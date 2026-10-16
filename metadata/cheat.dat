@@ -31844,19 +31844,19 @@ eggvntdx:0:000680C8:05:000:Infinite Lives PL2
 eggvntdx:0:000680BA:63:000:Always have 99 hits PL2
 
 ; [ Ehrgeiz (EG3/VER.A) ]
-ehrgeiz:0:0000:00:999:[ This game hasn't even ]:REASON 11
-ehrgeiz:0:0000:00:999:[ been looked at due to ]:REASON 11
-ehrgeiz:0:0000:00:999:[ time constraints - Too]:REASON 11
-ehrgeiz:0:0000:00:999:[ many games and so     ]:REASON 11
-ehrgeiz:0:0000:00:999:[ little time. It is    ]:REASON 11
-ehrgeiz:0:0000:00:999:[ even possible that    ]:REASON 11
-ehrgeiz:0:0000:00:999:[ this game may be a    ]:REASON 11
-ehrgeiz:0:0000:00:999:[ clone of an existing  ]:REASON 11
-ehrgeiz:0:0000:00:999:[ game which may have   ]:REASON 11
-ehrgeiz:0:0000:00:999:[ cheats. Please search ]:REASON 11
-ehrgeiz:0:0000:00:999:[ the cheat forums      ]:REASON 11
-ehrgeiz:0:0000:00:999:[ before posting cheat  ]:REASON 11
-ehrgeiz:0:0000:00:999:[ requests/cheat finding]:REASON 11
+ehrgeizua:0:0000:00:999:[ This game hasn't even ]:REASON 11
+ehrgeizua:0:0000:00:999:[ been looked at due to ]:REASON 11
+ehrgeizua:0:0000:00:999:[ time constraints - Too]:REASON 11
+ehrgeizua:0:0000:00:999:[ many games and so     ]:REASON 11
+ehrgeizua:0:0000:00:999:[ little time. It is    ]:REASON 11
+ehrgeizua:0:0000:00:999:[ even possible that    ]:REASON 11
+ehrgeizua:0:0000:00:999:[ this game may be a    ]:REASON 11
+ehrgeizua:0:0000:00:999:[ clone of an existing  ]:REASON 11
+ehrgeizua:0:0000:00:999:[ game which may have   ]:REASON 11
+ehrgeizua:0:0000:00:999:[ cheats. Please search ]:REASON 11
+ehrgeizua:0:0000:00:999:[ the cheat forums      ]:REASON 11
+ehrgeizua:0:0000:00:999:[ before posting cheat  ]:REASON 11
+ehrgeizua:0:0000:00:999:[ requests/cheat finding]:REASON 11
 
 ; [ Eight Forces ]
 eightfrc:0:201D50:07:000:Infinite Lives PL1
@@ -117379,14 +117379,14 @@ soulclba:0:0000:00:999:[ for it on the cheat   ]:REASON 1
 soulclba:0:0000:00:999:[ forums.               ]:REASON 1
 
 ; [ Soul Calibur (SOC14/VER.C) ]
-soulclbr:0:0000:00:999:[ There are no cheats   ]:REASON 1
-soulclbr:0:0000:00:999:[ for this game as it   ]:REASON 1
-soulclbr:0:0000:00:999:[ didn't work the last  ]:REASON 1
-soulclbr:0:0000:00:999:[ time it was tested.   ]:REASON 1
-soulclbr:0:0000:00:999:[ If the game now works ]:REASON 1
-soulclbr:0:0000:00:999:[ please request cheats ]:REASON 1
-soulclbr:0:0000:00:999:[ for it on the cheat   ]:REASON 1
-soulclbr:0:0000:00:999:[ forums.               ]:REASON 1
+soulclbrja2:0:0000:00:999:[ There are no cheats   ]:REASON 1
+soulclbrja2:0:0000:00:999:[ for this game as it   ]:REASON 1
+soulclbrja2:0:0000:00:999:[ didn't work the last  ]:REASON 1
+soulclbrja2:0:0000:00:999:[ time it was tested.   ]:REASON 1
+soulclbrja2:0:0000:00:999:[ If the game now works ]:REASON 1
+soulclbrja2:0:0000:00:999:[ please request cheats ]:REASON 1
+soulclbrja2:0:0000:00:999:[ for it on the cheat   ]:REASON 1
+soulclbrja2:0:0000:00:999:[ forums.               ]:REASON 1
 
 ; [ Soul Edge (SO3/VER.A) ]
 souledgeua:0:000EFFD4:63:000:Infinite Time

@@ -2713,9 +2713,16 @@ V-V                           TP-027
 	DRIVER( tekken3 )	/* Tekken 3 (World, TET2/VER.E1) */
 	DRIVER( tekken3je1 )	/* Tekken 3 (Japan, TET1/VER.E1) */
 	DRIVER( soulclbr )	/* Soul Calibur (World, SOC12/VER.A2) */
+	DRIVER( soulclbrab )	/* Soul Calibur (Asia, SOC14/VER.B) */
+	DRIVER( soulclbrac )	/* Soul Calibur (Asia, SOC14/VER.C) */
+	DRIVER( soulclbrub )	/* Soul Calibur (US, SOC13/VER.B) */
+	DRIVER( soulclbruc )	/* Soul Calibur (US, SOC13/VER.C) */
 	DRIVER( soulclbrja2 )	/* Soul Calibur (Japan, SOC11/VER.A2) */
+	DRIVER( soulclbrjb )	/* Soul Calibur (Japan, SOC11/VER.B) */
+	DRIVER( soulclbrjc )	/* Soul Calibur (Japan, SOC11/VER.C) */
 	DRIVER( ehrgeiz )	/* Ehrgeiz (World, EG2/VER.A) */
 	DRIVER( ehrgeizua )	/* Ehrgeiz (US, EG3/VER.A) */
+	DRIVER( ehrgeizja )	/* Ehrgeiz (Japan, EG1/VER.A) */
 	DRIVER( mdhorse )	/* Derby Quiz My Dream Horse (Japan, MDH1/VER.A2) */
 	DRIVER( fgtlayer )	/* Fighting Layer (Asia, FTL3/VER.A) */
 	DRIVER( fgtlayerja )	/* Fighting Layer (Japan, FTL0/VER.A) */

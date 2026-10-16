@@ -636,7 +636,6 @@ static DRIVER_INIT( namcos12 )
 
 	/* kludge: some kind of protection? */
 	if( namcos12_is( "golgo13" ) ||
-		namcos12_is( "mrdrillr" ) ||
 		namcos12_is( "pacapp" ) )
 	{
 		data8_t *RAM = memory_region( REGION_USER2 );
@@ -838,6 +837,54 @@ INPUT_PORTS_START( namcos12_h8 )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_SERVICE1 )
 INPUT_PORTS_END
 
+/* Mr. Driller (current MAME): 4-way joysticks, one button */
+INPUT_PORTS_START( mrdrillr )
+	/* DSW (H8 port 7) */
+	PORT_START
+	PORT_DIPNAME( 0x0080, 0x0080, DEF_STR( Service_Mode ) )
+	PORT_DIPSETTING(      0x0080, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0040, 0x0040, "Freeze" )
+	PORT_DIPSETTING(      0x0040, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_BIT( 0xff3f, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	/* IN0 */
+	PORT_START
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_4WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_4WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_4WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_4WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_4WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_4WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_4WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_4WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
+	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_START2 )
+
+	/* IN1 */
+	PORT_START
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0f00, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BITX(0x4000, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
+	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_SERVICE1 )
+INPUT_PORTS_END
+
 /* Tekken 3: LP/RP on button 1/2, LK/RK on the button 4/5 pins */
 INPUT_PORTS_START( tekken3 )
 	/* DSW (H8 port 7) */
@@ -1014,6 +1061,31 @@ ROM_START( ehrgeizua )
 	ROM_REGION32_LE( 0x00400000, REGION_USER2, 0 ) /* main prg */
 	ROM_LOAD16_BYTE( "eg3vera.2l",        0x0000000, 0x200000, CRC(64c00ff0) SHA1(fc7980bc8d98c810aed2eb6b3265d150784dfc15) )
 	ROM_LOAD16_BYTE( "eg3vera.2p",        0x0000001, 0x200000, CRC(e722c030) SHA1(4669a7861c14d97048728989708a0fa3733f83a8) )
+
+	ROM_REGION32_LE( 0x1c00000, REGION_USER3, 0 ) /* main data */
+	ROM_LOAD16_BYTE( "eg1rom0l.12",       0x0000000, 0x800000, CRC(fe11a48e) SHA1(bdb2af5949bb4a324dab01489e9488aa5b9bd129) )
+	ROM_LOAD16_BYTE( "eg1rom0u.11",       0x0000001, 0x800000, CRC(7cb90c25) SHA1(0ff6f7bf8b7eb2e0706bd235fcb9a95ea639fae6) )
+	ROM_LOAD16_BYTE( "eg1fl1l.9",         0x1000000, 0x200000, CRC(dd4cac2b) SHA1(f49d0055303b3d8639e94f93bce6bf160cc99913) )
+	ROM_LOAD16_BYTE( "eg1fl1u.10",        0x1000001, 0x200000, CRC(e3348407) SHA1(829bf1be0f74fd385e325d774f1449e28aba1e4d) )
+	ROM_LOAD16_BYTE( "eg1fl2l.7",         0x1400000, 0x200000, CRC(34493262) SHA1(9dd5b1b25e7232460bf5ee5b339d9f536ec26979) )
+	ROM_LOAD16_BYTE( "eg1fl2u.8",         0x1400001, 0x200000, CRC(4fb84f1d) SHA1(714e0ef56871d7b4568bc6dda08bbb1c01dbba37) )
+	ROM_LOAD16_BYTE( "eg1fl3l.5",         0x1800000, 0x200000, CRC(f9441f87) SHA1(70944160620ba2fc80b4fc3a7b61c33622298a8b) )
+	ROM_LOAD16_BYTE( "eg1fl3u.6",         0x1800001, 0x200000, CRC(cea397de) SHA1(3791dbadb5699c805c27930e59c61af4d62f77f7) )
+
+	ROM_REGION( 0x0080000, REGION_CPU2, 0 ) /* sound prg (H8/3002) */
+	ROM_LOAD16_WORD_SWAP( "eg1vera.11s",  0x0000000, 0x080000, CRC(9e44645e) SHA1(374eb4a4c09d6b5b7af5ff0efec16b4d2aacbe2b) )
+
+	ROM_REGION( 0x1000000, REGION_SOUND1, 0 ) /* samples (C352) */
+	ROM_LOAD( "eg1wave0.2",               0x0000000, 0x800000, CRC(961fe69f) SHA1(0189a061959a8d94b9d2db627911264faf9f28fd) )
+ROM_END
+
+ROM_START( ehrgeizja )
+	ROM_REGION( 0x0400000, REGION_CPU1, 0 ) /* main ram */
+	ROM_REGION( 0x0000400, REGION_USER1, 0 ) /* scratchpad */
+
+	ROM_REGION32_LE( 0x0400000, REGION_USER2, 0 ) /* main prg */
+	ROM_LOAD16_BYTE( "eg1vera.2l",        0x0000000, 0x200000, CRC(302d62cf) SHA1(e2de280ae4475829398a6770aed8eab0ed35b1ce) )
+	ROM_LOAD16_BYTE( "eg1vera.2p",        0x0000001, 0x200000, CRC(1d7fb3a1) SHA1(dc038a639f89d7c8daaf987b728fde175fe4dbec) )
 
 	ROM_REGION32_LE( 0x1c00000, REGION_USER3, 0 ) /* main data */
 	ROM_LOAD16_BYTE( "eg1rom0l.12",       0x0000000, 0x800000, CRC(fe11a48e) SHA1(bdb2af5949bb4a324dab01489e9488aa5b9bd129) )
@@ -1241,6 +1313,138 @@ ROM_START( soulclbrja2 )
 	ROM_LOAD( "soc1wave0.2",              0x0000000, 0x800000, CRC(c100618d) SHA1(b87f88ee42ad9c5affa674e5f816d902143fed99) )
 ROM_END
 
+ROM_START( soulclbrab )
+	ROM_REGION( 0x0400000, REGION_CPU1, 0 ) /* main ram */
+	ROM_REGION( 0x0000400, REGION_USER1, 0 ) /* scratchpad */
+
+	ROM_REGION32_LE( 0x0400000, REGION_USER2, 0 ) /* main prg */
+	ROM_LOAD16_BYTE( "soc14verb.2l",      0x0000000, 0x200000, CRC(6af5c5f6) SHA1(51d1e7d78d95cfc765cd219ed07b405cd920044b) )
+	ROM_LOAD16_BYTE( "soc14verb.2p",      0x0000001, 0x200000, CRC(23e7a4c4) SHA1(a97f36cafdeff9e26fbd24e54ab8ac8080763761) )
+
+	ROM_REGION32_LE( 0x2000000, REGION_USER3, 0 ) /* main data */
+	ROM_LOAD(        "soc1rom0.7",        0x0000000, 0x800000, CRC(cdc47b55) SHA1(315ea6b819de5c4883aa400f1b9f4172637757bf) )
+	ROM_LOAD(        "soc1rom1.8",        0x0800000, 0x800000, CRC(30d2dd5a) SHA1(1c0c467ba339e0241efb8d5c3b025a046b2ca676) )
+	ROM_LOAD(        "soc1rom2.9",        0x1000000, 0x800000, CRC(dbb93955) SHA1(624cd8ad94e8ae53206f798bff81784afe95e5f1) )
+	ROM_LOAD(        "soc1fl3.6",         0x1800000, 0x400000, CRC(24d94c38) SHA1(0f9b9ab11dd4e02086d7b9104ce2f5d4e93cd696) )
+	ROM_LOAD(        "soc1fl4.5",         0x1c00000, 0x400000, CRC(6212090e) SHA1(ed5e50771180935a0c2e760e7369673098722201) )
+
+	ROM_REGION( 0x0080000, REGION_CPU2, 0 ) /* sound prg (H8/3002) */
+	ROM_LOAD16_WORD_SWAP( "soc1vera.11s", 0x0000000, 0x080000, CRC(52aa206a) SHA1(5abe9d6f800fa1b9623aa08b16e9b959b840e50b) )
+
+	ROM_REGION( 0x1000000, REGION_SOUND1, 0 ) /* samples (C352) */
+	ROM_LOAD( "soc1wave0.2",              0x0000000, 0x800000, CRC(c100618d) SHA1(b87f88ee42ad9c5affa674e5f816d902143fed99) )
+ROM_END
+
+ROM_START( soulclbrac )
+	ROM_REGION( 0x0400000, REGION_CPU1, 0 ) /* main ram */
+	ROM_REGION( 0x0000400, REGION_USER1, 0 ) /* scratchpad */
+
+	ROM_REGION32_LE( 0x0400000, REGION_USER2, 0 ) /* main prg */
+	ROM_LOAD16_BYTE( "soc14verc.2e",      0x0000000, 0x200000, CRC(c40e9614) SHA1(dc20469f0d657423e472fdf5897852ab9fb8bb73) )
+	ROM_LOAD16_BYTE( "soc14verc.2j",      0x0000001, 0x200000, CRC(80c41446) SHA1(e5620a4f0ffba913169a779df73384b7ca8780b9) )
+
+	ROM_REGION32_LE( 0x2000000, REGION_USER3, 0 ) /* main data */
+	ROM_LOAD(        "soc1rom0.7",        0x0000000, 0x800000, CRC(cdc47b55) SHA1(315ea6b819de5c4883aa400f1b9f4172637757bf) )
+	ROM_LOAD(        "soc1rom1.8",        0x0800000, 0x800000, CRC(30d2dd5a) SHA1(1c0c467ba339e0241efb8d5c3b025a046b2ca676) )
+	ROM_LOAD(        "soc1rom2.9",        0x1000000, 0x800000, CRC(dbb93955) SHA1(624cd8ad94e8ae53206f798bff81784afe95e5f1) )
+	ROM_LOAD(        "soc1fl3.6",         0x1800000, 0x400000, CRC(24d94c38) SHA1(0f9b9ab11dd4e02086d7b9104ce2f5d4e93cd696) )
+	ROM_LOAD(        "soc1fl4.5",         0x1c00000, 0x400000, CRC(6212090e) SHA1(ed5e50771180935a0c2e760e7369673098722201) )
+
+	ROM_REGION( 0x0080000, REGION_CPU2, 0 ) /* sound prg (H8/3002) */
+	ROM_LOAD16_WORD_SWAP( "soc1vera.11s", 0x0000000, 0x080000, CRC(52aa206a) SHA1(5abe9d6f800fa1b9623aa08b16e9b959b840e50b) )
+
+	ROM_REGION( 0x1000000, REGION_SOUND1, 0 ) /* samples (C352) */
+	ROM_LOAD( "soc1wave0.2",              0x0000000, 0x800000, CRC(c100618d) SHA1(b87f88ee42ad9c5affa674e5f816d902143fed99) )
+ROM_END
+
+ROM_START( soulclbrub )
+	ROM_REGION( 0x0400000, REGION_CPU1, 0 ) /* main ram */
+	ROM_REGION( 0x0000400, REGION_USER1, 0 ) /* scratchpad */
+
+	ROM_REGION32_LE( 0x0400000, REGION_USER2, 0 ) /* main prg */
+	ROM_LOAD16_BYTE( "soc13verb.2e",      0x0000000, 0x200000, CRC(ad7cfb1e) SHA1(7d1e7fd0024e31780335690906846e91ba063003) )
+	ROM_LOAD16_BYTE( "soc13verb.2j",      0x0000001, 0x200000, CRC(7449c045) SHA1(1c7a8b659d0f12dded2a00bc83baeb392fd7a719) )
+
+	ROM_REGION32_LE( 0x2000000, REGION_USER3, 0 ) /* main data */
+	ROM_LOAD(        "soc1rom0.7",        0x0000000, 0x800000, CRC(cdc47b55) SHA1(315ea6b819de5c4883aa400f1b9f4172637757bf) )
+	ROM_LOAD(        "soc1rom1.8",        0x0800000, 0x800000, CRC(30d2dd5a) SHA1(1c0c467ba339e0241efb8d5c3b025a046b2ca676) )
+	ROM_LOAD(        "soc1rom2.9",        0x1000000, 0x800000, CRC(dbb93955) SHA1(624cd8ad94e8ae53206f798bff81784afe95e5f1) )
+	ROM_LOAD(        "soc1fl3.6",         0x1800000, 0x400000, CRC(24d94c38) SHA1(0f9b9ab11dd4e02086d7b9104ce2f5d4e93cd696) )
+	ROM_LOAD(        "soc1fl4.5",         0x1c00000, 0x400000, CRC(6212090e) SHA1(ed5e50771180935a0c2e760e7369673098722201) )
+
+	ROM_REGION( 0x0080000, REGION_CPU2, 0 ) /* sound prg (H8/3002) */
+	ROM_LOAD16_WORD_SWAP( "soc1vera.11s", 0x0000000, 0x080000, CRC(52aa206a) SHA1(5abe9d6f800fa1b9623aa08b16e9b959b840e50b) )
+
+	ROM_REGION( 0x1000000, REGION_SOUND1, 0 ) /* samples (C352) */
+	ROM_LOAD( "soc1wave0.2",              0x0000000, 0x800000, CRC(c100618d) SHA1(b87f88ee42ad9c5affa674e5f816d902143fed99) )
+ROM_END
+
+ROM_START( soulclbruc )
+	ROM_REGION( 0x0400000, REGION_CPU1, 0 ) /* main ram */
+	ROM_REGION( 0x0000400, REGION_USER1, 0 ) /* scratchpad */
+
+	ROM_REGION32_LE( 0x0400000, REGION_USER2, 0 ) /* main prg */
+	ROM_LOAD16_BYTE( "soc13verc.2l",      0x0000000, 0x200000, CRC(4ba962fb) SHA1(e2b5e543d92a4157788482f3ab7c6b0e5ff30367) )
+	ROM_LOAD16_BYTE( "soc13verc.2p",      0x0000001, 0x200000, CRC(140c40de) SHA1(352faec0fff5a8422ee7c8db2e0c946b139be03f) )
+
+	ROM_REGION32_LE( 0x2000000, REGION_USER3, 0 ) /* main data */
+	ROM_LOAD(        "soc1rom0.7",        0x0000000, 0x800000, CRC(cdc47b55) SHA1(315ea6b819de5c4883aa400f1b9f4172637757bf) )
+	ROM_LOAD(        "soc1rom1.8",        0x0800000, 0x800000, CRC(30d2dd5a) SHA1(1c0c467ba339e0241efb8d5c3b025a046b2ca676) )
+	ROM_LOAD(        "soc1rom2.9",        0x1000000, 0x800000, CRC(dbb93955) SHA1(624cd8ad94e8ae53206f798bff81784afe95e5f1) )
+	ROM_LOAD(        "soc1fl3.6",         0x1800000, 0x400000, CRC(24d94c38) SHA1(0f9b9ab11dd4e02086d7b9104ce2f5d4e93cd696) )
+	ROM_LOAD(        "soc1fl4.5",         0x1c00000, 0x400000, CRC(6212090e) SHA1(ed5e50771180935a0c2e760e7369673098722201) )
+
+	ROM_REGION( 0x0080000, REGION_CPU2, 0 ) /* sound prg (H8/3002) */
+	ROM_LOAD16_WORD_SWAP( "soc1vera.11s", 0x0000000, 0x080000, CRC(52aa206a) SHA1(5abe9d6f800fa1b9623aa08b16e9b959b840e50b) )
+
+	ROM_REGION( 0x1000000, REGION_SOUND1, 0 ) /* samples (C352) */
+	ROM_LOAD( "soc1wave0.2",              0x0000000, 0x800000, CRC(c100618d) SHA1(b87f88ee42ad9c5affa674e5f816d902143fed99) )
+ROM_END
+
+ROM_START( soulclbrjb )
+	ROM_REGION( 0x0400000, REGION_CPU1, 0 ) /* main ram */
+	ROM_REGION( 0x0000400, REGION_USER1, 0 ) /* scratchpad */
+
+	ROM_REGION32_LE( 0x0400000, REGION_USER2, 0 ) /* main prg */
+	ROM_LOAD16_BYTE( "soc11verb.2e",      0x0000000, 0x200000, CRC(9660d996) SHA1(6361abfd8b0d29848aabad6a5c517ba0d336359a) )
+	ROM_LOAD16_BYTE( "soc11verb.2j",      0x0000001, 0x200000, CRC(49939880) SHA1(a53fb8ecd71c8d59b0e08d6233ea658ae083bc6d) )
+
+	ROM_REGION32_LE( 0x2000000, REGION_USER3, 0 ) /* main data */
+	ROM_LOAD(        "soc1rom0.7",        0x0000000, 0x800000, CRC(cdc47b55) SHA1(315ea6b819de5c4883aa400f1b9f4172637757bf) )
+	ROM_LOAD(        "soc1rom1.8",        0x0800000, 0x800000, CRC(30d2dd5a) SHA1(1c0c467ba339e0241efb8d5c3b025a046b2ca676) )
+	ROM_LOAD(        "soc1rom2.9",        0x1000000, 0x800000, CRC(dbb93955) SHA1(624cd8ad94e8ae53206f798bff81784afe95e5f1) )
+	ROM_LOAD(        "soc1fl3.6",         0x1800000, 0x400000, CRC(24d94c38) SHA1(0f9b9ab11dd4e02086d7b9104ce2f5d4e93cd696) )
+	ROM_LOAD(        "soc1fl4.5",         0x1c00000, 0x400000, CRC(6212090e) SHA1(ed5e50771180935a0c2e760e7369673098722201) )
+
+	ROM_REGION( 0x0080000, REGION_CPU2, 0 ) /* sound prg (H8/3002) */
+	ROM_LOAD16_WORD_SWAP( "soc1vera.11s", 0x0000000, 0x080000, CRC(52aa206a) SHA1(5abe9d6f800fa1b9623aa08b16e9b959b840e50b) )
+
+	ROM_REGION( 0x1000000, REGION_SOUND1, 0 ) /* samples (C352) */
+	ROM_LOAD( "soc1wave0.2",              0x0000000, 0x800000, CRC(c100618d) SHA1(b87f88ee42ad9c5affa674e5f816d902143fed99) )
+ROM_END
+
+ROM_START( soulclbrjc )
+	ROM_REGION( 0x0400000, REGION_CPU1, 0 ) /* main ram */
+	ROM_REGION( 0x0000400, REGION_USER1, 0 ) /* scratchpad */
+
+	ROM_REGION32_LE( 0x0400000, REGION_USER2, 0 ) /* main prg */
+	ROM_LOAD16_BYTE( "soc11verc.2l",      0x0000000, 0x200000, CRC(f5e3679c) SHA1(b426cfc7707a6772e6aabbaf4a19b7f008324d55) )
+	ROM_LOAD16_BYTE( "soc11verc.2p",      0x0000001, 0x200000, CRC(7537719c) SHA1(d83d4c762fa7fcfd5d84de550568e92999e5bdfb) )
+
+	ROM_REGION32_LE( 0x2000000, REGION_USER3, 0 ) /* main data */
+	ROM_LOAD(        "soc1rom0.7",        0x0000000, 0x800000, CRC(cdc47b55) SHA1(315ea6b819de5c4883aa400f1b9f4172637757bf) )
+	ROM_LOAD(        "soc1rom1.8",        0x0800000, 0x800000, CRC(30d2dd5a) SHA1(1c0c467ba339e0241efb8d5c3b025a046b2ca676) )
+	ROM_LOAD(        "soc1rom2.9",        0x1000000, 0x800000, CRC(dbb93955) SHA1(624cd8ad94e8ae53206f798bff81784afe95e5f1) )
+	ROM_LOAD(        "soc1fl3.6",         0x1800000, 0x400000, CRC(24d94c38) SHA1(0f9b9ab11dd4e02086d7b9104ce2f5d4e93cd696) )
+	ROM_LOAD(        "soc1fl4.5",         0x1c00000, 0x400000, CRC(6212090e) SHA1(ed5e50771180935a0c2e760e7369673098722201) )
+
+	ROM_REGION( 0x0080000, REGION_CPU2, 0 ) /* sound prg (H8/3002) */
+	ROM_LOAD16_WORD_SWAP( "soc1vera.11s", 0x0000000, 0x080000, CRC(52aa206a) SHA1(5abe9d6f800fa1b9623aa08b16e9b959b840e50b) )
+
+	ROM_REGION( 0x1000000, REGION_SOUND1, 0 ) /* samples (C352) */
+	ROM_LOAD( "soc1wave0.2",              0x0000000, 0x800000, CRC(c100618d) SHA1(b87f88ee42ad9c5affa674e5f816d902143fed99) )
+ROM_END
+
 ROM_START( sws99 )
 	ROM_REGION( 0x0400000, REGION_CPU1, 0 ) /* main ram */
 	ROM_REGION( 0x0000400, REGION_USER1, 0 ) /* scratchpad */
@@ -1432,10 +1636,17 @@ ROM_END
 
 GAMEX( 1997, tekken3,   0,        coh700s, tekken3, namcos12_h8, ROT0, "Namco",         "Tekken 3 (World, TET2/VER.E1)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1997, tekken3je1, tekken3, coh700s, tekken3, namcos12_h8, ROT0, "Namco",         "Tekken 3 (Japan, TET1/VER.E1)", GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1998, soulclbr,   0,        coh700, namcos12, namcos12, ROT0, "Namco",         "Soul Calibur (World, SOC12/VER.A2)", GAME_NOT_WORKING | GAME_NO_SOUND )
-GAMEX( 1998, soulclbrja2, soulclbr, coh700, namcos12, namcos12, ROT0, "Namco",        "Soul Calibur (Japan, SOC11/VER.A2)", GAME_NOT_WORKING | GAME_NO_SOUND )
-GAMEX( 1998, ehrgeiz,    0,        coh700, namcos12, namcos12, ROT0, "Square/Namco",  "Ehrgeiz (World, EG2/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
-GAMEX( 1998, ehrgeizua,  ehrgeiz,  coh700, namcos12, namcos12, ROT0, "Square/Namco",  "Ehrgeiz (US, EG3/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
+GAMEX( 1998, soulclbr,   0,        coh700s, namcos12_h8, namcos12_h8, ROT0, "Namco",         "Soul Calibur (World, SOC12/VER.A2)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1998, soulclbrab, soulclbr, coh700s, namcos12_h8, namcos12_h8, ROT0, "Namco",         "Soul Calibur (Asia, SOC14/VER.B)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1998, soulclbrac, soulclbr, coh700s, namcos12_h8, namcos12_h8, ROT0, "Namco",         "Soul Calibur (Asia, SOC14/VER.C)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1998, soulclbrub, soulclbr, coh700s, namcos12_h8, namcos12_h8, ROT0, "Namco",         "Soul Calibur (US, SOC13/VER.B)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1998, soulclbruc, soulclbr, coh700s, namcos12_h8, namcos12_h8, ROT0, "Namco",         "Soul Calibur (US, SOC13/VER.C)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1998, soulclbrja2, soulclbr, coh700s, namcos12_h8, namcos12_h8, ROT0, "Namco",        "Soul Calibur (Japan, SOC11/VER.A2)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1998, soulclbrjb, soulclbr, coh700s, namcos12_h8, namcos12_h8, ROT0, "Namco",         "Soul Calibur (Japan, SOC11/VER.B)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1998, soulclbrjc, soulclbr, coh700s, namcos12_h8, namcos12_h8, ROT0, "Namco",         "Soul Calibur (Japan, SOC11/VER.C)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1998, ehrgeiz,    0,        coh700s, namcos12_h8, namcos12_h8, ROT0, "Square/Namco",  "Ehrgeiz (World, EG2/VER.A)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1998, ehrgeizua,  ehrgeiz,  coh700s, namcos12_h8, namcos12_h8, ROT0, "Square/Namco",  "Ehrgeiz (US, EG3/VER.A)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1998, ehrgeizja,  ehrgeiz,  coh700s, namcos12_h8, namcos12_h8, ROT0, "Square/Namco",  "Ehrgeiz (Japan, EG1/VER.A)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1998, mdhorse,    0,        coh700, namcos12, namcos12, ROT0, "MOSS/Namco",    "Derby Quiz My Dream Horse (Japan, MDH1/VER.A2)", GAME_NOT_WORKING | GAME_NO_SOUND )
 GAMEX( 1998, fgtlayer,  0,        coh700s, namcos12_h8, namcos12_h8b, ROT0, "Arika/Namco",   "Fighting Layer (Asia, FTL3/VER.A)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1998, fgtlayerja, fgtlayer, coh700s, namcos12_h8, namcos12_h8b, ROT0, "Arika/Namco",   "Fighting Layer (Japan, FTL0/VER.A)", GAME_IMPERFECT_GRAPHICS )
@@ -1445,7 +1656,7 @@ GAMEX( 1999, tektagt,    0,       tektagt, namcos12_h8, tektagt, ROT0, "Namco", 
 GAMEX( 1999, tektagtub,  tektagt, tektagt, namcos12_h8, tektagt, ROT0, "Namco",         "Tekken Tag Tournament (US, TEG3/VER.B)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1999, tektagtuc1, tektagt, tektagt, namcos12_h8, tektagt, ROT0, "Namco",         "Tekken Tag Tournament (US, TEG3/VER.C1)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1999, tektagtjc1, tektagt, tektagt, namcos12_h8, tektagt, ROT0, "Namco",         "Tekken Tag Tournament (Japan, TEG1/VER.C1)", GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1999, mrdrillr,   0,        coh700, namcos12, namcos12, ROT0, "Namco",         "Mr. Driller (US, DRI3/VER.A2)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
-GAMEX( 1999, mrdrillrja2, mrdrillr, coh700, namcos12, namcos12, ROT0, "Namco",        "Mr. Driller (Japan, DRI1/VER.A2)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
+GAMEX( 1999, mrdrillr,   0,        coh700s, mrdrillr, namcos12_h8b, ROT0, "Namco",         "Mr. Driller (US, DRI3/VER.A2)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1999, mrdrillrja2, mrdrillr, coh700s, mrdrillr, namcos12_h8b, ROT0, "Namco",        "Mr. Driller (Japan, DRI1/VER.A2)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1999, aquarush,   0,        coh700, namcos12, namcos12, ROT0, "Namco",         "Aqua Rush (Japan, AQ1/VER.A1)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
 GAMEX( 1999, golgo13,    0,        coh700, namcos12, namcos12, ROT0, "Eighting/Raizing/Namco", "Golgo 13 (Japan, GLG1/VER.A)", GAME_NOT_WORKING | GAME_NO_SOUND )
