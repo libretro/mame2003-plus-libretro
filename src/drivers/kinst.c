@@ -211,9 +211,10 @@ static void end_spin(int param)
 	When the loop reads [start] we skip the remaining wait.
 	The PC is the instruction after the read.
 
-	2) The wait for VBLANK, polling the interrupt bit in the CP0 Cause register:
+	2) The waits for an interrupt, polling the CP0 Cause register, for example VBLANK:
 	loop:	v0 = Cause; if (!(v0 & 0x400)) goto loop
-	The MIPS3 core ends the timeslice there instead of spinning (idlepc).
+	The MIPS3 core recognises these loops and skips their passes exactly
+	(mips3_set_cause_poll_skip), counters included.
 
 	On top of that the MIPS3 core reads and writes main RAM directly (fast RAM).
 	The addresses come from each version's code, as loaded from the hard disk.
@@ -223,19 +224,18 @@ struct kinst_speedup_info
 	const char *	name;
 	offs_t			pc;
 	offs_t			address;
-	offs_t			idlepc;
 };
 
 static const struct kinst_speedup_info kinst_speedups[] =
 {
-	{ "kinst",    0x88029f98, 0x8808f5d4, 0x88012638 },	/* v1.5d */
-	{ "kinst14",  0x88029890, 0x8808f5bc, 0x88012368 },	/* v1.4 */
-	{ "kinst13",  0x88029880, 0x8808f5bc, 0x88012358 },	/* v1.3 */
-	{ "kinstp",   0x88029010, 0x8808f5bc, 0x88011de8 },	/* proto v4.7 */
-	{ "kinst2",   0x8802c2d0, 0x887ff544, 0x8801a308 },	/* v1.4 */
-	{ "kinst213", 0x8802c2d0, 0x887ff544, 0x8801a308 },	/* v1.3 */
-	{ "kinst211", 0x8802bef4, 0x887ff544, 0x8801a1b8 },	/* v1.1 */
-	{ "kinst210", 0x8802bb80, 0x887ff544, 0x8801a058 },	/* v1.0 */
+	{ "kinst",    0x88029f98, 0x8808f5d4 },	/* v1.5d */
+	{ "kinst14",  0x88029890, 0x8808f5bc },	/* v1.4 */
+	{ "kinst13",  0x88029880, 0x8808f5bc },	/* v1.3 */
+	{ "kinstp",   0x88029010, 0x8808f5bc },	/* proto v4.7 */
+	{ "kinst2",   0x8802c2d0, 0x887ff544 },	/* v1.4 */
+	{ "kinst213", 0x8802c2d0, 0x887ff544 },	/* v1.3 */
+	{ "kinst211", 0x8802bef4, 0x887ff544 },	/* v1.1 */
+	{ "kinst210", 0x8802bb80, 0x887ff544 },	/* v1.0 */
 	{ NULL }
 };
 
@@ -272,14 +272,23 @@ static void kinst_install_speedup(void)
 	kinst_speedup_pc = info->pc;
 	kinst_speedup = install_mem_read32_handler(0, info->address, info->address + 3, kinst_speedup_r);
 
-	/* the VBLANK wait (IRQ 0 is bit 0x400 of Cause) */
-	mips3_set_cause_idle_loop(info->idlepc, 0x400);
+	/* the loops waiting for an interrupt in Cause (VBLANK, IRQ 0, and the others) are
+	   skipped exactly by the MIPS3 core; the input port at $a0 can be read inside them */
+	mips3_set_cause_poll_skip(1);
+	mips3_add_poll_read(0xb00000a0, 0xb00000a3);
 
-	/* main RAM through a direct pointer, except the word watched by the delay speedup */
+	/* main RAM through a direct pointer, except the word watched by the delay speedup; */
+	/* (the regions are tried in order, so the busiest come first) */
 	mips3_add_fastram(0x80000000, 0x8007ffff, 0, rambase1);
-	mips3_add_fastram(0xa0000000, 0xa007ffff, 0, rambase1);
 	mips3_add_fastram(0x88000000, info->address - 1, 0, rambase2);
 	mips3_add_fastram(info->address + 4, 0x887fffff, 0, (UINT8 *)rambase2 + (info->address + 4 - 0x88000000));
+	mips3_add_fastram(0xa0000000, 0xa007ffff, 0, rambase1);
+	/* the low RAM windows (banks 4 and 1): the drawing code reads its tables there */
+	mips3_add_fastram(0x00000000, 0x00000fff, 0, rambase2 + 0x90000/4);
+	mips3_add_fastram(0x00001000, 0x0007ffff, 0, rambase1 + 0x1000/4);
+	/* the boot ROM, read only: the game calls its routines (and they can be recompiled) */
+	mips3_add_fastram(0x9fc00000, 0x9fc7ffff, 1, rombase);
+	mips3_add_fastram(0xbfc00000, 0xbfc7ffff, 1, rombase);
 
 	/* recompiler (core option; only on the hosts that support it) */
 	if (options.mips_dynarec)
