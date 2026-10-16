@@ -1088,7 +1088,10 @@ f  e  d  c| b| a  9| 8  7| 6  5| 4| 3  2  1  0
 	high 16 bits masked with umask/vmask (0xff when the caller's
 	coordinates are bytes). Returns 1 when the span was drawn.
 */
-#if defined( __ARM_NEON ) || defined( __ARM_NEON__ )
+/* DIAGNOSTIC: the NEON span renderer is turned off on every host while the
+   texture corruption reported on the Raspberry Pi 5 is investigated; set the
+   condition back to the NEON test to enable it again */
+#if 0 && ( defined( __ARM_NEON ) || defined( __ARM_NEON__ ) )
 #define PSX_TEXSPAN			1
 #else
 #define PSX_TEXSPAN			0
