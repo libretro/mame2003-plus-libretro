@@ -2697,10 +2697,17 @@ V-V                           TP-027
 	DRIVER( xevi3dgj )	/* Xevious 3D/G (Japan, XV31/VER.A) */
 	DRIVER( primglex )	/* Prime Goal EX (Japan, PG1/VER.A) */
 	DRIVER( danceyes )	/* Dancing Eyes (World, DC2/VER.B) */
+	DRIVER( danceyesu )	/* Dancing Eyes (US, DC3/VER.C) */
 	DRIVER( danceyesj )	/* Dancing Eyes (Japan, DC1/VER.A) */
 	DRIVER( starswep )	/* Star Sweep (World, STP2/VER.A) */
 	DRIVER( starswepj )	/* Star Sweep (Japan, STP1/VER.A) */
 	DRIVER( myangel3 )	/* Kosodate Quiz My Angel 3 (Japan, KQT1/VER.A) */
+	DRIVER( pocketrc )	/* Pocket Racer (Japan, PKR1/VER.B) */
+	DRIVER( ptblank2a )	/* Point Blank 2 (World, GNB2/VER.A) */
+	DRIVER( ptblank2b )	/* Point Blank 2 (World, GNB2/VER.A alt) */
+	DRIVER( ptblank2c )	/* Point Blank 2 (World, unknown version) */
+	DRIVER( ptblank2ua )	/* Point Blank 2 (US, GNB3/VER.A) */
+	DRIVER( gunbarla )	/* Gunbarl (Japan, GNB1/VER.A) */
 
 	/* Namco System 12 */
 	DRIVER( tekken3 )	/* Tekken 3 (World, TET2/VER.E1) */
