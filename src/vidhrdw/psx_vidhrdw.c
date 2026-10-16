@@ -643,8 +643,40 @@ VIDEO_STOP( psx )
 {
 }
 
+/*
+	Display line in VRAM (xBBBBBGGGGGRRRRR) to a direct colour bitmap
+	(xRRRRRGGGGGBBBBB), for drivers with VIDEO_RGB_DIRECT: the libretro
+	output then takes the bitmap as it is, without a palette lookup per
+	pixel. NEON does 8 pixels at a time where the compiler targets it.
+*/
+#if defined( __ARM_NEON ) || defined( __ARM_NEON__ )
+#include <arm_neon.h>
+#endif
+
+static void psx_line_to_rgb15( UINT16 *dst, const UINT16 *src, int n )
+{
+#if defined( __ARM_NEON ) || defined( __ARM_NEON__ )
+	const uint16x8_t m5 = vdupq_n_u16( 0x001f );
+	const uint16x8_t m_g = vdupq_n_u16( 0x03e0 );
+	for( ; n >= 8; n -= 8, src += 8, dst += 8 )
+	{
+		uint16x8_t v = vld1q_u16( src );
+		uint16x8_t r = vshlq_n_u16( vandq_u16( v, m5 ), 10 );
+		uint16x8_t g = vandq_u16( v, m_g );
+		uint16x8_t b = vandq_u16( vshrq_n_u16( v, 10 ), m5 );
+		vst1q_u16( dst, vorrq_u16( vorrq_u16( r, g ), b ) );
+	}
+#endif
+	while( n-- > 0 )
+	{
+		UINT16 v = *src++;
+		*dst++ = ( ( v & 0x1f ) << 10 ) | ( v & 0x3e0 ) | ( ( v >> 10 ) & 0x1f );
+	}
+}
+
 VIDEO_UPDATE( psx )
 {
+	int direct = ( Machine->drv->video_attributes & VIDEO_RGB_DIRECT ) != 0;
 	UINT32 n_x;
 	UINT32 n_y;
 
@@ -751,7 +783,10 @@ VIDEO_UPDATE( psx )
 					n_r = ( src[ ( n_byte >> 1 ) & 1023 ] >> ( ( n_byte & 1 ) * 8 ) ) & 0xff; n_byte++;
 					n_g = ( src[ ( n_byte >> 1 ) & 1023 ] >> ( ( n_byte & 1 ) * 8 ) ) & 0xff; n_byte++;
 					n_b = ( src[ ( n_byte >> 1 ) & 1023 ] >> ( ( n_byte & 1 ) * 8 ) ) & 0xff; n_byte++;
-					*dst++ = ( ( n_b >> 3 ) << 10 ) | ( ( n_g >> 3 ) << 5 ) | ( n_r >> 3 );
+					if( direct )
+						*dst++ = ( ( n_r >> 3 ) << 10 ) | ( ( n_g >> 3 ) << 5 ) | ( n_b >> 3 );
+					else
+						*dst++ = ( ( n_b >> 3 ) << 10 ) | ( ( n_g >> 3 ) << 5 ) | ( n_r >> 3 );
 				}
 			}
 		}
@@ -763,8 +798,11 @@ VIDEO_UPDATE( psx )
          UINT16 *dst = (UINT16 *)bitmap->base + n_y * dy;
          int length = m_n_screenwidth;
 
-         while (length--)
-            *dst++ = *src++;
+         if( direct )
+            psx_line_to_rgb15( dst, src, length );
+         else
+            while (length--)
+               *dst++ = *src++;
       }
 	}
 }
