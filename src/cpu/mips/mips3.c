@@ -1643,15 +1643,35 @@ int mips3_execute(int cycles)
 			struct jit_block *block = jit_lookup(mips3.pc);
 			if (block && (int)block->len <= mips3_icount)
 			{
-				/* the block takes its own cycles; none taken means a side exit */
+				/* run blocks back to back while they fit in the timeslice; */
+				/* each takes its own cycles, and none taken means a side exit */
 				/* before its first instruction, which the interpreter then runs */
-				int before = mips3_icount;
-				mips3.pc = ((jit_func)block->code)();
-				if (mips3_icount != before)
+				int ran = 0, stalled = 0;
+				for (;;)
 				{
-					mips3.ppc = mips3.pc - 4;
+					int before = mips3_icount;
+					mips3.pc = ((jit_func)block->code)();
+					if (mips3_icount == before)
+					{
+						stalled = 1;
+						break;
+					}
+					ran = 1;
+					if (mips3_icount <= 0)
+						break;
+					block = jit_lookup(mips3.pc);
+					if (!block || (int)block->len > mips3_icount)
+						break;
+				}
+				if (ran)
+				{
 					change_pc32bedw(mips3.pc);
-					continue;
+					if (!stalled)
+					{
+						mips3.ppc = mips3.pc - 4;
+						continue;
+					}
+					mips3.ppc = mips3.pc;
 				}
 			}
 		}

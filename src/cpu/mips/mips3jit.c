@@ -33,7 +33,8 @@
 #define JIT_TABLE_BITS		16
 #define JIT_TABLE_SIZE		(1 << JIT_TABLE_BITS)
 #define JIT_MAX_BLOCK		64				/* instructions */
-#define JIT_CODEMAP_BITS	20				/* host address granules of 64 bytes, one byte each */
+#define JIT_CODEMAP_BITS	22				/* host address words, one byte each (data words next to
+											   code, like KI's text buffers, must not flush the code) */
 #define JIT_CODEMAP_SIZE	(1 << JIT_CODEMAP_BITS)
 #define JIT_MAX_EXITS		(JIT_MAX_BLOCK * 4)
 
@@ -57,7 +58,7 @@ static UINT32 jit_flushes;
 
 static INLINE UINT32 jit_codemap_index(const void *host)
 {
-	return (UINT32)(((size_t)host >> 6) & (JIT_CODEMAP_SIZE - 1));
+	return (UINT32)(((size_t)host >> 2) & (JIT_CODEMAP_SIZE - 1));
 }
 
 static void jit_flush(void)
@@ -493,6 +494,8 @@ static int jit_classify(UINT32 op)
 		case 0x01:	/* REGIMM */
 			if (OPC_RT(op) == 0x00 || OPC_RT(op) == 0x01)		/* BLTZ, BGEZ */
 				return JIT_BRANCH;
+			if (OPC_RT(op) == 0x10 || OPC_RT(op) == 0x11)		/* BLTZAL, BGEZAL */
+				return JIT_BRANCH;
 			return JIT_NONE;
 
 		case 0x02: case 0x03:			/* J, JAL */
@@ -509,7 +512,7 @@ static int jit_classify(UINT32 op)
 		/* LB LH LW LBU LHU LWU SB SH SW LD SD, little-endian CPUs only */
 		case 0x20: case 0x21: case 0x23: case 0x24: case 0x25: case 0x27:
 		case 0x28: case 0x29: case 0x2b: case 0x37: case 0x3f:
-		/* LWL LWR SWL SWR LDL LDR SDL SDR, through the interpreter's helpers */
+		/* LWL LWR SWL SWR LDL LDR SDL SDR (helpers on the host pointer; LDL/LDR native on 64-bit hosts) */
 		case 0x22: case 0x26: case 0x2a: case 0x2e:
 		case 0x1a: case 0x1b: case 0x2c: case 0x2d:
 			return mips3.bigendian ? JIT_NONE : JIT_MEM;
@@ -726,19 +729,151 @@ static int jit_mem_size(UINT32 op)
 	return 8;
 }
 
-/* LWL/LWR/SWL/SWR/LDL/LDR/SDL/SDR: the interpreter's helper, or NULL */
-static void (*jit_mem_helper(UINT32 op))(UINT32)
+/*
+	LWL/LWR/SWL/SWR/LDL/LDR/SDL/SDR once the aligned word (or doubleword)
+	is known to be in fast RAM: the same arithmetic as lwl_le and the
+	others in mips3.c, on the host pointer instead of a lookup through
+	the memory handlers. 'host' points at the aligned access; words are
+	in host order there, as in the fastram_* handlers.
+*/
+static UINT64 jit_host_read64(const UINT8 *host)
+{
+	UINT64 first = *(const data32_t *)host;
+	UINT64 second = *(const data32_t *)(host + 4);
+	return first | (second << 32);
+}
+
+static void jit_host_write64(UINT8 *host, UINT64 data)
+{
+	*(data32_t *)host = (data32_t)data;
+	*(data32_t *)(host + 4) = (data32_t)(data >> 32);
+}
+
+static void jit_lwl(UINT32 op, UINT8 *host)
+{
+	offs_t offs = SIMMVAL + RSVAL32;
+	data32_t temp = *(data32_t *)host;
+	if (RTREG)
+	{
+		if ((offs & 3) == 3) RTVAL64 = (INT32)temp;
+		else
+		{
+			int shift = 8 * (offs & 3);
+			RTVAL64 = (INT32)((RTVAL32 & (0x00ffffff >> shift)) | (temp << (24 - shift)));
+		}
+	}
+}
+
+static void jit_lwr(UINT32 op, UINT8 *host)
+{
+	offs_t offs = SIMMVAL + RSVAL32;
+	data32_t temp = *(data32_t *)host;
+	if (RTREG)
+	{
+		if (!(offs & 3)) RTVAL64 = (INT32)temp;
+		else
+		{
+			int shift = 8 * (offs & 3);
+			RTVAL64 = (INT32)((RTVAL32 & (0xffffff00 << (24 - shift))) | (temp >> shift));
+		}
+	}
+}
+
+static void jit_ldl(UINT32 op, UINT8 *host)
+{
+	offs_t offs = SIMMVAL + RSVAL32;
+	UINT64 temp = jit_host_read64(host);
+	if (RTREG)
+	{
+		if ((offs & 7) == 7) RTVAL64 = temp;
+		else
+		{
+			UINT64 mask = ~((UINT64)0xff << 56);
+			int shift = 8 * (offs & 7);
+			RTVAL64 = (RTVAL64 & (mask >> shift)) | (temp << (56 - shift));
+		}
+	}
+}
+
+static void jit_ldr(UINT32 op, UINT8 *host)
+{
+	offs_t offs = SIMMVAL + RSVAL32;
+	UINT64 temp = jit_host_read64(host);
+	if (RTREG)
+	{
+		if (!(offs & 7)) RTVAL64 = temp;
+		else
+		{
+			UINT64 mask = ~((UINT64)0xff);
+			int shift = 8 * (offs & 7);
+			RTVAL64 = (RTVAL64 & (mask << (56 - shift))) | (temp >> shift);
+		}
+	}
+}
+
+static void jit_swl(UINT32 op, UINT8 *host)
+{
+	offs_t offs = SIMMVAL + RSVAL32;
+	if ((offs & 3) == 3) *(data32_t *)host = RTVAL32;
+	else
+	{
+		data32_t temp = *(data32_t *)host;
+		int shift = 8 * (offs & 3);
+		*(data32_t *)host = (temp & (0xffffff00 << shift)) | (RTVAL32 >> (24 - shift));
+	}
+}
+
+static void jit_swr(UINT32 op, UINT8 *host)
+{
+	offs_t offs = SIMMVAL + RSVAL32;
+	if (!(offs & 3)) *(data32_t *)host = RTVAL32;
+	else
+	{
+		data32_t temp = *(data32_t *)host;
+		int shift = 8 * (offs & 3);
+		*(data32_t *)host = (temp & (0x00ffffff >> (24 - shift))) | (RTVAL32 << shift);
+	}
+}
+
+static void jit_sdl(UINT32 op, UINT8 *host)
+{
+	offs_t offs = SIMMVAL + RSVAL32;
+	if ((offs & 7) == 7) jit_host_write64(host, RTVAL64);
+	else
+	{
+		UINT64 temp = jit_host_read64(host);
+		UINT64 mask = ~((UINT64)0xff);
+		int shift = 8 * (offs & 7);
+		jit_host_write64(host, (temp & (mask << shift)) | (RTVAL64 >> (56 - shift)));
+	}
+}
+
+static void jit_sdr(UINT32 op, UINT8 *host)
+{
+	offs_t offs = SIMMVAL + RSVAL32;
+	if (!(offs & 7)) jit_host_write64(host, RTVAL64);
+	else
+	{
+		UINT64 temp = jit_host_read64(host);
+		UINT64 mask = ~((UINT64)0xff << 56);
+		int shift = 8 * (offs & 7);
+		jit_host_write64(host, (temp & (mask >> (56 - shift))) | (RTVAL64 << shift));
+	}
+}
+
+/* LWL/LWR/SWL/SWR/LDL/LDR/SDL/SDR: the helper above, or NULL */
+static void (*jit_mem_helper(UINT32 op))(UINT32, UINT8 *)
 {
 	switch (op >> 26)
 	{
-		case 0x22:	return lwl_le;
-		case 0x26:	return lwr_le;
-		case 0x2a:	return swl_le;
-		case 0x2e:	return swr_le;
-		case 0x1a:	return ldl_le;
-		case 0x1b:	return ldr_le;
-		case 0x2c:	return sdl_le;
-		case 0x2d:	return sdr_le;
+		case 0x22:	return jit_lwl;
+		case 0x26:	return jit_lwr;
+		case 0x2a:	return jit_swl;
+		case 0x2e:	return jit_swr;
+		case 0x1a:	return jit_ldl;
+		case 0x1b:	return jit_ldr;
+		case 0x2c:	return jit_sdl;
+		case 0x2d:	return jit_sdr;
 	}
 	return NULL;
 }
@@ -772,7 +907,8 @@ static int jit_emit_mem_address(struct jit_ctx *ctx, UINT32 op, UINT32 index)
 	struct sljit_jump *found[MIPS3_MAX_FASTRAM];
 	struct sljit_label *ready;
 	int size = jit_mem_size(op);
-	int i, n = 0;
+	int i, k, first, n = 0;
+	UINT32 guess;
 
 	/* R0 = (UINT32)(rs + simm), aligned for the unaligned access helpers */
 	sljit_emit_op2(C, SLJIT_ADD32, SLJIT_R0, 0, JREG(OPC_RS(op)), SLJIT_IMM, OPC_SIMM(op));
@@ -780,10 +916,23 @@ static int jit_emit_mem_address(struct jit_ctx *ctx, UINT32 op, UINT32 index)
 	if (jit_mem_helper(op))
 		sljit_emit_op2(C, SLJIT_AND, SLJIT_R0, 0, SLJIT_R0, 0, SLJIT_IMM, ~(sljit_sw)(size - 1) & 0xffffffff);
 
-	/* R1 = host pointer, from the first region that holds the whole access */
+	/* R1 = host pointer, from the region that holds the whole access; the */
+	/* regions do not overlap, so their order only matters for speed: the */
+	/* one holding the address the registers give now (the block is compiled */
+	/* just before it runs) is tried first, the others after it in order */
+	guess = (UINT32)mips3.r[OPC_RS(op)] + (UINT32)OPC_SIMM(op);
+	first = -1;
 	for (i = 0; i < fastram_count; i++)
+		if (guess >= fastram[i].start && guess <= fastram[i].end)
+			first = i;
+	for (k = -1; k < fastram_count; k++)
 	{
 		struct sljit_jump *miss;
+		if (k < 0 && first < 0)
+			continue;
+		i = (k < 0) ? first : k;
+		if (k >= 0 && k == first)
+			continue;
 		if (fastram[i].end - fastram[i].start + 1 < (UINT32)size)
 			continue;
 		if (fastram[i].readonly && jit_mem_is_store(op))
@@ -812,7 +961,7 @@ static int jit_emit_mem_address(struct jit_ctx *ctx, UINT32 op, UINT32 index)
 				sljit_emit_op2(C, SLJIT_ADD, SLJIT_R2, 0, SLJIT_R1, 0, SLJIT_IMM, 7);
 			else
 				sljit_emit_op1(C, SLJIT_MOV, SLJIT_R2, 0, SLJIT_R1, 0);
-			sljit_emit_op2(C, SLJIT_LSHR, SLJIT_R2, 0, SLJIT_R2, 0, SLJIT_IMM, 6);
+			sljit_emit_op2(C, SLJIT_LSHR, SLJIT_R2, 0, SLJIT_R2, 0, SLJIT_IMM, 2);
 			sljit_emit_op2(C, SLJIT_AND, SLJIT_R2, 0, SLJIT_R2, 0, SLJIT_IMM, JIT_CODEMAP_SIZE - 1);
 			sljit_emit_op1(C, SLJIT_MOV_P, SLJIT_R0, 0, SLJIT_IMM, (sljit_sw)jit_codemap);
 			sljit_emit_op1(C, SLJIT_MOV_U8, SLJIT_R2, 0, SLJIT_MEM2(SLJIT_R0, SLJIT_R2), 0);
@@ -830,11 +979,46 @@ static void jit_emit_mem_access(struct sljit_compiler *C, UINT32 op, sljit_s32 h
 
 	/* the unaligned ones: the interpreter's helper, now that the access is */
 	/* known to be in fast RAM (and, for stores, away from translated code) */
+#if JIT_HOST64
+	/* LDL/LDR in native code (the hot ones: the game copies with them); */
+	/* with s = 8 * (address & 7), exactly the interpreter's results: */
+	/*   LDL: rt = (rt & (0x00ffffffffffffff >> s)) | (temp << (56 - s)) */
+	/*   LDR: rt = (rt & (0xffffffffffffff00 << (56 - s))) | (temp >> s) */
+	/* (s = 56 for LDL and s = 0 for LDR give the whole doubleword) */
+	if ((op >> 26) == 0x1a || (op >> 26) == 0x1b)
+	{
+		if (!rt)
+			return;
+		sljit_emit_op1(C, SLJIT_MOV, SLJIT_R0, 0, SLJIT_MEM1(host), 0);
+		sljit_emit_op2(C, SLJIT_ADD32, SLJIT_R2, 0, JREG(OPC_RS(op)), SLJIT_IMM, OPC_SIMM(op));
+		sljit_emit_op2(C, SLJIT_AND, SLJIT_R2, 0, SLJIT_R2, 0, SLJIT_IMM, 7);
+		sljit_emit_op2(C, SLJIT_SHL, SLJIT_R2, 0, SLJIT_R2, 0, SLJIT_IMM, 3);
+		sljit_emit_op2(C, SLJIT_SUB, SLJIT_R3, 0, SLJIT_IMM, 56, SLJIT_R2, 0);
+		if ((op >> 26) == 0x1a)
+		{
+			sljit_emit_op2(C, SLJIT_SHL, SLJIT_R0, 0, SLJIT_R0, 0, SLJIT_R3, 0);
+			sljit_emit_op1(C, SLJIT_MOV, SLJIT_R1, 0, SLJIT_IMM, (sljit_sw)0x00ffffffffffffffULL);
+			sljit_emit_op2(C, SLJIT_LSHR, SLJIT_R1, 0, SLJIT_R1, 0, SLJIT_R2, 0);
+		}
+		else
+		{
+			sljit_emit_op2(C, SLJIT_LSHR, SLJIT_R0, 0, SLJIT_R0, 0, SLJIT_R2, 0);
+			sljit_emit_op1(C, SLJIT_MOV, SLJIT_R1, 0, SLJIT_IMM, (sljit_sw)0xffffffffffffff00ULL);
+			sljit_emit_op2(C, SLJIT_SHL, SLJIT_R1, 0, SLJIT_R1, 0, SLJIT_R3, 0);
+		}
+		sljit_emit_op2(C, SLJIT_AND, SLJIT_R1, 0, SLJIT_R1, 0, JREG(rt));
+		sljit_emit_op2(C, SLJIT_OR, JREG(rt), SLJIT_R0, 0, SLJIT_R1, 0);
+		return;
+	}
+#endif
+
 	if (jit_mem_helper(op))
 	{
-		void (*helper)(UINT32) = jit_mem_helper(op);
+		void (*helper)(UINT32, UINT8 *) = jit_mem_helper(op);
+		if (host != SLJIT_R1)
+			sljit_emit_op1(C, SLJIT_MOV_P, SLJIT_R1, 0, host, 0);
 		sljit_emit_op1(C, SLJIT_MOV32, SLJIT_R0, 0, SLJIT_IMM, (sljit_sw)op);
-		sljit_emit_icall(C, SLJIT_CALL, SLJIT_ARGS1V(32), SLJIT_IMM, SLJIT_FUNC_ADDR(helper));
+		sljit_emit_icall(C, SLJIT_CALL, SLJIT_ARGS2V(32, P), SLJIT_IMM, SLJIT_FUNC_ADDR(helper));
 		return;
 	}
 
@@ -897,6 +1081,8 @@ static int jit_branch_link(UINT32 op)
 		return 31;
 	if ((op >> 26) == 0x00 && (op & 63) == 0x09)
 		return OPC_RD(op);
+	if ((op >> 26) == 0x01 && (OPC_RT(op) & 0x10))		/* BLTZAL, BGEZAL (when taken) */
+		return 31;
 	return -1;
 }
 
@@ -966,9 +1152,9 @@ static void jit_emit_condition(struct sljit_compiler *C, UINT32 op, sljit_s32 ds
 	/* 32-bit host: the sign is in the high word, zero needs both */
 	switch (op >> 26)
 	{
-		case 0x01:	/* BLTZ / BGEZ */
+		case 0x01:	/* BLTZ / BGEZ (and BLTZAL / BGEZAL) */
 			sljit_emit_op2u(C, SLJIT_SUB | SLJIT_SET_SIG_LESS, JREGH(rs), SLJIT_IMM, 0);
-			sljit_emit_op_flags(C, SLJIT_MOV, dst, 0, (rt == 0x00) ? SLJIT_SIG_LESS : SLJIT_SIG_GREATER_EQUAL);
+			sljit_emit_op_flags(C, SLJIT_MOV, dst, 0, ((rt & 1) == 0) ? SLJIT_SIG_LESS : SLJIT_SIG_GREATER_EQUAL);
 			break;
 		case 0x04:	/* BEQ */
 		case 0x05:	/* BNE */
@@ -995,9 +1181,9 @@ static void jit_emit_condition(struct sljit_compiler *C, UINT32 op, sljit_s32 ds
 
 	switch (op >> 26)
 	{
-		case 0x01:	/* BLTZ / BGEZ */
+		case 0x01:	/* BLTZ / BGEZ (and BLTZAL / BGEZAL) */
 			sljit_emit_op2u(C, SLJIT_SUB | SLJIT_SET_SIG_LESS, JREG(rs), SLJIT_IMM, 0);
-			sljit_emit_op_flags(C, SLJIT_MOV, dst, 0, (rt == 0x00) ? SLJIT_SIG_LESS : SLJIT_SIG_GREATER_EQUAL);
+			sljit_emit_op_flags(C, SLJIT_MOV, dst, 0, ((rt & 1) == 0) ? SLJIT_SIG_LESS : SLJIT_SIG_GREATER_EQUAL);
 			break;
 		case 0x04:	/* BEQ */
 		case 0x05:	/* BNE */
@@ -1072,6 +1258,13 @@ static void jit_emit_branch(struct jit_ctx *ctx, UINT32 op, UINT32 slot, UINT32 
 			break;
 		default:
 			jit_emit_condition(C, op, SLJIT_S1);
+			if ((op >> 26) == 0x01 && (OPC_RT(op) & 0x10))
+			{
+				/* BLTZAL / BGEZAL link only when taken, as in the interpreter */
+				struct sljit_jump *nolink = sljit_emit_cmp(C, SLJIT_EQUAL, SLJIT_S1, 0, SLJIT_IMM, 0);
+				jit_store_link(C, 31, next);
+				sljit_set_label(nolink, sljit_emit_label(C));
+			}
 			break;
 	}
 
@@ -1135,10 +1328,63 @@ static void jit_emit_branch_pair(struct jit_ctx *ctx, UINT32 op, UINT32 slot2, U
  *  Block translation
  *************************************/
 
+/*
+	The usual unaligned doubleword load, LDR rt,X(rs) and LDL rt,X+7(rs)
+	in either order: together they replace all of rt with the eight bytes
+	at rs+X, whatever rt held, so the pair is one 8-byte load from there
+	(a side exit when those bytes are not in one fast RAM region lets the
+	interpreter run the two as usual). The instructions between them may
+	only be other LDL/LDR that leave rt and rs alone (the interleaved form
+	compilers emit); no jump may land after the first one, so the second
+	never runs without it. If the block leaves in between, the interpreter
+	runs the second one again on the full value, which changes nothing.
+*/
+static UINT32 jit_pair_low(UINT32 a, UINT32 b)
+{
+	return ((a >> 26) == 0x1b) ? a : b;		/* the LDR has the low offset */
+}
+
+static int jit_fuse_unaligned(struct jit_ctx *ctx, const UINT8 *kind, const UINT8 *host, UINT32 i, UINT32 *partner)
+{
+	UINT32 op = *(const UINT32 *)(host + i * 4);
+	UINT32 want, j;
+	int rt = OPC_RT(op), rs = OPC_RS(op);
+
+	/* 64-bit hosts only: the load is unaligned, which 32-bit ARM may not take */
+	if (!JIT_HOST64)
+		return 0;
+	if ((op >> 26) != 0x1a && (op >> 26) != 0x1b)
+		return 0;
+	if (rt == 0 || rt == rs)
+		return 0;
+	want = ((op >> 26) == 0x1a) ? 0x1b : 0x1a;
+	for (j = i + 1; j < ctx->count && j <= i + 32; j++)
+	{
+		UINT32 o = *(const UINT32 *)(host + j * 4);
+		if (kind[j] || ctx->target[j])
+			return 0;
+		if ((o >> 26) != 0x1a && (o >> 26) != 0x1b)
+			return 0;
+		if ((int)OPC_RS(o) == rs && (int)OPC_RT(o) == rt && (o >> 26) == want)
+		{
+			INT32 lo = (INT16)jit_pair_low(op, o), hi = (INT16)((want == 0x1a) ? o : op);
+			if (hi != lo + 7)
+				return 0;
+			*partner = j;
+			return 1;
+		}
+		if ((int)OPC_RT(o) == rt || (int)OPC_RT(o) == rs || (int)OPC_RS(o) == rt)
+			return 0;
+	}
+	return 0;
+}
+
 static void jit_compile(struct jit_block *block, UINT32 pc)
 {
 	static struct jit_ctx ctx;
 	static UINT8 kind[JIT_MAX_BLOCK];		/* 0 one, 1 branch, 2 branch pair */
+	static UINT8 fused[JIT_MAX_BLOCK];		/* the second half of a fused LDL/LDR pair */
+	UINT32 partner;
 	struct mips3_fastram *region;
 	struct sljit_compiler *C;
 	const UINT8 *host;
@@ -1240,6 +1486,7 @@ static void jit_compile(struct jit_block *block, UINT32 pc)
 	sljit_emit_enter(C, 0, SLJIT_ARGS0(32), 4, 3, 0);
 	sljit_emit_op1(C, SLJIT_MOV_P, SLJIT_S0, 0, SLJIT_IMM, (sljit_sw)&mips3);
 
+	memset(fused, 0, sizeof(fused));
 	for (i = 0; i < count; i++)
 	{
 		/* a jump target: take the cycles so far, then the label */
@@ -1254,7 +1501,17 @@ static void jit_compile(struct jit_block *block, UINT32 pc)
 		switch (kind[i])
 		{
 			case 0:
-				jit_emit_one(&ctx, op, i);
+				if (fused[i])
+					break;		/* done with its pair */
+				if (jit_fuse_unaligned(&ctx, kind, host, i, &partner))
+				{
+					/* LDL + LDR of one doubleword: a single 8-byte load */
+					UINT32 ld = (0x37 << 26) | (op & 0x03ff0000) | (jit_pair_low(op, JIT_OP(partner)) & 0xffff);
+					fused[partner] = 1;
+					jit_emit_one(&ctx, ld, i);
+				}
+				else
+					jit_emit_one(&ctx, op, i);
 				break;
 			case 1:
 				jit_emit_branch(&ctx, op, JIT_OP(i + 1), i);
