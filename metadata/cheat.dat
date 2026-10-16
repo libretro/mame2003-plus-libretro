@@ -31430,24 +31430,24 @@ dungeonm:0:0FFFFF:02:100:Region Switch = US:Dungeon Magic
 dungeonm:0:0FFFFF:03:100:Region Switch = World:Dungeon Magic
 
 ; [ Dunk Mania (DM1/VER.C) ]
-dunkmnia:0:001DD096:FF:000:Infinite Time
-dunkmnia:0:001DD095:FF:500:Infinite Time (2/3)
-dunkmnia:0:001DD094:FF:500:Infinite Time (3/3)
-dunkmnia:0:001DD096:00:001:Finish this Period Now!
-dunkmnia:0:001DD095:00:501:Finish this Period Now! (2/3)
-dunkmnia:0:001DD094:01:501:Finish this Period Now! (3/3)
+dunkmniajc:0:001DD096:FF:000:Infinite Time
+dunkmniajc:0:001DD095:FF:500:Infinite Time (2/3)
+dunkmniajc:0:001DD094:FF:500:Infinite Time (3/3)
+dunkmniajc:0:001DD096:00:001:Finish this Period Now!
+dunkmniajc:0:001DD095:00:501:Finish this Period Now! (2/3)
+dunkmniajc:0:001DD094:01:501:Finish this Period Now! (3/3)
 :dunkmnia:00300060:001DD098:00012875:FFFFFFFF:Infinite Shot Time
 :dunkmnia:00300001:001DD098:00000001:FFFFFFFF:No Shot Time Left Now!:For the best effect assign this cheat an activation key and use it whenever the other side has the ball!
-dunkmnia:0:001DD4E8:00:000:Score always = 0 PL1
-dunkmnia:0:001DD4E8:7F:000:Score always = 127 PL1
-dunkmnia:0:001DD4E8:00:001:Set score = 0 Now! PL1
-dunkmnia:0:001DD4E8:32:001:Set score = 50 Now! PL1
-dunkmnia:0:001DD4E8:7F:070:Select score Now! PL1
-dunkmnia:0:001DD4F4:00:000:Score always = 0 PL2
-dunkmnia:0:001DD4F4:7F:000:Score always = 127 PL2
-dunkmnia:0:001DD4F4:00:001:Set score = 0 Now! PL2
-dunkmnia:0:001DD4F4:32:001:Set score = 50 Now! PL2
-dunkmnia:0:001DD4F4:7F:070:Select score Now! PL2
+dunkmniajc:0:001DD4E8:00:000:Score always = 0 PL1
+dunkmniajc:0:001DD4E8:7F:000:Score always = 127 PL1
+dunkmniajc:0:001DD4E8:00:001:Set score = 0 Now! PL1
+dunkmniajc:0:001DD4E8:32:001:Set score = 50 Now! PL1
+dunkmniajc:0:001DD4E8:7F:070:Select score Now! PL1
+dunkmniajc:0:001DD4F4:00:000:Score always = 0 PL2
+dunkmniajc:0:001DD4F4:7F:000:Score always = 127 PL2
+dunkmniajc:0:001DD4F4:00:001:Set score = 0 Now! PL2
+dunkmniajc:0:001DD4F4:32:001:Set score = 50 Now! PL2
+dunkmniajc:0:001DD4F4:7F:070:Select score Now! PL2
 
 ; [ Dunk Shot ]
 dunkshot:0:0000:00:999:[ There are no cheats   ]:REASON 1
@@ -138936,17 +138936,17 @@ xenophob:0:0607ED:FF:000:Infinite Health PL2
 xenophob:0:0608AD:FF:000:Infinite Health PL3
 
 ; [ Xevious 3D/G (XV31/VER.A) ]
-xevi3dg:0:000EE8C0:09:000:Infinite Credits
-xevi3dg:0:00150DC8:06:000:Infinite Lives PL1
-xevi3dg:0:00126358:01:000:Invincibility PL1
-xevi3dg:0:00150DB0:01:000:Always have Laser Gun PL1
-xevi3dg:0:00150DB0:02:000:Always have Homing Weapon PL1
-xevi3dg:0:00115BDC:02:000:Maximum Fire Power PL1
-xevi3dg:0:00150DCC:06:000:Infinite Lives PL2
-xevi3dg:0:00126204:01:000:Invincibility PL2
-xevi3dg:0:00150DB4:01:000:Always have Laser Gun PL2
-xevi3dg:0:00150DB4:02:000:Always have Homing Weapon PL2
-xevi3dg:0:001171B0:02:000:Maximum Fire Power PL2
+xevi3dgj:0:000EE8C0:09:000:Infinite Credits
+xevi3dgj:0:00150DC8:06:000:Infinite Lives PL1
+xevi3dgj:0:00126358:01:000:Invincibility PL1
+xevi3dgj:0:00150DB0:01:000:Always have Laser Gun PL1
+xevi3dgj:0:00150DB0:02:000:Always have Homing Weapon PL1
+xevi3dgj:0:00115BDC:02:000:Maximum Fire Power PL1
+xevi3dgj:0:00150DCC:06:000:Infinite Lives PL2
+xevi3dgj:0:00126204:01:000:Invincibility PL2
+xevi3dgj:0:00150DB4:01:000:Always have Laser Gun PL2
+xevi3dgj:0:00150DB4:02:000:Always have Homing Weapon PL2
+xevi3dgj:0:001171B0:02:000:Maximum Fire Power PL2
 
 ; [ Xevios ]
 xevios:0:8183:09:000:Infinite Lives

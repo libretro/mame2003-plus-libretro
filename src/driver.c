@@ -2693,6 +2693,7 @@ V-V                           TP-027
 	DRIVER( dunkmnia )	/* Dunk Mania (World, DM2/VER.C) */
 	DRIVER( dunkmniajc )	/* Dunk Mania (Japan, DM1/VER.C) */
 	DRIVER( xevi3dg )	/* Xevious 3D/G (World, XV32/VER.B) */
+	DRIVER( xevi3dga )	/* Xevious 3D/G (World, XV32/VER.A) */
 	DRIVER( xevi3dgj )	/* Xevious 3D/G (Japan, XV31/VER.A) */
 	DRIVER( primglex )	/* Prime Goal EX (Japan, PG1/VER.A) */
 	DRIVER( danceyes )	/* Dancing Eyes (World, DC2/VER.B) */
