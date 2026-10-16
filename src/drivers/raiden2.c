@@ -1256,7 +1256,7 @@ static INTERRUPT_GEN( raiden2_interrupt )
 //	r2_debug_frame();
 	cpu_set_irq_line_and_vector(cpu_getactivecpu(), 0, HOLD_LINE, 0xc0/4);
 }
-
+/*
 static void r2_state_postload(void)
 {
 	r2_main_bankswitch(r2_prg_bank);
@@ -1323,7 +1323,7 @@ static void r2_state_save_register(void)
 	}
 	state_save_register_func_postload(r2_state_postload);
 }
-
+*/
 static MACHINE_INIT(raiden2)
 {
 	machine_init_seibu_sound_1();
@@ -1468,8 +1468,10 @@ static DRIVER_INIT(raiden2)
 */
 	if (raiden2_prepare_and_decrypt_sprites(gfx) != 0)
 		log_cb(RETRO_LOG_DEBUG, LOGPRE "Raiden2: sprite decryption allocation failed\n");
+ /* 
 	r2_state_save_register();
 	seibu_sound_state_save_register();
+ */
 }
 
 /* This backport is intended to be playable.  Keep imperfect flags until
