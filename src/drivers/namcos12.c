@@ -127,26 +127,6 @@ static INTERRUPT_GEN( namcos12_vblank )
 	n_oldcoin = ~n_coin;
 
 	psx_vblank();
-
-	/* kludge: protection hacks */
-	if( namcos12_is( "fgtlayer" ) )
-	{
-		data8_t *RAM = memory_region( REGION_CPU1 );
-		if( *( (data32_t *)&RAM[ 0x2ac494 ] ) == 0x080ab125 )
-		{
-			*( (data32_t *)&RAM[ 0x2ac494 ] ) = 0;
-			psxcpu_ram_written( &RAM[ 0x2ac494 ], 4 );
-		}
-	}
-	else if( namcos12_is( "pacapp" ) )
-	{
-		data8_t *RAM = memory_region( REGION_CPU1 );
-		if( *( (data32_t *)&RAM[ 0x16d50 ] ) == 0x08005b54 )
-		{
-			*( (data32_t *)&RAM[ 0x16d50 ] ) = 0;
-			psxcpu_ram_written( &RAM[ 0x16d50 ], 4 );
-		}
-	}
 }
 
 
@@ -332,17 +312,66 @@ static struct C352interface c352_interface =
 };
 
 static data32_t m_n_bankoffset;
+static int m_alt_bank;	/* mdhorse, kaiunqz: "alt bank" method of current MAME */
+
+static void bankoffset_update( void )
+{
+	UINT32 n_banks = memory_region_length( REGION_USER3 ) / 0x200000;
+	UINT32 n_bank = m_n_bankoffset;
+
+	if( n_banks == 0 )
+	{
+		return;
+	}
+	if( n_bank >= n_banks )
+	{
+		n_bank %= n_banks;
+	}
+	cpu_setbank( 7, memory_region( REGION_USER3 ) + ( n_bank * 0x200000 ) );
+}
 
 static WRITE32_HANDLER( bankoffset_w )
 {
-	m_n_bankoffset = data;
+	/* only the low half (0x1f000000-1) is the bank register (current MAME) */
+	if( !ACCESSING_LSW32 )
+	{
+		return;
+	}
+	data &= 0xffff;
 
-	cpu_setbank( 7, memory_region( REGION_USER3 ) + ( m_n_bankoffset * 0x200000 ) );
+	if( m_alt_bank )
+	{
+		/* bit 3 set: upper bits ((data - 8) << 2), clear: lower 3 bits */
+		if( ( data & 8 ) != 0 )
+		{
+			m_n_bankoffset = ( data - 8 ) << 2;
+		}
+		else
+		{
+			m_n_bankoffset = ( m_n_bankoffset & ~7 ) | ( data & 7 );
+		}
+	}
+	else
+	{
+		m_n_bankoffset = data;
+	}
+
+	bankoffset_update();
 
 	verboselog( 1, "bankoffset_w( %08x, %08x, %08x ) %08x\n", offset, data, mem_mask, m_n_bankoffset );
 }
 
 static data32_t m_n_dmaoffset;
+
+/* PSX expansion 1 base address (0x1f801000).  Some games (mdhorse, kaiunqz)
+   point it at 0x1f300000 to DMA from the program ROM without setting bit 31
+   of the DMA offset (current MAME) */
+static data32_t m_n_expbase;
+
+static WRITE32_HANDLER( expbase_w )
+{
+	COMBINE_DATA( &m_n_expbase );
+}
 
 static WRITE32_HANDLER( dmaoffset_w )
 {
@@ -367,16 +396,33 @@ static void namcos12_rom_read( UINT32 n_address, INT32 n_size )
 
 	m_has_tektagt_dma = 0;
 
-	if( n_offset >= 0x80000000 )
+	if( n_offset >= 0x80000000 || m_n_expbase == 0x1f300000 )
 	{
-		p_n_src = (data32_t *)( memory_region( REGION_USER2 ) + ( n_offset & 0x003fffff ) );
+		/* the boot loaders of some games (kaiunqz) copy a little past the end
+		   of the program ROM on purpose (current MAME masks with 0xffffff) */
+		n_offset &= 0x00ffffff;
+		if( n_offset >= memory_region_length( REGION_USER2 ) )
+		{
+			return; /* past the end: nothing is copied (current MAME) */
+		}
+		p_n_src = (data32_t *)( memory_region( REGION_USER2 ) + n_offset );
+		n_left = ( memory_region_length( REGION_USER2 ) - n_offset ) / 4;
+		if( n_size > n_left )
+		{
+			n_size = n_left;
+		}
 	}
 	else
 	{
 		n_offset &= 0x7fffffff;
+		if( m_alt_bank )
+		{
+			/* the alt bank method keeps the upper bits of the offset in the bank */
+			n_offset += m_n_bankoffset * 0x200000;
+		}
 		if( n_offset >= memory_region_length( REGION_USER3 ) )
 		{
-			n_offset = 0;
+			return; /* past the end: nothing is copied (current MAME) */
 		}
 		p_n_src = (data32_t *)( memory_region( REGION_USER3 ) + n_offset );
 		n_left = ( memory_region_length( REGION_USER3 ) - n_offset ) / 4;
@@ -627,16 +673,22 @@ static DRIVER_INIT( namcos12 )
 	cpu_setbank( 5, memory_region( REGION_CPU1 ) );
 	cpu_setbank( 6, memory_region( REGION_USER2 ) );
 
+	m_alt_bank = 0;
+	m_n_bankoffset = 0;
+	m_n_expbase = 0;
+	install_mem_write32_handler( 0, 0x1f801000, 0x1f801003, expbase_w );
+
 	psx_driver_init();
 
 	psx_dma_install_read_handler( 5, namcos12_rom_read );
 
 	state_save_register_UINT32( "namcos12", 0, "m_n_dmaoffset", &m_n_dmaoffset, 1 );
 	state_save_register_UINT32( "namcos12", 0, "m_n_bankoffset", &m_n_bankoffset, 1 );
+	state_save_register_UINT32( "namcos12", 0, "m_n_expbase", &m_n_expbase, 1 );
+	state_save_register_func_postload( bankoffset_update );
 
 	/* kludge: some kind of protection? */
-	if( namcos12_is( "golgo13" ) ||
-		namcos12_is( "pacapp" ) )
+	if( namcos12_is( "golgo13" ) )
 	{
 		data8_t *RAM = memory_region( REGION_USER2 );
 
@@ -670,6 +722,12 @@ static DRIVER_INIT( namcos12_h8b )
 {
 	init_namcos12_h8();
 	s12_boot_hack = 1;
+}
+
+static DRIVER_INIT( namcos12_h8alt )
+{
+	init_namcos12_h8();
+	m_alt_bank = 1;
 }
 
 static DRIVER_INIT( tektagt )
@@ -832,6 +890,150 @@ INPUT_PORTS_START( namcos12_h8 )
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_BUTTON6 | IPF_PLAYER2 )
 	PORT_BIT( 0x0f00, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BITX(0x4000, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
+	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_SERVICE1 )
+INPUT_PORTS_END
+
+/* Paca Paca Passion (current MAME): four coloured buttons per player on the joystick lines, one coin slot */
+INPUT_PORTS_START( pacapp )
+	/* DSW (H8 port 7) */
+	PORT_START
+	PORT_DIPNAME( 0x0080, 0x0080, DEF_STR( Service_Mode ) )
+	PORT_DIPSETTING(      0x0080, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0040, 0x0040, "Freeze" )
+	PORT_DIPSETTING(      0x0040, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_BIT( 0xff3f, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	/* IN0 */
+	PORT_START
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER1 )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1 )
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER2 )
+	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
+	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
+	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_START2 )
+
+	/* IN1 */
+	PORT_START
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0f00, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BITX(0x4000, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
+	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_SERVICE1 )
+INPUT_PORTS_END
+
+/* Paca Paca Passion 2 / Special: as pacapp, two coin slots */
+INPUT_PORTS_START( pacapp2 )
+	/* DSW (H8 port 7) */
+	PORT_START
+	PORT_DIPNAME( 0x0080, 0x0080, DEF_STR( Service_Mode ) )
+	PORT_DIPSETTING(      0x0080, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0040, 0x0040, "Freeze" )
+	PORT_DIPSETTING(      0x0040, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_BIT( 0xff3f, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	/* IN0 */
+	PORT_START
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER1 )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1 )
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER2 )
+	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
+	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
+	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_START2 )
+
+	/* IN1 */
+	PORT_START
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0f00, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BITX(0x4000, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
+	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_SERVICE1 )
+INPUT_PORTS_END
+
+/* My Dream Horse, Kaiun Quiz (current MAME): four answer buttons per player on the joystick lines, one coin slot */
+INPUT_PORTS_START( mdhorse )
+	/* DSW (H8 port 7) */
+	PORT_START
+	PORT_DIPNAME( 0x0080, 0x0080, DEF_STR( Service_Mode ) )
+	PORT_DIPSETTING(      0x0080, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0040, 0x0040, "Freeze" )
+	PORT_DIPSETTING(      0x0040, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_BIT( 0xff3f, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	/* IN0 */
+	PORT_START
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER1 )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1 )
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER2 )
+	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
+	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
+	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_START2 )
+
+	/* IN1 */
+	PORT_START
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0f00, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BITX(0x4000, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_SERVICE1 )
@@ -1207,6 +1409,29 @@ ROM_START( mdhorse )
 	ROM_LOAD( "mdh1wave0",                0x0000000, 0x800000, CRC(7b031123) SHA1(7cbc1f71d259405f9f1ef26026d51abcb255b057) )
 ROM_END
 
+ROM_START( kaiunqz )
+	ROM_REGION( 0x0400000, REGION_CPU1, 0 ) /* main ram */
+	ROM_REGION( 0x0000400, REGION_USER1, 0 ) /* scratchpad */
+
+	ROM_REGION32_LE( 0x0400000, REGION_USER2, 0 ) /* main prg */
+	ROM_LOAD16_BYTE( "kw1vera.2l",        0x0000000, 0x200000, CRC(fd1d2324) SHA1(eedb4627dfa17e9aac2c99592628f1fa7060edb5) )
+	ROM_LOAD16_BYTE( "kw1vera.2p",        0x0000001, 0x200000, CRC(d8bdea6b) SHA1(d32118846a1f43eecff7f56dcda03adf04975784) )
+
+	ROM_REGION32_LE( 0x3000000, REGION_USER3, 0 ) /* main data */
+	ROM_LOAD16_BYTE( "kw1rom0l.12",       0x0000000, 0x800000, CRC(e0768f0b) SHA1(3ffec7c789a95fcff7f06432723f155b99a20c42) )
+	ROM_LOAD16_BYTE( "kw1rom0u.11",       0x0000001, 0x800000, CRC(04101a16) SHA1(c2d79333ee382e2fea229bba23918fb5f88a25d4) )
+	ROM_LOAD16_BYTE( "kw1rom1l.10",       0x1000000, 0x800000, CRC(6a4edfa6) SHA1(a59fa28446b28db28b38368c794af71e673f69a2) )
+	ROM_LOAD16_BYTE( "kw1rom1u.9",        0x1000001, 0x800000, CRC(e6150b0d) SHA1(7dd1ba524246aea007e7bd6d3e7d457033b23a09) )
+	ROM_LOAD16_BYTE( "kw1rom2l.7",        0x2000000, 0x800000, CRC(21c376e4) SHA1(4b82494c1e13ebcea3c4e97803c0667be73bf6ae) )
+	ROM_LOAD16_BYTE( "kw1rom2u.8",        0x2000001, 0x800000, CRC(d850c222) SHA1(802c1782b323802eae871e2b9ccc5eae34277861) )
+
+	ROM_REGION( 0x0080000, REGION_CPU2, 0 ) /* sound prg (H8/3002) */
+	ROM_LOAD16_WORD_SWAP( "kw1vera.11s",  0x0000000, 0x080000, CRC(d863fafa) SHA1(3c2bb38c24165e3a1a4d1d257fcfc019b63d5199) )
+
+	ROM_REGION( 0x1000000, REGION_SOUND1, 0 ) /* samples (C352) */
+	ROM_LOAD( "kw1wave0.2",               0x0000000, 0x800000, CRC(060e52ae) SHA1(7ea95cae9d3c648163b225d0c7d365644be90241) )
+ROM_END
+
 ROM_START( mrdrillr )
 	ROM_REGION( 0x0400000, REGION_CPU1, 0 ) /* main ram */
 	ROM_REGION( 0x0000400, REGION_USER1, 0 ) /* scratchpad */
@@ -1267,6 +1492,48 @@ ROM_START( pacapp )
 	ROM_REGION( 0x1000000, REGION_SOUND1, 0 ) /* samples (C352) */
 	ROM_LOAD( "ppp1wave0.5",              0x0000000, 0x800000, CRC(184ccc7d) SHA1(b74638cebef209638c625aac7e8c5b924f56a8bb) )
 	ROM_LOAD( "ppp1wave1.4",              0x0800000, 0x800000, CRC(cbcf74c5) SHA1(a089277c9befc87b5bbe0d4e5b8187a4ad5ef143) )
+ROM_END
+
+ROM_START( pacapp2 )
+	ROM_REGION( 0x0400000, REGION_CPU1, 0 ) /* main ram */
+	ROM_REGION( 0x0000400, REGION_USER1, 0 ) /* scratchpad */
+
+	ROM_REGION32_LE( 0x0400000, REGION_USER2, 0 ) /* main prg */
+	ROM_LOAD16_BYTE( "pks1vera.2l",       0x0000000, 0x200000, CRC(aec428d3) SHA1(c13aecc6a367d6da501dce66fecbab5458ecac53) )
+	ROM_LOAD16_BYTE( "pks1vera.2p",       0x0000001, 0x200000, CRC(289e6e8a) SHA1(b8197355bee5660e8ff78a1c427c6d2b94a12b9d) )
+
+	ROM_REGION32_LE( 0x1800000, REGION_USER3, 0 ) /* main data */
+	ROM_LOAD(        "pks1rom0.ic7",      0x0000000, 0x800000, CRC(91f151fc) SHA1(84b4c9b2a9ae5687e1cba5f0a0db96495956cbfe) )
+	ROM_LOAD(        "pks1rom1.ic8",      0x0800000, 0x800000, CRC(8195f981) SHA1(1b9c2289e0975606ff52b9974778f82c9c29e955) )
+	ROM_LOAD(        "pks1rom2.ic9",      0x1000000, 0x800000, CRC(fea93ddc) SHA1(5f9c3f899a11797746d9c1077960f918aaca95f4) )
+
+	ROM_REGION( 0x0080000, REGION_CPU2, 0 ) /* sound prg (H8/3002) */
+	ROM_LOAD16_WORD_SWAP( "pks1vera.11s", 0x0000000, 0x080000, CRC(4942b588) SHA1(b28eb64a7347259619e32fdd396770983e25a707) )
+
+	ROM_REGION( 0x1000000, REGION_SOUND1, 0 ) /* samples (C352) */
+	ROM_LOAD( "pks1wave0.ic2",            0x0000000, 0x800000, CRC(3ebd27c3) SHA1(af874c3fb4cf1651075f307daefe7e3434769ecb) )
+	ROM_LOAD( "pks1wave1.ic1",            0x0800000, 0x800000, CRC(07e426b7) SHA1(6dd038d4f2c95470f1ca09cfead83802e9480d02) )
+ROM_END
+
+ROM_START( pacappsp )
+	ROM_REGION( 0x0400000, REGION_CPU1, 0 ) /* main ram */
+	ROM_REGION( 0x0000400, REGION_USER1, 0 ) /* scratchpad */
+
+	ROM_REGION32_LE( 0x0400000, REGION_USER2, 0 ) /* main prg */
+	ROM_LOAD16_BYTE( "psp1vera.2l",       0x0000000, 0x200000, CRC(4b6943af) SHA1(63b21794719bc1fc075e9cc4f1c1783442860036) )
+	ROM_LOAD16_BYTE( "psp1vera.2p",       0x0000001, 0x200000, CRC(91397f04) SHA1(db3dd59edcdec10eb2fee74450c024a7ecffe1c9) )
+
+	ROM_REGION32_LE( 0x1800000, REGION_USER3, 0 ) /* main data */
+	ROM_LOAD(        "psp1rom0.ic7",      0x0000000, 0x800000, CRC(7c26ff47) SHA1(f9d366ae9eb11e14875b611112bc82f7c7d391e0) )
+	ROM_LOAD(        "psp1rom1.ic8",      0x0800000, 0x800000, CRC(4b764fc3) SHA1(92a7f0f1537f2f4d5a8b0218720978b576f78dad) )
+	ROM_LOAD(        "psp1rom2.ic9",      0x1000000, 0x800000, CRC(a3fa6730) SHA1(0126a77661c3add0bfec9f6ef15021e602b7a614) )
+
+	ROM_REGION( 0x0080000, REGION_CPU2, 0 ) /* sound prg (H8/3002) */
+	ROM_LOAD16_WORD_SWAP( "psp1vera.11s", 0x0000000, 0x080000, CRC(47b9ccab) SHA1(15d4c5ac9ae7202df2d0ef84092679d190f2c45a) )
+
+	ROM_REGION( 0x1000000, REGION_SOUND1, 0 ) /* samples (C352) */
+	ROM_LOAD( "psp1wave0.ic2",            0x0000000, 0x800000, CRC(44b9a327) SHA1(ab20d5371f7a8c3a7fbc21fcf54a93c1cd007cd2) )
+	ROM_LOAD( "psp1wave1.ic1",            0x0800000, 0x800000, CRC(c045b09c) SHA1(1cfd7003771576f6574d91d862af1f76ceaed64f) )
 ROM_END
 
 ROM_START( soulclbr )
@@ -1647,16 +1914,19 @@ GAMEX( 1998, soulclbrjc, soulclbr, coh700s, namcos12_h8, namcos12_h8, ROT0, "Nam
 GAMEX( 1998, ehrgeiz,    0,        coh700s, namcos12_h8, namcos12_h8, ROT0, "Square/Namco",  "Ehrgeiz (World, EG2/VER.A)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1998, ehrgeizua,  ehrgeiz,  coh700s, namcos12_h8, namcos12_h8, ROT0, "Square/Namco",  "Ehrgeiz (US, EG3/VER.A)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1998, ehrgeizja,  ehrgeiz,  coh700s, namcos12_h8, namcos12_h8, ROT0, "Square/Namco",  "Ehrgeiz (Japan, EG1/VER.A)", GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1998, mdhorse,    0,        coh700, namcos12, namcos12, ROT0, "MOSS/Namco",    "Derby Quiz My Dream Horse (Japan, MDH1/VER.A2)", GAME_NOT_WORKING | GAME_NO_SOUND )
+GAMEX( 1998, mdhorse,    0,        coh700s, mdhorse, namcos12_h8alt, ROT0, "MOSS/Namco",    "Derby Quiz My Dream Horse (Japan, MDH1/VER.A2)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1998, fgtlayer,  0,        coh700s, namcos12_h8, namcos12_h8b, ROT0, "Arika/Namco",   "Fighting Layer (Asia, FTL3/VER.A)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1998, fgtlayerja, fgtlayer, coh700s, namcos12_h8, namcos12_h8b, ROT0, "Arika/Namco",   "Fighting Layer (Japan, FTL0/VER.A)", GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1998, pacapp,     0,        coh700, namcos12, namcos12, ROT0, "Produce/Namco", "Paca Paca Passion (Japan, PPP1/VER.A2)", GAME_NOT_WORKING | GAME_NO_SOUND )
-GAMEX( 1999, sws99,      0,        coh700, namcos12, namcos12, ROT0, "Namco",         "Super World Stadium '99 (Japan, SS91/VER.A3)", GAME_NOT_WORKING | GAME_NO_SOUND )
+GAMEX( 1998, pacapp,     0,        coh700s, pacapp, namcos12_h8b, ROT0, "Produce/Namco", "Paca Paca Passion (Japan, PPP1/VER.A2)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1999, pacapp2,    0,        coh700s, pacapp2, namcos12_h8b, ROT0, "Produce/Namco", "Paca Paca Passion 2 (Japan, PKS1/VER.A)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1999, pacappsp,   0,        coh700s, pacapp2, namcos12_h8b, ROT0, "Produce/Namco", "Paca Paca Passion Special (Japan, PSP1/VER.A)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1999, sws99,      0,        coh700s, namcos12_h8, namcos12_h8, ROT0, "Namco",         "Super World Stadium '99 (Japan, SS91/VER.A3)", GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING )
 GAMEX( 1999, tektagt,    0,       tektagt, namcos12_h8, tektagt, ROT0, "Namco",         "Tekken Tag Tournament (World, TEG2/VER.C1)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1999, tektagtub,  tektagt, tektagt, namcos12_h8, tektagt, ROT0, "Namco",         "Tekken Tag Tournament (US, TEG3/VER.B)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1999, tektagtuc1, tektagt, tektagt, namcos12_h8, tektagt, ROT0, "Namco",         "Tekken Tag Tournament (US, TEG3/VER.C1)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1999, tektagtjc1, tektagt, tektagt, namcos12_h8, tektagt, ROT0, "Namco",         "Tekken Tag Tournament (Japan, TEG1/VER.C1)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1999, mrdrillr,   0,        coh700s, mrdrillr, namcos12_h8b, ROT0, "Namco",         "Mr. Driller (US, DRI3/VER.A2)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1999, mrdrillrja2, mrdrillr, coh700s, mrdrillr, namcos12_h8b, ROT0, "Namco",        "Mr. Driller (Japan, DRI1/VER.A2)", GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1999, aquarush,   0,        coh700, namcos12, namcos12, ROT0, "Namco",         "Aqua Rush (Japan, AQ1/VER.A1)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
+GAMEX( 1999, kaiunqz,    0,        coh700s, mdhorse, namcos12_h8alt, ROT0, "Namco",         "Kaiun Quiz (Japan, KW1/VER.A)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1999, aquarush,   0,        coh700s, namcos12_h8, namcos12_h8, ROT0, "Namco",         "Aqua Rush (Japan, AQ1/VER.A1)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1999, golgo13,    0,        coh700, namcos12, namcos12, ROT0, "Eighting/Raizing/Namco", "Golgo 13 (Japan, GLG1/VER.A)", GAME_NOT_WORKING | GAME_NO_SOUND )
