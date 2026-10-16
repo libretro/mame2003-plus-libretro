@@ -145,6 +145,7 @@ static union
 
 static UINT16 *m_p_vram;
 static UINT32 m_n_vram_size;
+static UINT32 m_n_vram_width;
 static UINT32 m_n_gpu_buffer_offset;
 static UINT32 m_n_vramx;
 static UINT32 m_n_vramy;
@@ -493,6 +494,7 @@ static int psx_gpu_init( int n_width, int n_height )
 	m_n_gpu_buffer_offset = 0;
 
 	m_n_vram_size = n_width * n_height;
+	m_n_vram_width = n_width;
 	m_p_vram = auto_malloc( m_n_vram_size * 2 );
 	if( m_p_vram == NULL )
 	{
@@ -1068,6 +1070,356 @@ f  e  d  c| b| a  9| 8  7| 6  5| 4| 3  2  1  0
 		n_distance--; \
 	}
 
+/*
+	Textured span, the common case (standard texture page, not
+	interleaved): what TEXTUREFILL does for one span, pixel for pixel the
+	same result. With NEON, 8 pixels at a time: the texels are fetched one
+	by one (with the texture window when it is on), then shading,
+	semi-transparency, the transparent colour 0 and the store are done on
+	all 8 together, with the arithmetic the shade and transparency tables
+	hold. Pixels the arithmetic could not match (a shade above 255) and the
+	last pixels of the span go through the tables as before. A span whose
+	texture rows or CLUT row are the row it draws to is not taken (the
+	original reads back what it has just drawn), nor are interleaved
+	textures; the caller then uses TEXTUREFILL.
+
+	u, v, r, g, b are 16.16 values stepped per pixel; TXU/TXV are their
+	high 16 bits masked with umask/vmask (0xff when the caller's
+	coordinates are bytes). Returns 1 when the span was drawn.
+*/
+#if defined( __ARM_NEON ) || defined( __ARM_NEON__ )
+#define PSX_TEXSPAN			1
+#else
+#define PSX_TEXSPAN			0
+#endif
+
+#if PSX_TEXSPAN
+
+struct psx_texspan
+{
+	UINT32 u, v, r, g, b;
+	INT32 du, dv, dr, dg, db;
+	UINT32 umask, vmask;
+	UINT32 tp, tx, ty, abr;
+	int semi;
+	const UINT16 *clut;
+};
+
+static INLINE UINT16 psx_texspan_texel( const struct psx_texspan *s, int win, UINT32 u, UINT32 v )
+{
+	UINT32 n_u = ( u >> 16 ) & s->umask;
+	UINT32 n_v = ( v >> 16 ) & s->vmask;
+	if( win )
+	{
+		n_u %= m_n_tww;
+		n_v %= m_n_twh;
+	}
+	switch( s->tp )
+	{
+	case 0:
+		return s->clut[ ( *( m_p_p_vram[ s->ty + n_v ] + s->tx + ( n_u >> 2 ) ) >> ( ( n_u & 0x03 ) << 2 ) ) & 0x0f ];
+	case 1:
+		return s->clut[ ( *( m_p_p_vram[ s->ty + n_v ] + s->tx + ( n_u >> 1 ) ) >> ( ( n_u & 0x01 ) << 3 ) ) & 0xff ];
+	default:
+		return *( m_p_p_vram[ s->ty + n_v ] + s->tx + n_u );
+	}
+}
+
+/* one pixel through the tables, as SHADEDPIXEL / TRANSPARENTPIXEL */
+static INLINE void psx_texspan_pixel( const struct psx_texspan *s, UINT16 *p_vram, UINT16 n_bgr, UINT32 r, UINT32 g, UINT32 b )
+{
+	UINT16 *p_n_f = m_p_n_f1, *p_n_redb = m_p_n_redb1, *p_n_greenb = m_p_n_greenb1, *p_n_blueb = m_p_n_blueb1;
+	UINT16 *p_n_redtrans = m_p_n_redaddtrans, *p_n_greentrans = m_p_n_greenaddtrans, *p_n_bluetrans = m_p_n_blueaddtrans;
+	UINT16 rh = r >> 16, gh = g >> 16, bh = b >> 16;
+
+	if( n_bgr == 0 )
+	{
+		return;
+	}
+	if( s->semi && ( n_bgr & 0x8000 ) != 0 )
+	{
+		switch( s->abr )
+		{
+		case 0x00:
+			p_n_f = m_p_n_f05; p_n_redb = m_p_n_redb05; p_n_greenb = m_p_n_greenb05; p_n_blueb = m_p_n_blueb05;
+			break;
+		case 0x02:
+			p_n_redtrans = m_p_n_redsubtrans; p_n_greentrans = m_p_n_greensubtrans; p_n_bluetrans = m_p_n_bluesubtrans;
+			break;
+		case 0x03:
+			p_n_f = m_p_n_f025;
+			break;
+		}
+		*( p_vram ) = p_n_redtrans[ p_n_f[ m_p_n_redlevel[ n_bgr ] | rh ] | p_n_redb[ *( p_vram ) ] ] |
+			p_n_greentrans[ p_n_f[ m_p_n_greenlevel[ n_bgr ] | gh ] | p_n_greenb[ *( p_vram ) ] ] |
+			p_n_bluetrans[ p_n_f[ m_p_n_bluelevel[ n_bgr ] | bh ] | p_n_blueb[ *( p_vram ) ] ];
+	}
+	else
+	{
+		*( p_vram ) = m_p_n_redshade[ m_p_n_redlevel[ n_bgr ] | rh ] |
+			m_p_n_greenshade[ m_p_n_greenlevel[ n_bgr ] | gh ] |
+			m_p_n_blueshade[ m_p_n_bluelevel[ n_bgr ] | bh ];
+	}
+}
+
+/* does the span read the row it draws to (texture rows, CLUT)? */
+static int psx_texspan_overlap( const struct psx_texspan *s, int win, const UINT16 *p_vram, int n )
+{
+	const UINT16 *row = m_p_vram + ( ( p_vram - m_p_vram ) / m_n_vram_width ) * m_n_vram_width;
+	INT64 v0 = (INT64)s->v, v1 = (INT64)s->v + (INT64)s->dv * ( n - 1 );
+	UINT32 vmin, vmax, k;
+
+	if( s->tp != 2 && s->clut >= row && s->clut < row + m_n_vram_width )
+	{
+		return 1;
+	}
+	if( win )
+	{
+		vmin = 0;
+		vmax = m_n_twh - 1;
+	}
+	else
+	{
+		/* v stays within one 16-bit step range: the masked rows are contiguous */
+		if( v0 < 0 || v1 < 0 || v0 > 0xffffffffLL || v1 > 0xffffffffLL )
+		{
+			return 1;
+		}
+		vmin = (UINT32)( ( v0 < v1 ? v0 : v1 ) >> 16 );
+		vmax = (UINT32)( ( v0 < v1 ? v1 : v0 ) >> 16 );
+		if( ( vmin & ~s->vmask ) != ( vmax & ~s->vmask ) )
+		{
+			return 1;
+		}
+		vmin &= s->vmask;
+		vmax &= s->vmask;
+	}
+	if( vmax - vmin > 255 || s->ty + vmax >= 1024 )
+	{
+		return 1;
+	}
+	for( k = vmin; k <= vmax; k++ )
+	{
+		if( m_p_p_vram[ s->ty + k ] == row )
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
+
+/* largest lane (ARMv7 has no across-vector maximum) */
+static INLINE UINT16 psx_texspan_max( uint16x8_t x )
+{
+	uint16x4_t m = vmax_u16( vget_low_u16( x ), vget_high_u16( x ) );
+	m = vpmax_u16( m, m );
+	m = vpmax_u16( m, m );
+	return vget_lane_u16( m, 0 );
+}
+
+static int psx_texspan_draw( const struct psx_texspan *s, UINT16 *p_vram, int n )
+{
+	const int win = ( m_n_twh != 256 || m_n_tww != 256 || m_n_twx != 0 || m_n_twy != 0 );
+	UINT32 u = s->u, v = s->v, r = s->r, g = s->g, b = s->b;
+	const uint16x8_t m5 = vdupq_n_u16( 0x1f );
+	const uint16x8_t c31 = vdupq_n_u16( 31 );
+	const uint16x8_t zero = vdupq_n_u16( 0 );
+	const uint16x8_t bit15 = vdupq_n_u16( 0x8000 );
+	int i;
+
+	if( n < 8 || s->tp > 2 || psx_texspan_overlap( s, win, p_vram, n ) )
+	{
+		return 0;
+	}
+
+	for( ; n >= 8; n -= 8, p_vram += 8 )
+	{
+		UINT16 a_bgr[ 8 ], a_r[ 8 ], a_g[ 8 ], a_b[ 8 ];
+		UINT32 r0 = r, g0 = g, b0 = b;
+		uint16x8_t bgr, sr, sg, sb, cr, cg, cb, rr, rg, rb, out, dst;
+		uint16x8_t keep, semi;
+
+		for( i = 0; i < 8; i++ )
+		{
+			a_bgr[ i ] = psx_texspan_texel( s, win, u, v );
+			a_r[ i ] = r >> 16;
+			a_g[ i ] = g >> 16;
+			a_b[ i ] = b >> 16;
+			u += s->du; v += s->dv; r += s->dr; g += s->dg; b += s->db;
+		}
+		bgr = vld1q_u16( a_bgr );
+		sr = vld1q_u16( a_r );
+		sg = vld1q_u16( a_g );
+		sb = vld1q_u16( a_b );
+
+		/* a shade above 255 would mix into the table index: use the tables */
+		if( psx_texspan_max( vmaxq_u16( vmaxq_u16( sr, sg ), sb ) ) > 255 )
+		{
+			for( i = 0; i < 8; i++ )
+			{
+				psx_texspan_pixel( s, p_vram + i, a_bgr[ i ], r0, g0, b0 );
+				r0 += s->dr; g0 += s->dg; b0 += s->db;
+			}
+			continue;
+		}
+
+		/* level x shade / 128, before the clamp to 31 */
+		cr = vandq_u16( bgr, m5 );
+		cg = vandq_u16( vshrq_n_u16( bgr, 5 ), m5 );
+		cb = vandq_u16( vshrq_n_u16( bgr, 10 ), m5 );
+		rr = vshrq_n_u16( vmulq_u16( cr, sr ), 7 );
+		rg = vshrq_n_u16( vmulq_u16( cg, sg ), 7 );
+		rb = vshrq_n_u16( vmulq_u16( cb, sb ), 7 );
+
+		out = vorrq_u16( vminq_u16( rr, c31 ),
+			vorrq_u16( vshlq_n_u16( vminq_u16( rg, c31 ), 5 ), vshlq_n_u16( vminq_u16( rb, c31 ), 10 ) ) );
+
+		dst = vld1q_u16( p_vram );
+		if( s->semi )
+		{
+			uint16x8_t fr, fg, fb, br, bgc, bb, tr, tg, tb, blend;
+			switch( s->abr )
+			{
+			case 0x00:	/* 0.5 x B + 0.5 x F */
+				fr = vminq_u16( vshrq_n_u16( rr, 1 ), c31 ); fg = vminq_u16( vshrq_n_u16( rg, 1 ), c31 ); fb = vminq_u16( vshrq_n_u16( rb, 1 ), c31 );
+				br = vshrq_n_u16( vandq_u16( dst, m5 ), 1 );
+				bgc = vshrq_n_u16( vandq_u16( vshrq_n_u16( dst, 5 ), m5 ), 1 );
+				bb = vshrq_n_u16( vandq_u16( vshrq_n_u16( dst, 10 ), m5 ), 1 );
+				tr = vminq_u16( vaddq_u16( br, fr ), c31 ); tg = vminq_u16( vaddq_u16( bgc, fg ), c31 ); tb = vminq_u16( vaddq_u16( bb, fb ), c31 );
+				break;
+			case 0x02:	/* 1.0 x B - 1.0 x F */
+				fr = vminq_u16( rr, c31 ); fg = vminq_u16( rg, c31 ); fb = vminq_u16( rb, c31 );
+				br = vandq_u16( dst, m5 );
+				bgc = vandq_u16( vshrq_n_u16( dst, 5 ), m5 );
+				bb = vandq_u16( vshrq_n_u16( dst, 10 ), m5 );
+				tr = vqsubq_u16( br, fr ); tg = vqsubq_u16( bgc, fg ); tb = vqsubq_u16( bb, fb );
+				break;
+			case 0x03:	/* 1.0 x B + 0.25 x F */
+				fr = vminq_u16( vshrq_n_u16( rr, 2 ), c31 ); fg = vminq_u16( vshrq_n_u16( rg, 2 ), c31 ); fb = vminq_u16( vshrq_n_u16( rb, 2 ), c31 );
+				br = vandq_u16( dst, m5 );
+				bgc = vandq_u16( vshrq_n_u16( dst, 5 ), m5 );
+				bb = vandq_u16( vshrq_n_u16( dst, 10 ), m5 );
+				tr = vminq_u16( vaddq_u16( br, fr ), c31 ); tg = vminq_u16( vaddq_u16( bgc, fg ), c31 ); tb = vminq_u16( vaddq_u16( bb, fb ), c31 );
+				break;
+			default:	/* 1.0 x B + 1.0 x F */
+				fr = vminq_u16( rr, c31 ); fg = vminq_u16( rg, c31 ); fb = vminq_u16( rb, c31 );
+				br = vandq_u16( dst, m5 );
+				bgc = vandq_u16( vshrq_n_u16( dst, 5 ), m5 );
+				bb = vandq_u16( vshrq_n_u16( dst, 10 ), m5 );
+				tr = vminq_u16( vaddq_u16( br, fr ), c31 ); tg = vminq_u16( vaddq_u16( bgc, fg ), c31 ); tb = vminq_u16( vaddq_u16( bb, fb ), c31 );
+				break;
+			}
+			blend = vorrq_u16( tr, vorrq_u16( vshlq_n_u16( tg, 5 ), vshlq_n_u16( tb, 10 ) ) );
+			semi = vtstq_u16( bgr, bit15 );
+			out = vbslq_u16( semi, blend, out );
+		}
+		/* colour 0 is transparent */
+		keep = vceqq_u16( bgr, zero );
+		vst1q_u16( p_vram, vbslq_u16( keep, dst, out ) );
+	}
+
+	/* the last pixels */
+	for( i = 0; i < n; i++ )
+	{
+		psx_texspan_pixel( s, p_vram + i, psx_texspan_texel( s, win, u, v ), r, g, b );
+		u += s->du; v += s->dv; r += s->dr; g += s->dg; b += s->db;
+	}
+	return 1;
+}
+
+#endif	/* PSX_TEXSPAN */
+
+#if PSX_TEXSPAN
+/*
+	TEXTUREFILL for a span of a standard (not interleaved) texture through
+	psx_texspan_draw: same right clipping, and the caller's n_distance and
+	p_vram end as TEXTUREFILL leaves them. Otherwise nothing is done and
+	the caller uses TEXTUREFILL.
+*/
+#define TEXTURESPAN( T, U, DU, V, DV, UMASK, VMASK, DR, DG, DB ) \
+	if( n_ti == 0 && n_tp <= 2 && psx_texspan_fill_##T( n_x, n_y, &n_distance, &p_vram, \
+		U, DU, V, DV, UMASK, VMASK, n_r.d, DR, n_g.d, DG, n_b.d, DB, \
+		n_tp, n_tx, n_ty, n_abr, ( n_cmd & 0x02 ) != 0, p_clut ) ) \
+	{ \
+	} \
+	else
+
+#ifdef PSX_TEXSPAN_VERIFY
+/* debug: the same span through the tables, on a copy, must give the same pixels */
+static UINT16 psx_texspan_ref[ 1024 ];
+static void psx_texspan_reference( const struct psx_texspan *s, const UINT16 *p_vram, int n )
+{
+	const int win = ( m_n_twh != 256 || m_n_tww != 256 || m_n_twx != 0 || m_n_twy != 0 );
+	UINT32 u = s->u, v = s->v, r = s->r, g = s->g, b = s->b;
+	int i;
+	memcpy( psx_texspan_ref, p_vram, n * 2 );
+	for( i = 0; i < n; i++ )
+	{
+		psx_texspan_pixel( s, psx_texspan_ref + i, psx_texspan_texel( s, win, u, v ), r, g, b );
+		u += s->du; v += s->dv; r += s->dr; g += s->dg; b += s->db;
+	}
+}
+static unsigned long psx_texspan_checked;
+static void psx_texspan_compare( const struct psx_texspan *s, const UINT16 *p_vram, int n )
+{
+	int i;
+	psx_texspan_checked++;
+	for( i = 0; i < n; i++ )
+	{
+		if( psx_texspan_ref[ i ] != p_vram[ i ] )
+		{
+			fprintf( stderr, "TEXSPAN mismatch span #%lu pixel %d/%d: table %04x neon %04x (tp %u semi %d abr %u u %08x du %08x v %08x dv %08x r %08x dr %08x)\n",
+				psx_texspan_checked, i, n, psx_texspan_ref[ i ], p_vram[ i ], s->tp, s->semi, s->abr, s->u, s->du, s->v, s->dv, s->r, s->dr );
+			exit( 1 );
+		}
+	}
+}
+static void psx_texspan_report( void ) __attribute__(( destructor ));
+static void psx_texspan_report( void ) { fprintf( stderr, "TEXSPAN checked %lu spans\n", psx_texspan_checked ); }
+#define PSX_TEXSPAN_VERIFY_BEFORE	psx_texspan_reference( &s, p_vram, n_distance );
+#define PSX_TEXSPAN_VERIFY_AFTER	psx_texspan_compare( &s, p_vram, n_distance );
+#else
+#define PSX_TEXSPAN_VERIFY_BEFORE
+#define PSX_TEXSPAN_VERIFY_AFTER
+#endif
+
+#define PSX_TEXSPAN_FILL_DISTANCE( T ) \
+static int psx_texspan_fill_##T( INT32 n_x, INT32 n_y, T *p_distance, UINT16 **pp_vram, \
+	UINT32 u, INT32 du, UINT32 v, INT32 dv, UINT32 umask, UINT32 vmask, \
+	UINT32 r, INT32 dr, UINT32 g, INT32 dg, UINT32 b, INT32 db, \
+	UINT32 tp, UINT32 tx, UINT32 ty, UINT32 abr, int semi, const UINT16 *clut ) \
+{ \
+	struct psx_texspan s; \
+	INT32 n_distance = *p_distance; \
+	UINT16 *p_vram; \
+	if( n_distance > ( (INT32)m_n_drawarea_x2 - n_x ) + 1 ) \
+	{ \
+		n_distance = ( m_n_drawarea_x2 - n_x ) + 1; \
+	} \
+	if( n_distance < 8 ) \
+	{ \
+		return 0; \
+	} \
+	p_vram = m_p_p_vram[ n_y ] + n_x; \
+	s.u = u; s.du = du; s.v = v; s.dv = dv; s.umask = umask; s.vmask = vmask; \
+	s.r = r; s.dr = dr; s.g = g; s.dg = dg; s.b = b; s.db = db; \
+	s.tp = tp; s.tx = tx; s.ty = ty; s.abr = abr & 3; s.semi = semi; s.clut = clut; \
+	PSX_TEXSPAN_VERIFY_BEFORE \
+	if( !psx_texspan_draw( &s, p_vram, n_distance ) ) \
+	{ \
+		return 0; \
+	} \
+	PSX_TEXSPAN_VERIFY_AFTER \
+	*p_distance = 0; \
+	*pp_vram = p_vram + n_distance; \
+	return 1; \
+}
+PSX_TEXSPAN_FILL_DISTANCE( INT32 )
+PSX_TEXSPAN_FILL_DISTANCE( INT16 )
+#else
+#define TEXTURESPAN( T, U, DU, V, DV, UMASK, VMASK, DR, DG, DB )
+#endif
+
 #define TEXTUREFILL( PIXELUPDATE, TXU, TXV ) \
 	if( n_distance > ( (INT32)m_n_drawarea_x2 - n_x ) + 1 ) \
 	{ \
@@ -1642,7 +1994,10 @@ static void FlatTexturedPolygon( int n_points )
 				n_distance -= ( m_n_drawarea_x1 - n_x );
 				n_x = m_n_drawarea_x1;
 			}
-			TEXTUREFILL( FLATTEXTUREDPOLYGONUPDATE, n_u.w.h, n_v.w.h );
+			TEXTURESPAN( INT32, n_u.d, n_du, n_v.d, n_dv, 0xffff, 0xffff, 0, 0, 0 )
+			{
+				TEXTUREFILL( FLATTEXTUREDPOLYGONUPDATE, n_u.w.h, n_v.w.h );
+			}
 		}
 		n_cx1.d += n_dx1;
 		n_cu1.d += n_du1;
@@ -2137,7 +2492,10 @@ static void GouraudTexturedPolygon( int n_points )
 				n_distance -= ( m_n_drawarea_x1 - n_x );
 				n_x = m_n_drawarea_x1;
 			}
-			TEXTUREFILL( GOURAUDTEXTUREDPOLYGONUPDATE, n_u.w.h, n_v.w.h );
+			TEXTURESPAN( INT32, n_u.d, n_du, n_v.d, n_dv, 0xffff, 0xffff, n_dr, n_dg, n_db )
+			{
+				TEXTUREFILL( GOURAUDTEXTUREDPOLYGONUPDATE, n_u.w.h, n_v.w.h );
+			}
 		}
 		n_cx1.d += n_dx1;
 		n_cr1.d += n_dr1;
@@ -2569,7 +2927,10 @@ static void FlatTexturedRectangle( void )
 				n_distance -= ( m_n_drawarea_x1 - n_x );
 				n_x = m_n_drawarea_x1;
 			}
-			TEXTUREFILL( FLATTEXTUREDRECTANGLEUPDATE, n_u, n_v );
+			TEXTURESPAN( INT16, (UINT32)n_u << 16, 1 << 16, (UINT32)n_v << 16, 0, 0xff, 0xff, 0, 0, 0 )
+			{
+				TEXTUREFILL( FLATTEXTUREDRECTANGLEUPDATE, n_u, n_v );
+			}
 		}
 		n_v++;
 		n_y++;
@@ -2654,7 +3015,10 @@ static void Sprite8x8( void )
 				n_distance -= ( m_n_drawarea_x1 - n_x );
 				n_x = m_n_drawarea_x1;
 			}
-			TEXTUREFILL( FLATTEXTUREDRECTANGLEUPDATE, n_u, n_v );
+			TEXTURESPAN( INT16, (UINT32)n_u << 16, 1 << 16, (UINT32)n_v << 16, 0, 0xff, 0xff, 0, 0, 0 )
+			{
+				TEXTUREFILL( FLATTEXTUREDRECTANGLEUPDATE, n_u, n_v );
+			}
 		}
 		n_v++;
 		n_y++;
@@ -2739,7 +3103,10 @@ static void Sprite16x16( void )
 				n_distance -= ( m_n_drawarea_x1 - n_x );
 				n_x = m_n_drawarea_x1;
 			}
-			TEXTUREFILL( FLATTEXTUREDRECTANGLEUPDATE, n_u, n_v );
+			TEXTURESPAN( INT16, (UINT32)n_u << 16, 1 << 16, (UINT32)n_v << 16, 0, 0xff, 0xff, 0, 0, 0 )
+			{
+				TEXTUREFILL( FLATTEXTUREDRECTANGLEUPDATE, n_u, n_v );
+			}
 		}
 		n_v++;
 		n_y++;
