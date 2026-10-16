@@ -1237,7 +1237,10 @@ void update_variables(bool first_time)
           break;
 
         case OPT_MIPS_DYNAREC:
-          options.mips_dynarec = (strcmp(var.value, "enabled") == 0);
+          if(strcmp(var.value, "enabled") == 0)
+            options.mips_dynarec = true;
+          else
+            options.mips_dynarec = false;
           break;
 
         case OPT_CPU_CLOCK_SCALE:
