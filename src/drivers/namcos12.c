@@ -771,7 +771,7 @@ MACHINE_INIT( namcos12_h8 )
 
 static MACHINE_DRIVER_START( coh700 )
 	/* basic machine hardware */
-	MDRV_CPU_ADD( PSXCPU, 33868800 / 2 ) /* 33MHz ?? */
+	MDRV_CPU_ADD( PSXCPU, 100000000 / 4 ) /* CXD8661R, 100MHz XTAL; one cycle per four clocks as in current MAME */
 	MDRV_CPU_MEMORY( namcos12_readmem, namcos12_writemem )
 	MDRV_CPU_VBLANK_INT( namcos12_vblank, 1 )
 
@@ -804,7 +804,7 @@ MACHINE_DRIVER_END
 /* System 12 with the H8/3002 sound/I-O CPU and the C352 */
 static MACHINE_DRIVER_START( coh700s )
 	/* basic machine hardware */
-	MDRV_CPU_ADD_TAG( "main", PSXCPU, 33868800 / 2 ) /* 33MHz ?? */
+	MDRV_CPU_ADD_TAG( "main", PSXCPU, 100000000 / 4 ) /* CXD8661R, 100MHz XTAL; one cycle per four clocks as in current MAME */
 	MDRV_CPU_MEMORY( namcos12_readmem, namcos12_writemem )
 	MDRV_CPU_VBLANK_INT( namcos12_vblank_h8, 1 )
 
