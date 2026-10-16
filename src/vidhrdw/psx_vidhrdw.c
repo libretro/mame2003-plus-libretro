@@ -145,6 +145,7 @@ static union
 
 static UINT16 *m_p_vram;
 static UINT32 m_n_vram_size;
+static UINT32 m_n_vram_height;
 static UINT32 m_n_vram_width;
 static UINT32 m_n_gpu_buffer_offset;
 static UINT32 m_n_vramx;
@@ -495,6 +496,7 @@ static int psx_gpu_init( int n_width, int n_height )
 
 	m_n_vram_size = n_width * n_height;
 	m_n_vram_width = n_width;
+	m_n_vram_height = n_height;
 	m_p_vram = auto_malloc( m_n_vram_size * 2 );
 	if( m_p_vram == NULL )
 	{
@@ -1074,15 +1076,18 @@ f  e  d  c| b| a  9| 8  7| 6  5| 4| 3  2  1  0
 /*
 	Textured span, the common case (standard texture page, not
 	interleaved): what TEXTUREFILL does for one span, pixel for pixel the
-	same result. With NEON, 8 pixels at a time: the texels are fetched one
-	by one (with the texture window when it is on), then shading,
-	semi-transparency, the transparent colour 0 and the store are done on
-	all 8 together, with the arithmetic the shade and transparency tables
-	hold. Pixels the arithmetic could not match (a shade above 255) and the
-	last pixels of the span go through the tables as before. A span whose
-	texture rows or CLUT row are the row it draws to is not taken (the
-	original reads back what it has just drawn), nor are interleaved
-	textures; the caller then uses TEXTUREFILL.
+	same result. With NEON, 8 pixels at a time. The texel addresses of the
+	8 pixels (texture window included) are worked out together and the
+	texels loaded one per lane; 4-bit CLUT entries come from a byte table
+	lookup. Shading, semi-transparency, the transparent colour 0 and the
+	store are done on all 8 together, with the arithmetic the shade and
+	transparency tables hold. A shorter last block keeps its unused lanes
+	transparent, so they store back what they read. Pixels the arithmetic
+	could not match (a shade above 255) go through the tables as before.
+	A span whose texture rows or CLUT row are the row it draws to is not
+	taken (the original reads back what it has just drawn), nor are
+	interleaved textures; the caller then uses TEXTUREFILL. Untextured
+	spans (SOLIDFILL) take the same path with a constant texel.
 
 	u, v, r, g, b are 16.16 values stepped per pixel; TXU/TXV are their
 	high 16 bits masked with umask/vmask (0xff when the caller's
@@ -1106,6 +1111,7 @@ struct psx_texspan
 	const UINT16 *clut;
 };
 
+#ifdef PSX_TEXSPAN_VERIFY
 static INLINE UINT16 psx_texspan_texel( const struct psx_texspan *s, int win, UINT32 u, UINT32 v )
 {
 	UINT32 n_u = ( u >> 16 ) & s->umask;
@@ -1125,6 +1131,7 @@ static INLINE UINT16 psx_texspan_texel( const struct psx_texspan *s, int win, UI
 		return *( m_p_p_vram[ s->ty + n_v ] + s->tx + n_u );
 	}
 }
+#endif
 
 /* one pixel through the tables, as SHADEDPIXEL / TRANSPARENTPIXEL */
 static INLINE void psx_texspan_pixel( const struct psx_texspan *s, UINT16 *p_vram, UINT16 n_bgr, UINT32 r, UINT32 g, UINT32 b )
@@ -1166,9 +1173,11 @@ static INLINE void psx_texspan_pixel( const struct psx_texspan *s, UINT16 *p_vra
 /* does the span read the row it draws to (texture rows, CLUT)? */
 static int psx_texspan_overlap( const struct psx_texspan *s, int win, const UINT16 *p_vram, int n )
 {
-	const UINT16 *row = m_p_vram + ( ( p_vram - m_p_vram ) / m_n_vram_width ) * m_n_vram_width;
+	const UINT32 n_row = ( p_vram - m_p_vram ) / m_n_vram_width;
+	const UINT32 n_height = m_n_vram_height;
+	const UINT16 *row = m_p_vram + n_row * m_n_vram_width;
 	INT64 v0 = (INT64)s->v, v1 = (INT64)s->v + (INT64)s->dv * ( n - 1 );
-	UINT32 vmin, vmax, k;
+	UINT32 vmin, vmax;
 
 	if( s->tp != 2 && s->clut >= row && s->clut < row + m_n_vram_width )
 	{
@@ -1199,64 +1208,295 @@ static int psx_texspan_overlap( const struct psx_texspan *s, int win, const UINT
 	{
 		return 1;
 	}
-	for( k = vmin; k <= vmax; k++ )
+	/* texture line l is vram row l % n_height: is the drawn row among ty + vmin .. ty + vmax? */
+	if( vmax - vmin >= n_height )
 	{
-		if( m_p_p_vram[ s->ty + k ] == row )
-		{
-			return 1;
-		}
+		return 1;
 	}
-	return 0;
+	return ( n_row + n_height - ( s->ty + vmin ) % n_height ) % n_height <= vmax - vmin;
 }
 
-/* largest lane (ARMv7 has no across-vector maximum) */
-static INLINE UINT16 psx_texspan_max( uint16x8_t x )
+#define PSX_TS_ALWAYS static __inline__ __attribute__(( always_inline ))
+
+/* x % d for x < 65536 and 2 <= d <= 256, with m = psx_ts_recip( d ) */
+static UINT32 psx_ts_recip_d[ 2 ], psx_ts_recip_m[ 2 ];
+PSX_TS_ALWAYS UINT32 psx_ts_recip( int k, UINT32 d )
 {
+	if( psx_ts_recip_d[ k ] != d )
+	{
+		psx_ts_recip_d[ k ] = d;
+		psx_ts_recip_m[ k ] = (UINT32)( 0xffffffffULL / d ) + 1;
+	}
+	return psx_ts_recip_m[ k ];
+}
+PSX_TS_ALWAYS UINT32 psx_ts_mod( UINT32 x, UINT32 d, UINT32 m )
+{
+	return x - d * (UINT32)( ( (UINT64)x * m ) >> 32 );
+}
+
+/* psx_ts_mod on 8 lanes */
+PSX_TS_ALWAYS uint16x8_t psx_ts_vmod( uint16x8_t x, UINT32 d, UINT32 m )
+{
+	const uint32x2_t mv = vdup_n_u32( m );
+	const uint32x4_t lo = vmovl_u16( vget_low_u16( x ) ), hi = vmovl_u16( vget_high_u16( x ) );
+	const uint32x4_t qlo = vcombine_u32( vshrn_n_u64( vmull_u32( vget_low_u32( lo ), mv ), 32 ), vshrn_n_u64( vmull_u32( vget_high_u32( lo ), mv ), 32 ) );
+	const uint32x4_t qhi = vcombine_u32( vshrn_n_u64( vmull_u32( vget_low_u32( hi ), mv ), 32 ), vshrn_n_u64( vmull_u32( vget_high_u32( hi ), mv ), 32 ) );
+	return vmlsq_n_u16( x, vcombine_u16( vmovn_u32( qlo ), vmovn_u32( qhi ) ), (UINT16)d );
+}
+
+/* texel n_u of a texture row (tx already added) */
+PSX_TS_ALWAYS UINT16 psx_ts_texel( const UINT16 *clut, const UINT16 *row, const int tp, UINT32 n_u )
+{
+	switch( tp )
+	{
+	case 0:
+		return clut[ ( row[ n_u >> 2 ] >> ( ( n_u & 0x03 ) << 2 ) ) & 0x0f ];
+	case 1:
+		return clut[ ( row[ n_u >> 1 ] >> ( ( n_u & 0x01 ) << 3 ) ) & 0xff ];
+	default:
+		return row[ n_u ];
+	}
+}
+
+/* largest lane */
+PSX_TS_ALWAYS UINT16 psx_texspan_max( uint16x8_t x )
+{
+#if defined( __aarch64__ )
+	return vmaxvq_u16( x );
+#else
 	uint16x4_t m = vmax_u16( vget_low_u16( x ), vget_high_u16( x ) );
 	m = vpmax_u16( m, m );
 	m = vpmax_u16( m, m );
 	return vget_lane_u16( m, 0 );
+#endif
 }
 
-static int psx_texspan_draw( const struct psx_texspan *s, UINT16 *p_vram, int n )
+/* 8 lanes of x + i * dx ( i = 0..7 ), high 16 bits */
+PSX_TS_ALWAYS uint16x8_t psx_ts_hi16( uint32x4_t lo, uint32x4_t hi )
 {
-	const int win = ( m_n_twh != 256 || m_n_tww != 256 || m_n_twx != 0 || m_n_twy != 0 );
-	UINT32 u = s->u, v = s->v, r = s->r, g = s->g, b = s->b;
+	return vcombine_u16( vshrn_n_u32( lo, 16 ), vshrn_n_u32( hi, 16 ) );
+}
+
+/*
+	The span, 8 pixels a block. tp, win (texture window) and fixrow (dv is
+	0 and no window: one texture row for the whole span) are constants in
+	each copy of this function. The last block may hold fewer than 8
+	pixels: its unused lanes have texel 0 (transparent), so they store
+	back what they read; when 8 lanes would run past the end of vram the
+	last pixels go through the tables instead.
+*/
+PSX_TS_ALWAYS void psx_ts_span( const struct psx_texspan *s, UINT16 *p_vram, int n, const int tp, const int win, const int fixrow )
+{
+	static const UINT32 a_lane[ 8 ] = { 0, 1, 2, 3, 4, 5, 6, 7 };
+	const uint32x4_t lane_lo = vld1q_u32( a_lane ), lane_hi = vld1q_u32( a_lane + 4 );
 	const uint16x8_t m5 = vdupq_n_u16( 0x1f );
 	const uint16x8_t c31 = vdupq_n_u16( 31 );
 	const uint16x8_t zero = vdupq_n_u16( 0 );
 	const uint16x8_t bit15 = vdupq_n_u16( 0x8000 );
+	const UINT16 *vram_end = m_p_vram + m_n_vram_size;
+	const UINT16 *clut = s->clut;
+	const UINT32 umask = s->umask, vmask = s->vmask;
+	const INT32 du = s->du, dv = s->dv;
+	const UINT32 tww = m_n_tww, twh = m_n_twh;
+	const UINT32 mw = win ? psx_ts_recip( 0, tww ) : 0, mh = win ? psx_ts_recip( 1, twh ) : 0;
+	UINT32 u = s->u, v = s->v, r = s->r, g = s->g, b = s->b;
+	uint32x4_t r_lo = vmlaq_n_u32( vdupq_n_u32( r ), lane_lo, s->dr ), r_hi = vmlaq_n_u32( vdupq_n_u32( r ), lane_hi, s->dr );
+	uint32x4_t g_lo = vmlaq_n_u32( vdupq_n_u32( g ), lane_lo, s->dg ), g_hi = vmlaq_n_u32( vdupq_n_u32( g ), lane_hi, s->dg );
+	uint32x4_t b_lo = vmlaq_n_u32( vdupq_n_u32( b ), lane_lo, s->db ), b_hi = vmlaq_n_u32( vdupq_n_u32( b ), lane_hi, s->db );
+	const uint32x4_t r_step = vdupq_n_u32( (UINT32)s->dr * 8 ), g_step = vdupq_n_u32( (UINT32)s->dg * 8 ), b_step = vdupq_n_u32( (UINT32)s->db * 8 );
+	const UINT16 *row = NULL;
+	/* vram row of texture line l: ( l & hmask ) x vram_w, when the height is a power of 2 */
+	const UINT32 vram_h = m_n_vram_height;
+#if defined( __BYTE_ORDER__ ) && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+	const int vecrows = ( vram_h & ( vram_h - 1 ) ) == 0 && m_n_vram_width <= 0xffff;
+#else
+	const int vecrows = 0;
+#endif
+	const uint16x8_t hmask_v = vdupq_n_u16( vram_h - 1 ), ty_v = vdupq_n_u16( s->ty );
+	const uint16x8_t umask_v = vdupq_n_u16( umask ), vmask_v = vdupq_n_u16( vmask );
+	const uint32x4_t tx_v = vdupq_n_u32( s->tx );
+	const UINT16 vram_w = m_n_vram_width;
+	uint8x8x2_t clut_lo, clut_hi;
 	int i;
 
-	if( n < 8 || s->tp > 2 || psx_texspan_overlap( s, win, p_vram, n ) )
+	if( fixrow )
 	{
-		return 0;
+		row = m_p_p_vram[ s->ty + ( ( v >> 16 ) & vmask ) ] + s->tx;
+	}
+	if( tp == 0 )
+	{
+		/* the 16 CLUT entries, low bytes and high bytes */
+		const uint8x16x2_t c = vld2q_u8( (const UINT8 *)clut );
+		clut_lo.val[ 0 ] = vget_low_u8( c.val[ 0 ] ); clut_lo.val[ 1 ] = vget_high_u8( c.val[ 0 ] );
+		clut_hi.val[ 0 ] = vget_low_u8( c.val[ 1 ] ); clut_hi.val[ 1 ] = vget_high_u8( c.val[ 1 ] );
+	}
+	else
+	{
+		clut_lo.val[ 0 ] = clut_lo.val[ 1 ] = clut_hi.val[ 0 ] = clut_hi.val[ 1 ] = vdup_n_u8( 0 );
 	}
 
-	for( ; n >= 8; n -= 8, p_vram += 8 )
+	for( ; n > 0; n -= 8, p_vram += 8 )
 	{
-		UINT16 a_bgr[ 8 ], a_r[ 8 ], a_g[ 8 ], a_b[ 8 ];
+		UINT16 a_bgr[ 8 ];
+		const int m = n < 8 ? n : 8;
 		UINT32 r0 = r, g0 = g, b0 = b;
 		uint16x8_t bgr, sr, sg, sb, cr, cg, cb, rr, rg, rb, out, dst;
-		uint16x8_t keep, semi;
 
-		for( i = 0; i < 8; i++ )
+		if( m < 8 && p_vram + 8 > vram_end )
 		{
-			a_bgr[ i ] = psx_texspan_texel( s, win, u, v );
-			a_r[ i ] = r >> 16;
-			a_g[ i ] = g >> 16;
-			a_b[ i ] = b >> 16;
-			u += s->du; v += s->dv; r += s->dr; g += s->dg; b += s->db;
+			/* the last pixels of vram */
+			for( i = 0; i < m; i++ )
+			{
+				UINT32 n_u = ( u >> 16 ) & umask, n_v = ( v >> 16 ) & vmask;
+				if( win )
+				{
+					n_u = psx_ts_mod( n_u, tww, mw );
+					n_v = psx_ts_mod( n_v, twh, mh );
+				}
+				psx_texspan_pixel( s, p_vram + i, tp == 3 ? ( s->semi ? 0xc210 : 0x4210 ) : psx_ts_texel( clut, fixrow ? row : m_p_p_vram[ s->ty + n_v ] + s->tx, tp, n_u ), r, g, b );
+				u += du; v += dv; r += s->dr; g += s->dg; b += s->db;
+			}
+			return;
 		}
-		bgr = vld1q_u16( a_bgr );
-		sr = vld1q_u16( a_r );
-		sg = vld1q_u16( a_g );
-		sb = vld1q_u16( a_b );
+
+		/* the texels */
+		if( tp == 3 )
+		{
+			/* untextured: level 16 on each channel, the semi-transparency bit when it is on */
+			bgr = vdupq_n_u16( s->semi ? 0xc210 : 0x4210 );
+			if( m < 8 )
+			{
+				bgr = vandq_u16( bgr, vcltq_u16( vcombine_u16( vmovn_u32( lane_lo ), vmovn_u32( lane_hi ) ), vdupq_n_u16( m ) ) );
+			}
+		}
+		else if( fixrow && du == 0x10000 && m == 8 && tp != 0 && ( ( u >> 16 ) & umask ) + 7 <= umask )
+		{
+			/* one row, consecutive texels */
+			const UINT32 n_u = ( u >> 16 ) & umask;
+			if( tp == 2 )
+			{
+				bgr = vld1q_u16( row + n_u );
+			}
+			else
+			{
+#if defined( __BYTE_ORDER__ ) && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+				const UINT8 *p8 = (const UINT8 *)row + n_u;
+				for( i = 0; i < 8; i++ )
+				{
+					a_bgr[ i ] = clut[ p8[ i ] ];
+				}
+#else
+				for( i = 0; i < 8; i++ )
+				{
+					a_bgr[ i ] = psx_ts_texel( clut, row, tp, n_u + i );
+				}
+#endif
+				bgr = vld1q_u16( a_bgr );
+			}
+			u += 0x80000;
+			v += dv * 8;
+		}
+		else if( vecrows )
+		{
+			/* texel addresses on all 8 lanes, then one load per lane */
+			uint16x8_t n_u = vandq_u16( psx_ts_hi16( vmlaq_n_u32( vdupq_n_u32( u ), lane_lo, du ), vmlaq_n_u32( vdupq_n_u32( u ), lane_hi, du ) ), umask_v );
+			uint16x8_t n_v = vandq_u16( psx_ts_hi16( vmlaq_n_u32( vdupq_n_u32( v ), lane_lo, dv ), vmlaq_n_u32( vdupq_n_u32( v ), lane_hi, dv ) ), vmask_v );
+			if( win )
+			{
+				n_u = psx_ts_vmod( n_u, tww, mw );
+				n_v = psx_ts_vmod( n_v, twh, mh );
+			}
+			{
+			const uint16x8_t line = vandq_u16( vaddq_u16( n_v, ty_v ), hmask_v );
+			const uint16x8_t n_w = tp == 0 ? vshrq_n_u16( n_u, 2 ) : tp == 1 ? vshrq_n_u16( n_u, 1 ) : n_u;
+			UINT32 a_idx[ 8 ];
+			UINT16 a_w[ 8 ];
+			uint16x8_t w;
+			vst1q_u32( a_idx, vmlal_n_u16( vaddw_u16( tx_v, vget_low_u16( n_w ) ), vget_low_u16( line ), vram_w ) );
+			vst1q_u32( a_idx + 4, vmlal_n_u16( vaddw_u16( tx_v, vget_high_u16( n_w ) ), vget_high_u16( line ), vram_w ) );
+			if( m == 8 )
+			{
+				for( i = 0; i < 8; i++ )
+				{
+					a_w[ i ] = m_p_vram[ a_idx[ i ] ];
+				}
+			}
+			else
+			{
+				for( i = 0; i < m; i++ )
+				{
+					a_w[ i ] = m_p_vram[ a_idx[ i ] ];
+				}
+				for( ; i < 8; i++ )
+				{
+					a_w[ i ] = 0;
+				}
+			}
+			w = vld1q_u16( a_w );
+			if( tp == 0 )
+			{
+				/* 4-bit: the 16 CLUT entries are a byte table lookup */
+				const int16x8_t sh = vnegq_s16( vreinterpretq_s16_u16( vshlq_n_u16( vandq_u16( n_u, vdupq_n_u16( 3 ) ), 2 ) ) );
+				const uint8x8_t nib = vmovn_u16( vandq_u16( vshlq_u16( w, sh ), vdupq_n_u16( 0x0f ) ) );
+				bgr = vorrq_u16( vmovl_u8( vtbl2_u8( clut_lo, nib ) ), vshll_n_u8( vtbl2_u8( clut_hi, nib ), 8 ) );
+			}
+			else if( tp == 1 )
+			{
+				const int16x8_t sh = vnegq_s16( vreinterpretq_s16_u16( vshlq_n_u16( vandq_u16( n_u, vdupq_n_u16( 1 ) ), 3 ) ) );
+				UINT16 a_t[ 8 ];
+				vst1q_u16( a_t, vandq_u16( vshlq_u16( w, sh ), vdupq_n_u16( 0xff ) ) );
+				for( i = 0; i < 8; i++ )
+				{
+					a_bgr[ i ] = clut[ a_t[ i ] ];
+				}
+				bgr = vld1q_u16( a_bgr );
+			}
+			else
+			{
+				bgr = w;
+			}
+			if( m < 8 )
+			{
+				/* unused lanes: transparent */
+				bgr = vandq_u16( bgr, vcltq_u16( vcombine_u16( vmovn_u32( lane_lo ), vmovn_u32( lane_hi ) ), vdupq_n_u16( m ) ) );
+			}
+			}
+			u += (UINT32)du * 8;
+			v += (UINT32)dv * 8;
+		}
+		else
+		{
+			for( i = 0; i < m; i++ )
+			{
+				UINT32 n_u = ( u >> 16 ) & umask, n_v = ( v >> 16 ) & vmask;
+				if( win )
+				{
+					n_u = psx_ts_mod( n_u, tww, mw );
+					n_v = psx_ts_mod( n_v, twh, mh );
+				}
+				a_bgr[ i ] = psx_ts_texel( clut, fixrow ? row : m_p_p_vram[ s->ty + n_v ] + s->tx, tp, n_u );
+				u += du; v += dv;
+			}
+			for( ; i < 8; i++ )
+			{
+				a_bgr[ i ] = 0;
+			}
+			bgr = vld1q_u16( a_bgr );
+		}
+
+		sr = psx_ts_hi16( r_lo, r_hi );
+		sg = psx_ts_hi16( g_lo, g_hi );
+		sb = psx_ts_hi16( b_lo, b_hi );
+		r_lo = vaddq_u32( r_lo, r_step ); r_hi = vaddq_u32( r_hi, r_step );
+		g_lo = vaddq_u32( g_lo, g_step ); g_hi = vaddq_u32( g_hi, g_step );
+		b_lo = vaddq_u32( b_lo, b_step ); b_hi = vaddq_u32( b_hi, b_step );
+		r += (UINT32)s->dr * 8; g += (UINT32)s->dg * 8; b += (UINT32)s->db * 8;
 
 		/* a shade above 255 would mix into the table index: use the tables */
 		if( psx_texspan_max( vmaxq_u16( vmaxq_u16( sr, sg ), sb ) ) > 255 )
 		{
-			for( i = 0; i < 8; i++ )
+			vst1q_u16( a_bgr, bgr );
+			for( i = 0; i < m; i++ )
 			{
 				psx_texspan_pixel( s, p_vram + i, a_bgr[ i ], r0, g0, b0 );
 				r0 += s->dr; g0 += s->dg; b0 += s->db;
@@ -1279,51 +1519,83 @@ static int psx_texspan_draw( const struct psx_texspan *s, UINT16 *p_vram, int n 
 		if( s->semi )
 		{
 			uint16x8_t fr, fg, fb, br, bgc, bb, tr, tg, tb, blend;
+			br = vandq_u16( dst, m5 );
+			bgc = vandq_u16( vshrq_n_u16( dst, 5 ), m5 );
+			bb = vshrq_n_u16( dst, 10 );
+			bb = vandq_u16( bb, m5 );
 			switch( s->abr )
 			{
 			case 0x00:	/* 0.5 x B + 0.5 x F */
 				fr = vminq_u16( vshrq_n_u16( rr, 1 ), c31 ); fg = vminq_u16( vshrq_n_u16( rg, 1 ), c31 ); fb = vminq_u16( vshrq_n_u16( rb, 1 ), c31 );
-				br = vshrq_n_u16( vandq_u16( dst, m5 ), 1 );
-				bgc = vshrq_n_u16( vandq_u16( vshrq_n_u16( dst, 5 ), m5 ), 1 );
-				bb = vshrq_n_u16( vandq_u16( vshrq_n_u16( dst, 10 ), m5 ), 1 );
+				br = vshrq_n_u16( br, 1 ); bgc = vshrq_n_u16( bgc, 1 ); bb = vshrq_n_u16( bb, 1 );
 				tr = vminq_u16( vaddq_u16( br, fr ), c31 ); tg = vminq_u16( vaddq_u16( bgc, fg ), c31 ); tb = vminq_u16( vaddq_u16( bb, fb ), c31 );
 				break;
 			case 0x02:	/* 1.0 x B - 1.0 x F */
 				fr = vminq_u16( rr, c31 ); fg = vminq_u16( rg, c31 ); fb = vminq_u16( rb, c31 );
-				br = vandq_u16( dst, m5 );
-				bgc = vandq_u16( vshrq_n_u16( dst, 5 ), m5 );
-				bb = vandq_u16( vshrq_n_u16( dst, 10 ), m5 );
 				tr = vqsubq_u16( br, fr ); tg = vqsubq_u16( bgc, fg ); tb = vqsubq_u16( bb, fb );
 				break;
 			case 0x03:	/* 1.0 x B + 0.25 x F */
 				fr = vminq_u16( vshrq_n_u16( rr, 2 ), c31 ); fg = vminq_u16( vshrq_n_u16( rg, 2 ), c31 ); fb = vminq_u16( vshrq_n_u16( rb, 2 ), c31 );
-				br = vandq_u16( dst, m5 );
-				bgc = vandq_u16( vshrq_n_u16( dst, 5 ), m5 );
-				bb = vandq_u16( vshrq_n_u16( dst, 10 ), m5 );
 				tr = vminq_u16( vaddq_u16( br, fr ), c31 ); tg = vminq_u16( vaddq_u16( bgc, fg ), c31 ); tb = vminq_u16( vaddq_u16( bb, fb ), c31 );
 				break;
 			default:	/* 1.0 x B + 1.0 x F */
 				fr = vminq_u16( rr, c31 ); fg = vminq_u16( rg, c31 ); fb = vminq_u16( rb, c31 );
-				br = vandq_u16( dst, m5 );
-				bgc = vandq_u16( vshrq_n_u16( dst, 5 ), m5 );
-				bb = vandq_u16( vshrq_n_u16( dst, 10 ), m5 );
 				tr = vminq_u16( vaddq_u16( br, fr ), c31 ); tg = vminq_u16( vaddq_u16( bgc, fg ), c31 ); tb = vminq_u16( vaddq_u16( bb, fb ), c31 );
 				break;
 			}
 			blend = vorrq_u16( tr, vorrq_u16( vshlq_n_u16( tg, 5 ), vshlq_n_u16( tb, 10 ) ) );
-			semi = vtstq_u16( bgr, bit15 );
-			out = vbslq_u16( semi, blend, out );
+			out = vbslq_u16( vtstq_u16( bgr, bit15 ), blend, out );
 		}
-		/* colour 0 is transparent */
-		keep = vceqq_u16( bgr, zero );
-		vst1q_u16( p_vram, vbslq_u16( keep, dst, out ) );
+		/* colour 0 is transparent (and so are the unused lanes) */
+		vst1q_u16( p_vram, vbslq_u16( vceqq_u16( bgr, zero ), dst, out ) );
+	}
+}
+
+/*
+	SOLIDFILL through the same code: an untextured pixel is what the tables
+	give for a texel of level 16 on each channel (0x4210), with bit 15 set
+	when semi-transparency is on, as every pixel then blends.
+*/
+static void psx_solidspan_draw( const struct psx_texspan *s, UINT16 *p_vram, int n )
+{
+	psx_ts_span( s, p_vram, n, 3, 0, 0 );
+}
+
+static int psx_texspan_draw( const struct psx_texspan *s, UINT16 *p_vram, int n )
+{
+	const int win = ( m_n_twh != 256 || m_n_tww != 256 || m_n_twx != 0 || m_n_twy != 0 );
+
+	if( n < 1 || s->tp > 2 || ( win && ( m_n_tww < 2 || m_n_twh < 2 ) ) || psx_texspan_overlap( s, win, p_vram, n ) )
+	{
+		return 0;
 	}
 
-	/* the last pixels */
-	for( i = 0; i < n; i++ )
+	if( win )
 	{
-		psx_texspan_pixel( s, p_vram + i, psx_texspan_texel( s, win, u, v ), r, g, b );
-		u += s->du; v += s->dv; r += s->dr; g += s->dg; b += s->db;
+		switch( s->tp )
+		{
+		case 0: psx_ts_span( s, p_vram, n, 0, 1, 0 ); break;
+		case 1: psx_ts_span( s, p_vram, n, 1, 1, 0 ); break;
+		default: psx_ts_span( s, p_vram, n, 2, 1, 0 ); break;
+		}
+	}
+	else if( s->dv == 0 )
+	{
+		switch( s->tp )
+		{
+		case 0: psx_ts_span( s, p_vram, n, 0, 0, 1 ); break;
+		case 1: psx_ts_span( s, p_vram, n, 1, 0, 1 ); break;
+		default: psx_ts_span( s, p_vram, n, 2, 0, 1 ); break;
+		}
+	}
+	else
+	{
+		switch( s->tp )
+		{
+		case 0: psx_ts_span( s, p_vram, n, 0, 0, 0 ); break;
+		case 1: psx_ts_span( s, p_vram, n, 1, 0, 0 ); break;
+		default: psx_ts_span( s, p_vram, n, 2, 0, 0 ); break;
+		}
 	}
 	return 1;
 }
@@ -1397,7 +1669,7 @@ static int psx_texspan_fill_##T( INT32 n_x, INT32 n_y, T *p_distance, UINT16 **p
 	{ \
 		n_distance = ( m_n_drawarea_x2 - n_x ) + 1; \
 	} \
-	if( n_distance < 8 ) \
+	if( n_distance < 1 ) \
 	{ \
 		return 0; \
 	} \
@@ -1417,8 +1689,61 @@ static int psx_texspan_fill_##T( INT32 n_x, INT32 n_y, T *p_distance, UINT16 **p
 }
 PSX_TEXSPAN_FILL_DISTANCE( INT32 )
 PSX_TEXSPAN_FILL_DISTANCE( INT16 )
+
+/* SOLIDFILL for a span: same clipping, n_distance and p_vram end as SOLIDFILL leaves them */
+static void psx_solidspan_fill( INT32 n_x, INT32 n_y, INT32 *p_distance, UINT16 **pp_vram,
+	UINT32 r, INT32 dr, UINT32 g, INT32 dg, UINT32 b, INT32 db, UINT32 abr, int semi )
+{
+	struct psx_texspan s;
+	INT32 n_distance = *p_distance;
+	UINT16 *p_vram;
+	if( n_distance > ( (INT32)m_n_drawarea_x2 - n_x ) + 1 )
+	{
+		n_distance = ( m_n_drawarea_x2 - n_x ) + 1;
+	}
+	p_vram = m_p_p_vram[ n_y ] + n_x;
+	if( n_distance > 0 )
+	{
+		memset( &s, 0, sizeof( s ) );
+		s.r = r; s.dr = dr; s.g = g; s.dg = dg; s.b = b; s.db = db;
+		s.tp = 3; s.abr = abr & 3; s.semi = semi;
+#ifdef PSX_TEXSPAN_VERIFY
+		{
+			UINT16 a_ref[ 1024 ];
+			UINT32 rr = r, gg = g, bb = b;
+			int i;
+			memcpy( a_ref, p_vram, n_distance * 2 );
+			for( i = 0; i < n_distance; i++ )
+			{
+				psx_texspan_pixel( &s, a_ref + i, semi ? 0xc210 : 0x4210, rr, gg, bb );
+				rr += dr; gg += dg; bb += db;
+			}
+			psx_solidspan_draw( &s, p_vram, n_distance );
+			if( memcmp( a_ref, p_vram, n_distance * 2 ) != 0 )
+			{
+				fprintf( stderr, "SOLIDSPAN mismatch n %d semi %d abr %u r %08x dr %08x\n", n_distance, semi, abr & 3, r, dr );
+				exit( 1 );
+			}
+		}
+#else
+		psx_solidspan_draw( &s, p_vram, n_distance );
+#endif
+		p_vram += n_distance;
+		n_distance = 0;
+	}
+	*p_distance = n_distance;
+	*pp_vram = p_vram;
+}
+
+#define SOLIDSPAN( DR, DG, DB ) \
+	if( 1 ) \
+	{ \
+		psx_solidspan_fill( n_x, n_y, &n_distance, &p_vram, n_r.d, DR, n_g.d, DG, n_b.d, DB, n_abr, ( n_cmd & 0x02 ) != 0 ); \
+	} \
+	else
 #else
 #define TEXTURESPAN( T, U, DU, V, DV, UMASK, VMASK, DR, DG, DB )
+#define SOLIDSPAN( DR, DG, DB )
 #endif
 
 #define TEXTUREFILL( PIXELUPDATE, TXU, TXV ) \
@@ -1784,6 +2109,7 @@ static void FlatPolygon( int n_points )
 				n_distance -= ( m_n_drawarea_x1 - n_x );
 				n_x = m_n_drawarea_x1;
 			}
+			SOLIDSPAN( 0, 0, 0 )
 			SOLIDFILL( FLATPOLYGONUPDATE )
 		}
 		n_cx1.d += n_dx1;
@@ -2202,6 +2528,7 @@ static void GouraudPolygon( int n_points )
 				n_distance -= ( m_n_drawarea_x1 - n_x );
 				n_x = m_n_drawarea_x1;
 			}
+			SOLIDSPAN( n_dr, n_dg, n_db )
 			SOLIDFILL( GOURAUDPOLYGONUPDATE )
 		}
 		n_cx1.d += n_dx1;
@@ -2834,6 +3161,7 @@ static void FlatRectangle( void )
 				n_distance -= ( m_n_drawarea_x1 - n_x );
 				n_x = m_n_drawarea_x1;
 			}
+			SOLIDSPAN( 0, 0, 0 )
 			SOLIDFILL( FLATRECTANGEUPDATE )
 		}
 		n_y++;
