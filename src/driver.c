@@ -2678,10 +2678,16 @@ V-V                           TP-027
 	DRIVER( tekkenb )	/* Tekken (World, TE2/VER.B) */
 	DRIVER( tekkenjb )	/* Tekken (Japan, TE1/VER.B) */
 	DRIVER( tekken2 )	/* Tekken 2 Ver.B (World, TES2/VER.D) */
-	DRIVER( tekken2ub )	/* Tekken 2 Ver.B (US, TES3/VER.B) */
 	DRIVER( tekken2b )	/* Tekken 2 Ver.B (World, TES2/VER.B) */
+	DRIVER( tekken2ud )	/* Tekken 2 Ver.B (US, TES3/VER.D) */
+	DRIVER( tekken2ub )	/* Tekken 2 Ver.B (US, TES3/VER.B) */
+	DRIVER( tekken2jc )	/* Tekken 2 Ver.B (Japan, TES1/VER.C) */
+	DRIVER( tekken2jb )	/* Tekken 2 Ver.B (Japan, TES1/VER.B) */
 	DRIVER( tekken2a )	/* Tekken 2 (World, TES2/VER.A) */
+	DRIVER( tekken2ua )	/* Tekken 2 (US, TES3/VER.A) */
 	DRIVER( souledge )	/* Soul Edge Ver. II (Asia, SO4/VER.C) */
+	DRIVER( souledgeuc )	/* Soul Edge Ver. II (US, SO3/VER.C) */
+	DRIVER( souledgea )	/* Soul Edge (World, SO2/VER.A) */
 	DRIVER( souledgeua )	/* Soul Edge (US, SO3/VER.A) */
 	DRIVER( souledgeja )	/* Soul Edge (Japan, SO1/VER.A) */
 	DRIVER( dunkmnia )	/* Dunk Mania (World, DM2/VER.C) */

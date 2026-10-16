@@ -117389,28 +117389,28 @@ soulclbr:0:0000:00:999:[ for it on the cheat   ]:REASON 1
 soulclbr:0:0000:00:999:[ forums.               ]:REASON 1
 
 ; [ Soul Edge (SO3/VER.A) ]
-souledga:0:000EFFD4:63:000:Infinite Time
-souledga:0:000EFFD4:00:001:Finish this Round Now!
-souledga:0:002D602E:F0:000:Infinite Energy PL1
-souledga:0:002D602E:00:001:Drain All Energy Now! PL1
-souledga:0:002D6160:60:000:Always have Maximum Power PL1
-souledga:0:002D6160:00:001:Drain All Power Now! PL1
-souledga:0:002D9D72:F0:000:Infinite Energy PL2
-souledga:0:002D9D72:00:001:Drain All Energy Now! PL2
-souledga:0:002D9EA4:60:000:Always have Maximum Power PL2
-souledga:0:002D9EA4:00:001:Drain All Power Now! PL2
+souledgeua:0:000EFFD4:63:000:Infinite Time
+souledgeua:0:000EFFD4:00:001:Finish this Round Now!
+souledgeua:0:002D602E:F0:000:Infinite Energy PL1
+souledgeua:0:002D602E:00:001:Drain All Energy Now! PL1
+souledgeua:0:002D6160:60:000:Always have Maximum Power PL1
+souledgeua:0:002D6160:00:001:Drain All Power Now! PL1
+souledgeua:0:002D9D72:F0:000:Infinite Energy PL2
+souledgeua:0:002D9D72:00:001:Drain All Energy Now! PL2
+souledgeua:0:002D9EA4:60:000:Always have Maximum Power PL2
+souledgeua:0:002D9EA4:00:001:Drain All Power Now! PL2
 
 ; [ Soul Edge (SO1/VER.A) ]
-souledgb:0:000EFFD4:63:000:Infinite Time
-souledgb:0:000EFFD4:00:001:Finish this Round Now!
-souledgb:0:002D602E:F0:000:Infinite Energy PL1
-souledgb:0:002D602E:00:001:Drain All Energy Now! PL1
-souledgb:0:002D6160:60:000:Always have Maximum Power PL1
-souledgb:0:002D6160:00:001:Drain All Power Now! PL1
-souledgb:0:002D9D72:F0:000:Infinite Energy PL2
-souledgb:0:002D9D72:00:001:Drain All Energy Now! PL2
-souledgb:0:002D9EA4:60:000:Always have Maximum Power PL2
-souledgb:0:002D9EA4:00:001:Drain All Power Now! PL2
+souledgeja:0:000EFFD4:63:000:Infinite Time
+souledgeja:0:000EFFD4:00:001:Finish this Round Now!
+souledgeja:0:002D602E:F0:000:Infinite Energy PL1
+souledgeja:0:002D602E:00:001:Drain All Energy Now! PL1
+souledgeja:0:002D6160:60:000:Always have Maximum Power PL1
+souledgeja:0:002D6160:00:001:Drain All Power Now! PL1
+souledgeja:0:002D9D72:F0:000:Infinite Energy PL2
+souledgeja:0:002D9D72:00:001:Drain All Energy Now! PL2
+souledgeja:0:002D9EA4:60:000:Always have Maximum Power PL2
+souledgeja:0:002D9EA4:00:001:Drain All Power Now! PL2
 
 ; [ Soul Edge Ver. II (SO4/VER.C) ]
 souledge:0:00121F44:63:000:Infinite Time
@@ -126987,31 +126987,31 @@ tekken:0:00267038:09:000:Infinite Credits
 :tekken:00000001:00265B2E:00000000:FFFFFFFF:Drain all Energy Now! PL2
 
 ; [ Tekken 2 Ver.B (TES3/VER.B) ]
-tekken2:0:00301CEC:09:000:Infinite Credits
+tekken2ub:0:00301CEC:09:000:Infinite Credits
 :tekken2:00100000:0030F174:00001732:FFFFFFFF:Infinite Time
 :tekken2:00100001:0030F174:00000001:FFFFFFFF:Finish this Round Now!
-tekken2:0:0030CA6A:7E:000:Infinite Energy PL1
-tekken2:0:0030CA6A:00:001:Drain All Energy Now! PL1
-tekken2:0:0030DEEA:7E:000:Infinite Energy PL2
-tekken2:0:0030DEEA:00:001:Drain All Energy Now! PL2
+tekken2ub:0:0030CA6A:7E:000:Infinite Energy PL1
+tekken2ub:0:0030CA6A:00:001:Drain All Energy Now! PL1
+tekken2ub:0:0030DEEA:7E:000:Infinite Energy PL2
+tekken2ub:0:0030DEEA:00:001:Drain All Energy Now! PL2
 
 ; [ Tekken 2 Ver.B (TES2/VER.B) ]
-tekken2a:0:00301CEC:09:000:Infinite Credits
+tekken2b:0:00301CEC:09:000:Infinite Credits
 :tekken2a:00100000:0030F174:00001732:FFFFFFFF:Infinite Time
 :tekken2a:00100001:0030F174:00000001:FFFFFFFF:Finish this Round Now!
-tekken2a:0:0030CA6A:7E:000:Infinite Energy PL1
-tekken2a:0:0030CA6A:00:001:Drain All Energy Now! PL1
-tekken2a:0:0030DEEA:7E:000:Infinite Energy PL2
-tekken2a:0:0030DEEA:00:001:Drain All Energy Now! PL2
+tekken2b:0:0030CA6A:7E:000:Infinite Energy PL1
+tekken2b:0:0030CA6A:00:001:Drain All Energy Now! PL1
+tekken2b:0:0030DEEA:7E:000:Infinite Energy PL2
+tekken2b:0:0030DEEA:00:001:Drain All Energy Now! PL2
 
 ; [ Tekken 2 (TES2/VER.A) ]
-tekken2b:0:002FA4A0:09:000:Infinite Credits
+tekken2a:0:002FA4A0:09:000:Infinite Credits
 :tekken2b:00100000:00307928:00001732:FFFFFFFF:Infinite Time
 :tekken2b:00100001:00307928:00000001:FFFFFFFF:Finish this Round Now!
-tekken2b:0:0030521E:7E:000:Infinite Energy PL1
-tekken2b:0:0030521E:00:001:Drain All Energy Now! PL1
-tekken2b:0:0030669E:7E:000:Infinite Energy PL2
-tekken2b:0:0030669E:00:001:Drain All Energy Now! PL2
+tekken2a:0:0030521E:7E:000:Infinite Energy PL1
+tekken2a:0:0030521E:00:001:Drain All Energy Now! PL1
+tekken2a:0:0030669E:7E:000:Infinite Energy PL2
+tekken2a:0:0030669E:00:001:Drain All Energy Now! PL2
 
 ; [ Tekken 3 (TET1/VER.E1) ]
 tekken3je1:0:0021FB8C:32:000:Infinite Time
