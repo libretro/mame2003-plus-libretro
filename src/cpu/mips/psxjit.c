@@ -59,6 +59,7 @@
 struct jit_block
 {
 	void *		code;
+	void *		entry;			/* where a block leaving for this one jumps in (after the prologue), NULL if none */
 	UINT32		pc;				/* address of the first instruction */
 	UINT16		len;			/* instructions (cycles) in the block, 0 = not translatable */
 	UINT8		valid;
@@ -103,6 +104,7 @@ static void jit_flush( void )
 			sljit_free_code( jit_table[ i ].code, NULL );
 		}
 		jit_table[ i ].code = NULL;
+		jit_table[ i ].entry = NULL;
 		jit_table[ i ].valid = 0;
 	}
 	memset( jit_codemap, 0, JIT_CODEMAP_SIZE );
@@ -878,6 +880,65 @@ static int jit_target_index( struct jit_ctx *ctx, UINT32 target )
 }
 
 /*
+	Block chaining. Leaving for an address whose block is translated and
+	fits in what is left of the timeslice, jump straight into it instead
+	of returning to the dispatcher (jit_run), which would do the same:
+	no load is pending and the mode is unchanged on the way out of a
+	block, so it would look the block up, check that its cycles fit and
+	run it. All blocks share one stack frame (same sljit_emit_enter), so
+	the jump lands after the prologue and the block's own return goes
+	back to the dispatcher. The check reads the block table when it runs:
+	blocks compiled, replaced or flushed later are seen, and a block that
+	is not there or does not fit is simply a return to the dispatcher.
+*/
+static INLINE UINT32 jit_table_index( UINT32 pc )
+{
+	return ( ( pc >> 2 ) ^ ( pc >> 20 ) ) & ( JIT_TABLE_SIZE - 1 );
+}
+
+static void jit_emit_chain( struct sljit_compiler *C, sljit_s32 src, sljit_sw srcw )
+{
+#ifndef PSXJIT_VERIFY
+	struct sljit_jump *miss[ 3 ];
+	struct sljit_label *out;
+	int i;
+
+	if( src == SLJIT_IMM )
+	{
+		UINT32 target = (UINT32)srcw;
+		if( target & 3 )
+		{
+			return;
+		}
+		sljit_emit_op1( C, SLJIT_MOV_P, SLJIT_R1, 0, SLJIT_IMM, (sljit_sw)&jit_table[ jit_table_index( target ) ] );
+		miss[ 0 ] = sljit_emit_cmp( C, SLJIT_NOT_EQUAL | SLJIT_32, SLJIT_MEM1( SLJIT_R1 ), offsetof( struct jit_block, pc ), SLJIT_IMM, (sljit_sw)target );
+	}
+	else
+	{
+		/* R1 = &jit_table[ ( ( pc >> 2 ) ^ ( pc >> 20 ) ) & mask ] */
+		sljit_emit_op2( C, SLJIT_LSHR32, SLJIT_R1, 0, src, srcw, SLJIT_IMM, 2 );
+		sljit_emit_op2( C, SLJIT_LSHR32, SLJIT_R2, 0, src, srcw, SLJIT_IMM, 20 );
+		sljit_emit_op2( C, SLJIT_XOR32, SLJIT_R1, 0, SLJIT_R1, 0, SLJIT_R2, 0 );
+		sljit_emit_op2( C, SLJIT_AND32, SLJIT_R1, 0, SLJIT_R1, 0, SLJIT_IMM, JIT_TABLE_SIZE - 1 );
+		sljit_emit_op2( C, SLJIT_MUL, SLJIT_R1, 0, SLJIT_R1, 0, SLJIT_IMM, sizeof( struct jit_block ) );
+		sljit_emit_op2( C, SLJIT_ADD, SLJIT_R1, 0, SLJIT_R1, 0, SLJIT_IMM, (sljit_sw)jit_table );
+		miss[ 0 ] = sljit_emit_cmp( C, SLJIT_NOT_EQUAL | SLJIT_32, SLJIT_MEM1( SLJIT_R1 ), offsetof( struct jit_block, pc ), src, srcw );
+	}
+	/* entry is NULL for a block that is flushed, being compiled or not translatable */
+	sljit_emit_op1( C, SLJIT_MOV_P, SLJIT_R2, 0, SLJIT_MEM1( SLJIT_R1 ), offsetof( struct jit_block, entry ) );
+	miss[ 1 ] = sljit_emit_cmp( C, SLJIT_EQUAL, SLJIT_R2, 0, SLJIT_IMM, 0 );
+	sljit_emit_op1( C, SLJIT_MOV32_U16, SLJIT_R1, 0, SLJIT_MEM1( SLJIT_R1 ), offsetof( struct jit_block, len ) );
+	miss[ 2 ] = sljit_emit_cmp( C, SLJIT_SIG_GREATER | SLJIT_32, SLJIT_R1, 0, SLJIT_MEM0(), (sljit_sw)&mips_ICount );
+	sljit_emit_ijump( C, SLJIT_JUMP, SLJIT_R2, 0 );
+	out = sljit_emit_label( C );
+	for( i = 0; i < 3; i++ )
+	{
+		sljit_set_label( miss[ i ], out );
+	}
+#endif
+}
+
+/*
 	Leave for 'target' after the instructions up to 'index'. A target
 	inside the block is reached in native code while the timeslice has
 	room for the rest of the block from there, exactly as the dispatcher
@@ -928,6 +989,10 @@ static void jit_emit_leave( struct jit_ctx *ctx, UINT32 index, sljit_s32 src, sl
 				ctx->npending++;
 			}
 		}
+	}
+	if( branch != JIT_LEAVE_OUT )
+	{
+		jit_emit_chain( C, src, srcw );
 	}
 	sljit_emit_return( C, SLJIT_MOV32, src, srcw );
 }
@@ -1084,7 +1149,7 @@ static void jit_emit_branch( struct jit_ctx *ctx, UINT32 op, UINT32 slot, UINT32
 			sljit_emit_op1( C, SLJIT_MOV32, JDELAYV, SLJIT_R0, 0 );
 			sljit_emit_op1( C, SLJIT_MOV32, JDELAYR, SLJIT_IMM, dload );
 		}
-		jit_emit_leave( ctx, index + 2, SLJIT_S1, 0, JIT_LEAVE_PLAIN );
+		jit_emit_leave( ctx, index + 2, SLJIT_S1, 0, dload ? JIT_LEAVE_OUT : JIT_LEAVE_PLAIN );
 	}
 	else if( !jit_branch_is_conditional( op ) )
 	{
@@ -1209,6 +1274,7 @@ static void jit_compile( struct jit_block *block, UINT32 pc )
 	static UINT32 ops[ JIT_MAX_BLOCK + 1 ];
 	struct psx_fastram *region;
 	struct sljit_compiler *C;
+	struct sljit_label *entry;
 	const UINT8 *host;
 	UINT32 count = 0, maxcount, i;
 	int ends = 0;
@@ -1217,6 +1283,7 @@ static void jit_compile( struct jit_block *block, UINT32 pc )
 	block->len = 0;
 	block->valid = 1;
 	block->code = NULL;
+	block->entry = NULL;
 
 	/* code must sit in one fast RAM region */
 	region = find_fastram( pc, 4 );
@@ -1342,6 +1409,7 @@ static void jit_compile( struct jit_block *block, UINT32 pc )
 	sljit_emit_enter( C, 0, SLJIT_ARGS0( 32 ), 4, 3, 0 );
 #endif
 	sljit_emit_op1( C, SLJIT_MOV_P, SLJIT_S0, 0, SLJIT_IMM, (sljit_sw)&mipscpu );
+	entry = sljit_emit_label( C );
 
 	for( i = 0; i < count; i++ )
 	{
@@ -1409,6 +1477,11 @@ static void jit_compile( struct jit_block *block, UINT32 pc )
 		}
 	}
 	block->code = sljit_generate_code( C, 0, NULL );
+	if( block->code )
+	{
+		sljit_uw n_entry = sljit_get_label_addr( entry );
+		block->entry = (void *)n_entry;
+	}
 	sljit_free_compiler( C );
 	if( !block->code )
 	{
@@ -1435,7 +1508,7 @@ static void jit_compile( struct jit_block *block, UINT32 pc )
 */
 static INLINE struct jit_block *jit_lookup( UINT32 pc )
 {
-	struct jit_block *block = &jit_table[ ( ( pc >> 2 ) ^ ( pc >> 20 ) ) & ( JIT_TABLE_SIZE - 1 ) ];
+	struct jit_block *block = &jit_table[ jit_table_index( pc ) ];
 
 	if( !block->valid || block->pc != pc )
 	{
