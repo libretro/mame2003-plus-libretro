@@ -186,6 +186,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Racing Beat
 * Racing Hero
 * Rage Of The Dragons
+* Raiden II (US, set 1)
 * Recalhorn (prototype)
 * Riot
 * Rolling Crush
@@ -452,11 +453,13 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Phantasm - Romset `phantasm`
 * Photo Y2k - Romset `photoy2k`
 * Pigskin 621AD - Romset `pigskin`
+* Princess Clara Daisakusen - Romset `prikura`
 * Power Drive - Romset `powerdrv`
 * Prebillian - `pbillian`
 * Pro Baseball Skill Tryout - `tryout`
 * Puzzle King (PacMan 2 with Tetris & HyperMan 2 & Snow Bros - `4in1boot`
 * Rabbit - Romset `rabbit` - no sound
+* Raiden II - Romset `raiden2`
 * Rampage - Romsets `rampage` and `rampage2`
 * Risky Challenge - Romset `riskchal`
 * Rohga Armor Force - Romsets `rohga`, `rohgah`, `rohgau`
@@ -1161,4 +1164,13 @@ could crash on the score calc between levels is sorted [amadvance, arcadez]
 * Added Saurian Front a super rare Williams prototype of Midway's Strike Force to the midyunit driver [arcadez]
 * Added Adventure Canoe to the taitosj driver [arcadez,  jackphilippi, dink]
 * Added support for Ketsui: Kizuna Jigoku Tachi - IKD 2007 Special Version to pgm.c [arcadez]
+* Fixed a protection related problem with powerups in Burning Force [MAMEDev, arcadez]
+* Extended IREM Drum sample support to Lode Runner 3 and 4 [dink, arcadez]
+* Improved the dip switch options for Data East's Break Thru [arcadez]
+* Fixed BG GFX colours for Crater Raider [MAMEDev, arcadez]
+* Fixed multiple sound sample issues in TAD CORP's Toki [MAMEDev, arcadez]
+* Fixed sound sample playing for SEGA's Zaxxon [MAMEDev, arcadez]
+* Fixed Palette banking problems for Pleiads [MAMEDev, arcadez]
+* Added fixes from later MAME so that Princess Clara Daisakusen now works [MAMEDev, arcadez]
+* Ported a new driver for Raiden II game now playable [Salvia, MAMEDev, FBN, arcadez]
 
