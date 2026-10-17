@@ -5695,8 +5695,6 @@ Other Sun games
 	DRIVER( kov )		/* (c) 1999 */
 	DRIVER( kovplus )	/* (c) 1999 */
 	DRIVER( kov115 )	/* (c) 1999 */
-	DRIVER( kovsh )		/* (c) 1999 */
-	DRIVER( photoy2k )	/* (c) 1999 */
 	DRIVER( puzlstar )  /* (c) 1999 */
   DRIVER( puzzli2 )   /* (c) 1999 */
   DRIVER( puzzli2s )  /* (c) 2001 */
@@ -5758,6 +5756,15 @@ Other Sun games
 	DRIVER( happy6101 )    /* (c) 2004 IGS */
 	DRIVER( happy6100hk )  /* (c) 2004 IGS */
 	DRIVER( happy6100cn )  /* (c) 2004 IGS */
+	DRIVER( kovsh )        /* (c) 1999 IGS */
+	DRIVER( kovsh103 )     /* (c) 1999 IGS */
+	DRIVER( kovsh102 )     /* (c) 1999 IGS */
+	DRIVER( kovsh101 )     /* (c) 1999 IGS */
+	DRIVER( kovsh100 )     /* (c) 1999 IGS */
+	DRIVER( photoy2k )     /* (c) 1999 IGS */
+	DRIVER( photoy2k104 )  /* (c) 1999 IGS */
+	DRIVER( photoy2k103j ) /* (c) 1999 IGS */
+	DRIVER( photoy2k102j ) /* (c) 1999 IGS */
 
 	/* RamTek games */
 	DRIVER( hitme )		/* [1976 Ramtek] */
