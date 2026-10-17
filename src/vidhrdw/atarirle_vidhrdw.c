@@ -911,10 +911,10 @@ fprintf(stderr, "   Sprite: c=%04X l=%04X h=%d X=%4d (o=%4d w=%3d) Y=%4d (o=%4d 
 void draw_rle(struct atarirle_data *mo, struct mame_bitmap *bitmap, int code, int color, int hflip, int vflip,
 	int x, int y, int xscale, int yscale, const struct rectangle *clip)
 {
-	/* UINT32 palettebase = mo->palettebase + color; */
+	UINT32 palettebase = mo->palettebase + color;
   // draw it with appropriate flipping; the pen base is aligned to the
 	// object's depth (color and pixel bits cannot overlap)
-	UINT32 palettebase = (mo->palettebase + color) & ~UINT32((1 << rledata->bpp)) - 1);
+	//UINT32 palettebase = (mo->palettebase + color) & ~UINT32((1 << rledata->bpp) - 1);
 	const struct atarirle_info *info = &mo->info[code];
 	int scaled_xoffs = (xscale * info->xoffs) >> 12;
 	int scaled_yoffs = (yscale * info->yoffs) >> 12;
