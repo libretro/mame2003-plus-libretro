@@ -320,8 +320,11 @@ static int fastram_count;
 static offs_t fastram_byte_xor, fastram_word_xor;
 static memory_handlers fastram_slow;		/* handlers for everything else */
 
-static offs_t idle_pc;
-static UINT32 idle_cause_mask;
+/* exact skip of the loops that poll Cause for an interrupt (see cause_poll_skip) */
+#define MIPS3_MAX_POLLREAD	4
+static int cause_poll_enabled;
+static struct { offs_t start, end; } pollread[MIPS3_MAX_POLLREAD];
+static int pollread_count;
 
 
 void mips3_add_fastram(offs_t start, offs_t end, int readonly, void *base)
@@ -337,10 +340,20 @@ void mips3_add_fastram(offs_t start, offs_t end, int readonly, void *base)
 }
 
 
-void mips3_set_cause_idle_loop(offs_t pc, UINT32 causemask)
+void mips3_set_cause_poll_skip(int enable)
 {
-	idle_pc = pc;
-	idle_cause_mask = causemask;
+	cause_poll_enabled = enable;
+}
+
+
+void mips3_add_poll_read(offs_t start, offs_t end)
+{
+	if (pollread_count < MIPS3_MAX_POLLREAD)
+	{
+		pollread[pollread_count].start = start;
+		pollread[pollread_count].end = end;
+		pollread_count++;
+	}
 }
 
 
@@ -606,8 +619,8 @@ void mips3_init(void)
 	fastram_count = 0;
 	fastram_last = &fastram[0];
 	mips3_set_jit(0);
-	idle_pc = 0;
-	idle_cause_mask = 0;
+	cause_poll_enabled = 0;
+	pollread_count = 0;
 
 	mips3.compare_int_timer = timer_alloc(compare_int_callback);
 }
@@ -852,6 +865,155 @@ static void logtlbentry(void)
 	logonetlbentry(1);
 }
 
+/*
+	Exact skip of the loops that wait for an interrupt by polling Cause.
+
+	Within a timeslice nothing changes Cause: interrupt lines and the
+	Count/Compare timer only change between timeslices. So every pass of
+	such a loop leaves the same state, except for counters, and the whole
+	passes that still fit in the timeslice can be skipped: registers and
+	cycles end up exactly as if they had run.  The last passes always run
+	normally.  Called by the MFC0 of Cause (mips3.ppc), after its read.
+
+	The loop, from the branch target L to the backward branch and its
+	delay slot, may only hold:
+		mfc0  rt, Cause              (this instruction, once)
+		andi  rt, rt, mask           (Cause & mask is 0 now)
+		nop
+		lw/lh/lb $zero, off(rb)      (rb + off in a range declared free of
+		                              side effects, mips3_add_poll_read)
+		beq   rc, $zero, outside     (a timeout counter)
+		beq   rt, $zero, L           (the loop branch, last)
+		delay slot: nop, or addi/addiu rc, rc, imm (a counter)
+	A timeout counter must count down by 1 and stays at 1 or more.
+*/
+static void cause_poll_skip(UINT32 mfc0_op)
+{
+	UINT32 pc = mips3.ppc, a, op, branch_pc = 0, rt = (mfc0_op >> 16) & 31, mask = 0;
+	int count, i, n, cost, rc = -1, timeout = 0;
+	INT32 imm = 0;
+	UINT32 body[16];
+
+	if (rt == 0 || mips3.nextpc != ~0)
+		return;
+
+	/* find the backward branch beq rt, $zero, L with L <= pc */
+	for (a = pc + 4; a < pc + 4 * 12; a += 4)
+	{
+		op = ROPCODE(a);
+		if ((op >> 26) == 0x04 && ((op >> 21) & 31) == rt && ((op >> 16) & 31) == 0)
+		{
+			UINT32 target = a + 4 + ((INT32)(INT16)op << 2);
+			if (target <= pc && pc - target < 4 * 8)
+			{
+				branch_pc = a;
+				break;
+			}
+		}
+	}
+	if (!branch_pc)
+		return;
+	{
+		UINT32 target = branch_pc + 4 + ((INT32)(INT16)ROPCODE(branch_pc) << 2);
+		count = (branch_pc + 8 - target) / 4;
+		if (count > 16)
+			return;
+		for (i = 0; i < count; i++)
+			body[i] = ROPCODE(target + i * 4);
+		a = target;
+	}
+
+	/* check every instruction of the loop */
+	for (i = 0; i < count; i++)
+	{
+		UINT32 ia = a + i * 4;
+		op = body[i];
+		if (ia == pc)
+			continue;
+		if (ia == branch_pc)
+			continue;
+		if (op == 0)
+			continue;
+		if (ia == branch_pc + 4)
+		{
+			/* delay slot: a counter */
+			if (((op >> 26) == 0x08 || (op >> 26) == 0x09) && ((op >> 21) & 31) == ((op >> 16) & 31) &&
+				((op >> 16) & 31) != 0 && ((op >> 16) & 31) != rt)
+			{
+				rc = (op >> 16) & 31;
+				imm = (INT16)op;
+				continue;
+			}
+			return;
+		}
+		if ((op >> 26) == 0x0c && ((op >> 21) & 31) == rt && ((op >> 16) & 31) == rt)
+		{
+			/* the mask, between the mfc0 and the branch */
+			if (ia < pc || ia > branch_pc)
+				return;
+			mask |= op & 0xffff;
+			continue;
+		}
+		if (((op >> 26) == 0x23 || (op >> 26) == 0x21 || (op >> 26) == 0x20) && ((op >> 16) & 31) == 0)
+		{
+			UINT32 address = (UINT32)mips3.r[(op >> 21) & 31] + (INT16)op;
+			int p, ok = 0;
+			for (p = 0; p < pollread_count; p++)
+				if (address >= pollread[p].start && address <= pollread[p].end)
+					ok = 1;
+			if (ok)
+				continue;
+			return;
+		}
+		if ((op >> 26) == 0x04 && ((op >> 16) & 31) == 0 && ((op >> 21) & 31) != rt)
+		{
+			/* a timeout: beq rc, $zero, out of the loop */
+			UINT32 target = ia + 4 + ((INT32)(INT16)op << 2);
+			if (target >= a && target <= branch_pc + 4)
+				return;
+			if (timeout)
+				return;
+			timeout = (op >> 21) & 31;
+			continue;
+		}
+		return;
+	}
+	if (!mask || (CAUSE & mask))
+		return;
+	if (timeout && (timeout != rc || imm != -1))
+		return;
+
+	/* whole passes that fit, leaving at least two to run normally */
+	cost = count + 25;
+	n = mips3_icount / cost - 2;
+	if (n <= 0)
+		return;
+	if (rc >= 0)
+	{
+		INT64 value = (INT32)(UINT32)mips3.r[rc];
+		if (timeout)
+		{
+			if (value <= 1)
+				return;
+			if (n > value - 1)
+				n = (int)(value - 1);
+		}
+		else if ((body[(branch_pc + 4 - a) / 4] >> 26) == 0x08)
+		{
+			/* ADDI traps on overflow: stop before it */
+			INT64 limit = imm > 0 ? (0x7fffffffLL - value) / imm : (value + 0x80000000LL) / -imm;
+			if (imm == 0)
+				limit = n;
+			if (n > limit)
+				n = (int)limit;
+		}
+		if (n <= 0)
+			return;
+		mips3.r[rc] = (INT64)(INT32)((UINT32)value + (UINT32)(imm * n));
+	}
+	mips3_icount -= n * cost;
+}
+
 static INLINE void handle_cop0(UINT32 op)
 {
 	if ((SR & SR_KSU_MASK) != SR_KSU_KERNEL && !(SR & SR_COP0))
@@ -860,9 +1022,9 @@ static INLINE void handle_cop0(UINT32 op)
 	switch (RSREG)
 	{
 		case 0x00:	/* MFCz */		if (RTREG) RTVAL64 = (INT32)get_cop0_reg(RDREG);
-									/* optional idle loop: waiting for an interrupt in Cause */
-									if (idle_pc && mips3.ppc == idle_pc && RDREG == COP0_Cause && !(CAUSE & idle_cause_mask))
-										mips3_icount = 0;
+									/* optional: whole passes of a loop waiting for an interrupt in Cause */
+									if (cause_poll_enabled && RDREG == COP0_Cause)
+										cause_poll_skip(op);
 									break;
 		case 0x01:	/* DMFCz */		if (RTREG) RTVAL64 = get_cop0_reg(RDREG);				break;
 		case 0x02:	/* CFCz */		if (RTREG) RTVAL64 = (INT32)get_cop0_creg(RDREG);		break;
@@ -1481,15 +1643,35 @@ int mips3_execute(int cycles)
 			struct jit_block *block = jit_lookup(mips3.pc);
 			if (block && (int)block->len <= mips3_icount)
 			{
-				/* the block takes its own cycles; none taken means a side exit */
+				/* run blocks back to back while they fit in the timeslice; */
+				/* each takes its own cycles, and none taken means a side exit */
 				/* before its first instruction, which the interpreter then runs */
-				int before = mips3_icount;
-				mips3.pc = ((jit_func)block->code)();
-				if (mips3_icount != before)
+				int ran = 0, stalled = 0;
+				for (;;)
 				{
-					mips3.ppc = mips3.pc - 4;
+					int before = mips3_icount;
+					mips3.pc = ((jit_func)block->code)();
+					if (mips3_icount == before)
+					{
+						stalled = 1;
+						break;
+					}
+					ran = 1;
+					if (mips3_icount <= 0)
+						break;
+					block = jit_lookup(mips3.pc);
+					if (!block || (int)block->len > mips3_icount)
+						break;
+				}
+				if (ran)
+				{
 					change_pc32bedw(mips3.pc);
-					continue;
+					if (!stalled)
+					{
+						mips3.ppc = mips3.pc - 4;
+						continue;
+					}
+					mips3.ppc = mips3.pc;
 				}
 			}
 		}
