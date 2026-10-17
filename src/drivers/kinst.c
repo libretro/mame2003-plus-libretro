@@ -293,6 +293,12 @@ static void kinst_install_speedup(void)
 	/* recompiler (core option; only on the hosts that support it) */
 	if (options.mips_dynarec)
 		mips3_set_jit(1);
+	if (options.adsp_dynarec)
+	{
+		adsp2100_set_jit(1);
+		/* the banked sound ROM (dcs_rombank_data_r): reads with no side effects */
+		adsp2100_jit_pure_read(0x2000, 0x2fff);
+	}
 }
 
 
