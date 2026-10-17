@@ -220,8 +220,10 @@ Notes:
 */
 
 #include "driver.h"
+#include "state.h"
 #include <time.h>
 #include "cpu/z80/z80.h"
+#include "cpu/arm7/arm7.h"
 #include "sound/ics2115.h"
 
 
@@ -3393,61 +3395,190 @@ DRIVER_INIT(py2k2)
 
 }
 
-/* ddp2 rubbish */
+/*** IGS027A ARM protection, type 2 (55857F): DoDonPachi II **************
 
-data16_t *ddp2_protram;
-static int ddp2_asic27_0xd10000 = 0;
+  As in current MAME (pgmprot_igs027a_type2.cpp). An ARM7 with a 16KB
+  internal ROM (one per region) runs the protection; it decrypts its
+  external ROM with a table it uploads at 0x50000000, and talks to the
+  68000 through 64KB of shared RAM (0xd00000 for the 68000) and a latch
+  (0xd10000): a 68000 write to the latch raises the ARM's FIRQ, the
+  ARM's read of the latch clears it. The game region comes from the
+  internal ROM.
 
-static WRITE16_HANDLER ( ddp2_asic27_0xd10000_w )
+****************************************************************************/
+
+#define PGM_ARM_CPU		2	/* cpu number of the ARM7 */
+
+static data32_t *pgm_arm7_shareram;	/* 0x48000000 (ARM) / 0xd00000 (68000) */
+static data32_t *pgm_arm_ram;		/* 0x18000000 */
+static data32_t pgm_arm_xor_table[0x100];
+static data32_t pgm_arm_xor_ram[0x100];	/* 0x50000000 */
+static data32_t pgm_kov2_latchdata_68k_w;
+static data32_t pgm_kov2_latchdata_arm_w;
+
+static READ32_HANDLER( arm7_latch_arm_r )
 {
-	ddp2_asic27_0xd10000=data;
+	cpu_set_irq_line(PGM_ARM_CPU, ARM7_FIRQ_LINE, CLEAR_LINE);
+	return pgm_kov2_latchdata_68k_w;
 }
 
-static READ16_HANDLER ( ddp2_asic27_0xd10000_r )
+static WRITE32_HANDLER( arm7_latch_arm_w )
 {
-	logerror("d100000_prot_r %04x, %04x\n", offset,ddp2_asic27_0xd10000);
-	ddp2_asic27_0xd10000++;
-	ddp2_asic27_0xd10000&=0x7f;
-	return ddp2_asic27_0xd10000;
+	COMBINE_DATA(&pgm_kov2_latchdata_arm_w);
 }
 
-
-READ16_HANDLER(ddp2_protram_r)
+static READ32_HANDLER( arm7_shareram_r )
 {
-	logerror("prot_r %04x, %04x\n", offset,ddp2_protram[offset]);
-
-	if (offset == 0x02/2) return readinputport(4);
-
-	if (offset == 0x1f00/2) return 0;
-
-	return ddp2_protram[offset];
+	return pgm_arm7_shareram[offset];
 }
 
-WRITE16_HANDLER(ddp2_protram_w)
+static WRITE32_HANDLER( arm7_shareram_w )
 {
-	logerror("prot_w %04x, %02x\n", offset,data);
-	COMBINE_DATA(&ddp2_protram[offset]);
+	COMBINE_DATA(&pgm_arm7_shareram[offset]);
+}
 
-	ddp2_protram[0x10/2] = 0;
-	ddp2_protram[0x20/2] = 1;
+static READ16_HANDLER( arm7_latch_68k_r )
+{
+	return pgm_kov2_latchdata_arm_w;
+}
+
+static WRITE16_HANDLER( arm7_latch_68k_w )
+{
+	data32_t latch = pgm_kov2_latchdata_68k_w;
+	data16_t lo = latch;
+	COMBINE_DATA(&lo);
+	pgm_kov2_latchdata_68k_w = ( latch & 0xffff0000 ) | lo;
+	cpu_set_irq_line(PGM_ARM_CPU, ARM7_FIRQ_LINE, ASSERT_LINE);
+}
+
+/* the shared RAM seen as 16-bit words: word n is half n & 1 of dword n >> 1 */
+static READ16_HANDLER( arm7_ram_r )
+{
+	return pgm_arm7_shareram[offset >> 1] >> ( ( offset & 1 ) * 16 );
+}
+
+static WRITE16_HANDLER( arm7_ram_w )
+{
+	int shift = ( offset & 1 ) * 16;
+	data16_t word = pgm_arm7_shareram[offset >> 1] >> shift;
+	COMBINE_DATA(&word);
+	pgm_arm7_shareram[offset >> 1] = ( pgm_arm7_shareram[offset >> 1] & ~( 0xffff << shift ) ) | ( (data32_t)word << shift );
+}
+
+static READ32_HANDLER( pgm_arm_external_rom_r )
+{
+	return ( (data32_t *)memory_region(REGION_USER1) )[offset] ^ pgm_arm_xor_table[offset & 0xff];
+}
+
+static READ32_HANDLER( pgm_arm_xor_r )
+{
+	return pgm_arm_xor_ram[offset];
+}
+
+/* byte writes to the low byte of each dword (umask 0x000000ff in current MAME) */
+static WRITE32_HANDLER( pgm_arm_xor_w )
+{
+	COMBINE_DATA(&pgm_arm_xor_ram[offset]);
+	if( !( mem_mask & 0x000000ff ) )
+	{
+		data32_t b = data & 0xff;
+		pgm_arm_xor_table[offset] = ( b << 24 ) | ( b << 8 );
+	}
+}
+
+static MEMORY_READ32_START( pgm_arm_type2_readmem )
+	{ 0x00000000, 0x00003fff, MRA32_ROM },			/* internal ROM */
+	{ 0x08000000, 0x083fffff, pgm_arm_external_rom_r },	/* external ROM (encrypted) */
+	{ 0x10000000, 0x100003ff, MRA32_RAM },
+	{ 0x18000000, 0x1800ffff, MRA32_RAM },
+	{ 0x38000000, 0x38000003, arm7_latch_arm_r },		/* 68000 latch */
+	{ 0x48000000, 0x4800ffff, arm7_shareram_r },		/* shared with the 68000 */
+	{ 0x50000000, 0x500003ff, pgm_arm_xor_r },
+MEMORY_END
+
+static MEMORY_WRITE32_START( pgm_arm_type2_writemem )
+	{ 0x00000000, 0x00003fff, MWA32_ROM },
+	{ 0x10000000, 0x100003ff, MWA32_RAM },
+	{ 0x18000000, 0x1800ffff, MWA32_RAM, &pgm_arm_ram },
+	{ 0x38000000, 0x38000003, arm7_latch_arm_w },
+	{ 0x48000000, 0x4800ffff, arm7_shareram_w },
+	{ 0x50000000, 0x500003ff, pgm_arm_xor_w },		/* decryption table for the external ROM */
+MEMORY_END
+
+static MACHINE_INIT( pgm_arm_type2 )
+{
+	machine_init_pgm();
+	pgm_kov2_latchdata_68k_w = 0;
+	pgm_kov2_latchdata_arm_w = 0;
+	memset(pgm_arm_xor_table, 0, sizeof(pgm_arm_xor_table));
+	memset(pgm_arm_xor_ram, 0, sizeof(pgm_arm_xor_ram));
+}
+
+static void pgm_arm_type2_init(void)
+{
+	pgm_arm7_shareram = auto_malloc(0x10000);
+	memset(pgm_arm7_shareram, 0, 0x10000);
+
+	install_mem_read16_handler(0, 0xd00000, 0xd0ffff, arm7_ram_r);		/* ARM7 shared RAM */
+	install_mem_write16_handler(0, 0xd00000, 0xd0ffff, arm7_ram_w);
+	install_mem_read16_handler(0, 0xd10000, 0xd10001, arm7_latch_68k_r);	/* ARM7 latch */
+	install_mem_write16_handler(0, 0xd10000, 0xd10001, arm7_latch_68k_w);
+
+	state_save_register_UINT32("pgm_arm", 0, "shareram", pgm_arm7_shareram, 0x10000 / 4);
+	state_save_register_UINT32("pgm_arm", 0, "xor_table", pgm_arm_xor_table, 0x100);
+	state_save_register_UINT32("pgm_arm", 0, "xor_ram", pgm_arm_xor_ram, 0x100);
+	state_save_register_UINT32("pgm_arm", 0, "latch_68k_w", &pgm_kov2_latchdata_68k_w, 1);
+	state_save_register_UINT32("pgm_arm", 0, "latch_arm_w", &pgm_kov2_latchdata_arm_w, 1);
+}
+
+/* the ARM waits for an interrupt here: nothing else can get it out of the loop */
+static READ32_HANDLER( ddp2_speedup_r )
+{
+	data32_t data = pgm_arm_ram[0x300c/4];
+
+	if( activecpu_get_pc() == 0x080109b4 )
+	{
+		UINT32 r4 = activecpu_get_reg(1 + 4) + 0xe;	/* ARM7 R4 */
+		if( r4 == 0x18002f9e )
+		{
+			data32_t data2 = pgm_arm_ram[0x2f9c/4] & 0xffff0000;
+			if( data == 0 && data2 == 0 )
+				cpu_spinuntil_int();
+		}
+	}
+	return data;
+}
+
+static READ16_HANDLER( ddp2_main_speedup_r )
+{
+	data16_t data = pgm_mainram[0x0ee54/2];
+	int n_pc = activecpu_get_pc();
+
+	if( n_pc == 0x149dce || n_pc == 0x149cfe )
+		cpu_spinuntil_int();
+	return data;
 }
 
 static DRIVER_INIT( ddp2 )
 {
 	pgm_basic_init();
 	pgm_ddp2_decrypt();
+	pgm_arm_type2_init();
 
-	/* some kind of busy / counter */
-	/* the actual protection is an arm cpu with internal rom */
-
-	ddp2_protram = auto_malloc(0x2000);
-
-	install_mem_read16_handler(0, 0xd10000, 0xd10001, ddp2_asic27_0xd10000_r);
-	install_mem_write16_handler(0, 0xd10000, 0xd10001, ddp2_asic27_0xd10000_w);
-
-	install_mem_read16_handler(0, 0xd00000, 0xd01fff, ddp2_protram_r);
-	install_mem_write16_handler(0, 0xd00000, 0xd01fff, ddp2_protram_w);
+	install_mem_read32_handler(PGM_ARM_CPU, 0x1800300c, 0x1800300f, ddp2_speedup_r);
+	install_mem_read16_handler(0, 0x80ee54, 0x80ee55, ddp2_main_speedup_r);
 }
+
+static MACHINE_DRIVER_START( pgm_arm_type2 )
+	MDRV_IMPORT_FROM(pgm)
+
+	/* protection CPU: IGS027A (55857F), an ARM7 with internal ROM */
+	MDRV_CPU_ADD(ARM7, 20000000)
+	MDRV_CPU_MEMORY(pgm_arm_type2_readmem, pgm_arm_type2_writemem)
+
+	MDRV_INTERLEAVE(100)
+	MDRV_MACHINE_INIT(pgm_arm_type2)
+MACHINE_DRIVER_END
 
 /*** Rom Loading *************************************************************/
 
@@ -4321,37 +4452,74 @@ Some logic IC's, resistors, caps etc.
 
 */
 
-ROM_START( ddp2 )
-	ROM_REGION( 0x600000, REGION_CPU1, 0 ) /* 68000 Code */
-	ROM_LOAD16_WORD_SWAP( "pgm_p01s.rom", 0x000000, 0x020000, CRC(e42b166e) SHA1(2a9df9ec746b14b74fae48b1a438da14973702ea) )  // (BIOS)
-	ROM_LOAD16_WORD_SWAP( "v100.u8",    0x100000, 0x200000, CRC(0c8aa8ea) SHA1(57e33224622607a1df8daabf26ba063cf8a6d3fc) )
+/*
+  DoDonPachi II - Bee Storm: current MAME sets. The internal ROMs of the
+  IGS027A were dumped for China and Japan (they differ only by the byte
+  at 0x2882, the region); the others are taken to be the same.
+*/
 
+#define DDP2_ASIC027( name, crc, sha ) \
+	ROM_REGION( 0x4000, REGION_CPU3, 0 ) /* ARM protection ASIC - internal ROM */ \
+	ROM_LOAD( name, 0x000000, 0x04000, CRC(crc) SHA1(sha) )
+
+#define DDP2_PROGRAM( name, crc, sha ) \
+	ROM_REGION( 0x600000, REGION_CPU1, 0 ) /* 68000 Code */ \
+	ROM_LOAD16_WORD_SWAP( "pgm_p01s.u20", 0x000000, 0x020000, CRC(e42b166e) SHA1(2a9df9ec746b14b74fae48b1a438da14973702ea) ) /* (BIOS) */ \
+	ROM_LOAD16_WORD_SWAP( name, 0x100000, 0x200000, CRC(crc) SHA1(sha) ) \
 	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* Z80 - romless */
 
-//	ROM_REGION( 0x4000, REGION_CPU3, 0 ) /* ARM protection ASIC - internal rom */
-//	ROM_LOAD( "ddp2_igs027a.bin", 0x000000, 0x04000, NO_DUMP )
+#define DDP2_PROGRAM_102	DDP2_PROGRAM( "v102.u8",     5a9ea040, 51eaec46c368f7cfc5245e64896092f52b1193e0 )	/* 09/10/01 */
+#define DDP2_PROGRAM_101	DDP2_PROGRAM( "v101_16m.u8", 5e5786fd, c6fc2956b5dc6a97c0d7d808a8c58aa21fa023b9 )	/* 07/10/01 */
+#define DDP2_PROGRAM_100	DDP2_PROGRAM( "v100_u8.u8",  0c8aa8ea, 57e33224622607a1df8daabf26ba063cf8a6d3fc )	/* 05/21/01 */
 
-	ROM_REGION( 0x400000, REGION_USER1, 0 ) /* Protection Data (encrypted external ARM data, internal missing) */
-	ROM_LOAD( "v100.u23", 0x000000, 0x20000, CRC(06c3dd29) SHA1(20c9479f158467fc2037dcf162b6c6be18c91d46) )
+#define DDP2_ASIC027_CHINA		DDP2_ASIC027( "ddp2_igs027a_china.bin",     8c566319, bb001d8ada56bf446f9ab88e00936501652daf11 )
+#define DDP2_ASIC027_TAIWAN		DDP2_ASIC027( "ddp2_igs027a_taiwan.bin",    1dd34bdc, 4f2ee38ee37d5cc63b2a63ef51bd392e4f18d836 )
+#define DDP2_ASIC027_JAPAN		DDP2_ASIC027( "ddp2_igs027a_japan.bin",     742d34d2, 4491c08f3cefef2933ad5a741f4bb05cc2f3e1a0 )
+#define DDP2_ASIC027_KOREA		DDP2_ASIC027( "ddp2_igs027a_korea.bin",     e5a81c17, cfe4e28a44a1b3a5c1c9e303941b335dbde7dd8d )
+#define DDP2_ASIC027_HONG_KONG	DDP2_ASIC027( "ddp2_igs027a_hong_kong.bin", a7d1cace, b9391da52c8234ca0182484f33b5242827c51c76 )
+#define DDP2_ASIC027_WORLD		DDP2_ASIC027( "ddp2_igs027a_world.bin",     3654e20b, e00ef1d51efe66354e3eaf4750d9d819c74ddfbf )
 
-	ROM_REGION( 0xc00000, REGION_GFX1, 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
-	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
-	ROM_LOAD( "t1300.u21",    0x400000, 0x800000, CRC(e748f0cb) SHA1(5843bee3a17c33648ce904af2b98c6a90aff7393) )
+#define DDP2_COMMON_ROMS \
+	ROM_REGION32_LE( 0x400000, REGION_USER1, 0 ) /* Protection Data (encrypted external ARM data) */ \
+	ROM_LOAD( "v100_210.u23", 0x000000, 0x20000, CRC(06c3dd29) SHA1(20c9479f158467fc2037dcf162b6c6be18c91d46) ) \
+	ROM_REGION( 0xc00000, REGION_GFX1, 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */ \
+	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) /* (BIOS) */ \
+	ROM_LOAD( "pgm_t1300.u21", 0x400000, 0x800000, CRC(e748f0cb) SHA1(5843bee3a17c33648ce904af2b98c6a90aff7393) ) \
+	ROM_REGION( 0xc00000/5*8, REGION_GFX2, ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */ \
+	ROM_REGION( 0x1000000, REGION_GFX3, 0 ) /* Sprite Colour Data */ \
+	ROM_LOAD( "pgm_a1300.u1", 0x0000000, 0x0800000, CRC(fc87a405) SHA1(115c21ecc56997652e527c92654076870bc9fa51) ) /* FIXED BITS (xxxxxxxx1xxxxxxx) */ \
+	ROM_LOAD( "pgm_a1301.u2", 0x0800000, 0x0800000, CRC(0c8520da) SHA1(390317857ae5baa94a4cc042874b00a811f06a63) ) /* FIXED BITS (xxxxxxxx1xxxxxxx) */ \
+	ROM_REGION( 0x0800000, REGION_GFX4, 0 ) /* Sprite Masks + Colour Indexes */ \
+	ROM_LOAD( "pgm_b1300.u7", 0x0000000, 0x0800000, CRC(ef646604) SHA1(d737ff513792962f18df88c2caa9dd71de449079) ) \
+	ROM_REGION( 0x800000, REGION_SOUND1, ROMREGION_ERASE00 ) /* Samples - (8 bit mono 11025Hz) - */ \
+	ROM_LOAD( "pgm_m01s.rom", 0x000000, 0x200000, CRC(45ae7159) SHA1(d3ed3ff3464557fd0df6b069b2e431528b0ebfa8) ) /* (BIOS) */ \
+	ROM_LOAD( "pgm_m1300.u5", 0x400000, 0x400000, CRC(82d4015d) SHA1(d4cdc1aec1c97cf23ff7a20ccaad822962e66ffa) )
 
-	ROM_REGION( 0xc00000/5*8, REGION_GFX2, ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
-	/* 32x32 Tile Data is put here for easier Decoding */
-
-	ROM_REGION( 0x1000000, REGION_GFX3, 0 ) /* Sprite Colour Data */
-	ROM_LOAD( "a1300.u1",    0x0000000, 0x0800000, CRC(fc87a405) SHA1(115c21ecc56997652e527c92654076870bc9fa51) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
-	ROM_LOAD( "a1301.u2",    0x0800000, 0x0800000, CRC(0c8520da) SHA1(390317857ae5baa94a4cc042874b00a811f06a63) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
-
-	ROM_REGION( 0x0800000, REGION_GFX4, 0 ) /* Sprite Masks + Colour Indexes */
-	ROM_LOAD( "b1300.u7",    0x0000000, 0x0800000,  CRC(ef646604) SHA1(d737ff513792962f18df88c2caa9dd71de449079) )
-
-	ROM_REGION( 0x800000, REGION_SOUND1, ROMREGION_ERASE00 ) /* Samples - (8 bit mono 11025Hz) - */
-	ROM_LOAD( "pgm_m01s.rom", 0x000000, 0x200000, CRC(45ae7159) SHA1(d3ed3ff3464557fd0df6b069b2e431528b0ebfa8) ) // (BIOS)
-	ROM_LOAD( "m1300.u5",    0x400000, 0x400000, CRC(82d4015d) SHA1(d4cdc1aec1c97cf23ff7a20ccaad822962e66ffa) )
+#define DDP2_SET( name, program, asic ) \
+ROM_START( name ) \
+	program \
+	asic \
+	DDP2_COMMON_ROMS \
 ROM_END
+
+DDP2_SET( ddp2,      DDP2_PROGRAM_102, DDP2_ASIC027_WORLD )
+DDP2_SET( ddp2101,   DDP2_PROGRAM_101, DDP2_ASIC027_WORLD )
+DDP2_SET( ddp2100,   DDP2_PROGRAM_100, DDP2_ASIC027_WORLD )
+DDP2_SET( ddp2hk,    DDP2_PROGRAM_102, DDP2_ASIC027_HONG_KONG )
+DDP2_SET( ddp2101hk, DDP2_PROGRAM_101, DDP2_ASIC027_HONG_KONG )
+DDP2_SET( ddp2100hk, DDP2_PROGRAM_100, DDP2_ASIC027_HONG_KONG )
+DDP2_SET( ddp2k,     DDP2_PROGRAM_102, DDP2_ASIC027_KOREA )
+DDP2_SET( ddp2101k,  DDP2_PROGRAM_101, DDP2_ASIC027_KOREA )
+DDP2_SET( ddp2100k,  DDP2_PROGRAM_100, DDP2_ASIC027_KOREA )
+DDP2_SET( ddp2j,     DDP2_PROGRAM_102, DDP2_ASIC027_JAPAN )
+DDP2_SET( ddp2101j,  DDP2_PROGRAM_101, DDP2_ASIC027_JAPAN )
+DDP2_SET( ddp2100j,  DDP2_PROGRAM_100, DDP2_ASIC027_JAPAN )
+DDP2_SET( ddp2t,     DDP2_PROGRAM_102, DDP2_ASIC027_TAIWAN )
+DDP2_SET( ddp2101t,  DDP2_PROGRAM_101, DDP2_ASIC027_TAIWAN )
+DDP2_SET( ddp2100t,  DDP2_PROGRAM_100, DDP2_ASIC027_TAIWAN )
+DDP2_SET( ddp2c,     DDP2_PROGRAM_102, DDP2_ASIC027_CHINA )
+DDP2_SET( ddp2101c,  DDP2_PROGRAM_101, DDP2_ASIC027_CHINA )
+DDP2_SET( ddp2100c,  DDP2_PROGRAM_100, DDP2_ASIC027_CHINA )
 
 /*** GAME ********************************************************************/
 
@@ -4380,7 +4548,24 @@ GAMEX( 2001, py2k2,    pgm,        pgm,     photoy2k, py2k2,     ROT0, "IGS", "P
 
 /* not working */
 GAMEX( 1999, kovsh,    kov,        pgm,     sango,    kovsh,     ROT0, "IGS", "Knights of Valour Superheroes - Sangoku Senki Superheroes (ver. 322)", GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
-GAMEX( 2001, ddp2,     pgm,        pgm,     ddp2,     ddp2,      ROT270,"IGS", "DoDonPachi II - Bee Storm", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
+GAMEX( 2001, ddp2,     pgm,      pgm_arm_type2, pgm, ddp2, ROT270, "IGS", "DoDonPachi II - Bee Storm (World, ver. 102)", GAME_IMPERFECT_SOUND )
+GAMEX( 2001, ddp2101,  ddp2,     pgm_arm_type2, pgm, ddp2, ROT270, "IGS", "DoDonPachi II - Bee Storm (World, ver. 101)", GAME_IMPERFECT_SOUND )
+GAMEX( 2001, ddp2100,  ddp2,     pgm_arm_type2, pgm, ddp2, ROT270, "IGS", "DoDonPachi II - Bee Storm (World, ver. 100)", GAME_IMPERFECT_SOUND )
+GAMEX( 2001, ddp2hk,   ddp2,     pgm_arm_type2, pgm, ddp2, ROT270, "IGS", "DoDonPachi II - Fung Bou (Hong Kong, ver. 102)", GAME_IMPERFECT_SOUND )
+GAMEX( 2001, ddp2101hk, ddp2,     pgm_arm_type2, pgm, ddp2, ROT270, "IGS", "DoDonPachi II - Fung Bou (Hong Kong, ver. 101)", GAME_IMPERFECT_SOUND )
+GAMEX( 2001, ddp2100hk, ddp2,     pgm_arm_type2, pgm, ddp2, ROT270, "IGS", "DoDonPachi II - Fung Bou (Hong Kong, ver. 100)", GAME_IMPERFECT_SOUND )
+GAMEX( 2001, ddp2k,    ddp2,     pgm_arm_type2, pgm, ddp2, ROT270, "IGS", "DoDonPachi II - Bee Storm (Korea, ver. 102)", GAME_IMPERFECT_SOUND )
+GAMEX( 2001, ddp2101k, ddp2,     pgm_arm_type2, pgm, ddp2, ROT270, "IGS", "DoDonPachi II - Bee Storm (Korea, ver. 101)", GAME_IMPERFECT_SOUND )
+GAMEX( 2001, ddp2100k, ddp2,     pgm_arm_type2, pgm, ddp2, ROT270, "IGS", "DoDonPachi II - Bee Storm (Korea, ver. 100)", GAME_IMPERFECT_SOUND )
+GAMEX( 2001, ddp2j,    ddp2,     pgm_arm_type2, pgm, ddp2, ROT270, "IGS (Cave license)", "DoDonPachi II (Japan, ver. 102)", GAME_IMPERFECT_SOUND )
+GAMEX( 2001, ddp2101j, ddp2,     pgm_arm_type2, pgm, ddp2, ROT270, "IGS (Cave license)", "DoDonPachi II (Japan, ver. 101)", GAME_IMPERFECT_SOUND )
+GAMEX( 2001, ddp2100j, ddp2,     pgm_arm_type2, pgm, ddp2, ROT270, "IGS (Cave license)", "DoDonPachi II (Japan, ver. 100)", GAME_IMPERFECT_SOUND )
+GAMEX( 2001, ddp2t,    ddp2,     pgm_arm_type2, pgm, ddp2, ROT270, "IGS", "DoDonPachi - Feng Bao (Taiwan, ver. 102)", GAME_IMPERFECT_SOUND )
+GAMEX( 2001, ddp2101t, ddp2,     pgm_arm_type2, pgm, ddp2, ROT270, "IGS", "DoDonPachi - Feng Bao (Taiwan, ver. 101)", GAME_IMPERFECT_SOUND )
+GAMEX( 2001, ddp2100t, ddp2,     pgm_arm_type2, pgm, ddp2, ROT270, "IGS", "DoDonPachi - Feng Bao (Taiwan, ver. 100)", GAME_IMPERFECT_SOUND )
+GAMEX( 2001, ddp2c,    ddp2,     pgm_arm_type2, pgm, ddp2, ROT270, "IGS", "DoDonPachi - Feng Bao (China, ver. 102)", GAME_IMPERFECT_SOUND )
+GAMEX( 2001, ddp2101c, ddp2,     pgm_arm_type2, pgm, ddp2, ROT270, "IGS", "DoDonPachi - Feng Bao (China, ver. 101)", GAME_IMPERFECT_SOUND )
+GAMEX( 2001, ddp2100c, ddp2,     pgm_arm_type2, pgm, ddp2, ROT270, "IGS", "DoDonPachi - Feng Bao (China, ver. 100)", GAME_IMPERFECT_SOUND )
 
 /* Cave Games On PGM Hardware */
 

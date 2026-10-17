@@ -5701,7 +5701,24 @@ Other Sun games
   DRIVER( puzzli2 )   /* (c) 1999 */
   DRIVER( puzzli2s )  /* (c) 2001 */
   DRIVER( py2k2 )     /* (c) 2001 */
-  DRIVER( ddp2 )      /* (c) 2001 */
+  DRIVER( ddp2 )      /* (c) 2001 IGS */
+  DRIVER( ddp2101 )   /* (c) 2001 IGS */
+  DRIVER( ddp2100 )   /* (c) 2001 IGS */
+  DRIVER( ddp2hk )    /* (c) 2001 IGS */
+  DRIVER( ddp2101hk ) /* (c) 2001 IGS */
+  DRIVER( ddp2100hk ) /* (c) 2001 IGS */
+  DRIVER( ddp2k )     /* (c) 2001 IGS */
+  DRIVER( ddp2101k )  /* (c) 2001 IGS */
+  DRIVER( ddp2100k )  /* (c) 2001 IGS */
+  DRIVER( ddp2j )     /* (c) 2001 IGS */
+  DRIVER( ddp2101j )  /* (c) 2001 IGS */
+  DRIVER( ddp2100j )  /* (c) 2001 IGS */
+  DRIVER( ddp2t )     /* (c) 2001 IGS */
+  DRIVER( ddp2101t )  /* (c) 2001 IGS */
+  DRIVER( ddp2100t )  /* (c) 2001 IGS */
+  DRIVER( ddp2c )     /* (c) 2001 IGS */
+  DRIVER( ddp2101c )  /* (c) 2001 IGS */
+  DRIVER( ddp2100c )  /* (c) 2001 IGS */
 
 	/* RamTek games */
 	DRIVER( hitme )		/* [1976 Ramtek] */
