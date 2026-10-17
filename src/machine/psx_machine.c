@@ -9,8 +9,9 @@
 #include "driver.h"
 #include "state.h"
 #include "includes/psx.h"
+#include "cpu/mips/psx.h"
 
-#define VERBOSE_LEVEL ( 1 )
+#define VERBOSE_LEVEL ( 0 )
 
 static INLINE void verboselog( int n_level, const char *s_fmt, ... )
 {
@@ -144,6 +145,59 @@ void dma_finished( int n_channel )
 	dma_timer( n_channel, 0xffffffff );
 }
 
+/* DMA into main RAM: tell the CPU (its recompiler may hold code from there) */
+static void dma_ram_written( UINT32 n_address, INT32 n_size )
+{
+	UINT32 n_bytes;
+
+	if( n_size <= 0 || n_address > m_n_ramsize )
+	{
+		return;
+	}
+	n_bytes = (UINT32)n_size * 4;
+	if( n_bytes > m_n_ramsize + 1 - n_address )
+	{
+		n_bytes = m_n_ramsize + 1 - n_address;
+	}
+	psxcpu_ram_written( &m_p_n_ram[ n_address ], n_bytes );
+}
+
+/*
+	Speedups of the PSX CPU core for a driver with the usual memory map:
+	main RAM at 0x00000000 with its 0x80000000 and 0xa0000000 mirrors
+	(REGION_CPU1), scratchpad at 0x1f800000 (REGION_USER1), BIOS at
+	0x1fc00000 with its 0x9fc00000 and 0xbfc00000 mirrors (REGION_USER2).
+*/
+void psx_machine_cpu_speedups( void )
+{
+	static const offs_t ram_base[] = { 0x00000000, 0x80000000, 0xa0000000 };
+	static const offs_t bios_base[] = { 0x1fc00000, 0x9fc00000, 0xbfc00000 };
+	UINT32 n_ram = memory_region_length( REGION_CPU1 );
+	UINT32 n_bios = memory_region_length( REGION_USER2 );
+	int i;
+
+	if( n_ram > 0x00800000 ) n_ram = 0x00800000;
+	if( n_bios > 0x00400000 ) n_bios = 0x00400000;
+	for( i = 0; i < 3; i++ )
+	{
+		psxcpu_add_fastram( ram_base[ i ], ram_base[ i ] + n_ram - 1, 0, memory_region( REGION_CPU1 ) );
+	}
+	if( memory_region_length( REGION_USER1 ) >= 0x400 )
+	{
+		psxcpu_add_fastram( 0x1f800000, 0x1f8003ff, 0, memory_region( REGION_USER1 ) );
+	}
+	for( i = 0; i < 3; i++ )
+	{
+		psxcpu_add_fastram( bios_base[ i ], bios_base[ i ] + n_bios - 1, 1, memory_region( REGION_USER2 ) );
+	}
+
+	/* the recompiler (core option, default on) */
+	if( options.mips_dynarec )
+	{
+		psxcpu_set_jit( 1 );
+	}
+}
+
 void psx_dma_install_read_handler( int n_channel, psx_dma_read_handler p_fn_dma_read )
 {
 	m_p_fn_dma_read[ n_channel ] = p_fn_dma_read;
@@ -192,6 +246,7 @@ WRITE32_HANDLER( psx_dma_w )
 					verboselog( 1, "dma %d read block %08x %08x\n",
 						n_channel, m_p_n_dmabase[ n_channel ], m_p_n_dmablockcontrol[ n_channel ] );
 					m_p_fn_dma_read[ n_channel ]( n_address, n_size );
+					dma_ram_written( n_address, n_size );
 					dma_finished( n_channel );
 				}
 				else if( m_p_n_dmachannelcontrol[ n_channel ] == 0x01000200 &&
@@ -200,6 +255,7 @@ WRITE32_HANDLER( psx_dma_w )
 					verboselog( 1, "dma %d read block %08x %08x\n",
 						n_channel, m_p_n_dmabase[ n_channel ], m_p_n_dmablockcontrol[ n_channel ] );
 					m_p_fn_dma_read[ n_channel ]( n_address, n_size );
+					dma_ram_written( n_address, n_size );
 					if( n_channel == 1 )
 					{
 						dma_timer( n_channel, cpu_getscanline() + 16 );
@@ -230,6 +286,10 @@ WRITE32_HANDLER( psx_dma_w )
 						n_address &= m_n_ramsize;
 						n_nextaddress = *( (UINT32 *)&m_p_n_ram[ n_address ] );
 						m_p_fn_dma_write[ n_channel ]( n_address + 4, n_nextaddress >> 24 );
+						if( ( n_nextaddress >> 24 ) != 0 )
+						{
+							psx_gpu_list_node_end();
+						}
 						n_address = ( n_nextaddress & 0xffffff );
 
 						n_segments++;
@@ -249,6 +309,15 @@ WRITE32_HANDLER( psx_dma_w )
 						m_p_n_dmabase[ n_channel ], m_p_n_dmablockcontrol[ n_channel ] );
 					if( n_size > 0 )
 					{
+						/* the table runs down from n_address */
+						if( (UINT32)( n_size - 1 ) * 4 <= n_address )
+						{
+							dma_ram_written( n_address - ( n_size - 1 ) * 4, n_size );
+						}
+						else
+						{
+							dma_ram_written( 0, ( m_n_ramsize + 1 ) / 4 );
+						}
 						n_size--;
 						while( n_size > 0 )
 						{
@@ -342,6 +411,41 @@ static data16_t m_p_n_root_count[ 3 ];
 static data16_t m_p_n_root_mode[ 3 ];
 static data16_t m_p_n_root_target[ 3 ];
 
+/* the counter timers are saved as their time left (negative: not armed),
+   so a load neither restarts them nor adds interrupts */
+static double m_p_f_root_timeleft[ 3 ];
+
+static void root_presave( void )
+{
+	int n;
+
+	for( n = 0; n < 3; n++ )
+	{
+		/* timer_enable() returns the previous state; put it back */
+		int b_enabled = timer_enable( m_p_timer_root[ n ], 0 );
+		timer_enable( m_p_timer_root[ n ], b_enabled );
+		m_p_f_root_timeleft[ n ] = b_enabled ? timer_timeleft( m_p_timer_root[ n ] ) : -1;
+	}
+}
+
+static void root_postload( void )
+{
+	int n;
+
+	for( n = 0; n < 3; n++ )
+	{
+		if( m_p_f_root_timeleft[ n ] >= 0 )
+		{
+			timer_adjust( m_p_timer_root[ n ], m_p_f_root_timeleft[ n ], n, 0 );
+		}
+		else
+		{
+			timer_adjust( m_p_timer_root[ n ], TIME_NEVER, n, 0 );
+			timer_enable( m_p_timer_root[ n ], 0 );
+		}
+	}
+}
+
 static void root_finished( int n_counter )
 {
 	if( ( m_p_n_root_mode[ n_counter ] & 0x50 ) != 0 )
@@ -412,19 +516,19 @@ READ32_HANDLER( psx_counter_r )
 	case 0:
 		if( n_counter == 0 )
 		{
-			data = ( activecpu_gettotalcycles() / 1200 ) & 0xffff;
+			data = ( activecpu_gettotalcycles64() / 1200 ) & 0xffff;
 		}
 		else if( n_counter == 1 && ( m_p_n_root_mode[ n_counter ] & ( 1 << 0x08 ) ) != 0 )
 		{
-			data = ( activecpu_gettotalcycles() / 4800 ) & 0xffff;
+			data = ( activecpu_gettotalcycles64() / 4800 ) & 0xffff;
 		}
 		else if( n_counter == 2 && ( m_p_n_root_mode[ n_counter ] & ( 1 << 0x09 ) ) != 0 )
 		{
-			data = ( activecpu_gettotalcycles() / 480 ) & 0xffff;
+			data = ( activecpu_gettotalcycles64() / 480 ) & 0xffff;
 		}
 		else
 		{
-			data = activecpu_gettotalcycles() & 0xffff;
+			data = activecpu_gettotalcycles64() & 0xffff;
 		}
 		m_p_n_root_count[ n_counter ] = data;
 		break;
@@ -876,6 +980,78 @@ static void mdec_yuv2_to_rgb15( UINT32 n_address )
 	}
 }
 
+/* 24-bit output (from current MAME psxmdec): blocks are Cr, Cb, Y0-Y3 */
+static INLINE UINT16 mdec_clamp8( INT32 n )
+{
+	n += 128;
+	if( n < 0 ) return 0;
+	if( n > 255 ) return 255;
+	return n;
+}
+
+static INLINE void mdec_makergb24( UINT32 n_address, INT32 n_r, INT32 n_g, INT32 n_b, INT32 *p_n_y )
+{
+	*( (UINT16 *)&m_p_n_ram[ WORD_XOR_LE( n_address + 0 ) ] ) = ( mdec_clamp8( p_n_y[ 0 ] + n_g ) << 8 ) | mdec_clamp8( p_n_y[ 0 ] + n_r );
+	*( (UINT16 *)&m_p_n_ram[ WORD_XOR_LE( n_address + 2 ) ] ) = ( mdec_clamp8( p_n_y[ 1 ] + n_r ) << 8 ) | mdec_clamp8( p_n_y[ 0 ] + n_b );
+	*( (UINT16 *)&m_p_n_ram[ WORD_XOR_LE( n_address + 4 ) ] ) = ( mdec_clamp8( p_n_y[ 1 ] + n_b ) << 8 ) | mdec_clamp8( p_n_y[ 1 ] + n_g );
+}
+
+static void mdec_yuv2_to_rgb24( UINT32 n_address )
+{
+	INT32 n_r;
+	INT32 n_g;
+	INT32 n_b;
+	INT32 n_cb;
+	INT32 n_cr;
+	INT32 *p_n_cb;
+	INT32 *p_n_cr;
+	INT32 *p_n_y;
+	UINT32 n_x;
+	UINT32 n_y;
+	UINT32 n_z;
+
+	p_n_cr = &m_p_n_mdec_unpacked[ 0 ];
+	p_n_cb = &m_p_n_mdec_unpacked[ DCTSIZE2 ];
+	p_n_y = &m_p_n_mdec_unpacked[ DCTSIZE2 * 2 ];
+
+	for( n_z = 0; n_z < 2; n_z++ )
+	{
+		for( n_y = 0; n_y < 4; n_y++ )
+		{
+			for( n_x = 0; n_x < 4; n_x++ )
+			{
+				n_cr = *( p_n_cr );
+				n_cb = *( p_n_cb );
+				n_r = mdec_cr_to_r( n_cr );
+				n_g = mdec_cr_to_g( n_cr ) + mdec_cb_to_g( n_cb );
+				n_b = mdec_cb_to_b( n_cb );
+
+				mdec_makergb24( ( n_address +  0 ), n_r, n_g, n_b, p_n_y );
+				mdec_makergb24( ( n_address + 48 ), n_r, n_g, n_b, p_n_y + 8 );
+
+				n_cr = *( p_n_cr + 4 );
+				n_cb = *( p_n_cb + 4 );
+				n_r = mdec_cr_to_r( n_cr );
+				n_g = mdec_cr_to_g( n_cr ) + mdec_cb_to_g( n_cb );
+				n_b = mdec_cb_to_b( n_cb );
+
+				mdec_makergb24( ( n_address + 24 ), n_r, n_g, n_b, p_n_y + DCTSIZE2 );
+				mdec_makergb24( ( n_address + 72 ), n_r, n_g, n_b, p_n_y + DCTSIZE2 + 8 );
+
+				p_n_cr++;
+				p_n_cb++;
+				p_n_y += 2;
+				n_address += 6;
+			}
+			p_n_cr += 4;
+			p_n_cb += 4;
+			p_n_y += 8;
+			n_address += 72;
+		}
+		p_n_y += DCTSIZE2;
+	}
+}
+
 static void mdec0_write( UINT32 n_address, INT32 n_size )
 {
 	int n_index;
@@ -914,17 +1090,31 @@ static void mdec1_read( UINT32 n_address, INT32 n_size )
 {
 	if( ( m_n_mdec0_command & ( 1L << 29 ) ) != 0 )
 	{
-		while( n_size > 0 )
+		/* bits 28-27 select the output depth: 0x38000000 = 15 bit, 0x30000000 = 24 bit */
+		if( ( m_n_mdec0_command & ( 1L << 27 ) ) != 0 )
 		{
-			m_n_mdec0_address = mdec_unpack( m_n_mdec0_address );
-			mdec_yuv2_to_rgb15( n_address );
-			n_address += ( 16 * 16 ) * 2;
-			n_size -= ( 16 * 16 ) / 2;
+			while( n_size > 0 )
+			{
+				m_n_mdec0_address = mdec_unpack( m_n_mdec0_address );
+				mdec_yuv2_to_rgb15( n_address );
+				n_address += ( 16 * 16 ) * 2;
+				n_size -= ( 16 * 16 ) / 2;
+			}
+		}
+		else
+		{
+			while( n_size > 0 )
+			{
+				m_n_mdec0_address = mdec_unpack( m_n_mdec0_address );
+				mdec_yuv2_to_rgb24( n_address );
+				n_address += ( 16 * 16 ) * 3;
+				n_size -= ( 16 * 16 * 3 ) / 4;
+			}
 		}
 	}
 	else
 	{
-		verboselog( 0, "mdec 24bit not supported\n" );
+		verboselog( 0, "mdec1_read no conversion %08x\n", m_n_mdec0_command );
 	}
 	m_n_mdec1_status &= ~( 1L << 29 );
 }
@@ -1003,10 +1193,7 @@ static void psx_postload( void )
 		dma_timer( n, m_p_n_dma_lastscanline[ n ] );
 	}
 
-	for( n = 0; n < 3; n++ )
-	{
-		root_timer( n );
-	}
+	root_postload();
 
 	mdec_cos_precalc();
 }
@@ -1048,7 +1235,7 @@ void psx_driver_init( void )
 		m_p_n_sio_mode[ n ] = 0;
 		m_p_n_sio_control[ n ] = 0;
 		m_p_n_sio_baud[ n ] = 0;
-		m_p_p_n_sio_buf[ n ] = malloc( 256 );
+		m_p_p_n_sio_buf[ n ] = calloc( 1, 256 ); /* zeroed: the buffers are part of the save state */
 		m_p_n_sio_rx[ n ] = 0;
 		m_p_n_sio_read[ n ] = 0;
 		m_p_f_sio_write[ n ] = NULL;
@@ -1074,6 +1261,8 @@ void psx_driver_init( void )
 	state_save_register_UINT16( "psx", 0, "m_p_n_root_count", m_p_n_root_count, 3 );
 	state_save_register_UINT16( "psx", 0, "m_p_n_root_mode", m_p_n_root_mode, 3 );
 	state_save_register_UINT16( "psx", 0, "m_p_n_root_target", m_p_n_root_target, 3 );
+	state_save_register_double( "psx", 0, "m_p_f_root_timeleft", m_p_f_root_timeleft, 3 );
+	state_save_register_func_presave( root_presave );
 	state_save_register_UINT16( "psx", 0, "m_p_n_sio_status", m_p_n_sio_status, 2 );
 	state_save_register_UINT16( "psx", 0, "m_p_n_sio_mode", m_p_n_sio_mode, 2 );
 	state_save_register_UINT16( "psx", 0, "m_p_n_sio_control", m_p_n_sio_control, 2 );

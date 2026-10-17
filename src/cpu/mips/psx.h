@@ -213,6 +213,15 @@ extern void mips_set_irq_callback(int (*callback)(int irqline));
 extern const char *mips_info(void *context, int regnum);
 extern unsigned mips_dasm(char *buffer, UINT32 pc);
 
+/* optional speedups, off unless a driver enables them */
+/* loads and stores in a plain RAM region use a direct pointer */
+extern void psxcpu_add_fastram(offs_t start, offs_t end, int readonly, void *base);
+/* fast RAM written behind the CPU's back (DMA, driver patches) */
+extern void psxcpu_ram_written(const void *host, UINT32 bytes);
+/* recompiler (sljit), where supported */
+extern int psxcpu_jit_available(void);
+extern void psxcpu_set_jit(int enable);
+
 #ifdef MAME_DEBUG
 extern unsigned DasmMIPS(char *buff, unsigned _pc);
 #endif

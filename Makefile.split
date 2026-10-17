@@ -997,6 +997,7 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_namcos2 core_none))
 	CPUS+=M6809@
 	CPUS+=HD63705@
 	SOUNDS+=C140@
+SOUNDS+=C352@
 	#SOUNDS+=YM2151@
 	SOUNDS+=YM2151_ALT@
 	SOURCES_C += \
@@ -1842,6 +1843,24 @@ else
 CPUDEFS += -DHAS_PSXCPU=0
 endif
 
+CPU=$(strip $(findstring H83002@,$(CPUS)))
+ifneq ($(CPU),)
+OBJDIRS += $(CORE_DIR)/cpu/h83002
+CPUDEFS += -DHAS_H83002=1
+SOURCES_C += $(CORE_DIR)/cpu/h83002/h83002.c
+else
+CPUDEFS += -DHAS_H83002=0
+endif
+
+CPU=$(strip $(findstring M37702@,$(CPUS)))
+ifneq ($(CPU),)
+OBJDIRS += $(CORE_DIR)/cpu/m37710
+CPUDEFS += -DHAS_M37702=1
+SOURCES_C += $(CORE_DIR)/cpu/m37710/m37710.c $(CORE_DIR)/cpu/m37710/m37710o0.c $(CORE_DIR)/cpu/m37710/m37710o1.c $(CORE_DIR)/cpu/m37710/m37710o2.c $(CORE_DIR)/cpu/m37710/m37710o3.c
+else
+CPUDEFS += -DHAS_M37702=0
+endif
+
 CPU=$(strip $(findstring ASAP@,$(CPUS)))
 ifneq ($(CPU),)
 OBJDIRS += $(CORE_DIR)/cpu/asap
@@ -2487,6 +2506,14 @@ else
 SOUNDDEFS += -DHAS_C140=0
 endif
 
+SOUND=$(strip $(findstring C352@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_C352=1
+SOURCES_C += $(CORE_DIR)/sound/c352.c
+else
+SOUNDDEFS += -DHAS_C352=0
+endif
+
 SOUND=$(strip $(findstring QSOUND@,$(SOUNDS)))
 ifneq ($(SOUND),)
 SOUNDDEFS += -DHAS_QSOUND=1
@@ -2692,6 +2719,9 @@ SOURCES_C += \
 	$(CORE_DIR)/lib/zlib/uncompr.c \
 	$(CORE_DIR)/lib/zlib/unzip.c \
 	$(CORE_DIR)/lib/zlib/zutil.c
+
+# sljit: run-time code generator of the MIPS recompilers (empty where they are not supported)
+SOURCES_C += $(CORE_DIR)/lib/sljit/sljit_mame.c
 endif
 
 ifeq ($(ZLIB_UNCOMPRESS), 1)

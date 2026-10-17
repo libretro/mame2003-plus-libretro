@@ -19027,8 +19027,8 @@ dakkochn:0:0000:00:999:[ for it on the cheat   ]:REASON 1
 dakkochn:0:0000:00:999:[ forums.               ]:REASON 1
 
 ; [ Dancing Eyes (DC1/VER.A) ]
-danceyes:0:002B51DC:09:000:Infinite Credits
-danceyes:0:002B51A0:01:000:Always See Through Mode
+danceyesj:0:002B51DC:09:000:Infinite Credits
+danceyesj:0:002B51A0:01:000:Always See Through Mode
 :danceyes:00000500:0021F064:0000000E:FFFFFFFF:Select Stage
 
 ; [ Danchi de Hanafuoda ]
@@ -31430,24 +31430,24 @@ dungeonm:0:0FFFFF:02:100:Region Switch = US:Dungeon Magic
 dungeonm:0:0FFFFF:03:100:Region Switch = World:Dungeon Magic
 
 ; [ Dunk Mania (DM1/VER.C) ]
-dunkmnia:0:001DD096:FF:000:Infinite Time
-dunkmnia:0:001DD095:FF:500:Infinite Time (2/3)
-dunkmnia:0:001DD094:FF:500:Infinite Time (3/3)
-dunkmnia:0:001DD096:00:001:Finish this Period Now!
-dunkmnia:0:001DD095:00:501:Finish this Period Now! (2/3)
-dunkmnia:0:001DD094:01:501:Finish this Period Now! (3/3)
+dunkmniajc:0:001DD096:FF:000:Infinite Time
+dunkmniajc:0:001DD095:FF:500:Infinite Time (2/3)
+dunkmniajc:0:001DD094:FF:500:Infinite Time (3/3)
+dunkmniajc:0:001DD096:00:001:Finish this Period Now!
+dunkmniajc:0:001DD095:00:501:Finish this Period Now! (2/3)
+dunkmniajc:0:001DD094:01:501:Finish this Period Now! (3/3)
 :dunkmnia:00300060:001DD098:00012875:FFFFFFFF:Infinite Shot Time
 :dunkmnia:00300001:001DD098:00000001:FFFFFFFF:No Shot Time Left Now!:For the best effect assign this cheat an activation key and use it whenever the other side has the ball!
-dunkmnia:0:001DD4E8:00:000:Score always = 0 PL1
-dunkmnia:0:001DD4E8:7F:000:Score always = 127 PL1
-dunkmnia:0:001DD4E8:00:001:Set score = 0 Now! PL1
-dunkmnia:0:001DD4E8:32:001:Set score = 50 Now! PL1
-dunkmnia:0:001DD4E8:7F:070:Select score Now! PL1
-dunkmnia:0:001DD4F4:00:000:Score always = 0 PL2
-dunkmnia:0:001DD4F4:7F:000:Score always = 127 PL2
-dunkmnia:0:001DD4F4:00:001:Set score = 0 Now! PL2
-dunkmnia:0:001DD4F4:32:001:Set score = 50 Now! PL2
-dunkmnia:0:001DD4F4:7F:070:Select score Now! PL2
+dunkmniajc:0:001DD4E8:00:000:Score always = 0 PL1
+dunkmniajc:0:001DD4E8:7F:000:Score always = 127 PL1
+dunkmniajc:0:001DD4E8:00:001:Set score = 0 Now! PL1
+dunkmniajc:0:001DD4E8:32:001:Set score = 50 Now! PL1
+dunkmniajc:0:001DD4E8:7F:070:Select score Now! PL1
+dunkmniajc:0:001DD4F4:00:000:Score always = 0 PL2
+dunkmniajc:0:001DD4F4:7F:000:Score always = 127 PL2
+dunkmniajc:0:001DD4F4:00:001:Set score = 0 Now! PL2
+dunkmniajc:0:001DD4F4:32:001:Set score = 50 Now! PL2
+dunkmniajc:0:001DD4F4:7F:070:Select score Now! PL2
 
 ; [ Dunk Shot ]
 dunkshot:0:0000:00:999:[ There are no cheats   ]:REASON 1
@@ -31844,19 +31844,19 @@ eggvntdx:0:000680C8:05:000:Infinite Lives PL2
 eggvntdx:0:000680BA:63:000:Always have 99 hits PL2
 
 ; [ Ehrgeiz (EG3/VER.A) ]
-ehrgeiz:0:0000:00:999:[ This game hasn't even ]:REASON 11
-ehrgeiz:0:0000:00:999:[ been looked at due to ]:REASON 11
-ehrgeiz:0:0000:00:999:[ time constraints - Too]:REASON 11
-ehrgeiz:0:0000:00:999:[ many games and so     ]:REASON 11
-ehrgeiz:0:0000:00:999:[ little time. It is    ]:REASON 11
-ehrgeiz:0:0000:00:999:[ even possible that    ]:REASON 11
-ehrgeiz:0:0000:00:999:[ this game may be a    ]:REASON 11
-ehrgeiz:0:0000:00:999:[ clone of an existing  ]:REASON 11
-ehrgeiz:0:0000:00:999:[ game which may have   ]:REASON 11
-ehrgeiz:0:0000:00:999:[ cheats. Please search ]:REASON 11
-ehrgeiz:0:0000:00:999:[ the cheat forums      ]:REASON 11
-ehrgeiz:0:0000:00:999:[ before posting cheat  ]:REASON 11
-ehrgeiz:0:0000:00:999:[ requests/cheat finding]:REASON 11
+ehrgeizua:0:0000:00:999:[ This game hasn't even ]:REASON 11
+ehrgeizua:0:0000:00:999:[ been looked at due to ]:REASON 11
+ehrgeizua:0:0000:00:999:[ time constraints - Too]:REASON 11
+ehrgeizua:0:0000:00:999:[ many games and so     ]:REASON 11
+ehrgeizua:0:0000:00:999:[ little time. It is    ]:REASON 11
+ehrgeizua:0:0000:00:999:[ even possible that    ]:REASON 11
+ehrgeizua:0:0000:00:999:[ this game may be a    ]:REASON 11
+ehrgeizua:0:0000:00:999:[ clone of an existing  ]:REASON 11
+ehrgeizua:0:0000:00:999:[ game which may have   ]:REASON 11
+ehrgeizua:0:0000:00:999:[ cheats. Please search ]:REASON 11
+ehrgeizua:0:0000:00:999:[ the cheat forums      ]:REASON 11
+ehrgeizua:0:0000:00:999:[ before posting cheat  ]:REASON 11
+ehrgeizua:0:0000:00:999:[ requests/cheat finding]:REASON 11
 
 ; [ Eight Forces ]
 eightfrc:0:201D50:07:000:Infinite Lives PL1
@@ -67783,9 +67783,9 @@ mrdoy:0:E0F3:01:000:One red monster PL2
 mrdoy:0:E0F3:00:000:NO red monsters PL2
 
 ; [ Mr Driller (DRI1/VER.A2) ]
-mrdrillr:0:002C4560:09:000:Infinite Credits
-mrdrillr:0:0021D5F8:0A:000:Infinite Lives
-mrdrillr:0:0029EBF9:4A:000:Infinite Air
+mrdrillrja2:0:002C4560:09:000:Infinite Credits
+mrdrillrja2:0:0021D5F8:0A:000:Infinite Lives
+mrdrillrja2:0:0029EBF9:4A:000:Infinite Air
 
 ; [ Mr Driller 2 ]
 mrdrilr2:0:0000:00:999:[ There are no cheats   ]:REASON 1
@@ -117379,38 +117379,38 @@ soulclba:0:0000:00:999:[ for it on the cheat   ]:REASON 1
 soulclba:0:0000:00:999:[ forums.               ]:REASON 1
 
 ; [ Soul Calibur (SOC14/VER.C) ]
-soulclbr:0:0000:00:999:[ There are no cheats   ]:REASON 1
-soulclbr:0:0000:00:999:[ for this game as it   ]:REASON 1
-soulclbr:0:0000:00:999:[ didn't work the last  ]:REASON 1
-soulclbr:0:0000:00:999:[ time it was tested.   ]:REASON 1
-soulclbr:0:0000:00:999:[ If the game now works ]:REASON 1
-soulclbr:0:0000:00:999:[ please request cheats ]:REASON 1
-soulclbr:0:0000:00:999:[ for it on the cheat   ]:REASON 1
-soulclbr:0:0000:00:999:[ forums.               ]:REASON 1
+soulclbrja2:0:0000:00:999:[ There are no cheats   ]:REASON 1
+soulclbrja2:0:0000:00:999:[ for this game as it   ]:REASON 1
+soulclbrja2:0:0000:00:999:[ didn't work the last  ]:REASON 1
+soulclbrja2:0:0000:00:999:[ time it was tested.   ]:REASON 1
+soulclbrja2:0:0000:00:999:[ If the game now works ]:REASON 1
+soulclbrja2:0:0000:00:999:[ please request cheats ]:REASON 1
+soulclbrja2:0:0000:00:999:[ for it on the cheat   ]:REASON 1
+soulclbrja2:0:0000:00:999:[ forums.               ]:REASON 1
 
 ; [ Soul Edge (SO3/VER.A) ]
-souledga:0:000EFFD4:63:000:Infinite Time
-souledga:0:000EFFD4:00:001:Finish this Round Now!
-souledga:0:002D602E:F0:000:Infinite Energy PL1
-souledga:0:002D602E:00:001:Drain All Energy Now! PL1
-souledga:0:002D6160:60:000:Always have Maximum Power PL1
-souledga:0:002D6160:00:001:Drain All Power Now! PL1
-souledga:0:002D9D72:F0:000:Infinite Energy PL2
-souledga:0:002D9D72:00:001:Drain All Energy Now! PL2
-souledga:0:002D9EA4:60:000:Always have Maximum Power PL2
-souledga:0:002D9EA4:00:001:Drain All Power Now! PL2
+souledgeua:0:000EFFD4:63:000:Infinite Time
+souledgeua:0:000EFFD4:00:001:Finish this Round Now!
+souledgeua:0:002D602E:F0:000:Infinite Energy PL1
+souledgeua:0:002D602E:00:001:Drain All Energy Now! PL1
+souledgeua:0:002D6160:60:000:Always have Maximum Power PL1
+souledgeua:0:002D6160:00:001:Drain All Power Now! PL1
+souledgeua:0:002D9D72:F0:000:Infinite Energy PL2
+souledgeua:0:002D9D72:00:001:Drain All Energy Now! PL2
+souledgeua:0:002D9EA4:60:000:Always have Maximum Power PL2
+souledgeua:0:002D9EA4:00:001:Drain All Power Now! PL2
 
 ; [ Soul Edge (SO1/VER.A) ]
-souledgb:0:000EFFD4:63:000:Infinite Time
-souledgb:0:000EFFD4:00:001:Finish this Round Now!
-souledgb:0:002D602E:F0:000:Infinite Energy PL1
-souledgb:0:002D602E:00:001:Drain All Energy Now! PL1
-souledgb:0:002D6160:60:000:Always have Maximum Power PL1
-souledgb:0:002D6160:00:001:Drain All Power Now! PL1
-souledgb:0:002D9D72:F0:000:Infinite Energy PL2
-souledgb:0:002D9D72:00:001:Drain All Energy Now! PL2
-souledgb:0:002D9EA4:60:000:Always have Maximum Power PL2
-souledgb:0:002D9EA4:00:001:Drain All Power Now! PL2
+souledgeja:0:000EFFD4:63:000:Infinite Time
+souledgeja:0:000EFFD4:00:001:Finish this Round Now!
+souledgeja:0:002D602E:F0:000:Infinite Energy PL1
+souledgeja:0:002D602E:00:001:Drain All Energy Now! PL1
+souledgeja:0:002D6160:60:000:Always have Maximum Power PL1
+souledgeja:0:002D6160:00:001:Drain All Power Now! PL1
+souledgeja:0:002D9D72:F0:000:Infinite Energy PL2
+souledgeja:0:002D9D72:00:001:Drain All Energy Now! PL2
+souledgeja:0:002D9EA4:60:000:Always have Maximum Power PL2
+souledgeja:0:002D9EA4:00:001:Drain All Power Now! PL2
 
 ; [ Soul Edge Ver. II (SO4/VER.C) ]
 souledge:0:00121F44:63:000:Infinite Time
@@ -124535,19 +124535,19 @@ starshpp:0:0083:99:000:Infinite Fuel
 starshpp:0:00A0:0A:000:Infinite Torpedos
 
 ; [ Star Sweep (STP1/VER.A) ]
-starswep:0:0000:00:999:[ This game hasn't even ]:REASON 11
-starswep:0:0000:00:999:[ been looked at due to ]:REASON 11
-starswep:0:0000:00:999:[ time constraints - Too]:REASON 11
-starswep:0:0000:00:999:[ many games and so     ]:REASON 11
-starswep:0:0000:00:999:[ little time. It is    ]:REASON 11
-starswep:0:0000:00:999:[ even possible that    ]:REASON 11
-starswep:0:0000:00:999:[ this game may be a    ]:REASON 11
-starswep:0:0000:00:999:[ clone of an existing  ]:REASON 11
-starswep:0:0000:00:999:[ game which may have   ]:REASON 11
-starswep:0:0000:00:999:[ cheats. Please search ]:REASON 11
-starswep:0:0000:00:999:[ the cheat forums      ]:REASON 11
-starswep:0:0000:00:999:[ before posting cheat  ]:REASON 11
-starswep:0:0000:00:999:[ requests/cheat finding]:REASON 11
+starswepj:0:0000:00:999:[ This game hasn't even ]:REASON 11
+starswepj:0:0000:00:999:[ been looked at due to ]:REASON 11
+starswepj:0:0000:00:999:[ time constraints - Too]:REASON 11
+starswepj:0:0000:00:999:[ many games and so     ]:REASON 11
+starswepj:0:0000:00:999:[ little time. It is    ]:REASON 11
+starswepj:0:0000:00:999:[ even possible that    ]:REASON 11
+starswepj:0:0000:00:999:[ this game may be a    ]:REASON 11
+starswepj:0:0000:00:999:[ clone of an existing  ]:REASON 11
+starswepj:0:0000:00:999:[ game which may have   ]:REASON 11
+starswepj:0:0000:00:999:[ cheats. Please search ]:REASON 11
+starswepj:0:0000:00:999:[ the cheat forums      ]:REASON 11
+starswepj:0:0000:00:999:[ before posting cheat  ]:REASON 11
+starswepj:0:0000:00:999:[ requests/cheat finding]:REASON 11
 
 ; [ Star Trek ]
 startrek:0:CE17:04:000:Infinite Shield
@@ -126987,41 +126987,41 @@ tekken:0:00267038:09:000:Infinite Credits
 :tekken:00000001:00265B2E:00000000:FFFFFFFF:Drain all Energy Now! PL2
 
 ; [ Tekken 2 Ver.B (TES3/VER.B) ]
-tekken2:0:00301CEC:09:000:Infinite Credits
+tekken2ub:0:00301CEC:09:000:Infinite Credits
 :tekken2:00100000:0030F174:00001732:FFFFFFFF:Infinite Time
 :tekken2:00100001:0030F174:00000001:FFFFFFFF:Finish this Round Now!
-tekken2:0:0030CA6A:7E:000:Infinite Energy PL1
-tekken2:0:0030CA6A:00:001:Drain All Energy Now! PL1
-tekken2:0:0030DEEA:7E:000:Infinite Energy PL2
-tekken2:0:0030DEEA:00:001:Drain All Energy Now! PL2
+tekken2ub:0:0030CA6A:7E:000:Infinite Energy PL1
+tekken2ub:0:0030CA6A:00:001:Drain All Energy Now! PL1
+tekken2ub:0:0030DEEA:7E:000:Infinite Energy PL2
+tekken2ub:0:0030DEEA:00:001:Drain All Energy Now! PL2
 
 ; [ Tekken 2 Ver.B (TES2/VER.B) ]
-tekken2a:0:00301CEC:09:000:Infinite Credits
+tekken2b:0:00301CEC:09:000:Infinite Credits
 :tekken2a:00100000:0030F174:00001732:FFFFFFFF:Infinite Time
 :tekken2a:00100001:0030F174:00000001:FFFFFFFF:Finish this Round Now!
-tekken2a:0:0030CA6A:7E:000:Infinite Energy PL1
-tekken2a:0:0030CA6A:00:001:Drain All Energy Now! PL1
-tekken2a:0:0030DEEA:7E:000:Infinite Energy PL2
-tekken2a:0:0030DEEA:00:001:Drain All Energy Now! PL2
+tekken2b:0:0030CA6A:7E:000:Infinite Energy PL1
+tekken2b:0:0030CA6A:00:001:Drain All Energy Now! PL1
+tekken2b:0:0030DEEA:7E:000:Infinite Energy PL2
+tekken2b:0:0030DEEA:00:001:Drain All Energy Now! PL2
 
 ; [ Tekken 2 (TES2/VER.A) ]
-tekken2b:0:002FA4A0:09:000:Infinite Credits
+tekken2a:0:002FA4A0:09:000:Infinite Credits
 :tekken2b:00100000:00307928:00001732:FFFFFFFF:Infinite Time
 :tekken2b:00100001:00307928:00000001:FFFFFFFF:Finish this Round Now!
-tekken2b:0:0030521E:7E:000:Infinite Energy PL1
-tekken2b:0:0030521E:00:001:Drain All Energy Now! PL1
-tekken2b:0:0030669E:7E:000:Infinite Energy PL2
-tekken2b:0:0030669E:00:001:Drain All Energy Now! PL2
+tekken2a:0:0030521E:7E:000:Infinite Energy PL1
+tekken2a:0:0030521E:00:001:Drain All Energy Now! PL1
+tekken2a:0:0030669E:7E:000:Infinite Energy PL2
+tekken2a:0:0030669E:00:001:Drain All Energy Now! PL2
 
 ; [ Tekken 3 (TET1/VER.E1) ]
-tekken3:0:0021FB8C:32:000:Infinite Time
-tekken3:0:0021FB8D:17:500:Infinite Time (2/2)
-tekken3:0:0021FB8C:01:001:Finish this Round Now!
-tekken3:0:0021FB8D:00:501:Finish this Round Now! (2/2)
-tekken3:0:0031E492:82:000:Infinite Energy PL1
-tekken3:0:0031E492:00:001:Drain All Energy Now! PL1
-tekken3:0:0031FF76:82:000:Infinite Energy PL2
-tekken3:0:0031FF76:00:001:Drain All Energy Now! PL2
+tekken3je1:0:0021FB8C:32:000:Infinite Time
+tekken3je1:0:0021FB8D:17:500:Infinite Time (2/2)
+tekken3je1:0:0021FB8C:01:001:Finish this Round Now!
+tekken3je1:0:0021FB8D:00:501:Finish this Round Now! (2/2)
+tekken3je1:0:0031E492:82:000:Infinite Energy PL1
+tekken3je1:0:0031E492:00:001:Drain All Energy Now! PL1
+tekken3je1:0:0031FF76:82:000:Infinite Energy PL2
+tekken3je1:0:0031FF76:00:001:Drain All Energy Now! PL2
 
 ; [ Tekken (TE2/VER.B) ]
 tekkena:0:00266CE0:09:000:Infinite Credits
@@ -127042,14 +127042,14 @@ tekkenb:0:00266CE0:09:000:Infinite Credits
 :tekkenb:00000001:002657D6:00000000:FFFFFFFF:Drain all Energy Now! PL2
 
 ; [ Tekken Tag Tournament (TEG3/VER.B) ]
-tekkentt:0:0000:00:999:[ There are no cheats   ]:REASON 1
-tekkentt:0:0000:00:999:[ for this game as it   ]:REASON 1
-tekkentt:0:0000:00:999:[ didn't work the last  ]:REASON 1
-tekkentt:0:0000:00:999:[ time it was tested.   ]:REASON 1
-tekkentt:0:0000:00:999:[ If the game now works ]:REASON 1
-tekkentt:0:0000:00:999:[ please request cheats ]:REASON 1
-tekkentt:0:0000:00:999:[ for it on the cheat   ]:REASON 1
-tekkentt:0:0000:00:999:[ forums.               ]:REASON 1
+tektagt:0:0000:00:999:[ There are no cheats   ]:REASON 1
+tektagt:0:0000:00:999:[ for this game as it   ]:REASON 1
+tektagt:0:0000:00:999:[ didn't work the last  ]:REASON 1
+tektagt:0:0000:00:999:[ time it was tested.   ]:REASON 1
+tektagt:0:0000:00:999:[ If the game now works ]:REASON 1
+tektagt:0:0000:00:999:[ please request cheats ]:REASON 1
+tektagt:0:0000:00:999:[ for it on the cheat   ]:REASON 1
+tektagt:0:0000:00:999:[ forums.               ]:REASON 1
 
 ; [ Tel Jan ]
 teljan:0:06002FD7:09:000:Infinite Credits
@@ -138936,17 +138936,17 @@ xenophob:0:0607ED:FF:000:Infinite Health PL2
 xenophob:0:0608AD:FF:000:Infinite Health PL3
 
 ; [ Xevious 3D/G (XV31/VER.A) ]
-xevi3dg:0:000EE8C0:09:000:Infinite Credits
-xevi3dg:0:00150DC8:06:000:Infinite Lives PL1
-xevi3dg:0:00126358:01:000:Invincibility PL1
-xevi3dg:0:00150DB0:01:000:Always have Laser Gun PL1
-xevi3dg:0:00150DB0:02:000:Always have Homing Weapon PL1
-xevi3dg:0:00115BDC:02:000:Maximum Fire Power PL1
-xevi3dg:0:00150DCC:06:000:Infinite Lives PL2
-xevi3dg:0:00126204:01:000:Invincibility PL2
-xevi3dg:0:00150DB4:01:000:Always have Laser Gun PL2
-xevi3dg:0:00150DB4:02:000:Always have Homing Weapon PL2
-xevi3dg:0:001171B0:02:000:Maximum Fire Power PL2
+xevi3dgj:0:000EE8C0:09:000:Infinite Credits
+xevi3dgj:0:00150DC8:06:000:Infinite Lives PL1
+xevi3dgj:0:00126358:01:000:Invincibility PL1
+xevi3dgj:0:00150DB0:01:000:Always have Laser Gun PL1
+xevi3dgj:0:00150DB0:02:000:Always have Homing Weapon PL1
+xevi3dgj:0:00115BDC:02:000:Maximum Fire Power PL1
+xevi3dgj:0:00150DCC:06:000:Infinite Lives PL2
+xevi3dgj:0:00126204:01:000:Invincibility PL2
+xevi3dgj:0:00150DB4:01:000:Always have Laser Gun PL2
+xevi3dgj:0:00150DB4:02:000:Always have Homing Weapon PL2
+xevi3dgj:0:001171B0:02:000:Maximum Fire Power PL2
 
 ; [ Xevios ]
 xevios:0:8183:09:000:Infinite Lives
