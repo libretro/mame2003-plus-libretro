@@ -914,7 +914,7 @@ void draw_rle(struct atarirle_data *mo, struct mame_bitmap *bitmap, int code, in
 	/* UINT32 palettebase = mo->palettebase + color; */
   // draw it with appropriate flipping; the pen base is aligned to the
 	// object's depth (color and pixel bits cannot overlap)
-	UINT32 palettebase = (mo->palettebase + color) & ~UINT32((1 << rledata->bpp) - 1);
+	UINT32 palettebase = (mo->palettebase + color) & ~UINT32((1 << rledata->bpp)) - 1);
 	const struct atarirle_info *info = &mo->info[code];
 	int scaled_xoffs = (xscale * info->xoffs) >> 12;
 	int scaled_yoffs = (yscale * info->yoffs) >> 12;
