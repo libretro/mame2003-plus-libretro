@@ -22,6 +22,20 @@
 #include "includes/psx.h"
 #include "usrintrf.h"
 
+/* drawing on a second thread: hosts with POSIX threads and GCC/clang atomics */
+#if defined( __GNUC__ ) && ( defined( __linux__ ) || defined( __APPLE__ ) ) && !defined( __EMSCRIPTEN__ )
+#define PSX_GPU_THREADS ( 1 )
+#include <pthread.h>
+#include <sched.h>
+#else
+#define PSX_GPU_THREADS ( 0 )
+#endif
+
+static int psx_gpu_thread_wanted;	/* set by the driver (core option) */
+static void psx_gpu_sync( void );
+static void psx_gq_start( void );
+static void psx_gq_stop( void );
+
 #define STOP_ON_ERROR ( 0 )
 
 #define VERBOSE_LEVEL ( 0 )
@@ -63,7 +77,7 @@ struct GOURAUDTEXTUREDVERTEX
 	PAIR n_texture;
 };
 
-static union
+typedef union
 {
 	UINT32 n_entry[ 16 ];
 
@@ -141,7 +155,9 @@ static union
 		PAIR n_bgr;
 		struct FLATVERTEX vertex;
 	} Dot;
-} m_packet;
+} psx_gpu_packet;
+
+static psx_gpu_packet m_packet;
 
 static UINT16 *m_p_vram;
 static UINT32 m_n_vram_size;
@@ -623,6 +639,15 @@ static int psx_gpu_init( int n_width, int n_height )
 	state_save_register_UINT32( "psx", 0, "m_n_screenheight", &m_n_screenheight, 1 );
 	state_save_register_UINT32( "psx", 0, "m_n_drawmode", &m_n_drawmode, 1 );
 
+	/* the drawing thread (System 10/11/12): VRAM complete in a save state */
+	state_save_register_func_presave( psx_gpu_sync );
+	state_save_register_func_postload( psx_gpu_sync );
+	if( psx_gpu_thread_wanted )
+	{
+		psx_gq_start();
+	}
+	psx_gpu_thread_wanted = 0;	/* asked again by the next driver that wants it */
+
 	return 0;
 }
 
@@ -646,6 +671,7 @@ VIDEO_START( psx_type2_1024x1024 )
 
 VIDEO_STOP( psx )
 {
+	psx_gq_stop();
 }
 
 /*
@@ -684,6 +710,8 @@ VIDEO_UPDATE( psx )
 	int direct = ( Machine->drv->video_attributes & VIDEO_RGB_DIRECT ) != 0;
 	UINT32 n_x;
 	UINT32 n_y;
+
+	psx_gpu_sync();
 
 #if defined( MAME_DEBUG )
 	if( DebugMeshDisplay( bitmap, cliprect ) )
@@ -823,6 +851,45 @@ type 2
 f  e  d  c| b| a  9| 8  7| 6  5| 4| 3  2  1  0
           |ty|     |   tp|  abr|ty|         tx
 */
+
+/*
+	Drawing on a second thread (psx_gpu_set_thread; System 10/11/12).
+
+	psx_gpu_write parses the commands and keeps every register on the
+	emulation thread, as before. Each primitive is drawn with a copy of
+	its packet and of the drawing state of that moment (struct psx_draw):
+	at once, or in order by the drawing thread. VIDEO_UPDATE, a transfer
+	from VRAM to the CPU, the VBLANK and the save states wait until
+	everything queued has been drawn, so VRAM and what the emulation sees
+	are the same with and without the thread.
+
+	The drawing code below reads the state through psx_d.
+*/
+struct psx_draw
+{
+	psx_gpu_packet packet;
+	UINT32 twy, twx, twh, tww;
+	UINT32 drawarea_x1, drawarea_y1, drawarea_x2, drawarea_y2;
+	INT32 drawoffset_x, drawoffset_y;
+	UINT32 drawmode;
+	UINT32 gpustatus;
+};
+
+static struct psx_draw *psx_d;
+
+#define m_packet ( psx_d->packet )
+#define m_n_twy ( psx_d->twy )
+#define m_n_twx ( psx_d->twx )
+#define m_n_twh ( psx_d->twh )
+#define m_n_tww ( psx_d->tww )
+#define m_n_drawarea_x1 ( psx_d->drawarea_x1 )
+#define m_n_drawarea_y1 ( psx_d->drawarea_y1 )
+#define m_n_drawarea_x2 ( psx_d->drawarea_x2 )
+#define m_n_drawarea_y2 ( psx_d->drawarea_y2 )
+#define m_n_drawoffset_x ( psx_d->drawoffset_x )
+#define m_n_drawoffset_y ( psx_d->drawoffset_y )
+#define m_n_drawmode ( psx_d->drawmode )
+#define m_n_gpustatus ( psx_d->gpustatus )
 
 #define TRANSPARENCYSETUP \
 	p_n_f = m_p_n_f1; \
@@ -3523,6 +3590,372 @@ static void MoveImage( void )
 	}
 }
 
+#undef m_packet
+#undef m_n_twy
+#undef m_n_twx
+#undef m_n_twh
+#undef m_n_tww
+#undef m_n_drawarea_x1
+#undef m_n_drawarea_y1
+#undef m_n_drawarea_x2
+#undef m_n_drawarea_y2
+#undef m_n_drawoffset_x
+#undef m_n_drawoffset_y
+#undef m_n_drawmode
+#undef m_n_gpustatus
+
+enum
+{
+	PSX_DRAW_FLATPOLYGON3, PSX_DRAW_FLATPOLYGON4,
+	PSX_DRAW_FLATTEXTUREDPOLYGON3, PSX_DRAW_FLATTEXTUREDPOLYGON4,
+	PSX_DRAW_GOURAUDPOLYGON3, PSX_DRAW_GOURAUDPOLYGON4,
+	PSX_DRAW_GOURAUDTEXTUREDPOLYGON3, PSX_DRAW_GOURAUDTEXTUREDPOLYGON4,
+	PSX_DRAW_MONOCHROMELINE, PSX_DRAW_GOURAUDLINE,
+	PSX_DRAW_FRAMEBUFFERRECTANGLE, PSX_DRAW_FLATRECTANGLE, PSX_DRAW_FLATTEXTUREDRECTANGLE,
+	PSX_DRAW_SPRITE8X8, PSX_DRAW_SPRITE16X16, PSX_DRAW_DOT, PSX_DRAW_MOVEIMAGE,
+	PSX_DRAW_STORE	/* pixels sent to VRAM (command 0xa0) */
+};
+
+static void psx_draw_run( int n_op )
+{
+	switch( n_op )
+	{
+	case PSX_DRAW_FLATPOLYGON3: FlatPolygon( 3 ); break;
+	case PSX_DRAW_FLATPOLYGON4: FlatPolygon( 4 ); break;
+	case PSX_DRAW_FLATTEXTUREDPOLYGON3: FlatTexturedPolygon( 3 ); break;
+	case PSX_DRAW_FLATTEXTUREDPOLYGON4: FlatTexturedPolygon( 4 ); break;
+	case PSX_DRAW_GOURAUDPOLYGON3: GouraudPolygon( 3 ); break;
+	case PSX_DRAW_GOURAUDPOLYGON4: GouraudPolygon( 4 ); break;
+	case PSX_DRAW_GOURAUDTEXTUREDPOLYGON3: GouraudTexturedPolygon( 3 ); break;
+	case PSX_DRAW_GOURAUDTEXTUREDPOLYGON4: GouraudTexturedPolygon( 4 ); break;
+	case PSX_DRAW_MONOCHROMELINE: MonochromeLine(); break;
+	case PSX_DRAW_GOURAUDLINE: GouraudLine(); break;
+	case PSX_DRAW_FRAMEBUFFERRECTANGLE: FrameBufferRectangleDraw(); break;
+	case PSX_DRAW_FLATRECTANGLE: FlatRectangle(); break;
+	case PSX_DRAW_FLATTEXTUREDRECTANGLE: FlatTexturedRectangle(); break;
+	case PSX_DRAW_SPRITE8X8: Sprite8x8(); break;
+	case PSX_DRAW_SPRITE16X16: Sprite16x16(); break;
+	case PSX_DRAW_DOT: Dot(); break;
+	case PSX_DRAW_MOVEIMAGE: MoveImage(); break;
+	}
+}
+
+#if PSX_GPU_THREADS
+
+#define PSX_GQ_SIZE ( 4096 )	/* queued primitives, a power of two */
+#define PSX_GQ_STORE ( 16 )	/* pixels per PSX_DRAW_STORE entry */
+#define PSX_GQ_SPIN ( 4096 )	/* polls before sleeping */
+
+struct psx_gq_item
+{
+	int n_op;
+	int n_count;
+	union
+	{
+		struct psx_draw draw;
+		struct
+		{
+			UINT32 n_pos[ PSX_GQ_STORE ];	/* y << 10 | x */
+			UINT16 n_value[ PSX_GQ_STORE ];
+		} store;
+	} u;
+};
+
+static struct psx_gq_item *psx_gq;
+static UINT32 psx_gq_head;	/* next entry to fill: written by the emulation thread only */
+static UINT32 psx_gq_tail;	/* next entry to draw: written by the drawing thread only */
+static int psx_gq_sleeping;	/* the drawing thread waits for work */
+static int psx_gq_waiting;	/* the emulation thread waits for the drawing */
+static int psx_gq_quit;
+static int psx_gq_running;
+static struct psx_gq_item *psx_gq_store;	/* open PSX_DRAW_STORE entry at psx_gq_head */
+static pthread_t psx_gq_thread;
+static pthread_mutex_t psx_gq_lock = PTHREAD_MUTEX_INITIALIZER;
+static pthread_cond_t psx_gq_work = PTHREAD_COND_INITIALIZER;
+static pthread_cond_t psx_gq_done = PTHREAD_COND_INITIALIZER;
+
+static void *psx_gq_main( void *p )
+{
+	UINT32 n_tail = psx_gq_tail;
+
+	for( ;; )
+	{
+		UINT32 n_head = __atomic_load_n( &psx_gq_head, __ATOMIC_ACQUIRE );
+		struct psx_gq_item *item;
+
+		if( n_head == n_tail )
+		{
+			int n_spin;
+			for( n_spin = 0; n_spin < PSX_GQ_SPIN && n_head == n_tail; n_spin++ )
+			{
+				n_head = __atomic_load_n( &psx_gq_head, __ATOMIC_ACQUIRE );
+			}
+			if( n_head == n_tail )
+			{
+				int b_quit;
+				pthread_mutex_lock( &psx_gq_lock );
+				__atomic_store_n( &psx_gq_sleeping, 1, __ATOMIC_SEQ_CST );
+				while( ( n_head = __atomic_load_n( &psx_gq_head, __ATOMIC_SEQ_CST ) ) == n_tail && !psx_gq_quit )
+				{
+					pthread_cond_wait( &psx_gq_work, &psx_gq_lock );
+				}
+				__atomic_store_n( &psx_gq_sleeping, 0, __ATOMIC_SEQ_CST );
+				b_quit = psx_gq_quit;
+				pthread_mutex_unlock( &psx_gq_lock );
+				if( n_head == n_tail && b_quit )
+				{
+					break;
+				}
+			}
+			continue;
+		}
+
+		item = &psx_gq[ n_tail & ( PSX_GQ_SIZE - 1 ) ];
+		if( item->n_op == PSX_DRAW_STORE )
+		{
+			int i;
+			for( i = 0; i < item->n_count; i++ )
+			{
+				*( m_p_p_vram[ item->u.store.n_pos[ i ] >> 10 ] + ( item->u.store.n_pos[ i ] & 1023 ) ) = item->u.store.n_value[ i ];
+			}
+		}
+		else
+		{
+			psx_d = &item->u.draw;
+			psx_draw_run( item->n_op );
+		}
+
+		n_tail++;
+		__atomic_store_n( &psx_gq_tail, n_tail, __ATOMIC_SEQ_CST );
+		if( __atomic_load_n( &psx_gq_waiting, __ATOMIC_SEQ_CST ) )
+		{
+			pthread_mutex_lock( &psx_gq_lock );
+			pthread_cond_signal( &psx_gq_done );
+			pthread_mutex_unlock( &psx_gq_lock );
+		}
+	}
+	return NULL;
+}
+
+/* wait until the drawing thread has taken every entry before n_target */
+static void psx_gq_wait( UINT32 n_target )
+{
+	int n_spin;
+	for( n_spin = 0; n_spin < PSX_GQ_SPIN; n_spin++ )
+	{
+		if( (INT32)( __atomic_load_n( &psx_gq_tail, __ATOMIC_ACQUIRE ) - n_target ) >= 0 )
+		{
+			return;
+		}
+	}
+	pthread_mutex_lock( &psx_gq_lock );
+	__atomic_store_n( &psx_gq_waiting, 1, __ATOMIC_SEQ_CST );
+	while( (INT32)( __atomic_load_n( &psx_gq_tail, __ATOMIC_SEQ_CST ) - n_target ) < 0 )
+	{
+		pthread_cond_wait( &psx_gq_done, &psx_gq_lock );
+	}
+	__atomic_store_n( &psx_gq_waiting, 0, __ATOMIC_SEQ_CST );
+	pthread_mutex_unlock( &psx_gq_lock );
+}
+
+/* the entry at psx_gq_head, once there is room for it */
+static struct psx_gq_item *psx_gq_slot( void )
+{
+	if( psx_gq_head - __atomic_load_n( &psx_gq_tail, __ATOMIC_ACQUIRE ) >= PSX_GQ_SIZE )
+	{
+		psx_gq_wait( psx_gq_head - PSX_GQ_SIZE / 2 );
+	}
+	return &psx_gq[ psx_gq_head & ( PSX_GQ_SIZE - 1 ) ];
+}
+
+/* hand the entry at psx_gq_head to the drawing thread */
+static void psx_gq_push( void )
+{
+	__atomic_store_n( &psx_gq_head, psx_gq_head + 1, __ATOMIC_SEQ_CST );
+	if( __atomic_load_n( &psx_gq_sleeping, __ATOMIC_SEQ_CST ) )
+	{
+		pthread_mutex_lock( &psx_gq_lock );
+		pthread_cond_signal( &psx_gq_work );
+		pthread_mutex_unlock( &psx_gq_lock );
+	}
+}
+
+static void psx_gq_flush_store( void )
+{
+	if( psx_gq_store != NULL )
+	{
+		psx_gq_store = NULL;
+		psx_gq_push();
+	}
+}
+
+static void psx_gq_store_pixel( UINT32 n_y, UINT32 n_x, UINT16 n_value )
+{
+	if( psx_gq_store == NULL )
+	{
+		psx_gq_store = psx_gq_slot();
+		psx_gq_store->n_op = PSX_DRAW_STORE;
+		psx_gq_store->n_count = 0;
+	}
+	psx_gq_store->u.store.n_pos[ psx_gq_store->n_count ] = ( n_y << 10 ) | n_x;
+	psx_gq_store->u.store.n_value[ psx_gq_store->n_count ] = n_value;
+	psx_gq_store->n_count++;
+	if( psx_gq_store->n_count == PSX_GQ_STORE )
+	{
+		psx_gq_flush_store();
+	}
+}
+
+static void psx_gq_start( void )
+{
+	if( psx_gq_running )
+	{
+		return;
+	}
+	psx_gq = malloc( PSX_GQ_SIZE * sizeof( *psx_gq ) );
+	if( psx_gq == NULL )
+	{
+		return;
+	}
+	psx_gq_head = 0;
+	psx_gq_tail = 0;
+	psx_gq_sleeping = 0;
+	psx_gq_waiting = 0;
+	psx_gq_quit = 0;
+	psx_gq_store = NULL;
+	if( pthread_create( &psx_gq_thread, NULL, psx_gq_main, NULL ) != 0 )
+	{
+		free( psx_gq );
+		psx_gq = NULL;
+		return;
+	}
+	psx_gq_running = 1;
+}
+
+/* everything queued drawn: VRAM can be read */
+static void psx_gpu_sync( void )
+{
+	if( psx_gq_running )
+	{
+		psx_gq_flush_store();
+		psx_gq_wait( psx_gq_head );
+	}
+}
+
+static void psx_gq_stop( void )
+{
+	if( !psx_gq_running )
+	{
+		return;
+	}
+	psx_gpu_sync();
+	pthread_mutex_lock( &psx_gq_lock );
+	psx_gq_quit = 1;
+	pthread_cond_signal( &psx_gq_work );
+	pthread_mutex_unlock( &psx_gq_lock );
+	pthread_join( psx_gq_thread, NULL );
+	free( psx_gq );
+	psx_gq = NULL;
+	psx_gq_running = 0;
+}
+
+int psx_gpu_thread_available( void )
+{
+	return 1;
+}
+
+#else
+
+#define psx_gq_running ( 0 )
+static void psx_gpu_sync( void ) {}
+static void psx_gq_flush_store( void ) {}
+static void psx_gq_start( void ) {}
+static void psx_gq_stop( void ) {}
+
+int psx_gpu_thread_available( void )
+{
+	return 0;
+}
+
+#endif
+
+/* the driver asks for the drawing thread (before VIDEO_START) */
+void psx_gpu_set_thread( int b_enable )
+{
+	psx_gpu_thread_wanted = b_enable;
+}
+
+/* a textured polygon takes its texture page into the draw mode (TEXTURESETUP) */
+static void psx_gpu_texpage( UINT32 n_drawmode )
+{
+	if( m_n_drawmode != n_drawmode )
+	{
+		m_n_drawmode = n_drawmode;
+		if( m_n_gputype == 2 )
+		{
+			m_n_gpustatus = ( m_n_gpustatus & 0xfffff800 ) | ( m_n_drawmode & 0x7ff );
+		}
+		else
+		{
+			m_n_gpustatus = ( m_n_gpustatus & 0xffffe000 ) | ( m_n_drawmode & 0x1fff );
+		}
+	}
+}
+
+/* draw the primitive in m_packet with the current state, now or on the drawing thread */
+static void psx_gpu_draw( int n_op )
+{
+	static struct psx_draw local;
+	struct psx_draw *d = &local;
+#if PSX_GPU_THREADS
+	struct psx_gq_item *item = NULL;
+
+	if( psx_gq_running )
+	{
+		psx_gq_flush_store();
+		item = psx_gq_slot();
+		item->n_op = n_op;
+		d = &item->u.draw;
+	}
+#endif
+
+	d->packet = m_packet;
+	d->twy = m_n_twy;
+	d->twx = m_n_twx;
+	d->twh = m_n_twh;
+	d->tww = m_n_tww;
+	d->drawarea_x1 = m_n_drawarea_x1;
+	d->drawarea_y1 = m_n_drawarea_y1;
+	d->drawarea_x2 = m_n_drawarea_x2;
+	d->drawarea_y2 = m_n_drawarea_y2;
+	d->drawoffset_x = m_n_drawoffset_x;
+	d->drawoffset_y = m_n_drawoffset_y;
+	d->drawmode = m_n_drawmode;
+	d->gpustatus = m_n_gpustatus;
+
+	switch( n_op )
+	{
+	case PSX_DRAW_FLATTEXTUREDPOLYGON3:
+	case PSX_DRAW_FLATTEXTUREDPOLYGON4:
+		psx_gpu_texpage( m_packet.FlatTexturedPolygon.vertex[ 1 ].n_texture.w.h );
+		break;
+	case PSX_DRAW_GOURAUDTEXTUREDPOLYGON3:
+	case PSX_DRAW_GOURAUDTEXTUREDPOLYGON4:
+		psx_gpu_texpage( m_packet.GouraudTexturedPolygon.vertex[ 1 ].n_texture.w.h );
+		break;
+	}
+
+#if PSX_GPU_THREADS
+	if( item != NULL )
+	{
+		psx_gq_push();
+		return;
+	}
+#endif
+	psx_d = d;
+	psx_draw_run( n_op );
+}
+
 void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 {
 	while( n_size > 0 )
@@ -3547,7 +3980,7 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 				verboselog( 1, "%02x: frame buffer rectangle %u,%u %u,%u\n", m_packet.n_entry[ 0 ] >> 24,
 					m_packet.n_entry[ 1 ] & 0xffff, m_packet.n_entry[ 1 ] >> 16, m_packet.n_entry[ 2 ] & 0xffff, m_packet.n_entry[ 2 ] >> 16 );
 #endif
-				FrameBufferRectangleDraw();
+				psx_gpu_draw( PSX_DRAW_FRAMEBUFFERRECTANGLE );
 				m_n_gpu_buffer_offset = 0;
 			}
 			break;
@@ -3562,7 +3995,7 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			else
 			{
 				/*verboselog( 1, "%02x: monochrome 3 point polygon\n", m_packet.n_entry[ 0 ] >> 24 );*/
-				FlatPolygon( 3 );
+				psx_gpu_draw( PSX_DRAW_FLATPOLYGON3 );
 				m_n_gpu_buffer_offset = 0;
 			}
 			break;
@@ -3577,7 +4010,7 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			else
 			{
 				/*verboselog( 1, "%02x: textured 3 point polygon\n", m_packet.n_entry[ 0 ] >> 24 );*/
-				FlatTexturedPolygon( 3 );
+				psx_gpu_draw( PSX_DRAW_FLATTEXTUREDPOLYGON3 );
 				m_n_gpu_buffer_offset = 0;
 			}
 			break;
@@ -3592,7 +4025,7 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			else
 			{
 				/*verboselog( 1, "%02x: monochrome 4 point polygon\n", m_packet.n_entry[ 0 ] >> 24 );*/
-				FlatPolygon( 4 );
+				psx_gpu_draw( PSX_DRAW_FLATPOLYGON4 );
 				m_n_gpu_buffer_offset = 0;
 			}
 			break;
@@ -3607,7 +4040,7 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			else
 			{
 				/*verboselog( 1, "%02x: textured 4 point polygon\n", m_packet.n_entry[ 0 ] >> 24 );*/
-				FlatTexturedPolygon( 4 );
+				psx_gpu_draw( PSX_DRAW_FLATTEXTUREDPOLYGON4 );
 				m_n_gpu_buffer_offset = 0;
 			}
 			break;
@@ -3622,7 +4055,7 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			else
 			{
 				/*verboselog( 1, "%02x: gouraud 3 point polygon\n", m_packet.n_entry[ 0 ] >> 24 );*/
-				GouraudPolygon( 3 );
+				psx_gpu_draw( PSX_DRAW_GOURAUDPOLYGON3 );
 				m_n_gpu_buffer_offset = 0;
 			}
 			break;
@@ -3637,7 +4070,7 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			else
 			{
 				/*verboselog( 1, "%02x: gouraud textured 3 point polygon\n", m_packet.n_entry[ 0 ] >> 24 );*/
-				GouraudTexturedPolygon( 3 );
+				psx_gpu_draw( PSX_DRAW_GOURAUDTEXTUREDPOLYGON3 );
 				m_n_gpu_buffer_offset = 0;
 			}
 			break;
@@ -3652,7 +4085,7 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			else
 			{
 				/*verboselog( 1, "%02x: gouraud 4 point polygon\n", m_packet.n_entry[ 0 ] >> 24 );*/
-				GouraudPolygon( 4 );
+				psx_gpu_draw( PSX_DRAW_GOURAUDPOLYGON4 );
 				m_n_gpu_buffer_offset = 0;
 			}
 			break;
@@ -3667,7 +4100,7 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			else
 			{
 				/*verboselog( 1, "%02x: gouraud textured 4 point polygon\n", m_packet.n_entry[ 0 ] >> 24 );*/
-				GouraudTexturedPolygon( 4 );
+				psx_gpu_draw( PSX_DRAW_GOURAUDTEXTUREDPOLYGON4 );
 				m_n_gpu_buffer_offset = 0;
 			}
 			break;
@@ -3680,7 +4113,7 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			else
 			{
 				/*verboselog( 1, "%02x: monochrome line\n", m_packet.n_entry[ 0 ] >> 24 );*/
-				MonochromeLine();
+				psx_gpu_draw( PSX_DRAW_MONOCHROMELINE );
 				m_n_gpu_buffer_offset = 0;
 			}
 			break;
@@ -3693,7 +4126,7 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			else
 			{
 				/*verboselog( 1, "%02x: monochrome polyline\n", m_packet.n_entry[ 0 ] >> 24 );*/
-				MonochromeLine();
+				psx_gpu_draw( PSX_DRAW_MONOCHROMELINE );
 				if( ( m_packet.n_entry[ 3 ] & 0xf000f000 ) != 0x50005000 )
 				{
 					m_packet.n_entry[ 1 ] = m_packet.n_entry[ 2 ];
@@ -3715,7 +4148,7 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			else
 			{
 				/*verboselog( 1, "%02x: gouraud line\n", m_packet.n_entry[ 0 ] >> 24 );*/
-				GouraudLine();
+				psx_gpu_draw( PSX_DRAW_GOURAUDLINE );
 				m_n_gpu_buffer_offset = 0;
 			}
 			break;
@@ -3729,7 +4162,7 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			else
 			{
 				/*verboselog( 1, "%02x: gouraud polyline\n", m_packet.n_entry[ 0 ] >> 24 );*/
-				GouraudLine();
+				psx_gpu_draw( PSX_DRAW_GOURAUDLINE );
 				if( ( m_packet.n_entry[ 4 ] & 0xf000f000 ) != 0x50005000 )
 				{
 					m_packet.n_entry[ 0 ] = ( m_packet.n_entry[ 0 ] & 0xff000000 ) | ( m_packet.n_entry[ 2 ] & 0x00ffffff );
@@ -3760,7 +4193,7 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 					(INT16)( m_packet.n_entry[ 1 ] & 0xffff ), (INT16)( m_packet.n_entry[ 1 ] >> 16 ),
 					(INT16)( m_packet.n_entry[ 2 ] & 0xffff ), (INT16)( m_packet.n_entry[ 2 ] >> 16 ) );
 #endif
-				FlatRectangle();
+				psx_gpu_draw( PSX_DRAW_FLATRECTANGLE );
 				m_n_gpu_buffer_offset = 0;
 			}
 			break;
@@ -3781,7 +4214,7 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 					m_packet.n_entry[ 3 ] & 0xffff, m_packet.n_entry[ 3 ] >> 16,
 					m_packet.n_entry[ 0 ], m_packet.n_entry[ 2 ] );
 #endif
-				FlatTexturedRectangle();
+				psx_gpu_draw( PSX_DRAW_FLATTEXTUREDRECTANGLE );
 				m_n_gpu_buffer_offset = 0;
 			}
 			break;
@@ -3798,7 +4231,7 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 					(INT16)( m_packet.n_entry[ 1 ] & 0xffff ), (INT16)( m_packet.n_entry[ 1 ] >> 16 ),
 					m_packet.n_entry[ 0 ] & 0xffffff );
 #endif
-				Dot();
+				psx_gpu_draw( PSX_DRAW_DOT );
 				m_n_gpu_buffer_offset = 0;
 			}
 			break;
@@ -3814,7 +4247,7 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 				verboselog( 1, "%02x: 8x8 sprite %08x %08x %08x\n", m_packet.n_entry[ 0 ] >> 24,
 					m_packet.n_entry[ 0 ], m_packet.n_entry[ 1 ], m_packet.n_entry[ 2 ] );
 #endif
-				Sprite8x8();
+				psx_gpu_draw( PSX_DRAW_SPRITE8X8 );
 				m_n_gpu_buffer_offset = 0;
 			}
 			break;
@@ -3830,7 +4263,7 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 				verboselog( 1, "%02x: 16x16 sprite %08x %08x %08x\n", m_packet.n_entry[ 0 ] >> 24,
 					m_packet.n_entry[ 0 ], m_packet.n_entry[ 1 ], m_packet.n_entry[ 2 ] );
 #endif
-				Sprite16x16();
+				psx_gpu_draw( PSX_DRAW_SPRITE16X16 );
 				m_n_gpu_buffer_offset = 0;
 			}
 			break;
@@ -3844,7 +4277,7 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 #if 0
 				verboselog( 1, "move image in frame buffer %08x %08x %08x %08x\n", m_packet.n_entry[ 0 ], m_packet.n_entry[ 1 ], m_packet.n_entry[ 2 ], m_packet.n_entry[ 3 ] );
 #endif
-				MoveImage();
+				psx_gpu_draw( PSX_DRAW_MOVEIMAGE );
 				m_n_gpu_buffer_offset = 0;
 			}
 			break;
@@ -3865,6 +4298,13 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 						data & 0xffff );
 #endif
 
+#if PSX_GPU_THREADS
+					if( psx_gq_running )
+					{
+						psx_gq_store_pixel( ( m_n_vramy + ( m_packet.n_entry[ 1 ] >> 16 ) ) & 1023, ( m_n_vramx + m_packet.n_entry[ 1 ] ) & 1023, data & 0xffff );
+					}
+					else
+#endif
 					*( m_p_p_vram[ ( m_n_vramy + ( m_packet.n_entry[ 1 ] >> 16 ) ) & 1023 ] + ( ( m_n_vramx + m_packet.n_entry[ 1 ] ) & 1023 ) ) = data & 0xffff;
 					m_n_vramx++;
 					if( m_n_vramx >= ( m_packet.n_entry[ 2 ] & 0xffff ) )
@@ -3998,6 +4438,7 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 		p_ram++;
 		n_size--;
 	}
+	psx_gq_flush_store();
 }
 
 WRITE32_HANDLER( psx_gpu_w )
@@ -4178,6 +4619,10 @@ WRITE32_HANDLER( psx_gpu_w )
 
 void psx_gpu_read( UINT32 *p_ram, INT32 n_size )
 {
+	if( ( m_n_gpustatus & ( 1L << 0x1b ) ) != 0 )
+	{
+		psx_gpu_sync();
+	}
 	while( n_size > 0 )
 	{
 		if( ( m_n_gpustatus & ( 1L << 0x1b ) ) != 0 )
@@ -4247,6 +4692,8 @@ READ32_HANDLER( psx_gpu_r )
 
 INTERRUPT_GEN( psx_vblank )
 {
+	/* the frame drawn before the screen update and the end of retro_run */
+	psx_gpu_sync();
 	m_n_gpustatus ^= ( 1L << 31 );
 	psx_irq_set( 0x0001 );
 }

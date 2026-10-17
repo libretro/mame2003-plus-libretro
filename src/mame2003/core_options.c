@@ -766,6 +766,21 @@ static struct retro_core_option_v2_definition option_def_mips_dynarec = {
    "enabled"
 };
 
+static struct retro_core_option_v2_definition option_def_psx_gpu_thread = {
+   APPNAME"_psx_gpu_thread",
+   "PSX GPU Thread",
+   NULL,
+   "Restart core required. Draw the PSX GPU graphics on a second CPU core (offered only for the games that support it); same picture, faster on hosts with more than one core. Turn it off to draw on the emulation thread.",
+   NULL,
+   NULL,
+   {
+      { "enabled",  NULL },
+      { "disabled", NULL },
+      { NULL, NULL },
+   },
+   "enabled"
+};
+
 static struct retro_core_option_v2_definition option_def_cyclone_mode = {
    APPNAME"_cyclone_mode",
    "Cyclone Mode",
@@ -901,6 +916,7 @@ void init_core_options(void)
   default_options[OPT_DIGITAL_JOY_CENTERING]     = option_def_digital_joy_centering;
   default_options[OPT_CPU_CLOCK_SCALE]           = option_def_cpu_clock_scale;
   default_options[OPT_MIPS_DYNAREC]              = option_def_mips_dynarec;
+  default_options[OPT_PSX_GPU_THREAD]            = option_def_psx_gpu_thread;
   default_options[OPT_OVERRIDE_AD_STICK]         = option_def_override_ad_stick;
   default_options[OPT_INPUT_TOGGLE]              = option_def_input_toggle;
 #if (HAS_CYCLONE || HAS_DRZ80)
@@ -936,6 +952,10 @@ static void set_variables(void)
       case OPT_MIPS_DYNAREC:
          if(!options.content_flags[CONTENT_MIPS_DYNAREC])
            continue; /* only offered for the games that use the recompiler */
+         break;
+      case OPT_PSX_GPU_THREAD:
+         if(!options.content_flags[CONTENT_PSX_GPU_THREAD])
+           continue; /* only offered for the games that use it */
          break;
       case OPT_NEOGEO_BIOS:
           if(!options.content_flags[CONTENT_NEOGEO])
@@ -1242,6 +1262,13 @@ void update_variables(bool first_time)
             options.mips_dynarec = false;
           break;
 
+        case OPT_PSX_GPU_THREAD:
+          if(strcmp(var.value, "enabled") == 0)
+            options.psx_gpu_thread = true;
+          else
+            options.psx_gpu_thread = false;
+          break;
+
         case OPT_CPU_CLOCK_SCALE:
           if(strcmp(var.value, "default") == 0)
             options.cpu_clock_scale = 1;
@@ -1373,6 +1400,18 @@ void set_content_flags(void)
     if (game_driver->source_file && psxcpu_jit_available()
      && (strstr(game_driver->source_file, "namcos11.c") || strstr(game_driver->source_file, "namcos12.c")))
       options.content_flags[CONTENT_MIPS_DYNAREC] = true;
+  }
+#endif
+
+  /************ NAMCO SYSTEM 10/11/12: PSX GPU DRAWING THREAD ************/
+  /* the option means nothing where threads are compiled out */
+#if (HAS_PSXCPU)
+  {
+    extern int psx_gpu_thread_available(void);
+    if (game_driver->source_file && psx_gpu_thread_available()
+     && (strstr(game_driver->source_file, "namcos10.c") || strstr(game_driver->source_file, "namcos11.c")
+      || strstr(game_driver->source_file, "namcos12.c")))
+      options.content_flags[CONTENT_PSX_GPU_THREAD] = true;
   }
 #endif
 

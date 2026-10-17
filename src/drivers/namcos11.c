@@ -669,6 +669,7 @@ static DRIVER_INIT( namcos11 )
 
 	state_save_register_UINT32( "namcos11", 0, "keycus_rand_state", &keycus_rand_state, 1 );
 	psx_driver_init();
+	psx_gpu_set_thread( options.psx_gpu_thread );	/* PSX GPU drawing thread (core option) */
 }
 
 MACHINE_INIT( namcos11 )

@@ -679,6 +679,7 @@ static DRIVER_INIT( namcos12 )
 	install_mem_write32_handler( 0, 0x1f801000, 0x1f801003, expbase_w );
 
 	psx_driver_init();
+	psx_gpu_set_thread( options.psx_gpu_thread );	/* PSX GPU drawing thread (core option) */
 
 	psx_dma_install_read_handler( 5, namcos12_rom_read );
 
