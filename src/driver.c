@@ -5739,6 +5739,25 @@ Other Sun games
 	DRIVER( dw2001 )       /* (c) 2001 IGS */
 	DRIVER( dwpc )         /* (c) 2001 IGS */
 	DRIVER( dwpc101j )     /* (c) 2001 IGS */
+	DRIVER( dmnfrnt )      /* (c) 2002 IGS */
+	DRIVER( dmnfrnt103 )   /* (c) 2002 IGS */
+	DRIVER( dmnfrnt102 )   /* (c) 2002 IGS */
+	DRIVER( dmnfrntpcb )   /* (c) 2002 IGS */
+	DRIVER( theglad )      /* (c) 2003 IGS */
+	DRIVER( theglad104 )   /* (c) 2003 IGS */
+	DRIVER( theglad101 )   /* (c) 2003 IGS */
+	DRIVER( theglad100 )   /* (c) 2003 IGS */
+	DRIVER( thegladpcb )   /* (c) 2003 IGS (Alta/AMI license) */
+	DRIVER( thegladpcba )  /* (c) 2003 IGS (Alta/AMI license) */
+	DRIVER( svg )          /* (c) 2005 IGS / Idea Factory */
+	DRIVER( svghk )        /* (c) 2005 IGS / Idea Factory */
+	DRIVER( svgtw )        /* (c) 2005 IGS / Idea Factory */
+	DRIVER( svgpcb )       /* (c) 2005 IGS / Idea Factory (AMI license) */
+	DRIVER( killbldp )     /* (c) 2005 IGS */
+	DRIVER( happy6 )       /* (c) 2004 IGS */
+	DRIVER( happy6101 )    /* (c) 2004 IGS */
+	DRIVER( happy6100hk )  /* (c) 2004 IGS */
+	DRIVER( happy6100cn )  /* (c) 2004 IGS */
 
 	/* RamTek games */
 	DRIVER( hitme )		/* [1976 Ramtek] */

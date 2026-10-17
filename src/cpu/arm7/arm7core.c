@@ -619,6 +619,7 @@ static void arm7_check_irq_state(arm_state *cpustate)
         SET_CPSR(GET_CPSR | I_MASK | F_MASK);   /* Mask both IRQ & FIQ */
         SET_CPSR(GET_CPSR & ~T_MASK);
         R15 = 0x1c;                             /* IRQ Vector address */
+        if (cpustate->irq_callback) (*cpustate->irq_callback)(ARM7_FIRQ_LINE);  /* acknowledge (HOLD_LINE) */
         return;
     }
 
@@ -630,6 +631,7 @@ static void arm7_check_irq_state(arm_state *cpustate)
         SET_CPSR(GET_CPSR | I_MASK);            /* Mask IRQ */
         SET_CPSR(GET_CPSR & ~T_MASK);
         R15 = 0x18;                             /* IRQ Vector address */
+        if (cpustate->irq_callback) (*cpustate->irq_callback)(ARM7_IRQ_LINE);  /* acknowledge (HOLD_LINE) */
         return;
     }
 
