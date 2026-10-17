@@ -5719,6 +5719,26 @@ Other Sun games
   DRIVER( ddp2c )     /* (c) 2001 IGS */
   DRIVER( ddp2101c )  /* (c) 2001 IGS */
   DRIVER( ddp2100c )  /* (c) 2001 IGS */
+	DRIVER( kov2 )         /* (c) 2000 IGS */
+	DRIVER( kov2106 )      /* (c) 2000 IGS */
+	DRIVER( kov2104 )      /* (c) 2000 IGS */
+	DRIVER( kov2103 )      /* (c) 2000 IGS */
+	DRIVER( kov21022 )     /* (c) 2000 IGS */
+	DRIVER( kov2102 )      /* (c) 2000 IGS */
+	DRIVER( kov2101 )      /* (c) 2000 IGS */
+	DRIVER( kov2100 )      /* (c) 2000 IGS */
+	DRIVER( kov2p )        /* (c) 2001 IGS */
+	DRIVER( kov2p204 )     /* (c) 2001 IGS */
+	DRIVER( kov2p203 )     /* (c) 2001 IGS */
+	DRIVER( kov2p202 )     /* (c) 2001 IGS */
+	DRIVER( kov2p200 )     /* (c) 2001 IGS */
+	DRIVER( martmast )     /* (c) 2001 IGS */
+	DRIVER( martmast104c ) /* (c) 2001 IGS */
+	DRIVER( martmast103c ) /* (c) 2001 IGS */
+	DRIVER( martmast102c ) /* (c) 2001 IGS */
+	DRIVER( dw2001 )       /* (c) 2001 IGS */
+	DRIVER( dwpc )         /* (c) 2001 IGS */
+	DRIVER( dwpc101j )     /* (c) 2001 IGS */
 
 	/* RamTek games */
 	DRIVER( hitme )		/* [1976 Ramtek] */
