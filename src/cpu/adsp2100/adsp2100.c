@@ -490,14 +490,24 @@ void adsp2100_set_context(void *src)
 
 
 
+/* exact skip of one-instruction NOP delay loops (adsp2100_advance) */
+static int adsp2100_nop_loop_skip;
+
+void adsp2100_set_nop_loop_skip(int enable)
+{
+	adsp2100_nop_loop_skip = enable;
+}
+
+
 /*###################################################################################################
 **	INITIALIZATION AND SHUTDOWN
 **#################################################################################################*/
 
 void adsp2100_init(void)
 {
-	/* the recompiler is off until a driver asks for it */
+	/* the recompiler and the NOP loop skip are off until a driver asks for them */
 	adsp2100_set_jit(0);
+	adsp2100_nop_loop_skip = 0;
 
 	/* create the tables */
 	if (!create_tables())
@@ -723,7 +733,8 @@ static INLINE ADSP_ALWAYS_INLINE void adsp2100_advance(UINT32 op)
 		/* a one-instruction NOP loop counted by CNTR (a delay): run the */
 		/* iterations that fit in this timeslice at once, leaving at */
 		/* least one to the code below; nothing else changes in between */
-		if (op == 0 && adsp2100.loop_condition == 14 && pc_stack_top() == adsp2100.pc)
+		/* (only for the drivers that enable it, adsp2100_set_nop_loop_skip) */
+		if (op == 0 && adsp2100_nop_loop_skip && adsp2100.loop_condition == 14 && pc_stack_top() == adsp2100.pc)
 		{
 			INT32 skip = (INT32)adsp2100.cntr - 2;
 			if (skip > adsp2100_icount - 1)

@@ -290,6 +290,11 @@ static void kinst_install_speedup(void)
 	mips3_add_fastram(0x9fc00000, 0x9fc7ffff, 1, rombase);
 	mips3_add_fastram(0xbfc00000, 0xbfc7ffff, 1, rombase);
 
+	/* DCS sound: the boot code's NOP delay loops skipped exactly, and the */
+	/* banked sound ROM read through a pointer */
+	adsp2100_set_nop_loop_skip(1);
+	dcs_fast_rombank_init();
+
 	/* recompiler (core option; only on the hosts that support it) */
 	if (options.mips_dynarec)
 		mips3_set_jit(1);
