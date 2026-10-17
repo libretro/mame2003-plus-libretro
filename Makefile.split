@@ -624,6 +624,7 @@ endif
 
 ifneq (,$(filter $(INCLUDE_DRV),drv_backfire core_none))
 	CPUS+=ARM@
+CPUS+=ARM7@
 	SOUNDS+=YMZ280B@
 	SOURCES_C += \
 		$(CORE_DIR)/machine/decocrpt.c \
@@ -1889,6 +1890,15 @@ SOURCES_C += $(CORE_DIR)/cpu/arm/armdasm.c
 endif
 else
 CPUDEFS += -DHAS_ARM=0
+endif
+
+CPU=$(strip $(findstring ARM7@,$(CPUS)))
+ifneq ($(CPU),)
+OBJDIRS += $(CORE_DIR)/cpu/arm7
+CPUDEFS += -DHAS_ARM7=1
+SOURCES_C += $(CORE_DIR)/cpu/arm7/arm7.c
+else
+CPUDEFS += -DHAS_ARM7=0
 endif
 
 CPU=$(strip $(findstring JAGUAR@,$(CPUS)))

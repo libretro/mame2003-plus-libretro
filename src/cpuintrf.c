@@ -148,6 +148,9 @@
 #if (HAS_ARM)
 #include "cpu/arm/arm.h"
 #endif
+#if (HAS_ARM7)
+#include "cpu/arm7/arm7.h"
+#endif
 #if (HAS_SH2)
 #include "cpu/sh2/sh2.h"
 #endif
@@ -594,6 +597,9 @@ const struct cpu_interface cpuintrf[] =
 #endif
 #if (HAS_ARM)
 	CPU0(ARM,	   arm, 	 2,  0,1.00,32,26ledw, 0,26,LE,4, 4	),
+#endif
+#if (HAS_ARM7)
+	CPU0(ARM7,	   arm7, 	 5,  0,1.00,32,32ledw, 0,32,LE,2, 4	),
 #endif
 #if (HAS_SH2)
 	CPU4(SH2,	   sh2, 	16,  0,1.00,32,32bedw,   0,32,BE,2, 2  ),
