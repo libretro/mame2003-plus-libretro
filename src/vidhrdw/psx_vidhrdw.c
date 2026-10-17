@@ -3956,6 +3956,27 @@ static void psx_gpu_draw( int n_op )
 	psx_draw_run( n_op );
 }
 
+/* End of a node of a DMA linked list (GPU channel). A drawing command still
+   waiting for words there is dropped, instead of taking the words of the next
+   node as its own: that throws the parser out of step for the rest of the list,
+   and the misread words become fills and copies all over VRAM (Soul Edge, after a
+   few minutes: textures wiped, huge fills slowing everything down).
+   The emulated GPU draws at once, so the games can rebuild a primitive between
+   the time they link it and the time the list is sent; on the real board the
+   drawing time keeps them apart. Transfers to VRAM (0xa0) are left alone. */
+void psx_gpu_list_node_end( void )
+{
+	if( m_n_gpu_buffer_offset != 0 )
+	{
+		int n_command = m_packet.n_entry[ 0 ] >> 24;
+		if( n_command >= 0x20 && n_command < 0x80 )
+		{
+			verboselog( 1, "dropped incomplete command %02x (%u words)\n", n_command, m_n_gpu_buffer_offset );
+			m_n_gpu_buffer_offset = 0;
+		}
+	}
+}
+
 void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 {
 	while( n_size > 0 )

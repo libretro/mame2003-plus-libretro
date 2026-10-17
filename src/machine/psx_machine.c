@@ -286,6 +286,10 @@ WRITE32_HANDLER( psx_dma_w )
 						n_address &= m_n_ramsize;
 						n_nextaddress = *( (UINT32 *)&m_p_n_ram[ n_address ] );
 						m_p_fn_dma_write[ n_channel ]( n_address + 4, n_nextaddress >> 24 );
+						if( ( n_nextaddress >> 24 ) != 0 )
+						{
+							psx_gpu_list_node_end();
+						}
 						n_address = ( n_nextaddress & 0xffffff );
 
 						n_segments++;
@@ -512,19 +516,19 @@ READ32_HANDLER( psx_counter_r )
 	case 0:
 		if( n_counter == 0 )
 		{
-			data = ( activecpu_gettotalcycles() / 1200 ) & 0xffff;
+			data = ( activecpu_gettotalcycles64() / 1200 ) & 0xffff;
 		}
 		else if( n_counter == 1 && ( m_p_n_root_mode[ n_counter ] & ( 1 << 0x08 ) ) != 0 )
 		{
-			data = ( activecpu_gettotalcycles() / 4800 ) & 0xffff;
+			data = ( activecpu_gettotalcycles64() / 4800 ) & 0xffff;
 		}
 		else if( n_counter == 2 && ( m_p_n_root_mode[ n_counter ] & ( 1 << 0x09 ) ) != 0 )
 		{
-			data = ( activecpu_gettotalcycles() / 480 ) & 0xffff;
+			data = ( activecpu_gettotalcycles64() / 480 ) & 0xffff;
 		}
 		else
 		{
-			data = activecpu_gettotalcycles() & 0xffff;
+			data = activecpu_gettotalcycles64() & 0xffff;
 		}
 		m_p_n_root_count[ n_counter ] = data;
 		break;

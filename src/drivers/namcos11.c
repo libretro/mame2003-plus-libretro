@@ -196,17 +196,29 @@ static READ32_HANDLER( keycus_c406_r )
 	return data;
 }
 
-/* soul edge */
+/* soul edge: the C409 blends two 15-bit colours, as in current MAME (ns11prot).
+   Words 1 and 3 (p1, p2) and 7 (p3) are written; word 7 reads back p2 and p3
+   mixed by p1 (1..0x20). In the 32-bit map, word 2n+1 is the high half of
+   dword n. */
 static READ32_HANDLER( keycus_c409_r )
 {
-	/* todo: verify behaviour */
 	data32_t data;
 
 	data = namcos11_keycus[ offset ];
 	switch( offset )
 	{
 	case 3:
-		data = ( data & 0x0000ffff ) | 0x000f0000;
+		{
+			int p1 = namcos11_keycus[ 0 ] >> 16;
+			int p2 = namcos11_keycus[ 1 ] >> 16;
+			int p3 = namcos11_keycus[ 3 ] >> 16;
+			int a2 = ( p1 - 0x01 ) & 0x1f;
+			int a3 = ( 0x20 - p1 ) & 0x1f;
+			int r = ( ( ( p2 & 0x1f ) * a2 ) + ( ( p3 & 0x1f ) * a3 ) ) / 0x1f;
+			int g = ( ( ( ( p2 >> 5 ) & 0x1f ) * a2 ) + ( ( ( p3 >> 5 ) & 0x1f ) * a3 ) ) / 0x1f;
+			int b = ( ( ( ( p2 >> 10 ) & 0x1f ) * a2 ) + ( ( ( p3 >> 10 ) & 0x1f ) * a3 ) ) / 0x1f;
+			data = ( data & 0x0000ffff ) | ( ( r | ( g << 5 ) | ( b << 10 ) ) << 16 );
+		}
 		break;
 	}
 	verboselog( 1, "keycus_c409_r( %08x, %08x, %08x )\n", offset, data, mem_mask );
