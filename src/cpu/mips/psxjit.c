@@ -74,6 +74,7 @@ static void SLJIT_FUNC loop_skip_helper( sljit_u32 l );	/* psxloop.c */
 static UINT32 getcp2dr( int n_reg );
 static void setcp2dr( int n_reg, UINT32 n_value );
 static void docop2( int gteop );
+static void setcp2cr( int n_reg, UINT32 n_value );
 
 static int jit_enabled;
 static struct jit_block *jit_table;
@@ -488,6 +489,11 @@ static void SLJIT_FUNC jit_gte_mtc2( sljit_u32 op )
 	setcp2dr( INS_RD( op ), mipscpu.r[ INS_RT( op ) ] );
 }
 
+static void SLJIT_FUNC jit_gte_ctc2( sljit_u32 op )
+{
+	setcp2cr( INS_RD( op ), mipscpu.r[ INS_RT( op ) ] );
+}
+
 static void SLJIT_FUNC jit_gte_cmd( sljit_u32 op )
 {
 	docop2( INS_COFUN( op ) );
@@ -506,11 +512,16 @@ static void SLJIT_FUNC jit_gte_swc2( sljit_u32 op, sljit_up host )
 /* getcp2dr / setcp2dr do more than read / store this data register */
 static int jit_gte_dr_special_get( int n )
 {
-	return n == 1 || n == 3 || n == 5 || ( n >= 8 && n <= 11 ) || ( n >= 17 && n <= 19 ) || n == 29;
+	return n == 1 || n == 3 || n == 5 || n == 7 || ( n >= 8 && n <= 11 ) || ( n >= 15 && n <= 19 ) || n == 28 || n == 29;
 }
 static int jit_gte_dr_special_set( int n )
 {
-	return n == 15 || n == 28 || n == 30;
+	return n == 15 || n == 28 || n == 30 || n == 31;
+}
+/* setcp2cr sign extends or masks this control register */
+static int jit_gte_cr_special_set( int n )
+{
+	return n == 4 || n == 12 || n == 20 || n == 26 || n == 27 || n == 29 || n == 30 || n == 31;
 }
 
 static void jit_emit_call1( struct sljit_compiler *C, UINT32 op, void *fn )
@@ -561,8 +572,15 @@ static void jit_emit_helper_op( struct sljit_compiler *C, UINT32 op, sljit_s32 h
 			}
 			return;
 		case RS_CTC:
-			sljit_emit_op1( C, SLJIT_MOV32, SLJIT_R0, 0, JREG( rt ) );
-			sljit_emit_op1( C, SLJIT_MOV32, JCP2CR( rd ), SLJIT_R0, 0 );
+			if( jit_gte_cr_special_set( rd ) )
+			{
+				jit_emit_call1( C, op, (void *)jit_gte_ctc2 );
+			}
+			else
+			{
+				sljit_emit_op1( C, SLJIT_MOV32, SLJIT_R0, 0, JREG( rt ) );
+				sljit_emit_op1( C, SLJIT_MOV32, JCP2CR( rd ), SLJIT_R0, 0 );
+			}
 			return;
 		default:
 			if( INS_RS( op ) >= 16 && INS_CO( op ) == 1 )
