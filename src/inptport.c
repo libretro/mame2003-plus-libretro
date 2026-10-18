@@ -1036,32 +1036,17 @@ void update_analog_port(int port)
 				prev = -prev;
 			}
 
-			/* apply sensitivity using a logarithmic scale */
-			if (in->mask > 0xff)
+			/* OSD analog axes are normalized to -128..128 regardless of
+			 * the emulated input port width. Apply sensitivity in that range. */
+			if (new > 0)
 			{
-				if (new > 0)
-				{
-					current = (pow(new / 32768.0, 100.0 / sensitivity) * (max-in->default_value)
-							+ in->default_value) * 100 / sensitivity;
-				}
-				else
-				{
-					current = (pow(-new / 32768.0, 100.0 / sensitivity) * (min-in->default_value)
-							+ in->default_value) * 100 / sensitivity;
-				}
+				current = (pow(new / 128.0, 100.0 / sensitivity) * (max-in->default_value)
+						+ in->default_value) * 100 / sensitivity;
 			}
 			else
 			{
-				if (new > 0)
-				{
-					current = (pow(new / 128.0, 100.0 / sensitivity) * (max-in->default_value)
-							+ in->default_value) * 100 / sensitivity;
-				}
-				else
-				{
-					current = (pow(-new / 128.0, 100.0 / sensitivity) * (min-in->default_value)
-							+ in->default_value) * 100 / sensitivity;
-				}
+				current = (pow(-new / 128.0, 100.0 / sensitivity) * (min-in->default_value)
+						+ in->default_value) * 100 / sensitivity;
 			}
 		}
 	}
