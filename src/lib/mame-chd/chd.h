@@ -152,6 +152,7 @@ struct chd_header
 	UINT8	parentmd5[CHD_MD5_BYTES];	/* MD5 checksum of parent file */
 	UINT8	sha1[CHD_SHA1_BYTES];		/* SHA1 checksum of raw data */
 	UINT8	parentsha1[CHD_SHA1_BYTES];	/* SHA1 checksum of parent file */
+	UINT8	rawsha1[CHD_SHA1_BYTES];	/* v4/v5 only: SHA1 of the raw data (sha1 is data + metadata) */
 
 	UINT32	obsolete_cylinders;			/* obsolete field -- do not use! */
 	UINT32	obsolete_sectors;			/* obsolete field -- do not use! */

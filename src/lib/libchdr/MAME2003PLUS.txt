@@ -1,0 +1,27 @@
+libchdr for mame2003-plus
+=========================
+
+Source: https://github.com/rtissera/libchdr, commit 07a7dad (2025-12-26),
+BSD 3-clause (LICENSE.txt). Used to read CHD v4/v5 files (current MAME)
+through src/lib/mame-chd/chd_v5.c; the legacy MAME CHD code still handles
+v1-v3 and the .dif differencing files.
+
+Contents
+--------
+include/             libchdr headers and dr_flac.h (public domain / MIT-0)
+src/                 libchdr sources; libchdr_chd.c is not built on its own,
+                     it is compiled inside src/lib/mame-chd/chd_v5.c with its
+                     public functions renamed (they clash with the legacy API)
+deps/lzma/           LZMA SDK 24.05 (public domain): decoder plus the encoder
+                     property helpers libchdr needs, headers in the same folder
+deps/zstd/           zstd 1.5.6 (BSD): single-file decoder zstddeclib.c, made
+                     with build/single_file_libs/create_single_file_decoder.sh
+
+Local changes
+-------------
+- #include paths made relative, so the files do not depend on include
+  search order (libretro-common has its own, older, libchdr headers).
+- libchdr_chd.c, libchdr_flac.c: declarations moved to the start of their
+  blocks and aggregate initializers replaced, for C89 compilers (the core
+  builds with -Werror=declaration-after-statement).
+- deps/lzma/Precomp.h: defines Z7_ST (single-threaded, no LzFindMt).

@@ -5743,7 +5743,13 @@ Other Sun games
 	/* Rare games */
 	DRIVER( btoads )	/* (c) 1994 Rare */
 	DRIVER( kinst )		/* (c) 1994 Rare */
-	DRIVER( kinst2 )	/* (c) 1994 Rare */
+	DRIVER( kinst14 )	/* (c) 1994 Rare */
+	DRIVER( kinst13 )	/* (c) 1994 Rare */
+	DRIVER( kinstp )	/* (c) 1994 Rare */
+	DRIVER( kinst2 )	/* (c) 1996 Rare */
+	DRIVER( kinst213 )	/* (c) 1996 Rare */
+	DRIVER( kinst211 )	/* (c) 1996 Rare */
+	DRIVER( kinst210 )	/* (c) 1996 Rare */
 
 	/* Nihon System games */
 	DRIVER( gigasb )

@@ -579,6 +579,22 @@ static WRITE16_HANDLER( dcs_rombank_select_w )
 }
 
 
+static UINT8 *dcs_rombank_base;	/* dcs_fast_rombank_init */
+
+static READ16_HANDLER( dcs_rombank_data_fast_r )
+{
+	offset += (dcs.rombank & 0x7ff) << 12;
+	return dcs_rombank_base[BYTE_XOR_LE(offset)];
+}
+
+/* optional, for the drivers that ask for it (Killer Instinct): read the banked */
+/* sound ROMs through a pointer kept here instead of a region lookup per read */
+void dcs_fast_rombank_init(void)
+{
+	dcs_rombank_base = memory_region(REGION_CPU1 + dcs_cpunum) + ADSP2100_SIZE;
+	install_mem_read16_handler(dcs_cpunum, ADSP_DATA_ADDR_RANGE(0x2000, 0x2fff), dcs_rombank_data_fast_r);
+}
+
 static READ16_HANDLER( dcs_rombank_data_r )
 {
 	UINT8	*banks = memory_region(REGION_CPU1 + dcs_cpunum) + ADSP2100_SIZE;

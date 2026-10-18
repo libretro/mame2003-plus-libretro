@@ -92,6 +92,13 @@ extern unsigned adsp2100_get_reg(int regnum);
 extern void adsp2100_set_reg(int regnum, unsigned val);
 extern void adsp2100_set_irq_line(int irqline, int state);
 extern void adsp2100_set_irq_callback(int (*callback)(int irqline));
+/* exact skip of one-instruction NOP delay loops: off unless a driver enables it */
+extern void adsp2100_set_nop_loop_skip(int enable);
+/* optional recompiler (adsp2100jit.c): off unless a driver enables it */
+extern int adsp2100_jit_available(void);
+extern void adsp2100_set_jit(int enable);
+/* data memory words [start, end] read through a handler with no side effects */
+extern void adsp2100_jit_pure_read(UINT32 start, UINT32 end);
 extern const char *adsp2100_info(void *context, int regnum);
 extern unsigned adsp2100_dasm(char *buffer, unsigned pc);
 

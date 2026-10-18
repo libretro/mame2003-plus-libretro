@@ -1855,8 +1855,16 @@ static int process_disk_entries(struct rom_load_data *romdata, const struct RomM
 			/* get the header and extract the MD5/SHA1 */
 			header = *chd_get_header(source);
 			hash_data_clear(acthash);
-			hash_data_insert_binary_checksum(acthash, HASH_MD5, header.md5);
+			if (header.version <= 3)
+				hash_data_insert_binary_checksum(acthash, HASH_MD5, header.md5);
 			hash_data_insert_binary_checksum(acthash, HASH_SHA1, header.sha1);
+
+			/* CHD v4/v5 have no MD5; current MAME lists the overall SHA1, older sets the raw data SHA1 */
+			if (header.version > 3 && !hash_data_is_equal(ROM_GETHASHDATA(romp), acthash, 0))
+			{
+				hash_data_clear(acthash);
+				hash_data_insert_binary_checksum(acthash, HASH_SHA1, header.rawsha1);
+			}
 
 			/* verify the MD5 */
 			if (!hash_data_is_equal(ROM_GETHASHDATA(romp), acthash, 0))
