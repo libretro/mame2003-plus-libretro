@@ -290,12 +290,25 @@ WRITE32_HANDLER( psx_dma_w )
 						{
 							psx_gpu_list_node_end();
 						}
+						/* a node pointing to itself, or to a node pointing back to it, never
+						   ends: stop there (current MAME). No fixed limit on the number of
+						   nodes: the ordering tables of some games (Soul Edge) go well past
+						   10000 and their last primitives (the energy bars) were lost; only
+						   more nodes than RAM words can hold is surely a loop. */
+						if( ( n_nextaddress & 0xffffff ) != 0xffffff )
+						{
+							if( n_address == *( (UINT32 *)&m_p_n_ram[ n_nextaddress & m_n_ramsize & ~3 ] ) ||
+								n_address == ( n_nextaddress & m_n_ramsize ) )
+							{
+								verboselog( 1, "dma looped\n" );
+								break;
+							}
+						}
 						n_address = ( n_nextaddress & 0xffffff );
 
 						n_segments++;
-						if( n_segments == 10000 )
+						if( n_segments > ( m_n_ramsize + 1 ) / 4 )
 						{
-							/* todo: find a better way of detecting this */
 							verboselog( 1, "dma looped\n" );
 							break;
 						}
@@ -404,16 +417,134 @@ READ32_HANDLER( psx_dma_r )
 	return 0;
 }
 
-/* Root Counters */
+/* Root Counters (as current MAME, psx/rcnt.cpp) */
 
-static void *m_p_timer_root[ 7 ];
+#define PSX_RC_STOP				( 0x01 )
+#define PSX_RC_RESET			( 0x04 ) /* guess */
+#define PSX_RC_COUNTTARGET		( 0x08 )
+#define PSX_RC_IRQTARGET		( 0x10 )
+#define PSX_RC_IRQOVERFLOW		( 0x20 )
+#define PSX_RC_REPEAT			( 0x40 )
+#define PSX_RC_CLC				( 0x100 )
+#define PSX_RC_DIV				( 0x200 )
+#define PSX_RC_REACHEDTARGET	( 0x800 )
+#define PSX_RC_REACHEDFFFF		( 0x1000 )
+
+static void *m_p_timer_root[ 3 ];
 static data16_t m_p_n_root_count[ 3 ];
 static data16_t m_p_n_root_mode[ 3 ];
 static data16_t m_p_n_root_target[ 3 ];
+/* system clock ticks (two per CPU cycle) when n_count was last set */
+static UINT64 m_p_n_root_start[ 3 ];
 
-/* the counter timers are saved as their time left (negative: not armed),
-   so a load neither restarts them nor adds interrupts */
+/* the counters are saved as their current value and the timers as their time
+   left (negative: not armed), so a load neither restarts them nor adds
+   interrupts */
+static data16_t m_p_n_root_saved[ 3 ];
 static double m_p_f_root_timeleft[ 3 ];
+
+static UINT64 root_totalcycles( void )
+{
+	return cpu_gettotalcycles64( 0 ) * 2;
+}
+
+static int root_divider( int n_counter )
+{
+	if( n_counter == 0 && ( m_p_n_root_mode[ n_counter ] & PSX_RC_CLC ) != 0 )
+	{
+		/* pixel clock, probably based on resolution */
+		return 5;
+	}
+	else if( n_counter == 1 && ( m_p_n_root_mode[ n_counter ] & PSX_RC_CLC ) != 0 )
+	{
+		return 2150;
+	}
+	else if( n_counter == 2 && ( m_p_n_root_mode[ n_counter ] & PSX_RC_DIV ) != 0 )
+	{
+		return 8;
+	}
+	return 1;
+}
+
+static data16_t root_current( int n_counter )
+{
+	if( ( m_p_n_root_mode[ n_counter ] & PSX_RC_STOP ) != 0 )
+	{
+		return m_p_n_root_count[ n_counter ];
+	}
+	else
+	{
+		UINT64 n_current;
+		n_current = root_totalcycles() - m_p_n_root_start[ n_counter ];
+		n_current /= root_divider( n_counter );
+		n_current += m_p_n_root_count[ n_counter ];
+		if( n_current > 0xffff )
+		{
+			m_p_n_root_count[ n_counter ] = (data16_t)n_current;
+			m_p_n_root_start[ n_counter ] = root_totalcycles();
+			m_p_n_root_mode[ n_counter ] |= PSX_RC_REACHEDFFFF;
+		}
+		return (data16_t)n_current;
+	}
+}
+
+static int root_target( int n_counter )
+{
+	if( ( m_p_n_root_mode[ n_counter ] & PSX_RC_COUNTTARGET ) != 0 ||
+		( m_p_n_root_mode[ n_counter ] & PSX_RC_IRQTARGET ) != 0 )
+	{
+		return m_p_n_root_target[ n_counter ];
+	}
+	return 0x10000;
+}
+
+static void root_timer( int n_counter )
+{
+	if( ( m_p_n_root_mode[ n_counter ] & PSX_RC_STOP ) != 0 )
+	{
+		timer_adjust( m_p_timer_root[ n_counter ], TIME_NEVER, n_counter, 0 );
+		timer_enable( m_p_timer_root[ n_counter ], 0 );
+	}
+	else
+	{
+		int n_duration;
+
+		n_duration = root_target( n_counter ) - root_current( n_counter );
+		if( n_duration < 1 )
+		{
+			n_duration += 0x10000;
+
+			if( ( m_p_n_root_mode[ n_counter ] & PSX_RC_COUNTTARGET ) != 0 )
+			{
+				m_p_n_root_mode[ n_counter ] |= PSX_RC_REACHEDTARGET;
+			}
+			else
+			{
+				m_p_n_root_mode[ n_counter ] |= PSX_RC_REACHEDFFFF;
+			}
+		}
+
+		n_duration *= root_divider( n_counter );
+
+		/* as MAME: the timer runs on 33.8688 MHz on every board */
+		timer_adjust( m_p_timer_root[ n_counter ], (double)n_duration / 33868800, n_counter, 0 );
+	}
+}
+
+static void root_finished( int n_counter )
+{
+	m_p_n_root_count[ n_counter ] = 0;
+	m_p_n_root_start[ n_counter ] = root_totalcycles();
+	if( ( m_p_n_root_mode[ n_counter ] & PSX_RC_REPEAT ) != 0 )
+	{
+		root_timer( n_counter );
+	}
+	if( ( m_p_n_root_mode[ n_counter ] & PSX_RC_IRQOVERFLOW ) != 0 ||
+		( m_p_n_root_mode[ n_counter ] & PSX_RC_IRQTARGET ) != 0 )
+	{
+		psx_irq_set( 0x10 << n_counter );
+	}
+}
 
 static void root_presave( void )
 {
@@ -425,6 +556,7 @@ static void root_presave( void )
 		int b_enabled = timer_enable( m_p_timer_root[ n ], 0 );
 		timer_enable( m_p_timer_root[ n ], b_enabled );
 		m_p_f_root_timeleft[ n ] = b_enabled ? timer_timeleft( m_p_timer_root[ n ] ) : -1;
+		m_p_n_root_saved[ n ] = root_current( n );
 	}
 }
 
@@ -434,6 +566,8 @@ static void root_postload( void )
 
 	for( n = 0; n < 3; n++ )
 	{
+		m_p_n_root_count[ n ] = m_p_n_root_saved[ n ];
+		m_p_n_root_start[ n ] = root_totalcycles();
 		if( m_p_f_root_timeleft[ n ] >= 0 )
 		{
 			timer_adjust( m_p_timer_root[ n ], m_p_f_root_timeleft[ n ], n, 0 );
@@ -446,40 +580,6 @@ static void root_postload( void )
 	}
 }
 
-static void root_finished( int n_counter )
-{
-	if( ( m_p_n_root_mode[ n_counter ] & 0x50 ) != 0 )
-	{
-		psx_irq_set( 0x10 << n_counter );
-	}
-}
-
-static void root_timer( int n_counter )
-{
-	int n_duration;
-
-	n_duration = m_p_n_root_target[ n_counter ] - m_p_n_root_count[ n_counter ];
-	if( n_duration < 1 )
-	{
-		n_duration += 0x10000;
-	}
-
-	if( n_counter == 0 )
-	{
-		n_duration *= 1200;
-	}
-	else if( n_counter == 1 && ( m_p_n_root_mode[ n_counter ] & ( 1 << 0x08 ) ) != 0 )
-	{
-		n_duration *= 4800;
-	}
-	else if( n_counter == 2 && ( m_p_n_root_mode[ n_counter ] & ( 1 << 0x09 ) ) != 0 )
-	{
-		n_duration *= 480;
-	}
-
-	timer_adjust( m_p_timer_root[ n_counter ], (double)n_duration / 33868800, n_counter, 0 );
-}
-
 WRITE32_HANDLER( psx_counter_w )
 {
 	int n_counter;
@@ -487,18 +587,36 @@ WRITE32_HANDLER( psx_counter_w )
 	verboselog( 1, "psx_counter_w ( %08x, %08x, %08x )\n", offset, data, mem_mask );
 
 	n_counter = offset / 4;
+	if( n_counter > 2 )
+	{
+		return;
+	}
 
 	switch( offset % 4 )
 	{
 	case 0:
 		m_p_n_root_count[ n_counter ] = data;
+		m_p_n_root_start[ n_counter ] = root_totalcycles();
 		break;
 	case 1:
-		m_p_n_root_mode[ n_counter ] = data;
+		m_p_n_root_count[ n_counter ] = root_current( n_counter );
+		m_p_n_root_start[ n_counter ] = root_totalcycles();
+
+		if( ( data & PSX_RC_RESET ) != 0 )
+		{
+			data &= ~( PSX_RC_RESET | PSX_RC_STOP );
+			m_p_n_root_count[ n_counter ] = 0;
+		}
+
+		/* reached FFFF and reached target are read only, cleared when read */
+		data &= ~( PSX_RC_REACHEDFFFF | PSX_RC_REACHEDTARGET );
+		m_p_n_root_mode[ n_counter ] = data | ( m_p_n_root_mode[ n_counter ] & ( PSX_RC_REACHEDFFFF | PSX_RC_REACHEDTARGET ) );
 		break;
 	case 2:
 		m_p_n_root_target[ n_counter ] = data;
 		break;
+	default:
+		return;
 	}
 
 	root_timer( n_counter );
@@ -510,30 +628,19 @@ READ32_HANDLER( psx_counter_r )
 	data32_t data;
 
 	n_counter = offset / 4;
+	if( n_counter > 2 )
+	{
+		return 0;
+	}
 
 	switch( offset % 4 )
 	{
 	case 0:
-		if( n_counter == 0 )
-		{
-			data = ( activecpu_gettotalcycles64() / 1200 ) & 0xffff;
-		}
-		else if( n_counter == 1 && ( m_p_n_root_mode[ n_counter ] & ( 1 << 0x08 ) ) != 0 )
-		{
-			data = ( activecpu_gettotalcycles64() / 4800 ) & 0xffff;
-		}
-		else if( n_counter == 2 && ( m_p_n_root_mode[ n_counter ] & ( 1 << 0x09 ) ) != 0 )
-		{
-			data = ( activecpu_gettotalcycles64() / 480 ) & 0xffff;
-		}
-		else
-		{
-			data = activecpu_gettotalcycles64() & 0xffff;
-		}
-		m_p_n_root_count[ n_counter ] = data;
+		data = root_current( n_counter );
 		break;
 	case 1:
 		data = m_p_n_root_mode[ n_counter ];
+		m_p_n_root_mode[ n_counter ] &= ~( PSX_RC_REACHEDFFFF | PSX_RC_REACHEDTARGET );
 		break;
 	case 2:
 		data = m_p_n_root_target[ n_counter ];
@@ -1261,6 +1368,7 @@ void psx_driver_init( void )
 	state_save_register_UINT16( "psx", 0, "m_p_n_root_count", m_p_n_root_count, 3 );
 	state_save_register_UINT16( "psx", 0, "m_p_n_root_mode", m_p_n_root_mode, 3 );
 	state_save_register_UINT16( "psx", 0, "m_p_n_root_target", m_p_n_root_target, 3 );
+	state_save_register_UINT16( "psx", 0, "m_p_n_root_saved", m_p_n_root_saved, 3 );
 	state_save_register_double( "psx", 0, "m_p_f_root_timeleft", m_p_f_root_timeleft, 3 );
 	state_save_register_func_presave( root_presave );
 	state_save_register_UINT16( "psx", 0, "m_p_n_sio_status", m_p_n_sio_status, 2 );
