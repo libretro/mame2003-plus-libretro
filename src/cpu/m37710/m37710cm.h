@@ -1,3 +1,6 @@
+/* M37710/M37702 core internals: from MAME 0.121 (MAME license; R. Belmont,
+   based on the G65816 core by Karl Stenerud) */
+
 #ifndef HEADER__M37710CM
 #define HEADER__M37710CM
 
@@ -102,10 +105,11 @@ typedef struct
 	void (*set_line)(int line, int state);
 	int  (*execute)(int cycles);
 
-	// on-board peripheral stuff
+	/* on-board peripheral stuff */
 	UINT8 m37710_regs[128];
 	double reload[8];
 	mame_timer *timers[8];
+	double timer_left[8];	/* saved: time left of each timer (< 0: not armed) */
 } m37710i_cpu_struct;
 
 extern m37710i_cpu_struct m37710i_cpu;

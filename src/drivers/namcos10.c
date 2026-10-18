@@ -80,9 +80,6 @@ static DRIVER_INIT( namcos10 )
 	cpu_setbank( 4, memory_region( REGION_USER2 ) );
 	cpu_setbank( 5, memory_region( REGION_CPU1 ) );
 	cpu_setbank( 6, memory_region( REGION_USER2 ) );
-
-	/* PSX GPU drawing thread (core option) */
-	psx_gpu_set_thread( options.psx_gpu_thread );
 }
 
 MACHINE_INIT( namcos10 )

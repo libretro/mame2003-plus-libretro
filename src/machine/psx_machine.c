@@ -162,6 +162,23 @@ static void dma_ram_written( UINT32 n_address, INT32 n_size )
 	psxcpu_ram_written( &m_p_n_ram[ n_address ], n_bytes );
 }
 
+/* words of a DMA block from n_address that stay inside main RAM */
+static INT32 dma_clamp( UINT32 n_address, INT32 n_size )
+{
+	UINT32 n_words;
+
+	if( n_size <= 0 || n_address > m_n_ramsize )
+	{
+		return 0;
+	}
+	n_words = ( m_n_ramsize + 1 - n_address ) / 4;
+	if( (UINT32)n_size > n_words )
+	{
+		return (INT32)n_words;
+	}
+	return n_size;
+}
+
 /*
 	Speedups of the PSX CPU core for a driver with the usual memory map:
 	main RAM at 0x00000000 with its 0x80000000 and 0xa0000000 mirrors
@@ -233,7 +250,8 @@ WRITE32_HANDLER( psx_dma_w )
 				UINT32 n_address;
 				UINT32 n_nextaddress;
 
-				n_address = ( m_p_n_dmabase[ n_channel ] & m_n_ramsize );
+				/* word based: the low two address bits are ignored */
+				n_address = ( m_p_n_dmabase[ n_channel ] & m_n_ramsize & ~3 );
 				n_size = m_p_n_dmablockcontrol[ n_channel ];
 				if( ( m_p_n_dmachannelcontrol[ n_channel ] & 0x200 ) != 0 )
 				{
@@ -245,6 +263,7 @@ WRITE32_HANDLER( psx_dma_w )
 				{
 					verboselog( 1, "dma %d read block %08x %08x\n",
 						n_channel, m_p_n_dmabase[ n_channel ], m_p_n_dmablockcontrol[ n_channel ] );
+					n_size = dma_clamp( n_address, n_size );
 					m_p_fn_dma_read[ n_channel ]( n_address, n_size );
 					dma_ram_written( n_address, n_size );
 					dma_finished( n_channel );
@@ -254,6 +273,7 @@ WRITE32_HANDLER( psx_dma_w )
 				{
 					verboselog( 1, "dma %d read block %08x %08x\n",
 						n_channel, m_p_n_dmabase[ n_channel ], m_p_n_dmablockcontrol[ n_channel ] );
+					n_size = dma_clamp( n_address, n_size );
 					m_p_fn_dma_read[ n_channel ]( n_address, n_size );
 					dma_ram_written( n_address, n_size );
 					if( n_channel == 1 )
@@ -270,7 +290,7 @@ WRITE32_HANDLER( psx_dma_w )
 				{
 					verboselog( 1, "dma %d write block %08x %08x\n",
 						n_channel, m_p_n_dmabase[ n_channel ], m_p_n_dmablockcontrol[ n_channel ] );
-					m_p_fn_dma_write[ n_channel ]( n_address, n_size );
+					m_p_fn_dma_write[ n_channel ]( n_address, dma_clamp( n_address, n_size ) );
 					dma_finished( n_channel );
 				}
 				else if( m_p_n_dmachannelcontrol[ n_channel ] == 0x01000401 &&
@@ -283,9 +303,9 @@ WRITE32_HANDLER( psx_dma_w )
 						n_channel, m_p_n_dmabase[ n_channel ] );
 					do
 					{
-						n_address &= m_n_ramsize;
+						n_address &= m_n_ramsize & ~3;
 						n_nextaddress = *( (UINT32 *)&m_p_n_ram[ n_address ] );
-						m_p_fn_dma_write[ n_channel ]( n_address + 4, n_nextaddress >> 24 );
+						m_p_fn_dma_write[ n_channel ]( n_address + 4, dma_clamp( n_address + 4, n_nextaddress >> 24 ) );
 						if( ( n_nextaddress >> 24 ) != 0 )
 						{
 							psx_gpu_list_node_end();
@@ -297,7 +317,7 @@ WRITE32_HANDLER( psx_dma_w )
 						   more nodes than RAM words can hold is surely a loop. */
 						if( ( n_nextaddress & 0xffffff ) != 0xffffff )
 						{
-							if( n_address == *( (UINT32 *)&m_p_n_ram[ n_nextaddress & m_n_ramsize & ~3 ] ) ||
+							if( n_address == ( *( (UINT32 *)&m_p_n_ram[ n_nextaddress & m_n_ramsize & ~3 ] ) & 0xffffff ) ||
 								n_address == ( n_nextaddress & m_n_ramsize ) )
 							{
 								verboselog( 1, "dma looped\n" );
@@ -334,7 +354,8 @@ WRITE32_HANDLER( psx_dma_w )
 						n_size--;
 						while( n_size > 0 )
 						{
-							n_nextaddress = ( n_address - 4 ) & 0xffffff;
+							/* wraps inside RAM, never past it */
+							n_nextaddress = ( n_address - 4 ) & m_n_ramsize;
 							*( (UINT32 *)&m_p_n_ram[ n_address ] ) = n_nextaddress;
 							n_address = n_nextaddress;
 							n_size--;
@@ -434,7 +455,7 @@ static void *m_p_timer_root[ 3 ];
 static data16_t m_p_n_root_count[ 3 ];
 static data16_t m_p_n_root_mode[ 3 ];
 static data16_t m_p_n_root_target[ 3 ];
-/* system clock ticks (two per CPU cycle) when n_count was last set */
+/* system clock ticks (33.8688 MHz) when n_count was last set */
 static UINT64 m_p_n_root_start[ 3 ];
 
 /* the counters are saved as their current value and the timers as their time
@@ -443,9 +464,16 @@ static UINT64 m_p_n_root_start[ 3 ];
 static data16_t m_p_n_root_saved[ 3 ];
 static double m_p_f_root_timeleft[ 3 ];
 
-static UINT64 root_totalcycles( void )
+#define PSX_SYSCLK ( 33868800 )
+
+/* system clock ticks from the CPU's cycle count, at the rate the timers use
+   whatever the CPU clock of the board (exactly two per cycle on System 11) */
+static UINT64 root_ticks( void )
 {
-	return cpu_gettotalcycles64( 0 ) * 2;
+	UINT64 n_cycles = cpu_gettotalcycles64( 0 );
+	UINT64 n_clock = Machine->drv->cpu[ 0 ].cpu_clock;
+
+	return ( n_cycles / n_clock ) * PSX_SYSCLK + ( ( n_cycles % n_clock ) * PSX_SYSCLK ) / n_clock;
 }
 
 static int root_divider( int n_counter )
@@ -475,13 +503,13 @@ static data16_t root_current( int n_counter )
 	else
 	{
 		UINT64 n_current;
-		n_current = root_totalcycles() - m_p_n_root_start[ n_counter ];
+		n_current = root_ticks() - m_p_n_root_start[ n_counter ];
 		n_current /= root_divider( n_counter );
 		n_current += m_p_n_root_count[ n_counter ];
 		if( n_current > 0xffff )
 		{
 			m_p_n_root_count[ n_counter ] = (data16_t)n_current;
-			m_p_n_root_start[ n_counter ] = root_totalcycles();
+			m_p_n_root_start[ n_counter ] = root_ticks();
 			m_p_n_root_mode[ n_counter ] |= PSX_RC_REACHEDFFFF;
 		}
 		return (data16_t)n_current;
@@ -527,14 +555,14 @@ static void root_timer( int n_counter )
 		n_duration *= root_divider( n_counter );
 
 		/* as MAME: the timer runs on 33.8688 MHz on every board */
-		timer_adjust( m_p_timer_root[ n_counter ], (double)n_duration / 33868800, n_counter, 0 );
+		timer_adjust( m_p_timer_root[ n_counter ], (double)n_duration / PSX_SYSCLK, n_counter, 0 );
 	}
 }
 
 static void root_finished( int n_counter )
 {
 	m_p_n_root_count[ n_counter ] = 0;
-	m_p_n_root_start[ n_counter ] = root_totalcycles();
+	m_p_n_root_start[ n_counter ] = root_ticks();
 	if( ( m_p_n_root_mode[ n_counter ] & PSX_RC_REPEAT ) != 0 )
 	{
 		root_timer( n_counter );
@@ -567,7 +595,7 @@ static void root_postload( void )
 	for( n = 0; n < 3; n++ )
 	{
 		m_p_n_root_count[ n ] = m_p_n_root_saved[ n ];
-		m_p_n_root_start[ n ] = root_totalcycles();
+		m_p_n_root_start[ n ] = root_ticks();
 		if( m_p_f_root_timeleft[ n ] >= 0 )
 		{
 			timer_adjust( m_p_timer_root[ n ], m_p_f_root_timeleft[ n ], n, 0 );
@@ -596,11 +624,11 @@ WRITE32_HANDLER( psx_counter_w )
 	{
 	case 0:
 		m_p_n_root_count[ n_counter ] = data;
-		m_p_n_root_start[ n_counter ] = root_totalcycles();
+		m_p_n_root_start[ n_counter ] = root_ticks();
 		break;
 	case 1:
 		m_p_n_root_count[ n_counter ] = root_current( n_counter );
-		m_p_n_root_start[ n_counter ] = root_totalcycles();
+		m_p_n_root_start[ n_counter ] = root_ticks();
 
 		if( ( data & PSX_RC_RESET ) != 0 )
 		{
@@ -1200,20 +1228,23 @@ static void mdec1_read( UINT32 n_address, INT32 n_size )
 		/* bits 28-27 select the output depth: 0x38000000 = 15 bit, 0x30000000 = 24 bit */
 		if( ( m_n_mdec0_command & ( 1L << 27 ) ) != 0 )
 		{
-			while( n_size > 0 )
+			/* whole macroblocks, never past the end of RAM */
+			while( n_size > 0 && n_address + ( 16 * 16 ) * 2 <= m_n_ramsize + 1 )
 			{
 				m_n_mdec0_address = mdec_unpack( m_n_mdec0_address );
 				mdec_yuv2_to_rgb15( n_address );
+				dma_ram_written( n_address, ( 16 * 16 ) / 2 );
 				n_address += ( 16 * 16 ) * 2;
 				n_size -= ( 16 * 16 ) / 2;
 			}
 		}
 		else
 		{
-			while( n_size > 0 )
+			while( n_size > 0 && n_address + ( 16 * 16 ) * 3 <= m_n_ramsize + 1 )
 			{
 				m_n_mdec0_address = mdec_unpack( m_n_mdec0_address );
 				mdec_yuv2_to_rgb24( n_address );
+				dma_ram_written( n_address, ( 16 * 16 * 3 ) / 4 );
 				n_address += ( 16 * 16 ) * 3;
 				n_size -= ( 16 * 16 * 3 ) / 4;
 			}
@@ -1286,6 +1317,20 @@ void psx_machine_init( void )
 		m_p_n_dma_lastscanline[ n_channel ] = 0xffffffff;
 	}
 
+	/* root counters: power-on state, timers disarmed */
+	for( n_channel = 0; n_channel < 3; n_channel++ )
+	{
+		m_p_n_root_count[ n_channel ] = 0;
+		m_p_n_root_mode[ n_channel ] = 0;
+		m_p_n_root_target[ n_channel ] = 0;
+		m_p_n_root_start[ n_channel ] = root_ticks();
+		if( m_p_timer_root[ n_channel ] != NULL )
+		{
+			timer_adjust( m_p_timer_root[ n_channel ], TIME_NEVER, n_channel, 0 );
+			timer_enable( m_p_timer_root[ n_channel ], 0 );
+		}
+	}
+
 	psx_gpu_reset();
 }
 
@@ -1299,8 +1344,6 @@ static void psx_postload( void )
 	{
 		dma_timer( n, m_p_n_dma_lastscanline[ n ] );
 	}
-
-	root_postload();
 
 	mdec_cos_precalc();
 }
@@ -1371,6 +1414,11 @@ void psx_driver_init( void )
 	state_save_register_UINT16( "psx", 0, "m_p_n_root_saved", m_p_n_root_saved, 3 );
 	state_save_register_double( "psx", 0, "m_p_f_root_timeleft", m_p_f_root_timeleft, 3 );
 	state_save_register_func_presave( root_presave );
+	/* tag 0 post-loads run newest first, before the CPU cycle counts are
+	   restored: the counters restart from the cycle count under CPU 0's tag */
+	state_save_set_current_tag( 1 );
+	state_save_register_func_postload( root_postload );
+	state_save_set_current_tag( 0 );
 	state_save_register_UINT16( "psx", 0, "m_p_n_sio_status", m_p_n_sio_status, 2 );
 	state_save_register_UINT16( "psx", 0, "m_p_n_sio_mode", m_p_n_sio_mode, 2 );
 	state_save_register_UINT16( "psx", 0, "m_p_n_sio_control", m_p_n_sio_control, 2 );

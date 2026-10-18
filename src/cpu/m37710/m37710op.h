@@ -1,3 +1,6 @@
+/* M37710/M37702 opcode handlers: from MAME 0.121 (MAME license; R. Belmont,
+   based on the G65816 core by Karl Stenerud) */
+
 /* ======================================================================== */
 /* ============================= CONFIGURATION ============================ */
 /* ======================================================================== */
@@ -2943,7 +2946,7 @@ TABLE_FUNCTION(void, set_line, (int line, int state))
 {
 	switch(line)
 	{
-		// maskable interrupts
+		/* maskable interrupts */
 		case M37710_LINE_ADC:
 		case M37710_LINE_UART1XMIT:
 		case M37710_LINE_UART1RECV:
@@ -2982,7 +2985,7 @@ TABLE_FUNCTION(void, set_line, (int line, int state))
 					break;
 			}
 
-			// if I flag is set, trip the WAI mechanism only (may not be totally accurate)
+			/* if I flag is set, trip the WAI mechanism only (may not be totally accurate) */
 			if(FLAG_I)
 			{
 				if(CPU_STOPPED & STOP_LEVEL_WAI)

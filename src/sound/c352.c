@@ -1,4 +1,7 @@
 /*
+    license:BSD-3-Clause
+    copyright-holders:R. Belmont, superctr
+
     c352.c - Namco C352 custom PCM chip emulation
     v2.0
     By R. Belmont
@@ -84,6 +87,7 @@ static struct
 	int stream;
 	const UINT8 *rom;
 	UINT32 rom_mask;
+	UINT32 rom_length;
 
 	c352_voice_t v[32];
 	INT16 mulawtab[256];
@@ -92,9 +96,13 @@ static struct
 	UINT16 control;
 } c352;
 
+/* 24-bit address, mirrored on a power of two; nothing past the region */
 static INLINE UINT8 c352_read_byte(UINT32 address)
 {
-	return c352.rom[address & c352.rom_mask];
+	address &= c352.rom_mask;
+	if (address >= c352.rom_length)
+		return 0;
+	return c352.rom[address];
 }
 
 static void c352_fetch_sample(c352_voice_t *v)
@@ -205,7 +213,8 @@ static void c352_update(int param, INT16 **buffer, int length)
 
 				/* Interpolate samples */
 				if ((V_FLAGS(v) & C352_FLG_FILTER) == 0)
-					s = v->last_sample + ((INT32)v->counter * (v->sample - v->last_sample) >> 16);
+					/* product in 64 bits: same 16-bit result, no signed overflow */
+					s = v->last_sample + (INT32)(((INT64)v->counter * (v->sample - v->last_sample)) >> 16);
 			}
 
 			/* Left */
@@ -296,10 +305,17 @@ int C352_sh_start(const struct MachineSound *msound)
 	vol[1] = MIXER(intf->mixing_level, MIXER_PAN_RIGHT);
 
 	c352.rom = memory_region(intf->region);
-	length = memory_region_length(intf->region);
-	/* the chip addresses 16MB; mirror smaller ROMs on a power of two */
+	length = c352.rom ? memory_region_length(intf->region) : 0;
+	if (c352.rom == NULL)
+	{
+		static const UINT8 empty = 0;
+		c352.rom = &empty;
+	}
+	c352.rom_length = (UINT32)length;
+	/* the chip addresses 16MB; mirror smaller ROMs on a power of two
+	   (reads past the end of the region give 0) */
 	c352.rom_mask = 1;
-	while (c352.rom_mask < (UINT32)length) c352.rom_mask <<= 1;
+	while (c352.rom_mask < (UINT32)length && c352.rom_mask < 0x1000000) c352.rom_mask <<= 1;
 	c352.rom_mask -= 1;
 	if (c352.rom_mask > 0xffffff) c352.rom_mask = 0xffffff;
 

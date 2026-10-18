@@ -38,7 +38,11 @@
 #define LOOP_VSYNC		3
 #define LOOP_RNG		4
 
-static int loopskip_enabled = 1;
+/* build with -DPSX_LOOPSKIP=0 to compare against the plain interpreter */
+#ifndef PSX_LOOPSKIP
+#define PSX_LOOPSKIP	1
+#endif
+static int loopskip_enabled = PSX_LOOPSKIP;
 
 /* a word of code or data in fast RAM, or 0 if it is not there */
 static int loop_word( UINT32 address, UINT32 *word )

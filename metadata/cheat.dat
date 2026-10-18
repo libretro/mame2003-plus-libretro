@@ -19029,7 +19029,7 @@ dakkochn:0:0000:00:999:[ forums.               ]:REASON 1
 ; [ Dancing Eyes (DC1/VER.A) ]
 danceyesj:0:002B51DC:09:000:Infinite Credits
 danceyesj:0:002B51A0:01:000:Always See Through Mode
-:danceyes:00000500:0021F064:0000000E:FFFFFFFF:Select Stage
+:danceyesj:00000500:0021F064:0000000E:FFFFFFFF:Select Stage
 
 ; [ Danchi de Hanafuoda ]
 danchih:0:0000:00:999:[ This game hasn't even ]:REASON 11
@@ -31436,8 +31436,8 @@ dunkmniajc:0:001DD094:FF:500:Infinite Time (3/3)
 dunkmniajc:0:001DD096:00:001:Finish this Period Now!
 dunkmniajc:0:001DD095:00:501:Finish this Period Now! (2/3)
 dunkmniajc:0:001DD094:01:501:Finish this Period Now! (3/3)
-:dunkmnia:00300060:001DD098:00012875:FFFFFFFF:Infinite Shot Time
-:dunkmnia:00300001:001DD098:00000001:FFFFFFFF:No Shot Time Left Now!:For the best effect assign this cheat an activation key and use it whenever the other side has the ball!
+:dunkmniajc:00300060:001DD098:00012875:FFFFFFFF:Infinite Shot Time
+:dunkmniajc:00300001:001DD098:00000001:FFFFFFFF:No Shot Time Left Now!:For the best effect assign this cheat an activation key and use it whenever the other side has the ball!
 dunkmniajc:0:001DD4E8:00:000:Score always = 0 PL1
 dunkmniajc:0:001DD4E8:7F:000:Score always = 127 PL1
 dunkmniajc:0:001DD4E8:00:001:Set score = 0 Now! PL1
@@ -33676,19 +33676,19 @@ fghthstw:0:001005DD:00:001:Drain All Energy Now! PL2
 fghthstw:0:00100B00:00:501:Drain All Energy Now! PL2 (2/2)
 
 ; [ Fighting Layer (FTL0/VER.A) ]
-fgtlayer:0:0000:00:999:[ This game hasn't even ]:REASON 11
-fgtlayer:0:0000:00:999:[ been looked at due to ]:REASON 11
-fgtlayer:0:0000:00:999:[ time constraints - Too]:REASON 11
-fgtlayer:0:0000:00:999:[ many games and so     ]:REASON 11
-fgtlayer:0:0000:00:999:[ little time. It is    ]:REASON 11
-fgtlayer:0:0000:00:999:[ even possible that    ]:REASON 11
-fgtlayer:0:0000:00:999:[ this game may be a    ]:REASON 11
-fgtlayer:0:0000:00:999:[ clone of an existing  ]:REASON 11
-fgtlayer:0:0000:00:999:[ game which may have   ]:REASON 11
-fgtlayer:0:0000:00:999:[ cheats. Please search ]:REASON 11
-fgtlayer:0:0000:00:999:[ the cheat forums      ]:REASON 11
-fgtlayer:0:0000:00:999:[ before posting cheat  ]:REASON 11
-fgtlayer:0:0000:00:999:[ requests/cheat finding]:REASON 11
+fgtlayerja:0:0000:00:999:[ This game hasn't even ]:REASON 11
+fgtlayerja:0:0000:00:999:[ been looked at due to ]:REASON 11
+fgtlayerja:0:0000:00:999:[ time constraints - Too]:REASON 11
+fgtlayerja:0:0000:00:999:[ many games and so     ]:REASON 11
+fgtlayerja:0:0000:00:999:[ little time. It is    ]:REASON 11
+fgtlayerja:0:0000:00:999:[ even possible that    ]:REASON 11
+fgtlayerja:0:0000:00:999:[ this game may be a    ]:REASON 11
+fgtlayerja:0:0000:00:999:[ clone of an existing  ]:REASON 11
+fgtlayerja:0:0000:00:999:[ game which may have   ]:REASON 11
+fgtlayerja:0:0000:00:999:[ cheats. Please search ]:REASON 11
+fgtlayerja:0:0000:00:999:[ the cheat forums      ]:REASON 11
+fgtlayerja:0:0000:00:999:[ before posting cheat  ]:REASON 11
+fgtlayerja:0:0000:00:999:[ requests/cheat finding]:REASON 11
 
 ; [ Fighting Hawk (World) ]
 fhawk:0:9012:09:000:Infinite Bombs
@@ -126978,18 +126978,18 @@ tekipaki:0:080C07:FF:070:Select current level PL1
 tekipaki:0:081C07:FF:070:Select current level PL2
 
 ; [ Tekken (TE4/VER.C) ]
-tekken:0:00267038:09:000:Infinite Credits
-:tekken:00100000:002648BC:00001730:FFFFFFFF:Infinite Time
-:tekken:00100001:002648BC:00000001:FFFFFFFF:Finish this Round Now!
-:tekken:00000000:00264AF6:0000007D:FFFFFFFF:Infinite Energy PL1
-:tekken:00000001:00264AF6:00000000:FFFFFFFF:Drain all Energy Now! PL1
-:tekken:00000000:00265B2E:0000007D:FFFFFFFF:Infinite Energy PL2
-:tekken:00000001:00265B2E:00000000:FFFFFFFF:Drain all Energy Now! PL2
+tekkenac:0:00267038:09:000:Infinite Credits
+:tekkenac:00100000:002648BC:00001730:FFFFFFFF:Infinite Time
+:tekkenac:00100001:002648BC:00000001:FFFFFFFF:Finish this Round Now!
+:tekkenac:00000000:00264AF6:0000007D:FFFFFFFF:Infinite Energy PL1
+:tekkenac:00000001:00264AF6:00000000:FFFFFFFF:Drain all Energy Now! PL1
+:tekkenac:00000000:00265B2E:0000007D:FFFFFFFF:Infinite Energy PL2
+:tekkenac:00000001:00265B2E:00000000:FFFFFFFF:Drain all Energy Now! PL2
 
 ; [ Tekken 2 Ver.B (TES3/VER.B) ]
 tekken2ub:0:00301CEC:09:000:Infinite Credits
-:tekken2:00100000:0030F174:00001732:FFFFFFFF:Infinite Time
-:tekken2:00100001:0030F174:00000001:FFFFFFFF:Finish this Round Now!
+:tekken2ub:00100000:0030F174:00001732:FFFFFFFF:Infinite Time
+:tekken2ub:00100001:0030F174:00000001:FFFFFFFF:Finish this Round Now!
 tekken2ub:0:0030CA6A:7E:000:Infinite Energy PL1
 tekken2ub:0:0030CA6A:00:001:Drain All Energy Now! PL1
 tekken2ub:0:0030DEEA:7E:000:Infinite Energy PL2
@@ -126997,8 +126997,8 @@ tekken2ub:0:0030DEEA:00:001:Drain All Energy Now! PL2
 
 ; [ Tekken 2 Ver.B (TES2/VER.B) ]
 tekken2b:0:00301CEC:09:000:Infinite Credits
-:tekken2a:00100000:0030F174:00001732:FFFFFFFF:Infinite Time
-:tekken2a:00100001:0030F174:00000001:FFFFFFFF:Finish this Round Now!
+:tekken2b:00100000:0030F174:00001732:FFFFFFFF:Infinite Time
+:tekken2b:00100001:0030F174:00000001:FFFFFFFF:Finish this Round Now!
 tekken2b:0:0030CA6A:7E:000:Infinite Energy PL1
 tekken2b:0:0030CA6A:00:001:Drain All Energy Now! PL1
 tekken2b:0:0030DEEA:7E:000:Infinite Energy PL2
@@ -127006,8 +127006,8 @@ tekken2b:0:0030DEEA:00:001:Drain All Energy Now! PL2
 
 ; [ Tekken 2 (TES2/VER.A) ]
 tekken2a:0:002FA4A0:09:000:Infinite Credits
-:tekken2b:00100000:00307928:00001732:FFFFFFFF:Infinite Time
-:tekken2b:00100001:00307928:00000001:FFFFFFFF:Finish this Round Now!
+:tekken2a:00100000:00307928:00001732:FFFFFFFF:Infinite Time
+:tekken2a:00100001:00307928:00000001:FFFFFFFF:Finish this Round Now!
 tekken2a:0:0030521E:7E:000:Infinite Energy PL1
 tekken2a:0:0030521E:00:001:Drain All Energy Now! PL1
 tekken2a:0:0030669E:7E:000:Infinite Energy PL2
@@ -127024,15 +127024,6 @@ tekken3je1:0:0031FF76:82:000:Infinite Energy PL2
 tekken3je1:0:0031FF76:00:001:Drain All Energy Now! PL2
 
 ; [ Tekken (TE2/VER.B) ]
-tekkena:0:00266CE0:09:000:Infinite Credits
-:tekkena:00100000:00264564:00001730:FFFFFFFF:Infinite Time
-:tekkena:00100001:00264564:00000001:FFFFFFFF:Finish this Round Now!
-:tekkena:00000000:0026479E:0000007D:FFFFFFFF:Infinite Energy PL1
-:tekkena:00000001:0026479E:00000000:FFFFFFFF:Drain all Energy Now! PL1
-:tekkena:00000000:002657D6:0000007D:FFFFFFFF:Infinite Energy PL2
-:tekkena:00000001:002657D6:00000000:FFFFFFFF:Drain all Energy Now! PL2
-
-; [ Tekken (TE1/VER.B) ]
 tekkenb:0:00266CE0:09:000:Infinite Credits
 :tekkenb:00100000:00264564:00001730:FFFFFFFF:Infinite Time
 :tekkenb:00100001:00264564:00000001:FFFFFFFF:Finish this Round Now!
@@ -127041,15 +127032,24 @@ tekkenb:0:00266CE0:09:000:Infinite Credits
 :tekkenb:00000000:002657D6:0000007D:FFFFFFFF:Infinite Energy PL2
 :tekkenb:00000001:002657D6:00000000:FFFFFFFF:Drain all Energy Now! PL2
 
+; [ Tekken (TE1/VER.B) ]
+tekkenjb:0:00266CE0:09:000:Infinite Credits
+:tekkenjb:00100000:00264564:00001730:FFFFFFFF:Infinite Time
+:tekkenjb:00100001:00264564:00000001:FFFFFFFF:Finish this Round Now!
+:tekkenjb:00000000:0026479E:0000007D:FFFFFFFF:Infinite Energy PL1
+:tekkenjb:00000001:0026479E:00000000:FFFFFFFF:Drain all Energy Now! PL1
+:tekkenjb:00000000:002657D6:0000007D:FFFFFFFF:Infinite Energy PL2
+:tekkenjb:00000001:002657D6:00000000:FFFFFFFF:Drain all Energy Now! PL2
+
 ; [ Tekken Tag Tournament (TEG3/VER.B) ]
-tektagt:0:0000:00:999:[ There are no cheats   ]:REASON 1
-tektagt:0:0000:00:999:[ for this game as it   ]:REASON 1
-tektagt:0:0000:00:999:[ didn't work the last  ]:REASON 1
-tektagt:0:0000:00:999:[ time it was tested.   ]:REASON 1
-tektagt:0:0000:00:999:[ If the game now works ]:REASON 1
-tektagt:0:0000:00:999:[ please request cheats ]:REASON 1
-tektagt:0:0000:00:999:[ for it on the cheat   ]:REASON 1
-tektagt:0:0000:00:999:[ forums.               ]:REASON 1
+tektagtuc1:0:0000:00:999:[ There are no cheats   ]:REASON 1
+tektagtuc1:0:0000:00:999:[ for this game as it   ]:REASON 1
+tektagtuc1:0:0000:00:999:[ didn't work the last  ]:REASON 1
+tektagtuc1:0:0000:00:999:[ time it was tested.   ]:REASON 1
+tektagtuc1:0:0000:00:999:[ If the game now works ]:REASON 1
+tektagtuc1:0:0000:00:999:[ please request cheats ]:REASON 1
+tektagtuc1:0:0000:00:999:[ for it on the cheat   ]:REASON 1
+tektagtuc1:0:0000:00:999:[ forums.               ]:REASON 1
 
 ; [ Tel Jan ]
 teljan:0:06002FD7:09:000:Infinite Credits

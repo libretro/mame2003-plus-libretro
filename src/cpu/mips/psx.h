@@ -218,7 +218,9 @@ extern unsigned mips_dasm(char *buffer, UINT32 pc);
 extern void psxcpu_add_fastram(offs_t start, offs_t end, int readonly, void *base);
 /* fast RAM written behind the CPU's back (DMA, driver patches) */
 extern void psxcpu_ram_written(const void *host, UINT32 bytes);
-/* recompiler (sljit), where supported */
+/* recompiler (sljit), where supported. The fast RAM table and the
+   recompiler state are global, not part of the CPU context: one PSXCPU
+   per machine. */
 extern int psxcpu_jit_available(void);
 extern void psxcpu_set_jit(int enable);
 

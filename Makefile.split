@@ -997,7 +997,6 @@ ifneq (,$(filter $(INCLUDE_DRV),drv_namcos2 core_none))
 	CPUS+=M6809@
 	CPUS+=HD63705@
 	SOUNDS+=C140@
-SOUNDS+=C352@
 	#SOUNDS+=YM2151@
 	SOUNDS+=YM2151_ALT@
 	SOURCES_C += \

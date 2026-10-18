@@ -566,7 +566,9 @@ const struct cpu_interface cpuintrf[] =
 	CPU0(H83002,   h8_3002,	 8,  0,1.00,16,24bew,  0,24,BE,2,10 ),
 #endif
 #if (HAS_M37702)
-	CPU0(M37702,   m37702,	29,  0,1.00,16,24lew,  0,24,LE,1, 6 ),
+	/* 16 cpuint lines: the maskable ones (M37710_LINE_ADC..IRQ0); the
+	   non-maskable and timer tick lines are raised by the core itself */
+	CPU0(M37702,   m37702,	16,  0,1.00,16,24lew,  0,24,LE,1, 6 ),
 #endif
 #if (HAS_ASAP)
 	#define asap_ICount asap_icount

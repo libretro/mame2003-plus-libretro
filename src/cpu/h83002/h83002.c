@@ -33,7 +33,8 @@
 #include "driver.h"
 #include "h83002.h"
 
-#define H8_LOG(...)	do { } while (0)
+/* H8_LOG((fmt, ...)): debug log, compiled out */
+#define H8_LOG(x)	do { } while (0)
 
 #define H8_SP	(7)
 
@@ -50,7 +51,6 @@ typedef struct
 	UINT32 pc, ppc;
 
 	UINT32 irq_req[3];
-	INT32 cyccnt;
 
 	UINT8  ccr, exr;
 	UINT8  h8nflag, h8vflag, h8cflag, h8zflag, h8iflag, h8hflag;
@@ -70,12 +70,17 @@ typedef struct
 	UINT8 h8TSTR;
 
 	mame_timer *timer[5];
+	int timer_running[5];	/* timer[] armed (not TIME_NEVER / disabled) */
+	UINT16 tcnt_start[5];	/* TCNT when the timer was last armed */
 	double tcnt_offset[5];	/* time counted before the timer was last armed by a state load */
 	double save_left[5], save_elapsed[5];	/* saved timer state (time left < 0: not armed) */
 	int clock;
 } h83xx_state;
 
 static h83xx_state h8state;
+
+/* cycles left in the timeslice: cpuexec reads and adjusts it (abort,
+   cycles run), so the core counts down this very variable */
 int h8_3002_ICount;
 
 static h8_io_read_func  h8_io_read  = NULL;
@@ -169,12 +174,12 @@ static UINT16 h8_readop16(h83xx_state *h8, UINT32 address)
 /* timing macros
    note: we assume a system 12 - type setup where external access is 3+1 states
    timing will be off somewhat for other configurations. */
-#define H8_IFETCH_TIMING(x) h8->cyccnt -= (x) * 4;
-#define H8_BRANCH_TIMING(x) h8->cyccnt -= (x) * 4;
-#define H8_STACK_TIMING(x)  h8->cyccnt -= (x) * 4;
-#define H8_BYTE_TIMING(x, adr)  if (address24 >= 0xffff10) h8->cyccnt -= (x) * 3; else h8->cyccnt -= (x) * 4;
-#define H8_WORD_TIMING(x, adr)  if (address24 >= 0xffff10) h8->cyccnt -= (x) * 3; else h8->cyccnt -= (x) * 4;
-#define H8_IOP_TIMING(x)    h8->cyccnt -= (x);
+#define H8_IFETCH_TIMING(x) h8_3002_ICount -= (x) * 4;
+#define H8_BRANCH_TIMING(x) h8_3002_ICount -= (x) * 4;
+#define H8_STACK_TIMING(x)  h8_3002_ICount -= (x) * 4;
+#define H8_BYTE_TIMING(x, adr)  if (address24 >= 0xffff10) h8_3002_ICount -= (x) * 3; else h8_3002_ICount -= (x) * 4;
+#define H8_WORD_TIMING(x, adr)  if (address24 >= 0xffff10) h8_3002_ICount -= (x) * 3; else h8_3002_ICount -= (x) * 4;
+#define H8_IOP_TIMING(x)    h8_3002_ICount -= (x);
 
 static UINT32 h8_mem_read32(h83xx_state *h8, UINT32 address)
 {
@@ -227,7 +232,8 @@ static UINT8 h8_get_exr(h83xx_state *h8)
 	return h8->exr;
 }
 
-static void h8_set_ccr(h83xx_state *h8, UINT8 data)
+/* CCR into the flag bytes, without taking interrupts */
+static void h8_unpack_ccr(h83xx_state *h8, UINT8 data)
 {
 	h8->ccr = data;
 
@@ -239,6 +245,11 @@ static void h8_set_ccr(h83xx_state *h8, UINT8 data)
 	h8->h8iflag = (data & H8_IFLAG) ? 1 : 0;
 	h8->h8uflag = (data & H8_UFLAG) ? 1 : 0;
 	h8->h8uiflag = (data & H8_UIFLAG) ? 1 : 0;
+}
+
+static void h8_set_ccr(h83xx_state *h8, UINT8 data)
+{
+	h8_unpack_ccr(h8, data);
 
 	if (!h8->incheckirqs) h8_check_irqs(h8);
 }
@@ -248,8 +259,10 @@ static void h8_set_exr(h83xx_state *h8, UINT8 data)
 	h8->exr = data;
 }
 
+/* register numbers come from opcode bits: keep them inside regs[] */
 static INT16 h8_getreg16(h83xx_state *h8, UINT8 reg)
 {
+	reg &= 15;
 	if(reg > 7)
 		return h8->regs[reg-8]>>16;
 	else
@@ -258,6 +271,7 @@ static INT16 h8_getreg16(h83xx_state *h8, UINT8 reg)
 
 static void h8_setreg16(h83xx_state *h8, UINT8 reg, UINT16 data)
 {
+	reg &= 15;
 	if(reg > 7)
 	{
 		h8->regs[reg-8] &= 0xffff;
@@ -272,6 +286,7 @@ static void h8_setreg16(h83xx_state *h8, UINT8 reg, UINT16 data)
 
 static UINT8 h8_getreg8(h83xx_state *h8, UINT8 reg)
 {
+	reg &= 15;
 	if(reg > 7)
 		return h8->regs[reg-8];
 	else
@@ -280,6 +295,7 @@ static UINT8 h8_getreg8(h83xx_state *h8, UINT8 reg)
 
 static void h8_setreg8(h83xx_state *h8, UINT8 reg, UINT8 data)
 {
+	reg &= 15;
 	if(reg > 7)
 	{
 		h8->regs[reg-8] &= 0xffffff00;
@@ -294,12 +310,12 @@ static void h8_setreg8(h83xx_state *h8, UINT8 reg, UINT8 data)
 
 static UINT32 h8_getreg32(h83xx_state *h8, UINT8 reg)
 {
-	return h8->regs[reg];
+	return h8->regs[reg & 7];
 }
 
 static void h8_setreg32(h83xx_state *h8, UINT8 reg, UINT32 data)
 {
-	h8->regs[reg] = data;
+	h8->regs[reg & 7] = data;
 }
 
 static void h8_GenException(h83xx_state *h8, UINT8 vectornr)
@@ -445,12 +461,11 @@ static void h8_check_irqs(h83xx_state *h8)
 	h8->incheckirqs = 0;
 }
 
-#define U64(x) x##ULL
 #define H8_ADDR_MASK 0xffffff
 static UINT32 h8_idle_start, h8_idle_end;		/* polled memory (end 0 = off) */
 static UINT32 h8_idle_pc;						/* loop start last reached */
 static int h8_idle_since;						/* instructions since then */
-static int h8_idle_cycles;						/* cyccnt then */
+static int h8_idle_cycles;						/* h8_3002_ICount then */
 
 void h8_3002_set_idle_poll(UINT32 start, UINT32 end)
 {
@@ -473,13 +488,13 @@ static void h8_idle_check(h83xx_state *h8)
 	/* one whole pass just ran: skip the passes that still fit */
 	if (h8->pc == h8_idle_pc && h8_idle_since == 2)
 	{
-		int pass = h8_idle_cycles - h8->cyccnt;
-		if (pass > 0 && h8->cyccnt > pass)
-			h8->cyccnt -= ((h8->cyccnt - 1) / pass) * pass;
+		int pass = h8_idle_cycles - h8_3002_ICount;
+		if (pass > 0 && h8_3002_ICount > pass)
+			h8_3002_ICount -= ((h8_3002_ICount - 1) / pass) * pass;
 	}
 	h8_idle_pc = h8->pc;
 	h8_idle_since = 0;
-	h8_idle_cycles = h8->cyccnt;
+	h8_idle_cycles = h8_3002_ICount;
 }
 
 #include "h8ops.h"
@@ -516,7 +531,9 @@ static void h8itu_timer_expire(int which)
 	h83xx_state *h8 = &h8state;
 
 	timer_adjust(h8->timer[which], TIME_NEVER, 0, 0);
+	h8->timer_running[which] = 0;
 	h8->tcnt_offset[which] = 0;
+	h8->tcnt_start[which] = 0;
 	h8->h8TCNT[which] = 0;
 	h8->per_regs[tsr[which]] |= 4;
 	/* interrupt on overflow ? */
@@ -535,9 +552,11 @@ static void h8_itu_refresh_timer(h83xx_state *h8, int tnum)
 	period = TIME_IN_HZ(h8->clock) * tscales[ourTCR & 3] * (65536 - ourTVAL);
 
 	if (ourTCR & 4)
-		H8_LOG("H8/3002: Timer %d is using an external clock.  Unsupported!\n", tnum);
+		H8_LOG(("H8/3002: Timer %d is using an external clock.  Unsupported!\n", tnum));
 
 	timer_adjust(h8->timer[tnum], period, tnum, 0);
+	h8->timer_running[tnum] = 1;
+	h8->tcnt_start[tnum] = ourTVAL;
 	h8->tcnt_offset[tnum] = 0;
 }
 
@@ -550,7 +569,8 @@ static void h8_itu_sync_timers(h83xx_state *h8, int tnum)
 	cycle_time = TIME_IN_HZ(h8->clock) * tscales[ourTCR & 3];
 	cur = timer_timeelapsed(h8->timer[tnum]) + h8->tcnt_offset[tnum];
 
-	h8->h8TCNT[tnum] = (UINT16)(cur / cycle_time);
+	/* counted from the TCNT value the timer was armed with */
+	h8->h8TCNT[tnum] = (UINT16)(h8->tcnt_start[tnum] + (UINT32)(cur / cycle_time));
 }
 
 static UINT8 h8_itu_read8(h83xx_state *h8, UINT8 reg)
@@ -699,11 +719,12 @@ static void h8_onstatesave(void)
 	h83xx_state *h8 = &h8state;
 	int i;
 
+	/* the live flags are the flag bytes: ccr holds them in the state */
+	h8_get_ccr(h8);
+
 	for (i = 0; i < 5; i++)
 	{
-		int enabled = timer_enable(h8->timer[i], 0);
-		timer_enable(h8->timer[i], enabled);
-		h8->save_left[i] = enabled ? timer_timeleft(h8->timer[i]) : -1;
+		h8->save_left[i] = h8->timer_running[i] ? timer_timeleft(h8->timer[i]) : -1;
 		h8->save_elapsed[i] = timer_timeelapsed(h8->timer[i]) + h8->tcnt_offset[i];
 	}
 }
@@ -713,16 +734,21 @@ static void h8_onstateload(void)
 	h83xx_state *h8 = &h8state;
 	int i;
 
-	h8_set_ccr(h8, h8->ccr);
+	/* flags only: a load must not take an interrupt */
+	h8_unpack_ccr(h8, h8->ccr);
 
 	for (i = 0; i < 5; i++)
 	{
 		if (h8->save_left[i] >= 0)
+		{
 			timer_adjust(h8->timer[i], h8->save_left[i], i, 0);
+			h8->timer_running[i] = 1;
+		}
 		else
 		{
 			timer_adjust(h8->timer[i], TIME_NEVER, 0, 0);
 			timer_enable(h8->timer[i], 0);
+			h8->timer_running[i] = 0;
 		}
 		h8->tcnt_offset[i] = h8->save_elapsed[i];
 	}
@@ -751,6 +777,7 @@ void h8_3002_init(void)
 	state_save_register_UINT8 ("h8_3002", cpu, "iram",     h8->iram, sizeof(h8->iram));
 	state_save_register_UINT8 ("h8_3002", cpu, "h8TSTR",   &h8->h8TSTR, 1);
 	state_save_register_UINT16("h8_3002", cpu, "h8TCNT",   h8->h8TCNT, 5);
+	state_save_register_UINT16("h8_3002", cpu, "tcnt_start", h8->tcnt_start, 5);
 	state_save_register_double("h8_3002", cpu, "timer_left",    h8->save_left, 5);
 	state_save_register_double("h8_3002", cpu, "timer_elapsed", h8->save_elapsed, 5);
 	state_save_register_func_presave(h8_onstatesave);
@@ -782,6 +809,8 @@ void h8_3002_reset(void *param)
 	{
 		h8->h8TCNT[i] = 0;
 		timer_adjust(h8->timer[i], TIME_NEVER, 0, 0);
+		h8->timer_running[i] = 0;
+		h8->tcnt_start[i] = 0;
 		h8->tcnt_offset[i] = 0;
 	}
 }
@@ -791,7 +820,8 @@ void h8_3002_exit(void)
 	h8_idle_end = 0;
 }
 
-/* single instance: the state lives in h8state, contexts are not swapped */
+/* single instance (one H8/3002 per machine): the state lives in h8state,
+   contexts are not swapped */
 unsigned h8_3002_get_context(void *dst)
 {
 	return 1;

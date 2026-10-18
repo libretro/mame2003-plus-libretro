@@ -12,7 +12,6 @@
    MAME). Keycus protection, light guns and ROM sets as in current MAME.
    Random draw list corruption in soul edge v2 & dunkmania.
    missing memcard support in soul edge, dunk mania & prime goal ex 
-   Most games try to run too fast, lack of root counters and sound timers are likely to blame.
 
 Known Dumps
 -----------
@@ -681,7 +680,6 @@ static DRIVER_INIT( namcos11 )
 
 	state_save_register_UINT32( "namcos11", 0, "keycus_rand_state", &keycus_rand_state, 1 );
 	psx_driver_init();
-	psx_gpu_set_thread( options.psx_gpu_thread );	/* PSX GPU drawing thread (core option) */
 }
 
 MACHINE_INIT( namcos11 )
@@ -849,7 +847,9 @@ static MACHINE_DRIVER_START( coh100_c76 )
 	MDRV_CPU_MEMORY( namcos11_readmem, namcos11_writemem )
 	MDRV_CPU_VBLANK_INT( namcos11_vblank_c76, 1 )
 
-	MDRV_CPU_ADD( M37702, 16934400 )
+	/* one cycle per two XIN clocks (current MAME clocks_to_cycles); the core
+	   takes its timer XIN as twice this */
+	MDRV_CPU_ADD( M37702, 16934400 / 2 )
 	MDRV_CPU_MEMORY( c76_readmem, c76_writemem )
 	MDRV_CPU_VBLANK_INT( c76_interrupt, 2 )
 
@@ -1513,7 +1513,7 @@ ROM_START( ptblank2a )
 	ROM_LOAD16_BYTE( "gnb1vera.2f",  0x0200001, 0x100000, CRC(2bb7eb6d) SHA1(d1b1e031a28443140ac8652dfd77a65a042b67fc) )
 
 	ROM_REGION32_LE( 0x2000000, REGION_USER3, 0 ) /* main data */
-	ROM_LOAD16_BYTE( "gnb2prg.1",    0x0000000, 0x400000, CRC(8a8e77c3) SHA1(1a37e04a0acd1ab8c5fcbf807f24fd22f1d90a82) ) // == same data as the 64Mbit ROMs
+	ROM_LOAD16_BYTE( "gnb2prg.1",    0x0000000, 0x400000, CRC(8a8e77c3) SHA1(1a37e04a0acd1ab8c5fcbf807f24fd22f1d90a82) ) /* == same data as the 64Mbit ROMs */
 	ROM_LOAD16_BYTE( "gnb2prg.2",    0x0000001, 0x400000, CRC(563edc3f) SHA1(d691560bded88fe7738de01b293f1e761ab9304c) )
 	ROM_LOAD16_BYTE( "gnb2prg.3",    0x0800000, 0x400000, CRC(94fbe733) SHA1(74634c3680d22697c1cc3059c2bbe1703e77ddf1) )
 	ROM_LOAD16_BYTE( "gnb2prg.4",    0x0800001, 0x400000, CRC(1cbe79a6) SHA1(46e9f72c121ece3457b2f66413489ce6568e5510) )
@@ -1533,11 +1533,11 @@ ROM_START( ptblank2b )
 	ROM_REGION( 0x0000400, REGION_USER1, 0 ) /* scratchpad */
 
 	ROM_REGION32_LE( 0x0400000, REGION_USER2, 0 ) /* main prg */
-	ROM_LOAD( "gnb2vera.1j",         0x0000000, 0x200000, CRC(df0bc5f0) SHA1(ccd5cac2c8cef73dae971d256afec58d4b897430) ) // == gnb2vera.2l + gnb2vera.2j interleaved
-	ROM_LOAD( "gnb2vera.1l",         0x0200000, 0x200000, CRC(8a274d96) SHA1(9ae0932e5dba2a052dc4977c76bde2e0c5f39d54) ) // == gnb1vera.2k + gnb1vera.2f interleaved
+	ROM_LOAD( "gnb2vera.1j",         0x0000000, 0x200000, CRC(df0bc5f0) SHA1(ccd5cac2c8cef73dae971d256afec58d4b897430) ) /* == gnb2vera.2l + gnb2vera.2j interleaved */
+	ROM_LOAD( "gnb2vera.1l",         0x0200000, 0x200000, CRC(8a274d96) SHA1(9ae0932e5dba2a052dc4977c76bde2e0c5f39d54) ) /* == gnb1vera.2k + gnb1vera.2f interleaved */
 
 	ROM_REGION32_LE( 0x2000000, REGION_USER3, 0 ) /* main data */
-	ROM_LOAD16_BYTE( "gnb2prg.1",    0x0000000, 0x400000, CRC(8a8e77c3) SHA1(1a37e04a0acd1ab8c5fcbf807f24fd22f1d90a82) ) // == same data as the 64Mbit ROMs
+	ROM_LOAD16_BYTE( "gnb2prg.1",    0x0000000, 0x400000, CRC(8a8e77c3) SHA1(1a37e04a0acd1ab8c5fcbf807f24fd22f1d90a82) ) /* == same data as the 64Mbit ROMs */
 	ROM_LOAD16_BYTE( "gnb2prg.2",    0x0000001, 0x400000, CRC(563edc3f) SHA1(d691560bded88fe7738de01b293f1e761ab9304c) )
 	ROM_LOAD16_BYTE( "gnb2prg.3",    0x0800000, 0x400000, CRC(94fbe733) SHA1(74634c3680d22697c1cc3059c2bbe1703e77ddf1) )
 	ROM_LOAD16_BYTE( "gnb2prg.4",    0x0800001, 0x400000, CRC(1cbe79a6) SHA1(46e9f72c121ece3457b2f66413489ce6568e5510) )
@@ -1563,7 +1563,7 @@ ROM_START( ptblank2c )
 	ROM_LOAD16_BYTE( "gnb1vera.2f",  0x0200001, 0x100000, CRC(2bb7eb6d) SHA1(d1b1e031a28443140ac8652dfd77a65a042b67fc) )
 
 	ROM_REGION32_LE( 0x2000000, REGION_USER3, 0 ) /* main data */
-	ROM_LOAD16_BYTE( "gnb2prg.1",    0x0000000, 0x400000, CRC(8a8e77c3) SHA1(1a37e04a0acd1ab8c5fcbf807f24fd22f1d90a82) ) // == same data as the 64Mbit ROMs
+	ROM_LOAD16_BYTE( "gnb2prg.1",    0x0000000, 0x400000, CRC(8a8e77c3) SHA1(1a37e04a0acd1ab8c5fcbf807f24fd22f1d90a82) ) /* == same data as the 64Mbit ROMs */
 	ROM_LOAD16_BYTE( "gnb2prg.2",    0x0000001, 0x400000, CRC(563edc3f) SHA1(d691560bded88fe7738de01b293f1e761ab9304c) )
 	ROM_LOAD16_BYTE( "gnb2prg.3",    0x0800000, 0x400000, CRC(94fbe733) SHA1(74634c3680d22697c1cc3059c2bbe1703e77ddf1) )
 	ROM_LOAD16_BYTE( "gnb2prg.4",    0x0800001, 0x400000, CRC(1cbe79a6) SHA1(46e9f72c121ece3457b2f66413489ce6568e5510) )

@@ -50,8 +50,8 @@ static INLINE int44 i44( INT64 value )
 {
 	int44 r;
 	r.value = value;
-	r.pos = value > (INT64)0x7ffffffffffLL;
-	r.neg = value < -(INT64)0x80000000000LL;
+	r.pos = value > ( ( (INT64)1 << 43 ) - 1 );
+	r.neg = value < -( (INT64)1 << 43 );
 	return r;
 }
 
@@ -431,7 +431,7 @@ static INT64 F( INT64 a )
 		FLAG |= ( 1U << 31 ) | ( 1 << 16 );
 	}
 
-	if( a < (INT32) -0x80000000 )
+	if( a < -( (INT64)1 << 31 ) )
 	{
 		FLAG |= ( 1U << 31 ) | ( 1 << 15 );
 	}
@@ -513,7 +513,7 @@ static int gte_docop2( int gteop )
 
 	switch( GTE_FUNCT( gteop ) )
 	{
-	case 0x00: // drop through to RTPS
+	case 0x00: /* drop through to RTPS */
 	case 0x01:
 
 		MAC1 = A1i( i44_add( i44_add( i44_add( i44( (INT64) TRX << 12 ), ( R11 * VX0 ) ), ( R12 * VY0 ) ), ( R13 * VZ0 ) ) );
@@ -799,7 +799,7 @@ static int gte_docop2( int gteop )
 		IR3 = Lm_B3( MAC3, lm );
 		return 1;
 
-	case 0x1a: // end of NCDT
+	case 0x1a: /* end of NCDT */
 	case 0x29:
 
 		MAC1 = A1( ( ( R << 4 ) * IR1 ) + ( IR0 * Lm_B1( A1( ( (INT64) RFC << 12 ) - ( ( R << 4 ) * IR1 ) ), 0 ) ) );

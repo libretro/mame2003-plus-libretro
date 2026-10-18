@@ -18,9 +18,6 @@ extern void psx_gpu_reset( void );
 extern void psx_gpu_read( UINT32 *p_ram, INT32 n_size );
 extern void psx_gpu_write( UINT32 *p_ram, INT32 n_size );
 extern void psx_gpu_list_node_end( void );
-/* drawing on a second thread (before VIDEO_START): same results */
-extern int psx_gpu_thread_available( void );
-extern void psx_gpu_set_thread( int b_enable );
 READ32_HANDLER( psx_gpu_r );
 WRITE32_HANDLER( psx_gpu_w );
 

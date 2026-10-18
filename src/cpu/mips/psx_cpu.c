@@ -554,6 +554,8 @@ void mips_init( void )
 
 void mips_reset( void *param )
 {
+	/* machine init may patch RAM directly (boot hacks) */
+	jit_reset_flush();
 	mips_set_cp0r( CP0_SR, ( mipscpu.cp0r[ CP0_SR ] & ~( SR_TS | SR_SWC | SR_KUC | SR_IEC ) ) | SR_BEV );
 	mips_set_cp0r( CP0_RANDOM, 63 ); /* todo: */
 	mips_set_cp0r( CP0_PRID, 0x00000200 ); /* todo: */
@@ -682,7 +684,14 @@ static INLINE void mips_step( void )
 			{
 				UINT32 n_div;
 				UINT32 n_mod;
-				if( mipscpu.r[ INS_RT( mipscpu.op ) ] != 0 )
+				if( mipscpu.r[ INS_RS( mipscpu.op ) ] == 0x80000000 && mipscpu.r[ INS_RT( mipscpu.op ) ] == 0xffffffff )
+				{
+					/* overflows in C (trap on x86); the R3000A gives this */
+					mips_advance_pc();
+					mipscpu.lo = 0x80000000;
+					mipscpu.hi = 0;
+				}
+				else if( mipscpu.r[ INS_RT( mipscpu.op ) ] != 0 )
 				{
 					n_div = (INT32)mipscpu.r[ INS_RS( mipscpu.op ) ] / (INT32)mipscpu.r[ INS_RT( mipscpu.op ) ];
 					n_mod = (INT32)mipscpu.r[ INS_RS( mipscpu.op ) ] % (INT32)mipscpu.r[ INS_RT( mipscpu.op ) ];

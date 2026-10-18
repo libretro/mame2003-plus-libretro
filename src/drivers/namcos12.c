@@ -424,8 +424,15 @@ static void namcos12_rom_read( UINT32 n_address, INT32 n_size )
 		n_offset &= 0x7fffffff;
 		if( m_alt_bank )
 		{
-			/* the alt bank method keeps the upper bits of the offset in the bank */
-			n_offset += m_n_bankoffset * 0x200000;
+			/* the alt bank method keeps the upper bits of the offset in the bank,
+			   reduced as for the CPU window (bankoffset_update): with the 31-bit
+			   offset the sum stays below 2^32 */
+			UINT32 n_banks = memory_region_length( REGION_USER3 ) / 0x200000;
+			if( n_banks == 0 )
+			{
+				return;
+			}
+			n_offset += ( m_n_bankoffset % n_banks ) * 0x200000;
 		}
 		if( n_offset >= memory_region_length( REGION_USER3 ) )
 		{
@@ -688,7 +695,6 @@ static DRIVER_INIT( namcos12 )
 	install_mem_write32_handler( 0, 0x1f801000, 0x1f801003, expbase_w );
 
 	psx_driver_init();
-	psx_gpu_set_thread( options.psx_gpu_thread );	/* PSX GPU drawing thread (core option) */
 
 	psx_dma_install_read_handler( 5, namcos12_rom_read );
 
