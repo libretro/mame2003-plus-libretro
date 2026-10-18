@@ -42,6 +42,7 @@ static int bg_bank, mid_bank, fg_bank, tx_bank;
 static UINT8 r2_scroll[12];
 static UINT16 r2_layer_enable;
 static UINT16 r2_prg_bank;
+static int r2_is_raidendx;
 /* The old memory system uses REGION_CPU1[0..1ffff] as writable RAM.
    Preserve both switchable ROM pages before the first CPU/reset runs. */
 static UINT8 *r2_bank_rom;
@@ -357,6 +358,9 @@ static void r2_cop_command(int offset, UINT16 data)
 		case 0xf205:
 			r2_mem_w32(r2_cop_regs[2], r2_mem_r32(r2_cop_regs[0] + 4));
 			break;
+		case 0x7e05: /* raidendx */
+			cpu_writemem20(0x470, r2_mem_r8(r2_cop_regs[4]));
+			break;
 		case 0xa100: case 0xa180:
 			r2_collision_read_pos(0, r2_cop_regs[0], data & 0x0080); break;
 		case 0xa900: case 0xa980:
@@ -468,6 +472,8 @@ static void r2_cop_sort_trigger(UINT16 count)
 static void r2_crtc_write(UINT32 addr, UINT8 data)
 {
 	UINT32 o = addr & 0x7f;
+	if (r2_is_raidendx)
+		o = (o & ~0x30) | ((o & 0x10) << 1) | ((o & 0x20) >> 1);
 	if ((o & 0x7e) == 0x1c)
 	{
 		if (o & 1) r2_layer_enable = (r2_layer_enable & 0x00ff) | ((UINT16)data << 8);
@@ -486,11 +492,29 @@ static void r2_main_bankswitch(UINT16 data)
 //	if (cpu_getactivecpu() == 0) r2_debug_bank();
 }
 
+static void r2_dx_bankswitch(int bb)
+{
+	UINT8 *cpu1 = memory_region(REGION_CPU1);
+	if (cpu1 && memory_region_length(REGION_CPU1) >= 0x200000)
+	{
+		cpu_setbank(3, cpu1 + 0x100000 + (bb & 0x0f) * 0x10000);
+		cpu_setbank(4, cpu1 + 0x30000);
+	}
+}
+
 static READ_HANDLER(r2_cop_r)
 {
 	UINT32 addr = R2_COP_BASE + offset;
 	UINT16 ret;
 	UINT32 pair = addr & 0x7fe;
+
+	if (r2_is_raidendx && addr >= 0x600 && addr <= 0x64f)
+	{
+		UINT32 o = addr & 0x7e;
+		o = (o & ~0x30) | ((o & 0x10) << 1) | ((o & 0x20) >> 1);
+		pair = (addr & ~0x7e) | o;
+	}
+
 	ret = r2_copram_word(pair);
 	switch (pair)
 	{
@@ -522,9 +546,42 @@ static WRITE_HANDLER(r2_cop_w)
 	UINT32 pair = addr & 0x7fe;
 	UINT16 w;
 	int idx;
+
+	if (r2_is_raidendx && addr >= 0x600 && addr <= 0x64f)
+	{
+		UINT32 crtc_o = addr & 0x7f;
+		crtc_o = (crtc_o & ~0x30) | ((crtc_o & 0x10) << 1) | ((crtc_o & 0x20) >> 1);
+		o = (addr & ~0x7f) - R2_COP_BASE + crtc_o;
+	}
+
 	if (o < sizeof(r2_copram)) r2_copram[o] = data;
 //	r2_debug_access(addr, r2_copram_word(pair), 1);
 	if (addr >= 0x600 && addr <= 0x64f) r2_crtc_write(addr, (UINT8)data);
+
+	if (addr == 0x470 || addr == 0x471)
+	{
+		r2_cop_bank = r2_copram_word(0x470);
+		if (r2_is_raidendx)
+		{
+			int new_bank = 4 | ((r2_cop_bank >> 4) & 3);
+			if (fg_bank != new_bank)
+			{
+				fg_bank = new_bank;
+				if (foreground_layer) tilemap_mark_all_tiles_dirty(foreground_layer);
+			}
+			r2_dx_bankswitch((r2_cop_bank >> 12) & 0x0f);
+		}
+		else
+		{
+			int new_bank = 4 | (r2_cop_bank >> 14);
+			if (fg_bank != new_bank)
+			{
+				fg_bank = new_bank;
+				if (foreground_layer) tilemap_mark_all_tiles_dirty(foreground_layer);
+			}
+		}
+	}
+
 	if (!(addr & 1)) return;
 	w = r2_copram_word(pair);
 
@@ -547,8 +604,6 @@ static WRITE_HANDLER(r2_cop_w)
 		case 0x45a: r2_pal_brightness_val = w; break;
 		case 0x45c: break;
 		case 0x470:
-			r2_cop_bank = w;
-			if (fg_bank != ((r2_cop_bank >> 14) | 4)) { fg_bank = (r2_cop_bank >> 14) | 4; if (foreground_layer) tilemap_mark_all_tiles_dirty(foreground_layer); }
 			break;
 		case 0x476: r2_cop_dma_adr_rel = w; break;
 		case 0x478: if (r2_cop_dma_mode < 0x200) r2_cop_dma_src[r2_cop_dma_mode] = w; break;
@@ -563,7 +618,10 @@ static WRITE_HANDLER(r2_cop_w)
 		case 0x6c0: r2_cop_spr_off = w; break;
 		case 0x6c2: r2_sprite_prot_src_addr[0] = w; break;
 		case 0x6c6: r2_dst1 = w; break;
-		case 0x6ca: r2_main_bankswitch(w); break;
+		case 0x6ca:
+			if (!r2_is_raidendx)
+				r2_main_bankswitch(w);
+			break;
 		case 0x6cc:
 		{
 			int nb = (w & 1) << 1;
@@ -1208,6 +1266,90 @@ INPUT_PORTS_START( raiden2 )
 	PORT_BIT(0xfc, IP_ACTIVE_LOW, IPT_UNUSED)
 INPUT_PORTS_END
 
+INPUT_PORTS_START( raidendx )
+	PORT_START /* P1 low byte */
+	PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER1)
+	PORT_BIT(0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER1)
+	PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER1)
+	PORT_BIT(0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1)
+	PORT_BIT(0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1)
+	PORT_BIT(0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1)
+	PORT_BIT(0x40, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1)
+	PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START /* P2 high byte of modern P1_P2 */
+	PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER2)
+	PORT_BIT(0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER2)
+	PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER2)
+	PORT_BIT(0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER2)
+	PORT_BIT(0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2)
+	PORT_BIT(0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2)
+	PORT_BIT(0x40, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2)
+	PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START /* DSW A */
+	PORT_DIPNAME(0x07, 0x07, DEF_STR(Coin_A))
+	PORT_DIPSETTING(0x01, DEF_STR(4C_1C))
+	PORT_DIPSETTING(0x02, DEF_STR(3C_1C))
+	PORT_DIPSETTING(0x04, DEF_STR(2C_1C))
+	PORT_DIPSETTING(0x07, DEF_STR(1C_1C))
+	PORT_DIPSETTING(0x06, DEF_STR(1C_2C))
+	PORT_DIPSETTING(0x05, DEF_STR(1C_3C))
+	PORT_DIPSETTING(0x03, DEF_STR(1C_4C))
+	PORT_DIPSETTING(0x00, DEF_STR(Free_Play))
+	PORT_DIPNAME(0x38, 0x38, DEF_STR(Coin_B))
+	PORT_DIPSETTING(0x08, DEF_STR(4C_1C))
+	PORT_DIPSETTING(0x10, DEF_STR(3C_1C))
+	PORT_DIPSETTING(0x20, DEF_STR(2C_1C))
+	PORT_DIPSETTING(0x38, DEF_STR(1C_1C))
+	PORT_DIPSETTING(0x30, DEF_STR(1C_2C))
+	PORT_DIPSETTING(0x28, DEF_STR(1C_3C))
+	PORT_DIPSETTING(0x18, DEF_STR(1C_4C))
+	PORT_DIPSETTING(0x00, DEF_STR(Free_Play))
+	PORT_DIPNAME(0x40, 0x40, "Starting Coin")
+	PORT_DIPSETTING(0x40, "Normal")
+	PORT_DIPSETTING(0x00, "X 2")
+	PORT_DIPNAME(0x80, 0x80, DEF_STR(Flip_Screen))
+	PORT_DIPSETTING(0x80, DEF_STR(Off))
+	PORT_DIPSETTING(0x00, DEF_STR(On))
+
+	PORT_START /* DSW B */
+	PORT_DIPNAME(0x03, 0x03, DEF_STR(Difficulty))
+	PORT_DIPSETTING(0x03, "Normal")
+	PORT_DIPSETTING(0x02, "Easy")
+	PORT_DIPSETTING(0x01, "Hard")
+	PORT_DIPSETTING(0x00, "Very Hard")
+	PORT_DIPNAME(0x0c, 0x0c, DEF_STR(Lives))
+	PORT_DIPSETTING(0x00, "1")
+	PORT_DIPSETTING(0x04, "4")
+	PORT_DIPSETTING(0x08, "2")
+	PORT_DIPSETTING(0x0c, "3")
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) ) /* Manual shows "Not Used" */
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) ) /* Manual shows "Not Used" */
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x40, "Demo Sound" )
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ))
+	PORT_DIPSETTING(    0x40, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, "Test Mode" )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ))
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+	PORT_START /* SYSTEM at 0x74c */
+	PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_START1)
+	PORT_BIT(0x02, IP_ACTIVE_LOW, IPT_START2)
+	PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_UNUSED)
+	PORT_BIT(0x08, IP_ACTIVE_LOW, IPT_SERVICE1)
+	PORT_BIT(0xf0, IP_ACTIVE_LOW, IPT_UNUSED)
+
+	PORT_START /* coins read by sound CPU */
+	PORT_BIT_IMPULSE(0x01, IP_ACTIVE_LOW, IPT_COIN1, 4)
+	PORT_BIT_IMPULSE(0x02, IP_ACTIVE_LOW, IPT_COIN2, 4)
+	PORT_BIT(0xfc, IP_ACTIVE_LOW, IPT_UNUSED)
+INPUT_PORTS_END
+
 /* -----------------------------------------------------------------------
  * Graphics decode
  * ----------------------------------------------------------------------- */
@@ -1326,6 +1468,7 @@ static void r2_state_save_register(void)
 */
 static MACHINE_INIT(raiden2)
 {
+	r2_is_raidendx = 0;
 	machine_init_seibu_sound_1();
 	seibu_bank_w(0, 0);
 
@@ -1369,6 +1512,33 @@ static MACHINE_DRIVER_START( raiden2 )
 
 	MDRV_SOUND_ADD(YM2151, raiden2_ym2151_interface)
 	MDRV_SOUND_ADD(OKIM6295, raiden2_oki_interface)
+MACHINE_DRIVER_END
+
+static MACHINE_INIT(raidendx)
+{
+	r2_is_raidendx = 1;
+	machine_init_seibu_sound_1();
+	seibu_bank_w(0, 0);
+
+	bg_bank = 0;
+	mid_bank = 1;
+	fg_bank = 6;
+	tx_bank = 0;
+	memset(r2_scroll, 0, sizeof(r2_scroll));
+	r2_layer_enable = 0;
+	r2_prg_bank = 0x08;
+	r2_reset_cop();
+	if (buffered_spriteram)
+		memset(buffered_spriteram, 0, spriteram_size);
+
+	/* Working later driver starts on entries 2/3.  Use BANK3/BANK4 so the
+	   sound CPU can keep BANK1 for the Seibu sound ROM. */
+	r2_dx_bankswitch(0);
+}
+
+static MACHINE_DRIVER_START( raidendx )
+	MDRV_IMPORT_FROM(raiden2)
+	MDRV_MACHINE_INIT(raidendx)
 MACHINE_DRIVER_END
 
 /* -----------------------------------------------------------------------
@@ -1454,6 +1624,7 @@ ROM_END
 
 static DRIVER_INIT(raiden2)
 {
+  r2_is_raidendx = 0;
 	UINT8 *gfx = memory_region(REGION_GFX3);
 	r2_bank_rom = auto_malloc(0x40000);
 	if (r2_bank_rom) memcpy(r2_bank_rom, memory_region(REGION_CPU1), 0x40000);
@@ -1474,7 +1645,13 @@ static DRIVER_INIT(raiden2)
  */
 }
 
+static DRIVER_INIT( raidendx )
+{
+	init_raiden2();
+	r2_is_raidendx = 1;
+}
+
 /* This backport is intended to be playable.  Keep imperfect flags until
    Xbox 360 hardware testing confirms every priority/blending/sound detail. */
-GAMEX(1993, raiden2,  0, raiden2, raiden2, raiden2, ROT270, "Seibu Kaihatsu", "Raiden II (US, set 1)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND)
-GAMEX(1994, raidendx, 0, raiden2, raiden2, raiden2, ROT270, "Seibu Kaihatsu", "Raiden DX (UK)", GAME_NOT_WORKING )
+GAMEX(1993, raiden2,  0, raiden2,  raiden2,  raiden2,  ROT270, "Seibu Kaihatsu", "Raiden II (US, set 1)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND)
+GAMEX(1994, raidendx, 0, raidendx, raidendx, raidendx, ROT270, "Seibu Kaihatsu", "Raiden DX (UK)", GAME_NOT_WORKING )
