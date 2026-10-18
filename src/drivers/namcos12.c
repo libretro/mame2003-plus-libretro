@@ -375,9 +375,16 @@ static WRITE32_HANDLER( expbase_w )
 
 static WRITE32_HANDLER( dmaoffset_w )
 {
+	/* a 16-bit register in current MAME: the address of the write gives the low
+	   half of the offset, the data the high half; the upper half of a 32-bit
+	   word gives an offset ending in 2 */
 	if( ACCESSING_LSW32 )
 	{
-		m_n_dmaoffset = ( offset * 4 ) + ( data << 16 );
+		m_n_dmaoffset = ( offset * 4 ) | ( ( data & 0xffff ) << 16 );
+	}
+	if( ACCESSING_MSW32 )
+	{
+		m_n_dmaoffset = ( offset * 4 + 2 ) | ( data & 0xffff0000 );
 	}
 	verboselog( 1, "dmaoffset_w( %08x, %08x, %08x ) %08x\n", offset, data, mem_mask, m_n_dmaoffset );
 }
@@ -388,7 +395,7 @@ static data32_t m_n_tektagdmaoffset;
 static void namcos12_rom_read( UINT32 n_address, INT32 n_size )
 {
 	INT32 n_left;
-	UINT32 *p_n_src;
+	data16_t *p_n_src;
 	UINT32 *p_n_dst;
 	data32_t n_offset = m_has_tektagt_dma ? m_n_tektagdmaoffset : m_n_dmaoffset;
 
@@ -405,7 +412,7 @@ static void namcos12_rom_read( UINT32 n_address, INT32 n_size )
 		{
 			return; /* past the end: nothing is copied (current MAME) */
 		}
-		p_n_src = (data32_t *)( memory_region( REGION_USER2 ) + n_offset );
+		p_n_src = (data16_t *)( memory_region( REGION_USER2 ) + ( n_offset & ~1 ) );
 		n_left = ( memory_region_length( REGION_USER2 ) - n_offset ) / 4;
 		if( n_size > n_left )
 		{
@@ -424,7 +431,7 @@ static void namcos12_rom_read( UINT32 n_address, INT32 n_size )
 		{
 			return; /* past the end: nothing is copied (current MAME) */
 		}
-		p_n_src = (data32_t *)( memory_region( REGION_USER3 ) + n_offset );
+		p_n_src = (data16_t *)( memory_region( REGION_USER3 ) + ( n_offset & ~1 ) );
 		n_left = ( memory_region_length( REGION_USER3 ) - n_offset ) / 4;
 		if( n_size > n_left )
 		{
@@ -439,9 +446,11 @@ static void namcos12_rom_read( UINT32 n_address, INT32 n_size )
 	{
 		n_size = n_left;
 	}
+	/* in 16-bit units: the offset can end in 2 (dmaoffset_w) */
 	while( n_size > 0 )
 	{
-		*( p_n_dst++ ) = *( p_n_src++ );
+		*( p_n_dst++ ) = p_n_src[ 0 ] | ( p_n_src[ 1 ] << 16 );
+		p_n_src += 2;
 		n_size--;
 	}
 }
