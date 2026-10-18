@@ -224,12 +224,56 @@ static UINT16 m_p_n_nextpointlist4[] = { 1, 3, 0, 2 };
 static UINT16 m_p_n_prevpointlist4[] = { 2, 0, 3, 1 };
 static UINT16 m_p_n_nextpointlist3[] = { 1, 2, 0 };
 static UINT16 m_p_n_prevpointlist3[] = { 2, 0, 1 };
+/* a quad drawn as its second triangle (points 1, 2, 3) */
+static UINT16 m_p_n_nextpointlist4b[] = { 0, 3, 1, 2 };
+static UINT16 m_p_n_prevpointlist4b[] = { 0, 2, 3, 1 };
 
 #define SINT11( x ) ( ( (INT32)( x ) << 21 ) >> 21 )
 
+/* the vertices are 11-bit signed (current MAME) */
+#define S11( v ) ( (INT16)( ( (v) & 0x7ff ) ^ 0x400 ) - 0x400 )
 #define ADJUST_COORD( a ) \
-	a.w.l = COORD_X( a ) + m_n_drawoffset_x; \
-	a.w.h = COORD_Y( a ) + m_n_drawoffset_y;
+	a.w.l = S11( a.w.l ) + m_n_drawoffset_x; \
+	a.w.h = S11( a.w.h ) + m_n_drawoffset_y;
+
+/* the GPU does not draw a triangle with two vertices more than 1023 pixels
+   apart, across or down (current MAME, CullVertex) */
+static INLINE int CullVertex( int a, int b )
+{
+	int d = a - b;
+	return d < -1023 || d > 1023;
+}
+#define CULLPOINT( PacketType, p1, p2 ) \
+	( CullVertex( COORD_Y( m_packet.PacketType.vertex[ p1 ].n_coord ), COORD_Y( m_packet.PacketType.vertex[ p2 ].n_coord ) ) || \
+	  CullVertex( COORD_X( m_packet.PacketType.vertex[ p1 ].n_coord ), COORD_X( m_packet.PacketType.vertex[ p2 ].n_coord ) ) )
+#define CULLTRIANGLE( PacketType, start ) \
+	( CULLPOINT( PacketType, start, start + 1 ) || CULLPOINT( PacketType, start + 1, start + 2 ) || CULLPOINT( PacketType, start + 2, start ) )
+/* after ADJUST_COORD: drop the culled triangles of the polygon, as current MAME */
+#define CULLPOLYGON( PacketType ) \
+	n_leftpoint = 0; \
+	if( n_points == 4 ) \
+	{ \
+		if( CULLTRIANGLE( PacketType, 0 ) ) \
+		{ \
+			if( CULLTRIANGLE( PacketType, 1 ) ) \
+			{ \
+				return; \
+			} \
+			p_n_rightpointlist = m_p_n_nextpointlist4b; \
+			p_n_leftpointlist = m_p_n_prevpointlist4b; \
+			n_leftpoint = 1; \
+		} \
+		else if( CULLTRIANGLE( PacketType, 1 ) ) \
+		{ \
+			p_n_rightpointlist = m_p_n_nextpointlist3; \
+			p_n_leftpointlist = m_p_n_prevpointlist3; \
+			n_points = 3; \
+		} \
+	} \
+	else if( CULLTRIANGLE( PacketType, 0 ) ) \
+	{ \
+		return; \
+	}
 
 #define COORD_X( a ) ( (INT16)a.w.l )
 #define COORD_Y( a ) ( (INT16)a.w.h )
@@ -2101,8 +2145,8 @@ static void FlatPolygon( int n_points )
 		ADJUST_COORD( m_packet.FlatPolygon.vertex[ n_point ].n_coord );
 	}
 
-	n_leftpoint = 0;
-	for( n_point = 1; n_point < n_points; n_point++ )
+	CULLPOLYGON( FlatPolygon )
+	for( n_point = n_leftpoint + 1; n_point < n_points; n_point++ )
 	{
 		if( COORD_Y( m_packet.FlatPolygon.vertex[ n_point ].n_coord ) < COORD_Y( m_packet.FlatPolygon.vertex[ n_leftpoint ].n_coord ) ||
 			( COORD_Y( m_packet.FlatPolygon.vertex[ n_point ].n_coord ) == COORD_Y( m_packet.FlatPolygon.vertex[ n_leftpoint ].n_coord ) &&
@@ -2289,8 +2333,8 @@ static void FlatTexturedPolygon( int n_points )
 		ADJUST_COORD( m_packet.FlatTexturedPolygon.vertex[ n_point ].n_coord );
 	}
 
-	n_leftpoint = 0;
-	for( n_point = 1; n_point < n_points; n_point++ )
+	CULLPOLYGON( FlatTexturedPolygon )
+	for( n_point = n_leftpoint + 1; n_point < n_points; n_point++ )
 	{
 		if( COORD_Y( m_packet.FlatTexturedPolygon.vertex[ n_point ].n_coord ) < COORD_Y( m_packet.FlatTexturedPolygon.vertex[ n_leftpoint ].n_coord ) ||
 			( COORD_Y( m_packet.FlatTexturedPolygon.vertex[ n_point ].n_coord ) == COORD_Y( m_packet.FlatTexturedPolygon.vertex[ n_leftpoint ].n_coord ) &&
@@ -2485,8 +2529,8 @@ static void GouraudPolygon( int n_points )
 		ADJUST_COORD( m_packet.GouraudPolygon.vertex[ n_point ].n_coord );
 	}
 
-	n_leftpoint = 0;
-	for( n_point = 1; n_point < n_points; n_point++ )
+	CULLPOLYGON( GouraudPolygon )
+	for( n_point = n_leftpoint + 1; n_point < n_points; n_point++ )
 	{
 		if( COORD_Y( m_packet.GouraudPolygon.vertex[ n_point ].n_coord ) < COORD_Y( m_packet.GouraudPolygon.vertex[ n_leftpoint ].n_coord ) ||
 			( COORD_Y( m_packet.GouraudPolygon.vertex[ n_point ].n_coord ) == COORD_Y( m_packet.GouraudPolygon.vertex[ n_leftpoint ].n_coord ) &&
@@ -2715,8 +2759,8 @@ static void GouraudTexturedPolygon( int n_points )
 		ADJUST_COORD( m_packet.GouraudTexturedPolygon.vertex[ n_point ].n_coord );
 	}
 
-	n_leftpoint = 0;
-	for( n_point = 1; n_point < n_points; n_point++ )
+	CULLPOLYGON( GouraudTexturedPolygon )
+	for( n_point = n_leftpoint + 1; n_point < n_points; n_point++ )
 	{
 		if( COORD_Y( m_packet.GouraudTexturedPolygon.vertex[ n_point ].n_coord ) < COORD_Y( m_packet.GouraudTexturedPolygon.vertex[ n_leftpoint ].n_coord ) ||
 			( COORD_Y( m_packet.GouraudTexturedPolygon.vertex[ n_point ].n_coord ) == COORD_Y( m_packet.GouraudTexturedPolygon.vertex[ n_leftpoint ].n_coord ) &&
