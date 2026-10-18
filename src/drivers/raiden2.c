@@ -1624,7 +1624,6 @@ ROM_END
 
 static DRIVER_INIT(raiden2)
 {
-  r2_is_raidendx = 0;
 	UINT8 *gfx = memory_region(REGION_GFX3);
 	r2_bank_rom = auto_malloc(0x40000);
 	if (r2_bank_rom) memcpy(r2_bank_rom, memory_region(REGION_CPU1), 0x40000);
@@ -1643,6 +1642,7 @@ static DRIVER_INIT(raiden2)
 	r2_state_save_register();
 	seibu_sound_state_save_register();
  */
+  r2_is_raidendx = 0;
 }
 
 static DRIVER_INIT( raidendx )
