@@ -4969,8 +4969,52 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( sengokmj )	/* (c) 1991 Sigma */
 
 
-	DRIVER( raiden2 )
-  DRIVER( raidendx )
+	DRIVER( raiden2 )	/* Raiden II (US, set 1) */
+	DRIVER( raiden2g )	/* Raiden II (Germany) */
+	DRIVER( raiden2gb )	/* Raiden II (Great Britain) */
+	DRIVER( raiden2hk )	/* Raiden II (Hong Kong) */
+	DRIVER( raiden2j )	/* Raiden II (Japan) */
+	DRIVER( raiden2sw )	/* Raiden II (Switzerland) */
+	DRIVER( raiden2u )	/* Raiden II (US, set 2) */
+	DRIVER( raiden2f )	/* Raiden II (France) */
+	DRIVER( raiden2nl )	/* Raiden II (Holland) */
+	DRIVER( raiden2es )	/* Raiden II (Spain) */
+	DRIVER( raiden2i )	/* Raiden II (Italy) */
+	DRIVER( raiden2au )	/* Raiden II (Australia) */
+	DRIVER( raiden2e )	/* Raiden II (easier, Korea) */
+	DRIVER( raiden2eub )	/* Raiden II (easier, US set 3) */
+	DRIVER( raiden2eua )	/* Raiden II (easier, US set 1) */
+	DRIVER( raiden2eg )	/* Raiden II (easier, Germany) */
+	DRIVER( raiden2eup )	/* Raiden II (easier, US, prototype? 11-16) */
+	DRIVER( raiden2ea )	/* Raiden II (easier, Japan) */
+	DRIVER( raiden2eu )	/* Raiden II (easier, US set 2) */
+	DRIVER( raiden2k )	/* Raiden II (harder, Korea) */
+	DRIVER( raiden2dx )	/* Raiden II (harder, Raiden DX hardware, Korea) */
+	DRIVER( raidendx )	/* Raiden DX (UK) */
+	DRIVER( raidendxg )	/* Raiden DX (Germany) */
+	DRIVER( raidendxpt )	/* Raiden DX (Portugal) */
+	DRIVER( raidendxa1 )	/* Raiden DX (Hong Kong, set 1) */
+	DRIVER( raidendxa2 )	/* Raiden DX (Hong Kong, set 2) */
+	DRIVER( raidendxk )	/* Raiden DX (Korea) */
+	DRIVER( raidendxu )	/* Raiden DX (US) */
+	DRIVER( raidendxnl )	/* Raiden DX (Holland) */
+	DRIVER( raidendxj )	/* Raiden DX (Japan, set 1) */
+	DRIVER( raidendxja )	/* Raiden DX (Japan, set 2) */
+	DRIVER( raidendxch )	/* Raiden DX (China) */
+	DRIVER( zeroteam )	/* Zero Team USA (US) */
+	DRIVER( zeroteama )	/* Zero Team (Japan?, earlier?, set 1) */
+	DRIVER( zeroteamb )	/* Zero Team (Japan?, later batteryless) */
+	DRIVER( zeroteamc )	/* Zero Team (Taiwan) */
+	DRIVER( zeroteamd )	/* Zero Team (Korea) */
+	DRIVER( zeroteame )	/* Zero Team (Japan?, earlier?, set 2) */
+	DRIVER( zeroteams )	/* Zero Team Selection */
+	DRIVER( zeroteamsr )	/* Zero Team Suicide Revival Kit */
+	DRIVER( r2dx_v33 )	/* Raiden II New / Raiden DX (newer V33 PCB) (Raiden DX EEPROM) */
+	DRIVER( r2dx_v33_r2 )	/* Raiden II New / Raiden DX (newer V33 PCB) (Raiden II EEPROM) */
+	DRIVER( nzeroteam )	/* New Zero Team (V33 SYSTEM TYPE_B hardware) */
+	DRIVER( nzeroteama )	/* New Zero Team (V33 SYSTEM TYPE_B hardware, Zhongguo Shantou Yihuang license) */
+	DRIVER( nzeroteamb )	/* New Zero Team (V33 SYSTEM TYPE_B hardware, Haoyunlai Trading Company license) */
+	DRIVER( zerotm2k )	/* Zero Team 2000 */
 
 /* Seibu STI System games:
 	Viper: Phase 1 					(c) 1995
