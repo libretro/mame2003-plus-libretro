@@ -700,13 +700,18 @@ VIDEO_STOP( psx )
 	output then takes the bitmap as it is, without a palette lookup per
 	pixel. NEON does 8 pixels at a time where the compiler targets it.
 */
-#if defined( __ARM_NEON ) || defined( __ARM_NEON__ )
+/* NEON paths with GCC/clang only (they use GCC attributes); other compilers,
+   MSVC on ARM included, take the C code */
+#if ( defined( __ARM_NEON ) || defined( __ARM_NEON__ ) ) && defined( __GNUC__ )
+#define PSX_NEON	1
 #include <arm_neon.h>
+#else
+#define PSX_NEON	0
 #endif
 
 static void psx_line_to_rgb15( UINT16 *dst, const UINT16 *src, int n )
 {
-#if defined( __ARM_NEON ) || defined( __ARM_NEON__ )
+#if PSX_NEON
 	const uint16x8_t m5 = vdupq_n_u16( 0x001f );
 	const uint16x8_t m_g = vdupq_n_u16( 0x03e0 );
 	for( ; n >= 8; n -= 8, src += 8, dst += 8 )
@@ -1139,7 +1144,7 @@ f  e  d  c| b| a  9| 8  7| 6  5| 4| 3  2  1  0
 	high 16 bits masked with umask/vmask (0xff when the caller's
 	coordinates are bytes). Returns 1 when the span was drawn.
 */
-#if defined( __ARM_NEON ) || defined( __ARM_NEON__ )
+#if PSX_NEON
 #define PSX_TEXSPAN			1
 #else
 #define PSX_TEXSPAN			0

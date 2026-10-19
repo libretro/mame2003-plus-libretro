@@ -23,6 +23,10 @@
 	defined(__SWITCH__) || defined(HAVE_LIBNX) || defined(_XBOX) || defined(__WINRT__)
 #define SLJIT_MAME_NO_JIT
 #endif
+/* MSVC before 2013 (the 2003-2010 lanes): no recompiler, the interpreter is used */
+#if defined(_MSC_VER) && _MSC_VER < 1800
+#define SLJIT_MAME_NO_JIT
+#endif
 
 #if !defined(SLJIT_MAME_NO_JIT) && \
 	(defined(__x86_64__) || defined(_M_X64) || defined(__aarch64__) || defined(_M_ARM64) || \
