@@ -1413,6 +1413,15 @@ else
 CPUDEFS += -DHAS_I8X41=0
 endif
 
+CPU=$(strip $(findstring I8051@,$(CPUS)))
+ifneq ($(CPU),)
+OBJDIRS += $(CORE_DIR)/cpu/i8051
+CPUDEFS += -DHAS_I8051=1
+SOURCES_C += $(CORE_DIR)/cpu/i8051/i8051.c
+else
+CPUDEFS += -DHAS_I8051=0
+endif
+
 CPU=$(strip $(findstring M6800@,$(CPUS)))
 ifneq ($(CPU),)
 OBJDIRS += $(CORE_DIR)/cpu/m6800

@@ -20,6 +20,8 @@ TODO: - background is misplaced in wbmlju
 #include "vidhrdw/system1.h"
 #include "cpu/z80/z80.h"
 #include "machine/segacrpt.h"
+#include "state.h"
+#include "cpu/i8051/i8051.h"
 
 
 static UINT8 *system1_ram;
@@ -332,43 +334,203 @@ static PORT_WRITE_START( wbml_writeport )
 	{ 0x16, 0x16, wbml_videoram_bank_latch_w },
 PORT_END
 
-/* protection values from real hardware, these were verified to be the same on the title
-   screen and in the first level... they're all jumps that the MCU appears to put in RAM
-   at some point */
-static const int shtngtab[]=
+/*************************************
+ *
+ *  8751 MCU (Choplifter 315-5151, Shooting Master 315-5159a)
+ *
+ *  Backported from current MAME (sega/system1.cpp). The MCU halts the
+ *  Z80 through BUSREQ and reads/writes the Z80 address spaces with MOVX.
+ *
+ *  MCU P1 (mcu_control_w):
+ *    bit 7 -> TD62003 pins 5 & 6 @ IC151
+ *    bit 6 -> via PLS153, when high, asserts BUSREQ, halting the Z80
+ *    bit 4-3 -> MOVX space: 0=Z80 program, 1=banked ROM, 2=Z80 I/O, 3=watchdog?
+ *    bit 0 -> directly connected to the Z80 /INT line
+ *  MCU INT0 <- vertical count PAL (VBLANK), INT1 <- videomode bit 6,
+ *  MCU T0 <- clocked by the Z80 bus controller INTACK.
+ *
+ *************************************/
+
+#define MCU_CPUNUM		2
+
+static UINT8 mcu_control;
+static UINT8 mcu_int1_state;
+static int mcu_int_gen;
+static double mcu_int_assert_time;
+
+static void mcu_int_release(int gen)
 {
-	0xC3,0xC1,0x39,
-	0xC3,0x6F,0x0A,
-	0xC3,0x56,0x39,
-	0xC3,0x57,0x0C,
-	0xC3,0xE2,0x0B,
-	0xC3,0x68,0x03,
-	0xC3,0xF1,0x06,
-	0xC3,0xCA,0x06,
-	0xC3,0xC4,0x06,
-	0xC3,0xD6,0x07,
-	0xC3,0x89,0x13,
-	0xC3,0x75,0x13,
-	0xC3,0x9F,0x13,
-	0xC3,0xFF,0x38,
-	0xC3,0x60,0x13,
-	0xC3,0x62,0x00,
-	0xC3,0x39,0x04,
-	-1
-};
-static void mcuenable_hack(void)
+	/* ignore a release overtaken by a newer falling edge */
+	if (gen == mcu_int_gen && (mcu_control & 0x01))
+		cpu_set_irq_line(0, 0, CLEAR_LINE);
+}
+
+static WRITE_HANDLER( mcu_control_w )
 {
-	/* hooked gun feedback */
-	int i=0;
-	while(shtngtab[i]>=0)
+	UINT8 changed = mcu_control ^ data;
+
+	/* boost interleave to ensure that the MCU can break the Z80 out of BUSREQ */
+	if (!(mcu_control & 0x40) && (data & 0x40))
+		cpu_boost_interleave(0, TIME_IN_USEC(10));
+
+	mcu_control = data;
+
+	if (changed & 0x40)
 	{
-		system1_ram[i+0x40]=shtngtab[i];
-		i++;
+		if (data & 0x40)
+			cpunum_suspend(0, SUSPEND_REASON_HALT, 1);
+		else
+			cpunum_resume(0, SUSPEND_REASON_HALT);
 	}
 
-	system1_ram[0x2ff]=0x49; /* I ? */
-	system1_ram[0x3ff]=0x54; /* T ? */
+	if (changed & 0x01)
+	{
+		if (!(data & 0x01))
+		{
+			/* falling edge: assert the Z80 /INT and cancel any pending release */
+			mcu_int_gen++;
+			mcu_int_assert_time = cpunum_get_localtime(MCU_CPUNUM);
+			cpu_set_irq_line(0, 0, ASSERT_LINE);
+		}
+		else
+		{
+			/* rising edge: the firmware pulses /INT for a few machine cycles
+			   (CLR P1.0 / 4 NOPs / SETB P1.0). The Z80 runs first in each
+			   timeslice and is usually ahead of the MCU, so releasing the line
+			   right away would drop the pulse before the Z80 ever samples it.
+			   Release it after the same width measured in the Z80's own time. */
+			double now = cpunum_get_localtime(MCU_CPUNUM);
+			double delay = (cpunum_get_localtime(0) - now) + (now - mcu_int_assert_time);
+
+			if (delay > 0)
+				timer_set(delay, ++mcu_int_gen, mcu_int_release);
+			else
+				cpu_set_irq_line(0, 0, CLEAR_LINE);
+		}
+	}
 }
+
+static READ_HANDLER( mcu_port_r )
+{
+	return 0xff;
+}
+
+static READ_HANDLER( mcu_movx_r )
+{
+	data8_t result;
+
+	switch ((mcu_control >> 3) & 3)
+	{
+		case 0:
+			return cpunum_read_byte(0, offset);
+
+		case 1:
+			return memory_region(REGION_CPU1)[(offset & 0xffff) + 0x10000];
+
+		case 2:
+			cpuintrf_push_context(0);
+			result = cpu_readport16(offset & 0xff);
+			cpuintrf_pop_context();
+			return result;
+	}
+
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "MCU movx read mode %02X offset %04X\n", mcu_control, offset);
+	return 0xff;
+}
+
+static WRITE_HANDLER( mcu_movx_w )
+{
+	switch ((mcu_control >> 3) & 3)
+	{
+		case 0:
+			cpunum_write_byte(0, offset, data);
+			return;
+
+		case 2:
+			cpuintrf_push_context(0);
+			cpu_writeport16(offset & 0xff, data);
+			cpuintrf_pop_context();
+			return;
+	}
+
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "MCU movx write mode %02X offset %04X = %02X\n", mcu_control, offset, data);
+}
+
+/* the bus controller INTACK pin clocks MCU T0 */
+static int mcu_t0_irq_ack(int irqline)
+{
+	cpu_set_irq_line(MCU_CPUNUM, I8051_T0_LINE, PULSE_LINE);
+	return 0xff;
+}
+
+/* INT0 is driven by a PAL from the vertical count, close to VBLANK */
+static INTERRUPT_GEN( mcu_vblank_int )
+{
+	cpu_set_irq_line(MCU_CPUNUM, I8051_INT0_LINE, PULSE_LINE);
+}
+
+/* videomode bit 6 is connected to the 8751 INT1 (active low) */
+static WRITE_HANDLER( mcu_videomode_w )
+{
+	UINT8 state = (data & 0x40) ? CLEAR_LINE : ASSERT_LINE;
+
+	chplft_videomode_w(offset, data);
+
+	if (state != mcu_int1_state)
+	{
+		mcu_int1_state = state;
+		cpu_set_irq_line(MCU_CPUNUM, I8051_INT1_LINE, state);
+	}
+}
+
+static void mcu_machine_init(void)
+{
+	mcu_control = 0;
+	mcu_int1_state = CLEAR_LINE;
+	mcu_int_gen = 0;
+	mcu_int_assert_time = 0;
+	i8051_set_movx_handlers(MCU_CPUNUM, mcu_movx_r, mcu_movx_w);
+	cpu_set_irq_callback(0, mcu_t0_irq_ack);
+}
+
+static MACHINE_INIT( chplft_mcu )
+{
+	machine_init_system1();
+	mcu_machine_init();
+}
+
+static MACHINE_INIT( shtngmst )
+{
+	machine_init_wbml();
+	mcu_machine_init();
+}
+
+static DRIVER_INIT( system1_mcu )
+{
+	state_save_register_UINT8("system1_mcu", 0, "control", &mcu_control, 1);
+	state_save_register_UINT8("system1_mcu", 0, "int1", &mcu_int1_state, 1);
+}
+
+static MEMORY_READ_START( mcu_readmem )
+	{ 0x0000, 0x0fff, MRA_ROM },
+MEMORY_END
+
+static MEMORY_WRITE_START( mcu_writemem )
+	{ 0x0000, 0x0fff, MWA_ROM },
+MEMORY_END
+
+static PORT_READ_START( mcu_readport )
+	{ I8051_P0, I8051_P3, mcu_port_r },
+PORT_END
+
+static PORT_WRITE_START( mcu_writeport )
+	{ I8051_P1, I8051_P1, mcu_control_w },
+PORT_END
+
+static PORT_WRITE_START( chplft_mcu_writeport )
+	{ 0x14, 0x14, system1_soundport_w },    /* sound commands */
+	{ 0x15, 0x15, mcu_videomode_w },
+PORT_END
 
 static WRITE_HANDLER( gun_output_w )
 {
@@ -380,14 +542,12 @@ static WRITE_HANDLER( gun_output_w )
 	/*gun_solenoid = BIT(data, 2);*/
 
 	gun_output = data;
-
-	mcuenable_hack();
 }
 
 static PORT_WRITE_START( sht_writeport )
 	{ 0x10, 0x10, gun_output_w },
 	{ 0x14, 0x14, system1_soundport_w },    /* sound commands */
-	{ 0x15, 0x15, chplft_videomode_w },
+	{ 0x15, 0x15, mcu_videomode_w },
 	{ 0x16, 0x16, wbml_videoram_bank_latch_w },
 PORT_END
 
@@ -2481,6 +2641,35 @@ static MACHINE_DRIVER_START( chplft )
 
 MACHINE_DRIVER_END
 
+/* the additional 8751 MCU: clocked from the 8MHz sound crystal, it drives the
+   Z80 /INT itself (VBLANK goes to the MCU INT0 instead of the Z80) */
+static MACHINE_DRIVER_START( system1_mcu )
+
+	MDRV_CPU_MODIFY("main")
+	MDRV_CPU_VBLANK_INT(NULL,0)
+
+	MDRV_CPU_ADD_TAG("mcu", I8751, 8000000/I8051_CLOCK_DIVIDER)
+	MDRV_CPU_MEMORY(mcu_readmem,mcu_writemem)
+	MDRV_CPU_PORTS(mcu_readport,mcu_writeport)
+	MDRV_CPU_VBLANK_INT(mcu_vblank_int,1)
+
+	/* MAME uses a maximum quantum of the Z80 clock / 16 for these boards */
+	MDRV_INTERLEAVE(4000000/16/60)
+
+MACHINE_DRIVER_END
+
+static MACHINE_DRIVER_START( chplft_mcu )
+
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM( chplft )
+	MDRV_CPU_MODIFY("main")
+	MDRV_CPU_PORTS(wbml_readport,chplft_mcu_writeport)
+
+	MDRV_IMPORT_FROM( system1_mcu )
+	MDRV_MACHINE_INIT(chplft_mcu)
+
+MACHINE_DRIVER_END
+
 static MACHINE_DRIVER_START( shtngmst )
 
 	/* basic machine hardware */
@@ -2489,7 +2678,8 @@ static MACHINE_DRIVER_START( shtngmst )
 	MDRV_CPU_MEMORY(brain_readmem,chplft_writemem)
 	MDRV_CPU_PORTS(sht_readport,sht_writeport)
 
-	MDRV_MACHINE_INIT(wbml) /* banked */
+	MDRV_IMPORT_FROM( system1_mcu )
+	MDRV_MACHINE_INIT(shtngmst) /* banked */
 
 	/* video hardware - same as small - left / right 8 pixels clipped */
 	MDRV_VISIBLE_AREA(0*8+8, 32*8-1-8, 0*8, 28*8-1)
@@ -3432,6 +3622,9 @@ ROM_START( shtngmst )
 	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* 64k for sound cpu */
 	ROM_LOAD( "epr7043",      0x0000, 0x8000, CRC(99a368ab) SHA1(a9451f39ee2613e5c3e2791d4d8d837b4a3ab666) )
 
+	ROM_REGION( 0x1000, REGION_CPU3, 0 ) /* 8751 MCU */
+	ROM_LOAD( "315-5159a.ic74", 0x0000, 0x1000, CRC(1f774912) SHA1(34d12756735514bea5a513fdf441ae93318747b2) )
+
 	ROM_REGION( 0x18000, REGION_GFX1, ROMREGION_DISPOSE )
 	ROM_LOAD( "epr7040",      0x00000, 0x8000, CRC(f30769fa) SHA1(366c1fbe4e1c8943b209f6c831c9a6b7e4372105) )
 	ROM_LOAD( "epr7041",      0x08000, 0x8000, CRC(f3e273f9) SHA1(b8715c528299dc1e4f0c19c50d91ca9861a423a1) )
@@ -3461,6 +3654,9 @@ ROM_START( chplft )
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* 64k for sound cpu */
 	ROM_LOAD( "epr-7130.126",	0x0000, 0x8000, CRC(346af118) SHA1(ef579818a45b8ebb276d5832092b26e232d5a737) )
+
+	ROM_REGION( 0x1000, REGION_CPU3, 0 ) /* 8751 MCU */
+	ROM_LOAD( "315-5151.ic74",	0x0000, 0x1000, CRC(1377a6ef) SHA1(b85acd7292e5480c98af1a0492b6b5d3f9b1716c) )
 
 	ROM_REGION( 0x18000, REGION_GFX1, ROMREGION_DISPOSE )
 	ROM_LOAD( "epr-7127.4",		0x00000, 0x8000, CRC(1e708f6d) SHA1(b975e13bdc44105e7a15c2694e3ec53b60e23e5e) )
@@ -4401,8 +4597,8 @@ GAME( 1985, hvymetal, 0,        hvymetal, hvymetal, hvymetal, ROT0,   "Sega", 		
 GAME( 1985, myhero,   0,        system1,  myhero,   0,        ROT0,   "Sega", 			 	   "My Hero (US)" )
 GAME( 1985, sscandal, myhero,   system1,  myhero,   myheroj,  ROT0,   "Coreland / Sega", 	   "Seishun Scandal (Japan)" )
 GAME( 1985, myherok,  myhero,   system1,  myhero,   myherok,  ROT0,   "Coreland / Sega", 	   "My Hero (Korea)" )
-GAMEX(1985, shtngmst, 0,        shtngmst, shtngmst, 0,        ROT0,   "Sega", 			 	   "Shooting Master", GAME_IMPERFECT_GRAPHICS )	/* 8751 protection handled via hack */
-GAMEX(1985, chplft,   0,        chplft,   chplft,   0,        ROT0,   "Sega", 			 	   "Choplifter", GAME_UNEMULATED_PROTECTION )	/* 8751 protection */
+GAMEX(1985, shtngmst, 0,        shtngmst, shtngmst, system1_mcu, ROT0, "Sega", 			 	   "Shooting Master (8751 315-5159a)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1985, chplft,   0,        chplft_mcu, chplft, system1_mcu, ROT0, "Sega", 			 	   "Choplifter (8751 315-5151)" )
 GAME( 1985, chplftb,  chplft,   chplft,   chplft,   0,        ROT0,   "Sega", 			 	   "Choplifter (alternate)" )
 GAME( 1985, chplftbl, chplft,   chplft,   chplft,   0,        ROT0,   "bootleg", 		 	   "Choplifter (bootleg)" )
 GAME( 1985, 4dwarrio, 0,        system1,  4dwarrio, 4dwarrio, ROT0,   "Coreland / Sega", 	   "4-D Warriors" )
