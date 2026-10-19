@@ -155,6 +155,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Ms. Pacman Twin
 * Mrs. Dynamite
 * Multi Champ Deluxe * Mature *
+* New Zero Team
 * Ninja Kazan
 * Oo Parts (Japan, Prototype)
 * Opa Opa (Rev A Unprotected)
@@ -186,7 +187,9 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Racing Beat
 * Racing Hero
 * Rage Of The Dragons
-* Raiden II (US, set 1)
+* Raiden II
+* Raiden DX
+* Raiden II / Raiden DX New
 * Recalhorn (prototype)
 * Riot
 * Rolling Crush
@@ -269,6 +272,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Woodpecker
 * World Cup Volley 95
 * Xeno Crisis
+* Zero Team 2000
 * Zintrick
 * Zupapa
 
@@ -1162,7 +1166,7 @@ could crash on the score calc between levels is sorted [amadvance, arcadez]
 * Ported across from FBL dink's fix for the broken text gfx layer in the Japanese version Of Cameltry [dink, arcadez]
 * Added support for Jammin a rare Atari prototype music game to the Donkey Kong driver [arcadez]
 * Added Saurian Front a super rare Williams prototype of Midway's Strike Force to the midyunit driver [arcadez]
-* Added Adventure Canoe to the taitosj driver [arcadez,  jackphilippi, dink]
+* Added Adventure Canoe to the taitosj driver [arcadez, jackphilippi, dink]
 * Added support for Ketsui: Kizuna Jigoku Tachi - IKD 2007 Special Version to pgm.c [arcadez]
 * Fixed a protection related problem with powerups in Burning Force [MAMEDev, arcadez]
 * Extended IREM Drum sample support to Lode Runner 3 and 4 [dink, arcadez]
@@ -1172,5 +1176,5 @@ could crash on the score calc between levels is sorted [amadvance, arcadez]
 * Fixed sound sample playing for SEGA's Zaxxon [MAMEDev, arcadez]
 * Fixed Palette banking problems for Pleiads [MAMEDev, arcadez]
 * Added fixes from later MAME so that Princess Clara Daisakusen now works [MAMEDev, arcadez]
-* Ported a new driver for Raiden II game now playable [Salvia, MAMEDev, FBN, arcadez]
+* Ported a new raiden2.c driver Raiden II Raiden DX and Zero Team etc etc now playable [Salvia, MAMEDev, FBN, vanni and claude, arcadez]
 
