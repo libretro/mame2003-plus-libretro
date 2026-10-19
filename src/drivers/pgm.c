@@ -235,6 +235,9 @@ WRITE16_HANDLER( pgm_tx_videoram_w );
 WRITE16_HANDLER( pgm_bg_videoram_w );
 VIDEO_START( pgm );
 VIDEO_EOF( pgm );
+WRITE16_HANDLER( pgm_videoregs_w );
+void pgm_video_vblank( void );
+void pgm_video_reset( void );
 VIDEO_UPDATE( pgm );
 void pgm_kov_decrypt(void);
 void pgm_kovsh_decrypt(void);
@@ -460,7 +463,7 @@ static MEMORY_READ16_START( pgm_readmem )
 	{ 0x900000, 0x903fff, MRA16_RAM }, /* Backgrounds */
 	{ 0x904000, 0x905fff, MRA16_RAM }, /* Text Layer */
 	{ 0x907000, 0x9077ff, MRA16_RAM },
-	{ 0xa00000, 0xa011ff, MRA16_RAM },
+	{ 0xa00000, 0xa013ff, MRA16_RAM },
 	{ 0xb00000, 0xb0ffff, MRA16_RAM }, /* Video Regs inc. Zoom Table */
 
 	{ 0xc00002, 0xc00003, soundlatch_word_r },
@@ -487,8 +490,8 @@ static MEMORY_WRITE16_START( pgm_writemem )
 	{ 0x900000, 0x903fff, pgm_bg_videoram_w, &pgm_bg_videoram }, /* Backgrounds */
 	{ 0x904000, 0x905fff, pgm_tx_videoram_w, &pgm_tx_videoram },/* Text Layer */
 	{ 0x907000, 0x9077ff, MWA16_RAM, &pgm_rowscrollram },
-	{ 0xa00000, 0xa011ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16 },
-	{ 0xb00000, 0xb0ffff, MWA16_RAM, &pgm_videoregs }, /* Video Regs inc. Zoom Table */
+	{ 0xa00000, 0xa013ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16 },
+	{ 0xb00000, 0xb0ffff, pgm_videoregs_w, &pgm_videoregs }, /* Video Regs inc. Zoom Table */
 
 	{ 0xc00002, 0xc00003, m68k_l1_w },
 	{ 0xc00004, 0xc00005, soundlatch2_word_w },
@@ -510,7 +513,7 @@ static MEMORY_READ16_START( cavepgm_readmem )
 	{ 0x900000, 0x903fff, MRA16_RAM }, /* Backgrounds */
 	{ 0x904000, 0x905fff, MRA16_RAM }, /* Text Layer */
 	{ 0x907000, 0x9077ff, MRA16_RAM },
-	{ 0xa00000, 0xa011ff, MRA16_RAM },
+	{ 0xa00000, 0xa013ff, MRA16_RAM },
 	{ 0xb00000, 0xb0ffff, MRA16_RAM }, /* Video Regs inc. Zoom Table */
 
 	{ 0xc00002, 0xc00003, soundlatch_word_r },
@@ -538,8 +541,8 @@ static MEMORY_WRITE16_START( cavepgm_writemem )
 	{ 0x900000, 0x903fff, pgm_bg_videoram_w, &pgm_bg_videoram }, /* Backgrounds */
 	{ 0x904000, 0x905fff, pgm_tx_videoram_w, &pgm_tx_videoram },/* Text Layer */
 	{ 0x907000, 0x9077ff, MWA16_RAM, &pgm_rowscrollram },
-	{ 0xa00000, 0xa011ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16 },
-	{ 0xb00000, 0xb0ffff, MWA16_RAM, &pgm_videoregs }, /* Video Regs inc. Zoom Table */
+	{ 0xa00000, 0xa013ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16 },
+	{ 0xb00000, 0xb0ffff, pgm_videoregs_w, &pgm_videoregs }, /* Video Regs inc. Zoom Table */
 
 	{ 0xc00002, 0xc00003, m68k_l1_w },
 	{ 0xc00004, 0xc00005, soundlatch2_word_w },
@@ -563,7 +566,7 @@ static MEMORY_READ16_START( killbld_readmem )
 	{ 0x900000, 0x903fff, MRA16_RAM }, /* Backgrounds */
 	{ 0x904000, 0x905fff, MRA16_RAM }, /* Text Layer */
 	{ 0x907000, 0x9077ff, MRA16_RAM },
-	{ 0xa00000, 0xa011ff, MRA16_RAM },
+	{ 0xa00000, 0xa013ff, MRA16_RAM },
 	{ 0xb00000, 0xb0ffff, MRA16_RAM }, /* Video Regs inc. Zoom Table */
 
 	{ 0xc00002, 0xc00003, soundlatch_word_r },
@@ -591,8 +594,8 @@ static MEMORY_WRITE16_START( killbld_writemem )
 	{ 0x900000, 0x903fff, pgm_bg_videoram_w, &pgm_bg_videoram }, /* Backgrounds */
 	{ 0x904000, 0x905fff, pgm_tx_videoram_w, &pgm_tx_videoram },/* Text Layer */
 	{ 0x907000, 0x9077ff, MWA16_RAM, &pgm_rowscrollram },
-	{ 0xa00000, 0xa011ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16 },
-	{ 0xb00000, 0xb0ffff, MWA16_RAM, &pgm_videoregs }, /* Video Regs inc. Zoom Table */
+	{ 0xa00000, 0xa013ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16 },
+	{ 0xb00000, 0xb0ffff, pgm_videoregs_w, &pgm_videoregs }, /* Video Regs inc. Zoom Table */
 
 	{ 0xc00002, 0xc00003, m68k_l1_w },
 	{ 0xc00004, 0xc00005, soundlatch2_word_w },
@@ -617,7 +620,7 @@ static MEMORY_READ16_START( olds_readmem )
 	{ 0x900000, 0x903fff, MRA16_RAM }, /* Backgrounds */
 	{ 0x904000, 0x905fff, MRA16_RAM }, /* Text Layer */
 	{ 0x907000, 0x9077ff, MRA16_RAM },
-	{ 0xa00000, 0xa011ff, MRA16_RAM },
+	{ 0xa00000, 0xa013ff, MRA16_RAM },
 	{ 0xb00000, 0xb0ffff, MRA16_RAM }, /* Video Regs inc. Zoom Table */
 
 	{ 0xc00002, 0xc00003, soundlatch_word_r },
@@ -645,8 +648,8 @@ static MEMORY_WRITE16_START( olds_writemem )
 	{ 0x900000, 0x903fff, pgm_bg_videoram_w, &pgm_bg_videoram }, /* Backgrounds */
 	{ 0x904000, 0x905fff, pgm_tx_videoram_w, &pgm_tx_videoram },/* Text Layer */
 	{ 0x907000, 0x9077ff, MWA16_RAM, &pgm_rowscrollram },
-	{ 0xa00000, 0xa011ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16 },
-	{ 0xb00000, 0xb0ffff, MWA16_RAM, &pgm_videoregs }, /* Video Regs inc. Zoom Table */
+	{ 0xa00000, 0xa013ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16 },
+	{ 0xb00000, 0xb0ffff, pgm_videoregs_w, &pgm_videoregs }, /* Video Regs inc. Zoom Table */
 
 	{ 0xc00002, 0xc00003, m68k_l1_w },
 	{ 0xc00004, 0xc00005, soundlatch2_word_w },
@@ -1368,16 +1371,16 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 
 /*** Machine Driver **********************************************************/
 
-static INTERRUPT_GEN( pgm_interrupt ) {
-	if( cpu_getiloops() == 0 )
-		cpu_set_irq_line(0, 6, HOLD_LINE);
-	else
-		cpu_set_irq_line(0, 4, HOLD_LINE);
+/* IRQ6 at vblank and IRQ4 every 62 lines, as enabled in the video control register (vidhrdw) */
+static INTERRUPT_GEN( pgm_interrupt )
+{
+	pgm_video_vblank();
 }
 
 static MACHINE_INIT( pgm )
 {
     cpu_set_halt_line(1, ASSERT_LINE);
+    pgm_video_reset();
 }
 
 static MACHINE_INIT( olds )
@@ -1398,7 +1401,7 @@ static MACHINE_DRIVER_START( pgm )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M68000, 20000000) /* 20 mhz! verified on real board */
 	MDRV_CPU_MEMORY(pgm_readmem, pgm_writemem)
-	MDRV_CPU_VBLANK_INT(pgm_interrupt,2)
+	MDRV_CPU_VBLANK_INT(pgm_interrupt,1)
 
 	MDRV_CPU_ADD(Z80, 8468000)
 	MDRV_CPU_MEMORY(z80_readmem, z80_writemem)
@@ -1415,7 +1418,7 @@ static MACHINE_DRIVER_START( pgm )
 	MDRV_SCREEN_SIZE(64*8, 64*8)
 	MDRV_VISIBLE_AREA(0*8, 56*8-1, 0*8, 28*8-1)
 	MDRV_GFXDECODE(gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(0x1200/2)
+	MDRV_PALETTE_LENGTH(0x1400/2)
 
 	MDRV_VIDEO_START(pgm)
 	MDRV_VIDEO_EOF(pgm)
@@ -1427,7 +1430,7 @@ static MACHINE_DRIVER_START( cavepgm )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M68000, 20000000) /* 20 mhz! verified on real board */
 	MDRV_CPU_MEMORY(cavepgm_readmem,cavepgm_writemem)
-	MDRV_CPU_VBLANK_INT(pgm_interrupt,2)
+	MDRV_CPU_VBLANK_INT(pgm_interrupt,1)
 
 	MDRV_CPU_ADD(Z80, 8468000)
 	MDRV_CPU_MEMORY(z80_readmem, z80_writemem)
@@ -1446,7 +1449,7 @@ static MACHINE_DRIVER_START( cavepgm )
 	MDRV_SCREEN_SIZE(64*8, 64*8)
 	MDRV_VISIBLE_AREA(0*8, 56*8-1, 0*8, 28*8-1)
 	MDRV_GFXDECODE(gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(0x1200/2)
+	MDRV_PALETTE_LENGTH(0x1400/2)
 
 	MDRV_VIDEO_START(pgm)
 	MDRV_VIDEO_EOF(pgm)
@@ -1458,7 +1461,7 @@ static MACHINE_DRIVER_START( killbld )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M68000, 20000000) /* 20 mhz! verified on real board */
 	MDRV_CPU_MEMORY(killbld_readmem, killbld_writemem)
-	MDRV_CPU_VBLANK_INT(pgm_interrupt,2)
+	MDRV_CPU_VBLANK_INT(pgm_interrupt,1)
 
 	MDRV_CPU_ADD(Z80, 8468000)
 	MDRV_CPU_MEMORY(z80_readmem, z80_writemem)
@@ -1476,7 +1479,7 @@ static MACHINE_DRIVER_START( killbld )
 	MDRV_SCREEN_SIZE(64*8, 64*8)
 	MDRV_VISIBLE_AREA(0*8, 56*8-1, 0*8, 28*8-1)
 	MDRV_GFXDECODE(gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(0x1200/2)
+	MDRV_PALETTE_LENGTH(0x1400/2)
 
 	MDRV_VIDEO_START(pgm)
 	MDRV_VIDEO_EOF(pgm)
@@ -1488,7 +1491,7 @@ static MACHINE_DRIVER_START( olds )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M68000, 20000000) /* 20 mhz! verified on real board */
 	MDRV_CPU_MEMORY(olds_readmem, olds_writemem)
-	MDRV_CPU_VBLANK_INT(pgm_interrupt,2)
+	MDRV_CPU_VBLANK_INT(pgm_interrupt,1)
 
 	MDRV_CPU_ADD(Z80, 8468000)
 	MDRV_CPU_MEMORY(z80_readmem, z80_writemem)
@@ -1506,7 +1509,7 @@ static MACHINE_DRIVER_START( olds )
 	MDRV_SCREEN_SIZE(64*8, 64*8)
 	MDRV_VISIBLE_AREA(0*8, 56*8-1, 0*8, 28*8-1)
 	MDRV_GFXDECODE(gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(0x1200/2)
+	MDRV_PALETTE_LENGTH(0x1400/2)
 
 	MDRV_VIDEO_START(pgm)
 	MDRV_VIDEO_EOF(pgm)

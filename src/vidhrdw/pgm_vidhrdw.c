@@ -1,214 +1,301 @@
 /*** Video *******************************************************************/
-/* see drivers/pgm.c for notes on where improvements can be made */
+/*
+	PGM (IGS023) video, as the igs023_video device of current MAME:
+
+	- sprites with the zoom / shrink tables (0xb01000), drawn from the end of
+	  the list so that earlier entries are on top, with a priority bitmap:
+	  a sprite pixel is not drawn over one already drawn, and a sprite with
+	  the priority bit set ("under the background") is hidden where the
+	  background is opaque
+	- the control register (0xb0e000): bit 0 sprite DMA, bit 2 IRQ4 (every
+	  62 lines), bit 3 IRQ6 (vblank), bit 11 text layer off, bit 12
+	  background off, bit 13 high priority sprites off
+	- the sprite list is copied by the DMA at the end of the frame, only when
+	  enabled, with the per-word masks of the hardware; a sprite whose size
+	  word (bits 0-14) is zero ends the list
+	- the screen is filled with pen 0x3ff
+*/
 
 #include "driver.h"
+#include "state.h"
 
 extern data16_t *pgm_mainram, *pgm_bg_videoram, *pgm_tx_videoram, *pgm_videoregs, *pgm_rowscrollram;
 static struct tilemap *pgm_tx_tilemap, *pgm_bg_tilemap;
-static UINT16 *sprite_bitmap;
-static data16_t *pgm_spritebufferram; /* buffered spriteram*/
+static data16_t *pgm_spritebufferram; /* buffered spriteram (256 sprites, 8 words each) */
 
-extern data8_t *pgm_sprite_a_region;   /* = memory_region       ( REGION_GFX4 ); */
+extern data8_t *pgm_sprite_a_region;   /* sprite colour data, one byte per pixel */
 extern size_t	pgm_sprite_a_region_allocate;
 
-/* Sprites - These are a pain! */
+#define PGM_CTRL	( pgm_videoregs[ 0xe000 / 2 ] )
 
+/*** Sprites *****************************************************************/
 
-static void pgm_drawsprite(int wide, int high, int xpos, int ypos, int palt, int boffset, int flip)
+struct pgm_sprite
 {
-	int xcnt, ycnt, offset, xdrawpos, ydrawpos;
+	int x, y, flip, color, pri, width, height;
+	UINT32 offs;
+	UINT32 xzoom, yzoom;
+	int xgrow, ygrow;
+};
 
-	data8_t *bdata    = memory_region       ( REGION_GFX4 );
-	size_t  bdatasize = memory_region_length( REGION_GFX4 )-1;
-	data8_t *adata    = pgm_sprite_a_region;
-	size_t  adatasize = pgm_sprite_a_region_allocate-1;
+static struct pgm_sprite pgm_spritelist[ 256 ];
+static int pgm_num_sprites;
 
-	data16_t *dest;
-	data16_t msk;
+/* current sprite data pointers */
+static const data8_t *pgm_bdata;
+static UINT32 pgm_bmask;
+static const data8_t *pgm_adata;
+static UINT32 pgm_amask;
+static UINT32 pgm_aoffset;	/* pixel index into the expanded colour data */
+static UINT32 pgm_boffset;	/* word index into the mask data */
 
-	data32_t aoffset;
-	int draw;
+static const struct rectangle *pgm_clip;
 
-	aoffset = (bdata[(boffset+3) & bdatasize] << 24) | (bdata[(boffset+2) & bdatasize] << 16) | (bdata[(boffset+1) & bdatasize] << 8) | (bdata[(boffset+0) & bdatasize] << 0);
-	aoffset = aoffset >> 2; aoffset *= 3;
-
-/* 	if(aoffset)	logerror ("aoffset %08x boffset %08x\n",aoffset,boffset);*/
-
-	boffset += 4; /* because the first dword is the a data offset */
-	if (!(flip & 0x02)) { /* NO Y FLIP */
-		for (ycnt = 0 ; ycnt < high ; ycnt++) {
-			ydrawpos = ypos + ycnt;
-
-			if (!(flip & 0x01)) { /* NO FLIPPING */
-				for (xcnt = 0 ; xcnt < wide ; xcnt++) {
-					xdrawpos = xpos + (xcnt*16)+32;
-					draw = 0; if ( (xdrawpos > 0) && (xdrawpos < 448+32) && (ydrawpos >= 0) && (ydrawpos < 224) ) draw = 1;
-					/* Draw Code */
-					{
-						offset = xdrawpos + ((448+32+32) * ydrawpos);
-						dest = &sprite_bitmap[offset];
-						msk = (( bdata[(boffset+0) & bdatasize] << 8) |( bdata[(boffset+1) & bdatasize] << 0) );
-						if (!(msk & 0x0100)) { if (draw)  dest[0]  = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0200)) { if (draw)  dest[1]  = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0400)) { if (draw)  dest[2]  = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0800)) { if (draw)  dest[3]  = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x1000)) { if (draw)  dest[4]  = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x2000)) { if (draw)  dest[5]  = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x4000)) { if (draw)  dest[6]  = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x8000)) { if (draw)  dest[7]  = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0001)) { if (draw)  dest[8]  = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0002)) { if (draw)  dest[9]  = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0004)) { if (draw)  dest[10] = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0008)) { if (draw)  dest[11] = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0010)) { if (draw)  dest[12] = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0020)) { if (draw)  dest[13] = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0040)) { if (draw)  dest[14] = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0080)) { if (draw)  dest[15] = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-					}
-					boffset+=2;
-				}
-			} else { /* X FLIPPING */
-				for (xcnt = wide-1 ; xcnt >= 0 ; xcnt--) {
-					xdrawpos = xpos + (xcnt*16)+32;
-					draw = 0; if ( (xdrawpos > 0) && (xdrawpos < 448+32) && (ydrawpos >= 0) && (ydrawpos < 224) ) draw = 1;
-					/* Draw Code */
-					{
-						offset = xdrawpos + ((448+32+32) * ydrawpos);
-						dest = &sprite_bitmap[offset];
-						msk = (( bdata[(boffset+0) & bdatasize] << 8) |( bdata[(boffset+1) & bdatasize] << 0) );
-						if (!(msk & 0x0100)) { if (draw)  dest[15]  = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0200)) { if (draw)  dest[14]  = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0400)) { if (draw)  dest[13]  = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0800)) { if (draw)  dest[12]  = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x1000)) { if (draw)  dest[11]  = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x2000)) { if (draw)  dest[10]  = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x4000)) { if (draw)  dest[9]  = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x8000)) { if (draw)  dest[8]  = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0001)) { if (draw)  dest[7]  = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0002)) { if (draw)  dest[6]  = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0004)) { if (draw)  dest[5] = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0008)) { if (draw)  dest[4] = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0010)) { if (draw)  dest[3] = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0020)) { if (draw)  dest[2] = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0040)) { if (draw)  dest[1] = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0080)) { if (draw)  dest[0] = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-					}
-					boffset+=2;
-				}
-			}
-		}
-	} else {	/* Y FLIPPING */
-		for (ycnt = high-1 ; ycnt >= 0 ; ycnt--) {
-			ydrawpos = ypos + ycnt;
-
-			if (!(flip & 0x01)) { /* Y FLIP */
-				for (xcnt = 0 ; xcnt < wide ; xcnt++) {
-					xdrawpos = xpos + (xcnt*16)+32;
-					draw = 0; if ( (xdrawpos > 0) && (xdrawpos < 448+32) && (ydrawpos >= 0) && (ydrawpos < 224) ) draw = 1;
-					/* Draw Code */
-					{
-						offset = xdrawpos + ((448+32+32) * ydrawpos);
-						dest = &sprite_bitmap[offset];
-						msk = (( bdata[(boffset+0) & bdatasize] << 8) |( bdata[(boffset+1) & bdatasize] << 0) );
-						if (!(msk & 0x0100)) { if (draw)  dest[0]  = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0200)) { if (draw)  dest[1]  = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0400)) { if (draw)  dest[2]  = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0800)) { if (draw)  dest[3]  = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x1000)) { if (draw)  dest[4]  = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x2000)) { if (draw)  dest[5]  = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x4000)) { if (draw)  dest[6]  = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x8000)) { if (draw)  dest[7]  = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0001)) { if (draw)  dest[8]  = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0002)) { if (draw)  dest[9]  = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0004)) { if (draw)  dest[10] = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0008)) { if (draw)  dest[11] = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0010)) { if (draw)  dest[12] = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0020)) { if (draw)  dest[13] = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0040)) { if (draw)  dest[14] = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0080)) { if (draw)  dest[15] = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-					}
-					boffset+=2;
-				}
-			} else { /* XY FLIP */
-				for (xcnt = wide-1 ; xcnt >= 0 ; xcnt--) {
-					xdrawpos = xpos + (xcnt*16)+32;
-					draw = 0; if ( (xdrawpos > 0) && (xdrawpos < 448+32) && (ydrawpos >= 0) && (ydrawpos < 224) ) draw = 1;
-					/* Draw Code */
-					{
-						offset = xdrawpos + ((448+32+32) * ydrawpos);
-						dest = &sprite_bitmap[offset];
-						msk = (( bdata[(boffset+0) & bdatasize] << 8) |( bdata[(boffset+1) & bdatasize] << 0) );
-						if (!(msk & 0x0100)) { if (draw)  dest[15]  = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0200)) { if (draw)  dest[14]  = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0400)) { if (draw)  dest[13]  = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0800)) { if (draw)  dest[12]  = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x1000)) { if (draw)  dest[11]  = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x2000)) { if (draw)  dest[10]  = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x4000)) { if (draw)  dest[9]  = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x8000)) { if (draw)  dest[8]  = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0001)) { if (draw)  dest[7]  = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0002)) { if (draw)  dest[6]  = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0004)) { if (draw)  dest[5] = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0008)) { if (draw)  dest[4] = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0010)) { if (draw)  dest[3] = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0020)) { if (draw)  dest[2] = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0040)) { if (draw)  dest[1] = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-						if (!(msk & 0x0080)) { if (draw)  dest[0] = adata[aoffset & adatasize]+ palt*32;aoffset++; }
-					}
-					boffset+=2;
-				}
-			}
-		}
-	}
+static INLINE UINT16 pgm_mask_word( UINT32 index )
+{
+	UINT32 b = ( index * 2 ) & pgm_bmask;
+	return pgm_bdata[ b ] | ( pgm_bdata[ ( b + 1 ) & pgm_bmask ] << 8 );
 }
 
-static UINT16 *pgm_sprite_source;
-
-static void pgm_drawsprites(int priority)
+static INLINE void pgm_draw_pix( int xdrawpos, int pri, UINT16 *dest, UINT8 *destpri, UINT16 srcdat )
 {
-	/* ZZZZ Zxxx xxxx xxxx
-	   zzzz z-yy yyyy yyyy
-	   -ffp pppp Pvvv vvvv
-	   vvvv vvvv vvvv vvvv
-	   wwww wwwh hhhh hhhh
-	*/
-
-	/* const UINT16 *finish = pgm_spritebufferram+0xa00; */
-	const UINT16 *finish = pgm_spritebufferram+(0xa00/2);
-	int y;
-
-	/* clear the sprite bitmap */
-	for (y = 0; y < 224*(448+32+32); y++)
-		sprite_bitmap[y] = 0x400;
-
-	while( pgm_sprite_source<finish )
+	if( xdrawpos >= pgm_clip->min_x && xdrawpos <= pgm_clip->max_x )
 	{
-		int xpos = pgm_sprite_source[0] & 0x07ff;
-		int ypos = pgm_sprite_source[1] & 0x03ff;
-/*		int xzom = (pgm_sprite_source[0] & 0xf800) >> 11;*/
-/*		int yzom = (pgm_sprite_source[1] & 0xf800) >> 11;*/
-		int palt = (pgm_sprite_source[2] & 0x1f00) >> 8;
-		int flip = (pgm_sprite_source[2] & 0x6000) >> 13;
-		int boff = ((pgm_sprite_source[2] & 0x007f) << 16) | (pgm_sprite_source[3] & 0xffff);
-		int wide = (pgm_sprite_source[4] & 0x7e00) >> 9;/* Killing Blade*/
-		int high = pgm_sprite_source[4] & 0x01ff;
-		int pri = (pgm_sprite_source[2] & 0x0080) >>  7;
-
-		boff *= 2;
-		if (xpos > 0x3ff) xpos -=0x800;
-		if (ypos > 0x1ff) ypos -=0x400;
-
-		if (high == 0) break; /* is this right? */
-
-		if ((priority == 1) && (pri == 0)) break;
-
-		pgm_drawsprite(wide, high, xpos, ypos, palt, boff, flip);
-
-		pgm_sprite_source += 5;
+		if( !( destpri[ xdrawpos ] & 1 ) )
+		{
+			if( !pri || !( destpri[ xdrawpos ] & 2 ) )
+				dest[ xdrawpos ] = Machine->pens[ srcdat ];
+		}
+		destpri[ xdrawpos ] |= 1;
 	}
 }
 
-/* TX Layer */
+static INLINE UINT16 pgm_sprite_pix( void )
+{
+	return pgm_adata[ pgm_aoffset++ & pgm_amask ];
+}
+
+static void pgm_draw_sprite_line( int wide, UINT16 *dest, UINT8 *destpri, UINT32 xzoom, int xgrow, int flip, int xpos, int pri, int realxsize, int palt, int draw )
+{
+	int xcnt, x, i;
+	int xoffset = 0;
+	int xcntdraw = 0;
+
+	for( xcnt = 0; xcnt < wide; xcnt++ )
+	{
+		UINT16 msk = pgm_mask_word( pgm_boffset );
+
+		for( x = 0; x < 16; x++ )
+		{
+			int xzoombit = ( xzoom >> ( xoffset & 0x1f ) ) & 1;
+			xoffset++;
+
+			if( !( msk & 1 ) )
+			{
+				UINT16 srcdat = pgm_sprite_pix() + palt * 32;
+
+				if( xgrow || !xzoombit )
+				{
+					int pixel_column = xzoombit ? 2 : 1;
+					for( i = 0; i < pixel_column; i++ )
+					{
+						if( draw )
+							pgm_draw_pix( ( flip & 1 ) ? xpos + realxsize - xcntdraw : xpos + xcntdraw, pri, dest, destpri, srcdat );
+						xcntdraw++;
+					}
+				}
+			}
+			else
+			{
+				if( xgrow || !xzoombit )
+					xcntdraw += xzoombit ? 2 : 1;
+			}
+
+			msk >>= 1;
+		}
+
+		pgm_boffset++;
+	}
+}
+
+static void pgm_draw_sprite( struct mame_bitmap *bitmap, const struct pgm_sprite *s )
+{
+	int ycnt, xcnt, ycntdraw, ydrawpos;
+	int realysize = 0, realxsize = 0;
+	int high = s->height, wide = s->width;
+	UINT32 xzoom = s->xzoom, yzoom = s->yzoom;
+	int xgrow = s->xgrow, ygrow = s->ygrow;
+
+	/* the first two mask words hold the offset of the colour data */
+	pgm_aoffset = ( ( pgm_mask_word( pgm_boffset + 1 ) << 16 ) | pgm_mask_word( pgm_boffset ) ) >> 2;
+	pgm_aoffset *= 3;	/* three 5-bit pixels per colour word, expanded to bytes */
+	pgm_boffset += 2;
+
+	/* where drawing ends, for the flipped cases: the data must be drawn in ROM order */
+	for( ycnt = 0; ycnt < high; ycnt++ )
+	{
+		int yzoombit = ( yzoom >> ( ycnt & 0x1f ) ) & 1;
+		if( ygrow || !yzoombit )
+			realysize += yzoombit ? 2 : 1;
+	}
+	realysize--;
+
+	for( xcnt = 0; xcnt < wide * 16; xcnt++ )
+	{
+		int xzoombit = ( xzoom >> ( xcnt & 0x1f ) ) & 1;
+		if( xgrow || !xzoombit )
+			realxsize += xzoombit ? 2 : 1;
+	}
+	realxsize--;
+
+	ycntdraw = 0;
+	for( ycnt = 0; ycnt < high; ycnt++ )
+	{
+		int yzoombit = ( yzoom >> ( ycnt & 0x1f ) ) & 1;
+		int times, t;
+
+		if( yzoombit && !ygrow )
+		{
+			/* shrink: this line is skipped */
+			pgm_draw_sprite_line( wide, NULL, NULL, xzoom, xgrow, s->flip, s->x, s->pri, realxsize, s->color, 0 );
+			continue;
+		}
+
+		times = ( yzoombit && ygrow ) ? 2 : 1;	/* grow: this line twice */
+		for( t = 0; t < times; t++ )
+		{
+			UINT32 save_a = pgm_aoffset, save_b = pgm_boffset;
+
+			ydrawpos = ( s->flip & 2 ) ? s->y + realysize - ycntdraw : s->y + ycntdraw;
+
+			if( ydrawpos >= pgm_clip->min_y && ydrawpos <= pgm_clip->max_y )
+			{
+				UINT16 *dest = (UINT16 *)bitmap->line[ ydrawpos ];
+				UINT8 *destpri = (UINT8 *)priority_bitmap->line[ ydrawpos ];
+				pgm_draw_sprite_line( wide, dest, destpri, xzoom, xgrow, s->flip, s->x, s->pri, realxsize, s->color, 1 );
+			}
+			else
+			{
+				pgm_draw_sprite_line( wide, NULL, NULL, xzoom, xgrow, s->flip, s->x, s->pri, realxsize, s->color, 0 );
+				/* past the bottom (or the top when flipped): nothing more to draw */
+				if( ( !( s->flip & 2 ) && ydrawpos > pgm_clip->max_y ) || ( ( s->flip & 2 ) && ydrawpos < pgm_clip->min_y ) )
+					return;
+			}
+			ycntdraw++;
+
+			if( t + 1 < times )
+			{
+				pgm_aoffset = save_a;
+				pgm_boffset = save_b;
+			}
+		}
+	}
+}
+
+static void pgm_draw_sprites( struct mame_bitmap *bitmap )
+{
+	int n;
+
+	pgm_bdata = memory_region( REGION_GFX4 );
+	pgm_bmask = memory_region_length( REGION_GFX4 ) - 1;
+	pgm_adata = pgm_sprite_a_region;
+	pgm_amask = pgm_sprite_a_region_allocate - 1;
+
+	/* from the end of the list: earlier entries end up on top */
+	for( n = pgm_num_sprites - 1; n >= 0; n-- )
+	{
+		const struct pgm_sprite *s = &pgm_spritelist[ n ];
+
+		if( ( PGM_CTRL & 0x2000 ) && !s->pri )
+			continue;
+
+		pgm_boffset = s->offs;
+		pgm_draw_sprite( bitmap, s );
+	}
+}
+
+/*
+	Sprite list (5 words per sprite, 8 words apart in the buffer):
+
+	0  x------- -------- horizontal zoom (1) / shrink (0)
+	   -xxxx--- -------- horizontal zoom table entry
+	   -----xxx xxxxxxxx X position (11 bit signed)
+	1  x------- -------- vertical zoom / shrink
+	   -xxxx--- -------- vertical zoom table entry
+	   ------xx xxxxxxxx Y position (10 bit signed)
+	2  -x------ -------- flip Y
+	   --x----- -------- flip X
+	   ---xxxxx -------- palette
+	   -------- x------- priority (under the background)
+	   -------- -xxxxxxx mask data address MSB
+	3  xxxxxxxx xxxxxxxx mask data address LSB
+	4  -xxxxxx- -------- width (16 pixel units)
+	   -------x xxxxxxxx height
+*/
+static void pgm_get_sprites( void )
+{
+	int sprite_num;
+	const data16_t *zoomram = &pgm_videoregs[ 0x1000 / 2 ];
+
+	pgm_num_sprites = 0;
+	for( sprite_num = 0; sprite_num < 256; sprite_num++ )
+	{
+		const data16_t *src = &pgm_spritebufferram[ sprite_num * 8 ];
+		struct pgm_sprite *s = &pgm_spritelist[ pgm_num_sprites ];
+		int xzom, yzom;
+
+		if( ( src[ 4 ] & 0x7fff ) == 0 )
+			break;
+
+		s->xgrow = ( src[ 0 ] >> 15 ) & 1;
+		xzom = ( src[ 0 ] & 0x7800 ) >> 11;
+		s->x = src[ 0 ] & 0x07ff;
+		if( s->x & 0x400 ) s->x -= 0x800;
+
+		s->ygrow = ( src[ 1 ] >> 15 ) & 1;
+		yzom = ( src[ 1 ] & 0x7800 ) >> 11;
+		s->y = src[ 1 ] & 0x03ff;
+		if( s->y & 0x200 ) s->y -= 0x400;
+
+		s->flip = ( src[ 2 ] & 0x6000 ) >> 13;
+		s->color = ( src[ 2 ] & 0x1f00 ) >> 8;
+		s->pri = ( src[ 2 ] >> 7 ) & 1;
+		s->offs = ( ( src[ 2 ] & 0x007f ) << 16 ) | src[ 3 ];
+
+		s->width = ( src[ 4 ] & 0x7e00 ) >> 9;
+		s->height = src[ 4 ] & 0x01ff;
+
+		/* as MAME: 0x10 - entry when growing */
+		if( s->xgrow ) xzom = 0x10 - xzom;
+		if( s->ygrow ) yzom = 0x10 - yzom;
+
+		/* the last table entry reads as 1 (ddp3 leaves it at zero) */
+		s->xzoom = ( xzom < 0x10 ) ? ( ( xzom == 0xf ) ? 1 : ( ( (UINT32)zoomram[ xzom * 2 ] << 16 ) | zoomram[ xzom * 2 + 1 ] ) ) : 0;
+		s->yzoom = ( yzom < 0x10 ) ? ( ( yzom == 0xf ) ? 1 : ( ( (UINT32)zoomram[ yzom * 2 ] << 16 ) | zoomram[ yzom * 2 + 1 ] ) ) : 0;
+
+		pgm_num_sprites++;
+	}
+}
+
+/* sprite DMA: 256 sprites of 5 words from main RAM, with the bits each word keeps */
+static void pgm_sprite_dma( void )
+{
+	static const data16_t sprite_ram_mask[ 5 ] = { 0xffff, 0xfbff, 0x7fff, 0xffff, 0xffff };
+	int i, src, offs = 0;
+
+	if( !( PGM_CTRL & 0x0001 ) )
+		return;
+
+	for( i = 0; i < 256; i++ )
+	{
+		for( src = 0; src < 5; src++ )
+			pgm_spritebufferram[ i * 8 + src ] = pgm_mainram[ offs++ ] & sprite_ram_mask[ src ];
+		if( ( pgm_spritebufferram[ i * 8 + 4 ] & 0x7fff ) == 0 )
+			break;
+	}
+}
+
+/*** TX Layer ****************************************************************/
 
 WRITE16_HANDLER( pgm_tx_videoram_w )
 {
@@ -226,7 +313,7 @@ static void get_pgm_tx_tilemap_tile_info(int tile_index)
 	each tile uses 4 bytes, the tilemap is 64x128?
 
    the layer uses 4bpp 8x8 tiles from the 'T' roms
-   colours from 0xA01000 - 0xA017FF
+   colours from 0xA01000 - 0xA013FF
 
    scroll registers are at 0xB05000 (Y) and 0xB06000 (X)
 
@@ -236,18 +323,18 @@ static void get_pgm_tx_tilemap_tile_info(int tile_index)
 	p = palette
 	f = flip
 */
-	int tileno,colour,flipyx; /*,game;*/
+	int tileno,colour,flipyx;
 
 	tileno = pgm_tx_videoram[tile_index *2] & 0xffff;
 	colour = (pgm_tx_videoram[tile_index*2+1] & 0x3e) >> 1;
-	flipyx = (pgm_tx_videoram[tile_index*2+1] & 0xc0) >> 6;;
+	flipyx = (pgm_tx_videoram[tile_index*2+1] & 0xc0) >> 6;
 
 	if (tileno > 0xbfff) { tileno -= 0xc000 ; tileno += 0x20000; } /* not sure about this */
 
 	SET_TILE_INFO(0,tileno,colour,TILE_FLIPYX(flipyx))
 }
 
-/* BG Layer */
+/*** BG Layer ****************************************************************/
 
 WRITE16_HANDLER( pgm_bg_videoram_w )
 {
@@ -267,33 +354,96 @@ static void get_pgm_bg_tilemap_tile_info(int tile_index)
 	tileno = pgm_bg_videoram[tile_index *2] & 0xffff;
 	if (tileno > 0x7ff) tileno+=0x1000; /* Tiles 0x800+ come from the GAME Roms */
 	colour = (pgm_bg_videoram[tile_index*2+1] & 0x3e) >> 1;
-	flipyx = (pgm_bg_videoram[tile_index*2+1] & 0xc0) >> 6;;
+	flipyx = (pgm_bg_videoram[tile_index*2+1] & 0xc0) >> 6;
 
 	SET_TILE_INFO(1,tileno,colour,TILE_FLIPYX(flipyx))
 }
 
+/*** Interrupts ****************************************************************/
+/*
+	IRQ6 at vblank and IRQ4 every 62 lines (a divider that runs on its own),
+	each only while enabled in the control register; they stay asserted until
+	their enable bit is cleared.
+*/
 
+static int pgm_irq4_pending, pgm_irq6_pending;
+
+static void pgm_update_irqs( void )
+{
+	cpu_set_irq_line( 0, 4, pgm_irq4_pending ? ASSERT_LINE : CLEAR_LINE );
+	cpu_set_irq_line( 0, 6, pgm_irq6_pending ? ASSERT_LINE : CLEAR_LINE );
+}
+
+static void pgm_irq4_tick( int param )
+{
+	if( PGM_CTRL & 0x0004 )
+	{
+		pgm_irq4_pending = 1;
+		pgm_update_irqs();
+	}
+}
+
+void pgm_video_vblank( void )
+{
+	if( PGM_CTRL & 0x0008 )
+	{
+		pgm_irq6_pending = 1;
+		pgm_update_irqs();
+	}
+}
+
+WRITE16_HANDLER( pgm_videoregs_w )
+{
+	COMBINE_DATA( &pgm_videoregs[ offset ] );
+	if( offset == 0xe000 / 2 )
+	{
+		if( !( PGM_CTRL & 0x0004 ) ) pgm_irq4_pending = 0;
+		if( !( PGM_CTRL & 0x0008 ) ) pgm_irq6_pending = 0;
+		pgm_update_irqs();
+	}
+}
+
+static void *pgm_irq4_timer;
+
+void pgm_video_reset( void )
+{
+	PGM_CTRL &= ~0x000c;
+	pgm_irq4_pending = pgm_irq6_pending = 0;
+	pgm_update_irqs();
+	/* 62 lines of 264 at the PGM frame rate */
+	timer_adjust( pgm_irq4_timer, TIME_IN_HZ( Machine->drv->frames_per_second * 264.0 / 62.0 ), 0, TIME_IN_HZ( Machine->drv->frames_per_second * 264.0 / 62.0 ) );
+}
+
+static void pgm_video_postload( void )
+{
+	pgm_update_irqs();
+}
 
 /*** Video - Start / Update ****************************************************/
 
 VIDEO_START( pgm )
 {
 	pgm_tx_tilemap= tilemap_create(get_pgm_tx_tilemap_tile_info,tilemap_scan_rows,TILEMAP_TRANSPARENT, 8, 8,64,32);
+	if (!pgm_tx_tilemap) return 1;
 	tilemap_set_transparent_pen(pgm_tx_tilemap,15);
 
-/*	pgm_bg_tilemap = tilemap_create(get_pgm_bg_tilemap_tile_info,tilemap_scan_rows,TILEMAP_TRANSPARENT, 32, 32,64,64); */
 	pgm_bg_tilemap = tilemap_create(get_pgm_bg_tilemap_tile_info,tilemap_scan_rows,TILEMAP_TRANSPARENT, 32, 32,64,16);
+	if (!pgm_bg_tilemap) return 1;
 	tilemap_set_transparent_pen(pgm_bg_tilemap,31);
-/*	tilemap_set_scroll_rows(pgm_bg_tilemap,64*32); */
 	tilemap_set_scroll_rows(pgm_bg_tilemap,16*32);
 
-	pgm_spritebufferram = auto_malloc (0xa00);
+	pgm_spritebufferram = auto_malloc( 0x1000 );
+	if (!pgm_spritebufferram) return 1;
+	memset( pgm_spritebufferram, 0, 0x1000 );
+	pgm_num_sprites = 0;
 
-	sprite_bitmap		= auto_malloc((448+32+32) * 224 * sizeof(UINT16));
-	if (!sprite_bitmap) return 1;
+	pgm_irq4_timer = timer_alloc( pgm_irq4_tick );
+	pgm_irq4_pending = pgm_irq6_pending = 0;
 
-
-
+	state_save_register_UINT16( "pgm_video", 0, "spritebuffer", pgm_spritebufferram, 0x1000 / 2 );
+	state_save_register_int( "pgm_video", 0, "irq4_pending", &pgm_irq4_pending );
+	state_save_register_int( "pgm_video", 0, "irq6_pending", &pgm_irq6_pending );
+	state_save_register_func_postload( pgm_video_postload );
 
 	return 0;
 }
@@ -302,35 +452,32 @@ VIDEO_UPDATE( pgm )
 {
 	int y;
 
-	fillbitmap(bitmap,get_black_pen(),&Machine->visible_area);
+	pgm_clip = cliprect;
 
-	pgm_sprite_source = pgm_spritebufferram;
-	pgm_drawsprites(1);
+	fillbitmap( bitmap, Machine->pens[ 0x3ff ], cliprect );	/* ddp2 IGS logo needs 0x3ff */
+	fillbitmap( priority_bitmap, 0, cliprect );
 
-	/* copy the sprite bitmap to the screen */
-	for (y = 0; y < 224; y++)
-		draw_scanline16(bitmap, 0, y, 448, &sprite_bitmap[y * (448+32+32)+32], Machine->pens, 0x400);
+	if( !( PGM_CTRL & 0x1000 ) )
+	{
+		tilemap_set_scrolly( pgm_bg_tilemap, 0, pgm_videoregs[ 0x2000 / 2 ] );
+		for( y = cliprect->min_y; y <= cliprect->max_y; y++ )
+			tilemap_set_scrollx( pgm_bg_tilemap, ( y + pgm_videoregs[ 0x2000 / 2 ] ) & 0x1ff, pgm_videoregs[ 0x3000 / 2 ] + pgm_rowscrollram[ y ] );
+		tilemap_draw( bitmap, cliprect, pgm_bg_tilemap, 0, 2 );
+	}
 
-	tilemap_set_scrolly(pgm_bg_tilemap,0, pgm_videoregs[0x2000/2]);
+	pgm_get_sprites();
+	pgm_draw_sprites( bitmap );
 
-	for (y = 0; y < 224; y++)
-		/*tilemap_set_scrollx(pgm_bg_tilemap,(y+pgm_videoregs[0x2000/2])&0x7ff, pgm_videoregs[0x3000/2]+pgm_rowscrollram[y]); */
-        tilemap_set_scrollx(pgm_bg_tilemap,(y+pgm_videoregs[0x2000/2])&0x1ff, pgm_videoregs[0x3000/2]+pgm_rowscrollram[y]);
-	
-	tilemap_draw(bitmap,cliprect,pgm_bg_tilemap,0,0);
-
-	pgm_drawsprites(0);
-	/* copy the sprite bitmap to the screen */
-	for (y = 0; y < 224; y++)
-		draw_scanline16(bitmap, 0, y, 448, &sprite_bitmap[y * (448+32+32)+32], Machine->pens, 0x400);
-
-	tilemap_set_scrolly(pgm_tx_tilemap,0, pgm_videoregs[0x5000/2]);
-	tilemap_set_scrollx(pgm_tx_tilemap,0, pgm_videoregs[0x6000/2]); /* Check*/
-	tilemap_draw(bitmap,cliprect,pgm_tx_tilemap,0,0);
+	if( !( PGM_CTRL & 0x0800 ) )
+	{
+		tilemap_set_scrolly( pgm_tx_tilemap, 0, pgm_videoregs[ 0x5000 / 2 ] );
+		tilemap_set_scrollx( pgm_tx_tilemap, 0, pgm_videoregs[ 0x6000 / 2 ] );
+		tilemap_draw( bitmap, cliprect, pgm_tx_tilemap, 0, 0 );
+	}
 }
 
 VIDEO_EOF( pgm )
 {
-	/* first 0xa00 of main ram = sprites, seems to be buffered, DMA? */
-	memcpy(pgm_spritebufferram,pgm_mainram,0xa00);
+	/* the sprite list is copied by the DMA once a frame, when enabled */
+	pgm_sprite_dma();
 }
