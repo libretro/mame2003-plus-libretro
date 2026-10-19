@@ -36,6 +36,11 @@ struct hard_disk_info
 /* closed and *error describes the problem */
 struct hard_disk_file *hard_disk_open(mame_file *chd, mame_file *diff, const char **error);
 void hard_disk_close(struct hard_disk_file *file);
+
+/* copies into the differencing file the hunks written in an old-format one */
+/* (the CHD v3 that older versions of the core created), given its contents; */
+/* returns the number of hunks imported, -1 if the file can't be used */
+int hard_disk_import_legacy_diff(struct hard_disk_file *file, const UINT8 *data, UINT32 size);
 void hard_disk_close_all(void);
 
 /* checksums of the disk data (MD5 for CHD v1-v3, SHA1 of the raw data), and */

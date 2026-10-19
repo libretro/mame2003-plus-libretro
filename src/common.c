@@ -1802,6 +1802,8 @@ static int process_disk_entries(struct rom_load_data *romdata, const struct RomM
 			const struct GameDriver *drv;
 			struct hard_disk_file *disk;
 			mame_file *source = NULL, *diff = NULL;
+			UINT8 *legacydata = NULL;
+			UINT32 legacysize = 0;
 			char filename[1024], *c;
 			char datahash[HASH_BUF_SIZE], imagehash[HASH_BUF_SIZE];
 			const char *error;
@@ -1840,9 +1842,49 @@ static int process_disk_entries(struct rom_load_data *romdata, const struct RomM
 
 				log_cb(RETRO_LOG_INFO, LOGPRE "Opening differencing image: %s\n", diffname);
 				diff = mame_fopen(NULL, diffname, FILETYPE_IMAGE_DIFF, 1);
+
+				/* one made by older versions of the core (a CHD v3): keep its */
+				/* contents to import them, and the file itself as <name>.dif.old */
+				if (diff)
+				{
+					UINT8 tag[8];
+					UINT64 size = mame_fsize(diff);
+
+					mame_fseek(diff, 0, SEEK_SET);
+					if (size >= sizeof(tag) && size < 0x80000000 &&
+						mame_fread(diff, tag, sizeof(tag)) == sizeof(tag) && memcmp(tag, "MComprHD", 8) == 0)
+					{
+						char oldname[1024 + 4];
+
+						legacydata = malloc((size_t)size);
+						if (legacydata)
+						{
+							mame_fseek(diff, 0, SEEK_SET);
+							if (mame_fread(diff, legacydata, (UINT32)size) == size)
+								legacysize = (UINT32)size;
+							else
+							{
+								free(legacydata);
+								legacydata = NULL;
+							}
+						}
+						mame_fclose(diff);
+
+						/* keep the file even if it could not be read, so nothing is lost */
+						sprintf(oldname, "%s.old", diffname);
+						if (osd_rename(FILETYPE_IMAGE_DIFF, diffname, oldname))
+							log_cb(RETRO_LOG_INFO, LOGPRE "Old-format differencing image kept as %s\n", oldname);
+						else
+							log_cb(RETRO_LOG_WARN, LOGPRE "Old-format differencing image could not be kept as %s\n", oldname);
+						diff = mame_fopen(NULL, diffname, FILETYPE_IMAGE_DIFF, 1);
+					}
+					mame_fseek(diff, 0, SEEK_SET);
+				}
+
 				if (!diff)
 				{
 					log_cb(RETRO_LOG_ERROR, LOGPRE "%-12s: CAN'T OPEN OR CREATE DIFF FILE\n", diffname);
+					free(legacydata);
 					mame_fclose(source);
 					romdata->errors++;
 					romp++;
@@ -1855,9 +1897,17 @@ static int process_disk_entries(struct rom_load_data *romdata, const struct RomM
 			if (!disk)
 			{
 				log_cb(RETRO_LOG_ERROR, LOGPRE "%-12s: CAN'T OPEN DISK IMAGE (%s)\n", filename, error);
+				free(legacydata);
 				romdata->errors++;
 				romp++;
 				continue;
+			}
+
+			/* bring over what the game wrote with older versions of the core */
+			if (legacydata)
+			{
+				hard_disk_import_legacy_diff(disk, legacydata, legacysize);
+				free(legacydata);
 			}
 
 			/* verify the checksums: older sets list those of the data (the same for */
