@@ -5,6 +5,7 @@
 ***************************************************************************/
 
 #include "driver.h"
+#include "state.h"
 #include "midwayic.h"
 #include "machine/idectrl.h"
 #include "sndhrdw/cage.h"
@@ -167,6 +168,14 @@ static void generate_serial_data(int upper)
 void midway_serial_pic_init(int upper)
 {
 	generate_serial_data(upper);
+
+	/* the serial data is partly random, so it must be saved too */
+	state_save_register_UINT8("serial_pic", 0, "data",   serial.data, 16);
+	state_save_register_UINT8("serial_pic", 0, "buffer", &serial.buffer, 1);
+	state_save_register_UINT8("serial_pic", 0, "index",  &serial.index, 1);
+	state_save_register_UINT8("serial_pic", 0, "status", &serial.status, 1);
+	state_save_register_UINT8("serial_pic", 0, "bits",   &serial.bits, 1);
+	state_save_register_UINT8("serial_pic", 0, "ormask", &serial.ormask, 1);
 }
 
 

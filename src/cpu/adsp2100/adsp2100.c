@@ -15,6 +15,7 @@
 #include "cpuintrf.h"
 #include "mamedbg.h"
 #include "adsp2100.h"
+#include "state.h"
 
 
 /*###################################################################################################
@@ -451,11 +452,89 @@ void adsp2100_set_context(void *src)
 **	INITIALIZATION AND SHUTDOWN
 **#################################################################################################*/
 
+static void adsp2100_register_core(int cpunum, const char *prefix, ADSPCORE *c)
+{
+	char name[32];
+
+	sprintf(name, "%sax0", prefix);  state_save_register_UINT16("adsp2100", cpunum, name, &c->ax0.u, 1);
+	sprintf(name, "%sax1", prefix);  state_save_register_UINT16("adsp2100", cpunum, name, &c->ax1.u, 1);
+	sprintf(name, "%say0", prefix);  state_save_register_UINT16("adsp2100", cpunum, name, &c->ay0.u, 1);
+	sprintf(name, "%say1", prefix);  state_save_register_UINT16("adsp2100", cpunum, name, &c->ay1.u, 1);
+	sprintf(name, "%sar", prefix);   state_save_register_UINT16("adsp2100", cpunum, name, &c->ar.u, 1);
+	sprintf(name, "%saf", prefix);   state_save_register_UINT16("adsp2100", cpunum, name, &c->af.u, 1);
+	sprintf(name, "%smx0", prefix);  state_save_register_UINT16("adsp2100", cpunum, name, &c->mx0.u, 1);
+	sprintf(name, "%smx1", prefix);  state_save_register_UINT16("adsp2100", cpunum, name, &c->mx1.u, 1);
+	sprintf(name, "%smy0", prefix);  state_save_register_UINT16("adsp2100", cpunum, name, &c->my0.u, 1);
+	sprintf(name, "%smy1", prefix);  state_save_register_UINT16("adsp2100", cpunum, name, &c->my1.u, 1);
+	/* 40-bit MAC result kept in a 64-bit union: save it as two 32-bit words */
+	sprintf(name, "%smr", prefix);   state_save_register_UINT32("adsp2100", cpunum, name, (UINT32 *)&c->mr.mr, 2);
+	sprintf(name, "%smf", prefix);   state_save_register_UINT16("adsp2100", cpunum, name, &c->mf.u, 1);
+	sprintf(name, "%ssi", prefix);   state_save_register_UINT16("adsp2100", cpunum, name, &c->si.u, 1);
+	sprintf(name, "%sse", prefix);   state_save_register_UINT16("adsp2100", cpunum, name, &c->se.u, 1);
+	sprintf(name, "%ssb", prefix);   state_save_register_UINT16("adsp2100", cpunum, name, &c->sb.u, 1);
+	sprintf(name, "%ssr", prefix);   state_save_register_UINT32("adsp2100", cpunum, name, &c->sr.sr, 1);
+	sprintf(name, "%szero", prefix); state_save_register_UINT16("adsp2100", cpunum, name, &c->zero.u, 1);
+}
+
+static void adsp2100_state_register(void)
+{
+	int cpunum = cpu_getactivecpu();
+
+	adsp2100_register_core(cpunum, "core.", &adsp2100.core);
+	adsp2100_register_core(cpunum, "alt.", &adsp2100.alt);
+
+	state_save_register_UINT32("adsp2100", cpunum, "i",              adsp2100.i, 8);
+	state_save_register_INT32 ("adsp2100", cpunum, "m",              adsp2100.m, 8);
+	state_save_register_UINT32("adsp2100", cpunum, "l",              adsp2100.l, 8);
+	state_save_register_UINT32("adsp2100", cpunum, "lmask",          adsp2100.lmask, 8);
+	state_save_register_UINT32("adsp2100", cpunum, "base",           adsp2100.base, 8);
+	state_save_register_UINT8 ("adsp2100", cpunum, "px",             &adsp2100.px, 1);
+
+	state_save_register_UINT32("adsp2100", cpunum, "pc",             &adsp2100.pc, 1);
+	state_save_register_UINT32("adsp2100", cpunum, "ppc",            &adsp2100.ppc, 1);
+	state_save_register_UINT32("adsp2100", cpunum, "loop",           &adsp2100.loop, 1);
+	state_save_register_UINT32("adsp2100", cpunum, "loop_condition", &adsp2100.loop_condition, 1);
+	state_save_register_UINT32("adsp2100", cpunum, "cntr",           &adsp2100.cntr, 1);
+
+	state_save_register_UINT32("adsp2100", cpunum, "astat",          &adsp2100.astat, 1);
+	state_save_register_UINT32("adsp2100", cpunum, "sstat",          &adsp2100.sstat, 1);
+	state_save_register_UINT32("adsp2100", cpunum, "mstat",          &adsp2100.mstat, 1);
+	state_save_register_UINT32("adsp2100", cpunum, "astat_clear",    &adsp2100.astat_clear, 1);
+	state_save_register_UINT32("adsp2100", cpunum, "idle",           &adsp2100.idle, 1);
+
+	state_save_register_UINT32("adsp2100", cpunum, "loop_stack",     adsp2100.loop_stack, LOOP_STACK_DEPTH);
+	state_save_register_UINT32("adsp2100", cpunum, "cntr_stack",     adsp2100.cntr_stack, CNTR_STACK_DEPTH);
+	state_save_register_UINT32("adsp2100", cpunum, "pc_stack",       adsp2100.pc_stack, PC_STACK_DEPTH);
+	state_save_register_UINT8 ("adsp2100", cpunum, "stat_stack",     &adsp2100.stat_stack[0][0], STAT_STACK_DEPTH * 3);
+
+	state_save_register_INT32 ("adsp2100", cpunum, "pc_sp",          &adsp2100.pc_sp, 1);
+	state_save_register_INT32 ("adsp2100", cpunum, "cntr_sp",        &adsp2100.cntr_sp, 1);
+	state_save_register_INT32 ("adsp2100", cpunum, "stat_sp",        &adsp2100.stat_sp, 1);
+	state_save_register_INT32 ("adsp2100", cpunum, "loop_sp",        &adsp2100.loop_sp, 1);
+
+	state_save_register_UINT8 ("adsp2100", cpunum, "flagout",        &adsp2100.flagout, 1);
+	state_save_register_UINT8 ("adsp2100", cpunum, "flagin",         &adsp2100.flagin, 1);
+	state_save_register_UINT8 ("adsp2100", cpunum, "fl0",            &adsp2100.fl0, 1);
+	state_save_register_UINT8 ("adsp2100", cpunum, "fl1",            &adsp2100.fl1, 1);
+	state_save_register_UINT8 ("adsp2100", cpunum, "fl2",            &adsp2100.fl2, 1);
+
+	state_save_register_UINT8 ("adsp2100", cpunum, "imask",          &adsp2100.imask, 1);
+	state_save_register_UINT8 ("adsp2100", cpunum, "icntl",          &adsp2100.icntl, 1);
+	state_save_register_UINT16("adsp2100", cpunum, "ifc",            &adsp2100.ifc, 1);
+	state_save_register_UINT8 ("adsp2100", cpunum, "irq_state",      adsp2100.irq_state, 5);
+	state_save_register_UINT8 ("adsp2100", cpunum, "irq_latch",      adsp2100.irq_latch, 5);
+	state_save_register_INT32 ("adsp2100", cpunum, "interrupt_cycles", &adsp2100.interrupt_cycles, 1);
+}
+
 void adsp2100_init(void)
 {
 	/* create the tables */
 	if (!create_tables())
 		exit(-1);
+
+	/* register for save states; the registered addresses are those of */
+	/* the active context, swapped in per CPU when the state is saved   */
+	adsp2100_state_register();
 }
 
 void adsp2100_reset(void *param)

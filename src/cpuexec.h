@@ -162,6 +162,11 @@ void cpunum_resume(int cpunum, int reason);
 /* Returns true if the given CPU is suspended for any of the given reasons */
 int cpunum_is_suspended(int cpunum, int reason);
 
+/* Trigger a CPU is waiting for (0 if none), and suspend a CPU until a
+   trigger; used by drivers to keep a trigger wait across save states */
+int cpunum_get_suspend_trigger(int cpunum);
+void cpunum_suspend_until_trigger(int cpunum, int trigger, int eatcycles);
+
 /* Aborts the timeslice for the active CPU */
 void activecpu_abort_timeslice(void);
 

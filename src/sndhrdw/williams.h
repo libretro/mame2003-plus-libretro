@@ -15,6 +15,7 @@ void williams_cvsd_reset_w(int state);
 void williams_adpcm_init(int cpunum);
 void williams_adpcm_data_w(int data);
 void williams_adpcm_reset_w(int state);
+void williams_adpcm_register_state(void);
 
 void williams_narc_init(int cpunum);
 void williams_narc_data_w(int data);

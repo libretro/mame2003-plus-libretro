@@ -153,6 +153,13 @@ static UINT8			external_host_access;
 static void *			dpyint_timer[MAX_CPU];		  /* Display interrupt timer */
 static void *			vsblnk_timer[MAX_CPU];		  /* VBLANK start timer */
 
+/* internal interrupts are delivered through TIME_NOW timers, which the */
+/* core does not save; remember the queued ones so a save state taken  */
+/* while one is pending does not lose it                               */
+static UINT32 pending_internal[MAX_CPU];
+static int pending_generation[MAX_CPU];
+
+
 /* default configuration */
 static struct tms34010_config default_config =
 {
@@ -843,6 +850,12 @@ void tms34010_init(void)
 		vsblnk_timer[i] = timer_alloc(vsblnk_callback);
 	}
 
+	/* allocate the shiftreg here rather than in reset, so the pointer */
+	/* registered below is valid (a NULL entry zeroes the state size)  */
+	state.shiftreg = malloc(SHIFTREG_SIZE);
+	if (state.shiftreg)
+		memset(state.shiftreg, 0, SHIFTREG_SIZE);
+
 	cpunum = cpu_getactivecpu();
 	state_save_register_UINT32("tms34010", cpunum, "OP",        &state.op, 1);
 	state_save_register_UINT32("tms34010", cpunum, "PC",        &state.pc, 1);
@@ -871,6 +884,9 @@ void tms34010_init(void)
 	state_save_register_int("tms34010", cpunum, "gfxcycles",        &state.gfxcycles);
 	state_save_register_int("tms34010", cpunum, "luvcount",     &state.last_update_vcount);
 	state_save_register_int("tms34010", cpunum, "ICount",       &tms34010_ICount);
+	pending_internal[cpunum] = 0;
+	pending_generation[cpunum] = 0;
+	state_save_register_UINT32("tms34010", cpunum, "PENDINT",   &pending_internal[cpunum], 1);
 	state_save_register_func_presave(tms34010_state_presave);
 	state_save_register_func_postload(tms34010_state_postload);
 }
@@ -878,13 +894,13 @@ void tms34010_init(void)
 void tms34010_reset(void *param)
 {
 	struct tms34010_config *config = param ? param : &default_config;
+	UINT16 *shiftreg = state.shiftreg;
 
-	/* zap the state and copy in the config pointer */
+	/* zap the state and copy in the config pointer; keep the shiftreg */
+	/* allocated in init, it is registered for save states             */
 	memset(&state, 0, sizeof(state));
 	state.config = config;
-
-	/* allocate the shiftreg */
-	state.shiftreg = malloc(SHIFTREG_SIZE);
+	state.shiftreg = shiftreg;
 
 	/* fetch the initial PC and reset the state */
 	PC = RLONG(0xffffffe0) & 0xfffffff0;
@@ -1198,10 +1214,23 @@ void tms34020_set_irq_callback(int (*callback)(int irqline))
 **	Generate internal interrupt
 *#################################################################################################*/
 
+static void internal_interrupt_callback(int param);
+
+static void queue_internal_interrupt(int cpunum, int type)
+{
+	pending_internal[cpunum] |= type;
+	timer_set(TIME_NOW, cpunum | (type << 8) | ((pending_generation[cpunum] & 0x7f) << 24), internal_interrupt_callback);
+}
+
 static void internal_interrupt_callback(int param)
 {
 	int cpunum = param & 0xff;
-	int type = param >> 8;
+	int type = (param >> 8) & 0xffff;
+
+	/* ignore interrupts queued before a state load, they were re-queued */
+	if (((param >> 24) & 0x7f) != (pending_generation[cpunum] & 0x7f))
+		return;
+	pending_internal[cpunum] &= ~type;
 
 	/* call through to the CPU to generate the int */
 	cpuintrf_push_context(cpunum);
@@ -1553,7 +1582,7 @@ static void dpyint_callback(int cpunum)
 
 	/* set the CPU's context and queue an interrupt */
 	cpuintrf_push_context(cpunum);
-	timer_set(TIME_NOW, cpunum | (TMS34010_DI << 8), internal_interrupt_callback);
+	queue_internal_interrupt(cpunum, TMS34010_DI);
 
 	/* allow a callback so we can update before they are likely to do nasty things */
 	if (state.config->display_int_callback)
@@ -1678,7 +1707,7 @@ WRITE16_HANDLER( tms34010_io_register_w )
 
 			/* NMI issued? */
 			if (data & 0x0100)
-				timer_set(TIME_NOW, cpunum | (TMS34010_NMI << 8), internal_interrupt_callback);
+				queue_internal_interrupt(cpunum, TMS34010_NMI);
 			break;
 
 		case REG_HSTCTLL:
@@ -1715,7 +1744,7 @@ WRITE16_HANDLER( tms34010_io_register_w )
 
 			/* input interrupt? (should really be state-based, but the functions don't exist!) */
 			if (!(oldreg & 0x0008) && (newreg & 0x0008))
-				timer_set(TIME_NOW, cpunum | (TMS34010_HI << 8), internal_interrupt_callback);
+				queue_internal_interrupt(cpunum, TMS34010_HI);
 			else if ((oldreg & 0x0008) && !(newreg & 0x0008))
 				IOREG(REG_INTPEND) &= ~TMS34010_HI;
 			break;
@@ -1845,7 +1874,7 @@ WRITE16_HANDLER( tms34020_io_register_w )
 
 			/* NMI issued? */
 			if (data & 0x0100)
-				timer_set(TIME_NOW, cpunum | (TMS34010_NMI << 8), internal_interrupt_callback);
+				queue_internal_interrupt(cpunum, TMS34010_NMI);
 			break;
 
 		case REG020_HSTCTLL:
@@ -1880,7 +1909,7 @@ WRITE16_HANDLER( tms34020_io_register_w )
 
 			/* input interrupt? (should really be state-based, but the functions don't exist!) */
 			if (!(oldreg & 0x0008) && (newreg & 0x0008))
-				timer_set(TIME_NOW, cpunum | (TMS34010_HI << 8), internal_interrupt_callback);
+				queue_internal_interrupt(cpunum, TMS34010_HI);
 			else if ((oldreg & 0x0008) && !(newreg & 0x0008))
 				IOREG(REG020_INTPEND) &= ~TMS34010_HI;
 			break;
@@ -2150,6 +2179,19 @@ static void tms34010_state_postload(void)
 	tms34010_io_register_w(REG_DPYINT,IOREG(REG_DPYINT),0);
 	set_raster_op();
 	set_pixel_function();
+
+	/* re-queue the internal interrupts that were pending at save time */
+	{
+		int cpunum = cpu_getactivecpu();
+		UINT32 pending = pending_internal[cpunum];
+		int bit;
+
+		pending_generation[cpunum]++;
+		pending_internal[cpunum] = 0;
+		for (bit = 0; bit < 16; bit++)
+			if (pending & (1 << bit))
+				queue_internal_interrupt(cpunum, 1 << bit);
+	}
 }
 
 
