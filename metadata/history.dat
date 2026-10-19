@@ -153222,7 +153222,7 @@ PC [MS Windows] (2005, "Taito Legends")
 $end
 
 
-$info=nzerotea,
+$info=nzeroteam,nzeroteama,nzeroteamb,zerotm2k,
 $bio
 
 New Zero Team (c) 1993 Seibu Kaihatsu.
@@ -182610,7 +182610,7 @@ PC [MS-DOS, CD-ROM]
 $end
 
 
-$info=raidndx,raidndxa,raidndxb,raidndxj,raidndxm,
+$info=raidendx,raidendxg,raidendxpt,raidendxa1,raidendxa2,raidendxk,raidendxu,raidendxnl,raidendxj,raidendxja,raidendxch,r2dx_v33,r2dx_v33_r2,
 $bio
 
 Raiden DX (c) 1994 Seibu Kaihatsu.
@@ -183143,7 +183143,7 @@ Level 15 : Before the boss appears, do not shoot any small tanks. Two small tank
 $end
 
 
-$info=raiden2,raiden2a,raiden2b,raiden2c,raiden2e,
+$info=raiden2,raiden2g,raiden2gb,raiden2hk,raiden2j,raiden2sw,raiden2u,raiden2f,raiden2nl,raiden2es,raiden2i,raiden2au,raiden2e,raiden2eub,raiden2eua,raiden2eg,raiden2eup,raiden2ea,raiden2eu,raiden2k,raiden2dx,
 $bio
 
 Raiden II (c) 1993 Seibu Kaihatsu.
@@ -278372,7 +278372,7 @@ This game is known in Japan as "Gekitsui Oh".
 $end
 
 
-$info=zeroteam,zeroteaa,zeroteab,
+$info=zeroteam,zeroteama,zeroteamb,zeroteamc,zeroteamd,zeroteame,zeroteams,zeroteamsr,
 $bio
 
 Zero Team (c) 1993 Seibu Kaihatsu.
