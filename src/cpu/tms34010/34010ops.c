@@ -617,7 +617,9 @@ static void mmfm_b(void) { MMFM(B,0x10); }
 	COUNT_CYCLES(2);											\
 	{															\
 		INT32 rd = R##DSTREG;									\
-		SET_N(R##REG(rd)^0x80000000);							\
+		/* only the 34020 sets N; on the 34010 MMTM leaves it */	\
+		if (state.is_34020)										\
+			SET_N(R##REG(rd)^0x80000000);						\
 		for (i = 0; i  < 16; i++)								\
 		{														\
 			if (l & 0x8000)										\
