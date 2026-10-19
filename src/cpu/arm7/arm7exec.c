@@ -171,7 +171,7 @@
                     else
                     {
                         /* ASR.. */
-                        //if (insn & THUMB_SHIFT_R) /* Shift right */
+                        /* if (insn & THUMB_SHIFT_R): shift right */
                         {
                             rs = (insn & THUMB_ADDSUB_RS) >> THUMB_ADDSUB_RS_SHIFT;
                             rd = (insn & THUMB_ADDSUB_RD) >> THUMB_ADDSUB_RD_SHIFT;
@@ -221,7 +221,7 @@
                         op2 = insn & THUMB_INSN_IMM;
                         rd = rn - op2;
                         HandleThumbALUSubFlags(rd, rn, op2);
-                        //mame_printf_debug("%08x: xxx Thumb instruction: CMP R%d (%08x), %02x (N=%d, Z=%d, C=%d, V=%d)\n", pc, (insn & THUMB_INSN_IMM_RD) >> THUMB_INSN_IMM_RD_SHIFT, GET_REGISTER(cpustate, (insn & THUMB_INSN_IMM_RD) >> THUMB_INSN_IMM_RD_SHIFT), op2, N_IS_SET(GET_CPSR) ? 1 : 0, Z_IS_SET(GET_CPSR) ? 1 : 0, C_IS_SET(GET_CPSR) ? 1 : 0, V_IS_SET(GET_CPSR) ? 1 : 0);
+                        /* mame_printf_debug("%08x: xxx Thumb instruction: CMP R%d (%08x), %02x (N=%d, Z=%d, C=%d, V=%d)\n", pc, (insn & THUMB_INSN_IMM_RD) >> THUMB_INSN_IMM_RD_SHIFT, GET_REGISTER(cpustate, (insn & THUMB_INSN_IMM_RD) >> THUMB_INSN_IMM_RD_SHIFT), op2, N_IS_SET(GET_CPSR) ? 1 : 0, Z_IS_SET(GET_CPSR) ? 1 : 0, C_IS_SET(GET_CPSR) ? 1 : 0, V_IS_SET(GET_CPSR) ? 1 : 0); */
                     }
                     else
                     {
@@ -238,7 +238,7 @@
                     {
                         rn = GET_REGISTER(cpustate, (insn & THUMB_INSN_IMM_RD) >> THUMB_INSN_IMM_RD_SHIFT);
                         op2 = insn & THUMB_INSN_IMM;
-                        //mame_printf_debug("%08x:  Thumb instruction: SUB R%d, %02x\n", pc, (insn & THUMB_INSN_IMM_RD) >> THUMB_INSN_IMM_RD_SHIFT, op2);
+                        /* mame_printf_debug("%08x:  Thumb instruction: SUB R%d, %02x\n", pc, (insn & THUMB_INSN_IMM_RD) >> THUMB_INSN_IMM_RD_SHIFT, op2); */
                         rd = rn - op2;
                         SET_REGISTER(cpustate, (insn & THUMB_INSN_IMM_RD) >> THUMB_INSN_IMM_RD_SHIFT, rd);
                         HandleThumbALUSubFlags(rd, rn, op2);
@@ -248,7 +248,7 @@
                         rn = GET_REGISTER(cpustate, (insn & THUMB_INSN_IMM_RD) >> THUMB_INSN_IMM_RD_SHIFT);
                         op2 = insn & THUMB_INSN_IMM;
                         rd = rn + op2;
-                        //mame_printf_debug("%08x:  Thumb instruction: ADD R%d, %02x\n", pc, (insn & THUMB_INSN_IMM_RD) >> THUMB_INSN_IMM_RD_SHIFT, op2);
+                        /* mame_printf_debug("%08x:  Thumb instruction: ADD R%d, %02x\n", pc, (insn & THUMB_INSN_IMM_RD) >> THUMB_INSN_IMM_RD_SHIFT, op2); */
                         SET_REGISTER(cpustate, (insn & THUMB_INSN_IMM_RD) >> THUMB_INSN_IMM_RD_SHIFT, rd);
                         HandleThumbALUAddFlags(rd, rn, op2);
                     }
@@ -400,7 +400,7 @@
                                     rd = (insn & THUMB_ADDSUB_RD) >> THUMB_ADDSUB_RD_SHIFT;
                                     op2=(GET_CPSR & C_MASK) ? 1 : 0;
                                     rn=GET_REGISTER(cpustate, rd) + GET_REGISTER(cpustate, rs) + op2;
-                                    HandleThumbALUAddFlags(rn, GET_REGISTER(cpustate, rd), (GET_REGISTER(cpustate, rs))); // ?
+                                    HandleThumbALUAddFlags(rn, GET_REGISTER(cpustate, rd), (GET_REGISTER(cpustate, rs))); /* ? */
                                     SET_REGISTER(cpustate, rd, rn);
                                     break;
                                 case 0x6: /* SBC Rd, Rs */
@@ -408,7 +408,7 @@
                                     rd = (insn & THUMB_ADDSUB_RD) >> THUMB_ADDSUB_RD_SHIFT;
                                     op2=(GET_CPSR & C_MASK) ? 0 : 1;
                                     rn=GET_REGISTER(cpustate, rd) - GET_REGISTER(cpustate, rs) - op2;
-                                    HandleThumbALUSubFlags(rn, GET_REGISTER(cpustate, rd), (GET_REGISTER(cpustate, rs))); //?
+                                    HandleThumbALUSubFlags(rn, GET_REGISTER(cpustate, rd), (GET_REGISTER(cpustate, rs))); /* ? */
                                     SET_REGISTER(cpustate, rd, rn);
                                     break;
                                 case 0x7: /* ROR Rd, Rs */
@@ -506,7 +506,7 @@
                                     {
                                         case 0x1: /* ADD Rd, HRs */
                                             SET_REGISTER(cpustate, rd, GET_REGISTER(cpustate, rd) + GET_REGISTER(cpustate, rs+8));
-                                            // emulate the effects of pre-fetch
+                                            /* emulate the effects of pre-fetch */
                                             if (rs == 7)
                                             {
                                                 SET_REGISTER(cpustate, rd, GET_REGISTER(cpustate, rd) + 4);
@@ -521,7 +521,7 @@
                                             break;
                                         case 0x3: /* Add HRd, HRs */
                                             SET_REGISTER(cpustate, rd+8, GET_REGISTER(cpustate, rd+8) + GET_REGISTER(cpustate, rs+8));
-                                            // emulate the effects of pre-fetch
+                                            /* emulate the effects of pre-fetch */
                                             if (rs == 7)
                                             {
                                                 SET_REGISTER(cpustate, rd+8, GET_REGISTER(cpustate, rd+8) + 4);
@@ -573,7 +573,7 @@
                                 case 0x2: /* MOV */
                                     switch ((insn & THUMB_HIREG_H) >> THUMB_HIREG_H_SHIFT)
                                     {
-                                        case 0x1:       // MOV Rd, Hs
+                                        case 0x1:       /* MOV Rd, Hs */
                                             rs = (insn & THUMB_HIREG_RS) >> THUMB_HIREG_RS_SHIFT;
                                             rd = insn & THUMB_HIREG_RD;
                                             if (rs == 7)
@@ -586,7 +586,7 @@
                                             }
                                             R15 += 2;
                                             break;
-                                        case 0x2:       // MOV Hd, Rs
+                                        case 0x2:       /* MOV Hd, Rs */
                                             rs = (insn & THUMB_HIREG_RS) >> THUMB_HIREG_RS_SHIFT;
                                             rd = insn & THUMB_HIREG_RD;
                                             SET_REGISTER(cpustate, rd + 8, GET_REGISTER(cpustate, rs));
@@ -599,7 +599,7 @@
                                                 R15 &= ~1;
                                             }
                                             break;
-                                        case 0x3:       // MOV Hd, Hs
+                                        case 0x3:       /* MOV Hd, Hs */
                                             rs = (insn & THUMB_HIREG_RS) >> THUMB_HIREG_RS_SHIFT;
                                             rd = insn & THUMB_HIREG_RD;
                                             if (rs == 7)
@@ -781,7 +781,7 @@
                         rn = (insn & THUMB_ADDSUB_RS) >> THUMB_ADDSUB_RS_SHIFT;
                         rd = insn & THUMB_ADDSUB_RD;
                         offs = ((insn & THUMB_LSOP_OFFS) >> THUMB_LSOP_OFFS_SHIFT) << 2;
-                        SET_REGISTER(cpustate, rd, READ32(GET_REGISTER(cpustate, rn) + offs)); // fix
+                        SET_REGISTER(cpustate, rd, READ32(GET_REGISTER(cpustate, rn) + offs)); /* fix */
                         R15 += 2;
                     }
                     else /* Store */
@@ -1111,7 +1111,7 @@
                             fatalerror("%08x: Undefined Thumb instruction: %04x (ARM9 reserved)\n", pc, insn);
                             R15 += 2;
                             break;
-                        case COND_NV:   // SWI (this is sort of a "hole" in the opcode encoding)
+                        case COND_NV:   /* SWI (this is sort of a "hole" in the opcode encoding) */
                             cpustate->pendingSwi = 1;
                             ARM7_CHECKIRQ;
                             break;
@@ -1143,7 +1143,7 @@
                         addr += (insn & THUMB_BLOP_OFFS) << 1;
                         SET_REGISTER(cpustate, 14, (R15 + 2) | 1);
                         R15 = addr;
-                        //R15 += 2;
+                        /* R15 += 2; */
                     }
                     else
                     {
@@ -1246,16 +1246,16 @@
                 case 2:
                 case 3:
                     /* Branch and Exchange (BX) */
-                    if ((insn & 0x0ffffff0) == 0x012fff10)     // bits 27-4 == 000100101111111111110001
+                    if ((insn & 0x0ffffff0) == 0x012fff10)     /* bits 27-4 == 000100101111111111110001 */
                     {
                         R15 = GET_REGISTER(cpustate, insn & 0x0f);
-                        // If new PC address has A0 set, switch to Thumb mode
+                        /* If new PC address has A0 set, switch to Thumb mode */
                         if (R15 & 1) {
                             SET_CPSR(GET_CPSR|T_MASK);
                             R15--;
                         }
                     }
-		    else if ((insn & 0x0ff000f0) == 0x01600010)	// CLZ - v5
+		    else if ((insn & 0x0ff000f0) == 0x01600010)	/* CLZ - v5 */
 		    {
 		    	UINT32 rm = insn&0xf;
 			UINT32 rd = (insn>>12)&0xf;
@@ -1264,7 +1264,7 @@
 
 			R15 += 4;
 		    }
-		    else if ((insn & 0x0ff000f0) == 0x01000050)	// QADD - v5
+		    else if ((insn & 0x0ff000f0) == 0x01000050)	/* QADD - v5 */
 		    {
 		    	INT32 src1 = GET_REGISTER(cpustate, insn&0xf);
 			INT32 src2 = GET_REGISTER(cpustate, (insn>>16)&0xf);
@@ -1275,13 +1275,13 @@
 			SET_REGISTER(cpustate, (insn>>12)&0xf, (INT32)res);
 			R15 += 4;
 		    }
-		    else if ((insn & 0x0ff000f0) == 0x01400050)	// QDADD - v5
+		    else if ((insn & 0x0ff000f0) == 0x01400050)	/* QDADD - v5 */
 		    {
 		    	INT32 src1 = GET_REGISTER(cpustate, insn&0xf);
 			INT32 src2 = GET_REGISTER(cpustate, (insn>>16)&0xf);
 			INT64 res;
 
-			// check if doubling operation will overflow
+			/* check if doubling operation will overflow */
 			res = (INT64)src2 * 2;
 			saturate_qbit_overflow(cpustate, res);
 
@@ -1291,7 +1291,7 @@
 			SET_REGISTER(cpustate, (insn>>12)&0xf, (INT32)res);
 			R15 += 4;
 		    }
-		    else if ((insn & 0x0ff000f0) == 0x01200050)	// QSUB - v5
+		    else if ((insn & 0x0ff000f0) == 0x01200050)	/* QSUB - v5 */
 		    {
 		    	INT32 src1 = GET_REGISTER(cpustate, insn&0xf);
 			INT32 src2 = GET_REGISTER(cpustate, (insn>>16)&0xf);
@@ -1302,13 +1302,13 @@
 			SET_REGISTER(cpustate, (insn>>12)&0xf, (INT32)res);
 			R15 += 4;
 		    }
-		    else if ((insn & 0x0ff000f0) == 0x01600050)	// QDSUB - v5
+		    else if ((insn & 0x0ff000f0) == 0x01600050)	/* QDSUB - v5 */
 		    {
 		    	INT32 src1 = GET_REGISTER(cpustate, insn&0xf);
 			INT32 src2 = GET_REGISTER(cpustate, (insn>>16)&0xf);
 			INT64 res;
 
-			// check if doubling operation will overflow
+			/* check if doubling operation will overflow */
 			res = (INT64)src2 * 2;
 			saturate_qbit_overflow(cpustate, res);
 
@@ -1318,13 +1318,13 @@
 			SET_REGISTER(cpustate, (insn>>12)&0xf, (INT32)res);
 			R15 += 4;
 		    }
-		    else if ((insn & 0x0ff00090) == 0x01000080)	// SMLAxy - v5
+		    else if ((insn & 0x0ff00090) == 0x01000080)	/* SMLAxy - v5 */
 		    {
 		    	INT32 src1 = GET_REGISTER(cpustate, insn&0xf);
 			INT32 src2 = GET_REGISTER(cpustate, (insn>>8)&0xf);
 			INT32 res1;
 
-			// select top and bottom halves of src1/src2 and sign extend if necessary
+			/* select top and bottom halves of src1/src2 and sign extend if necessary */
 			if (insn & 0x20)
 			{
 				src1 >>= 16;
@@ -1351,21 +1351,21 @@
 				}
 			}
 
-			// do the signed multiply
+			/* do the signed multiply */
 			res1 = src1 * src2;
-			// and the accumulate.  NOTE: only the accumulate can cause an overflow, which is why we do it this way.
+			/* and the accumulate.  NOTE: only the accumulate can cause an overflow, which is why we do it this way. */
 			saturate_qbit_overflow(cpustate, (INT64)res1 + (INT64)GET_REGISTER(cpustate, (insn>>12)&0xf));
 
 			SET_REGISTER(cpustate, (insn>>16)&0xf, res1 + GET_REGISTER(cpustate, (insn>>12)&0xf));
 			R15 += 4;
 		    }
-		    else if ((insn & 0x0ff00090) == 0x01400080)	// SMLALxy - v5
+		    else if ((insn & 0x0ff00090) == 0x01400080)	/* SMLALxy - v5 */
 		    {
 		    	INT32 src1 = GET_REGISTER(cpustate, insn&0xf);
 			INT32 src2 = GET_REGISTER(cpustate, (insn>>8)&0xf);
 			INT64 dst;
 
-			// select top and bottom halves of src1/src2 and sign extend if necessary
+			/* select top and bottom halves of src1/src2 and sign extend if necessary */
 			if (insn & 0x20)
 			{
 				src1 >>= 16;
@@ -1395,20 +1395,20 @@
 			dst = (INT64)GET_REGISTER(cpustate, (insn>>12)&0xf);
 			dst |= (INT64)GET_REGISTER(cpustate, (insn>>16)&0xf)<<32;
 
-			// do the multiply and accumulate
+			/* do the multiply and accumulate */
 			dst += (INT64)src1 * (INT64)src2;
 
-			// write back the result
+			/* write back the result */
 			SET_REGISTER(cpustart, (insn>>12)&0xf, (UINT32)(dst&0xffffffff));
 			SET_REGISTER(cpustart, (insn>>16)&0xf, (UINT32)(dst>>32));
 		    }
-		    else if ((insn & 0x0ff00090) == 0x01600080)	// SMULxy - v5
+		    else if ((insn & 0x0ff00090) == 0x01600080)	/* SMULxy - v5 */
 		    {
 		    	INT32 src1 = GET_REGISTER(cpustate, insn&0xf);
 			INT32 src2 = GET_REGISTER(cpustate, (insn>>8)&0xf);
 			INT32 res;
 
-			// select top and bottom halves of src1/src2 and sign extend if necessary
+			/* select top and bottom halves of src1/src2 and sign extend if necessary */
 			if (insn & 0x20)
 			{
 				src1 >>= 16;
@@ -1438,7 +1438,7 @@
 			res = src1 * src2;
 			SET_REGISTER(cpustart, (insn>>16)&0xf, res);
 		    }
-		    else if ((insn & 0x0ff000b0) == 0x012000a0)	// SMULWy - v5
+		    else if ((insn & 0x0ff000b0) == 0x012000a0)	/* SMULWy - v5 */
 		    {
 		    	INT32 src1 = GET_REGISTER(cpustate, insn&0xf);
 			INT32 src2 = GET_REGISTER(cpustate, (insn>>8)&0xf);
@@ -1461,7 +1461,7 @@
 			res >>= 16;
 			SET_REGISTER(cpustart, (insn>>16)&0xf, (UINT32)res);
 		    }
-		    else if ((insn & 0x0ff000b0) == 0x01200080)	// SMLAWy - v5
+		    else if ((insn & 0x0ff000b0) == 0x01200080)	/* SMLAWy - v5 */
 		    {
 		    	INT32 src1 = GET_REGISTER(cpustate, insn&0xf);
 			INT32 src2 = GET_REGISTER(cpustate, (insn>>8)&0xf);
@@ -1484,27 +1484,27 @@
 			res = (INT64)src1 * (INT64)src2;
 			res >>= 16;
 
-			// check for overflow and set the Q bit
+			/* check for overflow and set the Q bit */
 			saturate_qbit_overflow(cpustate, (INT64)src3 + res);
 
-			// do the real accumulate
+			/* do the real accumulate */
 			src3 += (INT32)res;
 
-			// write the result back
+			/* write the result back */
 			SET_REGISTER(cpustart, (insn>>16)&0xf, (UINT32)res);
 		    }
                     else
                     /* Multiply OR Swap OR Half Word Data Transfer */
-                    if ((insn & 0x0e000000) == 0 && (insn & 0x80) && (insn & 0x10))  // bits 27-25=000 bit 7=1 bit 4=1
+                    if ((insn & 0x0e000000) == 0 && (insn & 0x80) && (insn & 0x10))  /* bits 27-25=000 bit 7=1 bit 4=1 */
                     {
                         /* Half Word Data Transfer */
-                        if (insn & 0x60)         // bits = 6-5 != 00
+                        if (insn & 0x60)         /* bits = 6-5 != 00 */
                         {
                             HandleHalfWordDT(cpustate, insn);
                         }
                         else
                         /* Swap */
-                        if (insn & 0x01000000)   // bit 24 = 1
+                        if (insn & 0x01000000)   /* bit 24 = 1 */
                         {
                             HandleSwap(cpustate, insn);
                         }
@@ -1512,7 +1512,7 @@
                         else
                         {
                             /* multiply long */
-                            if (insn & 0x800000) // Bit 23 = 1 for Multiply Long
+                            if (insn & 0x800000) /* Bit 23 = 1 for Multiply Long */
                             {
                                 /* Signed? */
                                 if (insn & 0x00400000)
@@ -1530,13 +1530,13 @@
                     }
                     else
                     /* Data Processing OR PSR Transfer */
-                    if ((insn & 0x0c000000) == 0)   // bits 27-26 == 00 - This check can only exist properly after Multiplication check above
+                    if ((insn & 0x0c000000) == 0)   /* bits 27-26 == 00 - This check can only exist properly after Multiplication check above */
                     {
                         /* PSR Transfer (MRS & MSR) */
-                        if (((insn & 0x00100000) == 0) && ((insn & 0x01800000) == 0x01000000)) // S bit must be clear, and bit 24,23 = 10
+                        if (((insn & 0x00100000) == 0) && ((insn & 0x01800000) == 0x01000000)) /* S bit must be clear, and bit 24,23 = 10 */
                         {
                             HandlePSRTransfer(cpustate, insn);
-                            ARM7_ICOUNT += 2;       // PSR only takes 1 - S Cycle, so we add + 2, since at end, we -3..
+                            ARM7_ICOUNT += 2;       /* PSR only takes 1 - S Cycle, so we add + 2, since at end, we -3.. */
                             R15 += 4;
                         }
                         /* Data Processing */
@@ -1583,17 +1583,17 @@
                 case 0x0f:
                     cpustate->pendingSwi = 1;
                     ARM7_CHECKIRQ;
-                    //couldn't find any cycle counts for SWI
+                    /* couldn't find any cycle counts for SWI */
                     break;
                 /* Undefined */
                 default:
                     cpustate->pendingSwi = 1;
                     ARM7_CHECKIRQ;
-                    ARM7_ICOUNT -= 1;               //undefined takes 4 cycles (page 77)
+                    ARM7_ICOUNT -= 1;               /* undefined takes 4 cycles (page 77) */
                     LOG(("%08x:  Undefined instruction\n",pc-4));
                     L_Next:
                         R15 += 4;
-                        ARM7_ICOUNT +=2;    //Any unexecuted instruction only takes 1 cycle (page 193)
+                        ARM7_ICOUNT +=2;    /* Any unexecuted instruction only takes 1 cycle (page 193) */
             }
         }
 

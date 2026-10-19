@@ -38,7 +38,7 @@
  ***************************************************************************************************/
 /* ARM7_IRQ_LINE .. ARM7_UNDEFINE_EXCEPTION: in arm7.h */
 #define ARM7_NUM_LINES 5
-// Really there's only 1 ABORT Line.. and cpu decides whether it's during data fetch or prefetch, but we let the user specify
+/* Really there's only 1 ABORT Line.. and cpu decides whether it's during data fetch or prefetch, but we let the user specify */
 
 /****************************************************************************************************
  *  ARM7 CORE REGISTERS
@@ -138,12 +138,12 @@ enum
 
 enum
 {
-	eARM_ARCHFLAGS_T	= 1,		// Thumb present
-	eARM_ARCHFLAGS_E	= 2,		// extended DSP operations present (only for v5+)
-	eARM_ARCHFLAGS_J	= 4,		// "Jazelle" (direct execution of Java bytecode)
-	eARM_ARCHFLAGS_MMU	= 8,		// has on-board MMU (traditional ARM style like the SA1110)
-	eARM_ARCHFLAGS_SA	= 16,		// StrongARM extensions (enhanced TLB)
-	eARM_ARCHFLAGS_XSCALE	= 32,		// XScale extensions (CP14, enhanced TLB)
+	eARM_ARCHFLAGS_T	= 1,		/* Thumb present */
+	eARM_ARCHFLAGS_E	= 2,		/* extended DSP operations present (only for v5+) */
+	eARM_ARCHFLAGS_J	= 4,		/* "Jazelle" (direct execution of Java bytecode) */
+	eARM_ARCHFLAGS_MMU	= 8,		/* has on-board MMU (traditional ARM style like the SA1110) */
+	eARM_ARCHFLAGS_SA	= 16,		/* StrongARM extensions (enhanced TLB) */
+	eARM_ARCHFLAGS_XSCALE	= 32		/* XScale extensions (CP14, enhanced TLB) */
 };
 
 #define ARM7CORE_REGS                   \
@@ -162,50 +162,50 @@ enum
 /* CPU state struct */
 typedef struct
 {
-	ARM7CORE_REGS			// these must be included in your cpu specific register implementation
+	ARM7CORE_REGS			/* these must be included in your cpu specific register implementation */
 	ARM7COPRO_REGS
 
-	UINT8 archRev;			// ARM architecture revision (3, 4, and 5 are valid)
-	UINT8 archFlags;		// architecture flags
+	UINT8 archRev;			/* ARM architecture revision (3, 4, and 5 are valid) */
+	UINT8 archFlags;		/* architecture flags */
 
 } arm_state;
 
 /****************************************************************************************************
  *  VARIOUS INTERNAL STRUCS/DEFINES/ETC..
  ***************************************************************************************************/
-// Mode values come from bit 4-0 of CPSR, but we are ignoring bit 4 here, since bit 4 always = 1 for valid modes
+/* Mode values come from bit 4-0 of CPSR, but we are ignoring bit 4 here, since bit 4 always = 1 for valid modes */
 enum
 {
-    eARM7_MODE_USER = 0x0,      // Bit: 4-0 = 10000
-    eARM7_MODE_FIQ  = 0x1,      // Bit: 4-0 = 10001
-    eARM7_MODE_IRQ  = 0x2,      // Bit: 4-0 = 10010
-    eARM7_MODE_SVC  = 0x3,      // Bit: 4-0 = 10011
-    eARM7_MODE_ABT  = 0x7,      // Bit: 4-0 = 10111
-    eARM7_MODE_UND  = 0xb,      // Bit: 4-0 = 11011
-    eARM7_MODE_SYS  = 0xf       // Bit: 4-0 = 11111
+    eARM7_MODE_USER = 0x0,      /* Bit: 4-0 = 10000 */
+    eARM7_MODE_FIQ  = 0x1,      /* Bit: 4-0 = 10001 */
+    eARM7_MODE_IRQ  = 0x2,      /* Bit: 4-0 = 10010 */
+    eARM7_MODE_SVC  = 0x3,      /* Bit: 4-0 = 10011 */
+    eARM7_MODE_ABT  = 0x7,      /* Bit: 4-0 = 10111 */
+    eARM7_MODE_UND  = 0xb,      /* Bit: 4-0 = 11011 */
+    eARM7_MODE_SYS  = 0xf       /* Bit: 4-0 = 11111 */
 };
 
 #define ARM7_NUM_MODES 0x10
 
 static const int thumbCycles[256] =
 {
-//  0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  // 0
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  // 1
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  // 2
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  // 3
-    1, 1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3,  // 4
-    2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,  // 5
-    2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3,  // 6
-    2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3,  // 7
-    2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3,  // 8
-    2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3,  // 9
-    3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,  // a
-    1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 2, 4, 1, 1,  // b
-    2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,  // c
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3,  // d
-    3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,  // e
-    2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2   // f
+/*  0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f */
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  /* 0 */
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  /* 1 */
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  /* 2 */
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  /* 3 */
+    1, 1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3,  /* 4 */
+    2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,  /* 5 */
+    2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3,  /* 6 */
+    2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3,  /* 7 */
+    2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3,  /* 8 */
+    2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3,  /* 9 */
+    3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,  /* a */
+    1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 2, 4, 1, 1,  /* b */
+    2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,  /* c */
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3,  /* d */
+    3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,  /* e */
+    2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2   /* f */
 };
 
 /* 17 processor registers are visible at any given time,
@@ -218,7 +218,7 @@ static const int sRegisterTable[ARM7_NUM_MODES][18] =
         eR0, eR1, eR2, eR3, eR4, eR5, eR6, eR7,
         eR8, eR9, eR10, eR11, eR12,
         eR13, eR14,
-        eR15, eCPSR  // No SPSR in this mode
+        eR15, eCPSR  /* No SPSR in this mode */
     },
     { /* FIQ */
         eR0, eR1, eR2, eR3, eR4, eR5, eR6, eR7,
@@ -238,26 +238,26 @@ static const int sRegisterTable[ARM7_NUM_MODES][18] =
         eR13_SVC, eR14_SVC,
         eR15, eCPSR, eSPSR_SVC
     },
-    {0}, {0}, {0},        // values for modes 4,5,6 are not valid
+    {0}, {0}, {0},        /* values for modes 4,5,6 are not valid */
     { /* ABT */
         eR0, eR1, eR2, eR3, eR4, eR5, eR6, eR7,
         eR8, eR9, eR10, eR11, eR12,
         eR13_ABT, eR14_ABT,
         eR15, eCPSR, eSPSR_ABT
     },
-    {0}, {0}, {0},        // values for modes 8,9,a are not valid!
+    {0}, {0}, {0},        /* values for modes 8,9,a are not valid! */
     { /* UND */
         eR0, eR1, eR2, eR3, eR4, eR5, eR6, eR7,
         eR8, eR9, eR10, eR11, eR12,
         eR13_UND, eR14_UND,
         eR15, eCPSR, eSPSR_UND
     },
-    {0}, {0}, {0},        // values for modes c,d, e are not valid!
+    {0}, {0}, {0},        /* values for modes c,d, e are not valid! */
     { /* SYS */
         eR0, eR1, eR2, eR3, eR4, eR5, eR6, eR7,
         eR8, eR9, eR10, eR11, eR12,
         eR13, eR14,
-        eR15, eCPSR  // No SPSR in this mode
+        eR15, eCPSR  /* No SPSR in this mode */
     }
 };
 
@@ -268,7 +268,7 @@ static const int sRegisterTable[ARM7_NUM_MODES][18] =
 #define Q_BIT   27
 #define I_BIT   7
 #define F_BIT   6
-#define T_BIT   5   // Thumb mode
+#define T_BIT   5   /* Thumb mode */
 
 #define N_MASK  ((UINT32)(1 << N_BIT)) /* Negative flag */
 #define Z_MASK  ((UINT32)(1 << Z_BIT)) /* Zero flag */
@@ -298,7 +298,7 @@ static const int sRegisterTable[ARM7_NUM_MODES][18] =
 #define T_IS_CLEAR(pc)  (!T_IS_SET(pc))
 
 /* Deconstructing an instruction */
-// todo: use these in all places (including dasm file)
+/* todo: use these in all places (including dasm file) */
 #define INSN_COND           ((UINT32)0xf0000000u)
 #define INSN_SDT_L          ((UINT32)0x00100000u)
 #define INSN_SDT_W          ((UINT32)0x00200000u)
@@ -463,10 +463,10 @@ enum
 
 /* Convenience Macros */
 #define R15                     ARM7REG(eR15)
-#define SPSR                    17                     // SPSR is always the 18th register in our 0 based array sRegisterTable[][18]
+#define SPSR                    17                     /* SPSR is always the 18th register in our 0 based array sRegisterTable[][18] */
 #define GET_CPSR                ARM7REG(eCPSR)
 #define SET_CPSR(v)             (GET_CPSR = (v))
-#define MODE_FLAG               0xF                    // Mode bits are 4:0 of CPSR, but we ignore bit 4.
+#define MODE_FLAG               0xF                    /* Mode bits are 4:0 of CPSR, but we ignore bit 4. */
 #define GET_MODE                (GET_CPSR & MODE_FLAG)
 #define SIGN_BIT                ((UINT32)(1 << 31))
 #define SIGN_BITS_DIFFER(a, b)  (((a) ^ (b)) >> 31)

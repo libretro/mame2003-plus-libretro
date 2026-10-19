@@ -235,6 +235,9 @@ WRITE16_HANDLER( pgm_tx_videoram_w );
 WRITE16_HANDLER( pgm_bg_videoram_w );
 VIDEO_START( pgm );
 VIDEO_EOF( pgm );
+WRITE16_HANDLER( pgm_videoregs_w );
+void pgm_video_vblank( void );
+void pgm_video_reset( void );
 VIDEO_UPDATE( pgm );
 void pgm_kov_decrypt(void);
 void pgm_kovsh_decrypt(void);
@@ -460,7 +463,7 @@ static MEMORY_READ16_START( pgm_readmem )
 	{ 0x900000, 0x903fff, MRA16_RAM }, /* Backgrounds */
 	{ 0x904000, 0x905fff, MRA16_RAM }, /* Text Layer */
 	{ 0x907000, 0x9077ff, MRA16_RAM },
-	{ 0xa00000, 0xa011ff, MRA16_RAM },
+	{ 0xa00000, 0xa013ff, MRA16_RAM },
 	{ 0xb00000, 0xb0ffff, MRA16_RAM }, /* Video Regs inc. Zoom Table */
 
 	{ 0xc00002, 0xc00003, soundlatch_word_r },
@@ -487,8 +490,8 @@ static MEMORY_WRITE16_START( pgm_writemem )
 	{ 0x900000, 0x903fff, pgm_bg_videoram_w, &pgm_bg_videoram }, /* Backgrounds */
 	{ 0x904000, 0x905fff, pgm_tx_videoram_w, &pgm_tx_videoram },/* Text Layer */
 	{ 0x907000, 0x9077ff, MWA16_RAM, &pgm_rowscrollram },
-	{ 0xa00000, 0xa011ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16 },
-	{ 0xb00000, 0xb0ffff, MWA16_RAM, &pgm_videoregs }, /* Video Regs inc. Zoom Table */
+	{ 0xa00000, 0xa013ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16 },
+	{ 0xb00000, 0xb0ffff, pgm_videoregs_w, &pgm_videoregs }, /* Video Regs inc. Zoom Table */
 
 	{ 0xc00002, 0xc00003, m68k_l1_w },
 	{ 0xc00004, 0xc00005, soundlatch2_word_w },
@@ -510,7 +513,7 @@ static MEMORY_READ16_START( cavepgm_readmem )
 	{ 0x900000, 0x903fff, MRA16_RAM }, /* Backgrounds */
 	{ 0x904000, 0x905fff, MRA16_RAM }, /* Text Layer */
 	{ 0x907000, 0x9077ff, MRA16_RAM },
-	{ 0xa00000, 0xa011ff, MRA16_RAM },
+	{ 0xa00000, 0xa013ff, MRA16_RAM },
 	{ 0xb00000, 0xb0ffff, MRA16_RAM }, /* Video Regs inc. Zoom Table */
 
 	{ 0xc00002, 0xc00003, soundlatch_word_r },
@@ -538,8 +541,8 @@ static MEMORY_WRITE16_START( cavepgm_writemem )
 	{ 0x900000, 0x903fff, pgm_bg_videoram_w, &pgm_bg_videoram }, /* Backgrounds */
 	{ 0x904000, 0x905fff, pgm_tx_videoram_w, &pgm_tx_videoram },/* Text Layer */
 	{ 0x907000, 0x9077ff, MWA16_RAM, &pgm_rowscrollram },
-	{ 0xa00000, 0xa011ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16 },
-	{ 0xb00000, 0xb0ffff, MWA16_RAM, &pgm_videoregs }, /* Video Regs inc. Zoom Table */
+	{ 0xa00000, 0xa013ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16 },
+	{ 0xb00000, 0xb0ffff, pgm_videoregs_w, &pgm_videoregs }, /* Video Regs inc. Zoom Table */
 
 	{ 0xc00002, 0xc00003, m68k_l1_w },
 	{ 0xc00004, 0xc00005, soundlatch2_word_w },
@@ -563,7 +566,7 @@ static MEMORY_READ16_START( killbld_readmem )
 	{ 0x900000, 0x903fff, MRA16_RAM }, /* Backgrounds */
 	{ 0x904000, 0x905fff, MRA16_RAM }, /* Text Layer */
 	{ 0x907000, 0x9077ff, MRA16_RAM },
-	{ 0xa00000, 0xa011ff, MRA16_RAM },
+	{ 0xa00000, 0xa013ff, MRA16_RAM },
 	{ 0xb00000, 0xb0ffff, MRA16_RAM }, /* Video Regs inc. Zoom Table */
 
 	{ 0xc00002, 0xc00003, soundlatch_word_r },
@@ -591,8 +594,8 @@ static MEMORY_WRITE16_START( killbld_writemem )
 	{ 0x900000, 0x903fff, pgm_bg_videoram_w, &pgm_bg_videoram }, /* Backgrounds */
 	{ 0x904000, 0x905fff, pgm_tx_videoram_w, &pgm_tx_videoram },/* Text Layer */
 	{ 0x907000, 0x9077ff, MWA16_RAM, &pgm_rowscrollram },
-	{ 0xa00000, 0xa011ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16 },
-	{ 0xb00000, 0xb0ffff, MWA16_RAM, &pgm_videoregs }, /* Video Regs inc. Zoom Table */
+	{ 0xa00000, 0xa013ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16 },
+	{ 0xb00000, 0xb0ffff, pgm_videoregs_w, &pgm_videoregs }, /* Video Regs inc. Zoom Table */
 
 	{ 0xc00002, 0xc00003, m68k_l1_w },
 	{ 0xc00004, 0xc00005, soundlatch2_word_w },
@@ -617,7 +620,7 @@ static MEMORY_READ16_START( olds_readmem )
 	{ 0x900000, 0x903fff, MRA16_RAM }, /* Backgrounds */
 	{ 0x904000, 0x905fff, MRA16_RAM }, /* Text Layer */
 	{ 0x907000, 0x9077ff, MRA16_RAM },
-	{ 0xa00000, 0xa011ff, MRA16_RAM },
+	{ 0xa00000, 0xa013ff, MRA16_RAM },
 	{ 0xb00000, 0xb0ffff, MRA16_RAM }, /* Video Regs inc. Zoom Table */
 
 	{ 0xc00002, 0xc00003, soundlatch_word_r },
@@ -645,8 +648,8 @@ static MEMORY_WRITE16_START( olds_writemem )
 	{ 0x900000, 0x903fff, pgm_bg_videoram_w, &pgm_bg_videoram }, /* Backgrounds */
 	{ 0x904000, 0x905fff, pgm_tx_videoram_w, &pgm_tx_videoram },/* Text Layer */
 	{ 0x907000, 0x9077ff, MWA16_RAM, &pgm_rowscrollram },
-	{ 0xa00000, 0xa011ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16 },
-	{ 0xb00000, 0xb0ffff, MWA16_RAM, &pgm_videoregs }, /* Video Regs inc. Zoom Table */
+	{ 0xa00000, 0xa013ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16 },
+	{ 0xb00000, 0xb0ffff, pgm_videoregs_w, &pgm_videoregs }, /* Video Regs inc. Zoom Table */
 
 	{ 0xc00002, 0xc00003, m68k_l1_w },
 	{ 0xc00004, 0xc00005, soundlatch2_word_w },
@@ -1277,20 +1280,20 @@ INPUT_PORTS_START( ddp2 )
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_COIN3 )
 	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_COIN4 )
-//	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON5 ) // test 1p+2p
-	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_UNKNOWN ) //  what should i use?
-	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_SERVICE1 ) // service 1p+2p
-//	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON6 ) // test 3p+4p
-	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN ) // what should i use?
-	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_SERVICE2 ) // service 3p+4p
+/* 	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON5 ) // test 1p+2p */
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_UNKNOWN ) /*  what should i use? */
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_SERVICE1 ) /* service 1p+2p */
+/* 	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON6 ) // test 3p+4p */
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* what should i use? */
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_SERVICE2 ) /* service 3p+4p */
 	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER1)
 	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER2)
 	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER3)
 	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER4)
-	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_UNKNOWN ) // unused?
-	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_UNKNOWN ) // uused?
-	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNKNOWN ) // uused?
-	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN ) // uused?
+	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* unused? */
+	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* uused? */
+	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* uused? */
+	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* uused? */
 
 	PORT_START	/* DSW */
 	PORT_SERVICE( 0x0001, IP_ACTIVE_LOW )
@@ -1368,16 +1371,16 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 
 /*** Machine Driver **********************************************************/
 
-static INTERRUPT_GEN( pgm_interrupt ) {
-	if( cpu_getiloops() == 0 )
-		cpu_set_irq_line(0, 6, HOLD_LINE);
-	else
-		cpu_set_irq_line(0, 4, HOLD_LINE);
+/* IRQ6 at vblank and IRQ4 every 62 lines, as enabled in the video control register (vidhrdw) */
+static INTERRUPT_GEN( pgm_interrupt )
+{
+	pgm_video_vblank();
 }
 
 static MACHINE_INIT( pgm )
 {
     cpu_set_halt_line(1, ASSERT_LINE);
+    pgm_video_reset();
 }
 
 static MACHINE_INIT( olds )
@@ -1398,7 +1401,7 @@ static MACHINE_DRIVER_START( pgm )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M68000, 20000000) /* 20 mhz! verified on real board */
 	MDRV_CPU_MEMORY(pgm_readmem, pgm_writemem)
-	MDRV_CPU_VBLANK_INT(pgm_interrupt,2)
+	MDRV_CPU_VBLANK_INT(pgm_interrupt,1)
 
 	MDRV_CPU_ADD(Z80, 8468000)
 	MDRV_CPU_MEMORY(z80_readmem, z80_writemem)
@@ -1415,7 +1418,7 @@ static MACHINE_DRIVER_START( pgm )
 	MDRV_SCREEN_SIZE(64*8, 64*8)
 	MDRV_VISIBLE_AREA(0*8, 56*8-1, 0*8, 28*8-1)
 	MDRV_GFXDECODE(gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(0x1200/2)
+	MDRV_PALETTE_LENGTH(0x1400/2)
 
 	MDRV_VIDEO_START(pgm)
 	MDRV_VIDEO_EOF(pgm)
@@ -1427,7 +1430,7 @@ static MACHINE_DRIVER_START( cavepgm )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M68000, 20000000) /* 20 mhz! verified on real board */
 	MDRV_CPU_MEMORY(cavepgm_readmem,cavepgm_writemem)
-	MDRV_CPU_VBLANK_INT(pgm_interrupt,2)
+	MDRV_CPU_VBLANK_INT(pgm_interrupt,1)
 
 	MDRV_CPU_ADD(Z80, 8468000)
 	MDRV_CPU_MEMORY(z80_readmem, z80_writemem)
@@ -1446,7 +1449,7 @@ static MACHINE_DRIVER_START( cavepgm )
 	MDRV_SCREEN_SIZE(64*8, 64*8)
 	MDRV_VISIBLE_AREA(0*8, 56*8-1, 0*8, 28*8-1)
 	MDRV_GFXDECODE(gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(0x1200/2)
+	MDRV_PALETTE_LENGTH(0x1400/2)
 
 	MDRV_VIDEO_START(pgm)
 	MDRV_VIDEO_EOF(pgm)
@@ -1458,7 +1461,7 @@ static MACHINE_DRIVER_START( killbld )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M68000, 20000000) /* 20 mhz! verified on real board */
 	MDRV_CPU_MEMORY(killbld_readmem, killbld_writemem)
-	MDRV_CPU_VBLANK_INT(pgm_interrupt,2)
+	MDRV_CPU_VBLANK_INT(pgm_interrupt,1)
 
 	MDRV_CPU_ADD(Z80, 8468000)
 	MDRV_CPU_MEMORY(z80_readmem, z80_writemem)
@@ -1476,7 +1479,7 @@ static MACHINE_DRIVER_START( killbld )
 	MDRV_SCREEN_SIZE(64*8, 64*8)
 	MDRV_VISIBLE_AREA(0*8, 56*8-1, 0*8, 28*8-1)
 	MDRV_GFXDECODE(gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(0x1200/2)
+	MDRV_PALETTE_LENGTH(0x1400/2)
 
 	MDRV_VIDEO_START(pgm)
 	MDRV_VIDEO_EOF(pgm)
@@ -1488,7 +1491,7 @@ static MACHINE_DRIVER_START( olds )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M68000, 20000000) /* 20 mhz! verified on real board */
 	MDRV_CPU_MEMORY(olds_readmem, olds_writemem)
-	MDRV_CPU_VBLANK_INT(pgm_interrupt,2)
+	MDRV_CPU_VBLANK_INT(pgm_interrupt,1)
 
 	MDRV_CPU_ADD(Z80, 8468000)
 	MDRV_CPU_MEMORY(z80_readmem, z80_writemem)
@@ -1506,7 +1509,7 @@ static MACHINE_DRIVER_START( olds )
 	MDRV_SCREEN_SIZE(64*8, 64*8)
 	MDRV_VISIBLE_AREA(0*8, 56*8-1, 0*8, 28*8-1)
 	MDRV_GFXDECODE(gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(0x1200/2)
+	MDRV_PALETTE_LENGTH(0x1400/2)
 
 	MDRV_VIDEO_START(pgm)
 	MDRV_VIDEO_EOF(pgm)
@@ -1936,7 +1939,7 @@ static DRIVER_INIT( killbld )
 	kb_cmd = 0;
 	kb_reg = 0;
 	kb_ptr = 0;
-	memset(kb_regs, 0, 0x10);
+	memset(kb_regs, 0, sizeof(kb_regs));
 
 
 }
@@ -1970,7 +1973,7 @@ UINT32 olds_prot_addr( UINT16 addr );
 UINT32 olds_read_reg( UINT16 addr );
 void olds_write_reg( UINT16 addr, UINT32 val );
 void IGS028_do_dma(UINT16 src, UINT16 dst, UINT16 size, UINT16 mode);
-void olds_protection_calculate_hilo();
+void olds_protection_calculate_hilo(void);
 void olds_protection_calculate_hold(int y, int z);
 READ16_HANDLER( olds_r );
 WRITE16_HANDLER( olds_w );
@@ -2201,7 +2204,7 @@ void olds_protection_calculate_hold(int y, int z) /* calculated in routine $12db
 	olds_prot_hold ^= (olds_prot_hilo & ~0x0408) << 1; /* $81790c */
 }
 
-void olds_protection_calculate_hilo() /* calculated in routine $12dbc2 in olds */
+void olds_protection_calculate_hilo(void) /* calculated in routine $12dbc2 in olds */
 {
 	UINT8 source;
 
@@ -5646,7 +5649,7 @@ ROM_START( dw2001 )
 	ROM_REGION( 0x4000, REGION_CPU3, ROMREGION_ERASEFF )
 	ROM_LOAD( "dw2001_igs027a_japan.bin", 0x000000, 0x004000, CRC(3a79159b) SHA1(0d693c798ce24c6a749669be8c7b1e4633409e49)  )
 	ROM_REGION32_LE( 0x400000, REGION_USER1, ROMREGION_ERASEFF )
-	ROM_LOAD( "dw2001_u12.u12", 0x000000, 0x080000, CRC(973db1ab) SHA1(cc35e1a8534fa5d59d888f530769bae4e08c62ca) ) // external ARM data ROM (encrypted )
+	ROM_LOAD( "dw2001_u12.u12", 0x000000, 0x080000, CRC(973db1ab) SHA1(cc35e1a8534fa5d59d888f530769bae4e08c62ca) ) /* external ARM data ROM (encrypted ) */
 	ROM_REGION( 0x780000, REGION_GFX1, ROMREGION_ERASE00 )
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) /* (BIOS) */
 	ROM_LOAD( "dw2001_u11.u11", 0x400000, 0x200000, CRC(b27cf093) SHA1(7c5736a3d72b89742da1c92b2604d66e48b95e56)  )
@@ -5669,7 +5672,7 @@ ROM_START( dwpc )
 	ROM_REGION( 0x4000, REGION_CPU3, ROMREGION_ERASEFF )
 	ROM_LOAD( "dw2001_igs027a_japan.bin", 0x000000, 0x004000, BAD_DUMP CRC(3a79159b) SHA1(0d693c798ce24c6a749669be8c7b1e4633409e49)  )
 	ROM_REGION32_LE( 0x400000, REGION_USER1, ROMREGION_ERASEFF )
-	ROM_LOAD( "dwpc_v110cn_u12.u12", 0x000000, 0x080000, CRC(5bb1ee6a) SHA1(7844e7eb8c10a5aeb18c6057d9dc2fee7ff822ba) ) // external ARM data ROM (encrypted )
+	ROM_LOAD( "dwpc_v110cn_u12.u12", 0x000000, 0x080000, CRC(5bb1ee6a) SHA1(7844e7eb8c10a5aeb18c6057d9dc2fee7ff822ba) ) /* external ARM data ROM (encrypted ) */
 	ROM_REGION( 0xc80000, REGION_GFX1, ROMREGION_ERASE00 )
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) /* (BIOS) */
 	ROM_LOAD( "dwpc_v110cn_u11.u11", 0x400000, 0x400000, CRC(db219cb8) SHA1(8af5a8dac8db93a7720675c64212293d7eab106d)  )
@@ -5692,7 +5695,7 @@ ROM_START( dwpc101j )
 	ROM_REGION( 0x4000, REGION_CPU3, ROMREGION_ERASEFF )
 	ROM_LOAD( "dw2001_igs027a_japan.bin", 0x000000, 0x004000, CRC(3a79159b) SHA1(0d693c798ce24c6a749669be8c7b1e4633409e49)  )
 	ROM_REGION32_LE( 0x400000, REGION_USER1, ROMREGION_ERASEFF )
-	ROM_LOAD( "dwpc_v100jp_u12.u12", 0x000000, 0x080000, CRC(0d112126) SHA1(2b569b8ef974d1d9906cc052eee63b869c8d4fa4) ) // external ARM data ROM (encrypted )
+	ROM_LOAD( "dwpc_v100jp_u12.u12", 0x000000, 0x080000, CRC(0d112126) SHA1(2b569b8ef974d1d9906cc052eee63b869c8d4fa4) ) /* external ARM data ROM (encrypted ) */
 	ROM_REGION( 0xc80000, REGION_GFX1, ROMREGION_ERASE00 )
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) /* (BIOS) */
 	ROM_LOAD( "dwpc_v100jp_u11.u11", 0x400000, 0x400000, CRC(c29d8831) SHA1(0ae93ef31fffc244111f636d47e5762d3ba23fe5)  )
@@ -6212,9 +6215,9 @@ ROM_START( kovsh )
 	ROM_LOAD( "pgm_t0600.u11", 0x400000, 0x800000, CRC(4acc1ad6) SHA1(0668dbd5e856c2406910c6b7382548b37c631780)  )
 	ROM_REGION( 0xc80000/5*8, REGION_GFX2, ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	ROM_REGION( 0x1e00000, REGION_GFX3, 0 )
-	ROM_LOAD( "pgm_a0600.u1", 0x000000, 0x800000, CRC(d8167834) SHA1(fa55a99629d03b2ea253392352f70d2c8639a991) ) // FIXED BITS (xxxxxxxx1xxxxxxx )
-	ROM_LOAD( "pgm_a0601.u3", 0x800000, 0x800000, CRC(ff7a4373) SHA1(7def9fca7513ad5a117da230bebd2e3c78679041) ) // FIXED BITS (xxxxxxxx1xxxxxxx )
-	ROM_LOAD( "pgm_a0602.u5", 0x1000000, 0x800000, CRC(e7a32959) SHA1(3d0ed684dc5b269238890836b2ce7ef46aa5265b) ) // FIXED BITS (xxxxxxxx1xxxxxxx )
+	ROM_LOAD( "pgm_a0600.u1", 0x000000, 0x800000, CRC(d8167834) SHA1(fa55a99629d03b2ea253392352f70d2c8639a991) ) /* FIXED BITS (xxxxxxxx1xxxxxxx ) */
+	ROM_LOAD( "pgm_a0601.u3", 0x800000, 0x800000, CRC(ff7a4373) SHA1(7def9fca7513ad5a117da230bebd2e3c78679041) ) /* FIXED BITS (xxxxxxxx1xxxxxxx ) */
+	ROM_LOAD( "pgm_a0602.u5", 0x1000000, 0x800000, CRC(e7a32959) SHA1(3d0ed684dc5b269238890836b2ce7ef46aa5265b) ) /* FIXED BITS (xxxxxxxx1xxxxxxx ) */
 	ROM_LOAD( "pgm_a0613.u7", 0x1800000, 0x400000, CRC(ec31abda) SHA1(ee526655369bae63b0ef0730e9768b765c9950fc)  )
 	ROM_LOAD( "pgm_a0604_v200.u9", 0x1a00000, 0x400000, CRC(26b59fd3) SHA1(53219376056f4766dc5236735599d982ceb56b84)  )
 	ROM_REGION( 0x1000000, REGION_GFX4, ROMREGION_ERASE00 )
@@ -6238,9 +6241,9 @@ ROM_START( kovsh103 )
 	ROM_LOAD( "pgm_t0600.u11", 0x400000, 0x800000, CRC(4acc1ad6) SHA1(0668dbd5e856c2406910c6b7382548b37c631780)  )
 	ROM_REGION( 0xc80000/5*8, REGION_GFX2, ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	ROM_REGION( 0x1e00000, REGION_GFX3, 0 )
-	ROM_LOAD( "pgm_a0600.u1", 0x000000, 0x800000, CRC(d8167834) SHA1(fa55a99629d03b2ea253392352f70d2c8639a991) ) // FIXED BITS (xxxxxxxx1xxxxxxx )
-	ROM_LOAD( "pgm_a0601.u3", 0x800000, 0x800000, CRC(ff7a4373) SHA1(7def9fca7513ad5a117da230bebd2e3c78679041) ) // FIXED BITS (xxxxxxxx1xxxxxxx )
-	ROM_LOAD( "pgm_a0602.u5", 0x1000000, 0x800000, CRC(e7a32959) SHA1(3d0ed684dc5b269238890836b2ce7ef46aa5265b) ) // FIXED BITS (xxxxxxxx1xxxxxxx )
+	ROM_LOAD( "pgm_a0600.u1", 0x000000, 0x800000, CRC(d8167834) SHA1(fa55a99629d03b2ea253392352f70d2c8639a991) ) /* FIXED BITS (xxxxxxxx1xxxxxxx ) */
+	ROM_LOAD( "pgm_a0601.u3", 0x800000, 0x800000, CRC(ff7a4373) SHA1(7def9fca7513ad5a117da230bebd2e3c78679041) ) /* FIXED BITS (xxxxxxxx1xxxxxxx ) */
+	ROM_LOAD( "pgm_a0602.u5", 0x1000000, 0x800000, CRC(e7a32959) SHA1(3d0ed684dc5b269238890836b2ce7ef46aa5265b) ) /* FIXED BITS (xxxxxxxx1xxxxxxx ) */
 	ROM_LOAD( "pgm_a0613.u7", 0x1800000, 0x400000, CRC(ec31abda) SHA1(ee526655369bae63b0ef0730e9768b765c9950fc)  )
 	ROM_LOAD( "pgm_a0604_v200.u9", 0x1a00000, 0x400000, CRC(26b59fd3) SHA1(53219376056f4766dc5236735599d982ceb56b84)  )
 	ROM_REGION( 0x1000000, REGION_GFX4, ROMREGION_ERASE00 )
@@ -6264,9 +6267,9 @@ ROM_START( kovsh102 )
 	ROM_LOAD( "pgm_t0600.u11", 0x400000, 0x800000, CRC(4acc1ad6) SHA1(0668dbd5e856c2406910c6b7382548b37c631780)  )
 	ROM_REGION( 0xc80000/5*8, REGION_GFX2, ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	ROM_REGION( 0x1e00000, REGION_GFX3, 0 )
-	ROM_LOAD( "pgm_a0600.u1", 0x000000, 0x800000, CRC(d8167834) SHA1(fa55a99629d03b2ea253392352f70d2c8639a991) ) // FIXED BITS (xxxxxxxx1xxxxxxx )
-	ROM_LOAD( "pgm_a0601.u3", 0x800000, 0x800000, CRC(ff7a4373) SHA1(7def9fca7513ad5a117da230bebd2e3c78679041) ) // FIXED BITS (xxxxxxxx1xxxxxxx )
-	ROM_LOAD( "pgm_a0602.u5", 0x1000000, 0x800000, CRC(e7a32959) SHA1(3d0ed684dc5b269238890836b2ce7ef46aa5265b) ) // FIXED BITS (xxxxxxxx1xxxxxxx )
+	ROM_LOAD( "pgm_a0600.u1", 0x000000, 0x800000, CRC(d8167834) SHA1(fa55a99629d03b2ea253392352f70d2c8639a991) ) /* FIXED BITS (xxxxxxxx1xxxxxxx ) */
+	ROM_LOAD( "pgm_a0601.u3", 0x800000, 0x800000, CRC(ff7a4373) SHA1(7def9fca7513ad5a117da230bebd2e3c78679041) ) /* FIXED BITS (xxxxxxxx1xxxxxxx ) */
+	ROM_LOAD( "pgm_a0602.u5", 0x1000000, 0x800000, CRC(e7a32959) SHA1(3d0ed684dc5b269238890836b2ce7ef46aa5265b) ) /* FIXED BITS (xxxxxxxx1xxxxxxx ) */
 	ROM_LOAD( "pgm_a0613.u7", 0x1800000, 0x400000, CRC(ec31abda) SHA1(ee526655369bae63b0ef0730e9768b765c9950fc)  )
 	ROM_LOAD( "pgm_a0604_v200.u9", 0x1a00000, 0x400000, CRC(26b59fd3) SHA1(53219376056f4766dc5236735599d982ceb56b84)  )
 	ROM_REGION( 0x1000000, REGION_GFX4, ROMREGION_ERASE00 )
@@ -6290,9 +6293,9 @@ ROM_START( kovsh101 )
 	ROM_LOAD( "pgm_t0600.u11", 0x400000, 0x800000, CRC(4acc1ad6) SHA1(0668dbd5e856c2406910c6b7382548b37c631780)  )
 	ROM_REGION( 0xc80000/5*8, REGION_GFX2, ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	ROM_REGION( 0x1e00000, REGION_GFX3, 0 )
-	ROM_LOAD( "pgm_a0600.u1", 0x000000, 0x800000, CRC(d8167834) SHA1(fa55a99629d03b2ea253392352f70d2c8639a991) ) // FIXED BITS (xxxxxxxx1xxxxxxx )
-	ROM_LOAD( "pgm_a0601.u3", 0x800000, 0x800000, CRC(ff7a4373) SHA1(7def9fca7513ad5a117da230bebd2e3c78679041) ) // FIXED BITS (xxxxxxxx1xxxxxxx )
-	ROM_LOAD( "pgm_a0602.u5", 0x1000000, 0x800000, CRC(e7a32959) SHA1(3d0ed684dc5b269238890836b2ce7ef46aa5265b) ) // FIXED BITS (xxxxxxxx1xxxxxxx )
+	ROM_LOAD( "pgm_a0600.u1", 0x000000, 0x800000, CRC(d8167834) SHA1(fa55a99629d03b2ea253392352f70d2c8639a991) ) /* FIXED BITS (xxxxxxxx1xxxxxxx ) */
+	ROM_LOAD( "pgm_a0601.u3", 0x800000, 0x800000, CRC(ff7a4373) SHA1(7def9fca7513ad5a117da230bebd2e3c78679041) ) /* FIXED BITS (xxxxxxxx1xxxxxxx ) */
+	ROM_LOAD( "pgm_a0602.u5", 0x1000000, 0x800000, CRC(e7a32959) SHA1(3d0ed684dc5b269238890836b2ce7ef46aa5265b) ) /* FIXED BITS (xxxxxxxx1xxxxxxx ) */
 	ROM_LOAD( "pgm_a0613.u7", 0x1800000, 0x400000, CRC(ec31abda) SHA1(ee526655369bae63b0ef0730e9768b765c9950fc)  )
 	ROM_LOAD( "pgm_a0604_v200.u9", 0x1a00000, 0x400000, CRC(26b59fd3) SHA1(53219376056f4766dc5236735599d982ceb56b84)  )
 	ROM_REGION( 0x1000000, REGION_GFX4, ROMREGION_ERASE00 )
@@ -6316,9 +6319,9 @@ ROM_START( kovsh100 )
 	ROM_LOAD( "pgm_t0600.u11", 0x400000, 0x800000, CRC(4acc1ad6) SHA1(0668dbd5e856c2406910c6b7382548b37c631780)  )
 	ROM_REGION( 0xc80000/5*8, REGION_GFX2, ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	ROM_REGION( 0x1e00000, REGION_GFX3, 0 )
-	ROM_LOAD( "pgm_a0600.u1", 0x000000, 0x800000, CRC(d8167834) SHA1(fa55a99629d03b2ea253392352f70d2c8639a991) ) // FIXED BITS (xxxxxxxx1xxxxxxx )
-	ROM_LOAD( "pgm_a0601.u3", 0x800000, 0x800000, CRC(ff7a4373) SHA1(7def9fca7513ad5a117da230bebd2e3c78679041) ) // FIXED BITS (xxxxxxxx1xxxxxxx )
-	ROM_LOAD( "pgm_a0602.u5", 0x1000000, 0x800000, CRC(e7a32959) SHA1(3d0ed684dc5b269238890836b2ce7ef46aa5265b) ) // FIXED BITS (xxxxxxxx1xxxxxxx )
+	ROM_LOAD( "pgm_a0600.u1", 0x000000, 0x800000, CRC(d8167834) SHA1(fa55a99629d03b2ea253392352f70d2c8639a991) ) /* FIXED BITS (xxxxxxxx1xxxxxxx ) */
+	ROM_LOAD( "pgm_a0601.u3", 0x800000, 0x800000, CRC(ff7a4373) SHA1(7def9fca7513ad5a117da230bebd2e3c78679041) ) /* FIXED BITS (xxxxxxxx1xxxxxxx ) */
+	ROM_LOAD( "pgm_a0602.u5", 0x1000000, 0x800000, CRC(e7a32959) SHA1(3d0ed684dc5b269238890836b2ce7ef46aa5265b) ) /* FIXED BITS (xxxxxxxx1xxxxxxx ) */
 	ROM_LOAD( "pgm_a0613.u7", 0x1800000, 0x400000, CRC(ec31abda) SHA1(ee526655369bae63b0ef0730e9768b765c9950fc)  )
 	ROM_LOAD( "pgm_a0604_v200.u9", 0x1a00000, 0x400000, CRC(26b59fd3) SHA1(53219376056f4766dc5236735599d982ceb56b84)  )
 	ROM_REGION( 0x1000000, REGION_GFX4, ROMREGION_ERASE00 )

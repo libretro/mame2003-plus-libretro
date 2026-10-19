@@ -59,7 +59,13 @@ int arm7_ICount;
 
 /* the core's inline functions are local to this file */
 #undef INLINE
+#if defined( _MSC_VER )
+#define INLINE static __inline
+#elif defined( __GNUC__ )
 #define INLINE static __inline__
+#else
+#define INLINE static
+#endif
 
 /* ARMv5 helpers the core refers to (CLZ, QADD...): not reached on the ARMv4T */
 INLINE UINT32 count_leading_zeros(UINT32 val)
