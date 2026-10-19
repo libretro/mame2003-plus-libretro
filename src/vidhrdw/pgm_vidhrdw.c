@@ -368,10 +368,16 @@ static void get_pgm_bg_tilemap_tile_info(int tile_index)
 
 static int pgm_irq4_pending, pgm_irq6_pending;
 
+/* the 68000 interface keeps one interrupt level: a CLEAR_LINE on any line
+   drops it, so only the highest pending level is set */
 static void pgm_update_irqs( void )
 {
-	cpu_set_irq_line( 0, 4, pgm_irq4_pending ? ASSERT_LINE : CLEAR_LINE );
-	cpu_set_irq_line( 0, 6, pgm_irq6_pending ? ASSERT_LINE : CLEAR_LINE );
+	if( pgm_irq6_pending )
+		cpu_set_irq_line( 0, 6, ASSERT_LINE );
+	else if( pgm_irq4_pending )
+		cpu_set_irq_line( 0, 4, ASSERT_LINE );
+	else
+		cpu_set_irq_line( 0, 6, CLEAR_LINE );
 }
 
 static void pgm_irq4_tick( int param )
@@ -410,8 +416,6 @@ void pgm_video_reset( void )
 	PGM_CTRL &= ~0x000c;
 	pgm_irq4_pending = pgm_irq6_pending = 0;
 	pgm_update_irqs();
-	/* 62 lines of 264 at the PGM frame rate */
-	timer_adjust( pgm_irq4_timer, TIME_IN_HZ( Machine->drv->frames_per_second * 264.0 / 62.0 ), 0, TIME_IN_HZ( Machine->drv->frames_per_second * 264.0 / 62.0 ) );
 }
 
 static void pgm_video_postload( void )
@@ -437,7 +441,9 @@ VIDEO_START( pgm )
 	memset( pgm_spritebufferram, 0, 0x1000 );
 	pgm_num_sprites = 0;
 
+	/* IRQ4 divider: every 62 lines of 264, running all the time (as MAME) */
 	pgm_irq4_timer = timer_alloc( pgm_irq4_tick );
+	timer_adjust( pgm_irq4_timer, TIME_IN_HZ( Machine->drv->frames_per_second * 264.0 / 62.0 ), 0, TIME_IN_HZ( Machine->drv->frames_per_second * 264.0 / 62.0 ) );
 	pgm_irq4_pending = pgm_irq6_pending = 0;
 
 	state_save_register_UINT16( "pgm_video", 0, "spritebuffer", pgm_spritebufferram, 0x1000 / 2 );
