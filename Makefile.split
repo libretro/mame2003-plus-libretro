@@ -2650,8 +2650,18 @@ SOUNDDEFS += -DHAS_ICS2115=0
 endif
 
 SOURCES_C += \
-	$(CORE_DIR)/lib/mame-chd/chd.c \
 	$(CORE_DIR)/lib/mame-chd/mame_sha1.c
+
+# libchdr: reads the hard disk CHDs (every version, zlib/LZMA/Huffman/FLAC)
+SOURCES_C += \
+	$(CORE_DIR)/lib/libchdr/src/libchdr_bitstream.c \
+	$(CORE_DIR)/lib/libchdr/src/libchdr_cdrom.c \
+	$(CORE_DIR)/lib/libchdr/src/libchdr_chd.c \
+	$(CORE_DIR)/lib/libchdr/src/libchdr_flac.c \
+	$(CORE_DIR)/lib/libchdr/src/libchdr_huffman.c \
+	$(CORE_DIR)/lib/libchdr/deps/lzma/LzFind.c \
+	$(CORE_DIR)/lib/libchdr/deps/lzma/LzmaDec.c \
+	$(CORE_DIR)/lib/libchdr/deps/lzma/LzmaEnc.c
 
 SOURCES_C += \
 	$(CORE_DIR)/libretro-deps/libFLAC/bitreader.c \

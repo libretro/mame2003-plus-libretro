@@ -1,0 +1,35 @@
+libchdr for mame2003-plus
+=========================
+
+Source: https://github.com/rtissera/libchdr, commit 07a7dad (2025-12-26),
+BSD 3-clause (LICENSE.txt). Reads the hard disk CHDs of every version
+(v1-v5) through src/harddisk.c, which opens them with chd_open_core_file()
+on top of the core's own file layer.
+
+Contents
+--------
+include/             libchdr headers and dr_flac.h (public domain / MIT-0)
+src/                 libchdr sources
+deps/lzma/           LZMA SDK 19.00 (public domain), as RetroArch shipped it in
+                     deps/7zip: decoder, plus the encoder property helpers
+                     libchdr uses to configure the decoder. Used instead of the
+                     24.x SDK upstream libchdr bundles, which is not C89.
+
+Local changes
+-------------
+All of them keep the code building with C89 compilers (MSVC 2003-2010):
+
+- #include paths made relative, so the files do not depend on include
+  search order (libretro-common has its own, older, libchdr headers).
+- declarations moved to the start of their blocks, aggregate initializers
+  replaced, // comments turned into /* */, LL constants written as casts.
+- static inline becomes CHD_INLINE (coretypes.h): inline, __inline or
+  nothing, depending on the compiler.
+- Zstandard (zstd and cdzs codecs) is only built with WANT_ZSTD, which the
+  core does not define: the reference decoder needs variadic macros. MAME
+  does not use zstd for hard disk CHDs; such a file fails to open with
+  "unsupported format".
+- libchdr_chd.c: zlib.h is included with __MACTYPES__ defined, since
+  7zTypes.h already declares the same Byte typedef; the unused stdio
+  helpers use plain fseek/ftell.
+- deps/lzma/Precomp.h defines _7ZIP_ST (single-threaded, no LzFindMt).

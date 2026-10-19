@@ -457,7 +457,7 @@ struct mame_bitmap *auto_bitmap_alloc(int width,int height);
 struct mame_bitmap *auto_bitmap_alloc_depth(int width,int height,int depth);
 
 /* disk handling */
-struct chd_file *get_disk_handle(int diskindex);
+struct hard_disk_file *get_disk_handle(int diskindex);
 
 /* ROM processing */
 int rom_load(const struct RomModule *romp);

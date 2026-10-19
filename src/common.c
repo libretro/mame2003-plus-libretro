@@ -16,31 +16,6 @@
 /*#define LOG_LOAD */
 
 
-const char *chd_error_text[] =
-{
-	"CHDERR_NONE",
-	"CHDERR_NO_INTERFACE",
-	"CHDERR_OUT_OF_MEMORY",
-	"CHDERR_INVALID_FILE",
-	"CHDERR_INVALID_PARAMETER",
-	"CHDERR_INVALID_DATA",
-	"CHDERR_FILE_NOT_FOUND",
-	"CHDERR_REQUIRES_PARENT",
-	"CHDERR_FILE_NOT_WRITEABLE",
-	"CHDERR_READ_ERROR",
-	"CHDERR_WRITE_ERROR",
-	"CHDERR_CODEC_ERROR",
-	"CHDERR_INVALID_PARENT",
-	"CHDERR_HUNK_OUT_OF_RANGE",
-	"CHDERR_DECOMPRESSION_ERROR",
-	"CHDERR_COMPRESSION_ERROR",
-	"CHDERR_CANT_CREATE_FILE",
-	"CHDERR_CANT_VERIFY",
-	"CHDERR_NOT_SUPPORTED",
-	"CHDERR_METADATA_NOT_FOUND",
-	"CHDERR_INVALID_METADATA_SIZE",
-	"CHDERR_UNSUPPORTED_VERSION"
-};
 /***************************************************************************
 	Constants
 ***************************************************************************/
@@ -182,7 +157,7 @@ size_t generic_nvram_size;
 data8_t *generic_nvram;
 
 /* disks */
-static struct chd_file *disk_handle[4];
+static struct hard_disk_file *disk_handle[4];
 
 /* system BIOS */
 static int system_bios;
@@ -1051,7 +1026,7 @@ void end_resource_tracking(void)
 
 ***************************************************************************/
 
-struct chd_file *get_disk_handle(int diskindex)
+struct hard_disk_file *get_disk_handle(int diskindex)
 {
 	return disk_handle[diskindex];
 }
@@ -1824,11 +1799,12 @@ static int process_disk_entries(struct rom_load_data *romdata, const struct RomM
 		/* handle files */
 		if (ROMENTRY_ISFILE(romp))
 		{
-			struct chd_file *source, *diff = NULL;
-			struct chd_header header;
+			const struct GameDriver *drv;
+			struct hard_disk_file *disk;
+			mame_file *source = NULL, *diff = NULL;
 			char filename[1024], *c;
-			char acthash[HASH_BUF_SIZE];
-			int err;
+			char datahash[HASH_BUF_SIZE], imagehash[HASH_BUF_SIZE];
+			const char *error;
 
 			/* make the filename of the source */
 			strcpy(filename, ROM_GETNAME(romp));
@@ -1838,83 +1814,66 @@ static int process_disk_entries(struct rom_load_data *romdata, const struct RomM
 			else
 				strcat(filename, ".chd");
 
-			/* first open the source drive */
+			/* look for it in the ROM path, up the chain through the parents */
 			log_cb(RETRO_LOG_INFO, LOGPRE "Opening disk image: %s\n", filename);
-			source = chd_open(filename, 0, NULL);
+			for (drv = Machine->gamedrv; drv != NULL && source == NULL; drv = drv->clone_of)
+				source = mame_fopen(drv->name, filename, FILETYPE_IMAGE, 0);
 			if (!source)
 			{
-				if (chd_get_last_error() == CHDERR_UNSUPPORTED_VERSION)
-					log_cb(RETRO_LOG_ERROR, LOGPRE "%-12s UNSUPPORTED CHD VERSION\n", filename);
-				else
-					log_cb(RETRO_LOG_ERROR, LOGPRE "%-12s NOT FOUND\n", filename);
+				log_cb(RETRO_LOG_ERROR, LOGPRE "%-12s NOT FOUND\n", filename);
 				romdata->errors++;
 				romp++;
 				continue;
 			}
 
-			/* get the header and extract the MD5/SHA1 */
-			header = *chd_get_header(source);
-			hash_data_clear(acthash);
-			hash_data_insert_binary_checksum(acthash, HASH_MD5, header.md5);
-			hash_data_insert_binary_checksum(acthash, HASH_SHA1, header.sha1);
-
-			/* verify the MD5 */
-			if (!hash_data_is_equal(ROM_GETHASHDATA(romp), acthash, 0))
-			{
-				log_cb(RETRO_LOG_ERROR, LOGPRE "%-12s WRONG CHECKSUMS:\n", filename);
-				dump_wrong_and_correct_checksums(romdata, ROM_GETHASHDATA(romp), acthash);
-				romdata->warnings++;
-			}
-
-			/* if not read-only, make the diff file */
+			/* if not read-only, open or create the differencing file */
 			if (!DISK_ISREADONLY(romp))
 			{
-				/* make the filename of the diff */
-				strcpy(filename, ROM_GETNAME(romp));
-				c = strrchr(filename, '.');
+				char diffname[1024];
+
+				strcpy(diffname, ROM_GETNAME(romp));
+				c = strrchr(diffname, '.');
 				if (c)
 					strcpy(c, ".dif");
 				else
-					strcat(filename, ".dif");
+					strcat(diffname, ".dif");
 
-				/* try to open the diff */
-				log_cb(RETRO_LOG_INFO, LOGPRE "Opening differencing image: %s\n", filename);
-				diff = chd_open(filename, 1, source);
+				log_cb(RETRO_LOG_INFO, LOGPRE "Opening differencing image: %s\n", diffname);
+				diff = mame_fopen(NULL, diffname, FILETYPE_IMAGE_DIFF, 1);
 				if (!diff)
 				{
-					/* didn't work; try creating it instead */
-					log_cb(RETRO_LOG_INFO, LOGPRE "Creating differencing image: %s\n", filename);
-					err = chd_create(filename, 0, 0, CHDCOMPRESSION_NONE, source);
-					if (err != CHDERR_NONE)
-					{
-						if (chd_get_last_error() == CHDERR_UNSUPPORTED_VERSION)
-							log_cb(RETRO_LOG_ERROR, LOGPRE "%-12s UNSUPPORTED CHD VERSION\n", filename);
-						else
-							log_cb(RETRO_LOG_ERROR, LOGPRE "%-12s: CAN'T CREATE DIFF FILE     Error code %s\n", filename, chd_error_text[err]);
-						romdata->errors++;
-						romp++;
-						continue;
-					}
-
-					/* open the newly-created diff file */
-					log_cb(RETRO_LOG_INFO, LOGPRE "Opening new differencing image: %s\n", filename);
-					diff = chd_open(filename, 1, source);
-					if (!diff)
-					{
-						if (chd_get_last_error() == CHDERR_UNSUPPORTED_VERSION)
-							log_cb(RETRO_LOG_ERROR, LOGPRE "%-12s UNSUPPORTED CHD VERSION\n", filename);
-						else
-							log_cb(RETRO_LOG_ERROR, LOGPRE "%-12s: CAN'T OPEN DIFF FILE  Error code %s\n", filename, chd_error_text[err]);
-						romdata->errors++;
-						romp++;
-						continue;
-					}
+					log_cb(RETRO_LOG_ERROR, LOGPRE "%-12s: CAN'T OPEN OR CREATE DIFF FILE\n", diffname);
+					mame_fclose(source);
+					romdata->errors++;
+					romp++;
+					continue;
 				}
+			}
+
+			/* open the disk */
+			disk = hard_disk_open(source, diff, &error);
+			if (!disk)
+			{
+				log_cb(RETRO_LOG_ERROR, LOGPRE "%-12s: CAN'T OPEN DISK IMAGE (%s)\n", filename, error);
+				romdata->errors++;
+				romp++;
+				continue;
+			}
+
+			/* verify the checksums: older sets list those of the data (the same for */
+			/* every CHD version of a dump), current MAME the one of a v5 image */
+			hard_disk_get_hashes(disk, datahash, imagehash);
+			if (!hash_data_is_equal(ROM_GETHASHDATA(romp), datahash, 0) &&
+				!hash_data_is_equal(ROM_GETHASHDATA(romp), imagehash, 0))
+			{
+				log_cb(RETRO_LOG_ERROR, LOGPRE "%-12s WRONG CHECKSUMS:\n", filename);
+				dump_wrong_and_correct_checksums(romdata, ROM_GETHASHDATA(romp), datahash);
+				romdata->warnings++;
 			}
 
 			/* we're okay, set the handle */
 			log_cb(RETRO_LOG_DEBUG, LOGPRE "Assigning to handle %d\n", DISK_GETINDEX(romp));
-			disk_handle[DISK_GETINDEX(romp)] = DISK_ISREADONLY(romp) ? source : diff;
+			disk_handle[DISK_GETINDEX(romp)] = disk;
 			romp++;
 		}
 	}
