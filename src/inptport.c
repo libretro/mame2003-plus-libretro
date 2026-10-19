@@ -1001,10 +1001,13 @@ void update_analog_port(int port)
 
 		else if ((delta == 0) && (in->type & IPF_CENTER))
 		{
+			/* return to center at the key speed, as newer MAME does (centerdelta
+			   defaults to keydelta); stop exactly on the center, don't overshoot */
+			int centerdelta = keydelta ? keydelta : 100 / sensitivity;
 			if (current > default_value)
-			delta = -100 / sensitivity;
+				delta = ( current - default_value > centerdelta ) ? -centerdelta : default_value - current;
 			if (current < default_value)
-			delta = 100 / sensitivity;
+				delta = ( default_value - current > centerdelta ) ? centerdelta : default_value - current;
 		}
 
 		/* An analog joystick which is not at zero position (or has just */
