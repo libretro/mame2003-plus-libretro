@@ -134,6 +134,7 @@ CPUS+=I8039@
 CPUS+=I8048@
 CPUS+=N7751@
 CPUS+=I8X41@
+CPUS+=I8051@
 CPUS+=M6800@
 CPUS+=M6801@
 CPUS+=M6802@
@@ -1431,6 +1432,15 @@ SOURCES_C += $(CORE_DIR)/cpu/i8x41/8x41dasm.c
 endif
 else
 CPUDEFS += -DHAS_I8X41=0
+endif
+
+CPU=$(strip $(findstring I8051@,$(CPUS)))
+ifneq ($(CPU),)
+OBJDIRS += $(CORE_DIR)/cpu/i8051
+CPUDEFS += -DHAS_I8051=1
+SOURCES_C += $(CORE_DIR)/cpu/i8051/i8051.c
+else
+CPUDEFS += -DHAS_I8051=0
 endif
 
 CPU=$(strip $(findstring M6800@,$(CPUS)))
