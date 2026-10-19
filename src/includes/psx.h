@@ -17,6 +17,7 @@ INTERRUPT_GEN( psx_vblank );
 extern void psx_gpu_reset( void );
 extern void psx_gpu_read( UINT32 *p_ram, INT32 n_size );
 extern void psx_gpu_write( UINT32 *p_ram, INT32 n_size );
+extern void psx_gpu_list_node_end( void );
 READ32_HANDLER( psx_gpu_r );
 WRITE32_HANDLER( psx_gpu_w );
 
@@ -40,6 +41,7 @@ extern void psx_sio_send( int, data8_t );
 WRITE32_HANDLER( psx_mdec_w );
 READ32_HANDLER( psx_mdec_r );
 extern void psx_machine_init( void );
+extern void psx_machine_cpu_speedups( void );
 extern void psx_driver_init( void );
 
 #define PSX_H ( 1 )

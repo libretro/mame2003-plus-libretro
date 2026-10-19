@@ -1,0 +1,52 @@
+name: build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  linux:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build (unix)
+        run: make -j$(nproc) platform=unix
+
+  aarch64:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install toolchain
+        run: sudo apt-get update && sudo apt-get install -y gcc-aarch64-linux-gnu
+      - name: Build (aarch64, NEON and recompiler paths)
+        run: make -j$(nproc) platform=unix CC=aarch64-linux-gnu-gcc ARCH=arm64
+
+  mingw:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install toolchain
+        run: sudo apt-get update && sudo apt-get install -y gcc-mingw-w64-x86-64
+      - name: Build (Windows, MinGW-w64)
+        run: make -j$(nproc) platform=win64 CC=x86_64-w64-mingw32-gcc
+
+  c89:
+    # MSVC 2003/2005 and old GCC lanes: no // comments, no C99 for loops,
+    # no variadic macros, declarations at the start of a block
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile the System 10/11/12 sources as C89
+        run: |
+          flags=$(make -n platform=unix GIT_VERSION=c89 2>/dev/null | grep -m1 -- '-c -osrc/drivers/namcos11.o' | sed -e 's/^.* src\/drivers\/namcos11.c//')
+          status=0
+          for f in src/cpu/h83002/h83002.c src/cpu/m37710/m37710.c src/cpu/m37710/m37710o0.c \
+                   src/cpu/m37710/m37710o1.c src/cpu/m37710/m37710o2.c src/cpu/m37710/m37710o3.c \
+                   src/sound/c352.c src/cpu/mips/psx_cpu.c src/vidhrdw/psx_vidhrdw.c \
+                   src/machine/psx_machine.c src/drivers/namcos10.c src/drivers/namcos11.c \
+                   src/drivers/namcos12.c; do
+            echo "== $f"
+            gcc -fsyntax-only $flags -std=c89 -pedantic -Wno-long-long \
+              -Werror=declaration-after-statement -Werror=variadic-macros "$f" || status=1
+          done
+          exit $status

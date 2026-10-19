@@ -315,6 +315,9 @@ int YM3526_num(const struct MachineSound *msound) { return ((struct YM3526interf
 int Y8950_clock(const struct MachineSound *msound) { return ((struct Y8950interface*)msound->sound_interface)->baseclock; }
 int Y8950_num(const struct MachineSound *msound) { return ((struct Y8950interface*)msound->sound_interface)->num; }
 #endif
+#if (HAS_C352)
+int C352_clock(const struct MachineSound *msound) { return ((struct C352interface*)msound->sound_interface)->clock; }
+#endif
 #if (HAS_YMZ280B)
 int YMZ280B_clock(const struct MachineSound *msound) { return ((struct YMZ280Binterface*)msound->sound_interface)->baseclock[0]; }
 int YMZ280B_num(const struct MachineSound *msound) { return ((struct YMZ280Binterface*)msound->sound_interface)->num; }
@@ -977,6 +980,18 @@ struct snd_interface sndintf[] =
 		0,
 		C140_sh_start,
 		C140_sh_stop,
+		0,
+		0
+	},
+#endif
+#if (HAS_C352)
+	{
+		SOUND_C352,
+		"C352",
+		0,
+		C352_clock,
+		C352_sh_start,
+		C352_sh_stop,
 		0,
 		0
 	},
