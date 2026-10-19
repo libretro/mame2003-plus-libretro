@@ -256,6 +256,12 @@ enum
 #if (HAS_PSXCPU)
 	CPU_PSXCPU,
 #endif
+#if (HAS_H83002)
+	CPU_H83002,
+#endif
+#if (HAS_M37702)
+	CPU_M37702,
+#endif
 #if (HAS_ASAP)
 	CPU_ASAP,
 #endif
