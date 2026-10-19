@@ -561,7 +561,7 @@ void pgm_ddp2_decrypt(void)
 	if ((i & 0x000030) == 0x000010 && (i & 0x180000) != 0x080000) x ^= 0x0004;
 #define IGS27_CRYPT3_ALT2 \
 	if ((i & 0x000030) == 0x000010) x ^= 0x0004;
-// ket - due to address starting at 0 and not 100000/2!
+/* ket - due to address starting at 0 and not 100000/2! */
 #define IGS27_CRYPT3_ALT3 \
 	if ((i & 0x080030) == 0x000010) x ^= 0x0004;
 #define IGS27_CRYPT4 \
@@ -661,7 +661,7 @@ static const UINT8 svgpcb_tab[0x100] = {
 	0xd4, 0xfb, 0xa6, 0x65, 0x92, 0xd1, 0x0a, 0xfa, 0xc1, 0x63, 0x90, 0xe1, 0xd5, 0x07, 0x6d, 0x62
 };
 
-static const UINT8 happy6in1_tab[256] = { // IGS0008RD1031215
+static const UINT8 happy6in1_tab[256] = { /* IGS0008RD1031215 */
 	0x49, 0x47, 0x53, 0x30, 0x30, 0x30, 0x38, 0x52, 0x44, 0x31, 0x30, 0x33, 0x31, 0x32, 0x31, 0x35,
 	0x14, 0xd6, 0x37, 0x5c, 0x5e, 0xc3, 0xd3, 0x62, 0x96, 0x3d, 0xfb, 0x47, 0xf0, 0xcb, 0xbf, 0xb0,
 	0x60, 0xa1, 0xc2, 0x3d, 0x90, 0xd0, 0x58, 0x56, 0x22, 0xac, 0xdd, 0x39, 0x27, 0x7e, 0x58, 0x44,
@@ -711,7 +711,7 @@ void pgm_kov2_decrypt(void)
 		UINT16 x = src[i];
 
 		IGS27_CRYPT1_ALT
-		// NO CRYPT2
+		/* NO CRYPT2 */
 		IGS27_CRYPT3
 		IGS27_CRYPT4_ALT
 		IGS27_CRYPT5_ALT
@@ -747,7 +747,7 @@ void pgm_kov2p_decrypt(void)
 	}
 }
 
-void pgm_mm_decrypt(void) // and dw2001
+void pgm_mm_decrypt(void) /* and dw2001 */
 {
 	int i;
 	data16_t *src = (data16_t *)memory_region(REGION_USER1);
@@ -908,12 +908,12 @@ void pgm_svgpcb_decrypt(void)
 	{
 		UINT16 x = src[i];
 
-		IGS27_CRYPT1_ALT; // ok?
-		IGS27_CRYPT2 // ok?
+		IGS27_CRYPT1_ALT; /* ok? */
+		IGS27_CRYPT2 /* ok? */
 		IGS27_CRYPT3
-		IGS27_CRYPT4 // ok?
-		IGS27_CRYPT5  // ok?
-		IGS27_CRYPT6_ALT // ok?
+		IGS27_CRYPT4 /* ok? */
+		IGS27_CRYPT5  /* ok? */
+		IGS27_CRYPT6_ALT /* ok? */
 		IGS27_CRYPT7
 		IGS27_CRYPT8_ALT
 
