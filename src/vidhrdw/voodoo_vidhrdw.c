@@ -2996,10 +2996,12 @@ if (s == 0 && t == 0)
 			tbaseaddr += t * twidth + (s & 0xfc);
 if (s == 0 && t == 0)	
 	log_cb(RETRO_LOG_DEBUG, LOGPRE " -> %06X = %08X\n", tbaseaddr, data);
-		dest[BYTE4_XOR_LE(tbaseaddr + 0)] = (data >> 0) & 0xff;
-		dest[BYTE4_XOR_LE(tbaseaddr + 1)] = (data >> 8) & 0xff;
-		dest[BYTE4_XOR_LE(tbaseaddr + 2)] = (data >> 16) & 0xff;
-		dest[BYTE4_XOR_LE(tbaseaddr + 3)] = (data >> 24) & 0xff;
+		/* texture RAM is addressed linearly: the rasterizer reads texel n */
+		/* at byte n, so no host endian swizzle here (it broke big endian) */
+		dest[tbaseaddr + 0] = (data >> 0) & 0xff;
+		dest[tbaseaddr + 1] = (data >> 8) & 0xff;
+		dest[tbaseaddr + 2] = (data >> 16) & 0xff;
+		dest[tbaseaddr + 3] = (data >> 24) & 0xff;
 	}
 	else
 	{
@@ -3008,8 +3010,8 @@ if (s == 0 && t == 0)
 		tbaseaddr += t * twidth + s;
 if (s == 0 && t == 0)	
 	log_cb(RETRO_LOG_DEBUG, LOGPRE " -> %06X = %08X\n", tbaseaddr*2, data);
-		dest[BYTE_XOR_LE(tbaseaddr + 0)] = (data >> 0) & 0xffff;
-		dest[BYTE_XOR_LE(tbaseaddr + 1)] = (data >> 16) & 0xffff;
+		dest[tbaseaddr + 0] = (data >> 0) & 0xffff;
+		dest[tbaseaddr + 1] = (data >> 16) & 0xffff;
 	}
 }
 
