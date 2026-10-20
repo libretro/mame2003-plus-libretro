@@ -28,5 +28,7 @@ WRITE16_HANDLER( SCSP_1_w );
 /* MIDI I/O access (used for comms on Model 2/3)*/
 WRITE16_HANDLER( SCSP_MidiIn );
 READ16_HANDLER( SCSP_MidiOutR );
+int SCSP_MidiInFree(void);
+int SCSP_MidiOutAvail(void);
 
 #endif

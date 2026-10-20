@@ -9,7 +9,8 @@
 
 	Unsupported:
 		- FM mode (VF3 uses it, Hanagumi might late in the title song...)
-		- on-board programmable DSP and related functionality
+
+	The effect DSP is in scspdsp.c (from current MAME).
 
 	ChangeLog:
 	* November 25, 2003 (ES) Fixed buggy timers and envelope overflows.
@@ -35,8 +36,10 @@ static data32_t IrqTimBC=0;
 static data32_t IrqMidi=0;
 
 static data8_t MidiOutW=0,MidiOutR=0;
-static data8_t MidiStack[8];
+static data8_t MidiStack[32];	/* 32 bytes, as current MAME */
+static data8_t MidiOutStack[16];	/* sent by the sound CPU (Model 2), apart from the received bytes */
 static data8_t MidiW=0,MidiR=0;
+static int ReadPopsMidi=0;	/* a register read of the MIDI data byte (not a read-modify-write) */
 
 static data32_t FNS_Table[0x400];
 
@@ -65,6 +68,13 @@ static void dma_scsp(void); 		/*SCSP DMA transfer function*/
 
 /* include the LFO handling code*/
 #include "scsplfo.c"
+
+/* the effect DSP */
+#include "scspdsp.c"
+
+/* slot sends to the DSP inputs (MIXS), one buffer per input */
+#define SCSP_MAXSAMPLES	44100
+static signed int *MixsBuf;
 
 /*
 	SCSP features 32 programmable slots
@@ -193,6 +203,8 @@ struct _SCSP
 		data8_t datab[0x30];
 	} udata;
 	struct _SLOT Slots[32];
+	struct _SCSPDSP DSP;
+	int MvolSet;		/* MVOL written: the output follows it */
 	unsigned char *SCSPRAM;
 	char Master;
 	void (*Int68kCB)(int irq);
@@ -216,10 +228,11 @@ void CheckPendingIRQ(void)
 {
 	data32_t pend=SCSP[0].udata.data[0x20/2];
 	data32_t en=SCSP[0].udata.data[0x1e/2];
+	/* MIDI in: pending while the input FIFO has bytes, raised when enabled (current MAME) */
 	if(MidiW!=MidiR)
 	{
-		SCSP[0].Int68kCB(IrqMidi);
-		return;
+		SCSP[0].udata.data[0x20/2]|=8;
+		pend|=8;
 	}
 	if(!pend)
 		return;
@@ -239,6 +252,12 @@ void CheckPendingIRQ(void)
 		if(en&0x100)
 		{
 			SCSP[0].Int68kCB(IrqTimBC);
+			return;
+		}
+	if(pend&8)
+		if(en&8)
+		{
+			SCSP[0].Int68kCB(IrqMidi);
 			return;
 		}
 
@@ -394,6 +413,8 @@ static void SCSP_Init(int n, struct SCSPinterface *intf)
 		}
 
 		SCSPs[i].SCSPRAM = memory_region(intf->region[i]);
+		SCSPDSP_Init(&SCSPs[i].DSP, (UINT16 *)SCSPs[i].SCSPRAM, memory_region_length(intf->region[i]));
+		SCSPs[i].MvolSet=0;
 	}
 
 	for(i=0;i<0x400;++i)
@@ -477,6 +498,8 @@ static void SCSP_Init(int n, struct SCSPinterface *intf)
 	buffertmpr=(signed int*) auto_malloc(44100*sizeof(signed int));
 	memset(buffertmpl,0,44100*sizeof(signed int));
 	memset(buffertmpr,0,44100*sizeof(signed int));
+	MixsBuf=(signed int*) auto_malloc(16*SCSP_MAXSAMPLES*sizeof(signed int));
+	memset(MixsBuf,0,16*SCSP_MAXSAMPLES*sizeof(signed int));
 
 	/* no "pend"*/
 	SCSP[0].udata.data[0x20/2] = 0;
@@ -533,9 +556,21 @@ static void SCSP_UpdateReg(int reg)
 {
 	switch(reg&0x3f)
 	{
+		case 0x0:
+		case 0x1:
+			/* master volume: applied once written (current MAME) */
+			SCSP->MvolSet=1;
+			break;
+		case 0x2:
+		case 0x3:
+			SCSP->DSP.RBL=(8*1024)<<RBL(SCSP);	/* 8 / 16 / 32 / 64 kwords */
+			SCSP->DSP.RBP=RBP(SCSP);
+			break;
 		case 0x6:
 		case 0x7:
-			SCSP_MidiIn(0, SCSP->udata.data[0x6/2]&0xff, 0);
+			/* MIDI out: to the host (Model 2), not back into the MIDI in queue */
+			MidiOutStack[MidiOutW++]=SCSP->udata.data[0x6/2]&0xff;
+			MidiOutW&=15;
 			break;
 		case 0x12:
 		case 0x13:
@@ -574,6 +609,10 @@ static void SCSP_UpdateReg(int reg)
 			if(SCSP->Master)
 			{
 				SCSP->udata.data[0x20/2]&=~SCSP->udata.data[0x22/2];
+				/* acknowledged sources drop their line first (current MAME
+				   ResetInterrupts), then whatever is still pending is raised */
+				if(SCSP->udata.data[0x22/2]&0x1e8)
+					SCSP[0].Int68kCB(0);
 				CheckPendingIRQ();
 			}
 			break;
@@ -605,15 +644,32 @@ static void SCSP_UpdateRegR(int reg)
 		case 4:
 		case 5:
 			{
-				unsigned short v=SCSP->udata.data[0x5/2];
-				v&=0xff00;
-				v|=MidiStack[MidiR];
-				if(MidiR!=MidiW)
+				/* MOFUL/MOEMP/MIOVF/MIFUL/MIEMP and MIBUF, the oldest byte in the input
+				   FIFO; only reading MIBUF takes the byte (current MAME) */
+				unsigned short v=MidiStack[MidiR];
+				if(((MidiOutW+1)&15)==MidiOutR)
+					v|=0x1000;
+				if(MidiOutR==MidiOutW)
+					v|=0x0800;
+				if(((MidiW+1)&31)==MidiR)
+					v|=0x0200;
+				if(MidiR==MidiW)
+					v|=0x0100;
+				SCSP->udata.data[0x4/2]=v;
+				if(ReadPopsMidi)
 				{
-					++MidiR;
-					MidiR&=7;
+					if(MidiR!=MidiW)
+					{
+						++MidiR;
+						MidiR&=31;
+					}
+					if(MidiR==MidiW)
+					{
+						/* input FIFO empty: no more MIDI interrupt */
+						SCSP->udata.data[0x20/2]&=~8;
+						CheckPendingIRQ();
+					}
 				}
-				SCSP->udata.data[0x5/2]=v;
 			}
 			break;
 		case 8:
@@ -649,6 +705,21 @@ static void SCSP_w16(unsigned int addr,unsigned short val)
 			SCSP_UpdateReg(addr&0xff);
 		}
 	}
+	else if(addr>=0x700 && addr<0xc00)
+	{
+		/* DSP: COEF, MADRS, microprogram. 0x7c0-0x7ff is not a mirror of
+		   MADRS: Dead or Alive clears it after loading MADRS */
+		if(addr<0x780)
+			SCSP->DSP.COEF[(addr-0x700)/2]=(INT16)val;
+		else if(addr<0x7c0)
+			SCSP->DSP.MADRS[(addr-0x780)/2]=val;
+		else if(addr>=0x800)
+		{
+			SCSP->DSP.MPRO[(addr-0x800)/2]=val;
+			if(addr==0xbf0)
+				SCSPDSP_Start(&SCSP->DSP);
+		}
+	}
 }
 
 static unsigned short SCSP_r16(unsigned int addr)
@@ -672,6 +743,28 @@ static unsigned short SCSP_r16(unsigned int addr)
 			SCSP_UpdateRegR(addr&0xff);
 		}
 		v= *((unsigned short *) (SCSP->udata.datab+((addr&0xff))));
+	}
+	else if(addr>=0x700)
+	{
+		/* DSP */
+		if(addr<0x780)
+			v=SCSP->DSP.COEF[(addr-0x700)/2];
+		else if(addr<0x7c0)
+			v=SCSP->DSP.MADRS[(addr-0x780)/2];
+		else if(addr<0x800)
+			v=0;
+		else if(addr<0xc00)
+			v=SCSP->DSP.MPRO[(addr-0x800)/2];
+		else if(addr<0xe00)
+			v=(addr&2) ? (SCSP->DSP.TEMP[(addr>>2)&0x7f]&0xffff) : ((UINT32)SCSP->DSP.TEMP[(addr>>2)&0x7f]>>16);
+		else if(addr<0xe80)
+			v=(addr&2) ? (SCSP->DSP.MEMS[(addr>>2)&0x1f]&0xffff) : ((UINT32)SCSP->DSP.MEMS[(addr>>2)&0x1f]>>16);
+		else if(addr<0xec0)
+			v=(addr&2) ? (SCSP->DSP.MIXS[(addr>>2)&0xf]&0xffff) : ((UINT32)SCSP->DSP.MIXS[(addr>>2)&0xf]>>16);
+		else if(addr<0xee0)
+			v=SCSP->DSP.EFREG[(addr-0xec0)/2];
+		else if(addr<0xee4)
+			v=SCSP->DSP.EXTS[(addr-0xee0)/2];
 	}
 	return v;
 }
@@ -719,6 +812,8 @@ void SCSP_TimersAddTicks(int ticks)
 }
 
 signed int *bufl1,*bufr1;
+static signed int *mixs1;	/* this slot's DSP input, NULL without send */
+static unsigned int EncM;	/* TL and IMXL of that send */
 #define SCSPNAME(_8bit,lfo,alfo,loop) \
 static void SCSP_Update##_8bit##lfo##alfo##loop(struct _SLOT *slot,unsigned int Enc,unsigned int nsamples)
 
@@ -799,6 +894,11 @@ SCSPNAME(_8bit,lfo,alfo,loop)\
 		\
 		sample=(sample*EG_Update(slot))>>SHIFT;\
 	\
+		if(mixs1)\
+		{\
+			*mixs1+=(sample*LPANTABLE[EncM])>>(SHIFT-2);\
+			++mixs1;\
+		}\
 		*bufl1=*bufl1 + ((sample*LPANTABLE[Enc])>>SHIFT);\
 		*bufr1=*bufr1 + ((sample*RPANTABLE[Enc])>>SHIFT);\
 		++bufl1;\
@@ -860,6 +960,13 @@ static void SCSP_DoMasterSamples(int chip, int nsamples)
 
 			if(PCM8B(slot))
 				mode|=0x10;
+			if(!SCSP->DSP.Stopped && IMXL(slot))
+			{
+				mixs1=MixsBuf+ISEL(slot)*SCSP_MAXSAMPLES;
+				EncM=((TL(slot))<<0x0)|((IMXL(slot))<<0xd);
+			}
+			else
+				mixs1=NULL;
 			SCSPUpdateModes[mode](slot,Enc,nsamples);
 		}
 	}
@@ -870,8 +977,37 @@ static void SCSP_DoMasterSamples(int chip, int nsamples)
 	bufl1=buffertmpl;
 	for(s=0;s<nsamples;++s)
 	{
-		signed int smpl=*bufl1>>2;
-		signed int smpr=*bufr1>>2;
+		signed int smpl=*bufl1;
+		signed int smpr=*bufr1;
+
+		if(!SCSP->DSP.Stopped)
+		{
+			struct _SCSPDSP *DSP=&SCSP->DSP;
+			int i;
+			for(i=0;i<16;++i)
+			{
+				DSP->MIXS[i]=MixsBuf[i*SCSP_MAXSAMPLES+s];
+				MixsBuf[i*SCSP_MAXSAMPLES+s]=0;
+			}
+			SCSPDSP_Step(DSP);
+			for(i=0;i<16;++i)
+			{
+				struct _SLOT *slot=SCSP->Slots+i;
+				if(EFSDL(slot))
+				{
+					unsigned short Enc=((EFPAN(slot))<<0x8)|((EFSDL(slot))<<0xd);
+					smpl+=(DSP->EFREG[i]*LPANTABLE[Enc])>>SHIFT;
+					smpr+=(DSP->EFREG[i]*RPANTABLE[Enc])>>SHIFT;
+				}
+			}
+		}
+		smpl>>=2;
+		smpr>>=2;
+		if(SCSP->MvolSet && MVOL(SCSP)!=15)
+		{
+			smpl=smpl*MVOL(SCSP)/15;
+			smpr=smpr*MVOL(SCSP)/15;
+		}
 
 		if (!chip)
 		{
@@ -997,11 +1133,15 @@ void SCSP_sh_stop(void)
 
 READ16_HANDLER( SCSP_0_r )
 {
+	data16_t v;
 	SCSP = &SCSPs[0];
 
 	stream_update(SCSPs[0].stream, 0);
 
-	return SCSP_r16(offset*2);
+	ReadPopsMidi = !(mem_mask & 0x00ff);
+	v = SCSP_r16(offset*2);
+	ReadPopsMidi = 0;
+	return v;
 }
 
 WRITE16_HANDLER( SCSP_0_w )
@@ -1070,14 +1210,29 @@ WRITE16_HANDLER( SCSP_1_w )
 WRITE16_HANDLER( SCSP_MidiIn )
 {
 	MidiStack[MidiW++]=data;
-	MidiW&=7;
+	MidiW&=31;
+	CheckPendingIRQ();
+}
+
+/* free room in the MIDI in queue */
+int SCSP_MidiInFree(void)
+{
+	return 31 - ((MidiW - MidiR) & 31);
+}
+
+/* bytes sent by the sound CPU waiting to be read */
+int SCSP_MidiOutAvail(void)
+{
+	return (MidiOutW - MidiOutR) & 15;
 }
 
 READ16_HANDLER( SCSP_MidiOutR )
 {
 	unsigned char val;
 
-	val=MidiStack[MidiR++];
-	MidiR&=7;
+	if (MidiOutR == MidiOutW)
+		return 0;
+	val=MidiOutStack[MidiOutR++];
+	MidiOutR&=15;
 	return val;
 }

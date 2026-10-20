@@ -323,6 +323,18 @@ enum
 #if (HAS_E132XS)
 	CPU_E132XS,
 #endif
+#if (HAS_I960)
+	CPU_I960,
+#endif
+#if (HAS_MB86233)
+	CPU_MB86233,
+#endif
+#if (HAS_MB86235)
+	CPU_MB86235,
+#endif
+#if (HAS_ADSP21062)
+	CPU_ADSP21062,
+#endif
 
     CPU_COUNT
 };

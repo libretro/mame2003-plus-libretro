@@ -168,6 +168,10 @@ CPUS+=Z8000@
 CPUS+=TMS32010@
 CPUS+=TMS32025@
 CPUS+=TMS32031@
+CPUS+=I960@
+CPUS+=MB86233@
+CPUS+=MB86235@
+CPUS+=ADSP21062@
 CPUS+=CCPU@
 CPUS+=ADSP2100@
 CPUS+=ADSP2101@
@@ -1047,6 +1051,9 @@ SOURCES_C += \
 	$(CORE_DIR)/drivers/n8080.c \
 	$(CORE_DIR)/drivers/mirax.c \
 	$(CORE_DIR)/machine/model1_machine.c $(CORE_DIR)/vidhrdw/model1_vidhrdw.c $(CORE_DIR)/drivers/model1.c \
+	$(CORE_DIR)/machine/model2_machine.c $(CORE_DIR)/vidhrdw/model2_vidhrdw.c $(CORE_DIR)/drivers/model2.c \
+	$(CORE_DIR)/sndhrdw/segadsb.c $(CORE_DIR)/sound/mpeg_audio.c \
+	$(CORE_DIR)/machine/sega315_5881.c $(CORE_DIR)/machine/sega315_5838.c \
 	$(CORE_DIR)/drivers/calorie.c \
 	$(CORE_DIR)/machine/mc8123.c \
 	$(CORE_DIR)/machine/namcoio_machine.c \
@@ -1837,6 +1844,42 @@ SOURCES_C += $(CORE_DIR)/cpu/tms32025/32025dsm.c
 endif
 else
 CPUDEFS += -DHAS_TMS32025=0
+endif
+
+CPU=$(strip $(findstring MB86233@,$(CPUS)))
+ifneq ($(CPU),)
+OBJDIRS += $(CORE_DIR)/cpu/mb86233
+CPUDEFS += -DHAS_MB86233=1
+SOURCES_C += $(CORE_DIR)/cpu/mb86233/mb86233.c
+else
+CPUDEFS += -DHAS_MB86233=0
+endif
+
+CPU=$(strip $(findstring MB86235@,$(CPUS)))
+ifneq ($(CPU),)
+OBJDIRS += $(CORE_DIR)/cpu/mb86235
+CPUDEFS += -DHAS_MB86235=1
+SOURCES_C += $(CORE_DIR)/cpu/mb86235/mb86235.c
+else
+CPUDEFS += -DHAS_MB86235=0
+endif
+
+CPU=$(strip $(findstring ADSP21062@,$(CPUS)))
+ifneq ($(CPU),)
+OBJDIRS += $(CORE_DIR)/cpu/sharc
+CPUDEFS += -DHAS_ADSP21062=1
+SOURCES_C += $(CORE_DIR)/cpu/sharc/sharc.c
+else
+CPUDEFS += -DHAS_ADSP21062=0
+endif
+
+CPU=$(strip $(findstring I960@,$(CPUS)))
+ifneq ($(CPU),)
+OBJDIRS += $(CORE_DIR)/cpu/i960
+CPUDEFS += -DHAS_I960=1
+SOURCES_C += $(CORE_DIR)/cpu/i960/i960.c
+else
+CPUDEFS += -DHAS_I960=0
 endif
 
 CPU=$(strip $(findstring TMS32031@,$(CPUS)))

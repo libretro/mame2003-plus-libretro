@@ -121,6 +121,18 @@
 #if (HAS_TMS32025)
 #include "cpu/tms32025/tms32025.h"
 #endif
+#if (HAS_I960)
+#include "cpu/i960/i960.h"
+#endif
+#if (HAS_MB86233)
+#include "cpu/mb86233/mb86233.h"
+#endif
+#if (HAS_MB86235)
+#include "cpu/mb86235/mb86235.h"
+#endif
+#if (HAS_ADSP21062)
+#include "cpu/sharc/sharc.h"
+#endif
 #if (HAS_TMS32031)
 #include "cpu/tms32031/tms32031.h"
 #endif
@@ -651,6 +663,22 @@ const struct cpu_interface cpuintrf[] =
 #endif
 #if (HAS_E132XS)
 	CPU0(E132XS,   e132xs, 	 1,0,1.00, 32, 32bedw,	  0,32,BE,2, 6	),
+#endif
+#if (HAS_I960)
+	#define i960_ICount i960_icount
+	CPU0(I960,     i960,	 4,  0,1.00,32,32ledw,	  0,32,LE,4,12	),
+#endif
+#if (HAS_MB86233)
+	#define mb86233_ICount mb86233_icount
+	CPU0(MB86233,  mb86233,	 0,  0,1.00,32,32ledw,	  0,32,LE,4, 4	),
+#endif
+#if (HAS_MB86235)
+	#define mb86235_ICount mb86235_icount
+	CPU0(MB86235,  mb86235,	 0,  0,1.00,32,32ledw,	  0,32,LE,8, 8	),
+#endif
+#if (HAS_ADSP21062)
+	#define sharc_ICount sharc_icount
+	CPU0(ADSP21062, sharc,	 3,  0,1.00,32,32ledw,	  0,32,LE,4, 8	),
 #endif
 
 };
