@@ -9,7 +9,8 @@
     SLJIT_MAME_SUPPORTED is 1 on the hosts the recompilers support:
     little-endian x86 and ARM, 64-bit (x86-64, AArch64) and 32-bit (x86,
     ARMv6/ARMv7/Thumb-2), except on systems that forbid or restrict
-    run-time code generation. Elsewhere it is 0 and sljit is not built.
+    run-time code generation or have no mmap (3DS, PS Vita). Elsewhere it
+    is 0 and sljit is not built.
 
 ***************************************************************************/
 
@@ -21,6 +22,18 @@
 #endif
 #if defined(IOS) || defined(__IOS__) || (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE) || \
 	defined(__SWITCH__) || defined(HAVE_LIBNX) || defined(_XBOX) || defined(__WINRT__)
+#define SLJIT_MAME_NO_JIT
+#endif
+/* consoles whose C library has no mmap/pthreads (sljit's executable memory
+   allocator needs them): 3DS (devkitARM), PS Vita (VitaSDK) */
+#if defined(_3DS) || defined(ARM11) || defined(VITA) || defined(__vita__) || defined(__psp2__)
+#define SLJIT_MAME_NO_JIT
+#endif
+/* ARM before v6 (Miyoo, ARMv5TE): sljit's ARM back end emits ARMv6 code */
+#if defined(__arm__) && ( (defined(__ARM_ARCH) && __ARM_ARCH < 6) || \
+	defined(__ARM_ARCH_4__) || defined(__ARM_ARCH_4T__) || defined(__ARM_ARCH_5__) || \
+	defined(__ARM_ARCH_5T__) || defined(__ARM_ARCH_5E__) || defined(__ARM_ARCH_5TE__) || \
+	defined(__ARM_ARCH_5TEJ__) )
 #define SLJIT_MAME_NO_JIT
 #endif
 /* MSVC before 2013 (the 2003-2010 lanes): no recompiler, the interpreter is used */
