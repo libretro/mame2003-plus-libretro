@@ -5830,3 +5830,43 @@ unsigned mips3_dasm(char *buffer, unsigned pc)
 	return 4;
 #endif
 }
+
+
+/*###################################################################################################
+**	OPTIONAL SPEEDUPS (see mips3.h)
+**
+**	This x86 recompiler is built instead of mips3.c when X86_MIPS3_DRC is set (32-bit x86 hosts).
+**	The speedups declared in mips3.h live in mips3.c; here they are accepted and ignored, so
+**	drivers that request them (Killer Instinct) still link and run, just without them.
+**#################################################################################################*/
+
+void mips3_add_fastram(offs_t start, offs_t end, int readonly, void *base)
+{
+	(void)start; (void)end; (void)readonly; (void)base;
+}
+
+void mips3_add_fastram_wait(offs_t start, offs_t end, int readonly, void *base, int wait)
+{
+	(void)start; (void)end; (void)readonly; (void)base; (void)wait;
+}
+
+void mips3_set_cause_poll_skip(int enable)
+{
+	(void)enable;
+}
+
+void mips3_add_poll_read(offs_t start, offs_t end)
+{
+	(void)start; (void)end;
+}
+
+void mips3_set_jit(int enable)
+{
+	(void)enable;
+}
+
+int mips3_jit_available(void)
+{
+	/* no sljit recompiler in this build: the "MIPS Dynarec" core option stays hidden */
+	return 0;
+}
