@@ -14897,34 +14897,34 @@ chopperb:0:E409:AA:000:Infinite Circle Bombs PL2
 chopperb:0:E409:FF:000:Infinite Atomic Bombs PL2
 
 ; [ Choplifter ]
-chplft:0:C02D:95:000:Infinite Lives
-chplft:0:E118:C8:000:Infinite Fuel
-chplft:0:C303:41:000:Invincibility
-chplft:0:C084:01:000:Always Have Prisoners
-chplft:0:C085:20:001:Finish Level Level Now!
-chplft:0:C083:00:001:No dead hostages
-chplft:0:C084:08:001:Max. load hostages = 08
-chplft:0:C084:20:001:Max. load hostages = 20
+choplift:0:C02D:95:000:Infinite Lives
+choplift:0:E118:C8:000:Infinite Fuel
+choplift:0:C303:41:000:Invincibility
+choplift:0:C084:01:000:Always Have Prisoners
+choplift:0:C085:20:001:Finish Level Level Now!
+choplift:0:C083:00:001:No dead hostages
+choplift:0:C084:08:001:Max. load hostages = 08
+choplift:0:C084:20:001:Max. load hostages = 20
 
 ; [ Choplifter (alternate) ]
-chplftb:0:C02D:95:000:Infinite Lives
-chplftb:0:E118:C8:000:Infinite Fuel
-chplftb:0:C303:41:000:Invincibility
-chplftb:0:C084:01:000:Always Have Prisoners
-chplftb:0:C085:20:001:Finish Level Level Now!
-chplftb:0:C083:00:001:No dead hostages
-chplftb:0:C084:08:001:Max. load hostages = 08
-chplftb:0:C084:20:001:Max. load hostages = 20
+chopliftu:0:C02D:95:000:Infinite Lives
+chopliftu:0:E118:C8:000:Infinite Fuel
+chopliftu:0:C303:41:000:Invincibility
+chopliftu:0:C084:01:000:Always Have Prisoners
+chopliftu:0:C085:20:001:Finish Level Level Now!
+chopliftu:0:C083:00:001:No dead hostages
+chopliftu:0:C084:08:001:Max. load hostages = 08
+chopliftu:0:C084:20:001:Max. load hostages = 20
 
 ; [ Choplifter (bootleg) ]
-chplftbl:0:C02D:95:000:Infinite Lives PL1
-chplftbl:0:E118:C8:000:Infinite Fuel
-chplftbl:0:C303:41:000:Invincibility
-chplftbl:0:C084:01:000:Always Have Prisoners
-chplftbl:0:C085:20:001:Finish Level Level Now!
-chplftbl:0:C083:00:001:No dead hostages
-chplftbl:0:C084:08:001:Max. load hostages = 08
-chplftbl:0:C084:20:001:Max. load hostages = 20
+chopliftbl:0:C02D:95:000:Infinite Lives PL1
+chopliftbl:0:E118:C8:000:Infinite Fuel
+chopliftbl:0:C303:41:000:Invincibility
+chopliftbl:0:C084:01:000:Always Have Prisoners
+chopliftbl:0:C085:20:001:Finish Level Level Now!
+chopliftbl:0:C083:00:001:No dead hostages
+chopliftbl:0:C084:08:001:Max. load hostages = 08
+chopliftbl:0:C084:20:001:Max. load hostages = 20
 
 ; [ Chequered Flag ]
 chqflag:0:05C6:63:000:Infinite Credits
