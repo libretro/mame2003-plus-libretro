@@ -186,6 +186,7 @@ void mips3drc_set_options(UINT8 cpunum, UINT32 opts);
 /* optional speedups for a single MIPS3 CPU, off by default; set them up in DRIVER_INIT */
 /* plain RAM accessed through a direct pointer (no handlers may sit in the range) */
 void mips3_add_fastram(offs_t start, offs_t end, int readonly, void *base);
+void mips3_add_fastram_wait(offs_t start, offs_t end, int readonly, void *base, int wait);
 /* skip, exactly, the whole passes of loops waiting for an interrupt in Cause (see mips3.c) */
 void mips3_set_cause_poll_skip(int enable);
 /* loads from this range, into $zero, have no side effects (they may sit in such a loop) */

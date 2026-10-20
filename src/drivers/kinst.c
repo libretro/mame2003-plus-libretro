@@ -258,6 +258,8 @@ static READ32_HANDLER( kinst_speedup_r )
 }
 
 
+#define KINST_ROM_WAIT		128		/* cycles per data read from the boot EPROM */
+
 static void kinst_install_speedup(void)
 {
 	const struct kinst_speedup_info *info;
@@ -287,8 +289,11 @@ static void kinst_install_speedup(void)
 	mips3_add_fastram(0x00000000, 0x00000fff, 0, rambase2 + 0x90000/4);
 	mips3_add_fastram(0x00001000, 0x0007ffff, 0, rambase1 + 0x1000/4);
 	/* the boot ROM, read only: the game calls its routines (and they can be recompiled) */
-	mips3_add_fastram(0x9fc00000, 0x9fc7ffff, 1, rombase);
-	mips3_add_fastram(0xbfc00000, 0xbfc7ffff, 1, rombase);
+	/* data reads from the boot EPROM have wait states (128 cycles, as FBNeo): */
+	/* the boot (blue screen) then takes about 7 seconds instead of 1, and the */
+	/* DCS has time to start the attract mode music, which was missing */
+	mips3_add_fastram_wait(0x9fc00000, 0x9fc7ffff, 1, rombase, KINST_ROM_WAIT);
+	mips3_add_fastram_wait(0xbfc00000, 0xbfc7ffff, 1, rombase, KINST_ROM_WAIT);
 
 	/* DCS sound: the boot code's NOP delay loops skipped exactly, and the */
 	/* banked sound ROM read through a pointer */
