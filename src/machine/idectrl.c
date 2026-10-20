@@ -261,7 +261,7 @@ static INLINE void signal_delayed_interrupt(struct ide_state *ide, double time, 
  *
  *************************************/
 
-int ide_controller_init_custom(int which, struct ide_interface *intf, struct chd_file *diskhandle)
+int ide_controller_init_custom(int which, struct ide_interface *intf, struct hard_disk_file *diskhandle)
 {
 	struct ide_state *ide = &idestate[which];
 	const struct hard_disk_info *hdinfo;
@@ -275,7 +275,7 @@ int ide_controller_init_custom(int which, struct ide_interface *intf, struct chd
 	ide->intf = intf;
 
 	/* set MAME harddisk handle */
-	ide->disk = hard_disk_open(diskhandle);
+	ide->disk = diskhandle;
 
 	/* get and copy the geometry */
 	if (ide->disk)

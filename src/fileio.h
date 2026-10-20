@@ -79,6 +79,10 @@ int osd_get_path_info(int pathtype, int pathindex, const char *filename);
 /* Attempt to open a file with the given name and mode using the specified path type */
 FILE* osd_fopen(int pathtype, int pathindex, const char *filename, const char *mode);
 
+/* Rename a file in the folder of the given path type, replacing newname if it */
+/* exists; returns non-zero on success */
+int osd_rename(int pathtype, const char *oldname, const char *newname);
+
 int osd_create_directory(const char *dir);
 
 

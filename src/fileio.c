@@ -307,6 +307,32 @@ FILE* osd_fopen(int pathtype, int pathindex, const char *filename, const char *m
 
 
 /***************************************************************************
+	osd_rename
+***************************************************************************/
+
+int osd_rename(int pathtype, const char *oldname, const char *newname)
+{
+   char dir[PATH_MAX_LENGTH] = {0};
+   char from[PATH_MAX_LENGTH] = {0};
+   char to[PATH_MAX_LENGTH] = {0};
+
+   osd_get_path(pathtype, dir);
+   snprintf(from, PATH_MAX_LENGTH, "%s%c%s", dir, PATH_DEFAULT_SLASH_C(), oldname);
+   snprintf(to, PATH_MAX_LENGTH, "%s%c%s", dir, PATH_DEFAULT_SLASH_C(), newname);
+
+   /* rename() does not replace an existing file everywhere */
+   remove(to);
+   if (rename(from, to) != 0)
+   {
+      log_cb(RETRO_LOG_WARN, LOGPRE "(osd_rename) failed to rename %s to %s\n", from, to);
+      return 0;
+   }
+   return 1;
+}
+
+
+
+/***************************************************************************
 	mame_fopen_rom
 ***************************************************************************/
 
