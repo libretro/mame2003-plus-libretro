@@ -3616,94 +3616,94 @@ ROM_END
 ROM_START( shtngmst )
 	ROM_REGION( 0x20000, REGION_CPU1, 0 ) /* 128k for code */
 	ROM_LOAD("epr-7100.ic18", 0x00000, 0x8000, CRC(268ecb1d) SHA1(a9274c9718f7244235cc6df76331d6a0b7e4e4c8) )
-	ROM_LOAD( "epr7101",      0x10000, 0x8000, CRC(ebf5ff72) SHA1(13ae06e3a81cf00b80ec939d5baf30143d61d480) )
-	ROM_LOAD( "epr7102",      0x18000, 0x8000, CRC(c890a4ad) SHA1(4b59d37902ace3a69b380ff40652ee37c85f0e9d) )
+	ROM_LOAD( "epr-7101.ic91",      0x10000, 0x8000, CRC(ebf5ff72) SHA1(13ae06e3a81cf00b80ec939d5baf30143d61d480) )
+	ROM_LOAD( "epr-7102.ic92",      0x18000, 0x8000, CRC(c890a4ad) SHA1(4b59d37902ace3a69b380ff40652ee37c85f0e9d) )
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* 64k for sound cpu */
-	ROM_LOAD( "epr7043",      0x0000, 0x8000, CRC(99a368ab) SHA1(a9451f39ee2613e5c3e2791d4d8d837b4a3ab666) )
+	ROM_LOAD( "epr-7043.ic126",      0x0000, 0x8000, CRC(99a368ab) SHA1(a9451f39ee2613e5c3e2791d4d8d837b4a3ab666) )
 
 	ROM_REGION( 0x1000, REGION_CPU3, 0 ) /* 8751 MCU */
 	ROM_LOAD( "315-5159a.ic74", 0x0000, 0x1000, CRC(1f774912) SHA1(34d12756735514bea5a513fdf441ae93318747b2) )
 
 	ROM_REGION( 0x18000, REGION_GFX1, ROMREGION_DISPOSE )
-	ROM_LOAD( "epr7040",      0x00000, 0x8000, CRC(f30769fa) SHA1(366c1fbe4e1c8943b209f6c831c9a6b7e4372105) )
-	ROM_LOAD( "epr7041",      0x08000, 0x8000, CRC(f3e273f9) SHA1(b8715c528299dc1e4f0c19c50d91ca9861a423a1) )
-	ROM_LOAD( "epr7042",      0x10000, 0x8000, CRC(6841c917) SHA1(6553843eea0131eb7b5a9aa29dddf641e41d8cc3) )
+	ROM_LOAD( "epr-7040.ic4",      0x00000, 0x8000, CRC(f30769fa) SHA1(366c1fbe4e1c8943b209f6c831c9a6b7e4372105) )
+	ROM_LOAD( "epr-7041.ic5",      0x08000, 0x8000, CRC(f3e273f9) SHA1(b8715c528299dc1e4f0c19c50d91ca9861a423a1) )
+	ROM_LOAD( "epr-7042.ic6",      0x10000, 0x8000, CRC(6841c917) SHA1(6553843eea0131eb7b5a9aa29dddf641e41d8cc3) )
 
 	ROM_REGION( 0x40000, REGION_GFX2, ROMREGION_ERASEFF )
-	ROM_LOAD( "epr7110",   0x00000, 0x8000, CRC(5d1a5048) SHA1(d1626ab1981080451c912df7e4ad7f76c0cb3459) )
-	ROM_LOAD( "epr7106",   0x08000, 0x8000, CRC(ae7ab7a2) SHA1(153691e468d29d21b95f1fbffb6896a3140d7e14) )
-	ROM_LOAD( "epr7108",   0x10000, 0x8000, CRC(816180ac) SHA1(a59670ec77d4359041ebf12dae5b74add55d82ac) )
-	ROM_LOAD( "epr7104",   0x18000, 0x8000, CRC(84a679c5) SHA1(19a21b1b33fc215f606093bfd61d597e4bd0b3d0) )
-	ROM_LOAD( "epr7109",   0x20000, 0x8000, CRC(097f7481) SHA1(4d93ea01b811af1cd3e136116625e4b8e06358a2) )
-	ROM_LOAD( "epr7105",   0x28000, 0x8000, CRC(13111729) SHA1(57ca2b945db36b056d0e40a39456fd8bf9d0a3ec) )
-	ROM_LOAD( "epr7107",   0x30000, 0x8000, CRC(8f50ea24) SHA1(781687e202dedca7b72c9bd5b97d9d46fcfd601c) )
+	ROM_LOAD( "epr-7110.ic26",   0x00000, 0x8000, CRC(5d1a5048) SHA1(d1626ab1981080451c912df7e4ad7f76c0cb3459) )
+	ROM_LOAD( "epr-7106.ic22",   0x08000, 0x8000, CRC(ae7ab7a2) SHA1(153691e468d29d21b95f1fbffb6896a3140d7e14) )
+	ROM_LOAD( "epr-7108.ic24",   0x10000, 0x8000, CRC(816180ac) SHA1(a59670ec77d4359041ebf12dae5b74add55d82ac) )
+	ROM_LOAD( "epr-7104.ic20",   0x18000, 0x8000, CRC(84a679c5) SHA1(19a21b1b33fc215f606093bfd61d597e4bd0b3d0) )
+	ROM_LOAD( "epr-7109.ic25",   0x20000, 0x8000, CRC(097f7481) SHA1(4d93ea01b811af1cd3e136116625e4b8e06358a2) )
+	ROM_LOAD( "epr-7105.ic21",   0x28000, 0x8000, CRC(13111729) SHA1(57ca2b945db36b056d0e40a39456fd8bf9d0a3ec) )
+	ROM_LOAD( "epr-7107.ic23",   0x30000, 0x8000, CRC(8f50ea24) SHA1(781687e202dedca7b72c9bd5b97d9d46fcfd601c) )
 
 	ROM_REGION( 0x0400, REGION_PROMS, 0 )
-	ROM_LOAD( "epr7113",      0x0000, 0x0100, CRC(5c0e1360) SHA1(2011b3eef2a58f9bd3f3b1bb9e6c201db85727c2) ) /* palette red component */
-	ROM_LOAD( "epr7112",      0x0100, 0x0100, CRC(46fbd351) SHA1(1fca7fbc5d5f8e13e58bbac735511bd0af392446) ) /* palette green component */
-	ROM_LOAD( "epr7111",      0x0200, 0x0100, CRC(8123b6b9) SHA1(fb2c5498f0603b5cd270402a738c891a85453666) ) /* palette blue component */
-	ROM_LOAD( "epr5317",      0x0300, 0x0100, CRC(648350b8) SHA1(c7986aa9127ef5b50b845434cb4e81dff9861cd2) ) /* timing? (not used) */
+	ROM_LOAD( "epr-7113.ic20",      0x0000, 0x0100, CRC(5c0e1360) SHA1(2011b3eef2a58f9bd3f3b1bb9e6c201db85727c2) ) /* palette red component */
+	ROM_LOAD( "epr-7112.ic14",      0x0100, 0x0100, CRC(46fbd351) SHA1(1fca7fbc5d5f8e13e58bbac735511bd0af392446) ) /* palette green component */
+	ROM_LOAD( "epr-7111.ic8",      0x0200, 0x0100, CRC(8123b6b9) SHA1(fb2c5498f0603b5cd270402a738c891a85453666) ) /* palette blue component */
+	ROM_LOAD( "pr5317.ic37",      0x0300, 0x0100, CRC(648350b8) SHA1(c7986aa9127ef5b50b845434cb4e81dff9861cd2) ) /* timing? (not used) */
 ROM_END
 
-ROM_START( chplft )
+ROM_START( choplift )
 	ROM_REGION( 0x20000, REGION_CPU1, 0 ) /* 128k for code */
-	ROM_LOAD( "epr-7124.90",	0x00000, 0x8000, CRC(678d5c41) SHA1(7553979f78270c2ddc5b3f3ebf7817ead8e08de7) )
-	ROM_LOAD( "epr-7125.91",	0x10000, 0x8000, CRC(f5283498) SHA1(1ad40f6d7b4cd18212ee56917240c0796f1a4ec2) )
-	ROM_LOAD( "epr-7126.92",	0x18000, 0x8000, CRC(dbd192ab) SHA1(03d280c82599a14fc6a2065d57c6241cdc6f1143) )
+	ROM_LOAD( "epr-7124.ic90",	0x00000, 0x8000, CRC(678d5c41) SHA1(7553979f78270c2ddc5b3f3ebf7817ead8e08de7) )
+	ROM_LOAD( "epr-7125.ic91",	0x10000, 0x8000, CRC(f5283498) SHA1(1ad40f6d7b4cd18212ee56917240c0796f1a4ec2) )
+	ROM_LOAD( "epr-7126.ic92",	0x18000, 0x8000, CRC(dbd192ab) SHA1(03d280c82599a14fc6a2065d57c6241cdc6f1143) )
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* 64k for sound cpu */
-	ROM_LOAD( "epr-7130.126",	0x0000, 0x8000, CRC(346af118) SHA1(ef579818a45b8ebb276d5832092b26e232d5a737) )
+	ROM_LOAD( "epr-7130.ic126",	0x0000, 0x8000, CRC(346af118) SHA1(ef579818a45b8ebb276d5832092b26e232d5a737) )
 
 	ROM_REGION( 0x1000, REGION_CPU3, 0 ) /* 8751 MCU */
 	ROM_LOAD( "315-5151.ic74",	0x0000, 0x1000, CRC(1377a6ef) SHA1(b85acd7292e5480c98af1a0492b6b5d3f9b1716c) )
 
 	ROM_REGION( 0x18000, REGION_GFX1, ROMREGION_DISPOSE )
-	ROM_LOAD( "epr-7127.4",		0x00000, 0x8000, CRC(1e708f6d) SHA1(b975e13bdc44105e7a15c2694e3ec53b60e23e5e) )
-	ROM_LOAD( "epr-7128.5",		0x08000, 0x8000, CRC(b922e787) SHA1(16087671ec7de25f749b5fd66409d48ef7b35820) )
-	ROM_LOAD( "epr-7129.6",		0x10000, 0x8000, CRC(bd3b6e6e) SHA1(c66f21b98cb8fc61a9318041ac1812c13099d974) )
+	ROM_LOAD( "epr-7127.ic4",		0x00000, 0x8000, CRC(1e708f6d) SHA1(b975e13bdc44105e7a15c2694e3ec53b60e23e5e) )
+	ROM_LOAD( "epr-7128.ic5",		0x08000, 0x8000, CRC(b922e787) SHA1(16087671ec7de25f749b5fd66409d48ef7b35820) )
+	ROM_LOAD( "epr-7129.ic6",		0x10000, 0x8000, CRC(bd3b6e6e) SHA1(c66f21b98cb8fc61a9318041ac1812c13099d974) )
 
 	ROM_REGION( 0x20000, REGION_GFX2, 0 ) /* 128k for sprites data */
-	ROM_LOAD( "epr-7121.87",	0x00000, 0x8000, CRC(f2b88f73) SHA1(2b06da1beabbea82d502fbe12f6ec3ef26056edd) )
-	ROM_LOAD( "epr-7120.86",	0x08000, 0x8000, CRC(517d7fd3) SHA1(3fb5c00224920c3f62fb86e82caf0fee2293e1e2) )
-	ROM_LOAD( "epr-7123.89",	0x10000, 0x8000, CRC(8f16a303) SHA1(5f2465505f001dc052e9de4cf66bc1d53fc8c7da) )
-	ROM_LOAD( "epr-7122.88",	0x18000, 0x8000, CRC(7c93f160) SHA1(6ab156cad7556808496070f8b02a708ce405c492) )
+	ROM_LOAD( "epr-7121.ic87",	0x00000, 0x8000, CRC(f2b88f73) SHA1(2b06da1beabbea82d502fbe12f6ec3ef26056edd) )
+	ROM_LOAD( "epr-7120.ic86",	0x08000, 0x8000, CRC(517d7fd3) SHA1(3fb5c00224920c3f62fb86e82caf0fee2293e1e2) )
+	ROM_LOAD( "epr-7123.ic89",	0x10000, 0x8000, CRC(8f16a303) SHA1(5f2465505f001dc052e9de4cf66bc1d53fc8c7da) )
+	ROM_LOAD( "epr-7122.ic88",	0x18000, 0x8000, CRC(7c93f160) SHA1(6ab156cad7556808496070f8b02a708ce405c492) )
 
 	ROM_REGION( 0x0400, REGION_PROMS, 0 )
-	ROM_LOAD( "pr7119.20",		0x0000, 0x0100, CRC(b2a8260f) SHA1(36c1debb4b3f2f190a25b18d533319d7380416de) ) /* palette red component */
-	ROM_LOAD( "pr7118.14",		0x0100, 0x0100, CRC(693e20c7) SHA1(9ebf4bd2c30ddd9648bc4b41c7739cfdf80100da) ) /* palette green component */
-	ROM_LOAD( "pr7117.8",		0x0200, 0x0100, CRC(4124307e) SHA1(cee28d891e6ce732c43a61acb5beeafd2200cf37) ) /* palette blue component */
-	ROM_LOAD( "pr5317.28",		0x0300, 0x0100, CRC(648350b8) SHA1(c7986aa9127ef5b50b845434cb4e81dff9861cd2) ) /* timing? (not used) */
+	ROM_LOAD( "pr7119.ic20",		0x0000, 0x0100, CRC(b2a8260f) SHA1(36c1debb4b3f2f190a25b18d533319d7380416de) ) /* palette red component */
+	ROM_LOAD( "pr7118.ic14",		0x0100, 0x0100, CRC(693e20c7) SHA1(9ebf4bd2c30ddd9648bc4b41c7739cfdf80100da) ) /* palette green component */
+	ROM_LOAD( "pr7117.ic8",		0x0200, 0x0100, CRC(4124307e) SHA1(cee28d891e6ce732c43a61acb5beeafd2200cf37) ) /* palette blue component */
+	ROM_LOAD( "pr5317.ic28",		0x0300, 0x0100, CRC(648350b8) SHA1(c7986aa9127ef5b50b845434cb4e81dff9861cd2) ) /* timing? (not used) */
 ROM_END
 
-ROM_START( chplftb )
+ROM_START( chopliftu )
 	ROM_REGION( 0x20000, REGION_CPU1, 0 ) /* 128k for code */
-	ROM_LOAD( "epr-7152.90",	0x00000, 0x8000, CRC(fe49d83e) SHA1(307be38dd73ed37b275c1b464d266a752cb06132) )
-	ROM_LOAD( "epr-7153.91",	0x10000, 0x8000, CRC(48697666) SHA1(0f4c6db9558272f5ceb347e742b284474f18b707) )
-	ROM_LOAD( "epr-7154.92",	0x18000, 0x8000, CRC(56d6222a) SHA1(ad8ccf15fe7f1d6716f78490892da0167d79f678) )
+	ROM_LOAD( "epr-7152.ic90",	0x00000, 0x8000, CRC(fe49d83e) SHA1(307be38dd73ed37b275c1b464d266a752cb06132) )
+	ROM_LOAD( "epr-7153.ic91",	0x10000, 0x8000, CRC(48697666) SHA1(0f4c6db9558272f5ceb347e742b284474f18b707) )
+	ROM_LOAD( "epr-7154.ic92",	0x18000, 0x8000, CRC(56d6222a) SHA1(ad8ccf15fe7f1d6716f78490892da0167d79f678) )
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* 64k for sound cpu */
-	ROM_LOAD( "epr-7130.126",	0x0000, 0x8000, CRC(346af118) SHA1(ef579818a45b8ebb276d5832092b26e232d5a737) )
+	ROM_LOAD( "epr-7130.ic126",	0x0000, 0x8000, CRC(346af118) SHA1(ef579818a45b8ebb276d5832092b26e232d5a737) )
 
 	ROM_REGION( 0x18000, REGION_GFX1, ROMREGION_DISPOSE )
-	ROM_LOAD( "epr-7127.4",		0x00000, 0x8000, CRC(1e708f6d) SHA1(b975e13bdc44105e7a15c2694e3ec53b60e23e5e) )
-	ROM_LOAD( "epr-7128.5",		0x08000, 0x8000, CRC(b922e787) SHA1(16087671ec7de25f749b5fd66409d48ef7b35820) )
-	ROM_LOAD( "epr-7129.6",		0x10000, 0x8000, CRC(bd3b6e6e) SHA1(c66f21b98cb8fc61a9318041ac1812c13099d974) )
+	ROM_LOAD( "epr-7127.ic4",		0x00000, 0x8000, CRC(1e708f6d) SHA1(b975e13bdc44105e7a15c2694e3ec53b60e23e5e) )
+	ROM_LOAD( "epr-7128.ic5",		0x08000, 0x8000, CRC(b922e787) SHA1(16087671ec7de25f749b5fd66409d48ef7b35820) )
+	ROM_LOAD( "epr-7129.ic6",		0x10000, 0x8000, CRC(bd3b6e6e) SHA1(c66f21b98cb8fc61a9318041ac1812c13099d974) )
 
 	ROM_REGION( 0x20000, REGION_GFX2, 0 ) /* 128k for sprites data */
-	ROM_LOAD( "epr-7121.87",	0x00000, 0x8000, CRC(f2b88f73) SHA1(2b06da1beabbea82d502fbe12f6ec3ef26056edd) )
-	ROM_LOAD( "epr-7120.86",	0x08000, 0x8000, CRC(517d7fd3) SHA1(3fb5c00224920c3f62fb86e82caf0fee2293e1e2) )
-	ROM_LOAD( "epr-7123.89",	0x10000, 0x8000, CRC(8f16a303) SHA1(5f2465505f001dc052e9de4cf66bc1d53fc8c7da) )
-	ROM_LOAD( "epr-7122.88",	0x18000, 0x8000, CRC(7c93f160) SHA1(6ab156cad7556808496070f8b02a708ce405c492) )
+	ROM_LOAD( "epr-7121.ic87",	0x00000, 0x8000, CRC(f2b88f73) SHA1(2b06da1beabbea82d502fbe12f6ec3ef26056edd) )
+	ROM_LOAD( "epr-7120.ic86",	0x08000, 0x8000, CRC(517d7fd3) SHA1(3fb5c00224920c3f62fb86e82caf0fee2293e1e2) )
+	ROM_LOAD( "epr-7123.ic89",	0x10000, 0x8000, CRC(8f16a303) SHA1(5f2465505f001dc052e9de4cf66bc1d53fc8c7da) )
+	ROM_LOAD( "epr-7122.ic88",	0x18000, 0x8000, CRC(7c93f160) SHA1(6ab156cad7556808496070f8b02a708ce405c492) )
 
 	ROM_REGION( 0x0400, REGION_PROMS, 0 )
-	ROM_LOAD( "pr7119.20",		0x0000, 0x0100, CRC(b2a8260f) SHA1(36c1debb4b3f2f190a25b18d533319d7380416de) ) /* palette red component */
-	ROM_LOAD( "pr7118.14",		0x0100, 0x0100, CRC(693e20c7) SHA1(9ebf4bd2c30ddd9648bc4b41c7739cfdf80100da) ) /* palette green component */
-	ROM_LOAD( "pr7117.8",		0x0200, 0x0100, CRC(4124307e) SHA1(cee28d891e6ce732c43a61acb5beeafd2200cf37) ) /* palette blue component */
-	ROM_LOAD( "pr5317.28",		0x0300, 0x0100, CRC(648350b8) SHA1(c7986aa9127ef5b50b845434cb4e81dff9861cd2) ) /* timing? (not used) */
+	ROM_LOAD( "pr7119.ic20",		0x0000, 0x0100, CRC(b2a8260f) SHA1(36c1debb4b3f2f190a25b18d533319d7380416de) ) /* palette red component */
+	ROM_LOAD( "pr7118.ic14",		0x0100, 0x0100, CRC(693e20c7) SHA1(9ebf4bd2c30ddd9648bc4b41c7739cfdf80100da) ) /* palette green component */
+	ROM_LOAD( "pr7117.ic8",		0x0200, 0x0100, CRC(4124307e) SHA1(cee28d891e6ce732c43a61acb5beeafd2200cf37) ) /* palette blue component */
+	ROM_LOAD( "pr5317.ic28",		0x0300, 0x0100, CRC(648350b8) SHA1(c7986aa9127ef5b50b845434cb4e81dff9861cd2) ) /* timing? (not used) */
 ROM_END
 
-ROM_START( chplftbl )
+ROM_START( chopliftbl )
 	ROM_REGION( 0x20000, REGION_CPU1, 0 ) /* 128k for code */
 	ROM_LOAD( "ep7124bl.90",	0x00000, 0x8000, CRC(71a37932) SHA1(72b6f8949d356b3adc5248fdaa13c2a1b9c0fa70) )
 	ROM_LOAD( "epr-7125.91",	0x10000, 0x8000, CRC(f5283498) SHA1(1ad40f6d7b4cd18212ee56917240c0796f1a4ec2) )
@@ -4598,9 +4598,9 @@ GAME( 1985, myhero,   0,        system1,  myhero,   0,        ROT0,   "Sega", 		
 GAME( 1985, sscandal, myhero,   system1,  myhero,   myheroj,  ROT0,   "Coreland / Sega", 	   "Seishun Scandal (Japan)" )
 GAME( 1985, myherok,  myhero,   system1,  myhero,   myherok,  ROT0,   "Coreland / Sega", 	   "My Hero (Korea)" )
 GAMEX(1985, shtngmst, 0,        shtngmst, shtngmst, system1_mcu, ROT0, "Sega", 			 	   "Shooting Master (8751 315-5159a)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1985, chplft,   0,        chplft_mcu, chplft, system1_mcu, ROT0, "Sega", 			 	   "Choplifter (8751 315-5151)" )
-GAME( 1985, chplftb,  chplft,   chplft,   chplft,   0,        ROT0,   "Sega", 			 	   "Choplifter (alternate)" )
-GAME( 1985, chplftbl, chplft,   chplft,   chplft,   0,        ROT0,   "bootleg", 		 	   "Choplifter (bootleg)" )
+GAME( 1985, choplift,   0,        chplft_mcu, chplft, system1_mcu, ROT0, "Sega", 			 	   "Choplifter (8751 315-5151)" )
+GAME( 1985, chopliftu,  choplift, chplft,   chplft,   0,        ROT0,   "Sega", 			 	   "Choplifter (unprotected)" )
+GAME( 1985, chopliftbl, choplift, chplft,   chplft,   0,        ROT0,   "bootleg", 		 	   "Choplifter (bootleg)" )
 GAME( 1985, 4dwarrio, 0,        system1,  4dwarrio, 4dwarrio, ROT0,   "Coreland / Sega", 	   "4-D Warriors" )
 GAME( 1986, brain,    0,        brain,    brain,    0,        ROT0,   "Coreland / Sega", 	   "Brain" )
 GAME( 1986, raflesia, 0,        system1,  raflesia, 4dwarrio, ROT270, "Coreland / Sega", 	   "Rafflesia" )

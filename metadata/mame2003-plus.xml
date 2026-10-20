@@ -170891,29 +170891,31 @@
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="1536"/>
 	</game>
 	<game name="shtngmst" sourcefile="system1.c">
-		<description>Shooting Master</description>
+		<description>Shooting Master (8751 315-5159a)</description>
 		<year>1985</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="epr-7100.ic18" size="32768" crc="268ecb1d" sha1="a9274c9718f7244235cc6df76331d6a0b7e4e4c8" region="cpu1" offset="0"/>
-		<rom name="epr7101" size="32768" crc="ebf5ff72" sha1="13ae06e3a81cf00b80ec939d5baf30143d61d480" region="cpu1" offset="10000"/>
-		<rom name="epr7102" size="32768" crc="c890a4ad" sha1="4b59d37902ace3a69b380ff40652ee37c85f0e9d" region="cpu1" offset="18000"/>
-		<rom name="epr7043" size="32768" crc="99a368ab" sha1="a9451f39ee2613e5c3e2791d4d8d837b4a3ab666" region="cpu2" offset="0"/>
-		<rom name="epr7040" size="32768" crc="f30769fa" sha1="366c1fbe4e1c8943b209f6c831c9a6b7e4372105" region="gfx1" dispose="yes" offset="0"/>
-		<rom name="epr7041" size="32768" crc="f3e273f9" sha1="b8715c528299dc1e4f0c19c50d91ca9861a423a1" region="gfx1" dispose="yes" offset="8000"/>
-		<rom name="epr7042" size="32768" crc="6841c917" sha1="6553843eea0131eb7b5a9aa29dddf641e41d8cc3" region="gfx1" dispose="yes" offset="10000"/>
-		<rom name="epr7110" size="32768" crc="5d1a5048" sha1="d1626ab1981080451c912df7e4ad7f76c0cb3459" region="gfx2" offset="0"/>
-		<rom name="epr7106" size="32768" crc="ae7ab7a2" sha1="153691e468d29d21b95f1fbffb6896a3140d7e14" region="gfx2" offset="8000"/>
-		<rom name="epr7108" size="32768" crc="816180ac" sha1="a59670ec77d4359041ebf12dae5b74add55d82ac" region="gfx2" offset="10000"/>
-		<rom name="epr7104" size="32768" crc="84a679c5" sha1="19a21b1b33fc215f606093bfd61d597e4bd0b3d0" region="gfx2" offset="18000"/>
-		<rom name="epr7109" size="32768" crc="097f7481" sha1="4d93ea01b811af1cd3e136116625e4b8e06358a2" region="gfx2" offset="20000"/>
-		<rom name="epr7105" size="32768" crc="13111729" sha1="57ca2b945db36b056d0e40a39456fd8bf9d0a3ec" region="gfx2" offset="28000"/>
-		<rom name="epr7107" size="32768" crc="8f50ea24" sha1="781687e202dedca7b72c9bd5b97d9d46fcfd601c" region="gfx2" offset="30000"/>
-		<rom name="epr7113" size="256" crc="5c0e1360" sha1="2011b3eef2a58f9bd3f3b1bb9e6c201db85727c2" region="proms" offset="0"/>
-		<rom name="epr7112" size="256" crc="46fbd351" sha1="1fca7fbc5d5f8e13e58bbac735511bd0af392446" region="proms" offset="100"/>
-		<rom name="epr7111" size="256" crc="8123b6b9" sha1="fb2c5498f0603b5cd270402a738c891a85453666" region="proms" offset="200"/>
-		<rom name="epr5317" size="256" crc="648350b8" sha1="c7986aa9127ef5b50b845434cb4e81dff9861cd2" region="proms" offset="300"/>
+		<rom name="epr-7101.ic91" size="32768" crc="ebf5ff72" sha1="13ae06e3a81cf00b80ec939d5baf30143d61d480" region="cpu1" offset="10000"/>
+		<rom name="epr-7102.ic92" size="32768" crc="c890a4ad" sha1="4b59d37902ace3a69b380ff40652ee37c85f0e9d" region="cpu1" offset="18000"/>
+		<rom name="epr-7043.ic126" size="32768" crc="99a368ab" sha1="a9451f39ee2613e5c3e2791d4d8d837b4a3ab666" region="cpu2" offset="0"/>
+		<rom name="315-5159a.ic74" size="4096" crc="1f774912" sha1="34d12756735514bea5a513fdf441ae93318747b2" region="cpu3" offset="0"/>
+		<rom name="epr-7040.ic4" size="32768" crc="f30769fa" sha1="366c1fbe4e1c8943b209f6c831c9a6b7e4372105" region="gfx1" dispose="yes" offset="0"/>
+		<rom name="epr-7041.ic5" size="32768" crc="f3e273f9" sha1="b8715c528299dc1e4f0c19c50d91ca9861a423a1" region="gfx1" dispose="yes" offset="8000"/>
+		<rom name="epr-7042.ic6" size="32768" crc="6841c917" sha1="6553843eea0131eb7b5a9aa29dddf641e41d8cc3" region="gfx1" dispose="yes" offset="10000"/>
+		<rom name="epr-7110.ic26" size="32768" crc="5d1a5048" sha1="d1626ab1981080451c912df7e4ad7f76c0cb3459" region="gfx2" offset="0"/>
+		<rom name="epr-7106.ic22" size="32768" crc="ae7ab7a2" sha1="153691e468d29d21b95f1fbffb6896a3140d7e14" region="gfx2" offset="8000"/>
+		<rom name="epr-7108.ic24" size="32768" crc="816180ac" sha1="a59670ec77d4359041ebf12dae5b74add55d82ac" region="gfx2" offset="10000"/>
+		<rom name="epr-7104.ic20" size="32768" crc="84a679c5" sha1="19a21b1b33fc215f606093bfd61d597e4bd0b3d0" region="gfx2" offset="18000"/>
+		<rom name="epr-7109.ic25" size="32768" crc="097f7481" sha1="4d93ea01b811af1cd3e136116625e4b8e06358a2" region="gfx2" offset="20000"/>
+		<rom name="epr-7105.ic21" size="32768" crc="13111729" sha1="57ca2b945db36b056d0e40a39456fd8bf9d0a3ec" region="gfx2" offset="28000"/>
+		<rom name="epr-7107.ic23" size="32768" crc="8f50ea24" sha1="781687e202dedca7b72c9bd5b97d9d46fcfd601c" region="gfx2" offset="30000"/>
+		<rom name="epr-7113.ic20" size="256" crc="5c0e1360" sha1="2011b3eef2a58f9bd3f3b1bb9e6c201db85727c2" region="proms" offset="0"/>
+		<rom name="epr-7112.ic14" size="256" crc="46fbd351" sha1="1fca7fbc5d5f8e13e58bbac735511bd0af392446" region="proms" offset="100"/>
+		<rom name="epr-7111.ic8" size="256" crc="8123b6b9" sha1="fb2c5498f0603b5cd270402a738c891a85453666" region="proms" offset="200"/>
+		<rom name="pr5317.ic37" size="256" crc="648350b8" sha1="c7986aa9127ef5b50b845434cb4e81dff9861cd2" region="proms" offset="300"/>
 		<chip type="cpu" name="Z80" clock="4000000"/>
 		<chip type="cpu" soundonly="yes" name="Z80" clock="4000000"/>
+		<chip type="cpu" name="I8051" clock="666666"/>
 		<chip type="audio" name="SN76496" clock="2000000"/>
 		<chip type="audio" name="SN76496" clock="2000000"/>
 		<video screen="raster" orientation="horizontal" width="240" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
@@ -171017,27 +171019,29 @@
 		</dipswitch>
 		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="1536"/>
 	</game>
-	<game name="chplft" sourcefile="system1.c">
-		<description>Choplifter</description>
+	<game name="choplift" sourcefile="system1.c">
+		<description>Choplifter (8751 315-5151)</description>
 		<year>1985</year>
 		<manufacturer>Sega</manufacturer>
-		<rom name="epr-7124.90" size="32768" crc="678d5c41" sha1="7553979f78270c2ddc5b3f3ebf7817ead8e08de7" region="cpu1" offset="0"/>
-		<rom name="epr-7125.91" size="32768" crc="f5283498" sha1="1ad40f6d7b4cd18212ee56917240c0796f1a4ec2" region="cpu1" offset="10000"/>
-		<rom name="epr-7126.92" size="32768" crc="dbd192ab" sha1="03d280c82599a14fc6a2065d57c6241cdc6f1143" region="cpu1" offset="18000"/>
-		<rom name="epr-7130.126" size="32768" crc="346af118" sha1="ef579818a45b8ebb276d5832092b26e232d5a737" region="cpu2" offset="0"/>
-		<rom name="epr-7127.4" size="32768" crc="1e708f6d" sha1="b975e13bdc44105e7a15c2694e3ec53b60e23e5e" region="gfx1" dispose="yes" offset="0"/>
-		<rom name="epr-7128.5" size="32768" crc="b922e787" sha1="16087671ec7de25f749b5fd66409d48ef7b35820" region="gfx1" dispose="yes" offset="8000"/>
-		<rom name="epr-7129.6" size="32768" crc="bd3b6e6e" sha1="c66f21b98cb8fc61a9318041ac1812c13099d974" region="gfx1" dispose="yes" offset="10000"/>
-		<rom name="epr-7121.87" size="32768" crc="f2b88f73" sha1="2b06da1beabbea82d502fbe12f6ec3ef26056edd" region="gfx2" offset="0"/>
-		<rom name="epr-7120.86" size="32768" crc="517d7fd3" sha1="3fb5c00224920c3f62fb86e82caf0fee2293e1e2" region="gfx2" offset="8000"/>
-		<rom name="epr-7123.89" size="32768" crc="8f16a303" sha1="5f2465505f001dc052e9de4cf66bc1d53fc8c7da" region="gfx2" offset="10000"/>
-		<rom name="epr-7122.88" size="32768" crc="7c93f160" sha1="6ab156cad7556808496070f8b02a708ce405c492" region="gfx2" offset="18000"/>
-		<rom name="pr7119.20" size="256" crc="b2a8260f" sha1="36c1debb4b3f2f190a25b18d533319d7380416de" region="proms" offset="0"/>
-		<rom name="pr7118.14" size="256" crc="693e20c7" sha1="9ebf4bd2c30ddd9648bc4b41c7739cfdf80100da" region="proms" offset="100"/>
-		<rom name="pr7117.8" size="256" crc="4124307e" sha1="cee28d891e6ce732c43a61acb5beeafd2200cf37" region="proms" offset="200"/>
-		<rom name="pr5317.28" size="256" crc="648350b8" sha1="c7986aa9127ef5b50b845434cb4e81dff9861cd2" region="proms" offset="300"/>
+		<rom name="epr-7124.ic90" size="32768" crc="678d5c41" sha1="7553979f78270c2ddc5b3f3ebf7817ead8e08de7" region="cpu1" offset="0"/>
+		<rom name="epr-7125.ic91" size="32768" crc="f5283498" sha1="1ad40f6d7b4cd18212ee56917240c0796f1a4ec2" region="cpu1" offset="10000"/>
+		<rom name="epr-7126.ic92" size="32768" crc="dbd192ab" sha1="03d280c82599a14fc6a2065d57c6241cdc6f1143" region="cpu1" offset="18000"/>
+		<rom name="epr-7130.ic126" size="32768" crc="346af118" sha1="ef579818a45b8ebb276d5832092b26e232d5a737" region="cpu2" offset="0"/>
+		<rom name="315-5151.ic74" size="4096" crc="1377a6ef" sha1="b85acd7292e5480c98af1a0492b6b5d3f9b1716c" region="cpu3" offset="0"/>
+		<rom name="epr-7127.ic4" size="32768" crc="1e708f6d" sha1="b975e13bdc44105e7a15c2694e3ec53b60e23e5e" region="gfx1" dispose="yes" offset="0"/>
+		<rom name="epr-7128.ic5" size="32768" crc="b922e787" sha1="16087671ec7de25f749b5fd66409d48ef7b35820" region="gfx1" dispose="yes" offset="8000"/>
+		<rom name="epr-7129.ic6" size="32768" crc="bd3b6e6e" sha1="c66f21b98cb8fc61a9318041ac1812c13099d974" region="gfx1" dispose="yes" offset="10000"/>
+		<rom name="epr-7121.ic87" size="32768" crc="f2b88f73" sha1="2b06da1beabbea82d502fbe12f6ec3ef26056edd" region="gfx2" offset="0"/>
+		<rom name="epr-7120.ic86" size="32768" crc="517d7fd3" sha1="3fb5c00224920c3f62fb86e82caf0fee2293e1e2" region="gfx2" offset="8000"/>
+		<rom name="epr-7123.ic89" size="32768" crc="8f16a303" sha1="5f2465505f001dc052e9de4cf66bc1d53fc8c7da" region="gfx2" offset="10000"/>
+		<rom name="epr-7122.ic88" size="32768" crc="7c93f160" sha1="6ab156cad7556808496070f8b02a708ce405c492" region="gfx2" offset="18000"/>
+		<rom name="pr7119.ic20" size="256" crc="b2a8260f" sha1="36c1debb4b3f2f190a25b18d533319d7380416de" region="proms" offset="0"/>
+		<rom name="pr7118.ic14" size="256" crc="693e20c7" sha1="9ebf4bd2c30ddd9648bc4b41c7739cfdf80100da" region="proms" offset="100"/>
+		<rom name="pr7117.ic8" size="256" crc="4124307e" sha1="cee28d891e6ce732c43a61acb5beeafd2200cf37" region="proms" offset="200"/>
+		<rom name="pr5317.ic28" size="256" crc="648350b8" sha1="c7986aa9127ef5b50b845434cb4e81dff9861cd2" region="proms" offset="300"/>
 		<chip type="cpu" name="Z80" clock="4000000"/>
 		<chip type="cpu" soundonly="yes" name="Z80" clock="4000000"/>
+		<chip type="cpu" name="I8051" clock="666666"/>
 		<chip type="audio" name="SN76496" clock="2000000"/>
 		<chip type="audio" name="SN76496" clock="2000000"/>
 		<video screen="raster" orientation="horizontal" width="256" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
@@ -171107,27 +171111,27 @@
 			<dipvalue name="1 Coin/5 Credits"/>
 			<dipvalue name="1 Coin/6 Credits"/>
 		</dipswitch>
-		<driver status="protection" color="good" sound="good" graphic="good" palettesize="1536"/>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="1536"/>
 	</game>
-	<game name="chplftb" sourcefile="system1.c" cloneof="chplft" romof="chplft">
-		<description>Choplifter (alternate)</description>
+	<game name="chopliftu" sourcefile="system1.c" cloneof="choplift" romof="choplift">
+		<description>Choplifter (unprotected)</description>
 		<year>1985</year>
 		<manufacturer>Sega</manufacturer>
-		<rom name="epr-7152.90" size="32768" crc="fe49d83e" sha1="307be38dd73ed37b275c1b464d266a752cb06132" region="cpu1" offset="0"/>
-		<rom name="epr-7153.91" size="32768" crc="48697666" sha1="0f4c6db9558272f5ceb347e742b284474f18b707" region="cpu1" offset="10000"/>
-		<rom name="epr-7154.92" size="32768" crc="56d6222a" sha1="ad8ccf15fe7f1d6716f78490892da0167d79f678" region="cpu1" offset="18000"/>
-		<rom name="epr-7130.126" merge="epr-7130.126" size="32768" crc="346af118" sha1="ef579818a45b8ebb276d5832092b26e232d5a737" region="cpu2" offset="0"/>
-		<rom name="epr-7127.4" merge="epr-7127.4" size="32768" crc="1e708f6d" sha1="b975e13bdc44105e7a15c2694e3ec53b60e23e5e" region="gfx1" dispose="yes" offset="0"/>
-		<rom name="epr-7128.5" merge="epr-7128.5" size="32768" crc="b922e787" sha1="16087671ec7de25f749b5fd66409d48ef7b35820" region="gfx1" dispose="yes" offset="8000"/>
-		<rom name="epr-7129.6" merge="epr-7129.6" size="32768" crc="bd3b6e6e" sha1="c66f21b98cb8fc61a9318041ac1812c13099d974" region="gfx1" dispose="yes" offset="10000"/>
-		<rom name="epr-7121.87" merge="epr-7121.87" size="32768" crc="f2b88f73" sha1="2b06da1beabbea82d502fbe12f6ec3ef26056edd" region="gfx2" offset="0"/>
-		<rom name="epr-7120.86" merge="epr-7120.86" size="32768" crc="517d7fd3" sha1="3fb5c00224920c3f62fb86e82caf0fee2293e1e2" region="gfx2" offset="8000"/>
-		<rom name="epr-7123.89" merge="epr-7123.89" size="32768" crc="8f16a303" sha1="5f2465505f001dc052e9de4cf66bc1d53fc8c7da" region="gfx2" offset="10000"/>
-		<rom name="epr-7122.88" merge="epr-7122.88" size="32768" crc="7c93f160" sha1="6ab156cad7556808496070f8b02a708ce405c492" region="gfx2" offset="18000"/>
-		<rom name="pr7119.20" merge="pr7119.20" size="256" crc="b2a8260f" sha1="36c1debb4b3f2f190a25b18d533319d7380416de" region="proms" offset="0"/>
-		<rom name="pr7118.14" merge="pr7118.14" size="256" crc="693e20c7" sha1="9ebf4bd2c30ddd9648bc4b41c7739cfdf80100da" region="proms" offset="100"/>
-		<rom name="pr7117.8" merge="pr7117.8" size="256" crc="4124307e" sha1="cee28d891e6ce732c43a61acb5beeafd2200cf37" region="proms" offset="200"/>
-		<rom name="pr5317.28" merge="pr5317.28" size="256" crc="648350b8" sha1="c7986aa9127ef5b50b845434cb4e81dff9861cd2" region="proms" offset="300"/>
+		<rom name="epr-7152.ic90" size="32768" crc="fe49d83e" sha1="307be38dd73ed37b275c1b464d266a752cb06132" region="cpu1" offset="0"/>
+		<rom name="epr-7153.ic91" size="32768" crc="48697666" sha1="0f4c6db9558272f5ceb347e742b284474f18b707" region="cpu1" offset="10000"/>
+		<rom name="epr-7154.ic92" size="32768" crc="56d6222a" sha1="ad8ccf15fe7f1d6716f78490892da0167d79f678" region="cpu1" offset="18000"/>
+		<rom name="epr-7130.ic126" merge="epr-7130.ic126" size="32768" crc="346af118" sha1="ef579818a45b8ebb276d5832092b26e232d5a737" region="cpu2" offset="0"/>
+		<rom name="epr-7127.ic4" merge="epr-7127.ic4" size="32768" crc="1e708f6d" sha1="b975e13bdc44105e7a15c2694e3ec53b60e23e5e" region="gfx1" dispose="yes" offset="0"/>
+		<rom name="epr-7128.ic5" merge="epr-7128.ic5" size="32768" crc="b922e787" sha1="16087671ec7de25f749b5fd66409d48ef7b35820" region="gfx1" dispose="yes" offset="8000"/>
+		<rom name="epr-7129.ic6" merge="epr-7129.ic6" size="32768" crc="bd3b6e6e" sha1="c66f21b98cb8fc61a9318041ac1812c13099d974" region="gfx1" dispose="yes" offset="10000"/>
+		<rom name="epr-7121.ic87" merge="epr-7121.ic87" size="32768" crc="f2b88f73" sha1="2b06da1beabbea82d502fbe12f6ec3ef26056edd" region="gfx2" offset="0"/>
+		<rom name="epr-7120.ic86" merge="epr-7120.ic86" size="32768" crc="517d7fd3" sha1="3fb5c00224920c3f62fb86e82caf0fee2293e1e2" region="gfx2" offset="8000"/>
+		<rom name="epr-7123.ic89" merge="epr-7123.ic89" size="32768" crc="8f16a303" sha1="5f2465505f001dc052e9de4cf66bc1d53fc8c7da" region="gfx2" offset="10000"/>
+		<rom name="epr-7122.ic88" merge="epr-7122.ic88" size="32768" crc="7c93f160" sha1="6ab156cad7556808496070f8b02a708ce405c492" region="gfx2" offset="18000"/>
+		<rom name="pr7119.ic20" merge="pr7119.ic20" size="256" crc="b2a8260f" sha1="36c1debb4b3f2f190a25b18d533319d7380416de" region="proms" offset="0"/>
+		<rom name="pr7118.ic14" merge="pr7118.ic14" size="256" crc="693e20c7" sha1="9ebf4bd2c30ddd9648bc4b41c7739cfdf80100da" region="proms" offset="100"/>
+		<rom name="pr7117.ic8" merge="pr7117.ic8" size="256" crc="4124307e" sha1="cee28d891e6ce732c43a61acb5beeafd2200cf37" region="proms" offset="200"/>
+		<rom name="pr5317.ic28" merge="pr5317.ic28" size="256" crc="648350b8" sha1="c7986aa9127ef5b50b845434cb4e81dff9861cd2" region="proms" offset="300"/>
 		<chip type="cpu" name="Z80" clock="4000000"/>
 		<chip type="cpu" soundonly="yes" name="Z80" clock="4000000"/>
 		<chip type="audio" name="SN76496" clock="2000000"/>
@@ -171201,25 +171205,25 @@
 		</dipswitch>
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="1536"/>
 	</game>
-	<game name="chplftbl" sourcefile="system1.c" cloneof="chplft" romof="chplft">
+	<game name="chopliftbl" sourcefile="system1.c" cloneof="choplift" romof="choplift">
 		<description>Choplifter (bootleg)</description>
 		<year>1985</year>
 		<manufacturer>bootleg</manufacturer>
 		<rom name="ep7124bl.90" size="32768" crc="71a37932" sha1="72b6f8949d356b3adc5248fdaa13c2a1b9c0fa70" region="cpu1" offset="0"/>
-		<rom name="epr-7125.91" merge="epr-7125.91" size="32768" crc="f5283498" sha1="1ad40f6d7b4cd18212ee56917240c0796f1a4ec2" region="cpu1" offset="10000"/>
-		<rom name="epr-7126.92" merge="epr-7126.92" size="32768" crc="dbd192ab" sha1="03d280c82599a14fc6a2065d57c6241cdc6f1143" region="cpu1" offset="18000"/>
-		<rom name="epr-7130.126" merge="epr-7130.126" size="32768" crc="346af118" sha1="ef579818a45b8ebb276d5832092b26e232d5a737" region="cpu2" offset="0"/>
-		<rom name="epr-7127.4" merge="epr-7127.4" size="32768" crc="1e708f6d" sha1="b975e13bdc44105e7a15c2694e3ec53b60e23e5e" region="gfx1" dispose="yes" offset="0"/>
-		<rom name="epr-7128.5" merge="epr-7128.5" size="32768" crc="b922e787" sha1="16087671ec7de25f749b5fd66409d48ef7b35820" region="gfx1" dispose="yes" offset="8000"/>
-		<rom name="epr-7129.6" merge="epr-7129.6" size="32768" crc="bd3b6e6e" sha1="c66f21b98cb8fc61a9318041ac1812c13099d974" region="gfx1" dispose="yes" offset="10000"/>
-		<rom name="epr-7121.87" merge="epr-7121.87" size="32768" crc="f2b88f73" sha1="2b06da1beabbea82d502fbe12f6ec3ef26056edd" region="gfx2" offset="0"/>
-		<rom name="epr-7120.86" merge="epr-7120.86" size="32768" crc="517d7fd3" sha1="3fb5c00224920c3f62fb86e82caf0fee2293e1e2" region="gfx2" offset="8000"/>
-		<rom name="epr-7123.89" merge="epr-7123.89" size="32768" crc="8f16a303" sha1="5f2465505f001dc052e9de4cf66bc1d53fc8c7da" region="gfx2" offset="10000"/>
-		<rom name="epr-7122.88" merge="epr-7122.88" size="32768" crc="7c93f160" sha1="6ab156cad7556808496070f8b02a708ce405c492" region="gfx2" offset="18000"/>
-		<rom name="pr7119.20" merge="pr7119.20" size="256" crc="b2a8260f" sha1="36c1debb4b3f2f190a25b18d533319d7380416de" region="proms" offset="0"/>
-		<rom name="pr7118.14" merge="pr7118.14" size="256" crc="693e20c7" sha1="9ebf4bd2c30ddd9648bc4b41c7739cfdf80100da" region="proms" offset="100"/>
-		<rom name="pr7117.8" merge="pr7117.8" size="256" crc="4124307e" sha1="cee28d891e6ce732c43a61acb5beeafd2200cf37" region="proms" offset="200"/>
-		<rom name="pr5317.28" merge="pr5317.28" size="256" crc="648350b8" sha1="c7986aa9127ef5b50b845434cb4e81dff9861cd2" region="proms" offset="300"/>
+		<rom name="epr-7125.91" merge="epr-7125.ic91" size="32768" crc="f5283498" sha1="1ad40f6d7b4cd18212ee56917240c0796f1a4ec2" region="cpu1" offset="10000"/>
+		<rom name="epr-7126.92" merge="epr-7126.ic92" size="32768" crc="dbd192ab" sha1="03d280c82599a14fc6a2065d57c6241cdc6f1143" region="cpu1" offset="18000"/>
+		<rom name="epr-7130.126" merge="epr-7130.ic126" size="32768" crc="346af118" sha1="ef579818a45b8ebb276d5832092b26e232d5a737" region="cpu2" offset="0"/>
+		<rom name="epr-7127.4" merge="epr-7127.ic4" size="32768" crc="1e708f6d" sha1="b975e13bdc44105e7a15c2694e3ec53b60e23e5e" region="gfx1" dispose="yes" offset="0"/>
+		<rom name="epr-7128.5" merge="epr-7128.ic5" size="32768" crc="b922e787" sha1="16087671ec7de25f749b5fd66409d48ef7b35820" region="gfx1" dispose="yes" offset="8000"/>
+		<rom name="epr-7129.6" merge="epr-7129.ic6" size="32768" crc="bd3b6e6e" sha1="c66f21b98cb8fc61a9318041ac1812c13099d974" region="gfx1" dispose="yes" offset="10000"/>
+		<rom name="epr-7121.87" merge="epr-7121.ic87" size="32768" crc="f2b88f73" sha1="2b06da1beabbea82d502fbe12f6ec3ef26056edd" region="gfx2" offset="0"/>
+		<rom name="epr-7120.86" merge="epr-7120.ic86" size="32768" crc="517d7fd3" sha1="3fb5c00224920c3f62fb86e82caf0fee2293e1e2" region="gfx2" offset="8000"/>
+		<rom name="epr-7123.89" merge="epr-7123.ic89" size="32768" crc="8f16a303" sha1="5f2465505f001dc052e9de4cf66bc1d53fc8c7da" region="gfx2" offset="10000"/>
+		<rom name="epr-7122.88" merge="epr-7122.ic88" size="32768" crc="7c93f160" sha1="6ab156cad7556808496070f8b02a708ce405c492" region="gfx2" offset="18000"/>
+		<rom name="pr7119.20" merge="pr7119.ic20" size="256" crc="b2a8260f" sha1="36c1debb4b3f2f190a25b18d533319d7380416de" region="proms" offset="0"/>
+		<rom name="pr7118.14" merge="pr7118.ic14" size="256" crc="693e20c7" sha1="9ebf4bd2c30ddd9648bc4b41c7739cfdf80100da" region="proms" offset="100"/>
+		<rom name="pr7117.8" merge="pr7117.ic8" size="256" crc="4124307e" sha1="cee28d891e6ce732c43a61acb5beeafd2200cf37" region="proms" offset="200"/>
+		<rom name="pr5317.28" merge="pr5317.ic28" size="256" crc="648350b8" sha1="c7986aa9127ef5b50b845434cb4e81dff9861cd2" region="proms" offset="300"/>
 		<chip type="cpu" name="Z80" clock="4000000"/>
 		<chip type="cpu" soundonly="yes" name="Z80" clock="4000000"/>
 		<chip type="audio" name="SN76496" clock="2000000"/>
