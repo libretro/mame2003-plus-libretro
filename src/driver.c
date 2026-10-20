@@ -6345,6 +6345,90 @@ Other Sun games
 
 	/* Sega Model 1 Hardware */
 	DRIVER( vr ) /* (c) 1992 Sega */
+	DRIVER( vf2 ) /* (c) 1994 Sega, Model 2A */
+	DRIVER( vf2b )
+	DRIVER( vf2a )
+	DRIVER( vf2o )
+	DRIVER( vcop2 ) /* (c) 1995 Sega, Model 2A */
+	DRIVER( motoraid ) /* (c) 1997 Sega, Model 2A */
+	DRIVER( motoraiddx )
+	DRIVER( skytargt ) /* (c) 1995 Sega, Model 2A */
+	DRIVER( airwlkrs ) /* (c) 1997 Data East, Model 2A */
+	DRIVER( manxtt ) /* (c) 1995 Sega, Model 2A */
+	DRIVER( manxttc )
+	DRIVER( manxttdx )
+	DRIVER( hpyagu98 ) /* (c) 1998 Deniam, Model 2A */
+	DRIVER( srallyc ) /* (c) 1995 Sega, Model 2A */
+	DRIVER( srallycb )
+	DRIVER( srallycc )
+	DRIVER( srallycdx )
+	DRIVER( srallycdxa )
+	DRIVER( vcop ) /* (c) 1994 Sega, original Model 2 */
+	DRIVER( vcopa )
+	DRIVER( desert )	/* 1994 Sega / Martin Marietta - original Model 2 */
+	DRIVER( daytona ) /* (c) 1994 Sega, original Model 2 */
+	DRIVER( daytonase )
+	DRIVER( daytona93 ) /* (c) 1993 Sega */
+	DRIVER( daytonas )
+	DRIVER( daytonat )
+	DRIVER( daytonata )
+	DRIVER( daytonam )
+	DRIVER( daytonagtx )
+	DRIVER( vstriker ) /* (c) 1994 Sega, Model 2B */
+	DRIVER( vstrikero )
+	DRIVER( gunblade ) /* (c) 1995 Sega, Model 2B */
+	DRIVER( rchase2 ) /* (c) 1994 Sega, Model 2B */
+	DRIVER( rchase2a )
+	DRIVER( doa ) /* (c) 1996 Tecmo, Model 2B */
+	DRIVER( doab ) /* (c) 1996 Tecmo, Model 2B */
+	DRIVER( doaa ) /* (c) 1996 Tecmo, Model 2A */
+	DRIVER( doaab )
+	DRIVER( doaae )
+	DRIVER( zerogun ) /* (c) 1997 Psikyo, Model 2B */
+	DRIVER( zerogunj ) /* (c) 1997 Psikyo, Model 2B */
+	DRIVER( zeroguna ) /* (c) 1997 Psikyo, Model 2A */
+	DRIVER( zerogunaj )
+	DRIVER( fvipers )	/* 1995 Sega - Model 2B */
+	DRIVER( fvipersb )
+	DRIVER( fvipersa )
+	DRIVER( von )	/* 1995 Sega - Model 2B */
+	DRIVER( vonu )
+	DRIVER( vonj )
+	DRIVER( schamp )	/* 1996 Sega - Model 2B */
+	DRIVER( sfight )
+	DRIVER( lastbrnx )	/* 1996 Sega - Model 2B */
+	DRIVER( lastbrnxu )
+	DRIVER( lastbrnxj )
+	DRIVER( dynamcop )	/* 1998 Sega - Model 2A / 2B */
+	DRIVER( dyndeka2 )
+	DRIVER( dynamcopb )
+	DRIVER( dynamcopc )	/* Model 2C */
+	DRIVER( dyndeka2b )
+	DRIVER( dynabb )	/* 1996 Sega - Model 2B */
+	DRIVER( dynabb97 )	/* 1997 Sega - Model 2B */
+	DRIVER( indy500 )	/* 1995 Sega - Model 2B */
+	DRIVER( indy500d )
+	DRIVER( indy500to )
+	DRIVER( sgt24h )	/* 1996 Jaleco - Model 2B */
+	DRIVER( stcc )		/* 1996 Sega - Model 2C */
+	DRIVER( stccb )
+	DRIVER( stcca )
+	DRIVER( stcco )
+	DRIVER( waverunr )	/* 1996 Sega - Model 2C */
+	DRIVER( skisuprg )	/* 1996 Sega - Model 2C */
+	DRIVER( bel )		/* 1997 Sega / EPL - Model 2C */
+	DRIVER( hotd )		/* 1997 Sega - Model 2C */
+	DRIVER( hotdo )
+	DRIVER( segawski )	/* 1997 Sega - Model 2C */
+	DRIVER( topskatr )	/* 1997 Sega - Model 2C */
+	DRIVER( topskatru )
+	DRIVER( topskatruo )
+	DRIVER( topskatrj )
+	DRIVER( overrev )	/* Model 2C */
+	DRIVER( overrevb )	/* Model 2B */
+	DRIVER( overrevba )
+	DRIVER( pltkids ) /* (c) 1998 Psikyo, Model 2B */
+	DRIVER( pltkidsa ) /* (c) 1998 Psikyo, Model 2A */
 	DRIVER( vf ) /* (c) 1993 Sega */
 
   /* Oriental Soft */
