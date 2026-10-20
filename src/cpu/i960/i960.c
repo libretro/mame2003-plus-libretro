@@ -262,6 +262,7 @@ static UINT32 get_ea(UINT32 opcode)
 #define i960_round( x )		round( x )
 #define i960_trunc( x )		trunc( x )
 #define i960_log2( x )		log2( x )
+#define i960_logb( x )		logb( x )
 #else
 static int i960_isnan( double x ) { return x != x; }
 static int i960_isinf( double x ) { return x == x && ( x - x ) != 0.0; }
@@ -269,6 +270,17 @@ static int i960_isinf( double x ) { return x == x && ( x - x ) != 0.0; }
 static double i960_round( double x ) { double a = fabs( x ), f = floor( a ); if( a - f >= 0.5 ) f += 1.0; return x < 0.0 ? -f : f; }
 static double i960_trunc( double x ) { return x < 0.0 ? ceil( x ) : floor( x ); }
 static double i960_log2( double x ) { return log( x ) / log( 2.0 ); }
+/* the binary exponent, as logb(): -inf for 0, +inf for infinities, NaN */
+/* unchanged; frexp() gives 0.5 <= m < 1, also for denormals */
+static double i960_logb( double x )
+{
+	int e;
+	if( i960_isnan( x ) ) return x;
+	if( i960_isinf( x ) ) return fabs( x );
+	if( x == 0.0 ) return -HUGE_VAL;
+	frexp( x, &e );
+	return (double)( e - 1 );
+}
 #endif
 
 /* 64-bit constants without the LL suffix (not in C89 / MSVC 2003) */
@@ -1777,7 +1789,7 @@ static void execute_op(UINT32 opcode)
 			case 0xa: /* logbnr */
 				m_icount -= 37;
 				t1f = get_1_rif(opcode);
-				set_rif(opcode, logb(t1f));
+				set_rif(opcode, i960_logb(t1f));
 				break;
 
 			case 0xb: /* roundr */
@@ -1847,7 +1859,7 @@ static void execute_op(UINT32 opcode)
 			case 0xa: /* logbnrl */
 				m_icount -= 37;
 				t1f = get_1_rifl(opcode);
-				set_rifl(opcode, logb(t1f));
+				set_rifl(opcode, i960_logb(t1f));
 				break;
 
 			case 0xb: /* roundrl */
