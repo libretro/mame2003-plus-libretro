@@ -133,7 +133,9 @@ static void jit_build_tables(void)
 		/* page p and the next one inside the region */
 		while (p1 < JIT_PAGES - 1 && ((p1 + 2) << JIT_PAGE_BITS) - 1 <= fastram[i].end && ((p1 + 2) << JIT_PAGE_BITS) - 1 > (p1 << JIT_PAGE_BITS))
 		{
-			jit_rtable[p1] = diff;
+			/* reads with wait states go through the fast RAM handlers, which count them */
+			if (!fastram[i].wait)
+				jit_rtable[p1] = diff;
 			if (!fastram[i].readonly)
 				jit_wtable[p1] = diff;
 			p1++;
@@ -1094,6 +1096,9 @@ static int jit_emit_mem_address(struct jit_ctx *ctx, UINT32 op, UINT32 index, in
 			continue;
 		if (fastram[i].readonly && jit_mem_is_store(op))
 			continue;
+		/* reads with wait states: through the fast RAM handlers, which count them */
+		if (fastram[i].wait && !jit_mem_is_store(op))
+			continue;
 		sljit_emit_op2(C, SLJIT_SUB, SLJIT_R1, 0, SLJIT_R0, 0, SLJIT_IMM, (sljit_sw)fastram[i].start);
 		miss = sljit_emit_cmp(C, SLJIT_GREATER, SLJIT_R1, 0, SLJIT_IMM, (sljit_sw)(fastram[i].end - fastram[i].start - (size - 1)));
 		sljit_emit_op2(C, SLJIT_ADD, SLJIT_R1, 0, SLJIT_R1, 0, SLJIT_IMM, (sljit_sw)fastram[i].base);
@@ -1463,7 +1468,8 @@ static void jit_emit_load_call(struct jit_ctx *ctx, UINT32 op, UINT32 index)
 	sljit_emit_op2(C, SLJIT_SUB32, SLJIT_R1, 0, JICOUNT, SLJIT_IMM, pending);
 	sljit_emit_op1(C, SLJIT_MOV32, SLJIT_MEM0(), (sljit_sw)&mips3_icount, SLJIT_R1, 0);
 	/* through the fast RAM handlers the address would only miss fast RAM again */
-	if (mips3.memory.readlong == fastram_readlong)
+	/* (unless it is in a region with wait states, which those handlers count) */
+	if (mips3.memory.readlong == fastram_readlong && !fastram_has_wait)
 		sljit_emit_icall(C, SLJIT_CALL, SLJIT_ARGS1(32, 32), SLJIT_MEM0(), (sljit_sw)&fastram_slow + fn - offsetof(mips3_regs, memory));
 	else
 		sljit_emit_icall(C, SLJIT_CALL, SLJIT_ARGS1(32, 32), SLJIT_MEM1(SLJIT_S0), fn);

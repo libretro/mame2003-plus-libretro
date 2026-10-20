@@ -313,12 +313,14 @@ struct mips3_fastram
 	offs_t		end;
 	UINT8 *		base;
 	UINT8		readonly;
+	int			wait;			/* cycles each data read costs (wait states), 0 = none */
 };
 
 static struct mips3_fastram fastram[MIPS3_MAX_FASTRAM];
 static int fastram_count;
 static offs_t fastram_byte_xor, fastram_word_xor;
 static memory_handlers fastram_slow;		/* handlers for everything else */
+static int fastram_has_wait;				/* a region with read wait states exists */
 
 /* exact skip of the loops that poll Cause for an interrupt (see cause_poll_skip) */
 #define MIPS3_MAX_POLLREAD	4
@@ -329,12 +331,22 @@ static int pollread_count;
 
 void mips3_add_fastram(offs_t start, offs_t end, int readonly, void *base)
 {
+	mips3_add_fastram_wait(start, end, readonly, base, 0);
+}
+
+/* the same, with wait states: each data read (not instruction fetch) costs */
+/* wait cycles, as a slow ROM does (instruction fetch and translation stay direct) */
+void mips3_add_fastram_wait(offs_t start, offs_t end, int readonly, void *base, int wait)
+{
 	if (fastram_count < MIPS3_MAX_FASTRAM)
 	{
 		fastram[fastram_count].start = start;
 		fastram[fastram_count].end = end;
 		fastram[fastram_count].base = (UINT8 *)base;
 		fastram[fastram_count].readonly = readonly;
+		fastram[fastram_count].wait = wait;
+		if (wait)
+			fastram_has_wait = 1;
 		fastram_count++;
 	}
 }
@@ -379,21 +391,21 @@ static INLINE struct mips3_fastram *find_fastram(offs_t address)
 static data8_t fastram_readbyte(offs_t address)
 {
 	struct mips3_fastram *r = find_fastram(address);
-	if (r) return r->base[(address - r->start) ^ fastram_byte_xor];
+	if (r) { mips3_icount -= r->wait; return r->base[(address - r->start) ^ fastram_byte_xor]; }
 	return (*fastram_slow.readbyte)(address);
 }
 
 static data16_t fastram_readword(offs_t address)
 {
 	struct mips3_fastram *r = find_fastram(address);
-	if (r) return *(data16_t *)&r->base[(address - r->start) ^ fastram_word_xor];
+	if (r) { mips3_icount -= r->wait; return *(data16_t *)&r->base[(address - r->start) ^ fastram_word_xor]; }
 	return (*fastram_slow.readword)(address);
 }
 
 static data32_t fastram_readlong(offs_t address)
 {
 	struct mips3_fastram *r = find_fastram(address);
-	if (r) return *(data32_t *)&r->base[address - r->start];
+	if (r) { mips3_icount -= r->wait; return *(data32_t *)&r->base[address - r->start]; }
 	return (*fastram_slow.readlong)(address);
 }
 
@@ -402,8 +414,11 @@ static UINT64 fastram_readdouble(offs_t address)
 	struct mips3_fastram *r = find_fastram(address);
 	if (r && address + 7 <= r->end)
 	{
-		UINT64 first = *(data32_t *)&r->base[address - r->start];
-		UINT64 second = *(data32_t *)&r->base[address + 4 - r->start];
+		UINT64 first;
+		UINT64 second;
+		mips3_icount -= r->wait;
+		first = *(data32_t *)&r->base[address - r->start];
+		second = *(data32_t *)&r->base[address + 4 - r->start];
 		return mips3.bigendian ? ((first << 32) | second) : (first | (second << 32));
 	}
 	return (*fastram_slow.readdouble)(address);
@@ -617,6 +632,7 @@ void mips3_init(void)
 {
 	/* optional speedups are off until a driver asks for them */
 	fastram_count = 0;
+	fastram_has_wait = 0;
 	fastram_last = &fastram[0];
 	mips3_set_jit(0);
 	cause_poll_enabled = 0;
