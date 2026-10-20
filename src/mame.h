@@ -178,6 +178,7 @@ enum /* used to index content-specific flags */
   CONTENT_NVRAM_BOOTSTRAP,
   CONTENT_CHEAT_INPUT_PORT,
   CONTENT_MIPS_DYNAREC,
+  CONTENT_ADSP_DYNAREC,
   CONTENT_end,
 };
 
@@ -220,6 +221,7 @@ struct GameOptions
   int      samplerate;		       /* sound sample playback rate, in KHz */
   bool     use_samples;	         /* 1 to enable external .wav samples */
   bool     mips_dynarec;	       /* 1 to let drivers enable the MIPS recompiler */
+  bool     adsp_dynarec;	       /* 1 to let drivers enable the ADSP-2100 recompiler */
   bool     use_alt_sound;	       /* 1 to enable alternate ost samples */
 
   float	   brightness;		       /* brightness of the display */
