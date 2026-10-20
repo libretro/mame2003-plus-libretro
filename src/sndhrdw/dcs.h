@@ -11,6 +11,7 @@ MACHINE_DRIVER_EXTERN( dcs2_audio_2104 );
 
 void dcs_init(void);
 void dcs2_init(offs_t polling_offset);
+void dcs_fast_rombank_init(void);
 void dcs_set_auto_ack(int state);
 
 void dcs_set_fifo_callbacks(UINT16 (*fifo_data_r)(void), UINT16 (*fifo_status_r)(void));

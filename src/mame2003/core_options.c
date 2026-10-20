@@ -769,6 +769,21 @@ static struct retro_core_option_v2_definition option_def_mips_dynarec = {
    "enabled"
 };
 
+static struct retro_core_option_v2_definition option_def_adsp_dynarec = {
+   APPNAME"_adsp_dynarec",
+   "ADSP Dynarec",
+   NULL,
+   "Restart core required. Recompile the sound DSP (ADSP-2100 family) code (offered only for the games that support it, on x86 and ARM hosts, 32 and 64-bit, that allow it); turn it off to use the interpreter.",
+   NULL,
+   NULL,
+   {
+      { "enabled",  NULL },
+      { "disabled", NULL },
+      { NULL, NULL },
+   },
+   "enabled"
+};
+
 static struct retro_core_option_v2_definition option_def_cyclone_mode = {
    APPNAME"_cyclone_mode",
    "Cyclone Mode",
@@ -904,6 +919,7 @@ void init_core_options(void)
   default_options[OPT_DIGITAL_JOY_CENTERING]     = option_def_digital_joy_centering;
   default_options[OPT_CPU_CLOCK_SCALE]           = option_def_cpu_clock_scale;
   default_options[OPT_MIPS_DYNAREC]              = option_def_mips_dynarec;
+  default_options[OPT_ADSP_DYNAREC]              = option_def_adsp_dynarec;
   default_options[OPT_OVERRIDE_AD_STICK]         = option_def_override_ad_stick;
   default_options[OPT_INPUT_TOGGLE]              = option_def_input_toggle;
 #if (HAS_CYCLONE || HAS_DRZ80)
@@ -938,6 +954,10 @@ static void set_variables(void)
          break;
       case OPT_MIPS_DYNAREC:
          if(!options.content_flags[CONTENT_MIPS_DYNAREC])
+           continue; /* only offered for the games that use the recompiler */
+         break;
+      case OPT_ADSP_DYNAREC:
+         if(!options.content_flags[CONTENT_ADSP_DYNAREC])
            continue; /* only offered for the games that use the recompiler */
          break;
       case OPT_NEOGEO_BIOS:
@@ -1245,6 +1265,13 @@ void update_variables(bool first_time)
             options.mips_dynarec = false;
           break;
 
+        case OPT_ADSP_DYNAREC:
+          if(strcmp(var.value, "enabled") == 0)
+            options.adsp_dynarec = true;
+          else
+            options.adsp_dynarec = false;
+          break;
+
         case OPT_CPU_CLOCK_SCALE:
           if(strcmp(var.value, "default") == 0)
             options.cpu_clock_scale = 1;
@@ -1348,6 +1375,27 @@ void set_content_flags(void)
         options.content_flags[CONTENT_ALT_SOUND] = true;
       }
   }
+
+  /************ KILLER INSTINCT: MIPS III RECOMPILER ************/
+  /* only the Killer Instinct driver enables it (Seattle games do not), */
+  /* and the option means nothing where it is compiled out */
+#if (HAS_R4600)
+  {
+    extern int mips3_jit_available(void);
+    if (game_driver->source_file && strstr(game_driver->source_file, "kinst.c") && mips3_jit_available())
+      options.content_flags[CONTENT_MIPS_DYNAREC] = true;
+  }
+#endif
+
+  /************ KILLER INSTINCT: ADSP-2105 (DCS SOUND) RECOMPILER ************/
+  /* the other DCS games and Hard Drivin' keep the interpreter */
+#if (HAS_ADSP2105)
+  {
+    extern int adsp2100_jit_available(void);
+    if (game_driver->source_file && strstr(game_driver->source_file, "kinst.c") && adsp2100_jit_available())
+      options.content_flags[CONTENT_ADSP_DYNAREC] = true;
+  }
+#endif
 
   /************ DRIVERS WITH MULTIPLE BIOS OPTIONS ************/
 #ifndef SPLIT_CORE
