@@ -156631,7 +156631,7 @@
 		<description>Battle Arena Toshinden 2 (USA 951124)</description>
 		<year>1995</year>
 		<manufacturer>Capcom/Takara</manufacturer>
-		<rom name="coh1002c.bin" merge="coh1002c.bin" size="524288" crc="50033af6" sha1="486d92ff6c7f1e54f8e0ef41cd9116eca0e10e1a" region="cpu1" offset="400000"/>
+		<rom name="coh1002c.bin" merge="coh1002c.bin" size="524288" crc="50033af6" sha1="486d92ff6c7f1e54f8e0ef41cd9116eca0e10e1a" region="user3" offset="0"/>
 		<rom name="ts2u-04" size="524288" crc="ddb52e7c" sha1="e77891abae7681d911ef6eba2e0920d81433ebe6" region="user2" offset="0"/>
 		<rom name="ts2-05" size="4194304" crc="7f4228e2" sha1="3690a76d19d97e55bc7b05a8456328697cfd7a77" region="user1" offset="0"/>
 		<rom name="ts2-06m" size="4194304" crc="cd7e0a27" sha1="325b5f2e653cdea07cddc9d20d12b5ab50dca949" region="user1" offset="400000"/>
@@ -156639,13 +156639,18 @@
 		<rom name="ts2-10" size="2097152" crc="ad90679a" sha1="19dd30764f892ee7f89c78ccbccdaf4d6b0e6e09" region="user1" offset="c00000"/>
 		<rom name="ts2-02" size="131072" crc="2f45c461" sha1="513b6b9b5a2f7c567c30c958e0e13834cd9bd266" region="cpu2" offset="0"/>
 		<rom name="ts2-01" size="4194304" crc="d7a505e0" sha1="f1b0cdea712101f695bd326eccd753eb79a07490" region="sound1" soundonly="yes" offset="0"/>
-		<chip type="cpu" name="PSX CPU" clock="33000000"/>
+		<chip type="cpu" name="PSX CPU" clock="16934400"/>
 		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
+		<chip type="audio" name="PSX SPU"/>
 		<chip type="audio" name="QSound" clock="4000000"/>
-		<video screen="raster" orientation="horizontal" width="480" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="640" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
-		<input players="2" control="joy8way" buttons="6" service="yes"/>
-		<dipswitch name="Unknown">
+		<input players="2" control="joy8way" buttons="6" coins="2" service="yes" tilt="yes"/>
+		<dipswitch name="Freeze">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
@@ -156657,13 +156662,13 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="65536"/>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="65536"/>
 	</game>
 	<game name="ts2j" sourcefile="zn.c" cloneof="ts2" romof="ts2">
 		<description>Battle Arena Toshinden 2 (JAPAN 951124)</description>
 		<year>1995</year>
 		<manufacturer>Capcom/Takara</manufacturer>
-		<rom name="coh1002c.bin" merge="coh1002c.bin" size="524288" crc="50033af6" sha1="486d92ff6c7f1e54f8e0ef41cd9116eca0e10e1a" region="cpu1" offset="400000"/>
+		<rom name="coh1002c.bin" merge="coh1002c.bin" size="524288" crc="50033af6" sha1="486d92ff6c7f1e54f8e0ef41cd9116eca0e10e1a" region="user3" offset="0"/>
 		<rom name="ts2j-04" size="524288" crc="4aba8c5e" sha1="a56001bf50bfc1b03036e88ae1febd1aac8c63c0" region="user2" offset="0"/>
 		<rom name="ts2-05" merge="ts2-05" size="4194304" crc="7f4228e2" sha1="3690a76d19d97e55bc7b05a8456328697cfd7a77" region="user1" offset="0"/>
 		<rom name="ts2-06m" merge="ts2-06m" size="4194304" crc="cd7e0a27" sha1="325b5f2e653cdea07cddc9d20d12b5ab50dca949" region="user1" offset="400000"/>
@@ -156671,13 +156676,18 @@
 		<rom name="ts2-10" merge="ts2-10" size="2097152" crc="ad90679a" sha1="19dd30764f892ee7f89c78ccbccdaf4d6b0e6e09" region="user1" offset="c00000"/>
 		<rom name="ts2-02" merge="ts2-02" size="131072" crc="2f45c461" sha1="513b6b9b5a2f7c567c30c958e0e13834cd9bd266" region="cpu2" offset="0"/>
 		<rom name="ts2-01" merge="ts2-01" size="4194304" crc="d7a505e0" sha1="f1b0cdea712101f695bd326eccd753eb79a07490" region="sound1" soundonly="yes" offset="0"/>
-		<chip type="cpu" name="PSX CPU" clock="33000000"/>
+		<chip type="cpu" name="PSX CPU" clock="16934400"/>
 		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
+		<chip type="audio" name="PSX SPU"/>
 		<chip type="audio" name="QSound" clock="4000000"/>
-		<video screen="raster" orientation="horizontal" width="480" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="640" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
-		<input players="2" control="joy8way" buttons="6" service="yes"/>
-		<dipswitch name="Unknown">
+		<input players="2" control="joy8way" buttons="6" coins="2" service="yes" tilt="yes"/>
+		<dipswitch name="Freeze">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
@@ -156689,30 +156699,35 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="65536"/>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="65536"/>
 	</game>
 	<game name="starglad" sourcefile="zn.c" romof="cpzn1">
 		<description>Star Gladiator (USA 960627)</description>
 		<year>1996</year>
 		<manufacturer>Capcom/</manufacturer>
-		<rom name="coh1002c.bin" merge="coh1002c.bin" size="524288" crc="50033af6" sha1="486d92ff6c7f1e54f8e0ef41cd9116eca0e10e1a" region="cpu1" offset="400000"/>
+		<rom name="coh1002c.bin" merge="coh1002c.bin" size="524288" crc="50033af6" sha1="486d92ff6c7f1e54f8e0ef41cd9116eca0e10e1a" region="user3" offset="0"/>
 		<rom name="ps1u-04.2h" size="524288" crc="121fb234" sha1="697d18d37afd95f302b40a5a6a78d8c92a41ea73" region="user2" offset="0"/>
 		<rom name="ps1-05m.3h" size="4194304" crc="8ad72c4f" sha1="c848c37eb5365000b4d4720b5c08d89ddd8e2c33" region="user1" offset="0"/>
-		<rom name="ps1-06m.4h" size="4194304" crc="95d8ed61" sha1="e9f259d589dc38a8321a6fea1f5dac741cadc0ff" region="user1" offset="0"/>
-		<rom name="ps1-07m.5h" size="4194304" crc="c06752db" sha1="0884b308e9cd9dde8660b422bc8fec9a362bcb52" region="user1" offset="0"/>
-		<rom name="ps1-08m.2k" size="4194304" crc="381f9ded" sha1="b7878a90740f5b3c5881ac7d46e2b84b18727337" region="user1" offset="0"/>
-		<rom name="ps1-09m.3k" size="4194304" crc="bd894812" sha1="9f0c3365e685a53ae793f4a256a6c177a843a424" region="user1" offset="0"/>
-		<rom name="ps1-10m.4k" size="4194304" crc="ff80c18a" sha1="8d01717eed6ec1f508fe7c445da941fb84ef7d22" region="user1" offset="0"/>
+		<rom name="ps1-06m.4h" size="4194304" crc="95d8ed61" sha1="e9f259d589dc38a8321a6fea1f5dac741cadc0ff" region="user1" offset="400000"/>
+		<rom name="ps1-07m.5h" size="4194304" crc="c06752db" sha1="0884b308e9cd9dde8660b422bc8fec9a362bcb52" region="user1" offset="800000"/>
+		<rom name="ps1-08m.2k" size="4194304" crc="381f9ded" sha1="b7878a90740f5b3c5881ac7d46e2b84b18727337" region="user1" offset="c00000"/>
+		<rom name="ps1-09m.3k" size="4194304" crc="bd894812" sha1="9f0c3365e685a53ae793f4a256a6c177a843a424" region="user1" offset="1000000"/>
+		<rom name="ps1-10m.4k" size="4194304" crc="ff80c18a" sha1="8d01717eed6ec1f508fe7c445da941fb84ef7d22" region="user1" offset="1400000"/>
 		<rom name="ps1-02a.2e" size="131072" crc="b854df92" sha1="ea71a613b5b19ec7e9c6e342e7743d320582a6bb" region="cpu2" offset="0"/>
 		<rom name="ps1-03a.3e" size="131072" crc="a2562fbb" sha1="3de02a4aa7ea620961ca2a5c331f38134033db79" region="cpu2" offset="28000"/>
 		<rom name="ps1-01m.3b" size="4194304" crc="0bfb17aa" sha1="cf4482785a2a33ad814c8b1461c5bc8e8e027895" region="sound1" soundonly="yes" offset="0"/>
-		<chip type="cpu" name="PSX CPU" clock="33000000"/>
+		<chip type="cpu" name="PSX CPU" clock="16934400"/>
 		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
+		<chip type="audio" name="PSX SPU"/>
 		<chip type="audio" name="QSound" clock="4000000"/>
-		<video screen="raster" orientation="horizontal" width="480" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="640" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
-		<input players="2" control="joy8way" buttons="6" service="yes"/>
-		<dipswitch name="Unknown">
+		<input players="2" control="joy8way" buttons="6" coins="2" service="yes" tilt="yes"/>
+		<dipswitch name="Freeze">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
@@ -156724,13 +156739,13 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="65536"/>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="65536"/>
 	</game>
 	<game name="sfex" sourcefile="zn.c" romof="cpzn1">
 		<description>Street Fighter EX (ASIA 961219)</description>
 		<year>1996</year>
 		<manufacturer>Capcom/Arika</manufacturer>
-		<rom name="coh1002c.bin" merge="coh1002c.bin" size="524288" crc="50033af6" sha1="486d92ff6c7f1e54f8e0ef41cd9116eca0e10e1a" region="cpu1" offset="400000"/>
+		<rom name="coh1002c.bin" merge="coh1002c.bin" size="524288" crc="50033af6" sha1="486d92ff6c7f1e54f8e0ef41cd9116eca0e10e1a" region="user3" offset="0"/>
 		<rom name="sfe-04a" size="524288" crc="08247bd4" sha1="07f356ef2827b3fbd0bfaf2010915315d9d60ef1" region="user2" offset="0"/>
 		<rom name="sfe-05m" size="4194304" crc="eab781fe" sha1="205476cb72c8dac915e140fb32243dfc5d209ba4" region="user1" offset="0"/>
 		<rom name="sfe-06m" size="4194304" crc="999de60c" sha1="092882698c411fc5c3bcb43105bf1886f94b8e40" region="user1" offset="400000"/>
@@ -156741,13 +156756,18 @@
 		<rom name="sfe-02" size="131072" crc="1908475c" sha1="99f68cff2d92f5697eec0846201f6fb317d5dc08" region="cpu2" offset="0"/>
 		<rom name="sfe-03" size="131072" crc="95c1e2e0" sha1="383bbe9613798a3ac6944d18768280a840994e40" region="cpu2" offset="28000"/>
 		<rom name="sfe-01m" size="4194304" crc="f5afff0d" sha1="7f9ac32ba0a3d9c6fef367e36a92d47c9ac1feb3" region="sound1" soundonly="yes" offset="0"/>
-		<chip type="cpu" name="PSX CPU" clock="33000000"/>
+		<chip type="cpu" name="PSX CPU" clock="16934400"/>
 		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
+		<chip type="audio" name="PSX SPU"/>
 		<chip type="audio" name="QSound" clock="4000000"/>
-		<video screen="raster" orientation="horizontal" width="480" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="640" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
-		<input players="2" control="joy8way" buttons="6" service="yes"/>
-		<dipswitch name="Unknown">
+		<input players="2" control="joy8way" buttons="6" coins="2" service="yes" tilt="yes"/>
+		<dipswitch name="Freeze">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
@@ -156759,13 +156779,13 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="65536"/>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="65536"/>
 	</game>
 	<game name="sfexj" sourcefile="zn.c" cloneof="sfex" romof="sfex">
 		<description>Street Fighter EX (JAPAN 961130)</description>
 		<year>1996</year>
 		<manufacturer>Capcom/Arika</manufacturer>
-		<rom name="coh1002c.bin" merge="coh1002c.bin" size="524288" crc="50033af6" sha1="486d92ff6c7f1e54f8e0ef41cd9116eca0e10e1a" region="cpu1" offset="400000"/>
+		<rom name="coh1002c.bin" merge="coh1002c.bin" size="524288" crc="50033af6" sha1="486d92ff6c7f1e54f8e0ef41cd9116eca0e10e1a" region="user3" offset="0"/>
 		<rom name="sfe-04j" size="524288" crc="ea100607" sha1="27ef8c619804999d32d14fcc5ec783c057b4dc73" region="user2" offset="0"/>
 		<rom name="sfe-05m" merge="sfe-05m" size="4194304" crc="eab781fe" sha1="205476cb72c8dac915e140fb32243dfc5d209ba4" region="user1" offset="0"/>
 		<rom name="sfe-06m" merge="sfe-06m" size="4194304" crc="999de60c" sha1="092882698c411fc5c3bcb43105bf1886f94b8e40" region="user1" offset="400000"/>
@@ -156776,13 +156796,18 @@
 		<rom name="sfe-02" merge="sfe-02" size="131072" crc="1908475c" sha1="99f68cff2d92f5697eec0846201f6fb317d5dc08" region="cpu2" offset="0"/>
 		<rom name="sfe-03" merge="sfe-03" size="131072" crc="95c1e2e0" sha1="383bbe9613798a3ac6944d18768280a840994e40" region="cpu2" offset="28000"/>
 		<rom name="sfe-01m" merge="sfe-01m" size="4194304" crc="f5afff0d" sha1="7f9ac32ba0a3d9c6fef367e36a92d47c9ac1feb3" region="sound1" soundonly="yes" offset="0"/>
-		<chip type="cpu" name="PSX CPU" clock="33000000"/>
+		<chip type="cpu" name="PSX CPU" clock="16934400"/>
 		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
+		<chip type="audio" name="PSX SPU"/>
 		<chip type="audio" name="QSound" clock="4000000"/>
-		<video screen="raster" orientation="horizontal" width="480" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="640" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
-		<input players="2" control="joy8way" buttons="6" service="yes"/>
-		<dipswitch name="Unknown">
+		<input players="2" control="joy8way" buttons="6" coins="2" service="yes" tilt="yes"/>
+		<dipswitch name="Freeze">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
@@ -156794,22 +156819,29 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="65536"/>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="65536"/>
 	</game>
 	<game name="glpracr" sourcefile="zn.c" romof="cpzn1">
 		<description>Gallop Racer (JAPAN Ver 9.01.12)</description>
 		<year>1996</year>
 		<manufacturer>Tecmo</manufacturer>
-		<rom name="coh1002c.bin" merge="coh1002c.bin" size="524288" crc="50033af6" sha1="486d92ff6c7f1e54f8e0ef41cd9116eca0e10e1a" region="cpu1" offset="400000"/>
+		<rom name="coh1002c.bin" merge="coh1002c.bin" size="524288" crc="50033af6" sha1="486d92ff6c7f1e54f8e0ef41cd9116eca0e10e1a" region="user3" offset="0"/>
 		<rom name="graj-04.2j" size="524288" crc="53bf551c" sha1="320632b5010630cee4c5ccb1578d5ee6d2754632" region="user2" offset="0"/>
 		<rom name="gra-05m.3j" size="4194304" crc="78053700" sha1="38727c8cc34bb57b7b7e73041e382fb0361f184e" region="user1" offset="0"/>
 		<rom name="gra-06m.4j" size="4194304" crc="d73b392b" sha1="241ddf474cea035e81a2abc580d3c0395ee925bb" region="user1" offset="400000"/>
 		<rom name="gra-07m.5j" size="4194304" crc="acaefe3a" sha1="32d596b0f975e1558fa7929c3166d8dad40a1c80" region="user1" offset="800000"/>
-		<chip type="cpu" name="PSX CPU" clock="33868800"/>
-		<video screen="raster" orientation="horizontal" width="480" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
-		<sound channels="0"/>
-		<input players="2" control="joy8way" buttons="6" service="yes"/>
-		<dipswitch name="Unknown">
+		<chip type="cpu" name="PSX CPU" clock="16934400"/>
+		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
+		<chip type="audio" name="PSX SPU"/>
+		<chip type="audio" name="QSound" clock="4000000"/>
+		<video screen="raster" orientation="horizontal" width="640" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="2"/>
+		<input players="4" control="joy8way" buttons="3" coins="4" service="yes" tilt="yes"/>
+		<dipswitch name="Freeze">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
@@ -156821,13 +156853,13 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="preliminary" graphic="good" palettesize="65536"/>
+		<driver status="good" color="good" sound="preliminary" graphic="imperfect" palettesize="65536"/>
 	</game>
 	<game name="sfexp" sourcefile="zn.c" romof="cpzn1">
 		<description>Street Fighter EX Plus (USA 970311)</description>
 		<year>1997</year>
 		<manufacturer>Capcom/Arika</manufacturer>
-		<rom name="coh1002c.bin" merge="coh1002c.bin" size="524288" crc="50033af6" sha1="486d92ff6c7f1e54f8e0ef41cd9116eca0e10e1a" region="cpu1" offset="400000"/>
+		<rom name="coh1002c.bin" merge="coh1002c.bin" size="524288" crc="50033af6" sha1="486d92ff6c7f1e54f8e0ef41cd9116eca0e10e1a" region="user3" offset="0"/>
 		<rom name="sfp-04e" size="524288" crc="305e4ec0" sha1="0df9572d7fc1bbc7131483960771d016fa5487a5" region="user2" offset="0"/>
 		<rom name="sfp-05" size="4194304" crc="ac7dcc5e" sha1="216de2de691a9bd7982d5d6b5b1e3e35ff381a2f" region="user1" offset="0"/>
 		<rom name="sfp-06" size="4194304" crc="1d504758" sha1="bd56141aba35dbb5b318445ba5db12eff7442221" region="user1" offset="400000"/>
@@ -156838,13 +156870,18 @@
 		<rom name="sfe-02" size="131072" crc="1908475c" sha1="99f68cff2d92f5697eec0846201f6fb317d5dc08" region="cpu2" offset="0"/>
 		<rom name="sfe-03" size="131072" crc="95c1e2e0" sha1="383bbe9613798a3ac6944d18768280a840994e40" region="cpu2" offset="28000"/>
 		<rom name="sfe-01m" size="4194304" crc="f5afff0d" sha1="7f9ac32ba0a3d9c6fef367e36a92d47c9ac1feb3" region="sound1" soundonly="yes" offset="0"/>
-		<chip type="cpu" name="PSX CPU" clock="33000000"/>
+		<chip type="cpu" name="PSX CPU" clock="16934400"/>
 		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
+		<chip type="audio" name="PSX SPU"/>
 		<chip type="audio" name="QSound" clock="4000000"/>
-		<video screen="raster" orientation="horizontal" width="480" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="640" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
-		<input players="2" control="joy8way" buttons="6" service="yes"/>
-		<dipswitch name="Unknown">
+		<input players="2" control="joy8way" buttons="6" coins="2" service="yes" tilt="yes"/>
+		<dipswitch name="Freeze">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
@@ -156856,13 +156893,13 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="65536"/>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="65536"/>
 	</game>
 	<game name="sfexpj" sourcefile="zn.c" cloneof="sfexp" romof="sfexp">
 		<description>Street Fighter EX Plus (JAPAN 970311)</description>
 		<year>1997</year>
 		<manufacturer>Capcom/Arika</manufacturer>
-		<rom name="coh1002c.bin" merge="coh1002c.bin" size="524288" crc="50033af6" sha1="486d92ff6c7f1e54f8e0ef41cd9116eca0e10e1a" region="cpu1" offset="400000"/>
+		<rom name="coh1002c.bin" merge="coh1002c.bin" size="524288" crc="50033af6" sha1="486d92ff6c7f1e54f8e0ef41cd9116eca0e10e1a" region="user3" offset="0"/>
 		<rom name="sfp-04j" size="524288" crc="18d043f5" sha1="9e6e24a722d13888fbfd391ddb1a5045b162488c" region="user2" offset="0"/>
 		<rom name="sfp-05" merge="sfp-05" size="4194304" crc="ac7dcc5e" sha1="216de2de691a9bd7982d5d6b5b1e3e35ff381a2f" region="user1" offset="0"/>
 		<rom name="sfp-06" merge="sfp-06" size="4194304" crc="1d504758" sha1="bd56141aba35dbb5b318445ba5db12eff7442221" region="user1" offset="400000"/>
@@ -156873,13 +156910,18 @@
 		<rom name="sfe-02" merge="sfe-02" size="131072" crc="1908475c" sha1="99f68cff2d92f5697eec0846201f6fb317d5dc08" region="cpu2" offset="0"/>
 		<rom name="sfe-03" merge="sfe-03" size="131072" crc="95c1e2e0" sha1="383bbe9613798a3ac6944d18768280a840994e40" region="cpu2" offset="28000"/>
 		<rom name="sfe-01m" merge="sfe-01m" size="4194304" crc="f5afff0d" sha1="7f9ac32ba0a3d9c6fef367e36a92d47c9ac1feb3" region="sound1" soundonly="yes" offset="0"/>
-		<chip type="cpu" name="PSX CPU" clock="33000000"/>
+		<chip type="cpu" name="PSX CPU" clock="16934400"/>
 		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
+		<chip type="audio" name="PSX SPU"/>
 		<chip type="audio" name="QSound" clock="4000000"/>
-		<video screen="raster" orientation="horizontal" width="480" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="640" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
-		<input players="2" control="joy8way" buttons="6" service="yes"/>
-		<dipswitch name="Unknown">
+		<input players="2" control="joy8way" buttons="6" coins="2" service="yes" tilt="yes"/>
+		<dipswitch name="Freeze">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
@@ -156891,13 +156933,13 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="65536"/>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="65536"/>
 	</game>
-	<game name="rvschool" sourcefile="zn.c" romof="cpzn1">
+	<game name="rvschool" sourcefile="zn.c" romof="cpzn2">
 		<description>Rival Schools (ASIA 971117)</description>
 		<year>1997</year>
 		<manufacturer>Capcom</manufacturer>
-		<rom name="coh1002c.bin" merge="coh1002c.bin" size="524288" crc="50033af6" sha1="486d92ff6c7f1e54f8e0ef41cd9116eca0e10e1a" region="cpu1" offset="400000"/>
+		<rom name="coh3002c.bin" merge="coh3002c.bin" size="524288" crc="e860ea8b" sha1="66e7e1d4e426466b8f48a2ba055a91b475569504" region="user3" offset="0"/>
 		<rom name="jst-04a" size="524288" crc="034b1011" sha1="6773246be242ee336503d21d7d44a3884832eb1e" region="user2" offset="0"/>
 		<rom name="jst-05m" size="4194304" crc="723372b8" sha1="2a7c95d1f9a3f58c469dfc28ead1fd192eaaebd1" region="user1" offset="0"/>
 		<rom name="jst-06m" size="4194304" crc="4248988e" sha1="4bdf7cac17d70ea85aa2002fc6b21a64d05e6e5a" region="user1" offset="400000"/>
@@ -156911,13 +156953,18 @@
 		<rom name="jst-02" size="131072" crc="7809e2c3" sha1="0216a665f7978bc8db3f7fdab038e1c7aa120844" region="cpu2" offset="0"/>
 		<rom name="jst-03" size="131072" crc="860ff24d" sha1="eea72fa5eaf407a112a5b3daf60f7ac8ad191cc7" region="cpu2" offset="28000"/>
 		<rom name="jst-01m" size="4194304" crc="9a7c98f9" sha1="764c6c4f41047e1f36d2dceac4aa9b943a9d529a" region="sound1" soundonly="yes" offset="0"/>
-		<chip type="cpu" name="PSX CPU" clock="33000000"/>
+		<chip type="cpu" name="PSX CPU" clock="25000000"/>
 		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
+		<chip type="audio" name="PSX SPU"/>
 		<chip type="audio" name="QSound" clock="4000000"/>
-		<video screen="raster" orientation="horizontal" width="480" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="640" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
-		<input players="2" control="joy8way" buttons="6" service="yes"/>
-		<dipswitch name="Unknown">
+		<input players="2" control="joy8way" buttons="6" coins="2" service="yes" tilt="yes"/>
+		<dipswitch name="Freeze">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
@@ -156929,13 +156976,13 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="65536"/>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="65536"/>
 	</game>
 	<game name="jgakuen" sourcefile="zn.c" cloneof="rvschool" romof="rvschool">
 		<description>Justice Gakuen (JAPAN 971117)</description>
 		<year>1997</year>
 		<manufacturer>Capcom</manufacturer>
-		<rom name="coh1002c.bin" merge="coh1002c.bin" size="524288" crc="50033af6" sha1="486d92ff6c7f1e54f8e0ef41cd9116eca0e10e1a" region="cpu1" offset="400000"/>
+		<rom name="coh3002c.bin" merge="coh3002c.bin" size="524288" crc="e860ea8b" sha1="66e7e1d4e426466b8f48a2ba055a91b475569504" region="user3" offset="0"/>
 		<rom name="jst-04j" size="524288" crc="28b8000a" sha1="9ebf74b453d775cadca9c2d7d8e2c7eb57bb9a38" region="user2" offset="0"/>
 		<rom name="jst-05m" merge="jst-05m" size="4194304" crc="723372b8" sha1="2a7c95d1f9a3f58c469dfc28ead1fd192eaaebd1" region="user1" offset="0"/>
 		<rom name="jst-06m" merge="jst-06m" size="4194304" crc="4248988e" sha1="4bdf7cac17d70ea85aa2002fc6b21a64d05e6e5a" region="user1" offset="400000"/>
@@ -156949,13 +156996,18 @@
 		<rom name="jst-02" merge="jst-02" size="131072" crc="7809e2c3" sha1="0216a665f7978bc8db3f7fdab038e1c7aa120844" region="cpu2" offset="0"/>
 		<rom name="jst-03" merge="jst-03" size="131072" crc="860ff24d" sha1="eea72fa5eaf407a112a5b3daf60f7ac8ad191cc7" region="cpu2" offset="28000"/>
 		<rom name="jst-01m" merge="jst-01m" size="4194304" crc="9a7c98f9" sha1="764c6c4f41047e1f36d2dceac4aa9b943a9d529a" region="sound1" soundonly="yes" offset="0"/>
-		<chip type="cpu" name="PSX CPU" clock="33000000"/>
+		<chip type="cpu" name="PSX CPU" clock="25000000"/>
 		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
+		<chip type="audio" name="PSX SPU"/>
 		<chip type="audio" name="QSound" clock="4000000"/>
-		<video screen="raster" orientation="horizontal" width="480" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="640" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
-		<input players="2" control="joy8way" buttons="6" service="yes"/>
-		<dipswitch name="Unknown">
+		<input players="2" control="joy8way" buttons="6" coins="2" service="yes" tilt="yes"/>
+		<dipswitch name="Freeze">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
@@ -156967,25 +157019,30 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="65536"/>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="65536"/>
 	</game>
-	<game name="tgmj" sourcefile="zn.c" romof="cpzn1">
+	<game name="tgmj" sourcefile="zn.c" romof="cpzn2">
 		<description>Tetris The Grand Master (JAPAN 980710)</description>
 		<year>1998</year>
 		<manufacturer>Capcom/Akira</manufacturer>
-		<rom name="coh1002c.bin" merge="coh1002c.bin" size="524288" crc="50033af6" sha1="486d92ff6c7f1e54f8e0ef41cd9116eca0e10e1a" region="cpu1" offset="400000"/>
+		<rom name="coh3002c.bin" merge="coh3002c.bin" size="524288" crc="e860ea8b" sha1="66e7e1d4e426466b8f48a2ba055a91b475569504" region="user3" offset="0"/>
 		<rom name="ate-04j" size="524288" crc="bb4bbb96" sha1="808f4b29493e74efd661d561d11cbec2f4afd1c8" region="user2" offset="0"/>
 		<rom name="ate-05" size="4194304" crc="50977f5a" sha1="78c2b1965957ff1756c25b76e549f11fc0001153" region="user1" offset="0"/>
 		<rom name="ate-06" size="4194304" crc="05973f16" sha1="c9262e8de14c4a9489f7050316012913c1caf0ff" region="user1" offset="400000"/>
 		<rom name="ate-02" size="131072" crc="f4f6e82f" sha1="ad6c49197a60f456367c9f78353741fb847819a1" region="cpu2" offset="0"/>
 		<rom name="ate-01" size="4194304" crc="a21c6521" sha1="560e4855f6e00def5277bdd12064b49e55c3b46b" region="sound1" soundonly="yes" offset="0"/>
-		<chip type="cpu" name="PSX CPU" clock="33000000"/>
+		<chip type="cpu" name="PSX CPU" clock="25000000"/>
 		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
+		<chip type="audio" name="PSX SPU"/>
 		<chip type="audio" name="QSound" clock="4000000"/>
-		<video screen="raster" orientation="horizontal" width="480" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="640" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
-		<input players="2" control="joy8way" buttons="6" service="yes"/>
-		<dipswitch name="Unknown">
+		<input players="4" control="joy8way" buttons="3" coins="4" service="yes" tilt="yes"/>
+		<dipswitch name="Freeze">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
@@ -156997,13 +157054,13 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="65536"/>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="65536"/>
 	</game>
 	<game name="sfex2" sourcefile="zn.c" romof="cpzn2">
 		<description>Street Fighter EX 2 (JAPAN 980312)</description>
 		<year>1998</year>
 		<manufacturer>Capcom/Arika</manufacturer>
-		<rom name="coh3002c.bin" merge="coh3002c.bin" size="524288" crc="e860ea8b" sha1="66e7e1d4e426466b8f48a2ba055a91b475569504" region="cpu1" offset="400000"/>
+		<rom name="coh3002c.bin" merge="coh3002c.bin" size="524288" crc="e860ea8b" sha1="66e7e1d4e426466b8f48a2ba055a91b475569504" region="user3" offset="0"/>
 		<rom name="ex2j-04" size="524288" crc="5d603586" sha1="ff546d3bd011d6441e9672b88bab763d3cd89be2" region="user2" offset="0"/>
 		<rom name="ex2-05m" size="8388608" crc="78726b17" sha1="2da449df335ef133ebc3997bbad73ef4137f4771" region="user1" offset="0"/>
 		<rom name="ex2-06m" size="8388608" crc="be1075ed" sha1="36dc673372f30f8b3ff5689ae568c5cd01fe2c07" region="user1" offset="800000"/>
@@ -157012,13 +157069,18 @@
 		<rom name="ex2-09m" size="4194304" crc="075ae585" sha1="6b88851db618fc3e96f1d740c46c1bc5be0ee21b" region="user1" offset="2000000"/>
 		<rom name="ex2-02" size="131072" crc="9489875e" sha1="1fc9985ff98232c63ea8d05a69f7d77cdf72919f" region="cpu2" offset="0"/>
 		<rom name="ex2-01m" size="4194304" crc="14a5bb0e" sha1="dfe3c3a53bd4c58743d8039b5344d3afbe2a9c24" region="sound1" soundonly="yes" offset="0"/>
-		<chip type="cpu" name="PSX CPU" clock="33000000"/>
+		<chip type="cpu" name="PSX CPU" clock="25000000"/>
 		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
+		<chip type="audio" name="PSX SPU"/>
 		<chip type="audio" name="QSound" clock="4000000"/>
-		<video screen="raster" orientation="horizontal" width="480" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="640" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
-		<input players="2" control="joy8way" buttons="6" service="yes"/>
-		<dipswitch name="Unknown">
+		<input players="2" control="joy8way" buttons="6" coins="2" service="yes" tilt="yes"/>
+		<dipswitch name="Freeze">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
@@ -157030,13 +157092,13 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="65536"/>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="65536"/>
 	</game>
 	<game name="sg2j" sourcefile="zn.c" romof="cpzn2">
 		<description>Star Gladiator 2 (JAPAN 980316)</description>
 		<year>1998</year>
 		<manufacturer>Capcom</manufacturer>
-		<rom name="coh3002c.bin" merge="coh3002c.bin" size="524288" crc="e860ea8b" sha1="66e7e1d4e426466b8f48a2ba055a91b475569504" region="cpu1" offset="400000"/>
+		<rom name="coh3002c.bin" merge="coh3002c.bin" size="524288" crc="e860ea8b" sha1="66e7e1d4e426466b8f48a2ba055a91b475569504" region="user3" offset="0"/>
 		<rom name="sg2j-04" size="524288" crc="cf4ce6ac" sha1="52b6f61d79671c9c108b3dfbd3c2ac333285412c" region="user2" offset="0"/>
 		<rom name="sg2-05m" size="8388608" crc="f1759236" sha1="fbe3a820a8c571dfb186eae68346e6461168ed48" region="user1" offset="0"/>
 		<rom name="sg2-06m" size="8388608" crc="33de4f72" sha1="ab32af76b5682e3d9f67dadbaed35abc043912b4" region="user1" offset="800000"/>
@@ -157046,13 +157108,18 @@
 		<rom name="sg2-02" size="131072" crc="415ee138" sha1="626083c8705f012552691c450f95401ddc88065b" region="cpu2" offset="0"/>
 		<rom name="sg2-03" size="131072" crc="43806735" sha1="88d389bcc79cbd4fa1f4b62008e171a897e77652" region="cpu2" offset="28000"/>
 		<rom name="sg2-01m" size="4194304" crc="643ea27b" sha1="40747432d5cfebac54d3824b6a6f26b5e7742fc1" region="sound1" soundonly="yes" offset="0"/>
-		<chip type="cpu" name="PSX CPU" clock="33000000"/>
+		<chip type="cpu" name="PSX CPU" clock="25000000"/>
 		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
+		<chip type="audio" name="PSX SPU"/>
 		<chip type="audio" name="QSound" clock="4000000"/>
-		<video screen="raster" orientation="horizontal" width="480" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="640" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
-		<input players="2" control="joy8way" buttons="6" service="yes"/>
-		<dipswitch name="Unknown">
+		<input players="2" control="joy8way" buttons="6" coins="2" service="yes" tilt="yes"/>
+		<dipswitch name="Freeze">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
@@ -157064,13 +157131,13 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="65536"/>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="65536"/>
 	</game>
 	<game name="techromn" sourcefile="zn.c" romof="cpzn2">
 		<description>Tech Romancer (USA 980914)</description>
 		<year>1998</year>
 		<manufacturer>Capcom</manufacturer>
-		<rom name="coh3002c.bin" merge="coh3002c.bin" size="524288" crc="e860ea8b" sha1="66e7e1d4e426466b8f48a2ba055a91b475569504" region="cpu1" offset="400000"/>
+		<rom name="coh3002c.bin" merge="coh3002c.bin" size="524288" crc="e860ea8b" sha1="66e7e1d4e426466b8f48a2ba055a91b475569504" region="user3" offset="0"/>
 		<rom name="kiou-04" size="524288" crc="08aca34a" sha1="768a37f719af5d96993db5592b6505b013e0d6f4" region="user2" offset="0"/>
 		<rom name="kio-05m.bin" size="8388608" crc="98e9eb24" sha1="144773296c213ab09d626c915f90bb74e24487f0" region="user1" offset="0"/>
 		<rom name="kio-06m.bin" size="8388608" crc="be8d7d73" sha1="bcbbbd0b83503f2ed32527444e0da3afd774d3f7" region="user1" offset="800000"/>
@@ -157081,13 +157148,18 @@
 		<rom name="kio-02.bin" size="131072" crc="174309b3" sha1="b35b9c3905d2fabaa8410f70f7b382e916c89733" region="cpu2" offset="0"/>
 		<rom name="kio-03.bin" size="131072" crc="0b313ae5" sha1="0ea39305ca30f376930e39b134fd1a52200624fa" region="cpu2" offset="28000"/>
 		<rom name="kio-01m.bin" size="4194304" crc="6dc5bd07" sha1="e1755a48465f741691ea0fa1166cb2dc09210ed9" region="sound1" soundonly="yes" offset="0"/>
-		<chip type="cpu" name="PSX CPU" clock="33000000"/>
+		<chip type="cpu" name="PSX CPU" clock="25000000"/>
 		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
+		<chip type="audio" name="PSX SPU"/>
 		<chip type="audio" name="QSound" clock="4000000"/>
-		<video screen="raster" orientation="horizontal" width="480" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="640" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
-		<input players="2" control="joy8way" buttons="6" service="yes"/>
-		<dipswitch name="Unknown">
+		<input players="2" control="joy8way" buttons="6" coins="2" service="yes" tilt="yes"/>
+		<dipswitch name="Freeze">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
@@ -157099,13 +157171,13 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="65536"/>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="65536"/>
 	</game>
 	<game name="kikaioh" sourcefile="zn.c" cloneof="techromn" romof="techromn">
 		<description>Kikaioh (JAPAN 980914)</description>
 		<year>1998</year>
 		<manufacturer>Capcom</manufacturer>
-		<rom name="coh3002c.bin" merge="coh3002c.bin" size="524288" crc="e860ea8b" sha1="66e7e1d4e426466b8f48a2ba055a91b475569504" region="cpu1" offset="400000"/>
+		<rom name="coh3002c.bin" merge="coh3002c.bin" size="524288" crc="e860ea8b" sha1="66e7e1d4e426466b8f48a2ba055a91b475569504" region="user3" offset="0"/>
 		<rom name="kioj-04.bin" size="524288" crc="3a2a3bc8" sha1="3c4ae3cfe00a7f60ab2196ae042dab4a8eb6f597" region="user2" offset="0"/>
 		<rom name="kio-05m.bin" merge="kio-05m.bin" size="8388608" crc="98e9eb24" sha1="144773296c213ab09d626c915f90bb74e24487f0" region="user1" offset="0"/>
 		<rom name="kio-06m.bin" merge="kio-06m.bin" size="8388608" crc="be8d7d73" sha1="bcbbbd0b83503f2ed32527444e0da3afd774d3f7" region="user1" offset="800000"/>
@@ -157116,13 +157188,18 @@
 		<rom name="kio-02.bin" merge="kio-02.bin" size="131072" crc="174309b3" sha1="b35b9c3905d2fabaa8410f70f7b382e916c89733" region="cpu2" offset="0"/>
 		<rom name="kio-03.bin" merge="kio-03.bin" size="131072" crc="0b313ae5" sha1="0ea39305ca30f376930e39b134fd1a52200624fa" region="cpu2" offset="28000"/>
 		<rom name="kio-01m.bin" merge="kio-01m.bin" size="4194304" crc="6dc5bd07" sha1="e1755a48465f741691ea0fa1166cb2dc09210ed9" region="sound1" soundonly="yes" offset="0"/>
-		<chip type="cpu" name="PSX CPU" clock="33000000"/>
+		<chip type="cpu" name="PSX CPU" clock="25000000"/>
 		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
+		<chip type="audio" name="PSX SPU"/>
 		<chip type="audio" name="QSound" clock="4000000"/>
-		<video screen="raster" orientation="horizontal" width="480" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="640" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
-		<input players="2" control="joy8way" buttons="6" service="yes"/>
-		<dipswitch name="Unknown">
+		<input players="2" control="joy8way" buttons="6" coins="2" service="yes" tilt="yes"/>
+		<dipswitch name="Freeze">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
@@ -157134,13 +157211,13 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="65536"/>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="65536"/>
 	</game>
 	<game name="sfex2p" sourcefile="zn.c" cloneof="sfex2" romof="sfex2">
 		<description>Street Fighter EX 2 Plus (JAPAN 990611)</description>
 		<year>1999</year>
 		<manufacturer>Capcom/Arika</manufacturer>
-		<rom name="coh3002c.bin" merge="coh3002c.bin" size="524288" crc="e860ea8b" sha1="66e7e1d4e426466b8f48a2ba055a91b475569504" region="cpu1" offset="400000"/>
+		<rom name="coh3002c.bin" merge="coh3002c.bin" size="524288" crc="e860ea8b" sha1="66e7e1d4e426466b8f48a2ba055a91b475569504" region="user3" offset="0"/>
 		<rom name="sf2p-04" size="524288" crc="c6d0aea3" sha1="f48ee889dd743109f830063da3eb0f687db2d86c" region="user2" offset="0"/>
 		<rom name="sf2p-05" size="8388608" crc="4ee3110f" sha1="704f8dca7d0b698659af9e3271ea5072dfd42b8b" region="user1" offset="0"/>
 		<rom name="sf2p-06" size="8388608" crc="4cd53a45" sha1="39499ea6c9aa51c71f4fe44cc02f93d5a39e14ec" region="user1" offset="800000"/>
@@ -157151,13 +157228,18 @@
 		<rom name="sf2p-02" size="131072" crc="3705de5e" sha1="847007ca271da64bf13ffbf496d4291429eee27a" region="cpu2" offset="0"/>
 		<rom name="sf2p-03" size="131072" crc="6ae828f6" sha1="41c54165e87b846a845da581f408b96979288158" region="cpu2" offset="28000"/>
 		<rom name="ex2-01m" merge="ex2-01m" size="4194304" crc="14a5bb0e" sha1="dfe3c3a53bd4c58743d8039b5344d3afbe2a9c24" region="sound1" soundonly="yes" offset="0"/>
-		<chip type="cpu" name="PSX CPU" clock="33000000"/>
+		<chip type="cpu" name="PSX CPU" clock="25000000"/>
 		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
+		<chip type="audio" name="PSX SPU"/>
 		<chip type="audio" name="QSound" clock="4000000"/>
-		<video screen="raster" orientation="horizontal" width="480" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="640" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
-		<input players="2" control="joy8way" buttons="6" service="yes"/>
-		<dipswitch name="Unknown">
+		<input players="2" control="joy8way" buttons="6" coins="2" service="yes" tilt="yes"/>
+		<dipswitch name="Freeze">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
@@ -157169,13 +157251,13 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="65536"/>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="65536"/>
 	</game>
 	<game name="strider2" sourcefile="zn.c" romof="cpzn2">
 		<description>Strider 2 (USA 991213)</description>
 		<year>1999</year>
 		<manufacturer>Capcom</manufacturer>
-		<rom name="coh3002c.bin" merge="coh3002c.bin" size="524288" crc="e860ea8b" sha1="66e7e1d4e426466b8f48a2ba055a91b475569504" region="cpu1" offset="400000"/>
+		<rom name="coh3002c.bin" merge="coh3002c.bin" size="524288" crc="e860ea8b" sha1="66e7e1d4e426466b8f48a2ba055a91b475569504" region="user3" offset="0"/>
 		<rom name="hr2_04u.bin" size="524288" crc="6e18a49d" sha1="e2dbc22d8e37f0e6b05d40bf2e450d0683b10dc0" region="user2" offset="0"/>
 		<rom name="hr2-05m.bin" size="8388608" crc="18716fe8" sha1="bb923f18120086054cd6fd91f77d27a190c1eed4" region="user1" offset="0"/>
 		<rom name="hr2-06m.bin" size="8388608" crc="6f13b69c" sha1="9a14ecc72631bc44053af71fe7e3934bedf1a71e" region="user1" offset="800000"/>
@@ -157185,13 +157267,18 @@
 		<rom name="hr2-10m.bin" size="4194304" crc="d95b3f37" sha1="b6566c1184718f6c0986d13060894c0fb400c201" region="user1" offset="2800000"/>
 		<rom name="hr2-02.bin" size="131072" crc="acd8d385" sha1="5edb61c3d66d2d09a28a71db52eee3a9f7db8c9d" region="cpu2" offset="0"/>
 		<rom name="hr2-01m.bin" size="2097152" crc="510a16d1" sha1="05f10c2921a4d3b1fab4d0a4ea06351809bdbb07" region="sound1" soundonly="yes" offset="0"/>
-		<chip type="cpu" name="PSX CPU" clock="33000000"/>
+		<chip type="cpu" name="PSX CPU" clock="25000000"/>
 		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
+		<chip type="audio" name="PSX SPU"/>
 		<chip type="audio" name="QSound" clock="4000000"/>
-		<video screen="raster" orientation="horizontal" width="480" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="640" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
-		<input players="2" control="joy8way" buttons="6" service="yes"/>
-		<dipswitch name="Unknown">
+		<input players="4" control="joy8way" buttons="3" coins="4" service="yes" tilt="yes"/>
+		<dipswitch name="Freeze">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
@@ -157203,13 +157290,13 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="65536"/>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="65536"/>
 	</game>
 	<game name="stridr2a" sourcefile="zn.c" cloneof="strider2" romof="strider2">
 		<description>Strider 2 (ASIA 991213)</description>
 		<year>1999</year>
 		<manufacturer>Capcom</manufacturer>
-		<rom name="coh3002c.bin" merge="coh3002c.bin" size="524288" crc="e860ea8b" sha1="66e7e1d4e426466b8f48a2ba055a91b475569504" region="cpu1" offset="400000"/>
+		<rom name="coh3002c.bin" merge="coh3002c.bin" size="524288" crc="e860ea8b" sha1="66e7e1d4e426466b8f48a2ba055a91b475569504" region="user3" offset="0"/>
 		<rom name="hr2a04.bin" size="524288" crc="56ff9394" sha1="fe8417965d945210ac098c6678c02f1c678bd13b" region="user2" offset="0"/>
 		<rom name="hr2-05m.bin" merge="hr2-05m.bin" size="8388608" crc="18716fe8" sha1="bb923f18120086054cd6fd91f77d27a190c1eed4" region="user1" offset="0"/>
 		<rom name="hr2-06m.bin" merge="hr2-06m.bin" size="8388608" crc="6f13b69c" sha1="9a14ecc72631bc44053af71fe7e3934bedf1a71e" region="user1" offset="800000"/>
@@ -157219,13 +157306,18 @@
 		<rom name="hr2-10m.bin" merge="hr2-10m.bin" size="4194304" crc="d95b3f37" sha1="b6566c1184718f6c0986d13060894c0fb400c201" region="user1" offset="2800000"/>
 		<rom name="hr2-02.bin" merge="hr2-02.bin" size="131072" crc="acd8d385" sha1="5edb61c3d66d2d09a28a71db52eee3a9f7db8c9d" region="cpu2" offset="0"/>
 		<rom name="hr2-01m.bin" merge="hr2-01m.bin" size="2097152" crc="510a16d1" sha1="05f10c2921a4d3b1fab4d0a4ea06351809bdbb07" region="sound1" soundonly="yes" offset="0"/>
-		<chip type="cpu" name="PSX CPU" clock="33000000"/>
+		<chip type="cpu" name="PSX CPU" clock="25000000"/>
 		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
+		<chip type="audio" name="PSX SPU"/>
 		<chip type="audio" name="QSound" clock="4000000"/>
-		<video screen="raster" orientation="horizontal" width="480" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="640" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
-		<input players="2" control="joy8way" buttons="6" service="yes"/>
-		<dipswitch name="Unknown">
+		<input players="4" control="joy8way" buttons="3" coins="4" service="yes" tilt="yes"/>
+		<dipswitch name="Freeze">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
@@ -157237,13 +157329,13 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="65536"/>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="65536"/>
 	</game>
 	<game name="shiryu2" sourcefile="zn.c" cloneof="strider2" romof="strider2">
 		<description>Strider Hiryu 2 (JAPAN 991213)</description>
 		<year>1999</year>
 		<manufacturer>Capcom</manufacturer>
-		<rom name="coh3002c.bin" merge="coh3002c.bin" size="524288" crc="e860ea8b" sha1="66e7e1d4e426466b8f48a2ba055a91b475569504" region="cpu1" offset="400000"/>
+		<rom name="coh3002c.bin" merge="coh3002c.bin" size="524288" crc="e860ea8b" sha1="66e7e1d4e426466b8f48a2ba055a91b475569504" region="user3" offset="0"/>
 		<rom name="hr2j-04.bin" size="524288" crc="0824ee5f" sha1="a296ffe03f0d947deb9803d05de3c240a26b52bb" region="user2" offset="0"/>
 		<rom name="hr2-05m.bin" merge="hr2-05m.bin" size="8388608" crc="18716fe8" sha1="bb923f18120086054cd6fd91f77d27a190c1eed4" region="user1" offset="0"/>
 		<rom name="hr2-06m.bin" merge="hr2-06m.bin" size="8388608" crc="6f13b69c" sha1="9a14ecc72631bc44053af71fe7e3934bedf1a71e" region="user1" offset="800000"/>
@@ -157253,13 +157345,18 @@
 		<rom name="hr2-10m.bin" merge="hr2-10m.bin" size="4194304" crc="d95b3f37" sha1="b6566c1184718f6c0986d13060894c0fb400c201" region="user1" offset="2800000"/>
 		<rom name="hr2-02.bin" merge="hr2-02.bin" size="131072" crc="acd8d385" sha1="5edb61c3d66d2d09a28a71db52eee3a9f7db8c9d" region="cpu2" offset="0"/>
 		<rom name="hr2-01m.bin" merge="hr2-01m.bin" size="2097152" crc="510a16d1" sha1="05f10c2921a4d3b1fab4d0a4ea06351809bdbb07" region="sound1" soundonly="yes" offset="0"/>
-		<chip type="cpu" name="PSX CPU" clock="33000000"/>
+		<chip type="cpu" name="PSX CPU" clock="25000000"/>
 		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
+		<chip type="audio" name="PSX SPU"/>
 		<chip type="audio" name="QSound" clock="4000000"/>
-		<video screen="raster" orientation="horizontal" width="480" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="640" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
-		<input players="2" control="joy8way" buttons="6" service="yes"/>
-		<dipswitch name="Unknown">
+		<input players="4" control="joy8way" buttons="3" coins="4" service="yes" tilt="yes"/>
+		<dipswitch name="Freeze">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
@@ -157271,7 +157368,7 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="65536"/>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="65536"/>
 	</game>
 	<game name="glpracr2" sourcefile="zn.c" romof="tps">
 		<description>Gallop Racer 2 (USA)</description>
@@ -383360,13 +383457,13 @@
 		<description>ZN1</description>
 		<year>1997</year>
 		<manufacturer>Sony/Capcom</manufacturer>
-		<rom name="coh1002c.bin" size="524288" crc="50033af6" sha1="486d92ff6c7f1e54f8e0ef41cd9116eca0e10e1a" region="cpu1" offset="400000"/>
+		<rom name="coh1002c.bin" size="524288" crc="50033af6" sha1="486d92ff6c7f1e54f8e0ef41cd9116eca0e10e1a" region="user3" offset="0"/>
 	</game>
 	<game runnable="no" name="cpzn2">
 		<description>ZN2</description>
 		<year>1997</year>
 		<manufacturer>Sony/Capcom</manufacturer>
-		<rom name="coh3002c.bin" size="524288" crc="e860ea8b" sha1="66e7e1d4e426466b8f48a2ba055a91b475569504" region="cpu1" offset="400000"/>
+		<rom name="coh3002c.bin" size="524288" crc="e860ea8b" sha1="66e7e1d4e426466b8f48a2ba055a91b475569504" region="user3" offset="0"/>
 	</game>
 	<game runnable="no" name="tps">
 		<description>TPS</description>
