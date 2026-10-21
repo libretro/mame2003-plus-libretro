@@ -52,7 +52,8 @@
 #define JIT_TABLE_BITS		18
 #define JIT_TABLE_SIZE		(1 << JIT_TABLE_BITS)
 #define JIT_MAX_BLOCK		64				/* instructions */
-#define JIT_CODEMAP_BITS	20				/* host address granules of 64 bytes, one byte each */
+#define JIT_CODEMAP_SHIFT	2				/* host address granules of 4 bytes (one word), one byte each */
+#define JIT_CODEMAP_BITS	22
 #define JIT_CODEMAP_SIZE	(1 << JIT_CODEMAP_BITS)
 #define JIT_MAX_EXITS		(JIT_MAX_BLOCK * 4)
 
@@ -93,7 +94,7 @@ static INLINE void mips_step( void );
 
 static INLINE UINT32 jit_codemap_index( const void *host )
 {
-	return (UINT32)( ( (size_t)host >> 6 ) & ( JIT_CODEMAP_SIZE - 1 ) );
+	return (UINT32)( ( (size_t)host >> JIT_CODEMAP_SHIFT ) & ( JIT_CODEMAP_SIZE - 1 ) );
 }
 
 static void jit_flush( void )
@@ -137,8 +138,8 @@ void psxcpu_ram_written( const void *host, UINT32 bytes )
 	{
 		return;
 	}
-	first = (size_t)host >> 6;
-	last = ( (size_t)host + bytes - 1 ) >> 6;
+	first = (size_t)host >> JIT_CODEMAP_SHIFT;
+	last = ( (size_t)host + bytes - 1 ) >> JIT_CODEMAP_SHIFT;
 	if( last - first >= JIT_CODEMAP_SIZE )
 	{
 		jit_flush();
@@ -775,7 +776,7 @@ static void jit_emit_mem_address( struct jit_ctx *ctx, UINT32 op, const struct j
 	/* a store over translated code: let the interpreter do it (and flush) */
 	if( o->store )
 	{
-		sljit_emit_op2( C, SLJIT_LSHR, SLJIT_R2, 0, SLJIT_R1, 0, SLJIT_IMM, 6 );
+		sljit_emit_op2( C, SLJIT_LSHR, SLJIT_R2, 0, SLJIT_R1, 0, SLJIT_IMM, JIT_CODEMAP_SHIFT );
 		sljit_emit_op2( C, SLJIT_AND, SLJIT_R2, 0, SLJIT_R2, 0, SLJIT_IMM, JIT_CODEMAP_SIZE - 1 );
 		sljit_emit_op1( C, SLJIT_MOV_P, SLJIT_R0, 0, SLJIT_IMM, (sljit_sw)jit_codemap );
 		sljit_emit_op1( C, SLJIT_MOV_U8, SLJIT_R2, 0, SLJIT_MEM2( SLJIT_R0, SLJIT_R2 ), 0 );
