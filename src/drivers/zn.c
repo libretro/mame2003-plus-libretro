@@ -1804,6 +1804,7 @@ static DRIVER_INIT( coh1000ta )
 	state_save_register_UINT32( "zn", 0, "taito_bank", &tecmo_bank, 1 );
 	state_save_register_UINT8( "zn", 0, "taito_soundbank", &taito_fx1a_soundbank, 1 );
 	taitosound_state_register();
+	YM2610_timer_state_register();
 	state_save_register_UINT32( "zn", 0, "scratchpad", zn_scratchpad, 0x100 );
 	state_save_register_func_postload( taito_fx1a_postload );
 }

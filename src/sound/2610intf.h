@@ -41,6 +41,9 @@ void YM2610_sh_stop(void);
 
 void YM2610_sh_reset(void);
 
+/* optional: FM timers in save states (call from the driver init) */
+void YM2610_timer_state_register(void);
+
 /************************************************/
 /* Chip 0 functions								*/
 /************************************************/
