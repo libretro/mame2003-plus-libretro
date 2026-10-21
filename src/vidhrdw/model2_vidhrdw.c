@@ -2829,6 +2829,60 @@ READ32_HANDLER( model2_polygon_count_r )
 static struct mame_bitmap *m_tilemap;	/* the tile layers, mixed */
 static UINT8 m_tile_front[ 256 ];
 
+/* light gun crosshairs (Virtua Cop, Virtua Cop 2, The House of the Dead):
+   the gun ports span the whole screen, as PORT_CROSSHAIR( X/Y, 1.0, 0.0 )
+   in MAME. Found at video start from the input ports of the game */
+static int m_gun_port[ 2 ][ 2 ];	/* [player][x, y]: port number, -1 = none */
+static int m_gun_min[ 2 ][ 2 ], m_gun_max[ 2 ][ 2 ];
+
+static void find_gun_ports( void )
+{
+	const struct InputPort *in = Machine->input_ports;
+	int port = -1;
+	int p, a;
+
+	for( p = 0; p < 2; p++ )
+		for( a = 0; a < 2; a++ )
+			m_gun_port[ p ][ a ] = -1;
+
+	for( ; in->type != IPT_END; in++ )
+	{
+		UINT32 type = in->type & ~IPF_MASK;
+		if( type == IPT_PORT )
+			port++;
+		else if( ( type == IPT_LIGHTGUN_X || type == IPT_LIGHTGUN_Y ) &&
+			in[ 1 ].type != IPT_END && ( in[ 1 ].type & ~IPF_MASK ) == IPT_EXTENSION )
+		{
+			p = ( in->type & IPF_PLAYERMASK ) / IPF_PLAYER2;
+			a = ( type == IPT_LIGHTGUN_Y );
+			if( p < 2 && in[ 1 ].default_value > in[ 1 ].mask )
+			{
+				m_gun_port[ p ][ a ] = port;
+				m_gun_min[ p ][ a ] = in[ 1 ].mask;			/* PORT_ANALOG min */
+				m_gun_max[ p ][ a ] = in[ 1 ].default_value;	/* PORT_ANALOG max */
+			}
+		}
+	}
+}
+
+static void draw_gun_crosshairs( struct mame_bitmap *bitmap, const struct rectangle *cliprect )
+{
+	const struct rectangle *visible = &Machine->visible_area;
+	int p;
+
+	for( p = 0; p < 2; p++ )
+	{
+		int x, y;
+		if( m_gun_port[ p ][ 0 ] < 0 || m_gun_port[ p ][ 1 ] < 0 )
+			continue;
+		x = ( readinputport( m_gun_port[ p ][ 0 ] ) & 0xff ) - m_gun_min[ p ][ 0 ];
+		y = ( readinputport( m_gun_port[ p ][ 1 ] ) & 0xff ) - m_gun_min[ p ][ 1 ];
+		x = visible->min_x + x * ( visible->max_x - visible->min_x ) / ( m_gun_max[ p ][ 0 ] - m_gun_min[ p ][ 0 ] );
+		y = visible->min_y + y * ( visible->max_y - visible->min_y ) / ( m_gun_max[ p ][ 1 ] - m_gun_min[ p ][ 1 ] );
+		draw_crosshair( p + 1, bitmap, x, y, cliprect );
+	}
+}
+
 VIDEO_START( model2 )
 {
 	int i;
@@ -2870,6 +2924,7 @@ VIDEO_START( model2 )
 	m_xoffs = 90;
 	m_yoffs = -8;
 	render_frame_start();
+	find_gun_ports();
 
 	state_save_register_UINT32( "model2video", 0, "geoctl", &m_geoctl, 1 );
 	state_save_register_UINT32( "model2video", 0, "geocnt", &m_geocnt, 1 );
@@ -2954,4 +3009,6 @@ VIDEO_UPDATE( model2 )
 	copy_tiles( bitmap, cliprect, 0 );
 	render_polygons( bitmap, cliprect );
 	copy_tiles( bitmap, cliprect, 1 );
+
+	draw_gun_crosshairs( bitmap, cliprect );
 }
