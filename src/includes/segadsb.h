@@ -11,7 +11,8 @@
 #define SEGADSB_Z80		1	/* DSB: Z80 */
 #define SEGADSB_68K		2	/* DSB2: 68000 */
 
-void segadsb_init( int type, int cpu );	/* from DRIVER_INIT: MPEG data in REGION_SOUND2 */
+extern int segadsb_mpeg_region;			/* region of the MPEG data, REGION_SOUND2 by default */
+void segadsb_init( int type, int cpu );	/* from DRIVER_INIT */
 void segadsb_reset( void );
 void segadsb_midi_in( UINT8 data );		/* a byte of the game's sound line */
 

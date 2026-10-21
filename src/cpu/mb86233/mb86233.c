@@ -8,6 +8,15 @@
 
 ***************************************************************************/
 
+/* no fused multiply-add: the TGP rounds every product and sum, and x86 (the
+   reference) does not fuse them either. GCC and clang fuse a*b+c by default
+   on CPUs that have the instruction (PowerPC, ARM64) */
+#if defined(__clang__)
+#pragma STDC FP_CONTRACT OFF
+#elif defined(__GNUC__)
+#pragma GCC optimize("fp-contract=off")
+#endif
+
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
