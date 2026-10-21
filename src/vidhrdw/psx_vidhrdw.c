@@ -735,6 +735,8 @@ VIDEO_UPDATE( psx )
 	int direct = ( Machine->drv->video_attributes & VIDEO_RGB_DIRECT ) != 0;
 	UINT32 n_x;
 	UINT32 n_y;
+	int n_top;
+	int n_lines;
 
 #if defined( MAME_DEBUG )
 	if( DebugMeshDisplay( bitmap, cliprect ) )
@@ -822,14 +824,43 @@ VIDEO_UPDATE( psx )
 			n_x = m_n_displaystartx;
 		}
 
+		/* vertical display range: the first line is shown at disstart - 16
+		   (NTSC), the lines out of the range are black, as in MAME. With the
+		   usual 16..256 range this is the whole screen. */
+		n_top = (int)m_n_vert_disstart - 16;
+		n_lines = (int)m_n_vert_disend - (int)m_n_vert_disstart;
+		if( m_n_screenheight > 240 )
+		{
+			n_top *= 2;
+			n_lines *= 2;
+		}
+		if( n_top < 0 )
+		{
+			n_lines += n_top;
+			n_top = 0;
+		}
+		if( n_lines <= 0 || n_top >= (int)m_n_screenheight )
+		{
+			/* range not set up: the whole screen, as before */
+			n_top = 0;
+			n_lines = m_n_screenheight;
+		}
+		if( n_top + n_lines > (int)m_n_screenheight )
+			n_lines = m_n_screenheight - n_top;
+		for( n_y = 0; n_y < m_n_screenheight; n_y++ )
+		{
+			if( (int)n_y < n_top || (int)n_y >= n_top + n_lines )
+				memset( (UINT16 *)bitmap->base + n_y * bitmap->rowpixels, 0, m_n_screenwidth * 2 );
+		}
+
 		if( ( m_n_gpustatus & ( 1L << 0x15 ) ) != 0 )
 		{
 			/* 24-bit display mode (MDEC movies): 3 bytes per pixel in VRAM,
 			   reduced to the 15-bit palette used by the bitmap */
-			for( n_y = 0; n_y < m_n_screenheight; n_y++ )
+			for( n_y = 0; n_y < (UINT32)n_lines; n_y++ )
 			{
 				const UINT16 *src = m_p_p_vram[ ( n_y + m_n_displaystarty ) & 1023 ];
-				UINT16 *dst = (UINT16 *)bitmap->base + n_y * bitmap->rowpixels;
+				UINT16 *dst = (UINT16 *)bitmap->base + ( n_y + n_top ) * bitmap->rowpixels;
 				UINT32 n_byte = n_x * 2;
 				int length = m_n_screenwidth;
 
@@ -847,11 +878,11 @@ VIDEO_UPDATE( psx )
 			}
 		}
 		else
-		for( n_y = 0; n_y < m_n_screenheight; n_y++ )
+		for( n_y = 0; n_y < (UINT32)n_lines; n_y++ )
       {
          const uint16_t *src = (m_p_p_vram[ n_y + m_n_displaystarty ] + n_x);
          int dy = bitmap->rowpixels;
-         UINT16 *dst = (UINT16 *)bitmap->base + n_y * dy;
+         UINT16 *dst = (UINT16 *)bitmap->base + ( n_y + n_top ) * dy;
          int length = m_n_screenwidth;
 
          if( direct )
