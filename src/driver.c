@@ -2687,12 +2687,25 @@ V-V                           TP-027
 	DRIVER( shiryu2 )	/* Strider Hiryu 2 (JAPAN 991213) */
 						/* Rival Schools 2 */
 
-	/* Tecmo ZN1 */
-	DRIVER( glpracr2 )	/* Gallop Racer 2 (USA) */
-	DRIVER( glprac2j )	/* Gallop Racer 2 (JAPAN) */
-	DRIVER( glprac2l )	/* Gallop Racer 2 Link HW (JAPAN) */
-	DRIVER( doapp )		/* Dead Or Alive ++ (JAPAN) */
-	DRIVER( tondemo )	/* Tondemo Crisis (JAPAN) */
+	/* Tecmo TPS (ZN1) */
+	DRIVER( glpracr2 )	/* Gallop Racer 2 (Export) */
+	DRIVER( glpracr2j )	/* Gallop Racer 2 (Japan) */
+	DRIVER( glpracr2l )	/* Gallop Racer 2 Link HW (Japan) */
+	DRIVER( doapp )		/* Dead Or Alive ++ (Japan/USA/Export) */
+	DRIVER( doappk )	/* Dead Or Alive ++ (Korea) */
+	DRIVER( cbaj )		/* Cool Boarders Arcade Jam (Export) */
+	DRIVER( cbajbl )	/* Cool Boarders Arcade Jam (Export bootleg) */
+	DRIVER( shngmtkb )	/* Shanghai Matekibuyuu (Japan) */
+	DRIVER( tondemo )	/* Tondemo Crisis (Japan) */
+	DRIVER( glpracr3 )	/* Gallop Racer 3 (Export) */
+	DRIVER( glpracr3j )	/* Gallop Racer 3 (Japan) */
+	DRIVER( flamegun )	/* Flame Gunner (Export) */
+	DRIVER( flamegunj )	/* Flame Gunner (Japan) */
+	DRIVER( lpadv )		/* Logic Pro Adventure (Japan) */
+	DRIVER( tblkkuzu )	/* The Block Kuzushi (Japan) */
+	DRIVER( 1on1gov )	/* 1 on 1 Government (Japan) */
+	DRIVER( twcupmil )	/* Tecmo World Cup Millennium (Japan) */
+	DRIVER( mfjump )	/* Monster Farm Jump (Japan) */
 
 	/* PS Arcade 95 */
 	DRIVER( brvblade )	/* Brave Blade */
