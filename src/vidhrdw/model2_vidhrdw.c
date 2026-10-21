@@ -2293,6 +2293,15 @@ void model2_geo_parse( void )
 static UINT32 *m_destmap;
 static int m_dirty_minx, m_dirty_maxx, m_dirty_miny, m_dirty_maxy;	/* empty: minx > maxx */
 
+/* where one mipmap level (or the microtexture) is: computed once per
+   polygon, not at every texel fetch */
+typedef struct
+{
+	const UINT32 *sheet;
+	UINT32 width, height;	/* in texels, powers of two */
+	UINT32 x, y;			/* position in the texture sheet */
+} m2_tex_level;
+
 typedef struct
 {
 	UINT32 lumabase;
@@ -2305,29 +2314,9 @@ typedef struct
 	UINT32 utexx, utexy;
 	INT32 texlod;
 	UINT8 luma;
+	INT32 max_level;			/* largest mipmap level, down to 2x2 */
+	m2_tex_level level[ 16 ];	/* 0: the microtexture, 1 + n: mipmap level n */
 } m2_poly_extra_data;
-
-static INLINE UINT16 get_texel( UINT32 base_x, UINT32 base_y, int x, int y, const UINT32 *sheet )
-{
-	int x2 = base_x + x;
-	int y2 = base_y + y;
-	UINT32 offset, texel;
-	if( x2 >= 1024 )
-	{
-		/* texture sheets are mapped as 2048x1024 but stored in RAM as 1024x2048 */
-		x2 -= 1024;
-		y2 ^= 1024;
-	}
-	offset = ( ( y2 / 2 ) * 512 ) + ( x2 / 2 );
-	texel = sheet[ ( offset >> 1 ) & 0x3ffff ];
-	if( offset & 1 )
-		texel >>= 16;
-	if( ( y & 1 ) == 0 )
-		texel >>= 8;
-	if( ( x & 1 ) == 0 )
-		texel >>= 4;
-	return texel & 0x0f;
-}
 
 #define LERP( x, y, a )	( ( (x) + ( ( ( (y) - (x) ) * (a) ) >> 8 ) ) & 0x00ff00ff )
 
@@ -2337,29 +2326,21 @@ static UINT32 fetch_bilinear_texel( const m2_poly_extra_data *object, int transl
 	UINT32 tex_wrap_y = object->texwrapy;
 	UINT32 tex_mirr_x = object->texmirrorx;
 	UINT32 tex_mirr_y = object->texmirrory;
-	UINT32 tex_width, tex_height, tex_x, tex_y;
-	UINT32 *sheet;
+	const m2_tex_level *level = &object->level[ miplevel + 1 ];
+	UINT32 tex_width = level->width, tex_height = level->height;
+	UINT32 tex_x = level->x, tex_y = level->y;
+	const UINT32 *sheet = level->sheet;
 	UINT32 ufrac, vfrac, u0, u1, v0, v1;
 	UINT32 tex00, tex01, tex10, tex11, tex0x, tex1x;
 
 	if( miplevel == -1 )
 	{
 		/* microtexture */
-		tex_width = 128;
-		tex_height = 128;
-		tex_x = object->utexx;
-		tex_y = object->utexy;
-		sheet = object->texsheet[ 1 ];
 		u <<= 1 << object->utexminlod;
 		v <<= 1 << object->utexminlod;
 	}
 	else
 	{
-		tex_width = object->texwidth >> miplevel;
-		tex_height = object->texheight >> miplevel;
-		tex_x = ( ( object->texx - 2048 ) >> miplevel ) & 2047;
-		tex_y = ( ( object->texy - 1024 ) >> miplevel ) & 1023;
-		sheet = object->texsheet[ miplevel & 1 ];
 		u >>= miplevel;
 		v >>= miplevel;
 	}
@@ -2397,13 +2378,37 @@ static UINT32 fetch_bilinear_texel( const m2_poly_extra_data *object, int transl
 			v1 = v0, v0--, vfrac = 0x100;
 	}
 
-	tex00 = get_texel( tex_x, tex_y, u0, v0, sheet ) << 4;
-	tex01 = get_texel( tex_x, tex_y, u1, v0, sheet ) << 4;
-	tex10 = get_texel( tex_x, tex_y, u0, v1, sheet ) << 4;
-	tex11 = get_texel( tex_x, tex_y, u1, v1, sheet ) << 4;
+	/* the four 4-bit texels. Texture sheets are mapped as 2048x1024 but
+	   stored in RAM as 1024x2048: past column 1024 a texel is in the other
+	   half of the rows. A 32-bit word holds two 2x2 blocks: bit 1 of the
+	   column selects the half, the parity of the texture coordinates the
+	   texel in the block. All the values are positive */
+	{
+		UINT32 x, fold0, fold1, xa0, xa1, cs0, cs1, rs0, rs1, y0, y1;
+		x = tex_x + u0;
+		fold0 = ( x >= 1024 ) << 10;
+		xa0 = ( x - fold0 ) >> 2;
+		cs0 = ( ( x & 2 ) << 3 ) | ( ( ~u0 & 1 ) << 2 );
+		x = tex_x + u1;
+		fold1 = ( x >= 1024 ) << 10;
+		xa1 = ( x - fold1 ) >> 2;
+		cs1 = ( ( x & 2 ) << 3 ) | ( ( ~u1 & 1 ) << 2 );
+		rs0 = ( ~v0 & 1 ) << 3;
+		rs1 = ( ~v1 & 1 ) << 3;
+		y0 = tex_y + v0;
+		y1 = tex_y + v1;
+		tex00 = ( ( sheet[ ( ( ( ( y0 ^ fold0 ) >> 1 ) << 8 ) + xa0 ) & 0x3ffff ] >> ( cs0 | rs0 ) ) & 0x0f ) << 4;
+		tex01 = ( ( sheet[ ( ( ( ( y0 ^ fold1 ) >> 1 ) << 8 ) + xa1 ) & 0x3ffff ] >> ( cs1 | rs0 ) ) & 0x0f ) << 4;
+		tex10 = ( ( sheet[ ( ( ( ( y1 ^ fold0 ) >> 1 ) << 8 ) + xa0 ) & 0x3ffff ] >> ( cs0 | rs1 ) ) & 0x0f ) << 4;
+		tex11 = ( ( sheet[ ( ( ( ( y1 ^ fold1 ) >> 1 ) << 8 ) + xa1 ) & 0x3ffff ] >> ( cs1 | rs1 ) ) & 0x0f ) << 4;
+	}
 
 	if( translucent )
 	{
+		/* four transparent texels: what the filtering below gives */
+		if( ( tex00 & tex01 & tex10 & tex11 ) == 0xf0 )
+			return 0x000000f0;
+
 		/* pack the alpha components into the upper 16 bits */
 		if( tex00 != 0xf0 ) tex00 |= 0x00800000;
 		if( tex01 != 0xf0 ) tex01 |= 0x00800000;
@@ -2508,12 +2513,9 @@ static void draw_scanline_tex( int scanline, int startx, int stopx, float ooz, f
 	const UINT16 *colortable_b = &model2_colorxlat[ 0x8000 / 2 ];
 	UINT32 colorbase = object->colorbase;
 	UINT32 lumabase = object->lumabase;
-	INT32 max_level;
+	INT32 max_level = object->max_level;
+	UINT32 obj_luma = object->luma;
 	int x, dx;
-	UINT32 minwh = object->texwidth < object->texheight ? object->texwidth : object->texheight;
-
-	/* maximum mipmap level from the texture size; down to 2x2 */
-	max_level = 30 - count_leading_zeros32( minwh );
 
 	colorbase = model2_palram[ ( colorbase + 0x1000 ) & 0x1fff ] & 0x7fff;
 	colortable_r += ( ( colorbase >> 0 ) & 0x1f ) << 8;
@@ -2564,8 +2566,10 @@ static void draw_scanline_tex( int scanline, int startx, int stopx, float ooz, f
 			INT32 frac = ( mml & 127 ) << 1;
 			t = LERP( t, t2, frac );
 		}
-		else if( object->utex && mml < 0 )
+		else if( object->utex && mml < 0 && ( !translucent || t >= 0x00010000 ) )
 		{
+			/* (with no alpha, a translucent texel stays under 50% after this
+			   blend, and is discarded below) */
 			/* microtexture; blend up to almost 50% */
 			UINT32 t2 = fetch_bilinear_texel( object, translucent, -1, u, v );
 			INT32 frac = -mml >> object->utexminlod;
@@ -2582,7 +2586,7 @@ static void draw_scanline_tex( int scanline, int startx, int stopx, float ooz, f
 		}
 
 		/* 8 bits of filtered texel, 128 entries in the translator map */
-		luma = (UINT8)( (UINT32)model2_lumaram[ ( lumabase + ( t >> 1 ) ) & 0x7fff ] * object->luma / 256 );
+		luma = (UINT8)( ( (UINT32)model2_lumaram[ ( lumabase + ( t >> 1 ) ) & 0x7fff ] * obj_luma ) >> 8 );
 		if( luma > 0x3f )
 			luma = 0x3f;
 
@@ -2732,6 +2736,27 @@ static void model2_3d_render( polygon *poly, const struct rectangle *cliprect )
 		extra.utexminlod = ( poly->texheader[ 0 ] >> 10 ) & 3;
 		extra.utexx = ( ( poly->texheader[ 2 ] >> 13 ) & 1 ) * 128;
 		extra.utexy = ( ( poly->texheader[ 2 ] >> 14 ) & 3 ) * 128;
+
+		/* maximum mipmap level from the texture size; down to 2x2 */
+		{
+			UINT32 minwh = extra.texwidth < extra.texheight ? extra.texwidth : extra.texheight;
+			int level;
+			extra.max_level = 30 - count_leading_zeros32( minwh );
+			extra.level[ 0 ].sheet = extra.texsheet[ 1 ];
+			extra.level[ 0 ].width = 128;
+			extra.level[ 0 ].height = 128;
+			extra.level[ 0 ].x = extra.utexx;
+			extra.level[ 0 ].y = extra.utexy;
+			for( level = 0; level <= extra.max_level; level++ )
+			{
+				m2_tex_level *l = &extra.level[ level + 1 ];
+				l->sheet = extra.texsheet[ level & 1 ];
+				l->width = extra.texwidth >> level;
+				l->height = extra.texheight >> level;
+				l->x = ( ( extra.texx - 2048 ) >> level ) & 2047;
+				l->y = ( ( extra.texy - 1024 ) >> level ) & 1023;
+			}
+		}
 
 		for( i = 0; i < poly->num_vertices; i++ )
 		{
