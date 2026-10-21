@@ -4901,13 +4901,17 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 
 	/* Midway / Atari  Voodoo based Hardware (Seattle, Flagstaff) */
 	DRIVER ( wg3dh )	/* (c) 1996 Atari Games */
+	DRIVER ( wg3dhfe )	/* (c) 1996 Atari Games */
 	DRIVER ( mace )		/* (c) 1996 Atari Games */
+	DRIVER ( macea )	/* (c) 1997 Atari Games */
 	DRIVER ( sfrush )	/* (c) 1996 Atari Games */
+	DRIVER ( sfrushrk )	/* (c) 1997 Atari Games */
 	DRIVER ( calspeed )	/* (c) 1996 Atari Games */
 	DRIVER ( carnevil )	/* (c) 1998 Midway Games */
 	DRIVER ( biofreak )	/* (c) 1997 Midway Games */
 	DRIVER ( blitz )	/* (c) 1997 Midway Games */
 	DRIVER ( blitz99 )	/* (c) 1998 Midway Games */
+	DRIVER ( blitz99a )	/* (c) 1998 Midway Games */
 	DRIVER ( blitz2k )	/* (c) 1999 Midway Games */
 
 	/* Cinematronics raster games */

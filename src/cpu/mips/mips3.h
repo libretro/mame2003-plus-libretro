@@ -193,6 +193,7 @@ void mips3_set_cause_poll_skip(int enable);
 void mips3_add_poll_read(offs_t start, offs_t end);
 /* recompile integer code in fast RAM with sljit, where supported (x86 and ARM, 32 and 64-bit) */
 void mips3_set_jit(int enable);
+void mips3_ram_written(offs_t address, UINT32 bytes);
 /* nonzero when this build has the recompiler (x86/ARM hosts that allow run-time code) */
 int mips3_jit_available(void);
 

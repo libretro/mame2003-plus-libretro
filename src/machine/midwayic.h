@@ -25,6 +25,9 @@ NVRAM_HANDLER( midway_serial_pic2 );
 
 /* I/O ASIC connected to 2nd generation PIC */
 void midway_ioasic_init(int shuffle, int upper, int yearoffs, void (*irq_callback)(int));
+/* called with the data written to register 0xd (aux output); after midway_ioasic_init */
+void midway_ioasic_set_aux_output(void (*callback)(data32_t data));
+void midway_ioasic_set_port_filter(data32_t (*callback)(int port, data32_t data));
 void midway_ioasic_set_auto_ack(int auto_ack);
 void midway_ioasic_reset(void);
 void midway_ioasic_fifo_w(data16_t data);
@@ -42,6 +45,9 @@ enum
 	MIDWAY_IOASIC_MACE,
 	MIDWAY_IOASIC_GAUNTDL,
 	MIDWAY_IOASIC_INVASION,
+	MIDWAY_IOASIC_VAPORTRX,
+	MIDWAY_IOASIC_SFRUSHRK,
+	MIDWAY_IOASIC_HYPRDRIV,
 };
 
 

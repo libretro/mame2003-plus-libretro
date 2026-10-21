@@ -126,13 +126,9 @@ void RENDERFUNC(void)
 	if (vmax->y < vmin->y) { struct tri_vertex *temp = vmax; vmax = vmin; vmin = temp; }
 	if (vmax->y < vmid->y) { struct tri_vertex *temp = vmax; vmax = vmid; vmid = temp; }
 
-	/* compute the clipped start/end y */
+	/* compute the start/end y (the Y clip applies to the frame buffer row, below) */
 	starty = TRUNC_TO_INT(vmin->y + 0.5f);
 	stopy = TRUNC_TO_INT(vmax->y + 0.5f);
-	if (starty < fbz_cliprect->min_y)
-		starty = fbz_cliprect->min_y;
-	if (stopy > fbz_cliprect->max_y)
-		starty = fbz_cliprect->max_y;
 	if (starty >= stopy)
 		return;
 	
@@ -188,7 +184,7 @@ void RENDERFUNC(void)
 	for (y = starty; y < stopy; y++)
 	{
 		int effy = FBZMODE_BITS(17,1) ? (inverted_yorigin - y) : y;
-		if (effy >= 0 && effy < FRAMEBUF_HEIGHT)
+		if (effy >= 0 && effy < FRAMEBUF_HEIGHT && effy >= fbz_cliprect->min_y && effy < fbz_cliprect->max_y)
 		{
 			UINT16 *dest = &buffer[effy * FRAMEBUF_WIDTH];
 			UINT16 *depth = &depthbuf[effy * FRAMEBUF_WIDTH];
@@ -280,6 +276,16 @@ void RENDERFUNC(void)
 					depthval = float_to_depth(curw);
 				else
 					depthval = float_to_depth((float)curz * (1.0 / 4096.0));
+
+				/* the depth bias applies to the value tested and to the one written (as current MAME) */
+				if (FBZMODE_BITS(16,1))
+				{
+					depthval += (INT16)voodoo_regs[zaColor];
+					if (depthval >= 0xffff)
+						depthval = 0xffff;
+					else if (depthval < 0)
+						depthval = 0;
+				}
 					
 				/* handle depth buffer testing */
 				if (FBZMODE_BITS(4,1))
@@ -288,20 +294,7 @@ void RENDERFUNC(void)
 				
 					/* the source depth is either the iterated W/Z+bias or a constant value */
 					if (!FBZMODE_BITS(20,1))
-					{
 						depthsource = depthval;
-
-						/* add the bias */
-						if (FBZMODE_BITS(16,1))
-						{
-							depthsource += (INT16)voodoo_regs[zaColor];
-						
-							if (depthsource >= 0xffff)
-								depthsource = 0xffff;
-							else if (depthsource < 0)
-								depthsource = 0;
-						}
-					}
 					else
 						depthsource = voodoo_regs[zaColor] & 0xffff;
 
@@ -1073,21 +1066,21 @@ void RENDERFUNC(void)
 				if (!FBZCOLORPATH_BITS(7,1))
 				{
 					if (!FBZCOLORPATH_BITS(4,1))			/* cc_localselect mux == iterated RGB */
-						c_local = (curr & 0xff0000) | ((curg >> 8) & 0xff00) | ((curb >> 16) & 0xff);
+						c_local = (ITER8(curr) << 16) | (ITER8(curg) << 8) | ITER8(curb);
 					else									/* cc_localselect mux == color0 RGB */
 						c_local = voodoo_regs[color0] & 0xffffff;
 				}
 				else
 				{
 					if (!(texel & 0x80000000))				/* cc_localselect mux == iterated RGB */
-						c_local = (curr & 0xff0000) | ((curg >> 8) & 0xff00) | ((curb >> 16) & 0xff);
+						c_local = (ITER8(curr) << 16) | (ITER8(curg) << 8) | ITER8(curb);
 					else									/* cc_localselect mux == color0 RGB */
 						c_local = voodoo_regs[color0] & 0xffffff;
 				}
 				
 				/* compute a_local */
 				if (FBZCOLORPATH_BITS(5,2) == 0)		/* cca_localselect mux == iterated alpha */
-					c_local |= (cura << 8) & 0xff000000;
+					c_local |= (UINT32)ITER8(cura) << 24;
 				else if (FBZCOLORPATH_BITS(5,2) == 1)	/* cca_localselect mux == color0 alpha */
 					c_local |= voodoo_regs[color0] & 0xff000000;
 				else if (FBZCOLORPATH_BITS(5,2) == 2)	/* cca_localselect mux == iterated Z */
@@ -1098,9 +1091,9 @@ void RENDERFUNC(void)
 				{
 					if (FBZCOLORPATH_BITS(0,2) == 0)		/* cc_rgbselect mux == iterated RGB */
 					{
-						r = curr >> 16;
-						g = curg >> 16;
-						b = curb >> 16;
+						r = ITER8(curr);
+						g = ITER8(curg);
+						b = ITER8(curb);
 					}
 					else if (FBZCOLORPATH_BITS(0,2) == 1)	/* cc_rgbselect mux == texture RGB */
 					{
@@ -1141,7 +1134,7 @@ void RENDERFUNC(void)
 
 						case 2:		/* cc_mselect mux == a_other */
 							if (FBZCOLORPATH_BITS(2,2) == 0)			/* cca_localselect mux == iterated alpha */
-								rm = gm = bm = cura >> 16;
+								rm = gm = bm = ITER8(cura);
 							else if (FBZCOLORPATH_BITS(2,2) == 1)		/* cca_localselect mux == texture alpha */
 								rm = gm = bm = (texel >> 24) & 0xff;
 							else if (FBZCOLORPATH_BITS(2,2) == 2)		/* cca_localselect mux == color1 alpha */
@@ -1197,7 +1190,7 @@ void RENDERFUNC(void)
 				if (!FBZCOLORPATH_BITS(17,1))				/* cca_zero_other */
 				{
 					if (FBZCOLORPATH_BITS(2,2) == 0)			/* cca_localselect mux == iterated alpha */
-						a = cura >> 16;
+						a = ITER8(cura);
 					else if (FBZCOLORPATH_BITS(2,2) == 1)		/* cca_localselect mux == texture alpha */
 						a = (texel >> 24) & 0xff;
 					else if (FBZCOLORPATH_BITS(2,2) == 2)		/* cca_localselect mux == color1 alpha */
@@ -1224,7 +1217,7 @@ void RENDERFUNC(void)
 
 						case 2:		/* cca_mselect mux == a_other */
 							if (FBZCOLORPATH_BITS(2,2) == 0)			/* cca_localselect mux == iterated alpha */
-								am = cura >> 16;
+								am = ITER8(cura);
 							else if (FBZCOLORPATH_BITS(2,2) == 1)		/* cca_localselect mux == texture alpha */
 								am = (texel >> 24) & 0xff;
 							else if (FBZCOLORPATH_BITS(2,2) == 2)		/* cca_localselect mux == color1 alpha */
@@ -1252,15 +1245,33 @@ void RENDERFUNC(void)
 				if (FBZCOLORPATH_BITS(23,2))				/* cca_add_clocal */
 					a += c_local >> 24;
 
+				/* as current MAME: clamp the combined colour, invert it, then the alpha tests */
+				if (r < 0) r = 0; else if (r > 255) r = 255;
+				if (g < 0) g = 0; else if (g > 255) g = 255;
+				if (b < 0) b = 0; else if (b > 255) b = 255;
+				if (a < 0) a = 0; else if (a > 255) a = 255;
+
+				/* invert */
+				if (FBZCOLORPATH_BITS(16,1))				/* cc_invert_output */
+				{
+					r ^= 0xff;
+					g ^= 0xff;
+					b ^= 0xff;
+				}
+				if (FBZCOLORPATH_BITS(25,1))				/* cca_invert_output */
+					a ^= 0xff;
+
 				/* handle alpha masking */
 				if (FBZMODE_BITS(13,1) && (a & 1) == 0)
 					goto skipdrawdepth;
 
-				/* apply alpha function */
-				if (ALPHAMODE_BITS(0,4))
+				/* apply alpha function (enable: bit 0) */
+				if (ALPHAMODE_BITS(0,1))
 				{
 					switch (ALPHAMODE_BITS(1,3))
 					{
+						case 0:
+							goto skipdrawdepth;
 						case 1:
 							if (a >= ALPHAMODE_BITS(24,8))
 								goto skipdrawdepth;
@@ -1287,16 +1298,6 @@ void RENDERFUNC(void)
 							break;
 					}
 				}
-				
-				/* invert */
-				if (FBZCOLORPATH_BITS(16,1))				/* cc_invert_output */
-				{
-					r ^= 0xff;
-					g ^= 0xff;
-					b ^= 0xff;
-				}
-				if (FBZCOLORPATH_BITS(25,1))				/* cca_invert_output */
-					a ^= 0xff;
 					
 				/* fog */
 #if (FOGGING)
@@ -1351,101 +1352,59 @@ void RENDERFUNC(void)
 					/* quick out for standard alpha blend with opaque pixel */
 					if (ALPHAMODE_BITS(8,8) != 0x51 || a < 0xff)
 					{
+						/* as current MAME (alpha_blend): the destination expanded from */
+						/* 5-6-5 with its top bits repeated, the dither subtraction term when bit 19 */
+						/* asks, and (src * s + dst * d) >> 8 with saturation */
 						int dpix = dest[x];
-						int dr = (dpix >> 8) & 0xf8;
-						int dg = (dpix >> 3) & 0xfc;
-						int db = (dpix << 3) & 0xf8;
-/* fix me -- we don't support alpha layer on the dest*/
-						int da = 0xff;
-						int sr = r;
-						int sg = g;
-						int sb = b;
-						int sa = a;
-						
-/* fix me -- add dither subtraction here*/
-/*						if (FBZMODE_BITS(19,1))*/
-						
-						/* compute source portion */
+						int dr = ((dpix >> 8) & 0xf8) | ((dpix >> 13) & 0x07);
+						int dg = ((dpix >> 3) & 0xfc) | ((dpix >> 9) & 0x03);
+						int db = ((dpix << 3) & 0xf8) | ((dpix >> 2) & 0x07);
+						int da = 0xff;	/* no alpha planes on the destination */
+						int sr, sg, sb, sa = a;
+						int srs = 0, sgs = 0, sbs = 0, drs = 0, dgs = 0, dbs = 0;
+
+						if (r < 0) r = 0; else if (r > 255) r = 255;
+						if (g < 0) g = 0; else if (g > 255) g = 255;
+						if (b < 0) b = 0; else if (b > 255) b = 255;
+						if (sa < 0) sa = 0; else if (sa > 255) sa = 255;
+						sr = r; sg = g; sb = b;
+
+						if (FBZMODE_BITS(19,1) && FBZMODE_BITS(8,1))
+						{
+							int dith = (15 - (FBZMODE_BITS(11,1) ? dither_matrix_2x2 : dither_matrix_4x4)[((effy & 3) << 2) | (x & 3)]) >> 1;
+							dr += dith;
+							dg += dith >> 1;
+							db += dith;
+						}
+
 						switch (ALPHAMODE_BITS(8,4))
 						{
-							case 0:		/* AZERO*/
-								r = g = b = 0;
-								break;
-							case 1:		/* ASRC_ALPHA*/
-								r = (sr * (sa + 1)) >> 8;
-								g = (sg * (sa + 1)) >> 8;
-								b = (sb * (sa + 1)) >> 8;
-								break;
-							case 2:		/* A_COLOR*/
-								r = (sr * (dr + 1)) >> 8;
-								g = (sg * (dg + 1)) >> 8;
-								b = (sb * (db + 1)) >> 8;
-								break;
-							case 3:		/* ADST_ALPHA*/
-								r = (sr * (da + 1)) >> 8;
-								g = (sg * (da + 1)) >> 8;
-								b = (sb * (da + 1)) >> 8;
-								break;
-							case 4:		/* AONE*/
-								break;
-							case 5:		/* AOMSRC_ALPHA*/
-								r = (sr * (0x100 - sa)) >> 8;
-								g = (sg * (0x100 - sa)) >> 8;
-								b = (sb * (0x100 - sa)) >> 8;
-								break;
-							case 6:		/* AOM_COLOR*/
-								r = (sr * (0x100 - dr)) >> 8;
-								g = (sg * (0x100 - dg)) >> 8;
-								b = (sb * (0x100 - db)) >> 8;
-								break;
-							case 7:		/* AOMDST_ALPHA*/
-								r = (sr * (0x100 - da)) >> 8;
-								g = (sg * (0x100 - da)) >> 8;
-								b = (sb * (0x100 - da)) >> 8;
-								break;
+							default:
+							case 0:		srs = sgs = sbs = 0; break;					/* AZERO */
+							case 1:		srs = sgs = sbs = sa + 1; break;				/* ASRC_ALPHA */
+							case 2:		srs = dr + 1; sgs = dg + 1; sbs = db + 1; break;	/* A_COLOR */
+							case 3:		srs = sgs = sbs = da + 1; break;				/* ADST_ALPHA */
+							case 4:		srs = sgs = sbs = 256; break;				/* AONE */
+							case 5:		srs = sgs = sbs = 0x100 - sa; break;			/* AOMSRC_ALPHA */
+							case 6:		srs = 0x100 - dr; sgs = 0x100 - dg; sbs = 0x100 - db; break;	/* AOM_COLOR */
+							case 7:		srs = sgs = sbs = 0x100 - da; break;			/* AOMDST_ALPHA */
+							case 15:	srs = 0x100 - da; if (sa < srs) srs = sa; srs++; sgs = sbs = srs; break;	/* ASATURATE */
 						}
-						
-						/* add in dest portion */
 						switch (ALPHAMODE_BITS(12,4))
 						{
-							case 0:		/* AZERO*/
-								break;
-							case 1:		/* ASRC_ALPHA*/
-								r += (dr * (sa + 1)) >> 8;
-								g += (dg * (sa + 1)) >> 8;
-								b += (db * (sa + 1)) >> 8;
-								break;
-							case 2:		/* A_COLOR*/
-								r += (dr * (sr + 1)) >> 8;
-								g += (dg * (sg + 1)) >> 8;
-								b += (db * (sb + 1)) >> 8;
-								break;
-							case 3:		/* ADST_ALPHA*/
-								r += (dr * (da + 1)) >> 8;
-								g += (dg * (da + 1)) >> 8;
-								b += (db * (da + 1)) >> 8;
-								break;
-							case 4:		/* AONE*/
-								r += dr;
-								g += dg;
-								b += db;
-								break;
-							case 5:		/* AOMSRC_ALPHA*/
-								r += (dr * (0x100 - sa)) >> 8;
-								g += (dg * (0x100 - sa)) >> 8;
-								b += (db * (0x100 - sa)) >> 8;
-								break;
-							case 6:		/* AOM_COLOR*/
-								r += (dr * (0x100 - sr)) >> 8;
-								g += (dg * (0x100 - sg)) >> 8;
-								b += (db * (0x100 - sb)) >> 8;
-								break;
-							case 7:		/* AOMDST_ALPHA*/
-								r += (dr * (0x100 - da)) >> 8;
-								g += (dg * (0x100 - da)) >> 8;
-								b += (db * (0x100 - da)) >> 8;
-								break;
+							default:
+							case 0:		drs = dgs = dbs = 0; break;					/* AZERO */
+							case 1:		drs = dgs = dbs = sa + 1; break;				/* ASRC_ALPHA */
+							case 2:		drs = sr + 1; dgs = sg + 1; dbs = sb + 1; break;	/* A_COLOR */
+							case 3:		drs = dgs = dbs = da + 1; break;				/* ADST_ALPHA */
+							case 4:		drs = dgs = dbs = 256; break;				/* AONE */
+							case 5:		drs = dgs = dbs = 0x100 - sa; break;			/* AOMSRC_ALPHA */
+							case 6:		drs = 0x100 - sr; dgs = 0x100 - sg; dbs = 0x100 - sb; break;	/* AOM_COLOR */
+							case 7:		drs = dgs = dbs = 0x100 - da; break;			/* AOMDST_ALPHA */
 						}
+						r = (sr * srs + dr * drs) >> 8;
+						g = (sg * sgs + dg * dgs) >> 8;
+						b = (sb * sbs + db * dbs) >> 8;
 					}
 				}
 #endif				
@@ -1459,35 +1418,17 @@ void RENDERFUNC(void)
 				if (a < 0) a = 0;
 				else if (a > 255) a = 255;
 				
-				/* apply dithering */
-				if (FBZMODE_BITS(8,1))
-				{
-#if 1
-					UINT8 *dith;
-					if (!FBZMODE_BITS(11,1))
-						dith = &dither_lookup[256 * dither_matrix_4x4[((y & 3) << 2) | (x & 3)]];
-					else
-						dith = &dither_lookup[256 * dither_matrix_2x2[((y & 3) << 2) | (x & 3)]];
-					r = dith[r];
-					g = dith[g];
-					b = dith[b];
-					a = dith[a];
-#else
-					UINT8 dith;
-					if (!FBZMODE_BITS(11,1))
-						dith = dither_matrix_4x4[((y & 3) << 2) | (x & 3)];
-					else
-						dith = dither_matrix_2x2[((y & 3) << 2) | (x & 3)];
-					r += dith;
-					g += dith;
-					b += dith;
-					a += dith;
-#endif
-				}
-
-				/* stuff */
+				/* write the colour: dithered with the hardware equations (as current MAME) or truncated */
 				if (FBZMODE_BITS(9,1))
-					dest[x] = ((r & 0xf8) << 8) | ((g & 0xfc) << 3) | ((b & 0xf8) >> 3);
+				{
+					if (FBZMODE_BITS(8,1))
+					{
+						int m = FBZMODE_BITS(11,1), di = ((effy & 3) << 2) | (x & 3);
+						dest[x] = (dither_rb[m][di][r] << 11) | (dither_g[m][di][g] << 5) | dither_rb[m][di][b];
+					}
+					else
+						dest[x] = ((r & 0xf8) << 8) | ((g & 0xfc) << 3) | ((b & 0xf8) >> 3);
+				}
 				if (FBZMODE_BITS(10,1))
 					depth[x] = depthval;
 				

@@ -1376,13 +1376,15 @@ void set_content_flags(void)
       }
   }
 
-  /************ KILLER INSTINCT: MIPS III RECOMPILER ************/
-  /* only the Killer Instinct driver enables it (Seattle games do not), */
+  /************ KILLER INSTINCT, CARNEVIL, SF RUSH: MIPS III RECOMPILER ************/
+  /* only the Killer Instinct driver, CarnEvil and the SF Rush games (Seattle) enable it, */
   /* and the option means nothing where it is compiled out */
-#if (HAS_R4600)
+#if (HAS_R4600 || HAS_R5000)
   {
     extern int mips3_jit_available(void);
-    if (game_driver->source_file && strstr(game_driver->source_file, "kinst.c") && mips3_jit_available())
+    if (game_driver->source_file && mips3_jit_available()
+     && (strstr(game_driver->source_file, "kinst.c") || strcmp(game_driver->name, "carnevil") == 0
+      || strcmp(game_driver->name, "sfrush") == 0 || strcmp(game_driver->name, "sfrushrk") == 0))
       options.content_flags[CONTENT_MIPS_DYNAREC] = true;
   }
 #endif

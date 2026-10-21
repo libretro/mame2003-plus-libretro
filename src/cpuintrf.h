@@ -614,6 +614,10 @@ data8_t cpunum_read_byte(int cpunum, offs_t address);
 /* write a byte from another CPU's memory space */
 void cpunum_write_byte(int cpunum, offs_t address, data8_t data);
 
+/* read/write 'count' consecutive bytes of another CPU's memory space (one context switch) */
+void cpunum_read_bytes(int cpunum, offs_t address, UINT8 *data, UINT32 count);
+void cpunum_write_bytes(int cpunum, offs_t address, const UINT8 *data, UINT32 count);
+
 /* return a pointer to the saved context of a given CPU, or NULL if the
    context is active (and contained within the CPU core */
 void *cpunum_get_context_ptr(int cpunum);

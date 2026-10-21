@@ -823,6 +823,9 @@ static INLINE void set_cop0_reg(int idx, UINT64 val)
 			mips3.cpr[0][idx] = val;
 			if (diff & 0x8000)
 				update_cycle_counting();
+			/* the recompiler translates FPU instructions only while COP1 is usable */
+			if (diff & SR_COP1)
+				jit_flush();
 			check_irqs();
 			break;
 		}
@@ -1467,6 +1470,14 @@ static INLINE void handle_cop1(UINT32 op)
 			}
 			break;
 	}
+}
+
+
+
+/* a COP1 instruction (not a branch) from translated code: exactly the interpreter's */
+static void jit_cop1_helper(UINT32 op)
+{
+	handle_cop1(op);
 }
 
 

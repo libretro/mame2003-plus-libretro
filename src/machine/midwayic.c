@@ -70,6 +70,8 @@ struct ioasic_state
 	UINT8	shuffle_active;
 	UINT8 *	shuffle_map;
 	void 	(*irq_callback)(int);
+	void	(*aux_output)(data32_t data);	/* writes to register 0xd (PICIN), or NULL */
+	data32_t (*port_filter)(int port, data32_t data);	/* adjusts input port 0-3 reads, or NULL */
 	UINT8	irq_state;
 	UINT16	sound_irq_state;
 	UINT8	auto_ack;
@@ -486,6 +488,9 @@ void midway_ioasic_init(int shuffle, int upper, int yearoffs, void (*irq_callbac
 		{ 0xf,0xe,0xd,0xc,0x4,0x5,0x6,0x7,0x9,0x8,0xa,0xb,0x2,0x3,0x1,0x0 },	/* Mace */
 		{ 0xc,0xd,0xe,0xf,0x0,0x1,0x2,0x3,0x7,0x8,0x9,0xb,0xa,0x5,0x6,0x4 },	/* Gauntlet Dark Legacy */
 		{ 0x0,0x1,0x2,0x3,0x4,0x5,0x6,0x7,0x8,0x9,0xa,0xb,0xc,0xd,0xe,0xf },	/* Invasion */
+		{ 0x7,0x4,0x5,0x6,0x2,0x0,0x1,0x3,0x8,0x9,0xa,0xb,0xd,0xc,0xe,0xf },	/* Vapor TRX */
+		{ 0x7,0x4,0x5,0x6,0x2,0x0,0x1,0x3,0x8,0x9,0xa,0xb,0xd,0xc,0xe,0xf },	/* San Francisco Rush: The Rock */
+		{ 0x1,0x2,0x3,0x0,0x4,0x5,0x6,0x7,0xa,0xb,0x8,0x9,0xc,0xd,0xe,0xf },	/* Hyperdrive */
 	};
 
 	/* do we have a DCS2 sound chip connected? (most likely) */
@@ -496,6 +501,8 @@ void midway_ioasic_init(int shuffle, int upper, int yearoffs, void (*irq_callbac
 	ioasic.shuffle_map = &shuffle_maps[shuffle][0];
 	ioasic.auto_ack = 0;
 	ioasic.irq_callback = irq_callback;
+	ioasic.aux_output = NULL;
+	ioasic.port_filter = NULL;
 
 	/* initialize the PIC */
 	midway_serial_pic2_init(upper, yearoffs);
@@ -748,6 +755,13 @@ READ32_HANDLER( midway_ioasic_r )
 		case IOASIC_PORT3:
 			result = readinputport(3);
 			break;
+	}
+
+	if (ioasic.port_filter && offset >= IOASIC_PORT0 && offset <= IOASIC_PORT3)
+		result = (*ioasic.port_filter)(offset - IOASIC_PORT0, result);
+
+	switch (offset)
+	{
 
 		case IOASIC_SOUNDSTAT:
 			/* status from sound CPU */
@@ -881,6 +895,12 @@ WRITE32_HANDLER( midway_ioasic_w )
 			midway_serial_pic2_w(newreg);
 			break;
 
+		case IOASIC_PICIN:
+			/* the aux output connector (Seattle: SF Rush wheel board), as current MAME */
+			if (ioasic.aux_output)
+				(*ioasic.aux_output)(data);
+			break;
+
 		case IOASIC_INTCTL:
 			/* interrupt enables */
 			/* bit  0 = global interrupt enable */
@@ -896,6 +916,19 @@ WRITE32_HANDLER( midway_ioasic_w )
 		default:
 			break;
 	}
+}
+
+
+
+void midway_ioasic_set_aux_output(void (*callback)(data32_t data))
+{
+	ioasic.aux_output = callback;
+}
+
+
+void midway_ioasic_set_port_filter(data32_t (*callback)(int port, data32_t data))
+{
+	ioasic.port_filter = callback;
 }
 
 

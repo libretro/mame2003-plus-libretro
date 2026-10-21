@@ -14699,6 +14699,37 @@ const char *sf_get_ctrl_name(int type)
   return "";
 }
 
+const struct ControlInfo sfrush_ctrl =
+{
+  false, /* 45_degree_rotation for joystick(s) */
+  false, /* alternating_controls */
+  false, /* mirrored_controls */
+  "Wheel, accelerator and brake on player 1 (the shifter stays in the last gear chosen). Clutch, music and the four track buttons are on player 2.", /* control_details */
+  &sfrush_get_ctrl_name
+};
+
+const char *sfrush_get_ctrl_name(int type)
+{
+  switch(type)
+  {
+    case IPT_BUTTON1: return BTN1 "1st Gear / Music";
+    case IPT_BUTTON2: return BTN2 "2nd Gear / Track 1";
+    case IPT_BUTTON3: return BTN3 "3rd Gear / Track 2";
+    case IPT_BUTTON4: return BTN4 "4th Gear / Track 3";
+    case IPT_BUTTON5: return BTN5 "Track 4";
+    case IPT_BUTTON7: return BTN7 "View 1";
+    case IPT_BUTTON8: return BTN8 "View 2";
+    case IPT_BUTTON9: return "B9: View 3";
+    case IPT_BUTTON10: return "B10: Reverse";
+    case IPT_PEDAL: return "Accelerator / Clutch";
+    case IPT_PEDAL2: return "Brake";
+    case IPT_PADDLE: return "Steer Left";
+    case (IPT_PADDLE + IPT_EXTENSION): return "Steer Right";
+  } /* end of switch */
+
+  return "";
+}
+
 const struct ControlInfo sfa2_ctrl =
 {
   false, /* 45_degree_rotation for joystick(s) */

@@ -1224,6 +1224,32 @@ void cpunum_write_byte(int cpunum, offs_t address, data8_t data)
 
 
 /*--------------------------
+ 	Read/write a run of bytes
+ 	(as cpunum_read_byte/
+ 	cpunum_write_byte on each,
+ 	one context switch)
+--------------------------*/
+
+void cpunum_read_bytes(int cpunum, offs_t address, UINT8 *data, UINT32 count)
+{
+	VERIFY_CPUNUM_VOID(cpunum_read_bytes);
+	cpuintrf_push_context(cpunum);
+	while (count--)
+		*data++ = (*cpu[cpunum].intf.memory_read)(address++);
+	cpuintrf_pop_context();
+}
+
+void cpunum_write_bytes(int cpunum, offs_t address, const UINT8 *data, UINT32 count)
+{
+	VERIFY_CPUNUM_VOID(cpunum_write_bytes);
+	cpuintrf_push_context(cpunum);
+	while (count--)
+		(*cpu[cpunum].intf.memory_write)(address++, *data++);
+	cpuintrf_pop_context();
+}
+
+
+/*--------------------------
  	Get context pointer
 --------------------------*/
 

@@ -2440,6 +2440,9 @@ const char *stratgyx_get_ctrl_name(int type);
 extern const struct ControlInfo sf_ctrl;
 const char *sf_get_ctrl_name(int type);
 
+extern const struct ControlInfo sfrush_ctrl;
+const char *sfrush_get_ctrl_name(int type);
+
 extern const struct ControlInfo sfa2_ctrl;
 const char *sfa2_get_ctrl_name(int type);
 

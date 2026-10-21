@@ -376,7 +376,7 @@ SOURCES_C += \
 	$(CORE_DIR)/vidhrdw/gridlee_vidhrdw.c $(CORE_DIR)/sndhrdw/gridlee_sndhrdw.c $(CORE_DIR)/drivers/gridlee.c \
 	$(CORE_DIR)/drivers/seattle.c $(CORE_DIR)/vidhrdw/voodoo_vidhrdw.c \
 	$(CORE_DIR)/vidhrdw/exterm_vidhrdw.c $(CORE_DIR)/drivers/exterm.c \
-	$(CORE_DIR)/machine/midwayic.c $(CORE_DIR)/sndhrdw/dcs.c \
+	$(CORE_DIR)/machine/midwayic.c $(CORE_DIR)/machine/smc91c9x.c $(CORE_DIR)/sndhrdw/dcs.c \
 	$(CORE_DIR)/machine/midyunit_machine.c $(CORE_DIR)/vidhrdw/midyunit_vidhrdw.c $(CORE_DIR)/drivers/midyunit.c \
 	$(CORE_DIR)/drivers/midxunit.c \
 	$(CORE_DIR)/machine/midwunit_machine.c $(CORE_DIR)/drivers/midwunit.c \
