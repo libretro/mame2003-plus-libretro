@@ -134,7 +134,10 @@ static void render_frame_start( void )
 	raster_state *raster = m_raster;
 
 	raster->poly_list_index = 0;
-	memset( raster->poly_sorted_list, 0, 0x10000 * sizeof( polygon * ) );
+	/* the buckets are cleared at video start; a frame only fills
+	   min_z..max_z, so only those need clearing */
+	if( raster->min_z <= raster->max_z )
+		memset( &raster->poly_sorted_list[ raster->min_z ], 0, ( raster->max_z - raster->min_z + 1 ) * sizeof( polygon * ) );
 	raster->min_z = 0xffff;
 	raster->max_z = 0;
 	/* Zero Gunner sets backgrounds with "previous z value" mode at the start
@@ -2283,8 +2286,12 @@ void model2_geo_parse( void )
    MAME), so a black pixel (dark shadows) is not taken as transparent */
 #define M2_PIXEL_OPAQUE 0xff000000
 
+/* the 3D frame. A drawn pixel is never 0 (M2_PIXEL_OPAQUE), so the buffer
+   is its own fill map: polygons are drawn front to back and the first one
+   to reach a pixel keeps it. Only the box holding the pixels drawn since
+   the last clear is cleared and composited */
 static UINT32 *m_destmap;
-static UINT8 *m_fillmap;
+static int m_dirty_minx, m_dirty_maxx, m_dirty_miny, m_dirty_maxy;	/* empty: minx > maxx */
 
 typedef struct
 {
@@ -2458,7 +2465,6 @@ static INLINE int count_leading_zeros32( UINT32 v )
 static void draw_scanline_solid( int scanline, int startx, int stopx, const m2_poly_extra_data *object, int translucent )
 {
 	UINT32 *p = &m_destmap[ scanline * DEST_W ];
-	UINT8 *fill = &m_fillmap[ scanline * DEST_W ];
 	const UINT16 *colortable_r = &model2_colorxlat[ 0x0000 / 2 ];
 	const UINT16 *colortable_g = &model2_colorxlat[ 0x4000 / 2 ];
 	const UINT16 *colortable_b = &model2_colorxlat[ 0x8000 / 2 ];
@@ -2488,11 +2494,8 @@ static void draw_scanline_solid( int scanline, int startx, int stopx, const m2_p
 
 	for( ; x < stopx; x += dx )
 	{
-		if( fill[ x ] == 0 )
-		{
+		if( p[ x ] == 0 )
 			p[ x ] = color;
-			fill[ x ] = 0xff;
-		}
 	}
 }
 
@@ -2500,7 +2503,6 @@ static void draw_scanline_tex( int scanline, int startx, int stopx, float ooz, f
 	float dooz, float duoz, float dvoz, const m2_poly_extra_data *object, int translucent )
 {
 	UINT32 *p = &m_destmap[ scanline * DEST_W ];
-	UINT8 *fill = &m_fillmap[ scanline * DEST_W ];
 	const UINT16 *colortable_r = &model2_colorxlat[ 0x0000 / 2 ];
 	const UINT16 *colortable_g = &model2_colorxlat[ 0x4000 / 2 ];
 	const UINT16 *colortable_b = &model2_colorxlat[ 0x8000 / 2 ];
@@ -2542,7 +2544,7 @@ static void draw_scanline_tex( int scanline, int startx, int stopx, float ooz, f
 		UINT32 t, tr, tg, tb;
 		UINT8 luma;
 
-		if( fill[ x ] > 0 )
+		if( p[ x ] != 0 )
 			continue;
 
 		z = 1.0f / ooz;
@@ -2589,7 +2591,6 @@ static void draw_scanline_tex( int scanline, int startx, int stopx, float ooz, f
 		tb = model2_gamma_table[ colortable_b[ luma ] & 0xff ];
 
 		p[ x ] = M2_PIXEL_OPAQUE | ( tr << 16 ) | ( tg << 8 ) | tb;
-		fill[ x ] = 0xff;
 	}
 }
 
@@ -2666,6 +2667,11 @@ static void rasterize_polygon( const poly_vertex *v, int n, int minx, int maxx, 
 		if( stopx > maxx + 1 ) stopx = maxx + 1;
 		if( startx >= stopx )
 			continue;
+
+		if( startx < m_dirty_minx ) m_dirty_minx = startx;
+		if( stopx - 1 > m_dirty_maxx ) m_dirty_maxx = stopx - 1;
+		if( y < m_dirty_miny ) m_dirty_miny = y;
+		if( y > m_dirty_maxy ) m_dirty_maxy = y;
 
 		if( textured )
 		{
@@ -2752,11 +2758,15 @@ static INLINE void model2_3d_project( polygon *poly )
 static void composite_3d( struct mame_bitmap *bitmap, const struct rectangle *cliprect )
 {
 	int x, y;
-	for( y = cliprect->min_y; y <= cliprect->max_y && y < DEST_H; y++ )
+	int minx = m_dirty_minx > cliprect->min_x ? m_dirty_minx : cliprect->min_x;
+	int maxx = m_dirty_maxx < cliprect->max_x ? m_dirty_maxx : cliprect->max_x;
+	int miny = m_dirty_miny > cliprect->min_y ? m_dirty_miny : cliprect->min_y;
+	int maxy = m_dirty_maxy < cliprect->max_y ? m_dirty_maxy : cliprect->max_y;
+	for( y = miny; y <= maxy; y++ )
 	{
 		UINT16 *dst = (UINT16 *)bitmap->line[ y ];
 		const UINT32 *src = &m_destmap[ y * DEST_W ];
-		for( x = cliprect->min_x; x <= cliprect->max_x && x < DEST_W; x++ )
+		for( x = minx; x <= maxx; x++ )
 		{
 			UINT32 c = src[ x ];
 			if( c )
@@ -2781,11 +2791,12 @@ static void render_polygons( struct mame_bitmap *bitmap, const struct rectangle 
 	if( raster->poly_list_index == 0 )
 		return;
 
-	for( y = cliprect->min_y; y <= cliprect->max_y && y < DEST_H; y++ )
-	{
-		memset( &m_destmap[ y * DEST_W ], 0, DEST_W * sizeof( UINT32 ) );
-		memset( &m_fillmap[ y * DEST_W ], 0, DEST_W );
-	}
+	/* clear what the previous frame drew */
+	if( m_dirty_minx <= m_dirty_maxx )
+		for( y = m_dirty_miny; y <= m_dirty_maxy; y++ )
+			memset( &m_destmap[ y * DEST_W + m_dirty_minx ], 0, ( m_dirty_maxx - m_dirty_minx + 1 ) * sizeof( UINT32 ) );
+	m_dirty_minx = m_dirty_miny = DEST_W;
+	m_dirty_maxx = m_dirty_maxy = -1;
 
 	for( window = raster->cur_window; window >= 0; window-- )
 	{
@@ -2909,11 +2920,12 @@ VIDEO_START( model2 )
 	m_raster->poly_list = auto_malloc( MAX_POLYGONS * sizeof( polygon ) );
 	m_raster->poly_sorted_list = auto_malloc( 0x10000 * sizeof( polygon * ) );
 	m_destmap = auto_malloc( DEST_W * DEST_H * sizeof( UINT32 ) );
-	m_fillmap = auto_malloc( DEST_W * DEST_H );
-	if( !m_raster || !m_geo || !m_raster->poly_list || !m_raster->poly_sorted_list || !m_destmap || !m_fillmap )
+	if( !m_raster || !m_geo || !m_raster->poly_list || !m_raster->poly_sorted_list || !m_destmap )
 		return 1;
 	memset( m_destmap, 0, DEST_W * DEST_H * sizeof( UINT32 ) );
-	memset( m_fillmap, 0, DEST_W * DEST_H );
+	memset( m_raster->poly_sorted_list, 0, 0x10000 * sizeof( polygon * ) );
+	m_dirty_minx = m_dirty_miny = DEST_W;
+	m_dirty_maxx = m_dirty_maxy = -1;
 
 	m_raster->texture_rom = (UINT16 *)memory_region( REGION_USER4 );
 	m_raster->texture_rom_mask = ( memory_region_length( REGION_USER4 ) / 2 ) - 1;
