@@ -47,6 +47,9 @@
 #define DIFF_HEADER_SIZE	64
 #define DIFF_ID_BYTES		20
 
+/* decompressed hunks kept in memory per disk */
+#define HARD_DISK_CACHE_BYTES	(4 * 1024 * 1024)
+
 static const char diff_tag[8] = { 'M','2','P','D','I','F','F','1' };
 
 
@@ -68,8 +71,9 @@ struct hard_disk_file
 	UINT32					hunkbytes;			/* bytes per hunk */
 	UINT32					totalhunks;			/* hunks in the disk */
 	UINT32					hunksectors;		/* sectors per hunk */
-	UINT32					cachehunk;			/* which hunk is cached */
-	UINT8 *					cache;				/* cache of the current hunk */
+	UINT32					cacheslots;			/* hunks the cache holds (direct mapped: hunk % cacheslots) */
+	UINT32 *				cachetag;			/* per slot: the hunk it holds, ~0 if none */
+	UINT8 *					cache;				/* cacheslots hunks */
 	UINT8					diskid[DIFF_ID_BYTES];	/* identifies the disk data */
 	UINT8					diskmd5[CHD_MD5_BYTES];	/* MD5 of the disk data (CHD v1-v3 only) */
 	UINT8					hasmd5;				/* diskmd5 is valid */
@@ -289,6 +293,35 @@ static int write_hunk(struct hard_disk_file *file, UINT32 hunknum, const UINT8 *
 
 
 
+/* the cache holds nothing */
+static void cache_flush(struct hard_disk_file *file)
+{
+	UINT32 i;
+	for (i = 0; i < file->cacheslots; i++)
+		file->cachetag[i] = ~0;
+}
+
+
+/* a hunk from the cache, read into it first when it is not there; NULL on a read error */
+static UINT8 *cache_hunk(struct hard_disk_file *file, UINT32 hunknum)
+{
+	UINT32 slot = hunknum % file->cacheslots;
+	UINT8 *hunk = &file->cache[(size_t)slot * file->hunkbytes];
+
+	if (file->cachetag[slot] != hunknum)
+	{
+		if (!read_hunk(file, hunknum, hunk))
+		{
+			file->cachetag[slot] = ~0;
+			return NULL;
+		}
+		file->cachetag[slot] = hunknum;
+	}
+	return hunk;
+}
+
+
+
 /*************************************
  *
  *	Open a hard disk
@@ -331,7 +364,6 @@ struct hard_disk_file *hard_disk_open(mame_file *chd, mame_file *diff, const cha
 	memset(file, 0, sizeof(*file));
 	memset(chdfile, 0, sizeof(*chdfile));
 	file->diff = diff;
-	file->cachehunk = ~0;
 
 	/* open the CHD; from now on libchdr owns the file and closes it */
 	chdfile->core.argp = chdfile;
@@ -392,13 +424,27 @@ struct hard_disk_file *hard_disk_open(mame_file *chd, mame_file *diff, const cha
 		file->hassha1 = 1;
 	}
 
-	/* allocate a cache */
-	file->cache = malloc(file->hunkbytes);
-	if (!file->cache)
+	/* allocate a cache: games stream the same data again and again (CarnEvil */
+	/* rereads ~7000 hunks over and over), so keep up to HARD_DISK_CACHE_BYTES of */
+	/* them decompressed; one hunk if that much memory is not there */
+	file->cacheslots = HARD_DISK_CACHE_BYTES / file->hunkbytes;
+	if (file->cacheslots > file->totalhunks)
+		file->cacheslots = file->totalhunks;
+	if (file->cacheslots < 1)
+		file->cacheslots = 1;
+	file->cache = malloc((size_t)file->cacheslots * file->hunkbytes);
+	if (!file->cache && file->cacheslots > 1)
+	{
+		file->cacheslots = 1;
+		file->cache = malloc(file->hunkbytes);
+	}
+	file->cachetag = malloc(file->cacheslots * sizeof(file->cachetag[0]));
+	if (!file->cache || !file->cachetag)
 	{
 		*error = "out of memory";
 		goto cleanup;
 	}
+	cache_flush(file);
 
 	/* set up the differencing file */
 	if (file->diff)
@@ -429,6 +475,7 @@ cleanup:
 		mame_fclose(file->diff);
 	free(file->diffmap);
 	free(file->cache);
+	free(file->cachetag);
 	free(file);
 	return NULL;
 }
@@ -566,8 +613,8 @@ int hard_disk_import_legacy_diff(struct hard_disk_file *file, const UINT8 *data,
 	}
 	free(hunk);
 
-	/* the cache may hold a hunk read before the import */
-	file->cachehunk = ~0;
+	/* the cache may hold hunks read before the import */
+	cache_flush(file);
 
 	if (skipped)
 		log_cb(RETRO_LOG_WARN, LOGPRE "Old differencing file: %u hunks imported, %u could not be read\n", imported, skipped);
@@ -601,6 +648,7 @@ void hard_disk_close(struct hard_disk_file *file)
 		mame_fclose(file->diff);
 	free(file->diffmap);
 	free(file->cache);
+	free(file->cachetag);
 	free(file);
 }
 
@@ -650,6 +698,7 @@ UINT32 hard_disk_read(struct hard_disk_file *file, UINT32 lbasector, UINT32 nums
 {
 	UINT32 hunknum = lbasector / file->hunksectors;
 	UINT32 sectoroffs = lbasector % file->hunksectors;
+	UINT8 *hunk;
 
 	/* for now, just break down multisector reads into single sectors */
 	if (numsectors > 1)
@@ -665,19 +714,13 @@ UINT32 hard_disk_read(struct hard_disk_file *file, UINT32 lbasector, UINT32 nums
 		return total;
 	}
 
-	/* if we haven't cached this hunk, read it now */
-	if (file->cachehunk != hunknum)
-	{
-		if (!read_hunk(file, hunknum, file->cache))
-		{
-			file->cachehunk = ~0;
-			return 0;
-		}
-		file->cachehunk = hunknum;
-	}
+	/* the hunk, read into the cache unless it is there */
+	hunk = cache_hunk(file, hunknum);
+	if (!hunk)
+		return 0;
 
 	/* copy out the requested sector */
-	memcpy(buffer, &file->cache[sectoroffs * file->info.sectorbytes], file->info.sectorbytes);
+	memcpy(buffer, &hunk[sectoroffs * file->info.sectorbytes], file->info.sectorbytes);
 	return 1;
 }
 
@@ -693,6 +736,7 @@ UINT32 hard_disk_write(struct hard_disk_file *file, UINT32 lbasector, UINT32 num
 {
 	UINT32 hunknum = lbasector / file->hunksectors;
 	UINT32 sectoroffs = lbasector % file->hunksectors;
+	UINT8 *hunk;
 
 	/* for now, just break down multisector writes into single sectors */
 	if (numsectors > 1)
@@ -712,24 +756,18 @@ UINT32 hard_disk_write(struct hard_disk_file *file, UINT32 lbasector, UINT32 num
 	if (!file->diff)
 		return 0;
 
-	/* if we haven't cached this hunk, read it now */
-	if (file->cachehunk != hunknum)
-	{
-		if (!read_hunk(file, hunknum, file->cache))
-		{
-			file->cachehunk = ~0;
-			return 0;
-		}
-		file->cachehunk = hunknum;
-	}
+	/* the hunk, read into the cache unless it is there */
+	hunk = cache_hunk(file, hunknum);
+	if (!hunk)
+		return 0;
 
 	/* copy in the requested data */
-	memcpy(&file->cache[sectoroffs * file->info.sectorbytes], buffer, file->info.sectorbytes);
+	memcpy(&hunk[sectoroffs * file->info.sectorbytes], buffer, file->info.sectorbytes);
 
 	/* write it back out; on failure the cache no longer matches the disk */
-	if (!write_hunk(file, hunknum, file->cache))
+	if (!write_hunk(file, hunknum, hunk))
 	{
-		file->cachehunk = ~0;
+		file->cachetag[hunknum % file->cacheslots] = ~0;
 		return 0;
 	}
 	return 1;
