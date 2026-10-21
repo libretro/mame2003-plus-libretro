@@ -1418,11 +1418,12 @@ void set_content_flags(void)
 }
 #endif
 
-  /************ NAMCO SYSTEM 11/12: PSX CPU RECOMPILER ************/
+  /************ NAMCO SYSTEM 11/12, SONY ZN: PSX CPU RECOMPILER ************/
   /* the option means nothing where the recompiler is compiled out */
 #if (HAS_PSXCPU)
   if (game_driver->source_file && psxcpu_jit_available()
-   && (strstr(game_driver->source_file, "namcos11.c") || strstr(game_driver->source_file, "namcos12.c")))
+   && (strstr(game_driver->source_file, "namcos11.c") || strstr(game_driver->source_file, "namcos12.c")
+    || strstr(game_driver->source_file, "zn.c")))
     options.content_flags[CONTENT_MIPS_DYNAREC] = true;
 #endif
 

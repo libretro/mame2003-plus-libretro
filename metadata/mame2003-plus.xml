@@ -161164,25 +161164,33 @@
 		</dipswitch>
 		<driver status="preliminary" color="good" sound="preliminary" graphic="good" palettesize="65536"/>
 	</game>
-	<game name="psyforce" sourcefile="zn.c" romof="taitofx1">
-		<description>Psychic Force (JAPAN)</description>
+	<game name="sfchamp" sourcefile="zn.c" romof="coh1000t">
+		<description>Super Football Champ (Ver 2.5O)</description>
 		<year>1995</year>
 		<manufacturer>Taito</manufacturer>
-		<rom name="coh1002t.bin" merge="coh1002t.bin" size="524288" crc="e3f23b6e" sha1="e18907cf8c6ba54d96edba0a9a00487a90219e0d" region="cpu1" offset="400000"/>
-		<rom name="e22-05.2" size="524288" crc="7770242c" sha1="dd37575d3d9ffdef60fe0e4cab6c9e42d087f714" region="user1" offset="0"/>
-		<rom name="e22-10.7" size="524288" crc="f6341d63" sha1="99dc27aa694ae5951148054291912a486726e8c9" region="user1" offset="1"/>
-		<rom name="e22-02.16" size="2097152" crc="03b50064" sha1="0259537e86b266b3f34308c4fc0bcc04c037da71" region="user1" offset="100000"/>
-		<rom name="e22-03.1" size="2097152" crc="8372f839" sha1="646b3919b6be63412c11850ec1524685abececc0" region="user1" offset="300000"/>
-		<rom name="e22-04.21" size="2097152" crc="397b71aa" sha1="48743c362503c1d2dbeb3c8be4cb2aaaae015b88" region="user1" offset="500000"/>
-		<rom name="e22-07.22" size="131072" crc="739af589" sha1="dbb4d1c6d824a99ccf27168e2c21644e19811523" region="cpu2" offset="0"/>
-		<rom name="e22-01.15" size="2097152" crc="808b8340" sha1="d8bde850dd9b5b71e94ea707d2d728754f907977" region="sound1" soundonly="yes" offset="0"/>
-		<chip type="cpu" name="PSX CPU" clock="33000000"/>
+		<rom name="m534002c-14.ic353" merge="m534002c-14.ic353" size="524288" crc="e3f23b6e" sha1="e18907cf8c6ba54d96edba0a9a00487a90219e0d" region="user3" offset="0"/>
+		<rom name="tt01.ic652" merge="tt01.ic652" size="8" crc="daac13e7" sha1="96d94f2b06fb7ecd91454969f4959a583ffb9d5a" region="user4" offset="0"/>
+		<rom name="e18-12.2" size="524288" crc="72304685" sha1="2e6f645871e19a49fcdfbdca49c6be415471eadf" region="user1" offset="1"/>
+		<rom name="e18-13.7" size="524288" crc="fa4d01ee" sha1="27efd8e2107d71213d35f2a58762ed8812f809d3" region="user1" offset="0"/>
+		<rom name="e18-02.12" size="2097152" crc="c7b4fe29" sha1="7f823bd61abf2b15d3ba62bca829a5b1acacfd09" region="user1" offset="600000"/>
+		<rom name="e18-03.16" size="2097152" crc="76392346" sha1="2c5b70c4708208f866feea0472fcc72333061124" region="user1" offset="800000"/>
+		<rom name="e18-04.19" size="2097152" crc="fc3731da" sha1="58948aad8d7bb7a8449d2bf12e9d5e6d7b4426b5" region="user1" offset="a00000"/>
+		<rom name="e18-05.21" size="2097152" crc="2e984c50" sha1="6d8255e38c67d68bf489c9885663ed2edf148188" region="user1" offset="c00000"/>
+		<rom name="e18-09.22" size="131072" crc="bb5a5319" sha1="0bb700cafc157d3af663cc9bebb8167487ff2852" region="cpu2" offset="10000"/>
+		<rom name="e18-01.15" size="2097152" crc="dbd1408c" sha1="ef81064f2f95e5ae25eb1f10d1e78f27f9e294f5" region="sound1" offset="0"/>
+		<rom name="tt02" size="8" crc="b1585ac7" sha1="d967eea539de2dd7a8d13fa2785c3033065bed9c" region="user5" offset="0"/>
+		<chip type="cpu" name="PSX CPU" clock="16934400"/>
 		<chip type="cpu" soundonly="yes" name="Z80" clock="4000000"/>
-		<chip type="audio" name="YM2610" clock="8000000"/>
-		<video screen="raster" orientation="horizontal" width="480" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<chip type="audio" name="PSX SPU"/>
+		<chip type="audio" name="YM2610B" clock="8000000"/>
+		<video screen="raster" orientation="horizontal" width="640" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
-		<input players="2" control="joy8way" buttons="6" service="yes"/>
+		<input players="2" control="joy8way" buttons="3" coins="2" service="yes" tilt="yes"/>
 		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
@@ -161190,32 +161198,39 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Test Mode">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="65536"/>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="65536"/>
 	</game>
-	<game name="sfchamp" sourcefile="zn.c" romof="taitofx1">
-		<description>Super Football Champ (JAPAN)</description>
+	<game name="sfchampo" sourcefile="zn.c" cloneof="sfchamp" romof="sfchamp">
+		<description>Super Football Champ (Ver 2.4O)</description>
 		<year>1995</year>
 		<manufacturer>Taito</manufacturer>
-		<rom name="coh1002t.bin" merge="coh1002t.bin" size="524288" crc="e3f23b6e" sha1="e18907cf8c6ba54d96edba0a9a00487a90219e0d" region="cpu1" offset="400000"/>
-		<rom name="e18-07.2" size="524288" crc="1b484e1c" sha1="f29f40a9988475d8abbb126095b0716133c087a0" region="user1" offset="0"/>
-		<rom name="e18-08.7" size="524288" crc="6a5558cd" sha1="75b26bcaaa213283e7e0dace69ee58f305b4572d" region="user1" offset="1"/>
-		<rom name="e18-02.12" size="2097152" crc="c7b4fe29" sha1="7f823bd61abf2b15d3ba62bca829a5b1acacfd09" region="user1" offset="100000"/>
-		<rom name="e18-03.16" size="2097152" crc="76392346" sha1="2c5b70c4708208f866feea0472fcc72333061124" region="user1" offset="300000"/>
-		<rom name="e18-04.19" size="2097152" crc="fc3731da" sha1="58948aad8d7bb7a8449d2bf12e9d5e6d7b4426b5" region="user1" offset="500000"/>
-		<rom name="e18-05.21" size="2097152" crc="2e984c50" sha1="6d8255e38c67d68bf489c9885663ed2edf148188" region="user1" offset="700000"/>
-		<rom name="e18-09.22" size="131072" crc="bb5a5319" sha1="0bb700cafc157d3af663cc9bebb8167487ff2852" region="cpu2" offset="0"/>
-		<rom name="e18-01.15" size="2097152" crc="dbd1408c" sha1="ef81064f2f95e5ae25eb1f10d1e78f27f9e294f5" region="sound1" soundonly="yes" offset="0"/>
-		<chip type="cpu" name="PSX CPU" clock="33000000"/>
+		<rom name="m534002c-14.ic353" merge="m534002c-14.ic353" size="524288" crc="e3f23b6e" sha1="e18907cf8c6ba54d96edba0a9a00487a90219e0d" region="user3" offset="0"/>
+		<rom name="tt01.ic652" merge="tt01.ic652" size="8" crc="daac13e7" sha1="96d94f2b06fb7ecd91454969f4959a583ffb9d5a" region="user4" offset="0"/>
+		<rom name="e18-11.2" size="524288" crc="f5462f30" sha1="44eb03a9b51e2d8dd14fe2ed36dbcf17035a22c7" region="user1" offset="1"/>
+		<rom name="e18-08.7" size="524288" crc="6a5558cd" sha1="75b26bcaaa213283e7e0dace69ee58f305b4572d" region="user1" offset="0"/>
+		<rom name="e18-02.12" merge="e18-02.12" size="2097152" crc="c7b4fe29" sha1="7f823bd61abf2b15d3ba62bca829a5b1acacfd09" region="user1" offset="600000"/>
+		<rom name="e18-03.16" merge="e18-03.16" size="2097152" crc="76392346" sha1="2c5b70c4708208f866feea0472fcc72333061124" region="user1" offset="800000"/>
+		<rom name="e18-04.19" merge="e18-04.19" size="2097152" crc="fc3731da" sha1="58948aad8d7bb7a8449d2bf12e9d5e6d7b4426b5" region="user1" offset="a00000"/>
+		<rom name="e18-05.21" merge="e18-05.21" size="2097152" crc="2e984c50" sha1="6d8255e38c67d68bf489c9885663ed2edf148188" region="user1" offset="c00000"/>
+		<rom name="e18-09.22" merge="e18-09.22" size="131072" crc="bb5a5319" sha1="0bb700cafc157d3af663cc9bebb8167487ff2852" region="cpu2" offset="10000"/>
+		<rom name="e18-01.15" merge="e18-01.15" size="2097152" crc="dbd1408c" sha1="ef81064f2f95e5ae25eb1f10d1e78f27f9e294f5" region="sound1" offset="0"/>
+		<rom name="tt02" merge="tt02" size="8" crc="b1585ac7" sha1="d967eea539de2dd7a8d13fa2785c3033065bed9c" region="user5" offset="0"/>
+		<chip type="cpu" name="PSX CPU" clock="16934400"/>
 		<chip type="cpu" soundonly="yes" name="Z80" clock="4000000"/>
-		<chip type="audio" name="YM2610" clock="8000000"/>
-		<video screen="raster" orientation="horizontal" width="480" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<chip type="audio" name="PSX SPU"/>
+		<chip type="audio" name="YM2610B" clock="8000000"/>
+		<video screen="raster" orientation="horizontal" width="640" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
-		<input players="2" control="joy8way" buttons="6" service="yes"/>
+		<input players="2" control="joy8way" buttons="3" coins="2" service="yes" tilt="yes"/>
 		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
@@ -161223,31 +161238,274 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Test Mode">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="65536"/>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="65536"/>
 	</game>
-	<game name="mgcldate" sourcefile="zn.c" romof="taitofx1">
-		<description>Magical Date (JAPAN) set 1</description>
+	<game name="sfchampu" sourcefile="zn.c" cloneof="sfchamp" romof="sfchamp">
+		<description>Super Football Champ (Ver 2.4A)</description>
+		<year>1995</year>
+		<manufacturer>Taito America</manufacturer>
+		<rom name="m534002c-14.ic353" merge="m534002c-14.ic353" size="524288" crc="e3f23b6e" sha1="e18907cf8c6ba54d96edba0a9a00487a90219e0d" region="user3" offset="0"/>
+		<rom name="tt01.ic652" merge="tt01.ic652" size="8" crc="daac13e7" sha1="96d94f2b06fb7ecd91454969f4959a583ffb9d5a" region="user4" offset="0"/>
+		<rom name="e18-10.2" size="524288" crc="82411fa6" sha1="0aa1764b7ff68258ef76a41355c50d5067262d75" region="user1" offset="1"/>
+		<rom name="e18-08.7" size="524288" crc="6a5558cd" sha1="75b26bcaaa213283e7e0dace69ee58f305b4572d" region="user1" offset="0"/>
+		<rom name="e18-02.12" merge="e18-02.12" size="2097152" crc="c7b4fe29" sha1="7f823bd61abf2b15d3ba62bca829a5b1acacfd09" region="user1" offset="600000"/>
+		<rom name="e18-03.16" merge="e18-03.16" size="2097152" crc="76392346" sha1="2c5b70c4708208f866feea0472fcc72333061124" region="user1" offset="800000"/>
+		<rom name="e18-04.19" merge="e18-04.19" size="2097152" crc="fc3731da" sha1="58948aad8d7bb7a8449d2bf12e9d5e6d7b4426b5" region="user1" offset="a00000"/>
+		<rom name="e18-05.21" merge="e18-05.21" size="2097152" crc="2e984c50" sha1="6d8255e38c67d68bf489c9885663ed2edf148188" region="user1" offset="c00000"/>
+		<rom name="e18-09.22" merge="e18-09.22" size="131072" crc="bb5a5319" sha1="0bb700cafc157d3af663cc9bebb8167487ff2852" region="cpu2" offset="10000"/>
+		<rom name="e18-01.15" merge="e18-01.15" size="2097152" crc="dbd1408c" sha1="ef81064f2f95e5ae25eb1f10d1e78f27f9e294f5" region="sound1" offset="0"/>
+		<rom name="tt02" merge="tt02" size="8" crc="b1585ac7" sha1="d967eea539de2dd7a8d13fa2785c3033065bed9c" region="user5" offset="0"/>
+		<chip type="cpu" name="PSX CPU" clock="16934400"/>
+		<chip type="cpu" soundonly="yes" name="Z80" clock="4000000"/>
+		<chip type="audio" name="PSX SPU"/>
+		<chip type="audio" name="YM2610B" clock="8000000"/>
+		<video screen="raster" orientation="horizontal" width="640" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="2"/>
+		<input players="2" control="joy8way" buttons="3" coins="2" service="yes" tilt="yes"/>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Test Mode">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="65536"/>
+	</game>
+	<game name="sfchampj" sourcefile="zn.c" cloneof="sfchamp" romof="sfchamp">
+		<description>Super Football Champ (Ver 2.4J)</description>
+		<year>1995</year>
+		<manufacturer>Taito</manufacturer>
+		<rom name="m534002c-14.ic353" merge="m534002c-14.ic353" size="524288" crc="e3f23b6e" sha1="e18907cf8c6ba54d96edba0a9a00487a90219e0d" region="user3" offset="0"/>
+		<rom name="tt01.ic652" merge="tt01.ic652" size="8" crc="daac13e7" sha1="96d94f2b06fb7ecd91454969f4959a583ffb9d5a" region="user4" offset="0"/>
+		<rom name="e18-07.2" size="524288" crc="1b484e1c" sha1="f29f40a9988475d8abbb126095b0716133c087a0" region="user1" offset="1"/>
+		<rom name="e18-08.7" size="524288" crc="6a5558cd" sha1="75b26bcaaa213283e7e0dace69ee58f305b4572d" region="user1" offset="0"/>
+		<rom name="e18-02.12" merge="e18-02.12" size="2097152" crc="c7b4fe29" sha1="7f823bd61abf2b15d3ba62bca829a5b1acacfd09" region="user1" offset="600000"/>
+		<rom name="e18-03.16" merge="e18-03.16" size="2097152" crc="76392346" sha1="2c5b70c4708208f866feea0472fcc72333061124" region="user1" offset="800000"/>
+		<rom name="e18-04.19" merge="e18-04.19" size="2097152" crc="fc3731da" sha1="58948aad8d7bb7a8449d2bf12e9d5e6d7b4426b5" region="user1" offset="a00000"/>
+		<rom name="e18-05.21" merge="e18-05.21" size="2097152" crc="2e984c50" sha1="6d8255e38c67d68bf489c9885663ed2edf148188" region="user1" offset="c00000"/>
+		<rom name="e18-09.22" merge="e18-09.22" size="131072" crc="bb5a5319" sha1="0bb700cafc157d3af663cc9bebb8167487ff2852" region="cpu2" offset="10000"/>
+		<rom name="e18-01.15" merge="e18-01.15" size="2097152" crc="dbd1408c" sha1="ef81064f2f95e5ae25eb1f10d1e78f27f9e294f5" region="sound1" offset="0"/>
+		<rom name="tt02" merge="tt02" size="8" crc="b1585ac7" sha1="d967eea539de2dd7a8d13fa2785c3033065bed9c" region="user5" offset="0"/>
+		<chip type="cpu" name="PSX CPU" clock="16934400"/>
+		<chip type="cpu" soundonly="yes" name="Z80" clock="4000000"/>
+		<chip type="audio" name="PSX SPU"/>
+		<chip type="audio" name="YM2610B" clock="8000000"/>
+		<video screen="raster" orientation="horizontal" width="640" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="2"/>
+		<input players="2" control="joy8way" buttons="3" coins="2" service="yes" tilt="yes"/>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Test Mode">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="65536"/>
+	</game>
+	<game name="psyforce" sourcefile="zn.c" romof="coh1000t">
+		<description>Psychic Force (Ver 2.4O)</description>
+		<year>1995</year>
+		<manufacturer>Taito</manufacturer>
+		<rom name="m534002c-14.ic353" merge="m534002c-14.ic353" size="524288" crc="e3f23b6e" sha1="e18907cf8c6ba54d96edba0a9a00487a90219e0d" region="user3" offset="0"/>
+		<rom name="tt01.ic652" merge="tt01.ic652" size="8" crc="daac13e7" sha1="96d94f2b06fb7ecd91454969f4959a583ffb9d5a" region="user4" offset="0"/>
+		<rom name="e22-09_.2" size="524288" crc="997e4500" sha1="4a90b452c9a877ccec55a11f36c4cbc6df1f1f41" region="user1" offset="1"/>
+		<rom name="e22-06_.7" size="524288" crc="f6341d63" sha1="99dc27aa694ae5951148054291912a486726e8c9" region="user1" offset="0"/>
+		<rom name="e22-02.16" size="2097152" crc="03b50064" sha1="0259537e86b266b3f34308c4fc0bcc04c037da71" region="user1" offset="800000"/>
+		<rom name="e22-03.19" size="2097152" crc="8372f839" sha1="646b3919b6be63412c11850ec1524685abececc0" region="user1" offset="a00000"/>
+		<rom name="e22-04.21" size="2097152" crc="397b71aa" sha1="48743c362503c1d2dbeb3c8be4cb2aaaae015b88" region="user1" offset="c00000"/>
+		<rom name="e22-07.22" size="131072" crc="739af589" sha1="dbb4d1c6d824a99ccf27168e2c21644e19811523" region="cpu2" offset="10000"/>
+		<rom name="e22-01.15" size="2097152" crc="808b8340" sha1="d8bde850dd9b5b71e94ea707d2d728754f907977" region="sound1" offset="0"/>
+		<rom name="tt03" size="8" crc="5799d8c9" sha1="72cf1ed0958959d085ca5f8ab8b4f883ab1cd162" region="user5" offset="0"/>
+		<chip type="cpu" name="PSX CPU" clock="16934400"/>
+		<chip type="cpu" soundonly="yes" name="Z80" clock="4000000"/>
+		<chip type="audio" name="PSX SPU"/>
+		<chip type="audio" name="YM2610B" clock="8000000"/>
+		<video screen="raster" orientation="horizontal" width="640" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="2"/>
+		<input players="2" control="joy8way" buttons="3" coins="2" service="yes" tilt="yes"/>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Test Mode">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="65536"/>
+	</game>
+	<game name="psyforcej" sourcefile="zn.c" cloneof="psyforce" romof="psyforce">
+		<description>Psychic Force (Ver 2.4J)</description>
+		<year>1995</year>
+		<manufacturer>Taito</manufacturer>
+		<rom name="m534002c-14.ic353" merge="m534002c-14.ic353" size="524288" crc="e3f23b6e" sha1="e18907cf8c6ba54d96edba0a9a00487a90219e0d" region="user3" offset="0"/>
+		<rom name="tt01.ic652" merge="tt01.ic652" size="8" crc="daac13e7" sha1="96d94f2b06fb7ecd91454969f4959a583ffb9d5a" region="user4" offset="0"/>
+		<rom name="e22-05_.2" size="524288" crc="7770242c" sha1="dd37575d3d9ffdef60fe0e4cab6c9e42d087f714" region="user1" offset="1"/>
+		<rom name="e22-10_.7" merge="e22-06_.7" size="524288" crc="f6341d63" sha1="99dc27aa694ae5951148054291912a486726e8c9" region="user1" offset="0"/>
+		<rom name="e22-02.16" merge="e22-02.16" size="2097152" crc="03b50064" sha1="0259537e86b266b3f34308c4fc0bcc04c037da71" region="user1" offset="800000"/>
+		<rom name="e22-03.19" merge="e22-03.19" size="2097152" crc="8372f839" sha1="646b3919b6be63412c11850ec1524685abececc0" region="user1" offset="a00000"/>
+		<rom name="e22-04.21" merge="e22-04.21" size="2097152" crc="397b71aa" sha1="48743c362503c1d2dbeb3c8be4cb2aaaae015b88" region="user1" offset="c00000"/>
+		<rom name="e22-07.22" merge="e22-07.22" size="131072" crc="739af589" sha1="dbb4d1c6d824a99ccf27168e2c21644e19811523" region="cpu2" offset="10000"/>
+		<rom name="e22-01.15" merge="e22-01.15" size="2097152" crc="808b8340" sha1="d8bde850dd9b5b71e94ea707d2d728754f907977" region="sound1" offset="0"/>
+		<rom name="tt03" merge="tt03" size="8" crc="5799d8c9" sha1="72cf1ed0958959d085ca5f8ab8b4f883ab1cd162" region="user5" offset="0"/>
+		<chip type="cpu" name="PSX CPU" clock="16934400"/>
+		<chip type="cpu" soundonly="yes" name="Z80" clock="4000000"/>
+		<chip type="audio" name="PSX SPU"/>
+		<chip type="audio" name="YM2610B" clock="8000000"/>
+		<video screen="raster" orientation="horizontal" width="640" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="2"/>
+		<input players="2" control="joy8way" buttons="3" coins="2" service="yes" tilt="yes"/>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Test Mode">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="65536"/>
+	</game>
+	<game name="psyforcex" sourcefile="zn.c" cloneof="psyforce" romof="psyforce">
+		<description>Psychic Force EX (Ver 2.0J)</description>
+		<year>1995</year>
+		<manufacturer>Taito</manufacturer>
+		<rom name="m534002c-14.ic353" merge="m534002c-14.ic353" size="524288" crc="e3f23b6e" sha1="e18907cf8c6ba54d96edba0a9a00487a90219e0d" region="user3" offset="0"/>
+		<rom name="tt01.ic652" merge="tt01.ic652" size="8" crc="daac13e7" sha1="96d94f2b06fb7ecd91454969f4959a583ffb9d5a" region="user4" offset="0"/>
+		<rom name="e22-11.2" size="524288" crc="29ebebc9" sha1="48a3371460d69ae5ba58d3e24615f389bf43b2cc" region="user1" offset="1"/>
+		<rom name="e22-12.7" size="524288" crc="7426ffc5" sha1="24b0132241e2e49109e585b082bf4ab67f86b294" region="user1" offset="0"/>
+		<rom name="e22-02.16" merge="e22-02.16" size="2097152" crc="03b50064" sha1="0259537e86b266b3f34308c4fc0bcc04c037da71" region="user1" offset="800000"/>
+		<rom name="e22-03.19" merge="e22-03.19" size="2097152" crc="8372f839" sha1="646b3919b6be63412c11850ec1524685abececc0" region="user1" offset="a00000"/>
+		<rom name="e22-04.21" merge="e22-04.21" size="2097152" crc="397b71aa" sha1="48743c362503c1d2dbeb3c8be4cb2aaaae015b88" region="user1" offset="c00000"/>
+		<rom name="e22-07.22" merge="e22-07.22" size="131072" crc="739af589" sha1="dbb4d1c6d824a99ccf27168e2c21644e19811523" region="cpu2" offset="10000"/>
+		<rom name="e22-01.15" merge="e22-01.15" size="2097152" crc="808b8340" sha1="d8bde850dd9b5b71e94ea707d2d728754f907977" region="sound1" offset="0"/>
+		<rom name="tt03" merge="tt03" size="8" crc="5799d8c9" sha1="72cf1ed0958959d085ca5f8ab8b4f883ab1cd162" region="user5" offset="0"/>
+		<chip type="cpu" name="PSX CPU" clock="16934400"/>
+		<chip type="cpu" soundonly="yes" name="Z80" clock="4000000"/>
+		<chip type="audio" name="PSX SPU"/>
+		<chip type="audio" name="YM2610B" clock="8000000"/>
+		<video screen="raster" orientation="horizontal" width="640" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="2"/>
+		<input players="2" control="joy8way" buttons="3" coins="2" service="yes" tilt="yes"/>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Test Mode">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="65536"/>
+	</game>
+	<game name="mgcldtex" sourcefile="zn.c" romof="coh1000t">
+		<description>Magical Date EX / Magical Date - Sotsugyou Kokuhaku Daisakusen (Ver 2.01J)</description>
+		<year>1997</year>
+		<manufacturer>Taito</manufacturer>
+		<rom name="m534002c-14.ic353" merge="m534002c-14.ic353" size="524288" crc="e3f23b6e" sha1="e18907cf8c6ba54d96edba0a9a00487a90219e0d" region="user3" offset="0"/>
+		<rom name="tt01.ic652" merge="tt01.ic652" size="8" crc="daac13e7" sha1="96d94f2b06fb7ecd91454969f4959a583ffb9d5a" region="user4" offset="0"/>
+		<rom name="e32-08.2" size="1048576" crc="3d42cd28" sha1="9017922e835a359ba5126c8a9e8c27380a5ce081" region="user1" offset="1"/>
+		<rom name="e32-09.7" size="1048576" crc="db7ec115" sha1="fa6f18de71ba997389d887d7ffe745aa25e24c20" region="user1" offset="0"/>
+		<rom name="e32-01.1" size="4194304" crc="cf5f1d01" sha1="5417f8aef5c8d0e9e63ba8c68efb5b3ef37b4693" region="user1" offset="400000"/>
+		<rom name="e32-02.6" size="4194304" crc="61c8438c" sha1="bdbe6079cc634c0cd6580f76619eb2944c9a31d9" region="user1" offset="800000"/>
+		<rom name="e32-03.12" size="2097152" crc="190d1618" sha1="838a651d32752015baa7e8caea62fd739631b8be" region="user1" offset="c00000"/>
+		<rom name="e32-10.22" size="131072" crc="adf3feb5" sha1="bae5bc3fad99a92a3492be1b775dab861007eb3b" region="cpu2" offset="10000"/>
+		<rom name="e32-04.15" size="4194304" crc="c72f9eea" sha1="7ab8b412a8ed00a42016acb7d13d3b074155780a" region="sound1" offset="0"/>
+		<rom name="tt06" size="8" crc="ce282fc9" sha1="dfc1f679ec70f2ff32869cfeb452acf9ac154aef" region="user5" offset="0"/>
+		<chip type="cpu" name="PSX CPU" clock="16934400"/>
+		<chip type="cpu" soundonly="yes" name="Z80" clock="4000000"/>
+		<chip type="audio" name="PSX SPU"/>
+		<chip type="audio" name="YM2610B" clock="8000000"/>
+		<video screen="raster" orientation="horizontal" width="640" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="2"/>
+		<input players="2" control="joy8way" buttons="3" coins="2" service="yes" tilt="yes"/>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Test Mode">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="65536"/>
+	</game>
+	<game name="mgcldate" sourcefile="zn.c" cloneof="mgcldtex" romof="mgcldtex">
+		<description>Magical Date / Magical Date - Dokidoki Kokuhaku Daisakusen (Ver 2.02J)</description>
 		<year>1996</year>
 		<manufacturer>Taito</manufacturer>
-		<rom name="coh1002t.bin" merge="coh1002t.bin" size="524288" crc="e3f23b6e" sha1="e18907cf8c6ba54d96edba0a9a00487a90219e0d" region="cpu1" offset="400000"/>
-		<rom name="e32-08.2" size="1048576" crc="3d42cd28" sha1="9017922e835a359ba5126c8a9e8c27380a5ce081" region="user1" offset="0"/>
-		<rom name="e32-09.7" size="1048576" crc="db7ec115" sha1="fa6f18de71ba997389d887d7ffe745aa25e24c20" region="user1" offset="1"/>
-		<rom name="e32-01.1" size="4194304" crc="cf5f1d01" sha1="5417f8aef5c8d0e9e63ba8c68efb5b3ef37b4693" region="user1" offset="200000"/>
-		<rom name="e32-02.6" size="4194304" crc="61c8438c" sha1="bdbe6079cc634c0cd6580f76619eb2944c9a31d9" region="user1" offset="600000"/>
-		<rom name="e32-03.12" size="2097152" crc="190d1618" sha1="838a651d32752015baa7e8caea62fd739631b8be" region="user1" offset="a00000"/>
-		<rom name="e32-10.22" size="131072" crc="adf3feb5" sha1="bae5bc3fad99a92a3492be1b775dab861007eb3b" region="cpu2" offset="0"/>
-		<rom name="e32-04.15" size="4194304" crc="c72f9eea" sha1="7ab8b412a8ed00a42016acb7d13d3b074155780a" region="sound1" soundonly="yes" offset="0"/>
-		<chip type="cpu" name="PSX CPU" clock="33000000"/>
+		<rom name="m534002c-14.ic353" merge="m534002c-14.ic353" size="524288" crc="e3f23b6e" sha1="e18907cf8c6ba54d96edba0a9a00487a90219e0d" region="user3" offset="0"/>
+		<rom name="tt01.ic652" merge="tt01.ic652" size="8" crc="daac13e7" sha1="96d94f2b06fb7ecd91454969f4959a583ffb9d5a" region="user4" offset="0"/>
+		<rom name="e32-05.2" size="524288" crc="72fc7f7b" sha1="50d9e84bc74fb63ec1900ab149051888bc3d03a5" region="user1" offset="1"/>
+		<rom name="e32-06.7" size="524288" crc="d11c3881" sha1="f7046c5bed4818152edcf697a49664b0bcf12a1b" region="user1" offset="0"/>
+		<rom name="e32-01.1" merge="e32-01.1" size="4194304" crc="cf5f1d01" sha1="5417f8aef5c8d0e9e63ba8c68efb5b3ef37b4693" region="user1" offset="400000"/>
+		<rom name="e32-02.6" merge="e32-02.6" size="4194304" crc="61c8438c" sha1="bdbe6079cc634c0cd6580f76619eb2944c9a31d9" region="user1" offset="800000"/>
+		<rom name="e32-03.12" merge="e32-03.12" size="2097152" crc="190d1618" sha1="838a651d32752015baa7e8caea62fd739631b8be" region="user1" offset="c00000"/>
+		<rom name="e32-07.22" merge="e32-10.22" size="131072" crc="adf3feb5" sha1="bae5bc3fad99a92a3492be1b775dab861007eb3b" region="cpu2" offset="10000"/>
+		<rom name="e32-04.15" merge="e32-04.15" size="4194304" crc="c72f9eea" sha1="7ab8b412a8ed00a42016acb7d13d3b074155780a" region="sound1" offset="0"/>
+		<rom name="tt06" merge="tt06" size="8" crc="ce282fc9" sha1="dfc1f679ec70f2ff32869cfeb452acf9ac154aef" region="user5" offset="0"/>
+		<chip type="cpu" name="PSX CPU" clock="16934400"/>
 		<chip type="cpu" soundonly="yes" name="Z80" clock="4000000"/>
-		<chip type="audio" name="YM2610" clock="8000000"/>
-		<video screen="raster" orientation="horizontal" width="480" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<chip type="audio" name="PSX SPU"/>
+		<chip type="audio" name="YM2610B" clock="8000000"/>
+		<video screen="raster" orientation="horizontal" width="640" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
-		<input players="2" control="joy8way" buttons="6" service="yes"/>
+		<input players="2" control="joy8way" buttons="3" coins="2" service="yes" tilt="yes"/>
 		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
@@ -161255,43 +161513,11 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Test Mode">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="65536"/>
-	</game>
-	<game name="mgcldtea" sourcefile="zn.c" cloneof="mgcldate" romof="mgcldate">
-		<description>Magical Date (JAPAN) set 2</description>
-		<year>1996</year>
-		<manufacturer>Taito</manufacturer>
-		<rom name="coh1002t.bin" merge="coh1002t.bin" size="524288" crc="e3f23b6e" sha1="e18907cf8c6ba54d96edba0a9a00487a90219e0d" region="cpu1" offset="400000"/>
-		<rom name="e32-05.2" size="524288" crc="72fc7f7b" sha1="50d9e84bc74fb63ec1900ab149051888bc3d03a5" region="user1" offset="0"/>
-		<rom name="e32-06.7" size="524288" crc="d11c3881" sha1="f7046c5bed4818152edcf697a49664b0bcf12a1b" region="user1" offset="1"/>
-		<rom name="e32-01.1" merge="e32-01.1" size="4194304" crc="cf5f1d01" sha1="5417f8aef5c8d0e9e63ba8c68efb5b3ef37b4693" region="user1" offset="200000"/>
-		<rom name="e32-02.6" merge="e32-02.6" size="4194304" crc="61c8438c" sha1="bdbe6079cc634c0cd6580f76619eb2944c9a31d9" region="user1" offset="600000"/>
-		<rom name="e32-03.12" merge="e32-03.12" size="2097152" crc="190d1618" sha1="838a651d32752015baa7e8caea62fd739631b8be" region="user1" offset="a00000"/>
-		<rom name="e32-10.22" merge="e32-10.22" size="131072" crc="adf3feb5" sha1="bae5bc3fad99a92a3492be1b775dab861007eb3b" region="cpu2" offset="0"/>
-		<rom name="e32-04.15" merge="e32-04.15" size="4194304" crc="c72f9eea" sha1="7ab8b412a8ed00a42016acb7d13d3b074155780a" region="sound1" soundonly="yes" offset="0"/>
-		<chip type="cpu" name="PSX CPU" clock="33000000"/>
-		<chip type="cpu" soundonly="yes" name="Z80" clock="4000000"/>
-		<chip type="audio" name="YM2610" clock="8000000"/>
-		<video screen="raster" orientation="horizontal" width="480" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
-		<sound channels="2"/>
-		<input players="2" control="joy8way" buttons="6" service="yes"/>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="65536"/>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="65536"/>
 	</game>
 	<game name="raystorm" sourcefile="zn.c" romof="taitofx1">
 		<description>Ray Storm (JAPAN)</description>

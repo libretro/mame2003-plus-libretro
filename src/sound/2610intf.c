@@ -14,6 +14,7 @@
 #include "driver.h"
 #include "ay8910.h"
 #include "fm.h"
+#include "state.h"
 
 #if BUILD_YM2610
 
@@ -26,6 +27,8 @@ static int stream[MAX_2610];
 static const struct YM2610interface *intf;
 
 static void *Timer[MAX_2610][2];
+static UINT8 timer_on[MAX_2610][2];		/* armed, for save states */
+static double timer_left[MAX_2610][2];
 
 /*------------------------- TM2610 -------------------------------*/
 /* IRQ Handler */
@@ -41,6 +44,7 @@ static void timer_callback_2610(int param)
 	int c=param>>7;
 
 	log_cb(RETRO_LOG_DEBUG, LOGPRE "2610 TimerOver %d\n",c);
+	timer_on[n][c] = 0;	/* one shot: fm.c restarts it */
 	YM2610TimerOver(n,c);
 }
 
@@ -50,12 +54,14 @@ static void TimerHandler(int n,int c,int count,double stepTime)
 	if( count == 0 )
 	{	/* Reset FM Timer */
 		timer_enable(Timer[n][c], 0);
+		timer_on[n][c] = 0;
 	}
 	else
 	{	/* Start FM Timer */
 		double timeSec = (double)count * stepTime;
 		if (!timer_enable(Timer[n][c], 1))
 			timer_adjust(Timer[n][c], timeSec, (c<<7)|n, 0);
+		timer_on[n][c] = 1;
 	}
 }
 
@@ -68,6 +74,60 @@ static void FMTimerInit( void )
 		Timer[i][0] = timer_alloc(timer_callback_2610);
 		Timer[i][1] = timer_alloc(timer_callback_2610);
 	}
+}
+
+/* optional: keep the two FM timers of each chip in save states (the core
+   does not save its timers), with the parts of the FM and SSG state the
+   YM2610 save state leaves out. Opt-in, so the save states of the other
+   YM2610 drivers keep their layout. */
+static void YM2610_timer_presave( void )
+{
+	int n, c;
+	for( n = 0; n < intf->num; n++ )
+		for( c = 0; c < 2; c++ )
+			timer_left[n][c] = timer_on[n][c] ? timer_timeleft( Timer[n][c] ) : 0;
+}
+
+static void YM2610_timer_postload( void )
+{
+	int n, c;
+	for( n = 0; n < intf->num; n++ )
+		for( c = 0; c < 2; c++ )
+		{
+			if( timer_on[n][c] )
+			{
+				timer_enable( Timer[n][c], 1 );
+				timer_adjust( Timer[n][c], timer_left[n][c], ( c << 7 ) | n, 0 );
+			}
+			else
+				timer_enable( Timer[n][c], 0 );
+		}
+}
+
+static int timer_state_wanted;
+
+/* called from the driver init, before the sound start */
+void YM2610_timer_state_register( void )
+{
+	timer_state_wanted = 1;
+}
+
+static void YM2610_timer_state_start( void )
+{
+	int n;
+	memset( timer_on, 0, sizeof( timer_on ) );
+	if( !timer_state_wanted )
+		return;
+	for( n = 0; n < intf->num; n++ )
+	{
+		state_save_register_UINT8( "ym2610timer", n, "on", timer_on[n], 2 );
+		state_save_register_double( "ym2610timer", n, "left", timer_left[n], 2 );
+	}
+	state_save_register_func_presave( YM2610_timer_presave );
+	state_save_register_func_postload( YM2610_timer_postload );
+	/* the chip and SSG state the YM2610 save state leaves out */
+	YM2610_ext_state_register( intf->num );
+	AY8910_ym_ext_state_register( intf->num );
 }
 
 /* update request from fm.c */
@@ -93,6 +153,7 @@ int YM2610_sh_start(const struct MachineSound *msound)
 
 	/* Timer Handler set */
 	FMTimerInit();
+	YM2610_timer_state_start();
 
 	/* stream system initialize */
 	for (i = 0;i < intf->num;i++)
@@ -143,6 +204,7 @@ int YM2610B_sh_start(const struct MachineSound *msound)
 
 	/* Timer Handler set */
 	FMTimerInit();
+	YM2610_timer_state_start();
 
 	/* stream system initialize */
 	for (i = 0;i < intf->num;i++)
@@ -181,6 +243,7 @@ int YM2610B_sh_start(const struct MachineSound *msound)
 /************************************************/
 void YM2610_sh_stop(void)
 {
+	timer_state_wanted = 0;
 	YM2610Shutdown();
 	AY8910_sh_stop_ym();
 }

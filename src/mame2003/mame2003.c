@@ -1167,10 +1167,21 @@ struct JoystickInfo alternate_joystick_maps[MAX_PLAYER_COUNT][IDX_NUMBER_OF_INPU
 
 struct JoystickInfo mame_joy_map[(MAX_PLAYER_COUNT * OSD_INPUT_CODES_PER_PLAYER) + 1] = { { 0 } }; /* + 1 for final zeroed struct */
 
+/* the list only changes with the controller layouts: the input code asks for
+   it at every key check (about 100 times a frame), so it is built again only
+   when a layout changed */
+static unsigned joy_map_types[MAX_PLAYER_COUNT];
+static int joy_map_built;
+
 const struct JoystickInfo *osd_get_joy_list(void)
 {
   unsigned needle      = 0;
   unsigned port_number = 0;
+
+  if(joy_map_built && memcmp(joy_map_types, options.active_control_type, sizeof(joy_map_types)) == 0)
+    return mame_joy_map;
+  memcpy(joy_map_types, options.active_control_type, sizeof(joy_map_types));
+  joy_map_built = 1;
 
   for(port_number = 0; port_number < MAX_PLAYER_COUNT; port_number++)
   {

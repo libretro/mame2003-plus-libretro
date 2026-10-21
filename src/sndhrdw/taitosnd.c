@@ -1,5 +1,6 @@
 #include "driver.h"
 #include "cpu/z80/z80.h"
+#include "state.h"
 
 
 /**********************************************************************************************
@@ -37,6 +38,24 @@ typedef struct TC0140SYT
 } TC0140SYT;
 
 static struct TC0140SYT tc0140syt;
+
+
+/* optional: clear the chip at machine reset and keep it in save states */
+void taitosound_reset( void )
+{
+	memset( &tc0140syt, 0, sizeof( tc0140syt ) );
+}
+
+void taitosound_state_register( void )
+{
+	state_save_register_UINT8( "tc0140syt", 0, "slavedata", tc0140syt.slavedata, 4 );
+	state_save_register_UINT8( "tc0140syt", 0, "masterdata", tc0140syt.masterdata, 4 );
+	state_save_register_UINT8( "tc0140syt", 0, "mainmode", &tc0140syt.mainmode, 1 );
+	state_save_register_UINT8( "tc0140syt", 0, "submode", &tc0140syt.submode, 1 );
+	state_save_register_UINT8( "tc0140syt", 0, "status", &tc0140syt.status, 1 );
+	state_save_register_UINT8( "tc0140syt", 0, "nmi_enabled", &tc0140syt.nmi_enabled, 1 );
+	state_save_register_UINT8( "tc0140syt", 0, "nmi_req", &tc0140syt.nmi_req, 1 );
+}
 
 
 static void Interrupt_Controller(void)
