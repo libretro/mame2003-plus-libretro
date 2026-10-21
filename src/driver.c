@@ -2662,6 +2662,7 @@ V-V                           TP-027
 	DRIVER( jojobanr2 )
 	DRIVER( jojobaner2 )
 	DRIVER( sfiii4n )
+	DRIVER( sfiii3ws )   /* hack, Street Fighter III 3rd Strike: Fight for the Future (Widescreen 20220908) */
 
 	/* Capcom ZN1 */
 	DRIVER( ts2 )		/* Battle Arena Toshinden 2 (USA 951124) */
