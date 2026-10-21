@@ -4294,6 +4294,85 @@ static void YM2610_postload(void)
 	cur_chip = NULL;
 }
 
+/* optional: the parts of the chip state that YM2610_save_state leaves out
+   (global envelope and LFO counters, key state, SSG-EG negation, the
+   envelope output and the algorithm memory). The postload of the chip
+   rewrites the registers, which changes some of them, so they are kept in
+   a copy and put back after it. */
+#define YM2610_EXT_CHIPS 2
+static struct
+{
+	UINT32 eg_cnt, eg_timer, lfo_cnt;
+	UINT32 key[6*4], vol_out[6*4];
+	UINT8 ssgn[6*4];
+	INT32 mem_value[6];
+} ym2610_ext[YM2610_EXT_CHIPS];
+static int ym2610_ext_chips;
+
+static void YM2610_ext_presave(void)
+{
+	int num, c, s;
+	for (num = 0; num < ym2610_ext_chips && num < YM2610NumChips; num++)
+	{
+		YM2610 *F2610 = &(FM2610[num]);
+		ym2610_ext[num].eg_cnt = F2610->OPN.eg_cnt;
+		ym2610_ext[num].eg_timer = F2610->OPN.eg_timer;
+		ym2610_ext[num].lfo_cnt = F2610->OPN.lfo_cnt;
+		for (c = 0; c < 6; c++)
+		{
+			ym2610_ext[num].mem_value[c] = F2610->CH[c].mem_value;
+			for (s = 0; s < 4; s++)
+			{
+				ym2610_ext[num].key[c*4+s] = F2610->CH[c].SLOT[s].key;
+				ym2610_ext[num].vol_out[c*4+s] = F2610->CH[c].SLOT[s].vol_out;
+				ym2610_ext[num].ssgn[c*4+s] = F2610->CH[c].SLOT[s].ssgn;
+			}
+		}
+	}
+}
+
+static void YM2610_ext_postload(void)
+{
+	int num, c, s;
+	for (num = 0; num < ym2610_ext_chips && num < YM2610NumChips; num++)
+	{
+		YM2610 *F2610 = &(FM2610[num]);
+		F2610->OPN.eg_cnt = ym2610_ext[num].eg_cnt;
+		F2610->OPN.eg_timer = ym2610_ext[num].eg_timer;
+		F2610->OPN.lfo_cnt = ym2610_ext[num].lfo_cnt;
+		for (c = 0; c < 6; c++)
+		{
+			F2610->CH[c].mem_value = ym2610_ext[num].mem_value[c];
+			for (s = 0; s < 4; s++)
+			{
+				F2610->CH[c].SLOT[s].key = ym2610_ext[num].key[c*4+s];
+				F2610->CH[c].SLOT[s].vol_out = ym2610_ext[num].vol_out[c*4+s];
+				F2610->CH[c].SLOT[s].ssgn = ym2610_ext[num].ssgn[c*4+s];
+			}
+		}
+	}
+}
+
+/* call before YM2610Init (the postload functions run last registered first) */
+void YM2610_ext_state_register(int chips)
+{
+	int num;
+	if (chips > YM2610_EXT_CHIPS) chips = YM2610_EXT_CHIPS;
+	ym2610_ext_chips = chips;
+	for (num = 0; num < chips; num++)
+	{
+		state_save_register_UINT32("YM2610ext", num, "eg_cnt", &ym2610_ext[num].eg_cnt, 1);
+		state_save_register_UINT32("YM2610ext", num, "eg_timer", &ym2610_ext[num].eg_timer, 1);
+		state_save_register_UINT32("YM2610ext", num, "lfo_cnt", &ym2610_ext[num].lfo_cnt, 1);
+		state_save_register_UINT32("YM2610ext", num, "key", ym2610_ext[num].key, 6*4);
+		state_save_register_UINT32("YM2610ext", num, "vol_out", ym2610_ext[num].vol_out, 6*4);
+		state_save_register_UINT8("YM2610ext", num, "ssgn", ym2610_ext[num].ssgn, 6*4);
+		state_save_register_INT32("YM2610ext", num, "mem_value", ym2610_ext[num].mem_value, 6);
+	}
+	state_save_register_func_presave(YM2610_ext_presave);
+	state_save_register_func_postload(YM2610_ext_postload);
+}
+
 static void YM2610_save_state(void)
 {
 	int num;

@@ -77,7 +77,8 @@ static void FMTimerInit( void )
 }
 
 /* optional: keep the two FM timers of each chip in save states (the core
-   does not save its timers). Opt-in, so the save states of the other
+   does not save its timers), with the parts of the FM and SSG state the
+   YM2610 save state leaves out. Opt-in, so the save states of the other
    YM2610 drivers keep their layout. */
 static void YM2610_timer_presave( void )
 {
@@ -124,6 +125,9 @@ static void YM2610_timer_state_start( void )
 	}
 	state_save_register_func_presave( YM2610_timer_presave );
 	state_save_register_func_postload( YM2610_timer_postload );
+	/* the chip and SSG state the YM2610 save state leaves out */
+	YM2610_ext_state_register( intf->num );
+	AY8910_ym_ext_state_register( intf->num );
 }
 
 /* update request from fm.c */
