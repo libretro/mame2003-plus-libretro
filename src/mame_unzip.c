@@ -810,42 +810,31 @@ int /* error */ load_zipped_file (int pathtype, int pathindex, const char* zipfi
 int /* error */ checksum_zipped_file (int pathtype, int pathindex, const char *zipfile, const char *filename, unsigned int *length, unsigned int *sum) {
 	ZIP* zip;
 	struct zipent* ent;
+	int pass;
 
-	zip = cache_openzip(pathtype, pathindex, zipfile);
-	if (!zip)
-		return -1;
+	/* NS981003: support for "load by CRC". The CRC goes first: merged sets
+	   keep the files of the clones in subfolders with the same names. */
+	for (pass = (*sum ? 0 : 1); pass < 2; pass++)
+	{
+		zip = cache_openzip(pathtype, pathindex, zipfile);
+		if (!zip)
+			return -1;
 
-	while (readzip(zip)) {
-		ent = &(zip->ent);
+		while (readzip(zip)) {
+			ent = &(zip->ent);
 
-		if (equal_filename(ent->name, filename))
-		{
-			*length = ent->uncompressed_size;
-			*sum = ent->crc32;
-			cache_suspendzip(zip);
-			return 0;
+			if ((pass == 0 && ent->crc32 == *sum) ||
+				(pass == 1 && equal_filename(ent->name, filename)))
+			{
+				*length = ent->uncompressed_size;
+				*sum = ent->crc32;
+				cache_suspendzip(zip);
+				return 0;
+			}
 		}
+
+		cache_suspendzip(zip);
 	}
 
-	cache_suspendzip(zip);
-
-	/* NS981003: support for "load by CRC" */
-	zip = cache_openzip(pathtype, pathindex, zipfile);
-	if (!zip)
-		return -1;
-
-	while (readzip(zip)) {
-		ent = &(zip->ent);
-
-		if (*sum && ent->crc32 == *sum)
-		{
-			*length = ent->uncompressed_size;
-			*sum = ent->crc32;
-			cache_suspendzip(zip);
-			return 0;
-		}
-	}
-
-	cache_suspendzip(zip);
 	return -1;
 }

@@ -60,6 +60,13 @@ extern int sh2_icount;				  /* cycle count */
 struct sh2_config
 {
   int is_slave;
+  /* optional: opcode fetch, for CPUs that decrypt opcodes (CPS-3);
+     NULL fetches opcodes as data */
+  data16_t (*opcode_read)(offs_t pc);
+  /* optional: called for each unit an internal DMA transfer reads, can
+     change the data (CPS-3: the DMA bypasses the decryption);
+     size 0 byte, 1 word, 2 long */
+  data32_t (*dma_read_hook)(UINT32 src, UINT32 dst, data32_t data, int size);
 };
 
 extern void sh2_init(void);

@@ -1051,20 +1051,24 @@ static mame_file *generic_fopen(int pathtype, const char *gamename, const char *
 				{
 					int err;
 
-					/* Try loading the file */
-					err = load_zipped_file(pathtype, pathindex, name, tempname, &file.data, &ziplength);
-
-					/* If it failed, since this is a ZIP file, we can try to load by CRC
-					   if an expected hash has been provided. unzip.c uses this ugly hack
-					   of specifying the CRC as filename. */
-					if (err && hash)
+					/* Load by CRC first when an expected hash has been provided:
+					   merged sets keep the files of the clones in subfolders with
+					   the same names (e.g. sfiii3n/sfiii3-simm1.0 and
+					   sfiii3nr1/sfiii3-simm1.0), and the name alone would take the
+					   first one. unzip.c uses this ugly hack of specifying the CRC
+					   as filename. */
+					err = -1;
+					if (hash && hash_data_has_info(hash, HASH_INFO_NO_DUMP) == 0)
 					{
 						char crcn[9];
 
-						hash_data_extract_printable_checksum(hash, HASH_CRC, crcn);
-
-						err = load_zipped_file(pathtype, pathindex, name, crcn, &file.data, &ziplength);
+						if (hash_data_extract_printable_checksum(hash, HASH_CRC, crcn) != 0)
+							err = load_zipped_file(pathtype, pathindex, name, crcn, &file.data, &ziplength);
 					}
+
+					/* Then by name */
+					if (err)
+						err = load_zipped_file(pathtype, pathindex, name, tempname, &file.data, &ziplength);
 
 					if (err == 0)
 					{

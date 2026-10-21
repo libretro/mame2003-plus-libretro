@@ -145,6 +145,8 @@ typedef struct
 	int     dma_timer_active[2];
 
 	int     is_slave, cpu_number;
+	data16_t (*opcode_read)(offs_t pc);
+	data32_t (*dma_read_hook)(UINT32 src, UINT32 dst, data32_t data, int size);
 } SH2;
 
 int sh2_icount;
@@ -2307,7 +2309,11 @@ void sh2_reset(void *param)
 	memset(sh2.m, 0, 0x200);
 
 	if(conf)
+	{
 		sh2.is_slave = conf->is_slave;
+		sh2.opcode_read = conf->opcode_read;
+		sh2.dma_read_hook = conf->dma_read_hook;
+	}
 	else
 		sh2.is_slave = 0;
 
@@ -2343,12 +2349,12 @@ int sh2_execute(int cycles)
 
 		if (sh2.delay)
 		{
-			opcode = RW(sh2.delay & AM);
+			opcode = sh2.opcode_read ? sh2.opcode_read(sh2.delay) : RW(sh2.delay & AM);
 			change_pc32bedw(sh2.pc & AM);
 			sh2.pc -= 2;
 		}
 		else
-			opcode = RW(sh2.pc & AM);
+			opcode = sh2.opcode_read ? sh2.opcode_read(sh2.pc) : RW(sh2.pc & AM);
 
 		CALL_MAME_DEBUG;
 
@@ -2536,6 +2542,10 @@ static void sh2_dmac_callback(int dma)
 	cpuintrf_pop_context();
 }
 
+/* a unit read by the internal DMA, through the optional hook */
+#define DMA_READ(src, dst, data, size) \
+	(sh2.dma_read_hook ? sh2.dma_read_hook((src), (dst), (data), (size)) : (data))
+
 static void sh2_dmac_check(int dma)
 {
 	if(sh2.m[0x63+4*dma] & sh2.m[0x6c] & 1)
@@ -2575,7 +2585,7 @@ static void sh2_dmac_check(int dma)
 						src --;
 					if(incd == 2)
 						dst --;
-					cpu_writemem32bedw(dst, cpu_readmem32bedw(src));
+					cpu_writemem32bedw(dst, DMA_READ(src, dst, cpu_readmem32bedw(src), 0));
 					if(incs == 1)
 						src ++;
 					if(incd == 1)
@@ -2591,7 +2601,7 @@ static void sh2_dmac_check(int dma)
 						src -= 2;
 					if(incd == 2)
 						dst -= 2;
-					cpu_writemem32bedw_word(dst, cpu_readmem32bedw_word(src));
+					cpu_writemem32bedw_word(dst, DMA_READ(src, dst, cpu_readmem32bedw_word(src), 1));
 					if(incs == 1)
 						src += 2;
 					if(incd == 1)
@@ -2607,7 +2617,7 @@ static void sh2_dmac_check(int dma)
 						src -= 4;
 					if(incd == 2)
 						dst -= 4;
-					cpu_writemem32bedw_dword(dst, cpu_readmem32bedw_dword(src));
+					cpu_writemem32bedw_dword(dst, DMA_READ(src, dst, cpu_readmem32bedw_dword(src), 2));
 					if(incs == 1)
 						src += 4;
 					if(incd == 1)
@@ -2622,10 +2632,10 @@ static void sh2_dmac_check(int dma)
 				{
 					if(incd == 2)
 						dst -= 16;
-					cpu_writemem32bedw_dword(dst, cpu_readmem32bedw_dword(src));
-					cpu_writemem32bedw_dword(dst+4, cpu_readmem32bedw_dword(src+4));
-					cpu_writemem32bedw_dword(dst+8, cpu_readmem32bedw_dword(src+8));
-					cpu_writemem32bedw_dword(dst+12, cpu_readmem32bedw_dword(src+12));
+					cpu_writemem32bedw_dword(dst, DMA_READ(src, dst, cpu_readmem32bedw_dword(src), 2));
+					cpu_writemem32bedw_dword(dst+4, DMA_READ(src+4, dst+4, cpu_readmem32bedw_dword(src+4), 2));
+					cpu_writemem32bedw_dword(dst+8, DMA_READ(src+8, dst+8, cpu_readmem32bedw_dword(src+8), 2));
+					cpu_writemem32bedw_dword(dst+12, DMA_READ(src+12, dst+12, cpu_readmem32bedw_dword(src+12), 2));
 					src += 16;
 					if(incd == 1)
 						dst += 16;
