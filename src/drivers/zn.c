@@ -2066,7 +2066,7 @@ INPUT_PORTS_START( znt2p )
 	PORT_DIPNAME( 0x08, 0x08, "Test Mode" )
 	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_BIT( 0xf0, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0xf0, IP_ACTIVE_HIGH, IPT_UNUSED )	/* not fitted: read as 0 */
 INPUT_PORTS_END
 
 /* two players, two buttons, one coin slot */
