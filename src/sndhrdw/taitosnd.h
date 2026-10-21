@@ -2,6 +2,11 @@
 #define __TAITOSND_H__
 
 
+/* optional: reset at machine init, save states */
+void taitosound_reset( void );
+void taitosound_state_register( void );
+
+
 /* MASTER (16 bit bus) control functions */
 WRITE16_HANDLER( taitosound_port16_lsb_w );
 WRITE16_HANDLER( taitosound_comm16_lsb_w );

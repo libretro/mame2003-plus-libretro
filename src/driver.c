@@ -2722,11 +2722,16 @@ V-V                           TP-027
 	/* Video System ZN1 */
 	DRIVER( sncwgltd )	/* Sonic Wings Limited (JAPAN) */
 
-	/* Taito FX1a */
-	DRIVER( psyforce )	/* Psychic Force (JAPAN) */
-	DRIVER( sfchamp )	/* Super Football Champ (JAPAN) */
-	DRIVER( mgcldate )	/* Magical Date (JAPAN) */
-	DRIVER( mgcldtea )	/* Magical Date (JAPAN) */
+	/* Taito FX-1A */
+	DRIVER( sfchamp )	/* Super Football Champ (Ver 2.5O) */
+	DRIVER( sfchampo )	/* Super Football Champ (Ver 2.4O) */
+	DRIVER( sfchampu )	/* Super Football Champ (Ver 2.4A) */
+	DRIVER( sfchampj )	/* Super Football Champ (Ver 2.4J) */
+	DRIVER( psyforce )	/* Psychic Force (Ver 2.4O) */
+	DRIVER( psyforcej )	/* Psychic Force (Ver 2.4J) */
+	DRIVER( psyforcex )	/* Psychic Force EX (Ver 2.0J) */
+	DRIVER( mgcldtex )	/* Magical Date EX (Ver 2.01J) */
+	DRIVER( mgcldate )	/* Magical Date (Ver 2.02J) */
 
 	/* Taito FX1b */
 	DRIVER( raystorm )	/* Ray Storm (JAPAN) */
