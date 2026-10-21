@@ -134,7 +134,10 @@ static void render_frame_start( void )
 	raster_state *raster = m_raster;
 
 	raster->poly_list_index = 0;
-	memset( raster->poly_sorted_list, 0, 0x10000 * sizeof( polygon * ) );
+	/* the buckets are cleared at video start; a frame only fills
+	   min_z..max_z, so only those need clearing */
+	if( raster->min_z <= raster->max_z )
+		memset( &raster->poly_sorted_list[ raster->min_z ], 0, ( raster->max_z - raster->min_z + 1 ) * sizeof( polygon * ) );
 	raster->min_z = 0xffff;
 	raster->max_z = 0;
 	/* Zero Gunner sets backgrounds with "previous z value" mode at the start
@@ -2283,8 +2286,21 @@ void model2_geo_parse( void )
    MAME), so a black pixel (dark shadows) is not taken as transparent */
 #define M2_PIXEL_OPAQUE 0xff000000
 
+/* the 3D frame. A drawn pixel is never 0 (M2_PIXEL_OPAQUE), so the buffer
+   is its own fill map: polygons are drawn front to back and the first one
+   to reach a pixel keeps it. Only the box holding the pixels drawn since
+   the last clear is cleared and composited */
 static UINT32 *m_destmap;
-static UINT8 *m_fillmap;
+static int m_dirty_minx, m_dirty_maxx, m_dirty_miny, m_dirty_maxy;	/* empty: minx > maxx */
+
+/* where one mipmap level (or the microtexture) is: computed once per
+   polygon, not at every texel fetch */
+typedef struct
+{
+	const UINT32 *sheet;
+	UINT32 width, height;	/* in texels, powers of two */
+	UINT32 x, y;			/* position in the texture sheet */
+} m2_tex_level;
 
 typedef struct
 {
@@ -2298,29 +2314,9 @@ typedef struct
 	UINT32 utexx, utexy;
 	INT32 texlod;
 	UINT8 luma;
+	INT32 max_level;			/* largest mipmap level, down to 2x2 */
+	m2_tex_level level[ 16 ];	/* 0: the microtexture, 1 + n: mipmap level n */
 } m2_poly_extra_data;
-
-static INLINE UINT16 get_texel( UINT32 base_x, UINT32 base_y, int x, int y, const UINT32 *sheet )
-{
-	int x2 = base_x + x;
-	int y2 = base_y + y;
-	UINT32 offset, texel;
-	if( x2 >= 1024 )
-	{
-		/* texture sheets are mapped as 2048x1024 but stored in RAM as 1024x2048 */
-		x2 -= 1024;
-		y2 ^= 1024;
-	}
-	offset = ( ( y2 / 2 ) * 512 ) + ( x2 / 2 );
-	texel = sheet[ ( offset >> 1 ) & 0x3ffff ];
-	if( offset & 1 )
-		texel >>= 16;
-	if( ( y & 1 ) == 0 )
-		texel >>= 8;
-	if( ( x & 1 ) == 0 )
-		texel >>= 4;
-	return texel & 0x0f;
-}
 
 #define LERP( x, y, a )	( ( (x) + ( ( ( (y) - (x) ) * (a) ) >> 8 ) ) & 0x00ff00ff )
 
@@ -2330,29 +2326,21 @@ static UINT32 fetch_bilinear_texel( const m2_poly_extra_data *object, int transl
 	UINT32 tex_wrap_y = object->texwrapy;
 	UINT32 tex_mirr_x = object->texmirrorx;
 	UINT32 tex_mirr_y = object->texmirrory;
-	UINT32 tex_width, tex_height, tex_x, tex_y;
-	UINT32 *sheet;
+	const m2_tex_level *level = &object->level[ miplevel + 1 ];
+	UINT32 tex_width = level->width, tex_height = level->height;
+	UINT32 tex_x = level->x, tex_y = level->y;
+	const UINT32 *sheet = level->sheet;
 	UINT32 ufrac, vfrac, u0, u1, v0, v1;
 	UINT32 tex00, tex01, tex10, tex11, tex0x, tex1x;
 
 	if( miplevel == -1 )
 	{
 		/* microtexture */
-		tex_width = 128;
-		tex_height = 128;
-		tex_x = object->utexx;
-		tex_y = object->utexy;
-		sheet = object->texsheet[ 1 ];
 		u <<= 1 << object->utexminlod;
 		v <<= 1 << object->utexminlod;
 	}
 	else
 	{
-		tex_width = object->texwidth >> miplevel;
-		tex_height = object->texheight >> miplevel;
-		tex_x = ( ( object->texx - 2048 ) >> miplevel ) & 2047;
-		tex_y = ( ( object->texy - 1024 ) >> miplevel ) & 1023;
-		sheet = object->texsheet[ miplevel & 1 ];
 		u >>= miplevel;
 		v >>= miplevel;
 	}
@@ -2390,13 +2378,37 @@ static UINT32 fetch_bilinear_texel( const m2_poly_extra_data *object, int transl
 			v1 = v0, v0--, vfrac = 0x100;
 	}
 
-	tex00 = get_texel( tex_x, tex_y, u0, v0, sheet ) << 4;
-	tex01 = get_texel( tex_x, tex_y, u1, v0, sheet ) << 4;
-	tex10 = get_texel( tex_x, tex_y, u0, v1, sheet ) << 4;
-	tex11 = get_texel( tex_x, tex_y, u1, v1, sheet ) << 4;
+	/* the four 4-bit texels. Texture sheets are mapped as 2048x1024 but
+	   stored in RAM as 1024x2048: past column 1024 a texel is in the other
+	   half of the rows. A 32-bit word holds two 2x2 blocks: bit 1 of the
+	   column selects the half, the parity of the texture coordinates the
+	   texel in the block. All the values are positive */
+	{
+		UINT32 x, fold0, fold1, xa0, xa1, cs0, cs1, rs0, rs1, y0, y1;
+		x = tex_x + u0;
+		fold0 = ( x >= 1024 ) << 10;
+		xa0 = ( x - fold0 ) >> 2;
+		cs0 = ( ( x & 2 ) << 3 ) | ( ( ~u0 & 1 ) << 2 );
+		x = tex_x + u1;
+		fold1 = ( x >= 1024 ) << 10;
+		xa1 = ( x - fold1 ) >> 2;
+		cs1 = ( ( x & 2 ) << 3 ) | ( ( ~u1 & 1 ) << 2 );
+		rs0 = ( ~v0 & 1 ) << 3;
+		rs1 = ( ~v1 & 1 ) << 3;
+		y0 = tex_y + v0;
+		y1 = tex_y + v1;
+		tex00 = ( ( sheet[ ( ( ( ( y0 ^ fold0 ) >> 1 ) << 8 ) + xa0 ) & 0x3ffff ] >> ( cs0 | rs0 ) ) & 0x0f ) << 4;
+		tex01 = ( ( sheet[ ( ( ( ( y0 ^ fold1 ) >> 1 ) << 8 ) + xa1 ) & 0x3ffff ] >> ( cs1 | rs0 ) ) & 0x0f ) << 4;
+		tex10 = ( ( sheet[ ( ( ( ( y1 ^ fold0 ) >> 1 ) << 8 ) + xa0 ) & 0x3ffff ] >> ( cs0 | rs1 ) ) & 0x0f ) << 4;
+		tex11 = ( ( sheet[ ( ( ( ( y1 ^ fold1 ) >> 1 ) << 8 ) + xa1 ) & 0x3ffff ] >> ( cs1 | rs1 ) ) & 0x0f ) << 4;
+	}
 
 	if( translucent )
 	{
+		/* four transparent texels: what the filtering below gives */
+		if( ( tex00 & tex01 & tex10 & tex11 ) == 0xf0 )
+			return 0x000000f0;
+
 		/* pack the alpha components into the upper 16 bits */
 		if( tex00 != 0xf0 ) tex00 |= 0x00800000;
 		if( tex01 != 0xf0 ) tex01 |= 0x00800000;
@@ -2458,7 +2470,6 @@ static INLINE int count_leading_zeros32( UINT32 v )
 static void draw_scanline_solid( int scanline, int startx, int stopx, const m2_poly_extra_data *object, int translucent )
 {
 	UINT32 *p = &m_destmap[ scanline * DEST_W ];
-	UINT8 *fill = &m_fillmap[ scanline * DEST_W ];
 	const UINT16 *colortable_r = &model2_colorxlat[ 0x0000 / 2 ];
 	const UINT16 *colortable_g = &model2_colorxlat[ 0x4000 / 2 ];
 	const UINT16 *colortable_b = &model2_colorxlat[ 0x8000 / 2 ];
@@ -2488,11 +2499,8 @@ static void draw_scanline_solid( int scanline, int startx, int stopx, const m2_p
 
 	for( ; x < stopx; x += dx )
 	{
-		if( fill[ x ] == 0 )
-		{
+		if( p[ x ] == 0 )
 			p[ x ] = color;
-			fill[ x ] = 0xff;
-		}
 	}
 }
 
@@ -2500,18 +2508,14 @@ static void draw_scanline_tex( int scanline, int startx, int stopx, float ooz, f
 	float dooz, float duoz, float dvoz, const m2_poly_extra_data *object, int translucent )
 {
 	UINT32 *p = &m_destmap[ scanline * DEST_W ];
-	UINT8 *fill = &m_fillmap[ scanline * DEST_W ];
 	const UINT16 *colortable_r = &model2_colorxlat[ 0x0000 / 2 ];
 	const UINT16 *colortable_g = &model2_colorxlat[ 0x4000 / 2 ];
 	const UINT16 *colortable_b = &model2_colorxlat[ 0x8000 / 2 ];
 	UINT32 colorbase = object->colorbase;
 	UINT32 lumabase = object->lumabase;
-	INT32 max_level;
+	INT32 max_level = object->max_level;
+	UINT32 obj_luma = object->luma;
 	int x, dx;
-	UINT32 minwh = object->texwidth < object->texheight ? object->texwidth : object->texheight;
-
-	/* maximum mipmap level from the texture size; down to 2x2 */
-	max_level = 30 - count_leading_zeros32( minwh );
 
 	colorbase = model2_palram[ ( colorbase + 0x1000 ) & 0x1fff ] & 0x7fff;
 	colortable_r += ( ( colorbase >> 0 ) & 0x1f ) << 8;
@@ -2542,7 +2546,7 @@ static void draw_scanline_tex( int scanline, int startx, int stopx, float ooz, f
 		UINT32 t, tr, tg, tb;
 		UINT8 luma;
 
-		if( fill[ x ] > 0 )
+		if( p[ x ] != 0 )
 			continue;
 
 		z = 1.0f / ooz;
@@ -2562,8 +2566,10 @@ static void draw_scanline_tex( int scanline, int startx, int stopx, float ooz, f
 			INT32 frac = ( mml & 127 ) << 1;
 			t = LERP( t, t2, frac );
 		}
-		else if( object->utex && mml < 0 )
+		else if( object->utex && mml < 0 && ( !translucent || t >= 0x00010000 ) )
 		{
+			/* (with no alpha, a translucent texel stays under 50% after this
+			   blend, and is discarded below) */
 			/* microtexture; blend up to almost 50% */
 			UINT32 t2 = fetch_bilinear_texel( object, translucent, -1, u, v );
 			INT32 frac = -mml >> object->utexminlod;
@@ -2580,7 +2586,7 @@ static void draw_scanline_tex( int scanline, int startx, int stopx, float ooz, f
 		}
 
 		/* 8 bits of filtered texel, 128 entries in the translator map */
-		luma = (UINT8)( (UINT32)model2_lumaram[ ( lumabase + ( t >> 1 ) ) & 0x7fff ] * object->luma / 256 );
+		luma = (UINT8)( ( (UINT32)model2_lumaram[ ( lumabase + ( t >> 1 ) ) & 0x7fff ] * obj_luma ) >> 8 );
 		if( luma > 0x3f )
 			luma = 0x3f;
 
@@ -2589,7 +2595,6 @@ static void draw_scanline_tex( int scanline, int startx, int stopx, float ooz, f
 		tb = model2_gamma_table[ colortable_b[ luma ] & 0xff ];
 
 		p[ x ] = M2_PIXEL_OPAQUE | ( tr << 16 ) | ( tg << 8 ) | tb;
-		fill[ x ] = 0xff;
 	}
 }
 
@@ -2667,6 +2672,11 @@ static void rasterize_polygon( const poly_vertex *v, int n, int minx, int maxx, 
 		if( startx >= stopx )
 			continue;
 
+		if( startx < m_dirty_minx ) m_dirty_minx = startx;
+		if( stopx - 1 > m_dirty_maxx ) m_dirty_maxx = stopx - 1;
+		if( y < m_dirty_miny ) m_dirty_miny = y;
+		if( y > m_dirty_maxy ) m_dirty_maxy = y;
+
 		if( textured )
 		{
 			float off = ( startx + 0.5f ) - xl;
@@ -2727,6 +2737,27 @@ static void model2_3d_render( polygon *poly, const struct rectangle *cliprect )
 		extra.utexx = ( ( poly->texheader[ 2 ] >> 13 ) & 1 ) * 128;
 		extra.utexy = ( ( poly->texheader[ 2 ] >> 14 ) & 3 ) * 128;
 
+		/* maximum mipmap level from the texture size; down to 2x2 */
+		{
+			UINT32 minwh = extra.texwidth < extra.texheight ? extra.texwidth : extra.texheight;
+			int level;
+			extra.max_level = 30 - count_leading_zeros32( minwh );
+			extra.level[ 0 ].sheet = extra.texsheet[ 1 ];
+			extra.level[ 0 ].width = 128;
+			extra.level[ 0 ].height = 128;
+			extra.level[ 0 ].x = extra.utexx;
+			extra.level[ 0 ].y = extra.utexy;
+			for( level = 0; level <= extra.max_level; level++ )
+			{
+				m2_tex_level *l = &extra.level[ level + 1 ];
+				l->sheet = extra.texsheet[ level & 1 ];
+				l->width = extra.texwidth >> level;
+				l->height = extra.texheight >> level;
+				l->x = ( ( extra.texx - 2048 ) >> level ) & 2047;
+				l->y = ( ( extra.texy - 1024 ) >> level ) & 1023;
+			}
+		}
+
 		for( i = 0; i < poly->num_vertices; i++ )
 		{
 			poly->v[ i ].pz = 1.0f / ( poly->v[ i ].pz + FLT_MIN );
@@ -2752,11 +2783,15 @@ static INLINE void model2_3d_project( polygon *poly )
 static void composite_3d( struct mame_bitmap *bitmap, const struct rectangle *cliprect )
 {
 	int x, y;
-	for( y = cliprect->min_y; y <= cliprect->max_y && y < DEST_H; y++ )
+	int minx = m_dirty_minx > cliprect->min_x ? m_dirty_minx : cliprect->min_x;
+	int maxx = m_dirty_maxx < cliprect->max_x ? m_dirty_maxx : cliprect->max_x;
+	int miny = m_dirty_miny > cliprect->min_y ? m_dirty_miny : cliprect->min_y;
+	int maxy = m_dirty_maxy < cliprect->max_y ? m_dirty_maxy : cliprect->max_y;
+	for( y = miny; y <= maxy; y++ )
 	{
 		UINT16 *dst = (UINT16 *)bitmap->line[ y ];
 		const UINT32 *src = &m_destmap[ y * DEST_W ];
-		for( x = cliprect->min_x; x <= cliprect->max_x && x < DEST_W; x++ )
+		for( x = minx; x <= maxx; x++ )
 		{
 			UINT32 c = src[ x ];
 			if( c )
@@ -2781,11 +2816,12 @@ static void render_polygons( struct mame_bitmap *bitmap, const struct rectangle 
 	if( raster->poly_list_index == 0 )
 		return;
 
-	for( y = cliprect->min_y; y <= cliprect->max_y && y < DEST_H; y++ )
-	{
-		memset( &m_destmap[ y * DEST_W ], 0, DEST_W * sizeof( UINT32 ) );
-		memset( &m_fillmap[ y * DEST_W ], 0, DEST_W );
-	}
+	/* clear what the previous frame drew */
+	if( m_dirty_minx <= m_dirty_maxx )
+		for( y = m_dirty_miny; y <= m_dirty_maxy; y++ )
+			memset( &m_destmap[ y * DEST_W + m_dirty_minx ], 0, ( m_dirty_maxx - m_dirty_minx + 1 ) * sizeof( UINT32 ) );
+	m_dirty_minx = m_dirty_miny = DEST_W;
+	m_dirty_maxx = m_dirty_maxy = -1;
 
 	for( window = raster->cur_window; window >= 0; window-- )
 	{
@@ -2909,11 +2945,12 @@ VIDEO_START( model2 )
 	m_raster->poly_list = auto_malloc( MAX_POLYGONS * sizeof( polygon ) );
 	m_raster->poly_sorted_list = auto_malloc( 0x10000 * sizeof( polygon * ) );
 	m_destmap = auto_malloc( DEST_W * DEST_H * sizeof( UINT32 ) );
-	m_fillmap = auto_malloc( DEST_W * DEST_H );
-	if( !m_raster || !m_geo || !m_raster->poly_list || !m_raster->poly_sorted_list || !m_destmap || !m_fillmap )
+	if( !m_raster || !m_geo || !m_raster->poly_list || !m_raster->poly_sorted_list || !m_destmap )
 		return 1;
 	memset( m_destmap, 0, DEST_W * DEST_H * sizeof( UINT32 ) );
-	memset( m_fillmap, 0, DEST_W * DEST_H );
+	memset( m_raster->poly_sorted_list, 0, 0x10000 * sizeof( polygon * ) );
+	m_dirty_minx = m_dirty_miny = DEST_W;
+	m_dirty_maxx = m_dirty_maxy = -1;
 
 	m_raster->texture_rom = (UINT16 *)memory_region( REGION_USER4 );
 	m_raster->texture_rom_mask = ( memory_region_length( REGION_USER4 ) / 2 ) - 1;
