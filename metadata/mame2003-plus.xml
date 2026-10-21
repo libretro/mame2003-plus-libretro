@@ -155839,6 +155839,157 @@
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="4096"/>
 	</game>
+	<game name="sfz3mix" sourcefile="cps2.c" cloneof="sfa3" romof="sfa3">
+		<description>Street Fighter Zero 3 Mix v0.32 (CPS2Turbo)</description>
+		<year>2026</year>
+		<manufacturer>hack</manufacturer>
+		<rom name="sz3mx.03" size="6291456" crc="7a968da6" sha1="5656ff21d6b23f8eab21e9d7e222461ceefed69e" region="cpu1" offset="0"/>
+		<rom name="sz3mx.13m" size="33554432" crc="5389b651" sha1="6032a925a0f37773fb26a1800d568dde0ea3082e" region="gfx1" offset="0"/>
+		<rom name="sz3mx.21m" size="33554432" crc="914c7031" sha1="7b7ce04e563ef23f6f9454f268a968b9114ac729" region="gfx1" offset="2000000"/>
+		<rom name="sz3mx.01" size="524288" crc="52f98a5c" sha1="5e1251b85d0bfb707b3e519aeb3a716893191a20" region="cpu2" offset="0"/>
+		<rom name="sz3mx.11m" size="16777216" crc="395edce2" sha1="0f6a4be84ed1e1a13319a480b41c1f35b36f35fc" region="sound1" offset="0"/>
+		<rom name="phoenix.key" size="20" crc="2cf772b0" sha1="eff33c65a4f3862c231f9e4d6fefa7b34398dbf2" region="user5" offset="0"/>
+		<sample name="empty.wav"/>
+		<sample name="L01.wav"/>
+		<sample name="L02.wav"/>
+		<sample name="L03.wav"/>
+		<sample name="L04.wav"/>
+		<sample name="L05.wav"/>
+		<sample name="L06.wav"/>
+		<sample name="L07.wav"/>
+		<sample name="L08.wav"/>
+		<sample name="L09.wav"/>
+		<sample name="L0A.wav"/>
+		<sample name="L0B.wav"/>
+		<sample name="L0C.wav"/>
+		<sample name="L0D.wav"/>
+		<sample name="L0E.wav"/>
+		<sample name="L0F.wav"/>
+		<sample name="L10.wav"/>
+		<sample name="L11.wav"/>
+		<sample name="L12.wav"/>
+		<sample name="L13.wav"/>
+		<sample name="L14.wav"/>
+		<sample name="L15.wav"/>
+		<sample name="L16.wav"/>
+		<sample name="L17.wav"/>
+		<sample name="L18.wav"/>
+		<sample name="L19.wav"/>
+		<sample name="L1A.wav"/>
+		<sample name="L1B.wav"/>
+		<sample name="L1C.wav"/>
+		<sample name="L1D.wav"/>
+		<sample name="L1E.wav"/>
+		<sample name="L1F.wav"/>
+		<sample name="L20.wav"/>
+		<sample name="L21.wav"/>
+		<sample name="L22.wav"/>
+		<sample name="L23.wav"/>
+		<sample name="L24.wav"/>
+		<sample name="L25.wav"/>
+		<sample name="L26.wav"/>
+		<sample name="L27.wav"/>
+		<sample name="L28.wav"/>
+		<sample name="L29.wav"/>
+		<sample name="L2A.wav"/>
+		<sample name="L2B.wav"/>
+		<sample name="L2C.wav"/>
+		<sample name="L2D.wav"/>
+		<sample name="L2E.wav"/>
+		<sample name="L2F.wav"/>
+		<sample name="L30.wav"/>
+		<sample name="L31.wav"/>
+		<sample name="L32.wav"/>
+		<sample name="L33.wav"/>
+		<sample name="L34.wav"/>
+		<sample name="L35.wav"/>
+		<sample name="L36.wav"/>
+		<sample name="L37.wav"/>
+		<sample name="L38.wav"/>
+		<sample name="L39.wav"/>
+		<sample name="L3A.wav"/>
+		<sample name="L3B.wav"/>
+		<sample name="L3C.wav"/>
+		<sample name="L3D.wav"/>
+		<sample name="L3E.wav"/>
+		<sample name="L3F.wav"/>
+		<sample name="R01.wav"/>
+		<sample name="R02.wav"/>
+		<sample name="R03.wav"/>
+		<sample name="R04.wav"/>
+		<sample name="R05.wav"/>
+		<sample name="R06.wav"/>
+		<sample name="R07.wav"/>
+		<sample name="R08.wav"/>
+		<sample name="R09.wav"/>
+		<sample name="R0A.wav"/>
+		<sample name="R0B.wav"/>
+		<sample name="R0C.wav"/>
+		<sample name="R0D.wav"/>
+		<sample name="R0E.wav"/>
+		<sample name="R0F.wav"/>
+		<sample name="R10.wav"/>
+		<sample name="R11.wav"/>
+		<sample name="R12.wav"/>
+		<sample name="R13.wav"/>
+		<sample name="R14.wav"/>
+		<sample name="R15.wav"/>
+		<sample name="R16.wav"/>
+		<sample name="R17.wav"/>
+		<sample name="R18.wav"/>
+		<sample name="R19.wav"/>
+		<sample name="R1A.wav"/>
+		<sample name="R1B.wav"/>
+		<sample name="R1C.wav"/>
+		<sample name="R1D.wav"/>
+		<sample name="R1E.wav"/>
+		<sample name="R1F.wav"/>
+		<sample name="R20.wav"/>
+		<sample name="R21.wav"/>
+		<sample name="R22.wav"/>
+		<sample name="R23.wav"/>
+		<sample name="R24.wav"/>
+		<sample name="R25.wav"/>
+		<sample name="R26.wav"/>
+		<sample name="R27.wav"/>
+		<sample name="R28.wav"/>
+		<sample name="R29.wav"/>
+		<sample name="R2A.wav"/>
+		<sample name="R2B.wav"/>
+		<sample name="R2C.wav"/>
+		<sample name="R2D.wav"/>
+		<sample name="R2E.wav"/>
+		<sample name="R2F.wav"/>
+		<sample name="R30.wav"/>
+		<sample name="R31.wav"/>
+		<sample name="R32.wav"/>
+		<sample name="R33.wav"/>
+		<sample name="R34.wav"/>
+		<sample name="R35.wav"/>
+		<sample name="R36.wav"/>
+		<sample name="R37.wav"/>
+		<sample name="R38.wav"/>
+		<sample name="R39.wav"/>
+		<sample name="R3A.wav"/>
+		<sample name="R3B.wav"/>
+		<sample name="R3C.wav"/>
+		<sample name="R3D.wav"/>
+		<sample name="R3E.wav"/>
+		<sample name="R3F.wav"/>
+		<chip type="cpu" name="68000" clock="23600000"/>
+		<chip type="cpu" name="Z80" clock="16000000"/>
+		<chip type="audio" name="QSound" clock="4000000"/>
+		<chip type="audio" name="Samples"/>
+		<video screen="raster" orientation="horizontal" width="416" height="234" aspectx="16" aspecty="9" refresh="59.633331"/>
+		<sound channels="2"/>
+		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
+		<dipswitch name="Aspect Ratio">
+			<dipvalue name="16:9" default="yes"/>
+			<dipvalue name="4:3"/>
+			<dipvalue name="112:81"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="4096"/>
+	</game>
 	<game name="jyangoku" sourcefile="cps2.c">
 		<description>Jyangokushi: Haoh no Saihai (Japan 990527)</description>
 		<year>1999</year>
