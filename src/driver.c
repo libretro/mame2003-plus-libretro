@@ -6345,6 +6345,15 @@ Other Sun games
 
 	/* Sega Model 1 Hardware */
 	DRIVER( vr ) /* (c) 1992 Sega */
+	DRIVER( vformula ) /* (c) 1993 Sega */
+	DRIVER( vf ) /* (c) 1993 Sega */
+	DRIVER( swa ) /* (c) 1994 Sega */
+	DRIVER( swaj )
+	DRIVER( wingwar ) /* (c) 1994 Sega */
+	DRIVER( wingwaru )
+	DRIVER( wingwarj )
+	DRIVER( wingwar360 )
+	DRIVER( netmerc ) /* (c) 1993 Sega */
 	DRIVER( vf2 ) /* (c) 1994 Sega, Model 2A */
 	DRIVER( vf2b )
 	DRIVER( vf2a )
@@ -6429,7 +6438,6 @@ Other Sun games
 	DRIVER( overrevba )
 	DRIVER( pltkids ) /* (c) 1998 Psikyo, Model 2B */
 	DRIVER( pltkidsa ) /* (c) 1998 Psikyo, Model 2A */
-	DRIVER( vf ) /* (c) 1993 Sega */
 
   /* Oriental Soft */
 	DRIVER( 1945kiii )  /* (c) 2000 Oriental */

@@ -297,16 +297,22 @@ static void dsb2_timer_cb( int param )
  *  Init, reset, sound start
  *************************************/
 
+int segadsb_mpeg_region = REGION_SOUND2;
+
 void segadsb_init( int type, int cpu )
 {
 	dsb_type = type;
 	dsb_cpu = cpu;
 	dsb_stream = -1;
 	if( type == SEGADSB_NONE )
+	{
+		segadsb_mpeg_region = REGION_SOUND2;
 		return;
+	}
 
-	dsb_mpeg_rom = memory_region( REGION_SOUND2 );
-	dsb_mpeg_len = memory_region_length( REGION_SOUND2 );
+	dsb_mpeg_rom = memory_region( segadsb_mpeg_region );
+	dsb_mpeg_len = memory_region_length( segadsb_mpeg_region );
+	segadsb_mpeg_region = REGION_SOUND2;	/* back to the default for the next game */
 	dsb_decoder = auto_malloc( sizeof( struct mpeg_audio ) );
 	mpeg_audio_init( dsb_decoder, dsb_mpeg_rom, MPEG_AUDIO_L2 );
 

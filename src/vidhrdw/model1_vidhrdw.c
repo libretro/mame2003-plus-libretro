@@ -1,145 +1,288 @@
+/***************************************************************************
+
+    Sega Model 1 video: TGP display list interpreter, flat-shaded
+    polygon rasterizer and System 24 tilemaps.
+
+    license:BSD-3-Clause
+    copyright-holders:Olivier Galibert
+
+    Ported to C for MAME 2003-plus from current MAME
+    (src/mame/sega/model1_v.cpp).  Behaviour follows current MAME; the
+    differences are only in the plumbing (0.78 bitmaps/palette/tilemaps,
+    vblank hook, no glm, no logging).
+
+***************************************************************************/
+
+#include <math.h>
+
+/* no fused multiply-add: the TGP rounds every product and sum, and x86 (the
+   reference) does not fuse them either. GCC and clang fuse a*b+c by default
+   on CPUs that have the instruction (PowerPC, ARM64) */
+#if defined(__clang__)
+#pragma STDC FP_CONTRACT OFF
+#elif defined(__GNUC__)
+#pragma GCC optimize("fp-contract=off")
+#endif
+#include <string.h>
+#include <stdlib.h>
+#include <limits.h>
 #include "driver.h"
 #include "state.h"
 #include "vidhrdw/generic.h"
 #include "vidhrdw/segaic24.h"
+#include "includes/model1.h"
 
-#include <math.h>
 
+/* Model 1 geometrizer TGP and rasterizer simulation */
+#define FRAC_SHIFT	16
+#define MOIRE		0x01000000
 
-#ifndef min
-#define min(a,b) (a<b?a:b)
-#endif
-#ifndef max
-#define max(a,b) (a>b?a:b)
-#endif
+/* std::min / std::max with the exact same NaN behaviour */
+#define STD_MIN(a, b)	(((b) < (a)) ? (b) : (a))
+#define STD_MAX(a, b)	(((a) < (b)) ? (b) : (a))
+
+enum { RENDER_BELOW_HUD = 0, RENDER_ABOVE_HUD = 1 };
 
 UINT16 *model1_display_list0, *model1_display_list1;
 UINT16 *model1_color_xlat;
-static UINT16 listctl[2];
-static UINT16 *glist;
 
-/* Model 1 geometrizer TGP and rasterizer simulation */
-enum { FRAC_SHIFT = 16 };
 
-static int render_done;
-static UINT16 *tgp_ram;
-static float trans_mat[12];
+/*************************************
+ *  Types
+ *************************************/
 
-static float vxx, vyy, vzz, ayy, ayyc, ayys;
-
-struct vector {
+struct m1_vec3
+{
 	float x, y, z;
 };
 
-static struct {
-	int xc, yc, x1, y1, x2, y2;
-	float zoomx, zoomy, transx, transy;
-	float a_bottom, a_top, a_left, a_right;
-	struct vector light;
-} view;
-
-struct spoint {
+struct m1_spoint
+{
 	INT32 x, y;
 };
 
-struct point {
+struct m1_point
+{
 	float x, y, z;
 	float xx, yy;
-	struct spoint s;
+	struct m1_spoint s;
 };
 
-static struct lightparam
+struct m1_quad
+{
+	struct m1_point *p[4];
+	float z;
+	int col;
+};
+
+struct m1_lightparam
 {
 	float a;
 	float d;
 	float s;
 	int p;
-} lightparams[32];
-
-enum { MOIRE = 0x00010000 };
-
-struct quad {
-	struct point *p[4];
-	float z;
-	int col;
 };
 
-static struct point *pointdb, *pointpt;
-static struct quad *quaddb, *quadpt;
-static struct quad **quadind;
-
-static UINT32 *poly_rom,*poly_ram;
-
-static float u2f(UINT32 v)
+struct m1_view
 {
-	union {
-		float ff;
-		UINT32 vv;
-	} u;
-	u.vv = v;
-	return u.ff;
+	int xc, yc, x1, y1, x2, y2;
+	float zoomx, zoomy, viewx, viewy;
+	float a_bottom, a_top, a_left, a_right;
+	float vxx, vyy, vzz, ayy, ayyc, ayys;
+	float translation[12];
+	struct m1_vec3 light;
+	int spec_enable;
+	struct m1_lightparam lightparams[256];
+};
+
+struct m1_clipper
+{
+	int  (*isclipped)(struct m1_view *view, struct m1_point *p);
+	void (*clip)(struct m1_view *view, struct m1_point *pt, struct m1_point *p1, struct m1_point *p2);
+};
+
+
+/*************************************
+ *  State
+ *************************************/
+
+static struct m1_view m1view;
+static struct m1_view *m_view = &m1view;
+
+static struct m1_point *m_pointdb, *m_pointpt;
+static struct m1_quad *m_quaddb, *m_quadpt;
+static struct m1_quad **m_quadind;
+
+static UINT32 *m_poly_rom, *m_poly_ram;
+static UINT16 *m_tgp_ram;
+static UINT16 m_listctl[2];
+static UINT16 *m_display_list_current;
+static int m_render_done;
+static int m_above_hud;		/* the display list has objects drawn above the HUD */
+
+static struct m1_clipper m_clipfn[4];
+
+static int m_overlay_stride;
+static UINT8 *m_overlay_block;
+static UINT32 *m_overlay_hud_snapshot;
+
+/* frame number of the last vblank-start processing (see model1_video_vblank_start) */
+static int m_vblank_frame;
+
+
+/*************************************
+ *  Helpers
+ *************************************/
+
+static INLINE float u2f(UINT32 v)
+{
+	union { float f; UINT32 u; } x;
+	x.u = v;
+	return x.f;
 }
 
-static UINT32 f2u(float f)
+/* float to int as x86 converts it (MAME's reference): NaN and values out
+   of range give INT_MIN. C leaves them undefined and other CPUs (PowerPC,
+   ARM) saturate, which drew stray edge pixels from far away vertices */
+static int f2i(double v)
 {
-	union {
-		float ff;
-		UINT32 vv;
-	} u;
-	u.ff = f;
-	return u.vv;
+	if (!(v > -2147483649.0 && v < 2147483648.0))
+		return INT_MIN;
+	return (int)v;
 }
 
-static UINT32 readi(const UINT16 *adr)
+/* std::lround replacement (round half away from zero) */
+static int m1_lround(double v)
 {
-	return adr[0]|(adr[1] << 16);
+	double r;
+	if (v >= 0.0)
+	{
+		r = floor(v);
+		if (v - r >= 0.5)
+			r += 1.0;
+	}
+	else
+	{
+		r = ceil(v);
+		if (r - v >= 0.5)
+			r -= 1.0;
+	}
+	return (int)(long)r;
 }
 
-static INT16 readi16(const UINT16 *adr)
+static INLINE float vec3_dot(const struct m1_vec3 *a, const struct m1_vec3 *b)
 {
-	return adr[0];
+	return a->x * b->x + a->y * b->y + a->z * b->z;
 }
 
-static float readf(const UINT16 *adr)
+/* glm::normalize: v * inversesqrt(dot(v, v)) */
+static INLINE void vec3_normalize(struct m1_vec3 *v)
+{
+	float inv = 1.0f / (float)sqrt((double)vec3_dot(v, v));
+	v->x *= inv;
+	v->y *= inv;
+	v->z *= inv;
+}
+
+/* position of the channels in a direct pen of the screen bitmap, from
+   direct_rgb_components (set once per frame, see pen_layout) */
+static int m_pen_shift[3];
+static UINT32 m_pen_max;	/* 0xff (32 bit) or 0x1f (15 bit) */
+
+static void pen_layout(void)
+{
+	int i;
+	m_pen_max = (Machine->color_depth == 32) ? 0xff : 0x1f;
+	for (i = 0; i < 3; i++)
+	{
+		UINT32 c = direct_rgb_components[i];
+		int sh = 0;
+		while (c && !(c & 1))
+		{
+			c >>= 1;
+			sh++;
+		}
+		m_pen_shift[i] = sh;
+	}
+}
+
+/* xRGB 8:8:8 -> native direct pen of the screen bitmap */
+static UINT32 rgb_to_pen(UINT32 rgb)
+{
+	UINT32 r = (rgb >> 16) & 0xff, g = (rgb >> 8) & 0xff, b = rgb & 0xff;
+	if (m_pen_max != 0xff)
+	{
+		r >>= 3;
+		g >>= 3;
+		b >>= 3;
+	}
+	return (r << m_pen_shift[0]) | (g << m_pen_shift[1]) | (b << m_pen_shift[2]);
+}
+
+static INLINE UINT32 get_pixel(struct mame_bitmap *bitmap, int x, int y)
+{
+	if (bitmap->depth == 32)
+		return ((UINT32 *)bitmap->line[y])[x];
+	return ((UINT16 *)bitmap->line[y])[x];
+}
+
+static INLINE void set_pixel(struct mame_bitmap *bitmap, int x, int y, UINT32 pen)
+{
+	if (bitmap->depth == 32)
+		((UINT32 *)bitmap->line[y])[x] = pen;
+	else
+		((UINT16 *)bitmap->line[y])[x] = (UINT16)pen;
+}
+
+
+/*************************************
+ *  Display list access
+ *************************************/
+
+static UINT32 readi(int adr)
+{
+	return (UINT32)m_display_list_current[(adr + 0) & 0x7fff] | ((UINT32)m_display_list_current[(adr + 1) & 0x7fff] << 16);
+}
+
+static INT16 readi16(int adr)
+{
+	return (INT16)m_display_list_current[(adr + 0) & 0x7fff];
+}
+
+static float readf(int adr)
 {
 	return u2f(readi(adr));
 }
 
-static void transform_point(struct point *p)
+
+/*************************************
+ *  View
+ *************************************/
+
+static void transform_point(const struct m1_view *v, struct m1_point *p)
 {
-	struct point q = *p;
+	struct m1_point q = *p;
 	float xx, zz;
-	xx = trans_mat[0]*q.x+trans_mat[3]*q.y+trans_mat[6]*q.z+trans_mat[9]+vxx;
-	p->y = trans_mat[1]*q.x+trans_mat[4]*q.y+trans_mat[7]*q.z+trans_mat[10]+vyy;
-	zz = trans_mat[2]*q.x+trans_mat[5]*q.y+trans_mat[8]*q.z+trans_mat[11]+vzz;
-	p->x = ayyc*xx-ayys*zz;
-	p->z = ayys*xx+ayyc*zz;
+	xx   = v->translation[0] * q.x + v->translation[3] * q.y + v->translation[6] * q.z + v->translation[ 9] + v->vxx;
+	p->y = v->translation[1] * q.x + v->translation[4] * q.y + v->translation[7] * q.z + v->translation[10] + v->vyy;
+	zz   = v->translation[2] * q.x + v->translation[5] * q.y + v->translation[8] * q.z + v->translation[11] + v->vzz;
+	p->x = v->ayyc * xx - v->ayys * zz;
+	p->z = v->ayys * xx + v->ayyc * zz;
 }
 
-static void transform_vector(struct vector *p)
+static void transform_vector(const struct m1_view *v, struct m1_vec3 *p)
 {
-	struct vector q = *p;
-	p->x = trans_mat[0]*q.x+trans_mat[3]*q.y+trans_mat[6]*q.z;
-	p->y = trans_mat[1]*q.x+trans_mat[4]*q.y+trans_mat[7]*q.z;
-	p->z = trans_mat[2]*q.x+trans_mat[5]*q.y+trans_mat[8]*q.z;
+	struct m1_vec3 q = *p;
+	struct m1_vec3 row1, row2, row3;
+	row1.x = v->translation[0]; row1.y = v->translation[3]; row1.z = v->translation[6];
+	row2.x = v->translation[1]; row2.y = v->translation[4]; row2.z = v->translation[7];
+	row3.x = v->translation[2]; row3.y = v->translation[5]; row3.z = v->translation[8];
+	p->x = vec3_dot(&q, &row1);
+	p->y = vec3_dot(&q, &row2);
+	p->z = vec3_dot(&q, &row3);
 }
 
-static void normalize_vector(struct vector *p)
-{
-	float norm = sqrt(p->x*p->x+p->y*p->y+p->z*p->z);
-	if(norm) {
-		p->x /= norm;
-		p->y /= norm;
-		p->z /= norm;
-	}
-}
-
-static float mult_vector(const struct vector *p, const struct vector *q)
-{
-	return p->x*q->x+p->y*q->y+p->z*q->z;
-}
-
-static float view_determinant(const struct point *p1, const struct point *p2, const struct point *p3)
+static float view_determinant(const struct m1_point *p1, const struct m1_point *p2, const struct m1_point *p3)
 {
 	float x1 = p2->x - p1->x;
 	float y1 = p2->y - p1->y;
@@ -148,92 +291,218 @@ static float view_determinant(const struct point *p1, const struct point *p2, co
 	float y2 = p3->y - p1->y;
 	float z2 = p3->z - p1->z;
 
-	return p1->x*(y1*z2-y2*z1) + p1->y*(z1*x2-z2*x1) + p1->z*(x1*y2-x2*y1);
+	return p1->x * (y1 * z2 - y2 * z1) + p1->y * (z1 * x2 - z2 * x1) + p1->z * (x1 * y2 - x2 * y1);
 }
 
-
-static void project_point(struct point *p)
+static void project_point(const struct m1_view *v, struct m1_point *p)
 {
 	p->xx = p->x / p->z;
 	p->yy = p->y / p->z;
-	p->s.x = view.xc+(p->xx*view.zoomx+view.transx);
-	p->s.y = view.yc-(p->yy*view.zoomy+view.transy);
+	p->s.x = f2i(v->xc + (p->xx * v->zoomx + v->viewx));
+	p->s.y = f2i(v->yc - (p->yy * v->zoomy + v->viewy));
 }
 
-static void project_point_direct(struct point *p)
+static void project_point_direct(const struct m1_view *v, struct m1_point *p)
 {
 	p->xx = p->x /*/ p->z*/;
 	p->yy = p->y /*/ p->z*/;
-	p->s.x = view.xc+(p->xx);
-	p->s.y = view.yc-(p->yy);
+	p->s.x = f2i(v->xc + p->xx);
+	p->s.y = f2i(v->yc - p->yy);
+}
+
+/*
+ xe = xc + (x/z * zm + tx)
+ xe < x1 => xc + (x/z * zm + tx) < x1
+         => x/z < (x1-xc-tx)/zm
+         => x < z*(x1-xc-tx)/zm
+
+ ye = yc - (y/z * zm + ty)
+ ye < y1 => yc - (y/z * zm + ty) < y1
+         => -y/z < (y1-yc+ty)/zm
+         => y > -z*(y1-yc+ty)/zm
+
+ xf = zf*a
+ xx = x1*t+x2(1-t); zz = z1*t+z2(1-t)
+ => x1*t+x2(1-t) = z1*t*a+z2*(1-t)*a
+ => t*(x1-x2+a*(z2-z1) = -x2+a*z2
+ => t = (z2*a-x2)/((z2-z1)*a-(x2-x1))
+*/
+static void recompute_frustum(struct m1_view *v)
+{
+	v->a_left   = ( v->x1 - v->xc - v->viewx) / v->zoomx;
+	v->a_right  = ( v->x2 - v->xc - v->viewx) / v->zoomx;
+	v->a_bottom = (-v->y1 + v->yc - v->viewy) / v->zoomy;
+	v->a_top    = (-v->y2 + v->yc - v->viewy) / v->zoomy;
+}
+
+static void init_translation_matrix(struct m1_view *v)
+{
+	memset(v->translation, 0, sizeof(v->translation));
+	v->translation[0] = 1.0;
+	v->translation[4] = 1.0;
+	v->translation[8] = 1.0;
+}
+
+static void set_viewport(struct m1_view *v, float xcenter, float ycenter, float xl, float xr, float yb, float yt)
+{
+	v->xc = xcenter;
+	v->yc = ycenter;
+	v->x1 = xl;
+	v->x2 = xr;
+	v->y1 = yb;
+	v->y2 = yt;
+
+	recompute_frustum(v);
+}
+
+static void set_lightparam(struct m1_view *v, int index, float diffuse, float ambient, float specular, int power)
+{
+	v->lightparams[index].d = diffuse;
+	v->lightparams[index].a = ambient;
+	v->lightparams[index].s = specular;
+	v->lightparams[index].p = power;
+}
+
+static void set_zoom(struct m1_view *v, float x, float y)
+{
+	v->zoomx = x;
+	v->zoomy = y;
+
+	recompute_frustum(v);
+}
+
+static void set_light_direction(struct m1_view *v, float x, float y, float z)
+{
+	v->light.x = x;
+	v->light.y = y;
+	v->light.z = z;
+	vec3_normalize(&v->light);
+}
+
+static void set_translation_matrix(struct m1_view *v, const float *mat)
+{
+	int i;
+	for (i = 0; i < 12; i++)
+		v->translation[i] = mat[i];
+}
+
+static void set_view_translation(struct m1_view *v, float x, float y)
+{
+	v->viewx = x;
+	v->viewy = y;
+
+	recompute_frustum(v);
 }
 
 
+/*************************************
+ *  Rasterizer
+ *************************************/
+
 static void draw_hline(struct mame_bitmap *bitmap, int x1, int x2, int y, int color)
 {
-	UINT16 *base = (UINT16 *)(bitmap->line[y]);
-	while(x1 <= x2) {
-		base[x1] = color;
-		x1++;
+	UINT32 pen = color & ~MOIRE;
+	if (bitmap->depth == 32)
+	{
+		UINT32 *base = (UINT32 *)bitmap->line[y];
+		while (x1 <= x2)
+		{
+			base[x1] = pen;
+			x1++;
+		}
+	}
+	else
+	{
+		UINT16 *base = (UINT16 *)bitmap->line[y];
+		while (x1 <= x2)
+		{
+			base[x1] = (UINT16)pen;
+			x1++;
+		}
 	}
 }
 
 static void draw_hline_moired(struct mame_bitmap *bitmap, int x1, int x2, int y, int color)
 {
-	UINT16 *base = (UINT16 *)(bitmap->line[y]);
-	while(x1 <= x2) {
-		if((x1^y)&1)
-			base[x1] = color;
-		x1++;
+	UINT32 pen = color & ~MOIRE;
+	if (bitmap->depth == 32)
+	{
+		UINT32 *base = (UINT32 *)bitmap->line[y];
+		while (x1 <= x2)
+		{
+			if (!((x1 ^ y) & 1))
+				base[x1] = pen;
+			x1++;
+		}
+	}
+	else
+	{
+		UINT16 *base = (UINT16 *)bitmap->line[y];
+		while (x1 <= x2)
+		{
+			if (!((x1 ^ y) & 1))
+				base[x1] = (UINT16)pen;
+			x1++;
+		}
 	}
 }
 
-static void fill_slope(struct mame_bitmap *bitmap, int color, INT32 x1, INT32 x2, INT32 sl1, INT32 sl2, INT32 y1, INT32 y2, INT32 *nx1, INT32 *nx2)
+static void fill_slope(struct mame_bitmap *bitmap, struct m1_view *view, int color, INT32 x1, INT32 x2, INT32 sl1, INT32 sl2, INT32 y1, INT32 y2, INT32 *nx1, INT32 *nx2)
 {
-	if(y1 > view.y2)
+	if (y1 > view->y2)
 		return;
 
-	if(y2 <= view.y1) {
-		int delta = y2-y1;
-		*nx1 = x1+delta*sl1;
-		*nx2 = x2+delta*sl2;
+	if (y2 <= view->y1)
+	{
+		int delta = y2 - y1;
+		*nx1 = x1 + delta * sl1;
+		*nx2 = x2 + delta * sl2;
 		return;
 	}
 
-	if(y2 > view.y2)
-		y2 = view.y2+1;
+	if (y2 > view->y2)
+		y2 = view->y2 + 1;
 
-	if(y1 < view.y1) {
-		int delta = view.y1 - y1;
-		x1 += delta*sl1;
-		x2 += delta*sl2;
-		y1 = view.y1;
+	if (y1 < view->y1)
+	{
+		int delta = view->y1 - y1;
+		x1 += delta * sl1;
+		x2 += delta * sl2;
+		y1 = view->y1;
 	}
 
-	if(x1 > x2 || (x1==x2 && sl1 > sl2)) {
-		INT32 t, *tp;
+	if (x1 > x2 || (x1 == x2 && sl1 > sl2))
+	{
+		INT32 t;
+		INT32 *tp;
+
 		t = x1;
 		x1 = x2;
 		x2 = t;
+
 		t = sl1;
 		sl1 = sl2;
 		sl2 = t;
+
 		tp = nx1;
 		nx1 = nx2;
 		nx2 = tp;
 	}
 
-	while(y1 < y2) {
-		if(y1 >= view.y1) {
-			int xx1 = x1>>FRAC_SHIFT;
-			int xx2 = x2>>FRAC_SHIFT;
-			if(xx1 <= view.x2 || xx2 >= view.x1) {
-				if(xx1 < view.x1)
-					xx1 = view.x1;
-				if(xx2 > view.x2)
-					xx2 = view.x2;
+	while (y1 < y2)
+	{
+		if (y1 >= view->y1)
+		{
+			int xx1 = x1 >> FRAC_SHIFT;
+			int xx2 = x2 >> FRAC_SHIFT;
+			if (xx1 <= view->x2 || xx2 >= view->x1)
+			{
+				if (xx1 < view->x1)
+					xx1 = view->x1;
+				if (xx2 > view->x2)
+					xx2 = view->x2;
 
-				if(color & MOIRE)
+				if (color & MOIRE)
 					draw_hline_moired(bitmap, xx1, xx2, y1, color);
 				else
 					draw_hline(bitmap, xx1, xx2, y1, color);
@@ -248,442 +517,483 @@ static void fill_slope(struct mame_bitmap *bitmap, int color, INT32 x1, INT32 x2
 	*nx2 = x2;
 }
 
-static void fill_line(struct mame_bitmap *bitmap, int color, INT32 y, INT32 x1, INT32 x2)
+static void fill_line(struct mame_bitmap *bitmap, struct m1_view *view, int color, INT32 y, INT32 x1, INT32 x2)
 {
-	int xx1 = x1>>FRAC_SHIFT;
-	int xx2 = x2>>FRAC_SHIFT;
+	int xx1 = x1 >> FRAC_SHIFT;
+	int xx2 = x2 >> FRAC_SHIFT;
 
-	if(y > view.y2 || y < view.y1)
+	if (y > view->y2 || y < view->y1)
 		return;
 
-	if(xx1 <= view.x2 || xx2 >= view.x1) {
-		if(xx1 < view.x1)
-			xx1 = view.x1;
-		if(xx2 > view.x2)
-			xx2 = view.x2;
+	if (xx1 <= view->x2 || xx2 >= view->x1)
+	{
+		if (xx1 < view->x1)
+			xx1 = view->x1;
+		if (xx2 > view->x2)
+			xx2 = view->x2;
 
-		if(color & MOIRE)
+		if (color & MOIRE)
 			draw_hline_moired(bitmap, xx1, xx2, y, color);
 		else
 			draw_hline(bitmap, xx1, xx2, y, color);
 	}
 }
 
-static void fill_quad(struct mame_bitmap *bitmap, const struct quad *q)
+/*
+  Draw a solid line between two screen points (integer Bresenham).  Wireframe
+  primitives reach the rasterizer as a degenerate quad with two coincident
+  vertex pairs (A,A,B,B); the scanline filler only touches one pixel per row,
+  collapsing near-horizontal wires to dots (e.g. the Star Wars Arcade target
+  box).  The endpoints come from the unclipped projection and can be garbage
+  (a degenerate projection yields inf/NaN, which float->int conversion turns
+  into INT32_MIN on x86 hosts), so clip the segment to the viewport first,
+  like fill_slope() does for the filler - unclipped, wingwar hung during boot
+  walking a ~2^31-pixel line.
+*/
+static void draw_wireframe_line(struct mame_bitmap *bitmap, int cleft, int cright, int ctop, int cbottom, int x1, int y1, int x2, int y2, UINT32 color, int moire)
 {
-	INT32 sl1, sl2, cury, limy, x1, x2;
-	int pmin, pmax, i, ps1, ps2;
-	struct spoint p[8];
-	int color = q->col;
+	/* Liang-Barsky clip against the viewport rectangle (doubles hold every
+	   int32 exactly, so in-range endpoints pass through unchanged) */
+	double lx1, ly1, cdx, cdy;
+	double p[4], q[4];
+	double t0 = 0.0, t1 = 1.0;
+	int i, dx, dy, sx, sy, err;
 
-	if(color < 0) {
-		color = -1-color;
-		logerror("VIDEOD: Q (%d, %d)-(%d, %d)-(%d, %d)-(%d, %d)\n",
-				 q->p[0]->s.x, q->p[0]->s.y,
-				 q->p[1]->s.x, q->p[1]->s.y,
-				 q->p[2]->s.x, q->p[2]->s.y,
-				 q->p[3]->s.x, q->p[3]->s.y);
+	lx1 = x1;
+	ly1 = y1;
+	cdx = (double)x2 - lx1;
+	cdy = (double)y2 - ly1;
+	p[0] = -cdx; p[1] = cdx; p[2] = -cdy; p[3] = cdy;
+	q[0] = lx1 - cleft; q[1] = cright - lx1; q[2] = ly1 - ctop; q[3] = cbottom - ly1;
+
+	for (i = 0; i < 4; i++)
+	{
+		if (p[i] == 0.0)
+		{
+			if (q[i] < 0.0)
+				return; /* parallel to this edge and outside it */
+		}
+		else
+		{
+			double t = q[i] / p[i];
+			if (p[i] < 0.0)
+				t0 = STD_MAX(t0, t);
+			else
+				t1 = STD_MIN(t1, t);
+		}
+	}
+	if (t0 > t1)
+		return; /* entirely outside the viewport */
+
+	if (t1 < 1.0)
+	{
+		x2 = m1_lround(lx1 + t1 * cdx);
+		y2 = m1_lround(ly1 + t1 * cdy);
+	}
+	if (t0 > 0.0)
+	{
+		x1 = m1_lround(lx1 + t0 * cdx);
+		y1 = m1_lround(ly1 + t0 * cdy);
 	}
 
-	for(i=0; i<4; i++) {
+	dx = abs(x2 - x1);
+	dy = abs(y2 - y1);
+	sx = x1 < x2 ? 1 : -1;
+	sy = y1 < y2 ? 1 : -1;
+	err = dx - dy;
+	for (;;)
+	{
+		int e2;
+		if (x1 >= 0 && x1 < bitmap->width && y1 >= 0 && y1 < bitmap->height)
+			if (!moire || !((x1 ^ y1) & 1))
+				set_pixel(bitmap, x1, y1, color);
+		if (x1 == x2 && y1 == y2)
+			break;
+		e2 = 2 * err;
+		if (e2 > -dy) { err -= dy; x1 += sx; }
+		if (e2 < dx)  { err += dx; y1 += sy; }
+	}
+}
+
+static void fill_quad(struct mame_bitmap *bitmap, struct m1_view *view, const struct m1_quad *q)
+{
+	struct m1_spoint p[8];
+	int color = q->col;
+	int i, pmin, pmax, ps1, ps2;
+	INT32 cury, limy, x1, x2;
+	INT32 sl1 = 0, sl2 = 0;
+
+	if (color < 0)
+		color = -1 - color;
+
+	/* MAME draws xRGB into a 32-bit bitmap; convert to this core's direct pen,
+	   keeping the moire flag */
+	color = (int)(rgb_to_pen(color & 0xffffff) | (color & MOIRE));
+
+	/* A wireframe primitive arrives as a degenerate quad with only two distinct
+	   screen vertices (A,A,B,B); rasterize it as a line so near-horizontal wires
+	   keep their full span instead of collapsing to one pixel per row. */
+	{
+		int ax = q->p[0]->s.x, ay = q->p[0]->s.y;
+		int bx = ax, by = ay, ndist = 1;
+		for (i = 1; i < 4; i++)
+		{
+			int vx = q->p[i]->s.x, vy = q->p[i]->s.y;
+			if (vx == ax && vy == ay)
+				continue;
+			if (ndist == 1)
+			{
+				bx = vx;
+				by = vy;
+				ndist = 2;
+			}
+			else if (vx != bx || vy != by)
+			{
+				ndist = 3;
+				break;
+			}
+		}
+		if (ndist == 2)
+		{
+			/* clip to the viewport, exactly like the scanline filler below does */
+			draw_wireframe_line(bitmap, view->x1, view->x2, view->y1, view->y2, ax, ay, bx, by, color & ~MOIRE, (color & MOIRE) != 0);
+			return;
+		}
+	}
+
+	for (i = 0; i < 4; i++)
+	{
 		p[i].x = p[i+4].x = q->p[i]->s.x << FRAC_SHIFT;
 		p[i].y = p[i+4].y = q->p[i]->s.y;
 	}
 
-	pmin = pmax = 0;
-	for(i=1; i<4; i++) {
-		if(p[i].y < p[pmin].y)
+	pmin = 0;
+	pmax = 0;
+	for (i = 1; i < 4; i++)
+	{
+		if (p[i].y < p[pmin].y)
 			pmin = i;
-		if(p[i].y > p[pmax].y)
+		if (p[i].y > p[pmax].y)
 			pmax = i;
 	}
 
 	cury = p[pmin].y;
 	limy = p[pmax].y;
 
-	if(cury == limy) {
-		x1 = x2 = p[0].x;
-		for(i=1; i<4; i++) {
-			if(p[i].x < x1)
+	if (cury == limy)
+	{
+		x1 = p[0].x;
+		x2 = p[0].x;
+		for (i = 1; i < 4; i++)
+		{
+			if (p[i].x < x1)
 				x1 = p[i].x;
-			if(p[i].x > x2)
+			if (p[i].x > x2)
 				x2 = p[i].x;
 		}
-		fill_line(bitmap, color, cury, x1, x2);
+		fill_line(bitmap, view, color, cury, x1, x2);
 		return;
 	}
 
-	if(cury > view.y2)
+	if (cury > view->y2)
 		return;
-	if(limy <= view.y1)
+	if (limy <= view->y1)
 		return;
 
-	if(limy > view.y2)
-		limy = view.y2;
+	if (limy > view->y2)
+		limy = view->y2;
 
-	ps1 = pmin+4;
+	ps1 = pmin + 4;
 	ps2 = pmin;
 
 	goto startup;
 
-	for(;;) {
-		if(p[ps1-1].y == p[ps2+1].y) {
-			fill_slope(bitmap, color, x1, x2, sl1, sl2, cury, p[ps1-1].y, &x1, &x2);
-			cury = p[ps1-1].y;
-			if(cury >= limy)
+	for (;;)
+	{
+		if (p[ps1 - 1].y == p[ps2 + 1].y)
+		{
+			fill_slope(bitmap, view, color, x1, x2, sl1, sl2, cury, p[ps1 - 1].y, &x1, &x2);
+			cury = p[ps1 - 1].y;
+			if (cury >= limy)
 				break;
 			ps1--;
 			ps2++;
 
 		startup:
-			while(p[ps1-1].y == cury)
+			while (p[ps1 - 1].y == cury)
 				ps1--;
-			while(p[ps2+1].y == cury)
+			while (p[ps2 + 1].y == cury)
 				ps2++;
 			x1 = p[ps1].x;
 			x2 = p[ps2].x;
-			sl1 = (x1-p[ps1-1].x)/(cury-p[ps1-1].y);
-			sl2 = (x2-p[ps2+1].x)/(cury-p[ps2+1].y);
-		} else if(p[ps1-1].y < p[ps2+1].y) {
-			fill_slope(bitmap, color, x1, x2, sl1, sl2, cury, p[ps1-1].y, &x1, &x2);
-			cury = p[ps1-1].y;
-			if(cury >= limy)
+			sl1 = (x1 - p[ps1 - 1].x) / (cury - p[ps1 - 1].y);
+			sl2 = (x2 - p[ps2 + 1].x) / (cury - p[ps2 + 1].y);
+		}
+		else if (p[ps1 - 1].y < p[ps2 + 1].y)
+		{
+			fill_slope(bitmap, view, color, x1, x2, sl1, sl2, cury, p[ps1 - 1].y, &x1, &x2);
+			cury = p[ps1 - 1].y;
+			if (cury >= limy)
 				break;
 			ps1--;
-			while(p[ps1-1].y == cury)
+			while (p[ps1 - 1].y == cury)
 				ps1--;
 			x1 = p[ps1].x;
-			sl1 = (x1-p[ps1-1].x)/(cury-p[ps1-1].y);
-		} else {
-			fill_slope(bitmap, color, x1, x2, sl1, sl2, cury, p[ps2+1].y, &x1, &x2);
-			cury = p[ps2+1].y;
-			if(cury >= limy)
+			sl1 = (x1 - p[ps1 - 1].x) / (cury - p[ps1 - 1].y);
+		}
+		else
+		{
+			fill_slope(bitmap, view, color, x1, x2, sl1, sl2, cury, p[ps2 + 1].y, &x1, &x2);
+			cury = p[ps2 + 1].y;
+			if (cury >= limy)
 				break;
 			ps2++;
-			while(p[ps2+1].y == cury)
+			while (p[ps2 + 1].y == cury)
 				ps2++;
 			x2 = p[ps2].x;
-			sl2 = (x2-p[ps2+1].x)/(cury-p[ps2+1].y);
+			sl2 = (x2 - p[ps2 + 1].x) / (cury - p[ps2 + 1].y);
 		}
 	}
-	if(cury == limy)
-		fill_line(bitmap, color, cury, x1, x2);
+	if (cury == limy)
+		fill_line(bitmap, view, color, cury, x1, x2);
 }
-#if 0
-static void draw_line(struct mame_bitmap *bitmap, int color, int x1, int y1, int x2, int y2)
+
+
+/*************************************
+ *  Sorting
+ *************************************/
+
+static int quad_compare(const struct m1_quad *self, const struct m1_quad *other)
 {
-	int s1x, s1y, s2x, s2y;
-	int d1, d2;
-	int cur;
-	int x, y;
+	float z2 = other->z;
 
-	if((x1 < view.x1 && x2 < view.x1) ||
-	   (x1 > view.x2 && x2 > view.x2) ||
-	   (y1 < view.y1 && y2 < view.y1) ||
-	   (y1 > view.y2 && y2 > view.y2))
-		return;
+	if (self->z < z2)
+		return +1;
+	if (self->z > z2)
+		return -1;
 
-	x = x1;
-	y = y1;
-	s1x = 1;
-	s1y = 0;
-	s2x = 0;
-	s2y = 1;
+	if (self - other < 0)
+		return -1;
 
-	d1 = x2-x1;
-	d2 = y2-y1;
-	if(d1<0) {
-		s1x = -s1x;
-		d1 = -d1;
-	}
-	if(d2<0) {
-		s2y = -s2y;
-		d2 = -d2;
-	}
-	if(d1 < d2) {
-		int t;
-		t = s1x;
-		s1x = s2x;
-		s2x = t;
-		t = s1y;
-		s1y = s2y;
-		s2y = t;
-		t = d1;
-		d1 = d2;
-		d2 = t;
-	}
-
-	if(d1 > 600)
-		return;
-
-	cur = 0;
-	while(x != x2 || y != y2) {
-		if(x>=view.x1 && x<=view.x2 && y>=view.y1 && y<=view.y2)
-			((UINT16 *)(bitmap->line[y]))[x] = color;
-		x += s1x;
-		y += s1y;
-		cur += d2;
-		if(cur >= d1) {
-			cur -= d1;
-			x += s2x;
-			y += s2y;
-		}
-	}
-	if(x>=view.x1 && x<=view.x2 && y>=view.y1 && y<=view.y2)
-		((UINT16 *)(bitmap->line[y]))[x] = color;
+	return +1;
 }
-#endif
+
 static int comp_quads(const void *q1, const void *q2)
 {
-	float z1 = (*(const struct quad **)q1)->z;
-	float z2 = (*(const struct quad **)q2)->z;
-	if(z1<z2)
-		return +1;
-	if(z1>z2)
-		return -1;
-	return 0;
+	const struct m1_quad *const *c1 = (const struct m1_quad *const *)q1;
+	const struct m1_quad *const *c2 = (const struct m1_quad *const *)q2;
+
+	return quad_compare(*c1, *c2);
 }
 
 static void sort_quads(void)
 {
-	int count = quadpt - quaddb;
+	int count = m_quadpt - m_quaddb;
 	int i;
-	for(i=0; i<count; i++)
-		quadind[i] = quaddb+i;
-	qsort(quadind, count, sizeof(struct quad *), comp_quads);
+	for (i = 0; i < count; i++)
+		m_quadind[i] = &m_quaddb[i];
+	qsort(m_quadind, count, sizeof(struct m1_quad *), comp_quads);
 }
-
-static void unsort_quads(void)
-{
-	int count = quadpt - quaddb;
-	int i;
-	for(i=0; i<count; i++)
-		quadind[i] = quaddb+i;
-}
-
 
 static void draw_quads(struct mame_bitmap *bitmap, const struct rectangle *cliprect)
 {
-	int count = quadpt - quaddb;
+	struct m1_view *view = m_view;
+	int count = m_quadpt - m_quaddb;
 	int i;
-	for(i=0; i<count; i++) {
-		struct quad *q = quadind[i];
 
-		fill_quad(bitmap, q);
-#if 0
-		draw_line(bitmap, get_black_pen(), q->p[0]->s.x, q->p[0]->s.y, q->p[1]->s.x, q->p[1]->s.y);
-		draw_line(bitmap, get_black_pen(), q->p[1]->s.x, q->p[1]->s.y, q->p[2]->s.x, q->p[2]->s.y);
-		draw_line(bitmap, get_black_pen(), q->p[2]->s.x, q->p[2]->s.y, q->p[3]->s.x, q->p[3]->s.y);
-		draw_line(bitmap, get_black_pen(), q->p[3]->s.x, q->p[3]->s.y, q->p[0]->s.x, q->p[0]->s.y);
-#endif
-	}
+	/* clip to the cliprect */
+	int save_x1 = view->x1;
+	int save_x2 = view->x2;
+	int save_y1 = view->y1;
+	int save_y2 = view->y2;
+	view->x1 = STD_MAX(view->x1, cliprect->min_x);
+	view->x2 = STD_MIN(view->x2, cliprect->max_x);
+	view->y1 = STD_MAX(view->y1, cliprect->min_y);
+	view->y2 = STD_MIN(view->y2, cliprect->max_y);
+
+	for (i = 0; i < count; i++)
+		fill_quad(bitmap, view, m_quadind[i]);
+
+	view->x1 = save_x1;
+	view->x2 = save_x2;
+	view->y1 = save_y1;
+	view->y2 = save_y2;
 }
 
-static UINT16 scale_color(UINT16 color, float level)
+
+/*************************************
+ *  Frustum clipping
+ *************************************/
+
+static int fclip_isc_bottom(struct m1_view *view, struct m1_point *p)
 {
-	int r, g, b;
-	r = ((color >> 10) & 31)*level;
-	g = ((color >> 5) & 31)*level;
-	b = (color & 31)*level;
-	return (r<<10)|(g<<5)|b;
+	return p->y > (p->z * view->a_bottom);
 }
 
-/* xe = xc + (x/z * zm + tx) */
-/* xe < x1 => xc + (x/z * zm + tx) < x1 */
-/*         => x/z < (x1-xc-tx)/zm */
-/*         => x < z*(x1-xc-tx)/zm */
-
-/* ye = yc - (y/z * zm + ty) */
-/* ye < y1 => yc - (y/z * zm + ty) < y1 */
-/*         => -y/z < (y1-yc+ty)/zm */
-/*         => y > -z*(y1-yc+ty)/zm */
-
-/* xf = zf*a */
-/* xx = x1*t+x2(1-t); zz = z1*t+z2(1-t) */
-/* => x1*t+x2(1-t) = z1*t*a+z2*(1-t)*a */
-/* => t*(x1-x2+a*(z2-z1) = -x2+a*z2 */
-/* => t = (z2*a-x2)/((z2-z1)*a-(x2-x1)) */
-
-static void recompute_frustrum(void)
+static void fclip_clip_bottom(struct m1_view *view, struct m1_point *pt, struct m1_point *p1, struct m1_point *p2)
 {
-	view.a_left   = ( view.x1-view.xc-view.transx)/view.zoomx;
-	view.a_right  = ( view.x2-view.xc-view.transx)/view.zoomx;
-	view.a_bottom = (-view.y1+view.yc-view.transy)/view.zoomy;
-	view.a_top    = (-view.y2+view.yc-view.transy)/view.zoomy;
+	float t = (p2->z * view->a_bottom - p2->y) / ((p2->z - p1->z) * view->a_bottom - (p2->y - p1->y));
+	pt->x = p1->x * t + p2->x * (1 - t);
+	pt->y = p1->y * t + p2->y * (1 - t);
+	pt->z = p1->z * t + p2->z * (1 - t);
+	project_point(view, pt);
 }
 
-static int fclip_isc_bottom(struct point *p)
+static int fclip_isc_top(struct m1_view *view, struct m1_point *p)
 {
-	return p->y > p->z*view.a_bottom;
+	return p->y < (p->z * view->a_top);
 }
 
-static struct point *fclip_clip_bottom(struct point *p1, struct point *p2)
+static void fclip_clip_top(struct m1_view *view, struct m1_point *pt, struct m1_point *p1, struct m1_point *p2)
 {
-	float t = (p2->z*view.a_bottom-p2->y)/((p2->z-p1->z)*view.a_bottom-(p2->y-p1->y));
-	pointpt->x = p1->x*t + p2->x*(1-t);
-	pointpt->y = p1->y*t + p2->y*(1-t);
-	pointpt->z = p1->z*t + p2->z*(1-t);
-	project_point(pointpt);
-	return pointpt++;
+	float t = (p2->z * view->a_top - p2->y) / ((p2->z - p1->z) * view->a_top - (p2->y - p1->y));
+	pt->x = p1->x * t + p2->x * (1 - t);
+	pt->y = p1->y * t + p2->y * (1 - t);
+	pt->z = p1->z * t + p2->z * (1 - t);
+	project_point(view, pt);
 }
 
-static int fclip_isc_top(struct point *p)
+static int fclip_isc_left(struct m1_view *view, struct m1_point *p)
 {
-	return p->y < p->z*view.a_top;
+	return p->x < (p->z * view->a_left);
 }
 
-static struct point *fclip_clip_top(struct point *p1, struct point *p2)
+static void fclip_clip_left(struct m1_view *view, struct m1_point *pt, struct m1_point *p1, struct m1_point *p2)
 {
-	float t = (p2->z*view.a_top-p2->y)/((p2->z-p1->z)*view.a_top-(p2->y-p1->y));
-	pointpt->x = p1->x*t + p2->x*(1-t);
-	pointpt->y = p1->y*t + p2->y*(1-t);
-	pointpt->z = p1->z*t + p2->z*(1-t);
-	project_point(pointpt);
-	return pointpt++;
+	float t = (p2->z * view->a_left - p2->x) / ((p2->z - p1->z) * view->a_left - (p2->x - p1->x));
+	pt->x = p1->x * t + p2->x * (1 - t);
+	pt->y = p1->y * t + p2->y * (1 - t);
+	pt->z = p1->z * t + p2->z * (1 - t);
+	project_point(view, pt);
 }
 
-static int fclip_isc_left(struct point *p)
+static int fclip_isc_right(struct m1_view *view, struct m1_point *p)
 {
-	return p->x < p->z*view.a_left;
+	return p->x > (p->z * view->a_right);
 }
 
-static struct point *fclip_clip_left(struct point *p1, struct point *p2)
+static void fclip_clip_right(struct m1_view *view, struct m1_point *pt, struct m1_point *p1, struct m1_point *p2)
 {
-	float t = (p2->z*view.a_left-p2->x)/((p2->z-p1->z)*view.a_left-(p2->x-p1->x));
-	pointpt->x = p1->x*t + p2->x*(1-t);
-	pointpt->y = p1->y*t + p2->y*(1-t);
-	pointpt->z = p1->z*t + p2->z*(1-t);
-	project_point(pointpt);
-	return pointpt++;
+	float t = (p2->z * view->a_right - p2->x) / ((p2->z - p1->z) * view->a_right - (p2->x - p1->x));
+	pt->x = p1->x * t + p2->x * (1 - t);
+	pt->y = p1->y * t + p2->y * (1 - t);
+	pt->z = p1->z * t + p2->z * (1 - t);
+	project_point(view, pt);
 }
 
-static int fclip_isc_right(struct point *p)
+static void fclip_push_quad(int level, struct m1_quad *q);
+
+static void fclip_push_quad_next(int level, struct m1_quad *q, struct m1_point *p1, struct m1_point *p2, struct m1_point *p3, struct m1_point *p4)
 {
-	return p->x > p->z*view.a_right;
+	struct m1_quad cquad;
+	cquad.col = q->col;
+	cquad.z = q->z;
+	cquad.p[0] = p1;
+	cquad.p[1] = p2;
+	cquad.p[2] = p3;
+	cquad.p[3] = p4;
+	fclip_push_quad(level + 1, &cquad);
 }
 
-static struct point *fclip_clip_right(struct point *p1, struct point *p2)
+static void fclip_push_quad(int level, struct m1_quad *q)
 {
-	float t = (p2->z*view.a_right-p2->x)/((p2->z-p1->z)*view.a_right-(p2->x-p1->x));
-	pointpt->x = p1->x*t + p2->x*(1-t);
-	pointpt->y = p1->y*t + p2->y*(1-t);
-	pointpt->z = p1->z*t + p2->z*(1-t);
-	project_point(pointpt);
-	return pointpt++;
-}
-
-static struct {
-	int (*isclipped)(struct point *p);
-	struct point *(*clip)(struct point *p1, struct point *p2);
-} clipfn[4] = {
-	{ fclip_isc_bottom, fclip_clip_bottom },
-	{ fclip_isc_top,    fclip_clip_top },
-	{ fclip_isc_left,   fclip_clip_left },
-	{ fclip_isc_right,  fclip_clip_right },
-};
-
-static void fclip_push_quad(int level, struct quad *q);
-
-static void fclip_push_quad_next(int level, struct quad *q,
-								 struct point *p1, struct point *p2, struct point *p3, struct point *p4)
-{
-	struct quad q2;
-	q2.col = q->col;
-	q2.z = q->z;
-	q2.p[0] = p1;
-	q2.p[1] = p2;
-	q2.p[2] = p3;
-	q2.p[3] = p4;
-
-	fclip_push_quad(level+1, &q2);
-}
-
-static void fclip_push_quad(int level, struct quad *q)
-{
-	int i, j;
-	struct point *pt[4], *pi1, *pi2;
+	struct m1_view *view = m_view;
 	int is_out[4], is_out2[4];
-	struct point *(*fclip_point)(struct point *p1, struct point *p2);
+	struct m1_point *pt[4];
+	struct m1_point *pi1, *pi2;
+	int i, j;
 
-	if(level == 4) {
-		logerror("VIDEOCQ %d", level);
-		for(i=0; i<4; i++)
-			logerror(" (%f, %f, %f)", q->p[i]->x, q->p[i]->y, q->p[i]->z);
-		logerror("\n");
-		*quadpt = *q;
-		quadpt++;
+	if (level == 4)
+	{
+		*m_quadpt = *q;
+		m_quadpt++;
 		return;
 	}
 
-	for(i=0; i<4; i++)
-		is_out[i] = clipfn[level].isclipped(q->p[i]);
-
-	logerror("VIDEOCQ %d", level);
-	for(i=0; i<4; i++)
-		logerror(" (%f, %f, %f, %d)", q->p[i]->x, q->p[i]->y, q->p[i]->z, is_out[i]);
-	logerror("\n");
+	for (i = 0; i < 4; i++)
+		is_out[i] = m_clipfn[level].isclipped(view, q->p[i]);
 
 	/* No clipping */
-	if(!is_out[0] && !is_out[1] && !is_out[2] && !is_out[3]) {
-		fclip_push_quad(level+1, q);
+	if (!is_out[0] && !is_out[1] && !is_out[2] && !is_out[3])
+	{
+		fclip_push_quad(level + 1, q);
 		return;
 	}
 
-	fclip_point = clipfn[level].clip;
-
 	/* Full clipping */
-	if(is_out[0] && is_out[1] && is_out[2] && is_out[3])
+	if (is_out[0] && is_out[1] && is_out[2] && is_out[3])
 		return;
 
 	/* Find n so that point n is clipped and n-1 isn't */
-	for(i=0; i<4; i++)
-		if(is_out[i] && !is_out[(i-1)&3])
+	for (i = 0; i < 4; i++)
+		if (is_out[i] && !is_out[(i - 1) & 3])
 			break;
 
-	for(j=0; j<4; j++) {
-		pt[j] = q->p[(i+j)&3];
-		is_out2[j] = is_out[(i+j)&3];
+	for (j = 0; j < 4; j++)
+	{
+		pt[j] = q->p[(i + j) & 3];
+		is_out2[j] = is_out[(i + j) & 3];
 	}
 
 	/* At this point, pt[0] is clipped out and pt[3] isn't.  Test for the 4 possible cases */
-	if(is_out2[1])
-		if(is_out2[2]) {
+	if (is_out2[1])
+	{
+		if (is_out2[2])
+		{
 			/* pt 0,1,2 clipped out, one triangle left */
-			pi1 = fclip_point(pt[2], pt[3]);
-			pi2 = fclip_point(pt[3], pt[0]);
+			m_clipfn[level].clip(view, m_pointpt, pt[2], pt[3]);
+			pi1 = m_pointpt++;
+			m_clipfn[level].clip(view, m_pointpt, pt[3], pt[0]);
+			pi2 = m_pointpt++;
 			fclip_push_quad_next(level, q, pi1, pt[3], pi2, pi2);
-		} else {
+		}
+		else
+		{
 			/* pt 0,1 clipped out, one quad left */
-			pi1 = fclip_point(pt[1], pt[2]);
-			pi2 = fclip_point(pt[3], pt[0]);
+			m_clipfn[level].clip(view, m_pointpt, pt[1], pt[2]);
+			pi1 = m_pointpt++;
+			m_clipfn[level].clip(view, m_pointpt, pt[3], pt[0]);
+			pi2 = m_pointpt++;
 			fclip_push_quad_next(level, q, pi1, pt[2], pt[3], pi2);
 		}
+	}
 	else
-		if(is_out2[2]) {
+	{
+		if (is_out2[2])
+		{
 			/* pt 0,2 clipped out, shouldn't happen, two triangles */
-			pi1 = fclip_point(pt[0], pt[1]);
-			pi2 = fclip_point(pt[1], pt[2]);
+			m_clipfn[level].clip(view, m_pointpt, pt[0], pt[1]);
+			pi1 = m_pointpt++;
+			m_clipfn[level].clip(view, m_pointpt, pt[1], pt[2]);
+			pi2 = m_pointpt++;
 			fclip_push_quad_next(level, q, pi1, pt[1], pi2, pi2);
-			pi1 = fclip_point(pt[2], pt[3]);
-			pi2 = fclip_point(pt[3], pt[0]);
+			m_clipfn[level].clip(view, m_pointpt, pt[2], pt[3]);
+			pi1 = m_pointpt++;
+			m_clipfn[level].clip(view, m_pointpt, pt[3], pt[0]);
+			pi2 = m_pointpt++;
 			fclip_push_quad_next(level, q, pi1, pt[3], pi2, pi2);
-		} else {
+		}
+		else
+		{
 			/* pt 0 clipped out, one decagon left, split in quad+tri */
-			pi1 = fclip_point(pt[0], pt[1]);
-			pi2 = fclip_point(pt[3], pt[0]);
+			m_clipfn[level].clip(view, m_pointpt, pt[0], pt[1]);
+			pi1 = m_pointpt++;
+			m_clipfn[level].clip(view, m_pointpt, pt[3], pt[0]);
+			pi2 = m_pointpt++;
 			fclip_push_quad_next(level, q, pi1, pt[1], pt[2], pt[3]);
 			fclip_push_quad_next(level, q, pt[3], pi2, pi1, pi1);
 		}
+	}
 }
 
 static float min4f(float a, float b, float c, float d)
 {
 	float m = a;
-	if(b<m)
+	if (b < m)
 		m = b;
-	if(c<m)
+	if (c < m)
 		m = c;
-	if(d<m)
+	if (d < m)
 		m = d;
 	return m;
 }
@@ -691,391 +1001,390 @@ static float min4f(float a, float b, float c, float d)
 static float max4f(float a, float b, float c, float d)
 {
 	float m = a;
-	if(b>m)
+	if (b > m)
 		m = b;
-	if(c>m)
+	if (c > m)
 		m = c;
-	if(d>m)
+	if (d > m)
 		m = d;
 	return m;
 }
 
-static const unsigned char times[]={1,1,1,1,2,2,2,3};
-static float compute_specular(struct vector *normal, struct vector *light,float diffuse,int lmode)
+
+/*************************************
+ *  Lighting
+ *************************************/
+
+static float compute_specular(const struct m1_vec3 *normal, const struct m1_vec3 *light, float diffuse, int lmode)
 {
-#if 0
+	const struct m1_lightparam *lp;
 	float s;
-	int p=lightparams[lmode].p&7;
-	int i;
-	float sv=lightparams[lmode].s;
 
-	/*This is how it should be according to model2 geo program, but doesn't work fine */
-	s=2*(diffuse*normal->z-light->z);
-	for(i=0;i<times[p];++i)
-		s*=s;
-	s*=sv;
-	if(s<0.0)
-		return 0.0;
-	if(s>1.0)
-		return 1.0;
-	return s;
+	if (!m_view->spec_enable)
+		return 0.0f;
 
-	return fabs(diffuse)*sv;
+	lp = &m_view->lightparams[lmode];
+	if (lp->p == 0 || lp->s <= 0.0f)
+		return 0.0f;
 
-#endif
-
-	return 0;
+	/* z component of the reflected light vector, as computed by the Model 2
+	   GEO program: R.z = 2*(N.L)*N.z - L.z, raised to a power of two selected
+	   by the power field and scaled by the specular scale. */
+	s = (2.0f * diffuse * normal->z) - light->z;
+	if (s <= 0.0f)
+		return 0.0f;
+	if (lp->p >= 2)
+		s *= s;
+	if (lp->p >= 4)
+		s *= s;
+	if (lp->p >= 7)
+		s *= s;
+	s = s * lp->s;
+	return STD_MIN(s, 1.0f);
 }
 
-static void push_object(UINT32 tex_adr, UINT32 poly_adr, UINT32 size)
-{
-	int i;
-	UINT32 flags;
-	struct point *old_p0, *old_p1, *p0, *p1;
-	struct vector vn;
-	int link, type;
-	int dump;
-	int lightmode;
-	float old_z;
-	struct quad cquad;
-	float *poly_data;
 
-	if(poly_adr & 0x800000)
-		poly_data=(float *) poly_ram;
+/*************************************
+ *  Objects
+ *************************************/
+
+/*
+  old_z is the flat-z "reuse" register (poly zmode 0 = keep previous poly's
+  sort z). It persists ACROSS objects within a display-list walk: NetMerc's
+  garage door wings (all-zmode-0 dynamic objects) must inherit the ~325k z of
+  the preceding object so the z~40k wall occludes them (real-hardware
+  capture); resetting per object made them sort at z=0 (nearest) and paint
+  through the wall.
+*/
+static void push_object(UINT32 tex_adr, UINT32 poly_adr, UINT32 size, float *old_z)
+{
+	const UINT32 *poly_data;
+	struct m1_point *old_p0, *old_p1;
+	UINT32 i;
+
+	/* Protect against bad data when attacking a super destroyer */
+	if (tex_adr == 0xffffffff || size >= 0x1000000)
+		return;
+
+	if (poly_adr & 0x800000)
+		poly_data = m_poly_ram;
 	else
-		poly_data=(float *) poly_rom;
+		poly_data = m_poly_rom;
 
 	poly_adr &= 0x7fffff;
-	dump = poly_adr == 0x944ea;
-	dump = 0;
 
-#if 0
-	if(poly_adr < 0x10000 || poly_adr >= 0x80000)
-		return;
-
-	if(poly_adr < 0x40000 || poly_adr >= 0x50000)
-		return;
-
-	if(poly_adr == 0x4c7db || poly_adr == 0x4cdaa || poly_adr == 0x4d3e7)
-		return;
-
-	if(poly_adr != 0x483e5)
-		return;
-#endif
-
-	if(1) {
-		logerror("XVIDEO:   draw object (%x, %x, %x)\n", tex_adr, poly_adr, size);
-	}
-
-	if(!size)
+	if (!size)
 		size = 0xffffffff;
 
-	old_p0 = pointpt++;
-	old_p1 = pointpt++;
+	old_p0 = m_pointpt++;
+	old_p1 = m_pointpt++;
 
-	old_p0->x = poly_data[poly_adr+0];
-	old_p0->y = poly_data[poly_adr+1];
-	old_p0->z = poly_data[poly_adr+2];
-	old_p1->x = poly_data[poly_adr+3];
-	old_p1->y = poly_data[poly_adr+4];
-	old_p1->z = poly_data[poly_adr+5];
-	transform_point(old_p0);
-	transform_point(old_p1);
-	if(old_p0->z > 0)
-		project_point(old_p0);
+	old_p0->x = u2f(poly_data[poly_adr + 0]);
+	old_p0->y = u2f(poly_data[poly_adr + 1]);
+	old_p0->z = u2f(poly_data[poly_adr + 2]);
+	old_p1->x = u2f(poly_data[poly_adr + 3]);
+	old_p1->y = u2f(poly_data[poly_adr + 4]);
+	old_p1->z = u2f(poly_data[poly_adr + 5]);
+	transform_point(m_view, old_p0);
+	transform_point(m_view, old_p1);
+
+	if (old_p0->z > 0)
+		project_point(m_view, old_p0);
 	else
 		old_p0->s.x = old_p0->s.y = 0;
-	if(old_p1->z > 0)
-		project_point(old_p1);
+
+	if (old_p1->z > 0)
+		project_point(m_view, old_p1);
 	else
 		old_p1->s.x = old_p1->s.y = 0;
 
-	old_z = 0;
-
 	poly_adr += 6;
 
-	for(i=0; i<size; i++) {
-#if 0
-		logerror("VIDEO:     %08x (%f, %f, %f) (%f, %f, %f) (%f, %f, %f)\n",
-				 *(UINT32 *)(poly_data+poly_adr) & ~(0x01800303),
-				 poly_data[poly_adr+1], poly_data[poly_adr+2], poly_data[poly_adr+3],
-				 poly_data[poly_adr+4], poly_data[poly_adr+5], poly_data[poly_adr+6],
-				 poly_data[poly_adr+7], poly_data[poly_adr+8], poly_data[poly_adr+9]);
-#endif
-		flags = *(UINT32 *)(poly_data+poly_adr);
+	for (i = 0; i < size; i++)
+	{
+		UINT32 flags = poly_data[poly_adr];
+		int type, lightmode, link;
+		struct m1_point *p0, *p1;
+		struct m1_vec3 vn;
+		struct m1_quad cquad;
 
 		type = flags & 3;
-		if(!type)
+		if (!type)
 			break;
 
-		if(flags & 0x00001000)
-			tex_adr ++;
-		lightmode=(flags>>17)&15;
+		if (flags & 0x00001000)
+			tex_adr++;
+		/* Flags bit 22 selects the second light parameter bank. netmerc uploads
+		   two banks (0x00-0x0c organic/terrain, 0x80-0x9e metal) and mixes
+		   polygons from both within a single display list; the other games
+		   never set the bit. In the Model 2 GEO attribute word this same bit
+		   is the top bit of the texture parameter index. */
+		lightmode = ((flags >> 17) & 15) | ((flags & 0x00400000) ? 0x80 : 0);
 
-		p0 = pointpt++;
-		p1 = pointpt++;
+		p0 = m_pointpt++;
+		p1 = m_pointpt++;
 
-		vn.x = poly_data[poly_adr+1];
-		vn.y = poly_data[poly_adr+2];
-		vn.z = poly_data[poly_adr+3];
-		p0->x = poly_data[poly_adr+4];
-		p0->y = poly_data[poly_adr+5];
-		p0->z = poly_data[poly_adr+6];
-		p1->x = poly_data[poly_adr+7];
-		p1->y = poly_data[poly_adr+8];
-		p1->z = poly_data[poly_adr+9];
+		vn.x = u2f(poly_data[poly_adr + 1]);
+		vn.y = u2f(poly_data[poly_adr + 2]);
+		vn.z = u2f(poly_data[poly_adr + 3]);
+		p0->x = u2f(poly_data[poly_adr + 4]);
+		p0->y = u2f(poly_data[poly_adr + 5]);
+		p0->z = u2f(poly_data[poly_adr + 6]);
+		p1->x = u2f(poly_data[poly_adr + 7]);
+		p1->y = u2f(poly_data[poly_adr + 8]);
+		p1->z = u2f(poly_data[poly_adr + 9]);
+
+		if (type == 2)
+		{
+			p1->x = p0->x;
+			p1->y = p0->y;
+			p1->z = p0->z;
+		}
 
 		link = (flags >> 8) & 3;
 
-		transform_vector(&vn);
+		transform_vector(m_view, &vn);
 
-		transform_point(p0);
-		transform_point(p1);
-		if(p0->z > 0)
-			project_point(p0);
+		transform_point(m_view, p0);
+		transform_point(m_view, p1);
+		if (p0->z > 0)
+			project_point(m_view, p0);
 		else
 			p0->s.x = p0->s.y = 0;
-		if(p1->z > 0)
-			project_point(p1);
+
+		if (p1->z > 0)
+			project_point(m_view, p1);
 		else
 			p1->s.x = p1->s.y = 0;
 
-#if 0
-		if(dump)
-			logerror("VIDEO:     %08x (%f, %f, %f) (%f, %f, %f)\n",
-					 *(UINT32 *)(poly_data+poly_adr),
-					 p0->x, p0->y, p0->z,
-					 p1->x, p1->y, p1->z);
-#endif
-
-
-#if 0
-		if(1 || dump) {
-			logerror("VIDEO:     %08x (%d, %d) (%d, %d) (%d, %d) (%d, %d)\n",
-					 *(UINT32 *)(poly_data+poly_adr),
-					 old_p0->s.x, old_p0->s.y,
-					 old_p1->s.x, old_p1->s.y,
-					 p0->s.x, p0->s.y,
-					 p1->s.x, p1->s.y);
-		}
-#endif
-
-		if(!link)
+		if (!link)
 			goto next;
 
-		if(!(flags & 0x00004000) && view_determinant(old_p1, old_p0, p0) > 0)
+		if (!(flags & 0x00004000) && view_determinant(old_p1, old_p0, p0) > 0)
 			goto next;
 
-		normalize_vector(&vn);
+		vec3_normalize(&vn);
 
 		cquad.p[0] = old_p1;
 		cquad.p[1] = old_p0;
 		cquad.p[2] = p0;
 		cquad.p[3] = p1;
 
-		switch((flags >> 10) & 3) {
-		case 0:
-			cquad.z = old_z;
-			break;
-		case 1:
-			cquad.z = old_z = min4f(old_p1->z, old_p0->z, p0->z, p1->z);
-			break;
-		case 2:
-			cquad.z = old_z = max4f(old_p1->z, old_p0->z, p0->z, p1->z);
-			break;
-		case 3:
-		default:
-			cquad.z = 0.0;
-			break;
+		switch ((flags >> 10) & 3)
+		{
+			case 0:
+				cquad.z = *old_z;
+				break;
+			case 1:
+				cquad.z = *old_z = min4f(old_p1->z, old_p0->z, p0->z, p1->z);
+				break;
+			case 2:
+				cquad.z = *old_z = max4f(old_p1->z, old_p0->z, p0->z, p1->z);
+				break;
+			case 3:
+			default:
+				cquad.z = 0.0;
+				break;
 		}
 
 		{
-			/*float dif=mult_vector(&vn, &view.light);
-			float ln=lightparams[lightmode].a + lightparams[lightmode].d*max(0.0,dif);
-			cquad.col = scale_color(Machine->pens[0x1000|(tgp_ram[tex_adr-0x40000] & 0x3ff)], min(1.0,ln));
-			cquad.col = scale_color(Machine->pens[0x1000|(tgp_ram[tex_adr-0x40000] & 0x3ff)], min(1.0,ln));
-			*/
-			float dif=mult_vector(&vn, &view.light);
-			float spec=compute_specular(&vn,&view.light,dif,lightmode);
-			float ln=lightparams[lightmode].a + lightparams[lightmode].d*max(0.0,dif) + spec;
-			int lumval=255.0*min(1.0,ln);
-			int color=paletteram16[0x1000|(tgp_ram[tex_adr-0x40000] & 0x3ff)];
-			int r=(color>>0x0)&0x1f;
-			int g=(color>>0x5)&0x1f;
-			int b=(color>>0xA)&0x1f;
-			lumval>>=2;	/*there must be a luma translation table somewhere */
-			if(lumval>0x3f)
-				lumval=0x3f;
-			r=(model1_color_xlat[(r<<8)|lumval|0x0]>>3)&0x1f;
-			g=(model1_color_xlat[(g<<8)|lumval|0x2000]>>3)&0x1f;
-			b=(model1_color_xlat[(b<<8)|lumval|0x4000]>>3)&0x1f;
-			cquad.col=(r<<10)|(g<<5)|(b<<0);
+			float dif = vec3_dot(&vn, &m_view->light);
+			float spec = compute_specular(&vn, &m_view->light, dif, lightmode);
+			float ln = m_view->lightparams[lightmode].a + m_view->lightparams[lightmode].d * STD_MAX(0.0f, dif) + spec;
+			int lumval = f2i(255.0f * STD_MIN(1.0f, ln));
+			/* bits [11:10] of the tile word select a colour mode: bit 10 marks a
+			   flat UI element (radar blips, HUD text) drawn unlit, and mode 01
+			   additionally blinks by rotating the BGR channels on alternate frames. */
+			UINT16 tex_data = m_tgp_ram[tex_adr - 0x40000];
+			int color = paletteram16[0x1000 | (tex_data & 0x3ff)];
+			int r = (color >> 0x0) & 0x1f;
+			int g = (color >> 0x5) & 0x1f;
+			int b = (color >> 0xA) & 0x1f;
+			if (((tex_data >> 10) & 3) == 1 && (cpu_getcurrentframe() & 1))
+			{
+				/* rotate b -> g -> r -> b */
+				int tmp = b;
+				b = r;
+				r = g;
+				g = tmp;
+			}
+
+			lumval >>= 2; /* there must be a luma translation table somewhere */
+			if (lumval > 0x3f)
+				lumval = 0x3f;
+			else if (lumval < 0)
+				lumval = 0;
+
+			/* flat UI element: draw unlit at full intensity instead of shading it */
+			if (tex_data & 0x400)
+				lumval = 0x3f;
+
+			r = (model1_color_xlat[(r << 8) | lumval | 0x0] >> 3) & 0x1f;
+			g = (model1_color_xlat[(g << 8) | lumval | 0x2000] >> 3) & 0x1f;
+			b = (model1_color_xlat[(b << 8) | lumval | 0x4000] >> 3) & 0x1f;
+			cquad.col = (pal5bit(r) << 16) | (pal5bit(g) << 8) | (pal5bit(b) << 0);
 		}
 
-		if(flags & 0x00002000)
+		if (flags & 0x00002000)
 			cquad.col |= MOIRE;
 
 		fclip_push_quad(0, &cquad);
 
 	next:
 		poly_adr += 10;
-		switch(link) {
-		case 0:
-		case 2:
-			old_p0 = p0;
-			old_p1 = p1;
-			break;
-		case 1:
-			old_p1 = p0;
-			break;
-		case 3:
-			old_p0 = p1;
-			break;
+		switch (link)
+		{
+			case 0:
+			case 2:
+				old_p0 = p0;
+				old_p1 = p1;
+				break;
+			case 1:
+				old_p1 = p0;
+				break;
+			case 3:
+				old_p0 = p1;
+				break;
 		}
 	}
 }
 
-static UINT16 *push_direct(UINT16 *list)
+static int push_direct(int list_offset)
 {
-	UINT32 flags;
-	UINT32 tex_adr, lum, v1, v2;
-	struct point *old_p0, *old_p1, *p0, *p1;
-	int link, type;
-	float z;
-	struct quad cquad;
+	UINT32 tex_adr = readi(list_offset + 2);
+	struct m1_point *old_p0, *old_p1;
 
-	tex_adr = readi(list);
-	v1      = readi(list+2);
-	v2      = readi(list+10);
+	old_p0 = m_pointpt++;
+	old_p1 = m_pointpt++;
 
-	old_p0 = pointpt++;
-	old_p1 = pointpt++;
+	old_p0->x = readf(list_offset + 2 + 4);
+	old_p0->y = readf(list_offset + 2 + 6);
+	old_p0->z = readf(list_offset + 2 + 8);
+	old_p1->x = readf(list_offset + 2 + 12);
+	old_p1->y = readf(list_offset + 2 + 14);
+	old_p1->z = readf(list_offset + 2 + 16);
 
-	old_p0->x = readf(list+4);
-	old_p0->y = readf(list+6);
-	old_p0->z = readf(list+8);
-	old_p1->x = readf(list+12);
-	old_p1->y = readf(list+14);
-	old_p1->z = readf(list+16);
+	/* Direct (2D-projected) polys are screen-space: project_point_direct only
+	   offsets x/y by the viewport centre and ignores z, so project every vertex
+	   unconditionally.  Guarding on z > 0 and snapping behind-"camera" vertices
+	   to (0,0) spawns huge spurious triangles radiating from the screen origin
+	   (the bogus red cross over the SWA cockpit once direct polys draw on top). */
+	project_point_direct(m_view, old_p0);
+	project_point_direct(m_view, old_p1);
 
-	logerror("VIDEOD start direct\n");
-	logerror("VIDEOD (%f, %f, %f) (%f, %f, %f)\n",
-			 old_p0->x, old_p0->y, old_p0->z,
-			 old_p1->x, old_p1->y, old_p1->z);
+	list_offset += 18;
 
-/*	transform_point(old_p0); */
-/*	transform_point(old_p1); */
-	if(old_p0->z > 0)
-		project_point_direct(old_p0);
-	else
-		old_p0->s.x = old_p0->s.y = 0;
-	if(old_p1->z > 0)
-		project_point_direct(old_p1);
-	else
-		old_p1->s.x = old_p1->s.y = 0;
-
-	list += 18;
-
-	for(;;) {
-		flags = readi(list);
+	for (;;)
+	{
+		UINT32 flags = readi(list_offset + 2);
+		UINT32 lum;
+		int type, link;
+		float z;
+		struct m1_point *p0, *p1;
+		struct m1_quad cquad;
 
 		type = flags & 3;
-		if(!type)
+		if (!type)
 			break;
 
-		if(flags & 0x00001000)
-			tex_adr ++;
+		if (flags & 0x00001000)
+			tex_adr++;
 
-		/* list+2 is luminosity */
-		/* list+4 is 0? */
-		/* list+12 is z? */
+		/* list+2+2 is luminosity
+		   list+2+4 is 0?
+		   list+2+12 is z? */
 
-		p0 = pointpt++;
-		p1 = pointpt++;
+		p0 = m_pointpt++;
+		p1 = m_pointpt++;
 
-		lum   = readi(list+2);
-		v1    = readi(list+4);
+		lum = readi(list_offset + 2 + 2);
 
-		if(type == 2) {
-			p0->x = readf(list+6);
-			p0->y = readf(list+8);
-			p0->z = readf(list+10);
+		z = 0;
+		if (type == 2)
+		{
+			p0->x = readf(list_offset + 2 + 6);
+			p0->y = readf(list_offset + 2 + 8);
+			p0->z = readf(list_offset + 2 + 10);
 			z = p0->z;
-			logerror("VIDEOD %08x %08x (%f, %f, %f)\n",
-					 flags, lum,
-					 p0->x, p0->y, p0->z);
 			*p1 = *p0;
-			list += 12;
-		} else {
-			p0->x = readf(list+6);
-			p0->y = readf(list+8);
-			p0->z = readf(list+10);
-			p1->x = readf(list+14);
-			p1->y = readf(list+16);
-			p1->z = readf(list+18);
-			z     = readf(list+12);
-			logerror("VIDEOD %08x %08x (%f, %f, %f) (%f, %f, %f)\n",
-					 flags, lum,
-					 p0->x, p0->y, p0->z,
-					 p1->x, p1->y, p1->z);
-			list += 20;
+			list_offset += 12;
+		}
+		else
+		{
+			p0->x = readf(list_offset + 2 + 6);
+			p0->y = readf(list_offset + 2 + 8);
+			p0->z = readf(list_offset + 2 + 10);
+			p1->x = readf(list_offset + 2 + 14);
+			p1->y = readf(list_offset + 2 + 16);
+			p1->z = readf(list_offset + 2 + 18);
+			z = readf(list_offset + 2 + 12);
+			list_offset += 20;
 		}
 
 		link = (flags >> 8) & 3;
 
-/*		transform_point(p0); */
-/*		transform_point(p1); */
-		if(p0->z > 0)
-			project_point_direct(p0);
-		if(p1->z > 0)
-			project_point_direct(p1);
+		project_point_direct(m_view, p0);
+		project_point_direct(m_view, p1);
 
-#if 1
-		if(old_p0 && old_p1)
-			logerror("VIDEOD:     %08x (%d, %d) (%d, %d) (%d, %d) (%d, %d)\n",
-					 flags,
-					 old_p0->s.x, old_p0->s.y,
-					 old_p1->s.x, old_p1->s.y,
-					 p0->s.x, p0->s.y,
-					 p1->s.x, p1->s.y);
-		else
-			logerror("VIDEOD:     %08x (%d, %d) (%d, %d)\n",
-					 flags,
-					 p0->s.x, p0->s.y,
-					 p1->s.x, p1->s.y);
-
-#endif
-
-		if(!link)
+		if (!link)
 			goto next;
 
 		cquad.p[0] = old_p1;
 		cquad.p[1] = old_p0;
 		cquad.p[2] = p0;
 		cquad.p[3] = p1;
-		cquad.z    = z;
+		cquad.z = z;
 		{
-			int lumval=((float) (lum>>24)) * 2.0;
-			int color=paletteram16[0x1000|(tgp_ram[tex_adr-0x40000] & 0x3ff)];
-			int r=(color>>0x0)&0x1f;
-			int g=(color>>0x5)&0x1f;
-			int b=(color>>0xA)&0x1f;
-			lumval>>=2;	/*there must be a luma translation table somewhere */
-			if(lumval>0x3f)
-				lumval=0x3f;
-			r=(model1_color_xlat[(r<<8)|lumval|0x0]>>3)&0x1f;
-			g=(model1_color_xlat[(g<<8)|lumval|0x2000]>>3)&0x1f;
-			b=(model1_color_xlat[(b<<8)|lumval|0x4000]>>3)&0x1f;
-			cquad.col=(r<<10)|(g<<5)|(b<<0);
+			int lumval = f2i(((float)(lum >> 24)) * 2.0f);
+			int color = paletteram16[0x1000 | (m_tgp_ram[tex_adr - 0x40000] & 0x3ff)];
+			int r = (color >> 0x0) & 0x1f;
+			int g = (color >> 0x5) & 0x1f;
+			int b = (color >> 0xA) & 0x1f;
+			lumval >>= 2; /* there must be a luma translation table somewhere */
+			if (lumval > 0x3f) lumval = 0x3f;
+			else if (lumval < 0) lumval = 0;
+			r = (model1_color_xlat[(r << 8) | lumval | 0x0] >> 3) & 0x1f;
+			g = (model1_color_xlat[(g << 8) | lumval | 0x2000] >> 3) & 0x1f;
+			b = (model1_color_xlat[(b << 8) | lumval | 0x4000] >> 3) & 0x1f;
+			cquad.col = (pal5bit(r) << 16) | (pal5bit(g) << 8) | (pal5bit(b) << 0);
 		}
-		/*cquad.col  = scale_color(Machine->pens[0x1000|(tgp_ram[tex_adr-0x40000] & 0x3ff)],((float) (lum>>24)) / 128.0); */
-		if(flags & 0x00002000)
+		if (flags & 0x00002000)
+		{
 			cquad.col |= MOIRE;
+			/* A moire (stipple-translucent) direct poly whose flat colour resolves
+			   to the transparent texture pen (index 0x1000 -> black) is a "fade
+			   toward backdrop" overlay, not a black fill.  Painting the pen
+			   literally gives a black/scene checkerboard (the Star Wars Arcade
+			   gunner 2nd-viewport overlay); the arcade alternates backdrop/scene.
+			   Paint the backdrop pen (palette[0]) so the stipple reads
+			   backdrop/scene. */
+			if ((m_tgp_ram[tex_adr - 0x40000] & 0x3ff) == 0)
+			{
+				UINT8 pr, pg, pb;
+				palette_get_color(0, &pr, &pg, &pb);
+				cquad.col = MOIRE | (pr << 16) | (pg << 8) | pb;
+			}
 
-		fclip_push_quad(0, &cquad);
+			/* wingwar's display list carries a constant degenerate moire record
+			   (all four vertices on one point) that the flat-quad filler would
+			   paint as a stray dot at the viewport centre; not seen on hardware. */
+			if (cquad.p[0]->s.x == cquad.p[1]->s.x && cquad.p[1]->s.x == cquad.p[2]->s.x && cquad.p[2]->s.x == cquad.p[3]->s.x &&
+				cquad.p[0]->s.y == cquad.p[1]->s.y && cquad.p[1]->s.y == cquad.p[2]->s.y && cquad.p[2]->s.y == cquad.p[3]->s.y)
+				goto next;
+		}
+
+		/* Direct polys are screen-space - project_point_direct only offsets x/y by
+		   the viewport centre and ignores z.  fclip_push_quad's frustum clip tests
+		   vertices against z-scaled planes (y > z*a_bottom, ...), which for a direct
+		   poly with small/zero z collapses every plane onto the origin and culls the
+		   whole poly (e.g. the SWA FIGHTER CONTROL console moire rect, all z = 0).
+		   Skip the frustum clip and queue the quad directly; fill_quad still scissors
+		   it to the viewport rectangle. */
+		*m_quadpt++ = cquad;
 
 	next:
-		switch(link) {
+		switch (link)
+		{
 		case 0:
 		case 2:
 			old_p0 = p0;
@@ -1089,237 +1398,238 @@ static UINT16 *push_direct(UINT16 *list)
 			break;
 		}
 	}
-	return list+2;
+	list_offset += 4;
+	return list_offset;
 }
 
-static UINT16 *skip_direct(UINT16 *list)
+static int skip_direct(int list_offset)
 {
-	UINT32 flags;
-	int type;
+	list_offset += 18;
 
-	list += 18;
+	for (;;)
+	{
+		UINT32 flags = readi(list_offset + 2);
 
-	for(;;) {
-		flags = readi(list);
-
-		type = flags & 3;
-		if(!type)
+		int type = flags & 3;
+		if (!type)
 			break;
 
-		if(type == 2)
-			list += 12;
+		if (type == 2)
+			list_offset += 12;
 		else
-			list += 20;
+			list_offset += 20;
 	}
-	return list+2;
+	list_offset += 4;
+	return list_offset;
 }
 
 static void draw_objects(struct mame_bitmap *bitmap, const struct rectangle *cliprect)
 {
-	if(quadpt != quaddb) {
-		logerror("VIDEO: sort&draw\n");
+	if (m_quadpt != m_quaddb)
+	{
 		sort_quads();
 		draw_quads(bitmap, cliprect);
 	}
 
-	quadpt = quaddb;
-	pointpt = pointdb;
+	m_quadpt = m_quaddb;
+	m_pointpt = m_pointdb;
 }
 
-static UINT16 *draw_direct(UINT16 *list, struct mame_bitmap *bitmap, const struct rectangle *cliprect)
+/* draw_direct() / unsort_quads() are unused in current MAME (direct polys go
+   through push_direct in the below-HUD pass); not ported. */
+
+
+/*************************************
+ *  List control
+ *************************************/
+
+static void set_current_render_list(void)
 {
-	UINT16 *res;
-
-	logerror("VIDEO:   draw direct %x\n", readi(list));
-
-	draw_objects(bitmap, cliprect);
-	res = push_direct(list);
-	unsort_quads();
-	draw_quads(bitmap, cliprect);
-
-	quadpt = quaddb;
-	pointpt = pointdb;
-	return res;
-}
-
-static UINT16 *get_list(void)
-{
-	if(!(listctl[0] & 4))
-		listctl[0] = (listctl[0] & ~0x40) | (listctl[0] & 8 ? 0x40 : 0);
-	return listctl[0] & 0x40 ? model1_display_list1 : model1_display_list0;
-}
-
-static int get_list_number(void)
-{
-	if(!(listctl[0] & 4))
-		listctl[0] = (listctl[0] & ~0x40) | (listctl[0] & 8 ? 0x40 : 0);
-	return listctl[0] & 0x40 ? 0 : 1;
+	if (!(m_listctl[0] & 4))
+		m_listctl[0] = (m_listctl[0] & ~0x40) | (m_listctl[0] & 8 ? 0x40 : 0);
+	m_display_list_current = m_listctl[0] & 0x40 ? model1_display_list1 : model1_display_list0;
 }
 
 static void end_frame(void)
 {
-	if((listctl[0] & 4) && (cpu_getcurrentframe() & 1))
-		listctl[0] ^= 0x40;
+	if ((m_listctl[0] & 4) && (cpu_getcurrentframe() & 1))
+		m_listctl[0] ^= 0x40;
 }
 
 READ16_HANDLER( model1_listctl_r )
 {
-	if(!offset)
-		return listctl[0] | 0x30;
+	if (!offset)
+		return m_listctl[0] | 0x30;
 	else
-		return listctl[1];
+		return m_listctl[1];
 }
 
 WRITE16_HANDLER( model1_listctl_w )
 {
-	COMBINE_DATA(listctl+offset);
-	logerror("VIDEO: control=%08x\n", (listctl[1]<<16)|listctl[0]);
+	COMBINE_DATA(m_listctl + offset);
 }
 
-static void tgp_render(struct mame_bitmap *bitmap, const struct rectangle *cliprect)
+WRITE16_HANDLER( model1_paletteram_w )
 {
-	render_done = 1;
-	if((listctl[1] & 0x1f) == 0x1f) {
-		UINT16 *list = get_list();
-		int zz = 0;
-		logerror("VIDEO: render list %d\n", get_list_number());
+	UINT16 v;
+	int r, g, b;
 
-		memset(trans_mat, 0, sizeof(trans_mat));
-		trans_mat[0] = 1.0;
-		trans_mat[4] = 1.0;
-		trans_mat[8] = 1.0;
+	COMBINE_DATA(&paletteram16[offset]);
+	v = paletteram16[offset];
+	r = pal5bit((v >> 0) & 0x1f);
+	g = pal5bit((v >> 5) & 0x1f);
+	b = pal5bit((v >> 10) & 0x1f);
+	/* Bit 15 is an intensity/shade bit, not unused as the plain xBGR_555 decode
+	   assumes.  Almost every entry has it set (full brightness); a handful clear
+	   it to render dimmed (e.g. Star Wars Arcade's grey menu backdrop pen 0x7777).
+	   Halve the channels when it is clear so those pens stop reading too bright. */
+	if (!(v & 0x8000))
+	{
+		r >>= 1;
+		g >>= 1;
+		b >>= 1;
+	}
+	palette_set_color(offset, r, g, b);
+}
 
-		for(;;) {
-			int type = (list[1]<<16)|list[0];
-			glist=list;
-			switch(type & 15) {
+
+/*************************************
+ *  TGP display list walk
+ *************************************/
+
+static void tgp_render(struct mame_bitmap *bitmap, const struct rectangle *cliprect, int pass)
+{
+	m_render_done = 1;
+	if ((m_listctl[1] & 0x1f) == 0x1f)
+	{
+		float old_z = 0;
+		int list_offset = 0;
+
+		set_current_render_list();
+
+		init_translation_matrix(m_view);
+
+		for (;;)
+		{
+			int type = readi(list_offset + 0);
+
+			switch (type)
+			{
 			case 0:
-				list += 2;
+				list_offset += 2;
 				break;
 			case 1:
-				/* 1 = plane 1 */
-				/* 2 = ??  draw object (413d3, 17c4c, e) */
-				/* 3 = plane 2 */
-				/* 4 = ??  draw object (408a8, a479, 9) */
-				/* 5 = decor */
-				/* 6 = ??  draw object (57bd4, 387460, 2ad) */
-
-				if(1 || zz >= 666)
-					push_object(readi(list+2), readi(list+4), readi(list+6));
-				list += 8;
+				/* command 0x01 = object drawn below the cat1 HUD tilemaps */
+				if (pass == RENDER_BELOW_HUD)
+					push_object(readi(list_offset + 2), readi(list_offset + 4), readi(list_offset + 6), &old_z);
+				list_offset += 8;
+				break;
+			case 0x41:
+				/* command 0x41 = object drawn above the HUD (e.g. SWA radar blips) */
+				m_above_hud = 1;
+				if (pass == RENDER_ABOVE_HUD)
+					push_object(readi(list_offset + 2), readi(list_offset + 4), readi(list_offset + 6), &old_z);
+				list_offset += 8;
 				break;
 			case 2:
-				list = draw_direct(list+2, bitmap, cliprect);
+				/* direct (2D-projected) polys; push them in the below-HUD pass so
+				   they share the per-viewport z-sort with the 0x01 objects */
+				if (pass == RENDER_BELOW_HUD)
+					list_offset = push_direct(list_offset);
+				else
+					list_offset = skip_direct(list_offset);
 				break;
 			case 3:
-				logerror("VIDEO:   viewport (%d, %d, %d, %d, %d, %d, %d)\n",
-						 readi(list+2),
-						 readi16(list+4), readi16(list+6), readi16(list+8),
-						 readi16(list+10), readi16(list+12), readi16(list+14));
+			{
+				float xc, yc, x1, y1, x2, y2;
 
 				draw_objects(bitmap, cliprect);
 
-				view.xc = readi16(list+4);
-				view.yc = 383-(readi16(list+6)-39);
-				view.x1 = readi16(list+8);
-				view.y2 = 383-(readi16(list+10)-39);
-				view.x2 = readi16(list+12);
-				view.y1 = 383-(readi16(list+14)-39);
+				xc = readi16(list_offset + 4);
+				yc = 383 - (readi16(list_offset + 6) - 39);
+				x1 = readi16(list_offset + 8);
+				y2 = 383 - (readi16(list_offset + 10) - 39);
+				x2 = readi16(list_offset + 12);
+				y1 = 383 - (readi16(list_offset + 14) - 39);
 
-				recompute_frustrum();
+				set_viewport(m_view, xc, yc, x1, x2, y1, y2);
 
-				list += 16;
+				list_offset += 16;
 				break;
-			case 4: {
-				int adr = readi(list+2);
-				int len = readi(list+4)+1;
+			}
+			case 4:
+			{
+				int adr = readi(list_offset + 2);
+				int len = readi(list_offset + 4) + 1;
 				int i;
-				logerror("ZVIDEO:   color write, adr=%x, len=%x\n", adr, len);
-				for(i=0; i<len; i++)
-					tgp_ram[adr-0x40000+i] = list[6+2*i];
-				list += 6+len*2;
+				for (i = 0; i < len; i++)
+					m_tgp_ram[adr - 0x40000 + i] = readi16(list_offset + 6 + 2 * i);
+				list_offset += 6 + len * 2;
 				break;
 			}
 			case 5:
-				{
-					int adr = readi(list+2);
-					int len = readi(list+4);
-					int i;
-					for(i=0;i<len;++i)
-					{
-						poly_ram[adr-0x800000+i]=readi(list+2*i+6);
-					}
-					list+=6+len*2;
-				}
-				break;
-			case 6: {
-				int adr = readi(list+2);
-				int len = readi(list+4);
+			{
+				int adr = readi(list_offset + 2);
+				int len = readi(list_offset + 4);
 				int i;
-				logerror("VIDEO:   upload data, adr=%x, len=%x\n", adr, len);
-				for(i=0;i<len;++i)
+				for (i = 0; i < len; i++)
+					m_poly_ram[adr - 0x800000 + i] = readi(list_offset + 2 * i + 6);
+				list_offset += 6 + len * 2;
+				break;
+			}
+			case 6:
+			{
+				int adr = readi(list_offset + 2);
+				int len = readi(list_offset + 4);
+				int i;
+				for (i = 0; i < len; i++)
 				{
-					int v=readi(list+6+i*2);
-					lightparams[i+adr].d=((float) (v&0xff))/255.0;
-					lightparams[i+adr].a=((float) ((v>>8)&0xff))/255.0;
-					lightparams[i+adr].s=((float) ((v>>16)&0xff))/255.0;
-					lightparams[i+adr].p=(v>>24)&0xff;
+					int v = readi(list_offset + 6 + i * 2);
+					float diffuse = ((float)(v & 0xff)) / 255.0f;
+					float ambient = ((float)((v >> 8) & 0xff)) / 255.0f;
+					float specular = ((float)((v >> 16) & 0xff)) / 255.0f;
+					int power = (v >> 24) & 0xff;
+					set_lightparam(m_view, i + adr, diffuse, ambient, specular, power);
 				}
-				list += 6+len*2;
+				list_offset += 6 + len * 2;
 				break;
 			}
 			case 7:
-				logerror("VIDEO:   code 7 (%d)\n", readi(list+2));
-				zz++;
-				list += 4;
+				/* Mode word, as in the Model 2 GEO command 7: bit 0 enables the
+				   specular term (netmerc toggles it mid-list, on for the enemy
+				   mechs and off for terrain/cockpit); bit 1 tracks the display
+				   list double buffer parity. */
+				m_view->spec_enable = readi(list_offset + 2) & 1;
+				list_offset += 4;
 				break;
 			case 8:
-				logerror("VIDEO:   select mode %08x\n", readi(list+2));
-				list += 4;
+				list_offset += 4;
 				break;
 			case 9:
-				logerror("VIDEO:   zoom (%f, %f)\n", readf(list+2), readf(list+4));
-				view.zoomx = readf(list+2)*4;
-				view.zoomy = readf(list+4)*4;
-
-				recompute_frustrum();
-
-				list += 6;
+				set_zoom(m_view, readf(list_offset + 2) * 4, readf(list_offset + 4) * 4);
+				list_offset += 6;
 				break;
 			case 0xa:
-				logerror("VIDEO:   light vector (%f, %f, %f)\n", readf(list+2), readf(list+4), readf(list+6));
-				view.light.x = readf(list+2);
-				view.light.y = readf(list+4);
-				view.light.z = readf(list+6);
-				normalize_vector(&view.light);
-				list += 8;
+				set_light_direction(m_view, readf(list_offset + 2), readf(list_offset + 4), readf(list_offset + 6));
+				list_offset += 8;
 				break;
-			case 0xb: {
+			case 0xb:
+			{
+				float mat[12];
 				int i;
-				logerror("VIDEO:   matrix (%f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f)\n",
-						 readf(list+2), readf(list+4), readf(list+6),
-						 readf(list+8), readf(list+10), readf(list+12),
-						 readf(list+14), readf(list+16), readf(list+18),
-						 readf(list+20), readf(list+22), readf(list+24));
-				for(i=0; i<12; i++)
-					trans_mat[i] = readf(list+2+2*i);
-				list += 26;
+				for (i = 0; i < 12; i++)
+					mat[i] = readf(list_offset + 2 + 2 * i);
+				set_translation_matrix(m_view, mat);
+				list_offset += 26;
 				break;
 			}
 			case 0xc:
-				logerror("VIDEO:   trans (%f, %f)\n", readf(list+2), readf(list+4));
-				view.transx = readf(list+2);
-				view.transy = readf(list+4);
-
-				recompute_frustrum();
-
-				list += 6;
+				set_view_translation(m_view, readf(list_offset + 2), readf(list_offset + 4));
+				list_offset += 6;
 				break;
 			case 0xf:
-			case -1:
 				goto end;
 			default:
-				logerror("VIDEO:   unknown type %d\n", type);
 				goto end;
 			}
 		}
@@ -1330,205 +1640,332 @@ static void tgp_render(struct mame_bitmap *bitmap, const struct rectangle *clipr
 
 static void tgp_scan(void)
 {
-#if 0
-	if (code_pressed_memory(KEYCODE_F))
-        {
-			FILE *fp;
-			fp=fopen("tgp-ram.bin", "w+b");
-			if (fp)
-                {
-					fwrite(tgp_ram, (0x100000-0x40000)*2, 1, fp);
-					fclose(fp);
-                }
-			exit(0);
-        }
-#endif
-	if(!render_done && (listctl[1] & 0x1f) == 0x1f) {
-		UINT16 *list = get_list();
+	if (!m_render_done && (m_listctl[1] & 0x1f) == 0x1f)
+	{
+		int list_offset = 0;
+
+		set_current_render_list();
 		/* Skip everything but the data uploads */
-		logerror("VIDEO: scan list %d\n", get_list_number());
-		for(;;) {
-			int type = (list[1]<<16)|list[0];
-			switch(type) {
-			case 0:
-				list += 2;
-				break;
-			case 1:
-				list += 8;
-				break;
-			case 2:
-				list = skip_direct(list+2);
-				break;
-			case 3:
-				list += 16;
-				break;
-			case 4: {
-				int adr = readi(list+2);
-				int len = readi(list+4)+1;
-				int i;
-				logerror("ZVIDEO:   scan color write, adr=%x, len=%x\n", adr, len);
-				for(i=0; i<len; i++)
-					tgp_ram[adr-0x40000+i] = list[6+2*i];
-				list += 6+len*2;
-				break;
-			}
-			case 5:
+
+		for (;;)
+		{
+			int type = readi(list_offset + 0);
+			switch (type)
+			{
+				case 0:
+					list_offset += 2;
+					break;
+				case 1:
+				case 0x41:
+					list_offset += 8;
+					break;
+				case 2:
+					list_offset = skip_direct(list_offset);
+					break;
+				case 3:
+					list_offset += 16;
+					break;
+				case 4:
 				{
-					int adr = readi(list+2);
-					int len = readi(list+4);
+					int adr = readi(list_offset + 2);
+					int len = readi(list_offset + 4) + 1;
 					int i;
-					for(i=0;i<len;++i)
-					{
-						poly_ram[adr-0x800000+i]=readi(list+2*i+6);
-					}
-					list+=6+len*2;
+					for (i = 0; i < len; i++)
+						m_tgp_ram[adr - 0x40000 + i] = readi16(list_offset + 6 + 2 * i);
+					list_offset += 6 + len * 2;
+					break;
 				}
-				break;
-			case 6: {
-				int adr = readi(list+2);
-				int len = readi(list+4);
-				int i;
-				/*logerror("VIDEO:   upload data, adr=%x, len=%x\n", adr, len); */
-				for(i=0;i<len;++i)
+				case 5:
 				{
-					int v=readi(list+6+i*2);
-					lightparams[i+adr].d=((float) (v&0xff))/255.0;
-					lightparams[i+adr].a=((float) ((v>>8)&0xff))/255.0;
-					lightparams[i+adr].s=((float) ((v>>16)&0xff))/255.0;
-					lightparams[i+adr].p=(v>>24)&0xff;
-					/*logerror("         %02X\n",v); */
+					int adr = readi(list_offset + 2);
+					int len = readi(list_offset + 4);
+					int i;
+					for (i = 0; i < len; i++)
+						m_poly_ram[adr - 0x800000 + i] = readi(list_offset + 2 * i + 6);
+					list_offset += 6 + len * 2;
+					break;
 				}
-				list += 6+len*2;
-				break;
-			}
-			case 7:
-				list += 4;
-				break;
-			case 8:
-				list += 4;
-				break;
-			case 9:
-				list += 6;
-				break;
-			case 0xa:
-				list += 8;
-				break;
-			case 0xb:
-				list += 26;
-				break;
-			case 0xc:
-				list += 6;
-				break;
-			case 0xf:
-			case -1:
-				goto end;
-			default:
-				logerror("VIDEO:   unknown type %d\n", type);
-				goto end;
+				case 6:
+				{
+					int adr = readi(list_offset + 2);
+					int len = readi(list_offset + 4);
+					int i;
+					for (i = 0; i < len; i++)
+					{
+						int v = readi(list_offset + 6 + i * 2);
+						m_view->lightparams[i + adr].d = ((float)(v & 0xff)) / 255.0f;
+						m_view->lightparams[i + adr].a = ((float)((v >> 8) & 0xff)) / 255.0f;
+						m_view->lightparams[i + adr].s = ((float)((v >> 16) & 0xff)) / 255.0f;
+						m_view->lightparams[i + adr].p = (v >> 24) & 0xff;
+					}
+					list_offset += 6 + len * 2;
+					break;
+				}
+				case 7:
+					list_offset += 4;
+					break;
+				case 8:
+					list_offset += 4;
+					break;
+				case 9:
+					list_offset += 6;
+					break;
+				case 0xa:
+					list_offset += 8;
+					break;
+				case 0xb:
+					list_offset += 26;
+					break;
+				case 0xc:
+					list_offset += 6;
+					break;
+				case 0xf:
+				case -1:
+					goto end;
+				default:
+					goto end;
 			}
 		}
 	end:
 		;
 	}
-	render_done = 0;
+	m_render_done = 0;
 }
 
-VIDEO_START(model1)
+
+/*************************************
+ *  HUD overlay stencil
+ *************************************/
+
+/* Snapshot the HUD after the cat1 tilemaps are composited: a pixel is a bright
+   "feature" (grid lines, struts) when any channel rises above near-black,
+   otherwise it is transparent/screen background where the above-HUD blips show. */
+static void build_overlay_mask(struct mame_bitmap *bitmap, const struct rectangle *cliprect)
 {
-	vxx=vyy=vzz=0;
-	ayy = 0;
+	/* anything darker than 8 (of 255) counts as HUD background: in 5-bit
+	   channels (expanded as c << 3 | c >> 2) that is a value above 1 */
+	const UINT32 level = (m_pen_max == 0xff) ? 8 : 1;
+	const UINT32 mx = m_pen_max;
+	const int s0 = m_pen_shift[0], s1 = m_pen_shift[1], s2 = m_pen_shift[2];
+	int x, y;
+	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
+	{
+		for (x = cliprect->min_x; x <= cliprect->max_x; x++)
+		{
+			UINT32 pix = get_pixel(bitmap, x, y);
+			int i = y * m_overlay_stride + x;
+			m_overlay_block[i] = ((pix >> s0) & mx) > level || ((pix >> s1) & mx) > level || ((pix >> s2) & mx) > level;
+			m_overlay_hud_snapshot[i] = pix;
+		}
+	}
+}
 
-	if(sys24_tile_vh_start(0x3fff))
+/* Restore the bright HUD features over the above-HUD blip pass, so blips only
+   remain where the HUD pixel was transparent / near-black. */
+static void apply_overlay_stencil(struct mame_bitmap *bitmap, const struct rectangle *cliprect)
+{
+	int x, y;
+	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
+	{
+		for (x = cliprect->min_x; x <= cliprect->max_x; x++)
+		{
+			int i = y * m_overlay_stride + x;
+			if (m_overlay_block[i])
+				set_pixel(bitmap, x, y, m_overlay_hud_snapshot[i]);
+		}
+	}
+}
+
+
+/*************************************
+ *  Video start / update / vblank
+ *************************************/
+
+/* The view (viewport, zoom, light, light parameters) is set by display
+   list commands that some games send only when a scene starts: save it */
+static INT32 m_save_view_i[8];
+static float m_save_view_f[14 + 12 + 3];
+static float m_save_lp_f[256 * 3];
+static INT32 m_save_lp_p[256];
+
+static void view_presave(void)
+{
+	struct m1_view *v = m_view;
+	float *f = m_save_view_f;
+	int i;
+
+	m_save_view_i[0] = v->xc;
+	m_save_view_i[1] = v->yc;
+	m_save_view_i[2] = v->x1;
+	m_save_view_i[3] = v->y1;
+	m_save_view_i[4] = v->x2;
+	m_save_view_i[5] = v->y2;
+	m_save_view_i[6] = v->spec_enable;
+	m_save_view_i[7] = 0;
+	*f++ = v->zoomx; *f++ = v->zoomy; *f++ = v->viewx; *f++ = v->viewy;
+	*f++ = v->a_bottom; *f++ = v->a_top; *f++ = v->a_left; *f++ = v->a_right;
+	*f++ = v->vxx; *f++ = v->vyy; *f++ = v->vzz;
+	*f++ = v->ayy; *f++ = v->ayyc; *f++ = v->ayys;
+	for (i = 0; i < 12; i++)
+		*f++ = v->translation[i];
+	*f++ = v->light.x; *f++ = v->light.y; *f++ = v->light.z;
+	for (i = 0; i < 256; i++)
+	{
+		m_save_lp_f[i * 3 + 0] = v->lightparams[i].a;
+		m_save_lp_f[i * 3 + 1] = v->lightparams[i].d;
+		m_save_lp_f[i * 3 + 2] = v->lightparams[i].s;
+		m_save_lp_p[i] = v->lightparams[i].p;
+	}
+}
+
+static void view_postload(void)
+{
+	struct m1_view *v = m_view;
+	const float *f = m_save_view_f;
+	int i;
+
+	v->xc = m_save_view_i[0];
+	v->yc = m_save_view_i[1];
+	v->x1 = m_save_view_i[2];
+	v->y1 = m_save_view_i[3];
+	v->x2 = m_save_view_i[4];
+	v->y2 = m_save_view_i[5];
+	v->spec_enable = m_save_view_i[6];
+	v->zoomx = *f++; v->zoomy = *f++; v->viewx = *f++; v->viewy = *f++;
+	v->a_bottom = *f++; v->a_top = *f++; v->a_left = *f++; v->a_right = *f++;
+	v->vxx = *f++; v->vyy = *f++; v->vzz = *f++;
+	v->ayy = *f++; v->ayyc = *f++; v->ayys = *f++;
+	for (i = 0; i < 12; i++)
+		v->translation[i] = *f++;
+	v->light.x = *f++; v->light.y = *f++; v->light.z = *f++;
+	for (i = 0; i < 256; i++)
+	{
+		v->lightparams[i].a = m_save_lp_f[i * 3 + 0];
+		v->lightparams[i].d = m_save_lp_f[i * 3 + 1];
+		v->lightparams[i].s = m_save_lp_f[i * 3 + 2];
+		v->lightparams[i].p = m_save_lp_p[i];
+	}
+	m_display_list_current = m_listctl[0] & 0x40 ? model1_display_list1 : model1_display_list0;
+}
+
+VIDEO_START( model1 )
+{
+	int overlay_pixels;
+
+	memset(&m1view, 0, sizeof(m1view));
+	m_view = &m1view;
+
+	if (sys24_tile_vh_start(0x3fff))
 		return 1;
 
-	poly_rom = (UINT32 *)memory_region(REGION_USER1);
-	poly_ram = auto_malloc(0x400000*4);
-	tgp_ram = auto_malloc((0x100000-0x40000)*2);
-	pointdb = auto_malloc(1000000*2*sizeof(struct point));
-	quaddb  = auto_malloc(1000000*sizeof(struct quad));
-	quadind = auto_malloc(1000000*sizeof(struct quad *));
+	m_poly_rom = (UINT32 *)memory_region(REGION_USER1);
+	m_poly_ram = auto_malloc(0x400000 * sizeof(UINT32));
+	m_tgp_ram = auto_malloc((0x100000 - 0x40000) * sizeof(UINT16));
+	m_pointdb = auto_malloc(1000000 * 2 * sizeof(struct m1_point));
+	m_quaddb  = auto_malloc(1000000 * sizeof(struct m1_quad));
+	m_quadind = auto_malloc(1000000 * sizeof(struct m1_quad *));
+	m_overlay_stride = Machine->drv->screen_width;
+	overlay_pixels = m_overlay_stride * Machine->drv->screen_height;
+	m_overlay_block = auto_malloc(overlay_pixels);
+	m_overlay_hud_snapshot = auto_malloc(overlay_pixels * sizeof(UINT32));
 
-	if(!tgp_ram || !pointdb || !quaddb || !quadind)
+	if (!m_poly_ram || !m_tgp_ram || !m_pointdb || !m_quaddb || !m_quadind || !m_overlay_block || !m_overlay_hud_snapshot)
 		return 1;
 
-	pointpt = pointdb;
-	quadpt = quaddb;
-	listctl[0] = listctl[1] = 0;
+	memset(m_poly_ram, 0, 0x400000 * sizeof(UINT32));
+	memset(m_tgp_ram, 0, (0x100000 - 0x40000) * sizeof(UINT16));
+	memset(m_quadind, 0, 1000000 * sizeof(struct m1_quad *));
 
-	state_save_register_UINT16("video", 0, "colors",  tgp_ram, 0x100000-0x40000);
-	state_save_register_UINT32("video", 0, "polys",  poly_ram, 0x40000);
-	state_save_register_UINT16("video", 0, "listctl", listctl, 2);
+	m_pointpt = m_pointdb;
+	m_quadpt = m_quaddb;
+	m_listctl[0] = m_listctl[1] = 0;
+	m_render_done = 0;
+	m_vblank_frame = -1;
+	m_display_list_current = model1_display_list0;
+
+	m_clipfn[0].isclipped = fclip_isc_bottom;
+	m_clipfn[0].clip = fclip_clip_bottom;
+	m_clipfn[1].isclipped = fclip_isc_top;
+	m_clipfn[1].clip = fclip_clip_top;
+	m_clipfn[2].isclipped = fclip_isc_left;
+	m_clipfn[2].clip = fclip_clip_left;
+	m_clipfn[3].isclipped = fclip_isc_right;
+	m_clipfn[3].clip = fclip_clip_right;
+
+	state_save_register_UINT16("model1_video", 0, "tgp_ram", m_tgp_ram, 0x100000 - 0x40000);
+	state_save_register_UINT32("model1_video", 0, "poly_ram", m_poly_ram, 0x40000);
+	state_save_register_UINT16("model1_video", 0, "listctl", m_listctl, 2);
+	state_save_register_INT32("model1_video", 0, "view_i", m_save_view_i, 8);
+	state_save_register_float("model1_video", 0, "view_f", m_save_view_f, 14 + 12 + 3);
+	state_save_register_float("model1_video", 0, "light_f", m_save_lp_f, 256 * 3);
+	state_save_register_INT32("model1_video", 0, "light_p", m_save_lp_p, 256);
+	state_save_register_func_presave(view_presave);
+	state_save_register_func_postload(view_postload);
+
 	return 0;
 }
 
-VIDEO_UPDATE(model1)
+VIDEO_UPDATE( model1 )
 {
+	struct m1_view *view = m_view;
+
 	sys24_tile_update();
-#if 0
-	{
-		int mod = 0;
-		double delta;
-		delta = 1;
+	pen_layout();
 
-		if(code_pressed(KEYCODE_F)) {
-			mod = 1;
-			vxx -= delta;
-		}
-		if(code_pressed(KEYCODE_G)) {
-			mod = 1;
-			vxx += delta;
-		}
-		if(code_pressed(KEYCODE_H)) {
-			mod = 1;
-			vyy -= delta;
-		}
-		if(code_pressed(KEYCODE_J)) {
-			mod = 1;
-			vyy += delta;
-		}
-		if(code_pressed(KEYCODE_K)) {
-			mod = 1;
-			vzz -= delta;
-		}
-		if(code_pressed(KEYCODE_L)) {
-			mod = 1;
-			vzz += delta;
-		}
-		if(code_pressed(KEYCODE_U)) {
-			mod = 1;
-			ayy -= 0.05;
-		}
-		if(code_pressed(KEYCODE_I)) {
-			mod = 1;
-			ayy += 0.05;
-		}
-		if(mod)
-			usrintf_showmessage("%g,%g,%g:%g", vxx, vyy, vzz, ayy);
-	}
-#endif
+	view->ayyc = (float)cos((double)view->ayy);
+	view->ayys = (float)sin((double)view->ayy);
 
-	ayyc = cos(ayy);
-	ayys = sin(ayy);
+	fillbitmap(priority_bitmap, 0, NULL);
+	fillbitmap(bitmap, Machine->pens[0], cliprect);
 
-	fillbitmap(priority_bitmap, 0, 0);
-	fillbitmap(bitmap, Machine->pens[0], &Machine->visible_area);
-
-	sys24_tile_draw(bitmap, cliprect, 7, 0, 0);
-	sys24_tile_draw(bitmap, cliprect, 6, 0, 0);
-	sys24_tile_draw(bitmap, cliprect, 5, 0, 0);
-	sys24_tile_draw(bitmap, cliprect, 4, 0, 0);
-
-	tgp_render(bitmap, cliprect);
-
-	sys24_tile_draw(bitmap, cliprect, 3, 0, 0);
+	/* draw tilemap B as opaque */
+	sys24_tile_draw(bitmap, cliprect, 6, 0, TILEMAP_IGNORE_TRANSPARENCY);
+	sys24_tile_draw(bitmap, cliprect, 4, 0, TILEMAP_IGNORE_TRANSPARENCY);
 	sys24_tile_draw(bitmap, cliprect, 2, 0, 0);
-	sys24_tile_draw(bitmap, cliprect, 1, 0, 0);
 	sys24_tile_draw(bitmap, cliprect, 0, 0, 0);
+
+	/* 3D objects (0x01) and direct polys (0x02) render below the HUD tilemaps,
+	   sharing the per-viewport z-sort. */
+	m_above_hud = 0;
+	tgp_render(bitmap, cliprect, RENDER_BELOW_HUD);
+
+	/* HUD tilemaps (cat1): cockpit struts, grid lines, radar screen background. */
+	sys24_tile_draw(bitmap, cliprect, 7, 0, 0);
+	sys24_tile_draw(bitmap, cliprect, 5, 0, 0);
+	sys24_tile_draw(bitmap, cliprect, 3, 0, 0);
+	sys24_tile_draw(bitmap, cliprect, 1, 0, 0);
+
+	/* 0x41 objects (e.g. radar blips) draw on top of the HUD, but the hardware
+	   only lets them through "background" HUD pixels. Snapshot the HUD, draw the
+	   above-HUD pass, then restore the bright HUD features over it. */
+	if (m_above_hud)
+	{
+		build_overlay_mask(bitmap, cliprect);
+		tgp_render(bitmap, cliprect, RENDER_ABOVE_HUD);
+		apply_overlay_stencil(bitmap, cliprect);
+	}
 }
 
-VIDEO_EOF(model1)
+/*
+  Current MAME runs screen_vblank_model1 (tgp_scan + end_frame) on the rising
+  edge of vblank, i.e. BEFORE the VIDEO_UPDATE_AFTER_VBLANK screen update of
+  the same frame number.  The driver should call this from its vblank
+  interrupt (which this core runs at vblank start); VIDEO_EOF only falls back
+  to it for frames where that did not happen (e.g. V60 halted).
+*/
+void model1_video_vblank_start(void)
 {
+	m_vblank_frame = cpu_getcurrentframe();
 	tgp_scan();
 	end_frame();
-	logerror("TGP: vsync\n");
+}
+
+VIDEO_EOF( model1 )
+{
+	if (m_vblank_frame != cpu_getcurrentframe())
+	{
+		m_vblank_frame = cpu_getcurrentframe();
+		tgp_scan();
+		end_frame();
+	}
 }
