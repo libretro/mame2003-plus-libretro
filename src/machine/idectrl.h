@@ -12,6 +12,9 @@
 struct ide_interface
 {
 	void 	(*interrupt)(int state);
+	/* optional: a bus master DMA run of 'count' bytes to 'address' of the DMA CPU; */
+	/* returns 1 when the driver stored it itself, 0 to go through the memory system */
+	int		(*dma_write)(offs_t address, const UINT8 *data, UINT32 count);
 };
 
 int ide_controller_init(int which, struct ide_interface *intf);

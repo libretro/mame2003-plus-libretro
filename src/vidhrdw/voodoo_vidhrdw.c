@@ -88,7 +88,6 @@ static UINT32 *cmdfifo;
 static UINT32 cmdfifo_expected;
 
 static UINT16 *pen_lookup;
-static UINT8 *dither_lookup;
 static float *depth_lookup;
 static UINT8 *lod_lookup;
 
@@ -203,21 +202,45 @@ static UINT32 renderer_list[RENDERER_LIST_MAX][10];
 static int renderer_listcount;
 #endif
 
+/* an iterated colour/alpha (16.16) as the colour path sees it: Voodoo 1's */
+/* pseudo-clamp of the 12-bit integer part (0xfff -> 0, 0x100 -> 0xff), as current MAME */
+#define ITER8(v)	((((v) >> 16) & 0xfff) == 0xfff ? 0 : (((v) >> 16) & 0xfff) == 0x100 ? 0xff : (((v) >> 16) & 0xff))
+
+/* dither matrices and equations: hardware-verified ones from current MAME */
 static const UINT8 dither_matrix_4x4[16] =
 {
-	 0,12, 3,14,
-	 8, 4,11, 7,
-	 2,15, 1,13,
-	10, 6, 9, 5
+	 0,  8,  2, 10,
+	12,  4, 14,  6,
+	 3, 11,  1,  9,
+	15,  7, 13,  5
 };
 
 static const UINT8 dither_matrix_2x2[16] =
 {
-	 0, 8, 0, 8,
-	12, 4,12, 4,
-	 0, 8, 0, 8,
-	12, 4,12, 4
+	 8, 10,  8, 10,
+	11,  9, 11,  9,
+	 8, 10,  8, 10,
+	11,  9, 11,  9
 };
+
+/* [matrix: 0 4x4, 1 2x2][(y & 3) * 4 + (x & 3)][8-bit value]: 5-bit red/blue, 6-bit green */
+static UINT8 dither_rb[2][16][256];
+static UINT8 dither_g[2][16][256];
+
+static void init_dither_tables(void)
+{
+	int m, i, v;
+	for (m = 0; m < 2; m++)
+		for (i = 0; i < 16; i++)
+		{
+			int d = m ? dither_matrix_2x2[i] : dither_matrix_4x4[i];
+			for (v = 0; v < 256; v++)
+			{
+				dither_rb[m][i][v] = ((v << 1) - (v >> 4) + (v >> 7) + d) >> 4;
+				dither_g[m][i][v] = ((v << 2) - (v >> 4) + (v >> 6) + d) >> 4;
+			}
+		}
+}
 
 static const UINT8 lod_dither_matrix[16] =
 {
@@ -252,6 +275,22 @@ static const UINT8 lod_width_shift[8][16] =
 
 
 static void generic_render_1tmu(void);
+struct mode_blitter
+{
+	UINT32 fbzcolorpath, alphamode, fbzmode, texturemode0;
+	void (*render)(void);
+};
+static const struct mode_blitter carnevil_blitters[10];
+static const struct mode_blitter sfrush_blitters[8];
+
+static void render2_0c600c09_00045119_000b4779_00000000(void);
+static void render2_0c600c09_00045119_000b4779_0824101f(void);
+static void render2_0c600c09_00045119_000b4779_0824181f(void);
+static void render2_0c600c09_00045119_000b4779_082418df(void);
+static void render2_0c482435_00045119_000b4379_0824101f(void);
+static void render2_0c480035_00045119_000b4779_082410df(void);
+static void render2_0c480035_00045119_000b477b_00000000(void);
+static void render2_0c600c09_00045119_000b4779_082708df(void);
 static void generic_render_2tmu(void);
 
 static void render_0c000035_00045119_000b4779_0824101f(void);
@@ -564,22 +603,15 @@ static const char *voodoo_reg_name[] =
  *
  *************************************/
 
+/* the 16 dithered 5-6-5 values of a colour (fastfill), as current MAME */
 static INLINE void dither_to_matrix(UINT32 color, UINT16 *matrix)
 {
-	UINT32 rawr = (((color >> 16) & 0xff) * 0xf8*2) / 0xff;
-	UINT32 rawg = (((color >> 8) & 0xff) * 0xfc*2) / 0xff;
-	UINT32 rawb = ((color & 0xff) * 0xf8*2) / 0xff;
+	int r = (color >> 16) & 0xff, g = (color >> 8) & 0xff, b = color & 0xff;
+	int m = (fbz_dither_matrix == dither_matrix_2x2);
 	int i;
-	
+
 	for (i = 0; i < 16; i++)
-	{
-		UINT32 dither = fbz_dither_matrix[i];
-		UINT32 newr = rawr + dither;
-		UINT32 newg = rawg + dither/2;
-		UINT32 newb = rawb + dither;
-		
-		matrix[i] = ((newr >> 4) << 11) | ((newg >> 3) << 5) | (newb >> 4);
-	}
+		matrix[i] = (dither_rb[m][i][r] << 11) | (dither_g[m][i][g] << 5) | dither_rb[m][i][b];
 }
 
 
@@ -679,6 +711,20 @@ usrintf_showmessage("Swaps = %d", swaps);
 }
 
 
+static void (*vblank_client)(int state);
+static void *vblank_end_timer;
+
+void voodoo_set_vblank_callback(void (*callback)(int state))
+{
+	vblank_client = callback;
+}
+
+static void vblank_end_callback(int param)
+{
+	if (vblank_client)
+		(*vblank_client)(0);
+}
+
 static void vblank_callback(int scanline)
 {
 	vblank_count++;
@@ -694,6 +740,13 @@ static void vblank_callback(int scanline)
 
 		if (blocked_on_swap)
 			blocked_on_swap = 0;
+	}
+
+	/* tell the driver (it raises its VBLANK interrupt), and when VBLANK ends */
+	if (vblank_client)
+	{
+		(*vblank_client)(1);
+		timer_adjust(vblank_end_timer, cpu_getscanlinetime(0), 0, 0);
 	}
 
 	/* reset for next time */
@@ -716,10 +769,9 @@ int voodoo_start_common(void)
 	
 	/* allocate memory for the pen, dither, and depth lookups */
 	pen_lookup = auto_malloc(sizeof(pen_lookup[0]) * 65536);
-	dither_lookup = auto_malloc(sizeof(dither_lookup[0]) * 16*256);
 	depth_lookup = auto_malloc(sizeof(depth_lookup[0]) * 65536);
 	lod_lookup = auto_malloc(sizeof(lod_lookup[0]) * 65536);
-	if (!pen_lookup || !dither_lookup || !depth_lookup)
+	if (!pen_lookup || !depth_lookup)
 		return 1;
 	
 	/* allocate memory for the frame a depth buffers */
@@ -755,12 +807,7 @@ int voodoo_start_common(void)
 		}
 	
 	/* initialize dithering tables */
-	for (i = 0; i < 16; i++)
-		for (j = 0; j < 256; j++)
-		{
-			UINT32 newval = (j * 0xf8*2) / 0xff + i;
-			dither_lookup[i * 256 + j] = newval / 2;
-		}
+	init_dither_tables();
 	
 	/* initialize depth tables */
 	for (i = 0; i < 65536; i++)
@@ -790,6 +837,8 @@ int voodoo_start_common(void)
 	
 	/* allocate a vblank timer */
 	vblank_timer = timer_alloc(vblank_callback);
+	vblank_end_timer = timer_alloc(vblank_end_callback);
+	vblank_client = NULL;
 	
 	voodoo_reset();
 	return 0;
@@ -843,7 +892,7 @@ void voodoo_reset(void)
 	/* fbzMode variables */
 	fbz_cliprect = &fbz_noclip;
 	fbz_noclip.min_x = fbz_noclip.min_y = 0;
-	fbz_noclip.max_x = fbz_noclip.max_y = (1024 << 4) - 1;
+	fbz_noclip.max_x = fbz_noclip.max_y = 1024;
 	fbz_clip = fbz_noclip;
 	fbz_chroma_key = 0;
 	fbz_stipple_mask = 0;
@@ -1053,7 +1102,8 @@ static void fastfill(void)
 			/* if not dithered, it's easy */
 			if (!fbz_dithering)
 			{
-				UINT16 color = dither[0];
+				UINT32 c1 = voodoo_regs[color1];
+				UINT16 color = ((c1 >> 8) & 0xf800) | ((c1 >> 5) & 0x07e0) | ((c1 >> 3) & 0x001f);
 				for (x = sx; x < ex; x++)
 					*dest++ = color;
 			}
@@ -1077,7 +1127,8 @@ static void fastfill(void)
 		/* loop over y */
 		for (y = sy; y < ey; y++)
 		{
-			UINT16 *dest = &depthbuf[y * FRAMEBUF_WIDTH + sx];
+			/* the same rows as the colour clear (Y origin), as current MAME */
+			UINT16 *dest = &depthbuf[(fbz_invert_y ? (inverted_yorigin - y) : y) * FRAMEBUF_WIDTH + sx];
 			for (x = sx; x < ex; x++)
 				*dest++ = color;
 		}
@@ -1267,9 +1318,35 @@ static void draw_triangle(void)
 		}
 	}
 	if (tmus == 1)
+	{
+		/* CarnEvil's common modes (the same blitter with the modes as constants) */
+		UINT32 fbz = voodoo_regs[fbzColorPath] & FBZCOLORPATH_MASK, alpha = voodoo_regs[alphaMode] & ALPHAMODE_MASK;
+		UINT32 fmode = voodoo_regs[fbzMode] & FBZMODE_MASK, tex0 = voodoo_regs[0x100 + textureMode] & TEXTUREMODE0_MASK;
+		int i;
+		for (i = 0; i < (int)(sizeof(carnevil_blitters) / sizeof(carnevil_blitters[0])); i++)
+			if (carnevil_blitters[i].fbzcolorpath == fbz && carnevil_blitters[i].alphamode == alpha &&
+				carnevil_blitters[i].fbzmode == fmode && carnevil_blitters[i].texturemode0 == tex0)
+			{
+				(*carnevil_blitters[i].render)();
+				goto done;
+			}
 		generic_render_1tmu();
+	}
 	else
+	{
+		/* SF Rush's common modes, with two TMUs */
+		UINT32 fbz = voodoo_regs[fbzColorPath] & FBZCOLORPATH_MASK, alpha = voodoo_regs[alphaMode] & ALPHAMODE_MASK;
+		UINT32 fmode = voodoo_regs[fbzMode] & FBZMODE_MASK, tex0 = voodoo_regs[0x100 + textureMode] & TEXTUREMODE0_MASK;
+		int i;
+		for (i = 0; i < (int)(sizeof(sfrush_blitters) / sizeof(sfrush_blitters[0])); i++)
+			if (sfrush_blitters[i].fbzcolorpath == fbz && sfrush_blitters[i].alphamode == alpha &&
+				sfrush_blitters[i].fbzmode == fmode && sfrush_blitters[i].texturemode0 == tex0)
+			{
+				(*sfrush_blitters[i].render)();
+				goto done;
+			}
 		generic_render_2tmu();
+	}
 
 done:
 	RESTORE_FPU();
@@ -2170,13 +2247,14 @@ WRITE32_HANDLER( voodoo_regs_w )
 			break;
 
 		case clipLeftRight:
-			fbz_clip.min_x = ((data >> 16) & 0x3ff) << 4;
-			fbz_clip.max_x = ((data & 0x3ff) << 4);
+			/* in pixels; right and bottom are exclusive (as current MAME) */
+			fbz_clip.min_x = (data >> 16) & 0x3ff;
+			fbz_clip.max_x = data & 0x3ff;
 			break;
 
 		case clipLowYHighY:
-			fbz_clip.min_y = ((data >> 16) & 0x3ff) << 4;
-			fbz_clip.max_y = ((data & 0x3ff) << 4);
+			fbz_clip.min_y = (data >> 16) & 0x3ff;
+			fbz_clip.max_y = data & 0x3ff;
 			break;
 	
 		case nopCMD:
@@ -2703,7 +2781,9 @@ READ32_HANDLER( voodoo_regs_r )
 			break;
 		
 		case vRetrace:
-			result = cpu_getscanline();
+			/* 0 during VBLANK; a couple of cycles (sfrush and mace boot loops, as current MAME) */
+			activecpu_eat_cycles(2);
+			result = cpu_getvblank() ? 0 : cpu_getscanline();
 /*			if (LOG_REGISTERS)*/
 /*				log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:voodoo vRetrace read = %08X\n", activecpu_get_pc(), result);*/
 			break;
@@ -2730,6 +2810,9 @@ READ32_HANDLER( voodoo_regs_r )
  *
  *************************************/
 
+/* x-5-5-5 to 5-6-5: green expanded to 6 bits (its top bit repeated), as current MAME */
+#define RGB555_TO_565(v)	((((v) << 1) & 0xffc0) | (((v) >> 4) & 0x0020) | ((v) & 0x001f))
+
 static void lfbwrite_0(offs_t offset, data32_t data, data32_t mem_mask)
 {
 	UINT16 *buffer = *lfb_write_buffer;
@@ -2752,9 +2835,9 @@ static void lfbwrite_1(offs_t offset, data32_t data, data32_t mem_mask)
 	if (lfb_flipy)
 		y = inverted_yorigin - y;
 	if (ACCESSING_LSW32)
-		buffer[y * FRAMEBUF_WIDTH + x] = ((data << 1) & 0xffe0) | (data & 0x001f);
+		buffer[y * FRAMEBUF_WIDTH + x] = RGB555_TO_565(data);
 	if (ACCESSING_MSW32)
-		buffer[y * FRAMEBUF_WIDTH + x + 1] = ((data >> 15) & 0xffe0) | ((data >> 16) & 0x001f);
+		buffer[y * FRAMEBUF_WIDTH + x + 1] = RGB555_TO_565(data >> 16);
 /*	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:LFB write mode 1 @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);*/
 }
 
@@ -2766,9 +2849,9 @@ static void lfbwrite_2(offs_t offset, data32_t data, data32_t mem_mask)
 	if (lfb_flipy)
 		y = inverted_yorigin - y;
 	if (ACCESSING_LSW32)
-		buffer[y * FRAMEBUF_WIDTH + x] = ((data << 1) & 0xffe0) | (data & 0x001f);
+		buffer[y * FRAMEBUF_WIDTH + x] = RGB555_TO_565(data);
 	if (ACCESSING_MSW32)
-		buffer[y * FRAMEBUF_WIDTH + x + 1] = ((data >> 15) & 0xffe0) | ((data >> 16) & 0x001f);
+		buffer[y * FRAMEBUF_WIDTH + x + 1] = RGB555_TO_565(data >> 16);
 /*	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:LFB write mode 2 @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);*/
 }
 
@@ -2851,7 +2934,7 @@ static void lfbwrite_d(offs_t offset, data32_t data, data32_t mem_mask)
 	if (lfb_flipy)
 		y = inverted_yorigin - y;
 	if (ACCESSING_LSW32)
-		buffer[y * FRAMEBUF_WIDTH + x] = ((data << 1) & 0xffc0) | (data & 0x001f);
+		buffer[y * FRAMEBUF_WIDTH + x] = RGB555_TO_565(data);
 	if (ACCESSING_MSW32)
 		depthbuf[y * FRAMEBUF_WIDTH + x] = data >> 16;
 /*	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:LFB write mode d @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);*/
@@ -2865,7 +2948,7 @@ static void lfbwrite_e(offs_t offset, data32_t data, data32_t mem_mask)
 	if (lfb_flipy)
 		y = inverted_yorigin - y;
 	if (ACCESSING_LSW32)
-		buffer[y * FRAMEBUF_WIDTH + x] = ((data << 1) & 0xffc0) | (data & 0x001f);
+		buffer[y * FRAMEBUF_WIDTH + x] = RGB555_TO_565(data);
 	if (ACCESSING_MSW32)
 		depthbuf[y * FRAMEBUF_WIDTH + x] = data >> 16;
 /*	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:LFB write mode e @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);*/
@@ -2878,9 +2961,9 @@ static void lfbwrite_f(offs_t offset, data32_t data, data32_t mem_mask)
 	if (lfb_flipy)
 		y = inverted_yorigin - y;
 	if (ACCESSING_LSW32)
-		depthbuf[y * FRAMEBUF_WIDTH + x] = ((data << 1) & 0xffe0) | (data & 0x001f);
+		depthbuf[y * FRAMEBUF_WIDTH + x] = data;		/* raw 16-bit depth, as current MAME */
 	if (ACCESSING_MSW32)
-		depthbuf[y * FRAMEBUF_WIDTH + x + 1] = ((data >> 15) & 0xffe0) | ((data >> 16) & 0x001f);
+		depthbuf[y * FRAMEBUF_WIDTH + x + 1] = data >> 16;
 /*	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:LFB write mode f @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);*/
 }
 
@@ -3155,20 +3238,22 @@ static void init_texel_8(int which)
 }
 
 
-static void init_texel_9(int which)
+/* 16-bit alpha + YIQ (8-4-2-2): the 256 colours of the NCC table, then each alpha */
+static void init_texel_ayiq(int which, int table, int format)
 {
-	/* format 9: 16-bit YIQ, NCC table 0 */
-	int a, r, g, b, i;
-	for (i = 0; i < 65536; i++)
+	UINT32 color[256];
+	UINT32 *dest = texel_lookup[which][format];
+	int r, g, b, i, a;
+
+	for (i = 0; i < 256; i++)
 	{
 		int vi = (i >> 2) & 0x03;
 		int vq = (i >> 0) & 0x03;
 
-		a = i >> 8;
-		r = g = b = ncc_y[which][0][(i >> 4) & 0x0f];
-		r += ncc_ir[which][0][vi] + ncc_qr[which][0][vq];
-		g += ncc_ig[which][0][vi] + ncc_qg[which][0][vq];
-		b += ncc_ib[which][0][vi] + ncc_qb[which][0][vq];
+		r = g = b = ncc_y[which][table][(i >> 4) & 0x0f];
+		r += ncc_ir[which][table][vi] + ncc_qr[which][table][vq];
+		g += ncc_ig[which][table][vi] + ncc_qg[which][table][vq];
+		b += ncc_ib[which][table][vi] + ncc_qb[which][table][vq];
 
 		if (r < 0) r = 0;
 		else if (r > 255) r = 255;
@@ -3176,9 +3261,23 @@ static void init_texel_9(int which)
 		else if (g > 255) g = 255;
 		if (b < 0) b = 0;
 		else if (b > 255) b = 255;
-		
-		texel_lookup[which][9][i] = (a << 24) | (r << 16) | (g << 8) | b;
+
+		color[i] = (r << 16) | (g << 8) | b;
 	}
+
+	for (a = 0; a < 256; a++)
+	{
+		UINT32 alpha = (UINT32)a << 24;
+		for (i = 0; i < 256; i++)
+			*dest++ = alpha | color[i];
+	}
+}
+
+
+static void init_texel_9(int which)
+{
+	/* format 9: 16-bit YIQ, NCC table 0 */
+	init_texel_ayiq(which, 0, 9);
 }
 
 
@@ -3264,27 +3363,7 @@ static void init_texel_e(int which)
 static void init_texel_f(int which)
 {
 	/* format 9: 16-bit YIQ, NCC table 1 */
-	int a, r, g, b, i;
-	for (i = 0; i < 65536; i++)
-	{
-		int vi = (i >> 2) & 0x03;
-		int vq = (i >> 0) & 0x03;
-
-		a = i >> 8;
-		r = g = b = ncc_y[which][1][(i >> 4) & 0x0f];
-		r += ncc_ir[which][1][vi] + ncc_qr[which][1][vq];
-		g += ncc_ig[which][1][vi] + ncc_qg[which][1][vq];
-		b += ncc_ib[which][1][vi] + ncc_qb[which][1][vq];
-
-		if (r < 0) r = 0;
-		else if (r > 255) r = 255;
-		if (g < 0) g = 0;
-		else if (g > 255) g = 255;
-		if (b < 0) b = 0;
-		else if (b > 255) b = 255;
-		
-		texel_lookup[which][15][i] = (a << 24) | (r << 16) | (g << 8) | b;
-	}
+	init_texel_ayiq(which, 1, 15);
 }
 
 
@@ -3529,6 +3608,305 @@ static void (*update_texel_lookup[16])(int which) =
 #undef RENDERFUNC
 
 #undef NUM_TMUS
+
+/*
+	CarnEvil: the mode combinations that draw most of its pixels in a game
+	(about 97% of them, counted over 8000 frames from power-on to play).
+*/
+
+#define NUM_TMUS			1
+
+#define RENDERFUNC			render_0c002425_00045119_00034679_0c26180f
+#define FBZCOLORPATH		0x0c002425
+#define ALPHAMODE			0x00045119
+#define FBZMODE				0x00034679
+#define TEXTUREMODE0		0x0c26180f
+#define TEXTUREMODE1		0x00000000
+#include "voodblit.c"
+#undef TEXTUREMODE1
+#undef TEXTUREMODE0
+#undef FBZMODE
+#undef ALPHAMODE
+#undef FBZCOLORPATH
+#undef RENDERFUNC
+
+#define RENDERFUNC			render_0c002435_04045119_00034279_0c26180f
+#define FBZCOLORPATH		0x0c002435
+#define ALPHAMODE			0x04045119
+#define FBZMODE				0x00034279
+#define TEXTUREMODE0		0x0c26180f
+#define TEXTUREMODE1		0x00000000
+#include "voodblit.c"
+#undef TEXTUREMODE1
+#undef TEXTUREMODE0
+#undef FBZMODE
+#undef ALPHAMODE
+#undef FBZCOLORPATH
+#undef RENDERFUNC
+
+#define RENDERFUNC			render_0c000035_08045119_000346f9_0c2618c9
+#define FBZCOLORPATH		0x0c000035
+#define ALPHAMODE			0x08045119
+#define FBZMODE				0x000346f9
+#define TEXTUREMODE0		0x0c2618c9
+#define TEXTUREMODE1		0x00000000
+#include "voodblit.c"
+#undef TEXTUREMODE1
+#undef TEXTUREMODE0
+#undef FBZMODE
+#undef ALPHAMODE
+#undef FBZCOLORPATH
+#undef RENDERFUNC
+
+#define RENDERFUNC			render_0c002435_40045119_000b4779_0c26180f
+#define FBZCOLORPATH		0x0c002435
+#define ALPHAMODE			0x40045119
+#define FBZMODE				0x000b4779
+#define TEXTUREMODE0		0x0c26180f
+#define TEXTUREMODE1		0x00000000
+#include "voodblit.c"
+#undef TEXTUREMODE1
+#undef TEXTUREMODE0
+#undef FBZMODE
+#undef ALPHAMODE
+#undef FBZCOLORPATH
+#undef RENDERFUNC
+
+#define RENDERFUNC			render_0c482415_0a045119_000346f9_0c26180f
+#define FBZCOLORPATH		0x0c482415
+#define ALPHAMODE			0x0a045119
+#define FBZMODE				0x000346f9
+#define TEXTUREMODE0		0x0c26180f
+#define TEXTUREMODE1		0x00000000
+#include "voodblit.c"
+#undef TEXTUREMODE1
+#undef TEXTUREMODE0
+#undef FBZMODE
+#undef ALPHAMODE
+#undef FBZCOLORPATH
+#undef RENDERFUNC
+
+#define RENDERFUNC			render_0c480015_04045119_000346f9_0c2618c9
+#define FBZCOLORPATH		0x0c480015
+#define ALPHAMODE			0x04045119
+#define FBZMODE				0x000346f9
+#define TEXTUREMODE0		0x0c2618c9
+#define TEXTUREMODE1		0x00000000
+#include "voodblit.c"
+#undef TEXTUREMODE1
+#undef TEXTUREMODE0
+#undef FBZMODE
+#undef ALPHAMODE
+#undef FBZCOLORPATH
+#undef RENDERFUNC
+
+#define RENDERFUNC			render_0c480015_0f045119_000346f9_0c2618c9
+#define FBZCOLORPATH		0x0c480015
+#define ALPHAMODE			0x0f045119
+#define FBZMODE				0x000346f9
+#define TEXTUREMODE0		0x0c2618c9
+#define TEXTUREMODE1		0x00000000
+#include "voodblit.c"
+#undef TEXTUREMODE1
+#undef TEXTUREMODE0
+#undef FBZMODE
+#undef ALPHAMODE
+#undef FBZCOLORPATH
+#undef RENDERFUNC
+
+#define RENDERFUNC			render_0c482415_0f045119_000346f9_0c2618c9
+#define FBZCOLORPATH		0x0c482415
+#define ALPHAMODE			0x0f045119
+#define FBZMODE				0x000346f9
+#define TEXTUREMODE0		0x0c2618c9
+#define TEXTUREMODE1		0x00000000
+#include "voodblit.c"
+#undef TEXTUREMODE1
+#undef TEXTUREMODE0
+#undef FBZMODE
+#undef ALPHAMODE
+#undef FBZCOLORPATH
+#undef RENDERFUNC
+
+#define RENDERFUNC			render_0c002435_40045119_000342f9_0c26180f
+#define FBZCOLORPATH		0x0c002435
+#define ALPHAMODE			0x40045119
+#define FBZMODE				0x000342f9
+#define TEXTUREMODE0		0x0c26180f
+#define TEXTUREMODE1		0x00000000
+#include "voodblit.c"
+#undef TEXTUREMODE1
+#undef TEXTUREMODE0
+#undef FBZMODE
+#undef ALPHAMODE
+#undef FBZCOLORPATH
+#undef RENDERFUNC
+
+#define RENDERFUNC			render_0c002435_08045119_000346f9_0c26180f
+#define FBZCOLORPATH		0x0c002435
+#define ALPHAMODE			0x08045119
+#define FBZMODE				0x000346f9
+#define TEXTUREMODE0		0x0c26180f
+#define TEXTUREMODE1		0x00000000
+#include "voodblit.c"
+#undef TEXTUREMODE1
+#undef TEXTUREMODE0
+#undef FBZMODE
+#undef ALPHAMODE
+#undef FBZCOLORPATH
+#undef RENDERFUNC
+
+#undef NUM_TMUS
+
+static const struct mode_blitter carnevil_blitters[10] =
+{
+	{ 0x0c002425, 0x00045119, 0x00034679, 0x0c26180f, render_0c002425_00045119_00034679_0c26180f },
+	{ 0x0c002435, 0x04045119, 0x00034279, 0x0c26180f, render_0c002435_04045119_00034279_0c26180f },
+	{ 0x0c000035, 0x08045119, 0x000346f9, 0x0c2618c9, render_0c000035_08045119_000346f9_0c2618c9 },
+	{ 0x0c002435, 0x40045119, 0x000b4779, 0x0c26180f, render_0c002435_40045119_000b4779_0c26180f },
+	{ 0x0c482415, 0x0a045119, 0x000346f9, 0x0c26180f, render_0c482415_0a045119_000346f9_0c26180f },
+	{ 0x0c480015, 0x04045119, 0x000346f9, 0x0c2618c9, render_0c480015_04045119_000346f9_0c2618c9 },
+	{ 0x0c480015, 0x0f045119, 0x000346f9, 0x0c2618c9, render_0c480015_0f045119_000346f9_0c2618c9 },
+	{ 0x0c482415, 0x0f045119, 0x000346f9, 0x0c2618c9, render_0c482415_0f045119_000346f9_0c2618c9 },
+	{ 0x0c002435, 0x40045119, 0x000342f9, 0x0c26180f, render_0c002435_40045119_000342f9_0c26180f },
+	{ 0x0c002435, 0x08045119, 0x000346f9, 0x0c26180f, render_0c002435_08045119_000346f9_0c26180f },
+};
+
+
+/*
+	SF Rush: the mode combinations that draw most of its pixels in a race
+	(about 87% of them, counted over 9000 frames from power-on to the end
+	of a race, besides the Wayne Gretzky modes above); its two TMUs, the
+	second TMU's mode read at run time.
+*/
+
+#define NUM_TMUS			2
+
+#define RENDERFUNC			render2_0c600c09_00045119_000b4779_00000000
+#define FBZCOLORPATH		0x0c600c09
+#define ALPHAMODE			0x00045119
+#define FBZMODE				0x000b4779
+#define TEXTUREMODE0		0x00000000
+#define TEXTUREMODE1		0x00000000
+#include "voodblit.c"
+#undef TEXTUREMODE1
+#undef TEXTUREMODE0
+#undef FBZMODE
+#undef ALPHAMODE
+#undef FBZCOLORPATH
+#undef RENDERFUNC
+
+#define RENDERFUNC			render2_0c600c09_00045119_000b4779_0824101f
+#define FBZCOLORPATH		0x0c600c09
+#define ALPHAMODE			0x00045119
+#define FBZMODE				0x000b4779
+#define TEXTUREMODE0		0x0824101f
+#define TEXTUREMODE1		0x00000000
+#include "voodblit.c"
+#undef TEXTUREMODE1
+#undef TEXTUREMODE0
+#undef FBZMODE
+#undef ALPHAMODE
+#undef FBZCOLORPATH
+#undef RENDERFUNC
+
+#define RENDERFUNC			render2_0c600c09_00045119_000b4779_0824181f
+#define FBZCOLORPATH		0x0c600c09
+#define ALPHAMODE			0x00045119
+#define FBZMODE				0x000b4779
+#define TEXTUREMODE0		0x0824181f
+#define TEXTUREMODE1		0x00000000
+#include "voodblit.c"
+#undef TEXTUREMODE1
+#undef TEXTUREMODE0
+#undef FBZMODE
+#undef ALPHAMODE
+#undef FBZCOLORPATH
+#undef RENDERFUNC
+
+#define RENDERFUNC			render2_0c600c09_00045119_000b4779_082418df
+#define FBZCOLORPATH		0x0c600c09
+#define ALPHAMODE			0x00045119
+#define FBZMODE				0x000b4779
+#define TEXTUREMODE0		0x082418df
+#define TEXTUREMODE1		0x00000000
+#include "voodblit.c"
+#undef TEXTUREMODE1
+#undef TEXTUREMODE0
+#undef FBZMODE
+#undef ALPHAMODE
+#undef FBZCOLORPATH
+#undef RENDERFUNC
+
+#define RENDERFUNC			render2_0c482435_00045119_000b4379_0824101f
+#define FBZCOLORPATH		0x0c482435
+#define ALPHAMODE			0x00045119
+#define FBZMODE				0x000b4379
+#define TEXTUREMODE0		0x0824101f
+#define TEXTUREMODE1		0x00000000
+#include "voodblit.c"
+#undef TEXTUREMODE1
+#undef TEXTUREMODE0
+#undef FBZMODE
+#undef ALPHAMODE
+#undef FBZCOLORPATH
+#undef RENDERFUNC
+
+#define RENDERFUNC			render2_0c480035_00045119_000b4779_082410df
+#define FBZCOLORPATH		0x0c480035
+#define ALPHAMODE			0x00045119
+#define FBZMODE				0x000b4779
+#define TEXTUREMODE0		0x082410df
+#define TEXTUREMODE1		0x00000000
+#include "voodblit.c"
+#undef TEXTUREMODE1
+#undef TEXTUREMODE0
+#undef FBZMODE
+#undef ALPHAMODE
+#undef FBZCOLORPATH
+#undef RENDERFUNC
+
+#define RENDERFUNC			render2_0c480035_00045119_000b477b_00000000
+#define FBZCOLORPATH		0x0c480035
+#define ALPHAMODE			0x00045119
+#define FBZMODE				0x000b477b
+#define TEXTUREMODE0		0x00000000
+#define TEXTUREMODE1		0x00000000
+#include "voodblit.c"
+#undef TEXTUREMODE1
+#undef TEXTUREMODE0
+#undef FBZMODE
+#undef ALPHAMODE
+#undef FBZCOLORPATH
+#undef RENDERFUNC
+
+#define RENDERFUNC			render2_0c600c09_00045119_000b4779_082708df
+#define FBZCOLORPATH		0x0c600c09
+#define ALPHAMODE			0x00045119
+#define FBZMODE				0x000b4779
+#define TEXTUREMODE0		0x082708df
+#define TEXTUREMODE1		0x00000000
+#include "voodblit.c"
+#undef TEXTUREMODE1
+#undef TEXTUREMODE0
+#undef FBZMODE
+#undef ALPHAMODE
+#undef FBZCOLORPATH
+#undef RENDERFUNC
+
+#undef NUM_TMUS
+
+static const struct mode_blitter sfrush_blitters[8] =
+{
+	{ 0x0c600c09, 0x00045119, 0x000b4779, 0x00000000, render2_0c600c09_00045119_000b4779_00000000 },
+	{ 0x0c600c09, 0x00045119, 0x000b4779, 0x0824101f, render2_0c600c09_00045119_000b4779_0824101f },
+	{ 0x0c600c09, 0x00045119, 0x000b4779, 0x0824181f, render2_0c600c09_00045119_000b4779_0824181f },
+	{ 0x0c600c09, 0x00045119, 0x000b4779, 0x082418df, render2_0c600c09_00045119_000b4779_082418df },
+	{ 0x0c482435, 0x00045119, 0x000b4379, 0x0824101f, render2_0c482435_00045119_000b4379_0824101f },
+	{ 0x0c480035, 0x00045119, 0x000b4779, 0x082410df, render2_0c480035_00045119_000b4779_082410df },
+	{ 0x0c480035, 0x00045119, 0x000b477b, 0x00000000, render2_0c480035_00045119_000b477b_00000000 },
+	{ 0x0c600c09, 0x00045119, 0x000b4779, 0x082708df, render2_0c600c09_00045119_000b4779_082708df },
+};
 
 
 /*

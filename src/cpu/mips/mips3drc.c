@@ -5870,3 +5870,9 @@ int mips3_jit_available(void)
 	/* no sljit recompiler in this build: the "MIPS Dynarec" core option stays hidden */
 	return 0;
 }
+
+void mips3_ram_written(offs_t address, UINT32 bytes)
+{
+	/* no translations to drop in this build */
+	(void)address; (void)bytes;
+}

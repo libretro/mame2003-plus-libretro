@@ -19,6 +19,9 @@ void voodoo_set_init_enable(data32_t newval);
 
 void voodoo_reset(void);
 
+/* called with 1 at the start of the Voodoo's VBLANK (after the pending swap), 0 at its end */
+void voodoo_set_vblank_callback(void (*callback)(int state));
+
 WRITE32_HANDLER( voodoo_regs_w );
 WRITE32_HANDLER( voodoo2_regs_w );
 READ32_HANDLER( voodoo_regs_r );

@@ -39,7 +39,7 @@
 
 #if MIPS3_JIT_SUPPORTED
 
-#define JIT_TABLE_BITS		16
+#define JIT_TABLE_BITS		18
 #define JIT_TABLE_SIZE		(1 << JIT_TABLE_BITS)
 #define JIT_MAX_BLOCK		64				/* instructions */
 #define JIT_CODEMAP_BITS	22				/* host address words, one byte each (data words next to
@@ -58,6 +58,9 @@ struct jit_block
 };
 
 typedef sljit_u32 (SLJIT_FUNC *jit_func)(void);
+
+/* the interpreter's COP1 (FPU) instruction, for translated code (mips3.c) */
+static void jit_cop1_helper(UINT32 op);
 
 static int jit_enabled;
 static struct jit_block *jit_table;
@@ -241,6 +244,8 @@ static void jit_init(void)
 static sljit_s32 jit_cache[32];
 #define JREG(n)			(jit_cache[n] ? jit_cache[n] : SLJIT_MEM1(SLJIT_S0)), (jit_cache[n] ? 0 : JOFF_R(n))
 #define JREGH(n)		JMEM(JOFF_R(n) + 4)
+#define JOFF_FPR(n)		((sljit_sw)(offsetof(mips3_regs, cpr) + (32 + (n)) * sizeof(UINT64)))	/* cpr[1][n] */
+#define JOFF_FCSR		((sljit_sw)(offsetof(mips3_regs, ccr) + (32 + 31) * sizeof(UINT64)))	/* ccr[1][31] */
 /* mips3_icount, kept in S5 while a block runs (stored back when it leaves) */
 #define JICOUNT			SLJIT_S5, 0
 #define JHI				JMEM(JOFF_HI)
@@ -604,7 +609,7 @@ static int jit_classify(UINT32 op)
 			return JIT_NONE;
 
 		case 0x01:	/* REGIMM */
-			if (OPC_RT(op) == 0x00 || OPC_RT(op) == 0x01)		/* BLTZ, BGEZ */
+			if (OPC_RT(op) <= 0x03)		/* BLTZ, BGEZ, BLTZL, BGEZL */
 				return JIT_BRANCH;
 			if (OPC_RT(op) == 0x10 || OPC_RT(op) == 0x11)		/* BLTZAL, BGEZAL */
 				return JIT_BRANCH;
@@ -612,7 +617,18 @@ static int jit_classify(UINT32 op)
 
 		case 0x02: case 0x03:			/* J, JAL */
 		case 0x04: case 0x05: case 0x06: case 0x07:	/* BEQ, BNE, BLEZ, BGTZ */
+		case 0x14: case 0x15: case 0x16: case 0x17:	/* BEQL, BNEL, BLEZL, BGTZL */
 			return JIT_BRANCH;
+
+		case 0x11:	/* COP1 */
+			if (OPC_RS(op) == 0x08)		/* BC1F, BC1T, BC1FL, BC1TL */
+				return JIT_BRANCH;
+			/* the rest through the interpreter's code, while the FPU is usable */
+			/* (a change of SR_COP1 drops the translations) */
+			return (mips3.cpr[0][COP0_Status] & SR_COP1) ? JIT_SIMPLE : JIT_NONE;
+
+		case 0x31: case 0x39:			/* LWC1, SWC1 */
+			return mips3.bigendian ? JIT_NONE : JIT_MEM;
 
 		case 0x08: case 0x09: case 0x0a: case 0x0b:
 		case 0x0c: case 0x0d: case 0x0e: case 0x0f:
@@ -632,9 +648,91 @@ static int jit_classify(UINT32 op)
 	return JIT_NONE;
 }
 
+static void jit_cache_writeback(struct sljit_compiler *C);
+static void jit_cache_load(struct sljit_compiler *C);
+
+#if JIT_HOST64
+/*
+	The most used single precision FPU instructions in native code, on the
+	64-bit hosts (x86-64 SSE, AArch64), where the host's float operations
+	are the ones the interpreter's C compiles to: same IEEE results.
+	MTC1; ADD.S SUB.S MUL.S DIV.S (fd = fs op ft, the low word of fd, as
+	the interpreter writes it); NEG.S (sign bit); C.EQ/UEQ/OLT/ULT/OLE/ULE.S
+	(the interpreter computes them as fs == ft, fs < ft, fs <= ft).
+	Returns 0 for the others, which go through the interpreter's code.
+*/
+static int jit_emit_cop1_native(struct sljit_compiler *C, UINT32 op)
+{
+	int rs = OPC_RS(op), rt = OPC_RT(op);
+	int ft = (op >> 16) & 31, fs = (op >> 11) & 31, fd = (op >> 6) & 31;
+	sljit_s32 fop = 0, set = 0, flag = 0;
+
+	if (rs == 0x04)		/* MTC1: the low word of rt, zero-extended */
+	{
+		sljit_emit_op1(C, SLJIT_MOV32, SLJIT_R0, 0, JREG(rt));
+		sljit_emit_op1(C, SLJIT_MOV32, JMEM(JOFF_FPR(fs)), SLJIT_R0, 0);
+		sljit_emit_op1(C, SLJIT_MOV32, JMEM(JOFF_FPR(fs) + 4), SLJIT_IMM, 0);
+		return 1;
+	}
+	if (rs != 0x10)
+		return 0;
+	switch (op & 63)
+	{
+		case 0x00:	fop = SLJIT_ADD_F32;	break;
+		case 0x01:	fop = SLJIT_SUB_F32;	break;
+		case 0x02:	fop = SLJIT_MUL_F32;	break;
+		case 0x03:	fop = SLJIT_DIV_F32;	break;
+		case 0x07:	/* NEG.S */
+			sljit_emit_op2(C, SLJIT_XOR32, SLJIT_R0, 0, JMEM(JOFF_FPR(fs)), SLJIT_IMM, (sljit_sw)(sljit_s32)0x80000000);
+			sljit_emit_op1(C, SLJIT_MOV32, JMEM(JOFF_FPR(fd)), SLJIT_R0, 0);
+			return 1;
+		case 0x32: case 0x3a: case 0x33: case 0x3b:	set = SLJIT_SET_ORDERED_EQUAL;		flag = SLJIT_ORDERED_EQUAL;			break;
+		case 0x34: case 0x3c: case 0x35: case 0x3d:	set = SLJIT_SET_ORDERED_LESS;		flag = SLJIT_ORDERED_LESS;			break;
+		case 0x36: case 0x3e:						set = SLJIT_SET_ORDERED_LESS_EQUAL;	flag = SLJIT_ORDERED_LESS_EQUAL;	break;
+		default:	return 0;
+	}
+	sljit_emit_fop1(C, SLJIT_MOV_F32, SLJIT_FR0, 0, JMEM(JOFF_FPR(fs)));
+	if (fop)
+	{
+		sljit_emit_fop2(C, fop, SLJIT_FR0, 0, SLJIT_FR0, 0, JMEM(JOFF_FPR(ft)));
+		sljit_emit_fop1(C, SLJIT_MOV_F32, JMEM(JOFF_FPR(fd)), SLJIT_FR0, 0);
+		return 1;
+	}
+	{
+		/* SET_FCC: condition bit cc of the FCSR; the top one (cc 7, bit 31) */
+		/* also clears the high word in the interpreter: left to it */
+		int sh = fcc_shift[(op >> 8) & 7];
+		if (sh >= 31)
+			return 0;
+		sljit_emit_fop1(C, SLJIT_CMP_F32 | set, SLJIT_FR0, 0, JMEM(JOFF_FPR(ft)));
+		sljit_emit_op_flags(C, SLJIT_MOV32, SLJIT_R0, 0, flag);
+		sljit_emit_op2(C, SLJIT_SHL32, SLJIT_R0, 0, SLJIT_R0, 0, SLJIT_IMM, sh);
+		sljit_emit_op2(C, SLJIT_AND32, SLJIT_R1, 0, JMEM(JOFF_FCSR), SLJIT_IMM, (sljit_sw)(sljit_s32)~(1u << sh));
+		sljit_emit_op2(C, SLJIT_OR32, SLJIT_R1, 0, SLJIT_R1, 0, SLJIT_R0, 0);
+		sljit_emit_op1(C, SLJIT_MOV32, JMEM(JOFF_FCSR), SLJIT_R1, 0);
+	}
+	return 1;
+}
+#endif
+
 static void jit_emit_simple(struct sljit_compiler *C, UINT32 op)
 {
 	int rs = OPC_RS(op), rt = OPC_RT(op), rd = OPC_RD(op), sa = OPC_SA(op);
+
+	/* COP1: the interpreter's code (FPU registers live in mips3, and the */
+	/* moves to and from the CPU registers go through mips3.r) */
+	if ((op >> 26) == 0x11)
+	{
+#if JIT_HOST64
+		if (jit_emit_cop1_native(C, op))
+			return;
+#endif
+		jit_cache_writeback(C);
+		sljit_emit_op1(C, SLJIT_MOV32, SLJIT_R0, 0, SLJIT_IMM, (sljit_sw)op);
+		sljit_emit_icall(C, SLJIT_CALL, SLJIT_ARGS1V(32), SLJIT_IMM, SLJIT_FUNC_ADDR(jit_cop1_helper));
+		jit_cache_load(C);
+		return;
+	}
 
 	switch (op >> 26)
 	{
@@ -852,6 +950,7 @@ static int jit_mem_size(UINT32 op)
 		case 0x21: case 0x25: case 0x29:			return 2;
 		case 0x23: case 0x27: case 0x2b:			return 4;
 		case 0x22: case 0x26: case 0x2a: case 0x2e:	return 4;	/* aligned word */
+		case 0x31: case 0x39:						return 4;	/* LWC1 SWC1 */
 	}
 	return 8;
 }
@@ -1007,7 +1106,7 @@ static void (*jit_mem_helper(UINT32 op))(UINT32, UINT8 *)
 
 static int jit_mem_is_store(UINT32 op)
 {
-	return (op >> 26) >= 0x28 && (op >> 26) != 0x37;
+	return (op >> 26) >= 0x28 && (op >> 26) != 0x37 && (op >> 26) != 0x31;
 }
 
 /* leave before instruction 'index' and let the interpreter run it */
@@ -1215,6 +1314,15 @@ static void jit_emit_mem_access(struct sljit_compiler *C, UINT32 op, sljit_s32 h
 		case 0x3f:	/* SD: low word first, as two little-endian words */
 			jit_store64(C, rt, host);
 			return;
+		case 0x31:	/* LWC1: the word, zero-extended into the FPU register */
+			sljit_emit_op1(C, SLJIT_MOV32, SLJIT_R0, 0, SLJIT_MEM1(host), 0);
+			sljit_emit_op1(C, SLJIT_MOV32, JMEM(JOFF_FPR(rt)), SLJIT_R0, 0);
+			sljit_emit_op1(C, SLJIT_MOV32, JMEM(JOFF_FPR(rt) + 4), SLJIT_IMM, 0);
+			return;
+		case 0x39:	/* SWC1: the low word of the FPU register */
+			sljit_emit_op1(C, SLJIT_MOV32, SLJIT_R0, 0, JMEM(JOFF_FPR(rt)));
+			sljit_emit_op1(C, SLJIT_MOV32, SLJIT_MEM1(host), 0, SLJIT_R0, 0);
+			return;
 	}
 
 	/* loads into r0 are dropped, as in the interpreter */
@@ -1234,7 +1342,21 @@ static int jit_branch_is_conditional(UINT32 op)
 	switch (op >> 26)
 	{
 		case 0x01: case 0x04: case 0x05: case 0x06: case 0x07:
+		case 0x14: case 0x15: case 0x16: case 0x17:
+		case 0x11:	/* BC1x */
 			return 1;
+	}
+	return 0;
+}
+
+/* branch likely: the delay slot runs only when the branch is taken */
+static int jit_branch_is_likely(UINT32 op)
+{
+	switch (op >> 26)
+	{
+		case 0x01:	return (OPC_RT(op) & 0x02) != 0;	/* BLTZL, BGEZL */
+		case 0x14: case 0x15: case 0x16: case 0x17:	return 1;
+		case 0x11:	return (OPC_RT(op) & 0x02) != 0;	/* BC1FL, BC1TL */
 	}
 	return 0;
 }
@@ -1357,6 +1479,21 @@ static void jit_emit_leave(struct jit_ctx *ctx, UINT32 index, sljit_s32 src, slj
 static void jit_emit_condition(struct sljit_compiler *C, UINT32 op, sljit_s32 dst)
 {
 	int rs = OPC_RS(op), rt = OPC_RT(op);
+
+	/* BC1F / BC1T (and the likely ones): FPU condition bit cc of the FCSR */
+	if ((op >> 26) == 0x11)
+	{
+		sljit_emit_op1(C, SLJIT_MOV32, dst, 0, JMEM(JOFF_FCSR));
+		sljit_emit_op2(C, SLJIT_LSHR32, dst, 0, dst, 0, SLJIT_IMM, fcc_shift[(op >> 18) & 7]);
+		sljit_emit_op2(C, SLJIT_AND32, dst, 0, dst, 0, SLJIT_IMM, 1);
+		if (!(rt & 1))		/* BC1F */
+			sljit_emit_op2(C, SLJIT_XOR32, dst, 0, dst, 0, SLJIT_IMM, 1);
+		return;
+	}
+
+	/* BEQL BNEL BLEZL BGTZL: the conditions of BEQ BNE BLEZ BGTZ */
+	if ((op >> 26) >= 0x14 && (op >> 26) <= 0x17)
+		op ^= 0x10 << 26;
 
 #if !JIT_HOST64
 	/* 32-bit host: the sign is in the high word, zero needs both */
@@ -1558,6 +1695,26 @@ static void jit_emit_branch(struct jit_ctx *ctx, UINT32 op, UINT32 slot, UINT32 
 				sljit_set_label(nolink, sljit_emit_label(C));
 			}
 			break;
+	}
+
+	/* branch likely: not taken skips the delay slot (its cycle given back, */
+	/* since the cycle count after the branch assumes the slot ran), and */
+	/* carries on with the instruction after it; taken runs it and leaves */
+	if (jit_branch_is_likely(op))
+	{
+		struct sljit_jump *nottaken = sljit_emit_cmp(C, SLJIT_EQUAL, SLJIT_S1, 0, SLJIT_IMM, 0);
+		if (slot_mem)
+			jit_emit_mem_access(C, slot, SLJIT_S2);
+		else
+			jit_emit_simple(C, slot);
+		jit_emit_leave(ctx, index + 2, SLJIT_IMM, (sljit_sw)target);
+		sljit_set_label(nottaken, sljit_emit_label(C));
+		{
+			UINT32 slotcost = ctx->cost[index + 2] - ctx->cost[index + 1];
+			if (slotcost)
+				sljit_emit_op2(C, SLJIT_ADD32, JICOUNT, JICOUNT, SLJIT_IMM, slotcost);
+		}
+		return;
 	}
 
 	/* the delay slot */
@@ -1856,7 +2013,11 @@ static void jit_compile(struct jit_block *block, UINT32 pc)
 	ctx.acct = 0;
 	ctx.nexits = 0;
 	ctx.npending = 0;
+#if JIT_HOST64
+	sljit_emit_enter(C, 0, SLJIT_ARGS0(32), (4 + JIT_CACHE_MAX) | SLJIT_ENTER_FLOAT(1), 6, 0);
+#else
 	sljit_emit_enter(C, 0, SLJIT_ARGS0(32), 4 + JIT_CACHE_MAX, 6, 0);
+#endif
 	sljit_emit_op1(C, SLJIT_MOV_P, SLJIT_S0, 0, SLJIT_IMM, (sljit_sw)&mips3);
 	sljit_emit_op1(C, SLJIT_MOV_P, SLJIT_S3, 0, SLJIT_IMM, (sljit_sw)jit_rtable);
 	sljit_emit_op1(C, SLJIT_MOV_P, SLJIT_S4, 0, SLJIT_IMM, (sljit_sw)jit_wtable);
@@ -1965,6 +2126,7 @@ static INLINE struct jit_block *jit_lookup(UINT32 pc)
 
 static const int jit_enabled = 0;
 static INLINE void jit_check_write(const void *host) { }
+static void jit_flush(void) { }
 static void jit_init(void) { }
 static void jit_exit(void) { }
 
@@ -1991,4 +2153,22 @@ void mips3_set_jit(int enable)
 	else if (!enable && jit_table)
 		jit_exit();
 #endif
+}
+
+
+/*
+	For drivers whose DMA (or another device) writes the fast RAM through
+	the memory handlers instead of the CPU: a write over translated code
+	flushes the translation cache, as a CPU store does. address is a MIPS
+	address in a fast RAM region; other addresses are ignored.
+*/
+void mips3_ram_written(offs_t address, UINT32 bytes)
+{
+	struct mips3_fastram *r = find_fastram(address);
+	UINT32 i;
+
+	if (!r || r->readonly)
+		return;
+	for (i = 0; i < bytes && address + i <= r->end; i += 4)
+		jit_check_write(&r->base[(address + i - r->start) & ~3]);
 }

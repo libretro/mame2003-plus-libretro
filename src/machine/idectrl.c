@@ -766,9 +766,11 @@ static void write_buffer_to_dma(struct ide_state *ide)
 
 /*	log_cb(RETRO_LOG_DEBUG, LOGPRE "Writing sector to %08X\n", ide->dma_address);*/
 
-	/* loop until we've consumed all bytes */
-	while (bytesleft--)
+	/* loop until we've consumed all bytes: a run at a time, up to the end of the descriptor */
+	while (bytesleft > 0)
 	{
+		UINT32 run;
+
 		/* if we're out of space, grab the next descriptor */
 		if (ide->dma_bytes_left == 0)
 		{
@@ -799,9 +801,14 @@ static void write_buffer_to_dma(struct ide_state *ide)
 /*			log_cb(RETRO_LOG_DEBUG, LOGPRE "New DMA descriptor: address = %08X  bytes = %04X  last = %d\n", ide->dma_address, ide->dma_bytes_left, ide->dma_last_buffer);*/
 		}
 
-		/* write the next byte */
-		cpunum_write_byte(ide->dma_cpu, ide->dma_address++, *data++);
-		ide->dma_bytes_left--;
+		/* write the bytes */
+		run = ide->dma_bytes_left < (UINT32)bytesleft ? ide->dma_bytes_left : (UINT32)bytesleft;
+		if (!ide->intf->dma_write || !(*ide->intf->dma_write)(ide->dma_address, data, run))
+			cpunum_write_bytes(ide->dma_cpu, ide->dma_address, data, run);
+		ide->dma_address += run;
+		data += run;
+		ide->dma_bytes_left -= run;
+		bytesleft -= run;
 	}
 }
 
@@ -872,17 +879,26 @@ static void read_first_sector(struct ide_state *ide)
 	/* just set a timer */
 	if (ide->command == IDE_COMMAND_READ_MULTIPLE_BLOCK)
 	{
-		double seek_time;
+		/* as current MAME: no seek on the cylinder of the previous access, */
+		/* else a full stroke (13 ms) scaled by the distance plus 1.3 ms */
+		UINT32 per_cylinder = ide->num_heads * ide->num_sectors;
+		UINT32 new_lba = lba_address(ide);
+		double seek_time = TIME_NO_SEEK_MULTISECTOR;
 
-		if (ide->cur_lba == lba_address(ide))
-			seek_time = TIME_NO_SEEK_MULTISECTOR;
-		else
-			seek_time = TIME_SEEK_MULTISECTOR;
+		if (per_cylinder && ide->num_cylinders)
+		{
+			INT32 diff = (INT32)(new_lba / per_cylinder) - (INT32)(ide->cur_lba / per_cylinder);
+			if (diff < 0)
+				diff = -diff;
+			if (diff)
+				seek_time = TIME_SEEK_MULTISECTOR * diff / ide->num_cylinders + TIME_IN_USEC(1300);
+		}
+		ide->cur_lba = new_lba;
 
 		timer_set(seek_time, ide - idestate, read_sector_done);
 	}
 	else
-		timer_set(TIME_PER_SECTOR, ide - idestate, read_sector_done);
+		timer_set(ide->command == IDE_COMMAND_READ_DMA ? TIME_IN_NSEC(400) + TIME_IN_USEC(15) : TIME_PER_SECTOR, ide - idestate, read_sector_done);
 }
 
 
@@ -902,7 +918,7 @@ static void read_next_sector(struct ide_state *ide)
 	}
 	else
 		/* just set a timer */
-		timer_set(TIME_PER_SECTOR, ide - idestate, read_sector_done);
+		timer_set(ide->command == IDE_COMMAND_READ_DMA ? TIME_IN_NSEC(400) + TIME_IN_USEC(15) : TIME_PER_SECTOR, ide - idestate, read_sector_done);
 }
 
 
@@ -952,9 +968,11 @@ static void read_buffer_from_dma(struct ide_state *ide)
 
 /*	log_cb(RETRO_LOG_DEBUG, LOGPRE "Reading sector from %08X\n", ide->dma_address);*/
 
-	/* loop until we've consumed all bytes */
-	while (bytesleft--)
+	/* loop until we've consumed all bytes: a run at a time, up to the end of the descriptor */
+	while (bytesleft > 0)
 	{
+		UINT32 run;
+
 		/* if we're out of space, grab the next descriptor */
 		if (ide->dma_bytes_left == 0)
 		{
@@ -985,9 +1003,13 @@ static void read_buffer_from_dma(struct ide_state *ide)
 /*			log_cb(RETRO_LOG_DEBUG, LOGPRE "New DMA descriptor: address = %08X  bytes = %04X  last = %d\n", ide->dma_address, ide->dma_bytes_left, ide->dma_last_buffer);*/
 		}
 
-		/* read the next byte */
-		*data++ = cpunum_read_byte(ide->dma_cpu, ide->dma_address++);
-		ide->dma_bytes_left--;
+		/* read the bytes */
+		run = ide->dma_bytes_left < (UINT32)bytesleft ? ide->dma_bytes_left : (UINT32)bytesleft;
+		cpunum_read_bytes(ide->dma_cpu, ide->dma_address, data, run);
+		ide->dma_address += run;
+		data += run;
+		ide->dma_bytes_left -= run;
+		bytesleft -= run;
 	}
 }
 
