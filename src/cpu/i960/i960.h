@@ -58,4 +58,10 @@ extern void i960_stall(void);
    goes to the same address. NULL: everywhere. */
 extern void i960_set_burst_callback(int (*is_burst)(UINT32 address));
 
+/* the addresses an idle loop may read: reading them has no side effect
+   and their contents change only between timeslices (RAM, a status
+   register updated by an interrupt). NULL (default): idle loops are not
+   skipped. */
+extern void i960_set_idle_read_callback(int (*read_ok)(UINT32 address));
+
 #endif

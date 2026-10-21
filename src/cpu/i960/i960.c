@@ -54,6 +54,47 @@ static i960_regs i960;
 int i960_icount;
 static int (*i960_burst_cb)(UINT32 address);
 
+/* Idle loops. A game waiting for an interrupt or for another CPU spins on
+   a short loop that reads memory and branches back, often counting the
+   iterations. Nothing else runs during this CPU's timeslice, so the
+   memory it reads does not change. When two iterations in a row
+   - only hold loads, register arithmetic, compares and branches,
+   - read the same addresses, which the driver declares free of side
+     effects,
+   - cost the same cycles and leave the condition codes as they were,
+   - change each register by the same amount, and no changing register
+     is read by a compare,
+   every further iteration does the same. They are skipped: their cycles
+   are taken and the counting registers advanced. The last iteration, the
+   one the timeslice ends in, still runs, so where the CPU stops and what
+   it has done are exactly what the interpreter gives. */
+#define IDLE_MAX_READS 8
+static int (*i960_idle_read_cb)(UINT32 address);
+static int idle_armed;			/* a backward branch was taken to idle_target */
+static int idle_ok;				/* the iteration since then only had safe instructions */
+static UINT32 idle_target;
+static int idle_icount;			/* m_icount at idle_target */
+static UINT32 idle_r[ 0x20 ];	/* the registers at idle_target */
+static UINT32 idle_ac;
+static int idle_have_delta;		/* the previous iteration was safe too: */
+static UINT32 idle_delta[ 0x20 ];	/* what it added to the registers */
+static int idle_cost;				/* and its cycles */
+static UINT32 idle_cmp_regs;	/* registers read by compares in this iteration */
+static UINT32 idle_ea[ IDLE_MAX_READS ], idle_prev_ea[ IDLE_MAX_READS ];
+static int idle_reads, idle_prev_reads;
+static int idle_bad;			/* idle_bad_target is no idle loop, for this timeslice */
+static UINT32 idle_bad_target;
+
+#define IDLE_READ( ea )	do { if( idle_ok ) idle_read( ea ); } while( 0 )
+
+static void idle_read( UINT32 ea )
+{
+	if( idle_reads < IDLE_MAX_READS && i960_idle_read_cb( ea ) )
+		idle_ea[ idle_reads++ ] = ea;
+	else
+		idle_ok = 0;
+}
+
 #define m_r						i960.r
 #define m_rcache				i960.rcache
 #define m_rcache_frame_addr		i960.rcache_frame_addr
@@ -2139,8 +2180,10 @@ static void execute_op(UINT32 opcode)
 
 		case 0x80: { /* ldob */
 			UINT8 v;
+			UINT32 ea = get_ea(opcode);
 			m_icount -= 4;
-			v = cpu_readmem32ledw(get_ea(opcode));
+			IDLE_READ( ea );
+			v = cpu_readmem32ledw(ea);
 			if(!m_stalled)
 				m_r[(opcode>>19)&0x1f] = v;
 			break;
@@ -2170,8 +2213,10 @@ static void execute_op(UINT32 opcode)
 
 		case 0x88: { /* ldos */
 			UINT16 v;
+			UINT32 ea = get_ea(opcode);
 			m_icount -= 4;
-			v = i960_read_word_unaligned(get_ea(opcode));
+			IDLE_READ( ea );
+			v = i960_read_word_unaligned(ea);
 			if(!m_stalled)
 				m_r[(opcode>>19)&0x1f] = v;
 			break;
@@ -2189,8 +2234,10 @@ static void execute_op(UINT32 opcode)
 
 		case 0x90: { /* ld */
 			UINT32 v;
+			UINT32 ea = get_ea(opcode);
 			m_icount -= 4;
-			v = i960_read_dword_unaligned(get_ea(opcode));
+			IDLE_READ( ea );
+			v = i960_read_dword_unaligned(ea);
 			if(!m_stalled)
 				m_r[(opcode>>19)&0x1f] = v;
 			break;
@@ -2314,8 +2361,10 @@ static void execute_op(UINT32 opcode)
 
 		case 0xc0: { /* ldib */
 			INT8 v;
+			UINT32 ea = get_ea(opcode);
 			m_icount -= 4;
-			v = cpu_readmem32ledw(get_ea(opcode));
+			IDLE_READ( ea );
+			v = cpu_readmem32ledw(ea);
 			if(!m_stalled)
 				m_r[(opcode>>19)&0x1f] = v;
 			break;
@@ -2328,8 +2377,10 @@ static void execute_op(UINT32 opcode)
 
 		case 0xc8: { /* ldis */
 			INT16 v;
+			UINT32 ea = get_ea(opcode);
 			m_icount -= 4;
-			v = i960_read_word_unaligned(get_ea(opcode));
+			IDLE_READ( ea );
+			v = i960_read_word_unaligned(ea);
 			if(!m_stalled)
 				m_r[(opcode>>19)&0x1f] = v;
 			break;
@@ -2351,6 +2402,120 @@ static void execute_op(UINT32 opcode)
     CPU interface
 ***************************************************************************/
 
+/* the instructions an idle loop may hold: loads (their address checked
+   by the driver), register arithmetic and logic, compares, branches.
+   Filled at init from idle_safe_list */
+static UINT8 idle_safe_op[ 256 ];
+static const UINT8 idle_safe_list[] =
+{
+	0x08,								/* b */
+	0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,	/* bno .. bo */
+	0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27,	/* testno .. testo */
+	0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37,	/* bbc, cmpob* */
+	0x38, 0x39, 0x3a, 0x3b, 0x3c, 0x3d, 0x3e, 0x3f,	/* bbs, cmpib* */
+	0x58, 0x59, 0x5a, 0x5c,				/* logic, add/sub/shift, compare, mov */
+	0x80, 0x88, 0x90, 0xc0, 0xc8,		/* ldob ldos ld ldib ldis */
+	0x8c								/* lda */
+};
+
+/* an instruction of a possible idle loop */
+static INLINE void idle_track( UINT32 opcode )
+{
+	UINT32 op = opcode >> 24;
+	if( !idle_safe_op[ op ] )
+		idle_ok = 0;
+	else if( op >= 0x30 && op <= 0x3f )
+	{
+		/* bbc, bbs, compare and branch: src2 is a register, src1 one too
+		   unless it is a literal */
+		idle_cmp_regs |= 1u << ( ( opcode >> 14 ) & 0x1f );
+		if( !( opcode & 0x2000 ) )
+			idle_cmp_regs |= 1u << ( ( opcode >> 19 ) & 0x1f );
+	}
+	else if( op == 0x5a )
+	{
+		/* compares: src1 and src2, unless literals */
+		if( !( opcode & 0x0800 ) )
+			idle_cmp_regs |= 1u << ( opcode & 0x1f );
+		if( !( opcode & 0x1000 ) )
+			idle_cmp_regs |= 1u << ( ( opcode >> 14 ) & 0x1f );
+	}
+}
+
+static void idle_not_a_loop( void )
+{
+	idle_bad = 1;
+	idle_bad_target = m_IP;
+	idle_armed = idle_ok = 0;
+}
+
+/* a short backward branch was taken */
+static void idle_branch_back( void )
+{
+	if( idle_bad && m_IP == idle_bad_target )
+		return;
+
+	if( idle_armed && m_IP == idle_target )
+	{
+		UINT32 delta[ 0x20 ], changed = 0;
+		int cost = idle_icount - m_icount, i;
+
+		if( !idle_ok || cost <= 0 || m_AC != idle_ac )
+		{
+			idle_not_a_loop();
+			return;
+		}
+		for( i = 0; i < 0x20; i++ )
+		{
+			delta[ i ] = m_r[ i ] - idle_r[ i ];
+			if( delta[ i ] )
+				changed |= 1u << i;
+		}
+		if( changed & idle_cmp_regs )
+		{
+			idle_not_a_loop();
+			return;
+		}
+		if( idle_have_delta )
+		{
+			if( cost != idle_cost || idle_reads != idle_prev_reads ||
+				memcmp( idle_ea, idle_prev_ea, idle_reads * sizeof( UINT32 ) ) != 0 ||
+				memcmp( delta, idle_delta, sizeof( delta ) ) != 0 )
+			{
+				idle_not_a_loop();
+				return;
+			}
+			/* skip all the iterations but the last one of the timeslice */
+			if( m_icount > cost )
+			{
+				UINT32 n = ( m_icount - 1 ) / cost;
+				m_icount -= n * cost;
+				for( i = 0; i < 0x20; i++ )
+					m_r[ i ] += n * delta[ i ];
+			}
+		}
+		memcpy( idle_delta, delta, sizeof( delta ) );
+		idle_cost = cost;
+		idle_have_delta = 1;
+	}
+	else
+	{
+		idle_armed = 1;
+		idle_have_delta = 0;
+	}
+
+	/* start an iteration */
+	idle_target = m_IP;
+	idle_icount = m_icount;
+	idle_ac = m_AC;
+	memcpy( idle_r, m_r, sizeof( idle_r ) );
+	memcpy( idle_prev_ea, idle_ea, sizeof( idle_ea ) );
+	idle_prev_reads = idle_reads;
+	idle_reads = 0;
+	idle_cmp_regs = 0;
+	idle_ok = 1;
+}
+
 int i960_execute( int cycles )
 {
 	UINT32 opcode;
@@ -2360,6 +2525,9 @@ int i960_execute( int cycles )
 	/* delay checking irqs if we are in burst stall mode */
 	if( m_stall_state.burst_mode == 0 )
 		check_immediate_irqs();
+
+	/* other CPUs ran since the last timeslice: start over */
+	idle_armed = idle_ok = idle_bad = 0;
 
 	while( m_icount > 0 )
 	{
@@ -2371,6 +2539,9 @@ int i960_execute( int cycles )
 
 		m_stalled = 0;
 
+		if( idle_ok )
+			idle_track( opcode );
+
 		if( m_stall_state.burst_mode == 1 )
 			execute_burst_stall_op( opcode );
 		else
@@ -2378,7 +2549,12 @@ int i960_execute( int cycles )
 
 		/* stalled on a FIFO: give the other CPUs the rest of the timeslice */
 		if( m_stalled )
+		{
 			m_icount = 0;
+			idle_armed = idle_ok = 0;
+		}
+		else if( m_IP < m_PIP && m_PIP - m_IP <= 32 && i960_idle_read_cb != NULL )
+			idle_branch_back();
 	}
 
 	return cycles - i960_icount;
@@ -2388,6 +2564,16 @@ void i960_stall( void )
 {
 	m_stalled = 1;
 	m_IP = m_PIP;
+}
+
+void i960_set_idle_read_callback( int (*read_ok)(UINT32 address) )
+{
+	unsigned i;
+	memset( idle_safe_op, 0, sizeof( idle_safe_op ) );
+	for( i = 0; i < sizeof( idle_safe_list ); i++ )
+		idle_safe_op[ idle_safe_list[ i ] ] = 1;
+	i960_idle_read_cb = read_ok;
+	idle_armed = idle_ok = 0;
 }
 
 void i960_set_burst_callback( int (*is_burst)(UINT32 address) )

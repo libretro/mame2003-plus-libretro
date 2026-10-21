@@ -754,6 +754,18 @@ static WRITE32_HANDLER( xvout_w )
 
 static READ32_HANDLER( unmapped_r )	{ return 0; }
 
+/* what an i960 idle loop may read: ROM, RAM, and the video control
+   register (frame number, changed by the vblank interrupt). Reading them
+   has no side effect, and nothing changes them during the i960 timeslice */
+static int model2_idle_read_ok( UINT32 a )
+{
+	if( a < 0x00240000 ) return 1;							/* program ROM, RAM */
+	if( a >= 0x00500000 && a < 0x00600000 ) return 1;		/* work RAM */
+	if( a >= 0x00900000 && a < 0x00980000 ) return 1;		/* buffer RAM */
+	if( a >= 0x0098000c && a < 0x00980010 ) return 1;		/* video control */
+	return 0;
+}
+
 /* where ldl/ldt/ldq and stl/stt/stq step through the addresses (MAME's BURST) */
 static int model2_is_burst( UINT32 a )
 {
@@ -1819,6 +1831,7 @@ static DRIVER_INIT( model2a )
 		m_timers[ i ] = timer_alloc( model2_timer_cb );
 
 	i960_set_burst_callback( model2_is_burst );
+	i960_set_idle_read_callback( model2_idle_read_ok );
 
 	EEPROM_init( &eeprom_interface_93C46 );
 
