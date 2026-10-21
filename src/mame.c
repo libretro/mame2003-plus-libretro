@@ -999,6 +999,38 @@ void set_visible_area(int min_x, int max_x, int min_y, int max_y)
 }
 
 
+/*-------------------------------------------------
+	set_display_aspect_ratio - changes the aspect
+	ratio of the display while the game runs, for
+	the drivers whose display shape is chosen at
+	run time (DIP switches, monitor setups, wide
+	video modes)
+
+	The new aspect ratio reaches the frontend with
+	the next display update, together with the
+	geometry, like a change of the visible area.
+	Calling it again with the same ratio does
+	nothing, so drivers can call it every frame.
+-------------------------------------------------*/
+
+void set_display_aspect_ratio(int aspect_x, int aspect_y)
+{
+	extern struct osd_create_params video_config;
+
+	if (aspect_x <= 0 || aspect_y <= 0)
+		return;
+
+	if (video_config.aspect_x == aspect_x && video_config.aspect_y == aspect_y)
+		return;
+
+	video_config.aspect_x = aspect_x;
+	video_config.aspect_y = aspect_y;
+
+	/* the frontend gets the new geometry with the next display update */
+	visible_area_changed = 1;
+}
+
+
 
 /*-------------------------------------------------
 	schedule_full_refresh - force a full erase

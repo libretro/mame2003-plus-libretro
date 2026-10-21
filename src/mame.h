@@ -363,6 +363,10 @@ void expand_machine_driver(void (*constructor)(struct InternalMachineDriver *), 
 /* set the current visible area of the screen bitmap */
 void set_visible_area(int min_x, int max_x, int min_y, int max_y);
 
+/* change the display aspect ratio while the game runs (the geometry is sent
+   again to the frontend with the next display update) */
+void set_display_aspect_ratio(int aspect_x, int aspect_y);
+
 /* force an erase and a complete redraw of the video next frame */
 void schedule_full_refresh(void);
 
