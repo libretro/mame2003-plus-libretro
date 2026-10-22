@@ -18,6 +18,7 @@ extern void psx_gpu_reset( void );
 extern void psx_gpu_read( UINT32 *p_ram, INT32 n_size );
 extern void psx_gpu_write( UINT32 *p_ram, INT32 n_size );
 extern void psx_gpu_list_node_end( void );
+extern void psx_gpu_lightgun_set( int n_x, int n_y );
 READ32_HANDLER( psx_gpu_r );
 WRITE32_HANDLER( psx_gpu_w );
 

@@ -171,6 +171,9 @@ static UINT32 m_n_displaystartx;
 static UINT32 m_n_displaystarty;
 static UINT32 m_n_gpustatus;
 static UINT32 m_n_gpuinfo;
+/* the light gun coordinates latched by the GPU (some arcade boards) */
+static UINT32 m_n_lightgun_x;
+static UINT32 m_n_lightgun_y;
 static UINT32 m_n_screenwidth;
 static UINT32 m_n_screenheight;
 static UINT32 m_n_drawmode;
@@ -538,6 +541,8 @@ static int psx_gpu_init( int n_width, int n_height )
 	m_n_gpustatus = 0x14802000;
 	m_n_drawmode = 0;
 	m_n_gpuinfo = 0;
+	m_n_lightgun_x = 0;
+	m_n_lightgun_y = 0;
 	m_n_gpu_buffer_offset = 0;
 
 	m_n_vram_size = n_width * n_height;
@@ -665,6 +670,8 @@ static int psx_gpu_init( int n_width, int n_height )
 	state_save_register_UINT32( "psx", 0, "m_n_displaystarty", &m_n_displaystarty, 1 );
 	state_save_register_UINT32( "psx", 0, "m_n_gpustatus", &m_n_gpustatus, 1 );
 	state_save_register_UINT32( "psx", 0, "m_n_gpuinfo", &m_n_gpuinfo, 1 );
+	state_save_register_UINT32( "psx", 0, "m_n_lightgun_x", &m_n_lightgun_x, 1 );
+	state_save_register_UINT32( "psx", 0, "m_n_lightgun_y", &m_n_lightgun_y, 1 );
 	state_save_register_UINT32( "psx", 0, "m_n_screenwidth", &m_n_screenwidth, 1 );
 	state_save_register_UINT32( "psx", 0, "m_n_screenheight", &m_n_screenheight, 1 );
 	state_save_register_UINT32( "psx", 0, "m_n_drawmode", &m_n_drawmode, 1 );
@@ -4318,6 +4325,12 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 	}
 }
 
+void psx_gpu_lightgun_set( int n_x, int n_y )
+{
+	m_n_lightgun_x = n_x;
+	m_n_lightgun_y = n_y;
+}
+
 WRITE32_HANDLER( psx_gpu_w )
 {
 	switch( offset )
@@ -4430,7 +4443,18 @@ WRITE32_HANDLER( psx_gpu_w )
 		case 0x09:
 			/*verboselog( 1, "not handled: GPU Control 0x09: %08x\n", data );*/
 			break;
+		case 0x0d:
+			/* reset the light gun coordinates (current MAME) */
+			m_n_lightgun_x = 0;
+			m_n_lightgun_y = 0;
+			break;
 		case 0x10:
+			if( ( data & 0xff ) == 0x08 )
+			{
+				/* the light gun coordinates (current MAME) */
+				m_n_gpuinfo = m_n_lightgun_x | ( m_n_lightgun_y << 16 );
+				break;
+			}
 			switch( data & 7 )
 			{
 			case 0x03:
