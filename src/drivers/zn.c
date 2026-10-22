@@ -815,9 +815,15 @@ static READ32_HANDLER( zn_unknown_r )
 	return 0xffffffff;
 }
 
+static int zn_gun_mux = -1;	/* Acclaim light guns: which gun the GPU holds, on SERVICE bit 3 */
+
 static READ32_HANDLER( zn_inputs_r )	/* P1, P2, SERVICE, SYSTEM at 0x1fa00000 + 0x100 each */
 {
-	return readinputport( ( offset >> 6 ) & 3 ) | 0xffffff00;
+	int n_port = ( offset >> 6 ) & 3;
+	UINT32 n_data = readinputport( n_port ) | 0xffffff00;
+	if( n_port == 2 && zn_gun_mux >= 0 )
+		n_data = ( n_data & ~8 ) | ( zn_gun_mux ? 8 : 0 );
+	return n_data;
 }
 
 static READ32_HANDLER( zn_inputs2_r )	/* P3, P4 at 0x1fa10000 + 0x100 each */
@@ -1026,6 +1032,7 @@ static void zn_board_init( void )
 
 static void zn_board_reset( void )
 {
+	zn_gun_mux = -1;
 	m_n_znsecsel = 0;
 	m_n_dip_bit = 0;
 	m_b_lastclock = 1;
@@ -2134,6 +2141,188 @@ MACHINE_DRIVER_END
 
 /***************************************************************************
 
+  Acclaim (COH-1000A): Judge Dredd, as in current MAME
+
+  ZN-1 main board with 2MB VRAM and the Acclaim BIOS; CAT702 AC01 on the
+  main board, AC02 on the ROM board. Game ROM: 2MB at 0x1f000000. An IDE
+  hard disk: the command block at 0x1fbfff90, the control block at
+  0x1fbfff80, 16 bits per register; its interrupt on PSX IRQ 10. Two light
+  guns: at each vblank the board switches gun (SERVICE bit 3) and the GPU
+  latches its coordinates. Sound: the PSX SPU only.
+
+***************************************************************************/
+
+static UINT8 acclaim_gun_mux;
+
+static void acclaim_ide_interrupt( int state )
+{
+	if( state != CLEAR_LINE )
+		psx_irq_set( 0x400 );
+}
+
+static struct ide_interface acclaim_ide_intf =
+{
+	acclaim_ide_interrupt
+};
+
+/* the IDE registers of a block (0x1f0 or 0x3f0), one per 16-bit word */
+static UINT32 acclaim_ide_read( int n_base, offs_t offset, UINT32 mem_mask )
+{
+	UINT32 n_data = 0;
+	int n_half;
+	for( n_half = 0; n_half < 2; n_half++ )
+	{
+		UINT32 n_halfmask = 0xffff << ( n_half * 16 );
+		if( ( mem_mask & n_halfmask ) != n_halfmask )
+		{
+			int n_reg = n_base + offset * 2 + n_half;
+			int n_lane = n_reg & 3;
+			UINT32 n_mask = ( n_reg == 0x1f0 ) ? 0xffff0000 : ~( 0xff << ( n_lane * 8 ) );
+			UINT32 n_value = ide_controller32_0_r( n_reg / 4, n_mask ) >> ( n_lane * 8 );
+			n_value &= ( n_reg == 0x1f0 ) ? 0xffff : 0xff;
+			n_data |= n_value << ( n_half * 16 );
+		}
+	}
+	return n_data;
+}
+
+static void acclaim_ide_write( int n_base, offs_t offset, UINT32 data, UINT32 mem_mask )
+{
+	int n_half;
+	for( n_half = 0; n_half < 2; n_half++ )
+	{
+		UINT32 n_halfmask = 0xffff << ( n_half * 16 );
+		if( ( mem_mask & n_halfmask ) != n_halfmask )
+		{
+			int n_reg = n_base + offset * 2 + n_half;
+			int n_lane = n_reg & 3;
+			UINT32 n_value = ( data >> ( n_half * 16 ) ) & ( ( n_reg == 0x1f0 ) ? 0xffff : 0xff );
+			UINT32 n_mask = ( n_reg == 0x1f0 ) ? 0xffff0000 : ~( 0xff << ( n_lane * 8 ) );
+			ide_controller32_0_w( n_reg / 4, n_value << ( n_lane * 8 ), n_mask );
+		}
+	}
+}
+
+static READ32_HANDLER( acclaim_ide_cs0_r ) { return acclaim_ide_read( 0x1f0, offset, mem_mask ); }
+static WRITE32_HANDLER( acclaim_ide_cs0_w ) { acclaim_ide_write( 0x1f0, offset, data, mem_mask ); }
+static READ32_HANDLER( acclaim_ide_cs1_r ) { return acclaim_ide_read( 0x3f0, offset, mem_mask ); }
+static WRITE32_HANDLER( acclaim_ide_cs1_w ) { acclaim_ide_write( 0x3f0, offset, data, mem_mask ); }
+
+static MEMORY_READ32_START( jdredd_readmem )
+	ZN_MAIN_READ
+	{ 0x1f000000, 0x1f1fffff, MRA32_BANK1 },  /* game rom */
+	{ 0x1fbfff80, 0x1fbfff8f, acclaim_ide_cs1_r },
+	{ 0x1fbfff90, 0x1fbfff9f, acclaim_ide_cs0_r },
+MEMORY_END
+
+static MEMORY_WRITE32_START( jdredd_writemem )
+	ZN_MAIN_WRITE
+	{ 0x1f000000, 0x1f1fffff, MWA32_ROM },
+	{ 0x1fbfff00, 0x1fbfff03, MWA32_NOP },    /* bank (no effect) */
+	{ 0x1fbfff10, 0x1fbfff13, MWA32_NOP },
+	{ 0x1fbfff80, 0x1fbfff8f, acclaim_ide_cs1_w },
+	{ 0x1fbfff90, 0x1fbfff9f, acclaim_ide_cs0_w },
+MEMORY_END
+
+/* at each vblank: the other gun, and its coordinates to the GPU when it
+   points at the screen */
+static INTERRUPT_GEN( jdredd_vblank )
+{
+	int n_x, n_y;
+
+	acclaim_gun_mux = !acclaim_gun_mux;
+	zn_gun_mux = acclaim_gun_mux;
+	n_x = readinputport( 7 + acclaim_gun_mux * 2 );
+	n_y = readinputport( 8 + acclaim_gun_mux * 2 );
+	if( n_x > 0x393 && n_x < 0xcb2 && n_y > 0x02d && n_y < 0x217 )
+		psx_gpu_lightgun_set( n_x, n_y );
+	psx_vblank();
+}
+
+/* the crosshairs: the gun ports span the whole screen, as
+   PORT_CROSSHAIR( X/Y, 1.0, 0.0, 0 ) in MAME */
+static VIDEO_UPDATE( jdredd )
+{
+	const struct rectangle *visible = &Machine->visible_area;
+	int n_gun;
+
+	video_update_psx( bitmap, cliprect );
+
+	for( n_gun = 0; n_gun < 2; n_gun++ )
+	{
+		int n_x = readinputport( 7 + n_gun * 2 ) - 0x392;
+		int n_y = readinputport( 8 + n_gun * 2 ) - 0x02c;
+		n_x = visible->min_x + n_x * ( visible->max_x - visible->min_x ) / ( 0xcb3 - 0x392 );
+		n_y = visible->min_y + n_y * ( visible->max_y - visible->min_y ) / ( 0x218 - 0x02c );
+		draw_crosshair( n_gun + 1, bitmap, n_x, n_y, cliprect );
+	}
+}
+
+static void jdredd_postload( void )
+{
+	zn_gun_mux = acclaim_gun_mux;
+}
+
+static DRIVER_INIT( jdredd )
+{
+	zn_scratchpad = auto_malloc( 0x400 );
+	zn_eeprom = auto_malloc( 0x800 );
+	memset( zn_scratchpad, 0, 0x400 );
+	memset( zn_eeprom, 0xff, 0x800 );
+
+	zn_vram_2mb = 1;
+	zn_coin_tecmo = 0;
+	zn_eeprom_default = 0;
+
+	zn_board_init();
+	cpu_setbank( 1, memory_region( REGION_USER1 ) );
+	znsec_init( 0, memory_region( REGION_USER4 ) );	/* AC01 */
+	znsec_init( 1, memory_region( REGION_USER5 ) );	/* AC02 */
+
+	ide_controller_init( 0, &acclaim_ide_intf );
+
+	state_save_register_UINT8( "zn", 0, "acclaim_gun_mux", &acclaim_gun_mux, 1 );
+	state_save_register_UINT32( "zn", 0, "scratchpad", zn_scratchpad, 0x100 );
+	state_save_register_func_postload( jdredd_postload );
+}
+
+static MACHINE_INIT( jdredd )
+{
+	ide_controller_reset( 0 );
+	zn_board_reset();
+	acclaim_gun_mux = 0;
+	zn_gun_mux = 0;
+}
+
+/* ZN-1, 2MB VRAM (COH-1000A), hard disk, SPU sound */
+static MACHINE_DRIVER_START( jdredd )
+	MDRV_CPU_ADD_TAG( "main", PSXCPU, 33868800 / 2 )	/* CXD8530CQ, 67.7376MHz XTAL; as System 11 */
+	MDRV_CPU_MEMORY( jdredd_readmem, jdredd_writemem )
+	MDRV_CPU_VBLANK_INT( jdredd_vblank, 1 )
+
+	MDRV_FRAMES_PER_SECOND( 60 )
+	MDRV_VBLANK_DURATION( 0 )
+
+	MDRV_MACHINE_INIT( jdredd )
+	MDRV_NVRAM_HANDLER( zn )
+
+	MDRV_VIDEO_ATTRIBUTES( VIDEO_TYPE_RASTER | VIDEO_RGB_DIRECT )
+	MDRV_SCREEN_SIZE( 640, 480 )
+	MDRV_VISIBLE_AREA( 0, 639, 0, 479 )
+	MDRV_PALETTE_LENGTH( 65536 )
+
+	MDRV_PALETTE_INIT( psx )
+	MDRV_VIDEO_START( psx_type2_1024x1024 )
+	MDRV_VIDEO_UPDATE( jdredd )
+	MDRV_VIDEO_STOP( psx )
+
+	MDRV_SOUND_ATTRIBUTES( SOUND_SUPPORTS_STEREO )
+	MDRV_SOUND_ADD( PSXSPU, zn_spu_interface )
+MACHINE_DRIVER_END
+
+
+/***************************************************************************
+
   Video System (COH-1002V), as in current MAME
 
   ZN-1 main board with 2MB VRAM and the Video System BIOS; CAT702 KN01 on
@@ -2657,6 +2846,36 @@ INPUT_PORTS_START( primrag2 )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON6 | IPF_PLAYER2 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED )
 	ZN_DSW_PORT
+INPUT_PORTS_END
+
+/* Judge Dredd: two light guns, a trigger and a button each */
+INPUT_PORTS_START( jdredd )
+	PORT_START	/* P1 */
+	PORT_BIT( 0xef, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )
+	PORT_START	/* P2 */
+	PORT_BIT( 0xef, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
+	PORT_START	/* SERVICE */
+	PORT_BITX( 0x01, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_SERVICE1 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_TILT )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED )	/* gun mux, from the driver */
+	PORT_BIT( 0x30, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
+	TPS_SYSTEM_PORT( 1, 1, 0 )
+	TPS_UNUSED_PORT
+	TPS_UNUSED_PORT
+	ZN_DSW_PORT
+	PORT_START	/* GUN1X */
+	PORT_ANALOG( 0xffff, 0x0822, IPT_LIGHTGUN_X | IPF_PLAYER1, 100, 50, 0x392, 0xcb3 )
+	PORT_START	/* GUN1Y */
+	PORT_ANALOG( 0xffff, 0x0122, IPT_LIGHTGUN_Y | IPF_PLAYER1, 100, 15, 0x02c, 0x218 )
+	PORT_START	/* GUN2X */
+	PORT_ANALOG( 0xffff, 0x0822, IPT_LIGHTGUN_X | IPF_PLAYER2, 100, 50, 0x392, 0xcb3 )
+	PORT_START	/* GUN2Y */
+	PORT_ANALOG( 0xffff, 0x0122, IPT_LIGHTGUN_Y | IPF_PLAYER2, 100, 15, 0x02c, 0x218 )
 INPUT_PORTS_END
 
 /* Taito FX: DSW 4 is the test mode; the 4 bits not fitted read as 0 */
@@ -5208,26 +5427,43 @@ ROM_START( nbajamex )
 	ROM_LOAD( "360snda1.u52", 0x000000, 0x080000, CRC(36d8a628) SHA1(944a01c9128f5e90c7dba3557a3ecb2c5ca90831) ) 
 ROM_END
 
-ROM_START( jdredd )
-	AC_BIOS
+#define ACCLAIM_BIOS \
+	ROM_REGION32_LE( 0x400000, REGION_CPU1, ROMREGION_ERASE00 ) /* ram */ \
+	ROM_REGION32_LE( 0x080000, REGION_USER3, 0 ) /* bios */ \
+	ROM_LOAD( "m534002c-15.ic353", 0x000000, 0x080000, CRC(8d8d0764) SHA1(7ee83d317190bb1cef2f8f01c81eaaae47150ebb) ) \
+	ROM_REGION( 0x000008, REGION_USER4, 0 ) /* CAT702, main board */ \
+	ROM_LOAD( "ac01.ic652", 0x000000, 0x000008, CRC(c425eaf5) SHA1(decf77ab50f7f58c641c3214a11647924f3a8998) )
 
-	ROM_REGION32_LE( 0x01a00000, REGION_USER1, 0 )
-	ROM_LOAD( "j-dread.u35",  0x000000, 0x020000, CRC(c1e17191) SHA1(82901439b1a51b9aadb4df4b9d944f26697a1460) ) 
-	ROM_LOAD( "j-dread.u36",  0x000000, 0x020000, CRC(37addbf9) SHA1(a4061a1ba9e230f080f0bfea69bf77efe9264a92) ) 
+ROM_START( coh1000a )
+	ACCLAIM_BIOS
+ROM_END
+
+ROM_START( jdredd )
+	ACCLAIM_BIOS
+
+	ROM_REGION32_LE( 0x200000, REGION_USER1, 0 ) /* game rom */
+	ROM_LOAD16_BYTE( "9e54_01-16-98_1566_u_36.u36",  0x000001, 0x020000, CRC(37addbf9) SHA1(a4061a1ba9e230f080f0bfea69bf77efe9264a92) )
+	ROM_LOAD16_BYTE( "79d3_01-16-98_1565_u_35.u35",  0x000000, 0x020000, CRC(c1e17191) SHA1(82901439b1a51b9aadb4df4b9d944f26697a1460) )
+
+	ROM_REGION( 0x000008, REGION_USER5, 0 ) /* CAT702, rom board */
+	ROM_LOAD( "ac02", 0x000000, 0x000008, CRC(1412d475) SHA1(c2f62232a261870f58353d09dc0d6ce2ad17a729) )
 
 	DISK_REGION( REGION_DISKS )
-	DISK_IMAGE( "jdreddc", 0, MD5(b66074f3df1e90ec4e3ff09dcdf33033) SHA1(83ed8df25d100b1c060f4dde2f162ba31803db7d) )
+	DISK_IMAGE( "jdreddc", 0, SHA1(eee205f83e5f590f8baf36452c873d7063156bd0) )	/* 1576 Rev.C */
 ROM_END
 
 ROM_START( jdreddb )
-	AC_BIOS
+	ACCLAIM_BIOS
 
-	ROM_REGION32_LE( 0x01a00000, REGION_USER1, 0 )
-	ROM_LOAD( "j-dread.u35",  0x000000, 0x020000, CRC(c1e17191) SHA1(82901439b1a51b9aadb4df4b9d944f26697a1460) ) 
-	ROM_LOAD( "j-dread.u36",  0x000000, 0x020000, CRC(37addbf9) SHA1(a4061a1ba9e230f080f0bfea69bf77efe9264a92) ) 
+	ROM_REGION32_LE( 0x200000, REGION_USER1, 0 ) /* game rom */
+	ROM_LOAD16_BYTE( "9e54_11-21-97_1566_u_36.u36",  0x000001, 0x020000, CRC(37addbf9) SHA1(a4061a1ba9e230f080f0bfea69bf77efe9264a92) )
+	ROM_LOAD16_BYTE( "79d3_11-21-97_1565_u_35.u35",  0x000000, 0x020000, CRC(c1e17191) SHA1(82901439b1a51b9aadb4df4b9d944f26697a1460) )
+
+	ROM_REGION( 0x000008, REGION_USER5, 0 ) /* CAT702, rom board */
+	ROM_LOAD( "ac02", 0x000000, 0x000008, CRC(1412d475) SHA1(c2f62232a261870f58353d09dc0d6ce2ad17a729) )
 
 	DISK_REGION( REGION_DISKS )
-	DISK_IMAGE( "jdreddb", 0, MD5(0da1d048d7223df74fca4f349473cefa) SHA1(9b810e3a16de62cabfc8271b6606574c7034cf41) )
+	DISK_IMAGE( "jdreddb", 0, SHA1(20f696fa6e1fbf97793bac2a794631c5dd4fb39a) )	/* 1576 Rev.B */
 ROM_END
 
 /* Capcom ZN-1 */
@@ -5297,8 +5533,10 @@ GAMEX( 1997, primrag2,  coh1000w, coh1000w, primrag2, coh1000w, ROT0,   "Atari",
 GAMEX( 1996, acpsx,    0,        zn,       zn, zn,   ROT0, "Acclaim", "Acclaim PSX", NOT_A_DRIVER )
 
 GAMEX( 1996, nbajamex, acpsx,    zn,       zn, zn,   ROT0, "Acclaim", "NBA Jam Extreme", GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )
-GAMEX( 1996, jdredd,   acpsx,    zn,       zn, zn,   ROT0, "Acclaim", "Judge Dredd (Rev C)", GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )
-GAMEX( 1996, jdreddb,  jdredd,   zn,       zn, zn,   ROT0, "Acclaim", "Judge Dredd (Rev B)", GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )
+
+GAMEX( 1995, coh1000a,  0,        jdredd,   jdredd,   jdredd,   ROT0,   "Acclaim", "Acclaim ZN-1", NOT_A_DRIVER )
+GAMEX( 1996, jdredd,    coh1000a, jdredd,   jdredd,   jdredd,   ROT0,   "Acclaim", "Judge Dredd (Rev C Dec. 17 1997)", 0 )
+GAMEX( 1996, jdreddb,   jdredd,   jdredd,   jdredd,   jdredd,   ROT0,   "Acclaim", "Judge Dredd (Rev B Nov. 26 1997)", 0 )
 
 /* Tecmo TPS */
 

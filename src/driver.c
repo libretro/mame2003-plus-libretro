@@ -2752,8 +2752,8 @@ V-V                           TP-027
 
 	/* Acclaim PSX */
 	DRIVER( nbajamex )	/* NBA Jam Extreme */
-	DRIVER( jdredd )	/* Judge Dredd (Rev C) */
-	DRIVER( jdreddb )	/* Judge Dredd (Rev B) */
+	DRIVER( jdredd )	/* Judge Dredd (Rev C Dec. 17 1997) */
+	DRIVER( jdreddb )	/* Judge Dredd (Rev B Nov. 26 1997) */
 
 	/* Video System ZN1 */
 	DRIVER( aerofgts )	/* Aero Fighters Special (USA) */
