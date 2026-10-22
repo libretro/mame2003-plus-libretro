@@ -153,6 +153,7 @@ Sound: Analog Devices ADSP-2181
 #include "state.h"
 #include "sound/psx.h"
 #include "machine/idectrl.h"
+#include "cpu/adsp2100/adsp2100.h"
 
 static int zn_bank_secsel;	/* the game ROM bank follows this register (Raizing) */
 static UINT32 tecmo_bank;
@@ -2323,6 +2324,694 @@ MACHINE_DRIVER_END
 
 /***************************************************************************
 
+  Acclaim (COH-1000A): NBA Jam Extreme, as in current MAME
+
+  The Acclaim ZN-1 board of Judge Dredd, without the hard disk: 32MB of
+  game ROM in 16 banks of 2MB and 32KB of battery backed RAM (71256), and
+  the RAX sound board.
+
+  Game ROM at 0x1f000000: the first 2MB window holds the bank written in
+  the low half of 0x1fbfff00. When that byte is 0, the backup RAM is at
+  0x1f200000 (8 bits per byte address); otherwise the 6MB from 0x1f200000
+  read the ROM from the bank written in the high half (inverted bit 4),
+  and the backup RAM is still written there.
+
+  RAX sound board (MAME shared/rax.cpp): an ADSP-2181 at 16.67MHz with
+  8MB of ROM (two banks of 4MB) read by its byte DMA (BDMA), 4 banks of
+  8K words of external data RAM behind the data memory overlay, and two
+  DACs fed by SPORT0 in autobuffer mode. The main CPU writes 16-bit
+  commands to 0x1fbfff80; the ADSP reads them at I/O 3, which clears its
+  IRQL0.
+
+***************************************************************************/
+
+/* the ADSP-2181 control registers, data memory 0x3fe0-0x3fff */
+enum
+{
+	RAX_IDMA_CONTROL_REG = 0,	/* 3fe0 */
+	RAX_BDMA_INT_ADDR_REG,		/* 3fe1 */
+	RAX_BDMA_EXT_ADDR_REG,		/* 3fe2 */
+	RAX_BDMA_CONTROL_REG,		/* 3fe3 */
+	RAX_BDMA_WORD_COUNT_REG,	/* 3fe4 */
+	RAX_PROG_FLAG_DATA_REG,		/* 3fe5 */
+	RAX_PROG_FLAG_CONTROL_REG,	/* 3fe6 */
+
+	RAX_S1_AUTOBUF_REG = 15,	/* 3fef */
+	RAX_S1_RFSDIV_REG,			/* 3ff0 */
+	RAX_S1_SCLKDIV_REG,			/* 3ff1 */
+	RAX_S1_CONTROL_REG,			/* 3ff2 */
+	RAX_S0_AUTOBUF_REG,			/* 3ff3 */
+	RAX_S0_RFSDIV_REG,			/* 3ff4 */
+	RAX_S0_SCLKDIV_REG,			/* 3ff5 */
+	RAX_S0_CONTROL_REG,			/* 3ff6 */
+	RAX_S0_MCTXLO_REG,			/* 3ff7 */
+	RAX_S0_MCTXHI_REG,			/* 3ff8 */
+	RAX_S0_MCRXLO_REG,			/* 3ff9 */
+	RAX_S0_MCRXHI_REG,			/* 3ffa */
+	RAX_TIMER_SCALE_REG,		/* 3ffb */
+	RAX_TIMER_COUNT_REG,		/* 3ffc */
+	RAX_TIMER_PERIOD_REG,		/* 3ffd */
+	RAX_WAITSTATES_REG,			/* 3ffe */
+	RAX_SYSCONTROL_REG			/* 3fff */
+};
+
+#define RAX_CLOCK			16670000
+#define RAX_BUFFER_SIZE		0x4000		/* DAC samples per channel */
+#define RAX_BUFFER_MASK		( RAX_BUFFER_SIZE - 1 )
+
+static int rax_cpunum;
+static UINT8 *rax_rom;
+static UINT16 *rax_banked_ram;			/* 5 x 8K words: internal, then external 0-3 */
+static UINT16 rax_control_regs[ 32 ];
+static UINT16 rax_data_in;
+static UINT16 rax_data_out;
+static UINT8 rax_pf0;
+static UINT16 rax_data_bank;
+static UINT16 rax_rom_bank;
+static UINT32 rax_dmovlay;
+static UINT16 rax_size;
+static UINT16 rax_incs;
+static INT32 rax_ireg;
+static UINT16 rax_ireg_base;
+static UINT8 rax_dac_enabled[ 2 ];
+
+/* the timers are not saved by the core: their time left is */
+static void *rax_reg_timer;
+static void *rax_dma_timer;
+static double rax_reg_timer_period;
+static double rax_reg_timer_left;
+static double rax_dma_timer_left;
+static UINT32 rax_dma_param;
+
+/* the DACs */
+static int rax_stream;
+static INT16 *rax_buffer[ 2 ];
+static UINT32 rax_buffer_in[ 2 ];
+static UINT32 rax_buffer_out[ 2 ];
+static UINT32 rax_sample_rate;
+static UINT32 rax_sample_step;
+static UINT32 rax_sample_position;
+
+static void rax_update_data_ram_bank( void )
+{
+	int n_entry = ( rax_dmovlay == 0 ) ? 0 : 1 + rax_data_bank;
+	cpu_setbank( 14, rax_banked_ram + n_entry * 0x2000 );
+}
+
+/* data memory as the ADSP sees it, outside its context (DMA, DACs) */
+static UINT16 *rax_data_ptr( UINT32 n_addr )
+{
+	n_addr &= 0x3fff;
+	if( n_addr < 0x2000 )
+		return rax_banked_ram + ( ( rax_dmovlay == 0 ) ? 0 : 1 + rax_data_bank ) * 0x2000 + n_addr;
+	if( n_addr < 0x3fe0 )
+		return (UINT16 *)( memory_region( REGION_CPU1 + rax_cpunum ) + ADSP2181_DATA_OFFSET + ( n_addr << 1 ) );
+	return NULL;
+}
+
+static void rax_dma_done( int param )
+{
+	/* update the external address and the page */
+	rax_control_regs[ RAX_BDMA_WORD_COUNT_REG ] = 0;
+	rax_control_regs[ RAX_BDMA_EXT_ADDR_REG ] = param & 0x3fff;
+	rax_control_regs[ RAX_BDMA_CONTROL_REG ] &= ~0xff00;
+	rax_control_regs[ RAX_BDMA_CONTROL_REG ] |= ( ( param >> 14 ) & 0xff ) << 8;
+
+	if( rax_control_regs[ RAX_BDMA_CONTROL_REG ] & 8 )
+		cpu_set_reset_line( rax_cpunum, PULSE_LINE );
+	else
+		cpu_set_irq_line( rax_cpunum, ADSP2181_BDMA, PULSE_LINE );
+
+	timer_adjust( rax_dma_timer, TIME_NEVER, 0, 0 );
+}
+
+/* the byte DMA: from the ROM to program or data memory, at once; the end
+   (its interrupt, or the reset of a boot load) after a cycle per word */
+static void rax_bdma( UINT32 n_count_reg )
+{
+	const UINT8 *adsp_rom = rax_rom + ( rax_rom_bank & 1 ) * 0x400000;
+	UINT32 page = ( rax_control_regs[ RAX_BDMA_CONTROL_REG ] >> 8 ) & 0xff;
+	UINT32 dir = ( rax_control_regs[ RAX_BDMA_CONTROL_REG ] >> 2 ) & 1;
+	UINT32 type = rax_control_regs[ RAX_BDMA_CONTROL_REG ] & 3;
+	UINT32 src_addr = ( page << 14 ) | rax_control_regs[ RAX_BDMA_EXT_ADDR_REG ];
+	UINT32 count = rax_control_regs[ RAX_BDMA_WORD_COUNT_REG ];
+
+	if( !dir )
+	{
+		while( count )
+		{
+			UINT32 n_addr = rax_control_regs[ RAX_BDMA_INT_ADDR_REG ];
+			if( type == 0 )
+			{
+				/* 24-bit words to program memory */
+				UINT32 n_word = ( adsp_rom[ ( src_addr + 0 ) & 0x3fffff ] << 16 ) |
+					( adsp_rom[ ( src_addr + 1 ) & 0x3fffff ] << 8 ) | adsp_rom[ ( src_addr + 2 ) & 0x3fffff ];
+				UINT32 *pgm = (UINT32 *)( memory_region( REGION_CPU1 + rax_cpunum ) + ADSP2181_PGM_OFFSET );
+				pgm[ n_addr & 0x3fff ] = n_word;
+				src_addr += 3;
+			}
+			else
+			{
+				/* 16-bit words, or bytes (MSB or LSB aligned) to data memory */
+				UINT16 n_word;
+				UINT16 *p;
+				if( type == 1 )
+				{
+					n_word = ( adsp_rom[ src_addr & 0x3fffff ] << 8 ) | adsp_rom[ ( src_addr + 1 ) & 0x3fffff ];
+					src_addr += 2;
+				}
+				else
+				{
+					n_word = adsp_rom[ src_addr & 0x3fffff ] << ( ( type == 2 ) ? 8 : 0 );
+					src_addr++;
+				}
+				p = rax_data_ptr( n_addr );
+				if( p )
+					*p = n_word;
+			}
+			rax_control_regs[ RAX_BDMA_INT_ADDR_REG ] = ( n_addr + 1 ) & 0x3fff;
+			count--;
+		}
+	}
+
+	rax_dma_param = src_addr;
+	timer_adjust( rax_dma_timer, TIME_IN_HZ( RAX_CLOCK ) * ( n_count_reg & 0x3fff ), rax_dma_param, 0 );
+}
+
+static READ16_HANDLER( rax_control_r )
+{
+	if( offset == RAX_PROG_FLAG_DATA_REG )
+		return rax_pf0;
+	return rax_control_regs[ offset ];
+}
+
+static WRITE16_HANDLER( rax_control_w )
+{
+	rax_control_regs[ offset ] = data;
+
+	switch( offset )
+	{
+		case RAX_BDMA_INT_ADDR_REG:
+			rax_control_regs[ offset ] = data & 0x3fff;
+			break;
+		case RAX_BDMA_EXT_ADDR_REG:
+			rax_control_regs[ offset ] = data & 0x3fff;
+			break;
+		case RAX_BDMA_CONTROL_REG:
+			rax_control_regs[ offset ] = data & 0xff0f;
+			break;
+		case RAX_BDMA_WORD_COUNT_REG:
+			rax_control_regs[ offset ] = data & 0x3fff;
+			rax_bdma( data );
+			break;
+
+		case RAX_S1_AUTOBUF_REG:
+			/* autobuffer off: the right DAC stops */
+			if( !( data & 2 ) )
+			{
+				stream_update( rax_stream, 0 );
+				rax_dac_enabled[ 1 ] = 0;
+				rax_buffer_in[ 1 ] = rax_buffer_out[ 1 ] = 0;
+			}
+			break;
+
+		case RAX_S0_AUTOBUF_REG:
+			/* autobuffer off: the left DAC and the transfers stop */
+			if( !( data & 2 ) )
+			{
+				stream_update( rax_stream, 0 );
+				rax_dac_enabled[ 0 ] = 0;
+				rax_buffer_in[ 0 ] = rax_buffer_out[ 0 ] = 0;
+				timer_adjust( rax_reg_timer, TIME_NEVER, 0, 0 );
+				rax_reg_timer_period = 0;
+			}
+			break;
+	}
+}
+
+/* the I/O space: data RAM bank, ROM bank, and the latches */
+static UINT16 rax_io_r( UINT32 offset )
+{
+	if( offset == 3 )
+	{
+		cpu_set_irq_line( rax_cpunum, ADSP2181_IRQL0, CLEAR_LINE );
+		return rax_data_in;
+	}
+	return 0xffff;
+}
+
+static void rax_io_w( UINT32 offset, UINT16 data )
+{
+	switch( offset )
+	{
+		case 0:
+			/* the board has two more RAM sockets, empty */
+			rax_data_bank = data & 3;
+			rax_update_data_ram_bank();
+			break;
+		case 1:
+			rax_rom_bank = data;
+			break;
+		case 3:
+			rax_data_out = data;
+			rax_pf0 = 0;
+			break;
+	}
+}
+
+static void rax_dmovlay_w( UINT32 data )
+{
+	rax_dmovlay = ( data != 0 );
+	rax_update_data_ram_bank();
+}
+
+/* a quarter of the autobuffer, to the DACs (left, right interleaved) */
+static void rax_irq( int param )
+{
+	int reg = cpunum_get_reg( rax_cpunum, ADSP2100_I0 + rax_ireg );
+	int count = rax_size / ( 4 * ( rax_incs ? rax_incs : 1 ) );
+	int i;
+
+	stream_update( rax_stream, 0 );
+
+	for( i = 0; i < ( count & ~1 ); i++ )
+	{
+		UINT16 *p = rax_data_ptr( reg );
+		int n_channel = i & 1;
+		if( rax_dac_enabled[ n_channel ] )
+		{
+			rax_buffer[ n_channel ][ rax_buffer_in[ n_channel ] & RAX_BUFFER_MASK ] = p ? (INT16)*p : 0;
+			if( rax_buffer_in[ n_channel ] - rax_buffer_out[ n_channel ] < RAX_BUFFER_SIZE - 1 )
+				rax_buffer_in[ n_channel ]++;
+		}
+		reg += rax_incs;
+	}
+
+	/* check for wrapping */
+	if( reg >= rax_ireg_base + rax_size )
+		reg = rax_ireg_base;
+
+	cpunum_set_reg( rax_cpunum, ADSP2100_I0 + rax_ireg, reg );
+}
+
+/* SPORT0 transmit: the autobuffer starts */
+static void rax_tx_callback( int port, INT32 data )
+{
+	if( port != 0 )
+		return;
+
+	/* SPORT0 enabled */
+	if( rax_control_regs[ RAX_SYSCONTROL_REG ] & 0x1000 )
+	{
+		/* autobuffer only, which is what this board uses */
+		if( rax_control_regs[ RAX_S0_AUTOBUF_REG ] & 0x0002 )
+		{
+			int mreg, lreg;
+			UINT16 source;
+
+			stream_update( rax_stream, 0 );
+
+			rax_ireg = ( rax_control_regs[ RAX_S0_AUTOBUF_REG ] >> 9 ) & 7;
+			mreg = ( rax_control_regs[ RAX_S0_AUTOBUF_REG ] >> 7 ) & 3;
+			mreg |= rax_ireg & 0x04;	/* msb comes from ireg */
+			lreg = rax_ireg;
+
+			source = cpunum_get_reg( rax_cpunum, ADSP2100_I0 + rax_ireg );
+			rax_incs = cpunum_get_reg( rax_cpunum, ADSP2100_M0 + mreg );
+			rax_size = cpunum_get_reg( rax_cpunum, ADSP2100_L0 + lreg );
+
+			/* the base value, kept for the wrapping; back one, so that the
+			   first sample is not lost */
+			source -= rax_incs;
+			cpunum_set_reg( rax_cpunum, ADSP2100_I0 + rax_ireg, source );
+			rax_ireg_base = source;
+
+			/* a sample every 16 serial clocks; the DACs at that rate */
+			rax_sample_rate = RAX_CLOCK / ( 16 * ( rax_control_regs[ RAX_S0_SCLKDIV_REG ] + 1 ) );
+			rax_sample_step = (UINT32)( (double)rax_sample_rate * 65536.0 / (double)Machine->sample_rate );
+			rax_dac_enabled[ 0 ] = rax_dac_enabled[ 1 ] = 1;
+
+			/* a timer every quarter of the buffer (two samples per pair) */
+			if( rax_incs )
+			{
+				rax_reg_timer_period = TIME_IN_HZ( rax_sample_rate ) * rax_size / ( 4 * 2 * rax_incs );
+				timer_adjust( rax_reg_timer, rax_reg_timer_period, 0, rax_reg_timer_period );
+			}
+			return;
+		}
+	}
+
+	/* anything else: no sound */
+	stream_update( rax_stream, 0 );
+	rax_dac_enabled[ 0 ] = rax_dac_enabled[ 1 ] = 0;
+	rax_buffer_in[ 0 ] = rax_buffer_out[ 0 ] = rax_buffer_in[ 1 ] = rax_buffer_out[ 1 ] = 0;
+	timer_adjust( rax_reg_timer, TIME_NEVER, 0, 0 );
+	rax_reg_timer_period = 0;
+}
+
+/* both DACs, resampled to the output rate; silence when one runs out */
+static void rax_dac_update( int num, INT16 **buffer, int length )
+{
+	UINT32 n_end = rax_sample_position;
+	int n_channel;
+
+	for( n_channel = 0; n_channel < 2; n_channel++ )
+	{
+		INT16 *dest = buffer[ n_channel ];
+		UINT32 current = rax_sample_position;
+		UINT32 n_used;
+		int i;
+
+		for( i = 0; i < length; i++ )
+		{
+			UINT32 n_index = rax_buffer_out[ n_channel ] + ( current >> 16 );
+			if( !rax_dac_enabled[ n_channel ] || n_index >= rax_buffer_in[ n_channel ] )
+				break;
+			dest[ i ] = rax_buffer[ n_channel ][ n_index & RAX_BUFFER_MASK ];
+			current += rax_sample_step;
+		}
+		for( ; i < length; i++ )
+			dest[ i ] = 0;
+
+		/* drop the samples played, keep the fraction */
+		n_used = current >> 16;
+		if( n_used > rax_buffer_in[ n_channel ] - rax_buffer_out[ n_channel ] )
+			n_used = rax_buffer_in[ n_channel ] - rax_buffer_out[ n_channel ];
+		rax_buffer_out[ n_channel ] += n_used;
+		if( n_channel == 0 )
+			n_end = current & 0xffff;
+	}
+	rax_sample_position = n_end;
+}
+
+static int rax_custom_start( const struct MachineSound *msound )
+{
+	const char *names[] = { "RAX DAC L", "RAX DAC R" };
+	int vols[] = { MIXER( 100, MIXER_PAN_LEFT ), MIXER( 100, MIXER_PAN_RIGHT ) };
+	int i;
+
+	rax_stream = stream_init_multi( 2, names, vols, Machine->sample_rate, 0, rax_dac_update );
+	for( i = 0; i < 2; i++ )
+	{
+		rax_buffer[ i ] = auto_malloc( RAX_BUFFER_SIZE * sizeof( INT16 ) );
+		if( !rax_buffer[ i ] )
+			return 1;
+		memset( rax_buffer[ i ], 0, RAX_BUFFER_SIZE * sizeof( INT16 ) );
+	}
+	state_save_register_INT16( "rax", 0, "buffer_l", rax_buffer[ 0 ], RAX_BUFFER_SIZE );
+	state_save_register_INT16( "rax", 0, "buffer_r", rax_buffer[ 1 ], RAX_BUFFER_SIZE );
+	return 0;
+}
+
+static struct CustomSound_interface rax_custom_interface =
+{
+	rax_custom_start, 0, 0
+};
+
+static MEMORY_READ16_START( rax_readmem )
+	{ ADSP_DATA_ADDR_RANGE( 0x0000, 0x1fff ), MRA16_BANK14 },	/* internal RAM, or external through DMOVLAY */
+	{ ADSP_DATA_ADDR_RANGE( 0x2000, 0x3fdf ), MRA16_RAM },		/* internal RAM */
+	{ ADSP_DATA_ADDR_RANGE( 0x3fe0, 0x3fff ), rax_control_r },	/* control registers */
+	{ ADSP_PGM_ADDR_RANGE( 0x0000, 0x3fff ), MRA16_RAM },		/* internal program RAM */
+MEMORY_END
+
+static MEMORY_WRITE16_START( rax_writemem )
+	{ ADSP_DATA_ADDR_RANGE( 0x0000, 0x1fff ), MWA16_BANK14 },
+	{ ADSP_DATA_ADDR_RANGE( 0x2000, 0x3fdf ), MWA16_RAM },
+	{ ADSP_DATA_ADDR_RANGE( 0x3fe0, 0x3fff ), rax_control_w },
+	{ ADSP_PGM_ADDR_RANGE( 0x0000, 0x3fff ), MWA16_RAM },
+MEMORY_END
+
+static void rax_presave( void )
+{
+	rax_reg_timer_left = timer_timeleft( rax_reg_timer );
+	rax_dma_timer_left = timer_timeleft( rax_dma_timer );
+}
+
+static void rax_postload( void )
+{
+	rax_update_data_ram_bank();
+	if( rax_reg_timer_period > 0 && rax_reg_timer_left < TIME_NEVER / 2 )
+		timer_adjust( rax_reg_timer, ( rax_reg_timer_left > 0 ) ? rax_reg_timer_left : 0, 0, rax_reg_timer_period );
+	else
+		timer_adjust( rax_reg_timer, TIME_NEVER, 0, 0 );
+	if( rax_dma_timer_left < TIME_NEVER / 2 )
+		timer_adjust( rax_dma_timer, ( rax_dma_timer_left > 0 ) ? rax_dma_timer_left : 0, rax_dma_param, 0 );
+	else
+		timer_adjust( rax_dma_timer, TIME_NEVER, 0, 0 );
+}
+
+static void rax_init( int cpunum )
+{
+	rax_cpunum = cpunum;
+	rax_rom = memory_region( REGION_SOUND1 );
+	rax_banked_ram = auto_malloc( 0x2000 * 5 * sizeof( UINT16 ) );
+	memset( rax_banked_ram, 0, 0x2000 * 5 * sizeof( UINT16 ) );
+	rax_reg_timer = timer_alloc( rax_irq );
+	rax_dma_timer = timer_alloc( rax_dma_done );
+
+	adsp2181_set_tx_callback( rax_tx_callback );
+	adsp2181_set_io_callbacks( rax_io_r, rax_io_w );
+	adsp2181_set_dmovlay_callback( rax_dmovlay_w );
+
+	state_save_register_UINT16( "rax", 0, "banked_ram", rax_banked_ram, 0x2000 * 5 );
+	state_save_register_UINT16( "rax", 0, "control_regs", rax_control_regs, 32 );
+	state_save_register_UINT16( "rax", 0, "data_in", &rax_data_in, 1 );
+	state_save_register_UINT16( "rax", 0, "data_out", &rax_data_out, 1 );
+	state_save_register_UINT8( "rax", 0, "pf0", &rax_pf0, 1 );
+	state_save_register_UINT16( "rax", 0, "data_bank", &rax_data_bank, 1 );
+	state_save_register_UINT16( "rax", 0, "rom_bank", &rax_rom_bank, 1 );
+	state_save_register_UINT32( "rax", 0, "dmovlay", &rax_dmovlay, 1 );
+	state_save_register_UINT16( "rax", 0, "size", &rax_size, 1 );
+	state_save_register_UINT16( "rax", 0, "incs", &rax_incs, 1 );
+	state_save_register_INT32( "rax", 0, "ireg", &rax_ireg, 1 );
+	state_save_register_UINT16( "rax", 0, "ireg_base", &rax_ireg_base, 1 );
+	state_save_register_UINT8( "rax", 0, "dac_enabled", rax_dac_enabled, 2 );
+	state_save_register_double( "rax", 0, "reg_timer_period", &rax_reg_timer_period, 1 );
+	state_save_register_double( "rax", 0, "reg_timer_left", &rax_reg_timer_left, 1 );
+	state_save_register_double( "rax", 0, "dma_timer_left", &rax_dma_timer_left, 1 );
+	state_save_register_UINT32( "rax", 0, "dma_param", &rax_dma_param, 1 );
+	state_save_register_UINT32( "rax", 0, "buffer_in", rax_buffer_in, 2 );
+	state_save_register_UINT32( "rax", 0, "buffer_out", rax_buffer_out, 2 );
+	state_save_register_UINT32( "rax", 0, "sample_rate", &rax_sample_rate, 1 );
+	state_save_register_UINT32( "rax", 0, "sample_step", &rax_sample_step, 1 );
+	state_save_register_UINT32( "rax", 0, "sample_position", &rax_sample_position, 1 );
+	state_save_register_func_presave( rax_presave );
+	state_save_register_func_postload( rax_postload );
+}
+
+static void rax_reset( void )
+{
+	UINT32 *pgm = (UINT32 *)( memory_region( REGION_CPU1 + rax_cpunum ) + ADSP2181_PGM_OFFSET );
+	int i;
+
+	/* the boot: 32 program words (96 bytes) from the ROM, as by BDMA */
+	for( i = 0; i < 32; i++ )
+		pgm[ i ] = ( rax_rom[ i * 3 + 0 ] << 16 ) | ( rax_rom[ i * 3 + 1 ] << 8 ) | rax_rom[ i * 3 + 2 ];
+
+	rax_pf0 = 1;
+	rax_rom_bank = 0;
+	rax_size = 0;
+	rax_incs = 0;
+	rax_ireg = 0;
+	memset( rax_control_regs, 0, sizeof( rax_control_regs ) );
+	rax_dmovlay = 0;
+	rax_data_bank = 0;
+	rax_update_data_ram_bank();
+
+	rax_dac_enabled[ 0 ] = rax_dac_enabled[ 1 ] = 0;
+	rax_buffer_in[ 0 ] = rax_buffer_out[ 0 ] = rax_buffer_in[ 1 ] = rax_buffer_out[ 1 ] = 0;
+	rax_sample_position = 0;
+	rax_sample_step = 0x10000;
+	rax_reg_timer_period = 0;
+	timer_adjust( rax_reg_timer, TIME_NEVER, 0, 0 );
+	timer_adjust( rax_dma_timer, TIME_NEVER, 0, 0 );
+}
+
+/* from the main CPU: a command, IRQL0 on the ADSP */
+static void rax_data_w( UINT16 data )
+{
+	rax_data_in = data;
+	cpu_set_irq_line( rax_cpunum, ADSP2181_IRQL0, ASSERT_LINE );
+	cpu_boost_interleave( 0, TIME_IN_USEC( 5 ) );
+}
+
+
+/* the main board side */
+
+static UINT8 *nbajamex_sram;			/* 71256 */
+static UINT32 nbajamex_rombank[ 2 ];
+static UINT8 nbajamex_bankmap;			/* 0: backup RAM at 0x1f200000, 1: ROM bank 1 there */
+
+static void nbajamex_update_banks( void )
+{
+	UINT32 n_bank0 = ( ( nbajamex_rombank[ 0 ] >> 4 ) & 1 ) | ( ( nbajamex_rombank[ 0 ] & 7 ) << 1 );
+	cpu_setbank( 1, memory_region( REGION_USER1 ) + n_bank0 * 0x200000 );
+}
+
+static READ32_HANDLER( nbajamex_rom1_r )
+{
+	UINT32 n_address = offset * 4;	/* from 0x1f200000 */
+
+	if( !nbajamex_bankmap )
+	{
+		/* the backup RAM, bytes at byte addresses */
+		if( n_address < 0x8000 )
+			return nbajamex_sram[ n_address ] | ( nbajamex_sram[ n_address + 1 ] << 8 ) |
+				( nbajamex_sram[ n_address + 2 ] << 16 ) | ( nbajamex_sram[ n_address + 3 ] << 24 );
+		return 0;
+	}
+	else
+	{
+		UINT32 n_bank1 = ( ( ~nbajamex_rombank[ 1 ] >> 4 ) & 1 ) | ( ( nbajamex_rombank[ 1 ] & 7 ) << 1 );
+		UINT32 n_rom = n_bank1 * 0x200000 + n_address;
+		if( n_rom + 4 <= memory_region_length( REGION_USER1 ) )
+			return *(UINT32 *)( memory_region( REGION_USER1 ) + n_rom );
+		return 0;
+	}
+}
+
+static WRITE32_HANDLER( nbajamex_backup_w )
+{
+	UINT32 n_address = offset * 4;	/* from 0x1f200000 */
+	int n_lane;
+
+	for( n_lane = 0; n_lane < 4; n_lane++ )
+		if( !( mem_mask & ( 0xff << ( n_lane * 8 ) ) ) )
+			nbajamex_sram[ n_address + n_lane ] = data >> ( n_lane * 8 );
+}
+
+static WRITE32_HANDLER( nbajamex_bank_w )
+{
+	/* a 16-bit register in each half */
+	if( ( mem_mask & 0x0000ffff ) != 0x0000ffff )
+		nbajamex_rombank[ 0 ] = data & 0xffff;
+	if( ( mem_mask & 0xffff0000 ) != 0xffff0000 )
+		nbajamex_rombank[ 1 ] = data >> 16;
+	nbajamex_bankmap = ( nbajamex_rombank[ 0 ] != 0 );
+	nbajamex_update_banks();
+}
+
+static READ32_HANDLER( nbajamex_sound_08_r )
+{
+	return 0x400;	/* sound related */
+}
+
+static READ32_HANDLER( nbajamex_sound_80_r )
+{
+	return 0xffff;
+}
+
+static WRITE32_HANDLER( nbajamex_sound_80_w )
+{
+	/* all 16 bits go to the latch of the sound board (see the sound test) */
+	if( ( mem_mask & 0x0000ffff ) != 0x0000ffff )
+		rax_data_w( data & 0xffff );
+}
+
+static MEMORY_READ32_START( nbajamex_readmem )
+	ZN_MAIN_READ
+	{ 0x1f000000, 0x1f1fffff, MRA32_BANK1 },  /* game rom, bank 0 */
+	{ 0x1f200000, 0x1f7fffff, nbajamex_rom1_r },
+	{ 0x1fbfff08, 0x1fbfff0b, nbajamex_sound_08_r },
+	{ 0x1fbfff80, 0x1fbfff83, nbajamex_sound_80_r },
+MEMORY_END
+
+static MEMORY_WRITE32_START( nbajamex_writemem )
+	ZN_MAIN_WRITE
+	{ 0x1f000000, 0x1f1fffff, MWA32_ROM },
+	{ 0x1f200000, 0x1f207fff, nbajamex_backup_w },
+	{ 0x1f208000, 0x1f7fffff, MWA32_NOP },
+	{ 0x1fbfff00, 0x1fbfff03, nbajamex_bank_w },
+	{ 0x1fbfff10, 0x1fbfff13, MWA32_NOP },
+	{ 0x1fbfff80, 0x1fbfff83, nbajamex_sound_80_w },
+MEMORY_END
+
+static NVRAM_HANDLER( nbajamex )
+{
+	nvram_handler_zn( file, read_or_write );
+	if( read_or_write )
+		mame_fwrite( file, nbajamex_sram, 0x8000 );
+	else if( file )
+		mame_fread( file, nbajamex_sram, 0x8000 );
+	else
+		memset( nbajamex_sram, 0xff, 0x8000 );
+}
+
+static void nbajamex_postload( void )
+{
+	nbajamex_update_banks();
+}
+
+static DRIVER_INIT( nbajamex )
+{
+	zn_scratchpad = auto_malloc( 0x400 );
+	zn_eeprom = auto_malloc( 0x800 );
+	nbajamex_sram = auto_malloc( 0x8000 );
+	memset( zn_scratchpad, 0, 0x400 );
+	memset( zn_eeprom, 0xff, 0x800 );
+	memset( nbajamex_sram, 0xff, 0x8000 );
+
+	zn_vram_2mb = 1;
+	zn_coin_tecmo = 0;
+	zn_eeprom_default = 0;
+
+	zn_board_init();
+	znsec_init( 0, memory_region( REGION_USER4 ) );	/* AC01 */
+	znsec_init( 1, memory_region( REGION_USER5 ) );	/* AC02 */
+
+	rax_init( mame_find_cpu_index( "rax" ) );
+
+	state_save_register_UINT8( "zn", 0, "nbajamex_sram", nbajamex_sram, 0x8000 );
+	state_save_register_UINT32( "zn", 0, "nbajamex_rombank", nbajamex_rombank, 2 );
+	state_save_register_UINT8( "zn", 0, "nbajamex_bankmap", &nbajamex_bankmap, 1 );
+	state_save_register_UINT32( "zn", 0, "scratchpad", zn_scratchpad, 0x100 );
+	state_save_register_func_postload( nbajamex_postload );
+}
+
+static MACHINE_INIT( nbajamex )
+{
+	zn_board_reset();
+	nbajamex_rombank[ 0 ] = nbajamex_rombank[ 1 ] = 0;
+	nbajamex_bankmap = 0;
+	nbajamex_update_banks();
+	rax_reset();
+}
+
+/* ZN-1, 2MB VRAM (COH-1000A), SPU and the RAX sound board */
+static MACHINE_DRIVER_START( nbajamex )
+	MDRV_CPU_ADD_TAG( "main", PSXCPU, 33868800 / 2 )	/* CXD8530CQ, 67.7376MHz XTAL; as System 11 */
+	MDRV_CPU_MEMORY( nbajamex_readmem, nbajamex_writemem )
+	MDRV_CPU_VBLANK_INT( psx_vblank, 1 )
+
+	MDRV_CPU_ADD_TAG( "rax", ADSP2181, RAX_CLOCK )
+	MDRV_CPU_FLAGS( CPU_AUDIO_CPU )
+	MDRV_CPU_MEMORY( rax_readmem, rax_writemem )
+
+	MDRV_FRAMES_PER_SECOND( 60 )
+	MDRV_VBLANK_DURATION( 0 )
+
+	MDRV_MACHINE_INIT( nbajamex )
+	MDRV_NVRAM_HANDLER( nbajamex )
+
+	MDRV_VIDEO_ATTRIBUTES( VIDEO_TYPE_RASTER | VIDEO_RGB_DIRECT )
+	MDRV_SCREEN_SIZE( 640, 480 )
+	MDRV_VISIBLE_AREA( 0, 639, 0, 479 )
+	MDRV_PALETTE_LENGTH( 65536 )
+
+	MDRV_PALETTE_INIT( psx )
+	MDRV_VIDEO_START( psx_type2_1024x1024 )
+	MDRV_VIDEO_UPDATE( psx )
+	MDRV_VIDEO_STOP( psx )
+
+	MDRV_SOUND_ATTRIBUTES( SOUND_SUPPORTS_STEREO )
+	MDRV_SOUND_ADD( PSXSPU, zn_spu_interface )
+	MDRV_SOUND_ADD( CUSTOM, rax_custom_interface )
+MACHINE_DRIVER_END
+
+
+/***************************************************************************
+
   Video System (COH-1002V), as in current MAME
 
   ZN-1 main board with 2MB VRAM and the Video System BIOS; CAT702 KN01 on
@@ -2876,6 +3565,17 @@ INPUT_PORTS_START( jdredd )
 	PORT_ANALOG( 0xffff, 0x0822, IPT_LIGHTGUN_X | IPF_PLAYER2, 100, 50, 0x392, 0xcb3 )
 	PORT_START	/* GUN2Y */
 	PORT_ANALOG( 0xffff, 0x0122, IPT_LIGHTGUN_Y | IPF_PLAYER2, 100, 15, 0x02c, 0x218 )
+INPUT_PORTS_END
+
+/* four players, four buttons */
+INPUT_PORTS_START( nbajamex )
+	TPS_PLAYER_PORT( 1, 1, 1 )
+	TPS_PLAYER_PORT( 2, 1, 1 )
+	TPS_SERVICE_PORT( 0 )
+	TPS_SYSTEM_PORT( 1, 1, 1 )
+	TPS_PLAYER_PORT( 3, 1, 1 )
+	TPS_PLAYER_PORT( 4, 1, 1 )
+	ZN_DSW_PORT
 INPUT_PORTS_END
 
 /* Taito FX: DSW 4 is the test mode; the 4 bits not fitted read as 0 */
@@ -5388,45 +6088,6 @@ ROM_START( primrag2 )
 	DISK_IMAGE( "primrag2", 0, SHA1(bc615068ddf4fd967f770ee01c02f285c052c4c5) )
 ROM_END
 
-/* Acclaim PSX */
-
-#define AC_BIOS \
-	ROM_REGION( 0x480400, REGION_CPU1, 0 ) \
-	ROM_LOAD( "coh1000a.bin", 0x0400000, 0x080000, CRC(8d8d0764) SHA1(7ee83d317190bb1cef2f8f01c81eaaae47150ebb) )
-
-ROM_START( acpsx )
-	AC_BIOS
-ROM_END
-
-ROM_START( nbajamex )
-	AC_BIOS
-
-	ROM_REGION32_LE( 0x01a00000, REGION_USER1, 0 )
-	ROM_LOAD( "360mpa1e.u35", 0x000000, 0x100000, CRC(d8f5b2f7) SHA1(e38609d314721b8b612e047406e2888395917b0d) ) 
-	ROM_LOAD( "360mpa1o.u36", 0x000000, 0x100000, CRC(c433e827) SHA1(1d2a5a6990a1b1864e63ce3ba7306d48ebbd4775) ) 
-	ROM_LOAD( "nbax0e.u41",   0x000000, 0x200000, CRC(077f4355) SHA1(63c52bb82943b52bb0906d114acd5ea8643068b6) ) 
-	ROM_LOAD( "nbax0o.u28",   0x000000, 0x200000, CRC(be13c5af) SHA1(eee5c9d985384ecfe4f00fae27d66fbefc15b28e) ) 
-	ROM_LOAD( "nbax1e.u42",   0x000000, 0x200000, CRC(f1212cf9) SHA1(b2f80af3ec4d559056e86f695d89d1d32b500f50) ) 
-	ROM_LOAD( "nbax1o.u29",   0x000000, 0x200000, CRC(3650e85b) SHA1(a36bfa235c8e3bb516e178f54d3c5e3955c7e918) ) 
-	ROM_LOAD( "nbax2e.u43",   0x000000, 0x200000, CRC(c20ab628) SHA1(7ffe5005e1913da56770452ae2f907a4a270ab24) ) 
-	ROM_LOAD( "nbax2o.u30",   0x000000, 0x200000, CRC(ccbb6125) SHA1(998eda99182b984f88f5fc58095cb35bf232a26b) ) 
-	ROM_LOAD( "nbax3e.u44",   0x000000, 0x200000, CRC(07ba00a3) SHA1(c14bffd35ee715b07d6065b454b0443438ab6536) ) 
-	ROM_LOAD( "nbax3o.u31",   0x000000, 0x200000, CRC(d5238edf) SHA1(d1eb30ec65dd6cfa8cbb2b36af3a83820d1de99a) ) 
-	ROM_LOAD( "nbax4e.u17",   0x000000, 0x200000, CRC(b5977765) SHA1(08acdfe413a5a9182ca117f44b7acac9dac9ecea) ) 
-	ROM_LOAD( "nbax4o.u3",    0x000000, 0x200000, CRC(1cf16a34) SHA1(a7e984a2db846854f1c4a9a2fdefd0d17ce3108c) ) 
-	ROM_LOAD( "nbax5e.u18",   0x000000, 0x200000, CRC(0eb917da) SHA1(d6c8991ba7cd492668757658ee64078d0e82b596) ) 
-	ROM_LOAD( "nbax5o.u4",    0x000000, 0x200000, CRC(5272754b) SHA1(c35ba5377eb812991e4bf0d954a34af90b986341) ) 
-	ROM_LOAD( "nbax6e.u19",   0x000000, 0x200000, CRC(6f17d8c1) SHA1(22cf263efb64cf62030e02b641c485debe75944d) ) 
-	ROM_LOAD( "nbax6o.u5",    0x000000, 0x200000, CRC(b1dfb42e) SHA1(fb9627e228bf2a744842eb44afbca4a6232cadb2) ) 
-
-	ROM_REGION( 0x01a00000, REGION_CPU2, 0 )
-	ROM_LOAD( "sound0.u48",   0x000000, 0x200000, CRC(38873b67) SHA1(b2f8d32270ae604c099a1b9b71d2e06468c7d4a9) ) 
-	ROM_LOAD( "sound1.u49",   0x000000, 0x200000, CRC(57014589) SHA1(d360ff1c52424bd91a5a8d1a2a9c10bf7abb0602) ) 
-
-	ROM_REGION( 0x01a00000, REGION_SOUND1, 0 )
-	ROM_LOAD( "360snda1.u52", 0x000000, 0x080000, CRC(36d8a628) SHA1(944a01c9128f5e90c7dba3557a3ecb2c5ca90831) ) 
-ROM_END
-
 #define ACCLAIM_BIOS \
 	ROM_REGION32_LE( 0x400000, REGION_CPU1, ROMREGION_ERASE00 ) /* ram */ \
 	ROM_REGION32_LE( 0x080000, REGION_USER3, 0 ) /* bios */ \
@@ -5464,6 +6125,70 @@ ROM_START( jdreddb )
 
 	DISK_REGION( REGION_DISKS )
 	DISK_IMAGE( "jdreddb", 0, SHA1(20f696fa6e1fbf97793bac2a794631c5dd4fb39a) )	/* 1576 Rev.B */
+ROM_END
+
+ROM_START( nbajamex )
+	ACCLAIM_BIOS
+
+	ROM_REGION32_LE( 0x2000000, REGION_USER1, 0 ) /* game rom, 16 banks of 2MB */
+	ROM_LOAD16_BYTE( "nba_jam_110i_odd_cs_cc48.u36",  0x0000001, 0x100000, CRC(533041e7) SHA1(691a11a031e61d892db74c4c29b6a999917c341b) )	/* labeled  NBA JAM 1.10I  ODD  CS = CC48 */
+	ROM_LOAD16_BYTE( "nba_jam_110i_even_cs_9567.u35", 0x0000000, 0x100000, CRC(63d7f15d) SHA1(23525e875d0e61763301e95f70964bc9df3a2624) )	/* labeled  NBA JAM 1.10I  EVEN  CS = 9567 */
+	ROM_LOAD16_BYTE( "nba0o.u28",   0x0200001, 0x200000, CRC(be13c5af) SHA1(eee5c9d985384ecfe4f00fae27d66fbefc15b28e) )
+	ROM_LOAD16_BYTE( "nba0e.u41",   0x0200000, 0x200000, CRC(077f4355) SHA1(63c52bb82943b52bb0906d114acd5ea8643068b6) )
+	ROM_LOAD16_BYTE( "nba1o.u29",   0x0600001, 0x200000, CRC(3650e85b) SHA1(a36bfa235c8e3bb516e178f54d3c5e3955c7e918) )
+	ROM_LOAD16_BYTE( "nba1e.u42",   0x0600000, 0x200000, CRC(f1212cf9) SHA1(b2f80af3ec4d559056e86f695d89d1d32b500f50) )
+	ROM_LOAD16_BYTE( "nba2o.u30",   0x0a00001, 0x200000, CRC(ccbb6125) SHA1(998eda99182b984f88f5fc58095cb35bf232a26b) )
+	ROM_LOAD16_BYTE( "nba2e.u43",   0x0a00000, 0x200000, CRC(c20ab628) SHA1(7ffe5005e1913da56770452ae2f907a4a270ab24) )
+	ROM_LOAD16_BYTE( "nba3o.u31",   0x0e00001, 0x200000, CRC(d5238edf) SHA1(d1eb30ec65dd6cfa8cbb2b36af3a83820d1de99a) )
+	ROM_LOAD16_BYTE( "nba3e.u44",   0x0e00000, 0x200000, CRC(07ba00a3) SHA1(c14bffd35ee715b07d6065b454b0443438ab6536) )
+	ROM_LOAD16_BYTE( "nba4o.u3",    0x1200001, 0x200000, CRC(1cf16a34) SHA1(a7e984a2db846854f1c4a9a2fdefd0d17ce3108c) )
+	ROM_LOAD16_BYTE( "nba4e.u17",   0x1200000, 0x200000, CRC(b5977765) SHA1(08acdfe413a5a9182ca117f44b7acac9dac9ecea) )
+	ROM_LOAD16_BYTE( "nba5o.u4",    0x1600001, 0x200000, CRC(5272754b) SHA1(c35ba5377eb812991e4bf0d954a34af90b986341) )
+	ROM_LOAD16_BYTE( "nba5e.u18",   0x1600000, 0x200000, CRC(0eb917da) SHA1(d6c8991ba7cd492668757658ee64078d0e82b596) )
+	ROM_LOAD16_BYTE( "nba6o.u5",    0x1a00001, 0x200000, CRC(b1dfb42e) SHA1(fb9627e228bf2a744842eb44afbca4a6232cadb2) )
+	ROM_LOAD16_BYTE( "nba6e.u19",   0x1a00000, 0x200000, CRC(6f17d8c1) SHA1(22cf263efb64cf62030e02b641c485debe75944d) )
+
+	ROM_REGION( ADSP2100_SIZE, REGION_CPU2, ROMREGION_ERASE00 )	/* ADSP-2181 internal RAM */
+
+	ROM_REGION( 0x800000, REGION_SOUND1, 0 )	/* RAX: two banks of 4MB */
+	ROM_LOAD( "360snda1.u52", 0x000000, 0x080000, CRC(36d8a628) SHA1(944a01c9128f5e90c7dba3557a3ecb2c5ca90831) )
+	ROM_LOAD( "sound0.u48",   0x400000, 0x200000, CRC(38873b67) SHA1(b2f8d32270ae604c099a1b9b71d2e06468c7d4a9) )
+	ROM_LOAD( "sound1.u49",   0x600000, 0x200000, CRC(57014589) SHA1(d360ff1c52424bd91a5a8d1a2a9c10bf7abb0602) )
+
+	ROM_REGION( 0x000008, REGION_USER5, 0 ) /* CAT702, rom board */
+	ROM_LOAD( "ac02", 0x000000, 0x000008, CRC(1412d475) SHA1(c2f62232a261870f58353d09dc0d6ce2ad17a729) )
+ROM_END
+
+ROM_START( nbajamexa )
+	ACCLAIM_BIOS
+
+	ROM_REGION32_LE( 0x2000000, REGION_USER1, 0 ) /* game rom, 16 banks of 2MB */
+	ROM_LOAD16_BYTE( "360-mp-a1_odd_cs_e0fe.u36",  0x0000001, 0x100000, CRC(c433e827) SHA1(1d2a5a6990a1b1864e63ce3ba7306d48ebbd4775) )	/* labeled  360-MP-A1  ODD  CS = E0FE */
+	ROM_LOAD16_BYTE( "360-mp-a1_even_cs_295a.u35", 0x0000000, 0x100000, CRC(d8f5b2f7) SHA1(e38609d314721b8b612e047406e2888395917b0d) )	/* labeled  360-MP-A1  EVEN  CS = 295A */
+	ROM_LOAD16_BYTE( "nba0o.u28",   0x0200001, 0x200000, CRC(be13c5af) SHA1(eee5c9d985384ecfe4f00fae27d66fbefc15b28e) )
+	ROM_LOAD16_BYTE( "nba0e.u41",   0x0200000, 0x200000, CRC(077f4355) SHA1(63c52bb82943b52bb0906d114acd5ea8643068b6) )
+	ROM_LOAD16_BYTE( "nba1o.u29",   0x0600001, 0x200000, CRC(3650e85b) SHA1(a36bfa235c8e3bb516e178f54d3c5e3955c7e918) )
+	ROM_LOAD16_BYTE( "nba1e.u42",   0x0600000, 0x200000, CRC(f1212cf9) SHA1(b2f80af3ec4d559056e86f695d89d1d32b500f50) )
+	ROM_LOAD16_BYTE( "nba2o.u30",   0x0a00001, 0x200000, CRC(ccbb6125) SHA1(998eda99182b984f88f5fc58095cb35bf232a26b) )
+	ROM_LOAD16_BYTE( "nba2e.u43",   0x0a00000, 0x200000, CRC(c20ab628) SHA1(7ffe5005e1913da56770452ae2f907a4a270ab24) )
+	ROM_LOAD16_BYTE( "nba3o.u31",   0x0e00001, 0x200000, CRC(d5238edf) SHA1(d1eb30ec65dd6cfa8cbb2b36af3a83820d1de99a) )
+	ROM_LOAD16_BYTE( "nba3e.u44",   0x0e00000, 0x200000, CRC(07ba00a3) SHA1(c14bffd35ee715b07d6065b454b0443438ab6536) )
+	ROM_LOAD16_BYTE( "nba4o.u3",    0x1200001, 0x200000, CRC(1cf16a34) SHA1(a7e984a2db846854f1c4a9a2fdefd0d17ce3108c) )
+	ROM_LOAD16_BYTE( "nba4e.u17",   0x1200000, 0x200000, CRC(b5977765) SHA1(08acdfe413a5a9182ca117f44b7acac9dac9ecea) )
+	ROM_LOAD16_BYTE( "nba5o.u4",    0x1600001, 0x200000, CRC(5272754b) SHA1(c35ba5377eb812991e4bf0d954a34af90b986341) )
+	ROM_LOAD16_BYTE( "nba5e.u18",   0x1600000, 0x200000, CRC(0eb917da) SHA1(d6c8991ba7cd492668757658ee64078d0e82b596) )
+	ROM_LOAD16_BYTE( "nba6o.u5",    0x1a00001, 0x200000, CRC(b1dfb42e) SHA1(fb9627e228bf2a744842eb44afbca4a6232cadb2) )
+	ROM_LOAD16_BYTE( "nba6e.u19",   0x1a00000, 0x200000, CRC(6f17d8c1) SHA1(22cf263efb64cf62030e02b641c485debe75944d) )
+
+	ROM_REGION( ADSP2100_SIZE, REGION_CPU2, ROMREGION_ERASE00 )	/* ADSP-2181 internal RAM */
+
+	ROM_REGION( 0x800000, REGION_SOUND1, 0 )	/* RAX: two banks of 4MB */
+	ROM_LOAD( "360snda1.u52", 0x000000, 0x080000, CRC(36d8a628) SHA1(944a01c9128f5e90c7dba3557a3ecb2c5ca90831) )
+	ROM_LOAD( "sound0.u48",   0x400000, 0x200000, CRC(38873b67) SHA1(b2f8d32270ae604c099a1b9b71d2e06468c7d4a9) )
+	ROM_LOAD( "sound1.u49",   0x600000, 0x200000, CRC(57014589) SHA1(d360ff1c52424bd91a5a8d1a2a9c10bf7abb0602) )
+
+	ROM_REGION( 0x000008, REGION_USER5, 0 ) /* CAT702, rom board */
+	ROM_LOAD( "ac02", 0x000000, 0x000008, CRC(1412d475) SHA1(c2f62232a261870f58353d09dc0d6ce2ad17a729) )
 ROM_END
 
 /* Capcom ZN-1 */
@@ -5530,13 +6255,13 @@ GAMEX( 1997, primrag2,  coh1000w, coh1000w, primrag2, coh1000w, ROT0,   "Atari",
 /* parent for the coh1000a.bin file, so that we do not have to include */
 /* it in every zip file */
 
-GAMEX( 1996, acpsx,    0,        zn,       zn, zn,   ROT0, "Acclaim", "Acclaim PSX", NOT_A_DRIVER )
 
-GAMEX( 1996, nbajamex, acpsx,    zn,       zn, zn,   ROT0, "Acclaim", "NBA Jam Extreme", GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )
 
 GAMEX( 1995, coh1000a,  0,        jdredd,   jdredd,   jdredd,   ROT0,   "Acclaim", "Acclaim ZN-1", NOT_A_DRIVER )
 GAMEX( 1996, jdredd,    coh1000a, jdredd,   jdredd,   jdredd,   ROT0,   "Acclaim", "Judge Dredd (Rev C Dec. 17 1997)", 0 )
 GAMEX( 1996, jdreddb,   jdredd,   jdredd,   jdredd,   jdredd,   ROT0,   "Acclaim", "Judge Dredd (Rev B Nov. 26 1997)", 0 )
+GAMEX( 1996, nbajamex,  coh1000a, nbajamex, nbajamex, nbajamex, ROT0,   "Acclaim", "NBA Jam Extreme (ver. 1.10I)", 0 )
+GAMEX( 1996, nbajamexa, nbajamex, nbajamex, nbajamex, nbajamex, ROT0,   "Acclaim", "NBA Jam Extreme (ver. 1.04)", 0 )
 
 /* Tecmo TPS */
 

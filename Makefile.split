@@ -1073,6 +1073,14 @@ else
 CPUDEFS += -DHAS_ADSP2115=0
 endif
 
+CPU=$(strip $(findstring ADSP2181@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_ADSP2181=1
+HAS_ADSP2100 = 1
+else
+CPUDEFS += -DHAS_ADSP2181=0
+endif
+
 CPU=$(strip $(findstring Z80@,$(CPUS)))
 ifneq ($(CPU),)
 CPUDEFS += -DHAS_Z80=1

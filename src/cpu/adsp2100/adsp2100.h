@@ -269,4 +269,56 @@ extern void adsp2115_set_tx_callback( TX_CALLBACK cb );
 extern void adsp2115_load_boot_data(data8_t *srcdata, data32_t *dstdata);
 #endif
 
+#if (HAS_ADSP2181)
+/**************************************************************************
+ * ADSP2181 section
+ *
+ * 16K words of program RAM and 16K words of data RAM on the chip: the
+ * driver maps them (program memory at ADSP2181_PGM_OFFSET, data memory
+ * at ADSP2181_DATA_OFFSET), with its control registers at 0x3fe0-0x3fff
+ * of data memory. The I/O space (IO(x) instructions) and the data memory
+ * overlay (DMOVLAY) go through the callbacks below
+ **************************************************************************/
+
+#define ADSP2181_DATA_OFFSET    ADSP2100_DATA_OFFSET
+#define ADSP2181_PGM_OFFSET     ADSP2100_PGM_OFFSET
+#define ADSP2181_SIZE           ADSP2100_SIZE
+
+#define adsp2181_icount adsp2100_icount
+
+#define ADSP2181_IRQ0		0		/* IRQ0 */
+#define ADSP2181_SPORT1_RX	0		/* SPORT1 receive IRQ */
+#define ADSP2181_IRQ1		1		/* IRQ1 */
+#define ADSP2181_SPORT1_TX	1		/* SPORT1 transmit IRQ */
+#define ADSP2181_IRQ2		2		/* IRQ2 */
+#define ADSP2181_SPORT0_RX	3		/* SPORT0 receive IRQ */
+#define ADSP2181_SPORT0_TX	4		/* SPORT0 transmit IRQ */
+#define ADSP2181_TIMER		5		/* internal timer IRQ */
+#define ADSP2181_IRQE		6		/* IRQE */
+#define ADSP2181_BDMA		7		/* BDMA */
+#define ADSP2181_IRQL1		8		/* IRQL1 */
+#define ADSP2181_IRQL0		9		/* IRQL0 */
+
+typedef UINT16 (*ADSP2181_IO_READ)( UINT32 offset );
+typedef void   (*ADSP2181_IO_WRITE)( UINT32 offset, UINT16 data );
+typedef void   (*ADSP2181_DMOVLAY)( UINT32 dmovlay );
+
+extern void adsp2181_init(void);
+extern void adsp2181_reset(void *param);
+extern void adsp2181_exit(void);
+extern int adsp2181_execute(int cycles);
+extern unsigned adsp2181_get_context(void *dst);
+extern void adsp2181_set_context(void *src);
+extern unsigned adsp2181_get_reg(int regnum);
+extern void adsp2181_set_reg(int regnum, unsigned val);
+extern void adsp2181_set_irq_line(int irqline, int state);
+extern void adsp2181_set_irq_callback(int (*callback)(int irqline));
+extern const char *adsp2181_info(void *context, int regnum);
+extern unsigned adsp2181_dasm(char *buffer, unsigned pc);
+extern void adsp2181_set_rx_callback( RX_CALLBACK cb );
+extern void adsp2181_set_tx_callback( TX_CALLBACK cb );
+extern void adsp2181_set_io_callbacks( ADSP2181_IO_READ rd, ADSP2181_IO_WRITE wr );
+extern void adsp2181_set_dmovlay_callback( ADSP2181_DMOVLAY cb );
+#endif
+
 #endif /* _ADSP2100_H */
