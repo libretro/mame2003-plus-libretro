@@ -2737,6 +2737,7 @@ V-V                           TP-027
 	/* Eighting / Raizing (COH-1002E) */
 	DRIVER( beastrzr )	/* Beastorizer (USA, Sep 22 1997) */
 	DRIVER( beastrzra )	/* Beastorizer (USA, Jun 21 1997) */
+	DRIVER( beastrzrb )	/* Beastorizer (USA bootleg) */
 	DRIVER( bldyroar )	/* Bloody Roar (Japan, Jun 21 1997) */
 	DRIVER( bldyror2 )	/* Bloody Roar 2 (World) */
 	DRIVER( bldyror2u )	/* Bloody Roar 2 (USA) */
@@ -2788,7 +2789,6 @@ V-V                           TP-027
 	DRIVER( gdarius )	/* G-Darius (Ver 2.02O) */
 	DRIVER( gdariusu )	/* G-Darius (Ver 2.02A) */
 	DRIVER( gdariusj )	/* G-Darius (Ver 2.01J) */
-	DRIVER( beastrzb )	/* Beastorizer (bootleg)*/
 
 	/* Namco System 11 */
 	DRIVER( tekken )	/* Tekken (World, TE2/VER.C) */
