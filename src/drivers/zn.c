@@ -133,45 +133,6 @@ static void tecmo_bank_update( void );
 
 #if PROTECTION_HACK
 
-/* decodebp.c */
-static unsigned char kn_protection_hack[] =
-{
-	/* unknown */
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00,
-
-	/* first test, this byte is ignored */
-	0xef,
-
-	/* checked for explicitly ( skips red screen ) */
-	0x76, 0x00, 0xe3, 0xeb, 0x5b, 0x2f, 0x73, 0x56,
-	0xc5, 0xc9, 0x74, 0x66, 0x79, 0xce, 0xa7, 0x02,
-	0x77, 0x79, 0x2e, 0xbb, 0xda, 0x2c, 0xb3, 0x5b,
-	0x65, 0xdc, 0xb7, 0x5b, 0x08, 0x14, 0xf1, 0xe4,
-	0x73, 0x0e, 0x57, 0xc1, 0x29, 0x62, 0x76, 0x95,
-	0xb9, 0x22, 0x3b, 0x7f, 0x28, 0x66, 0x32, 0xdd,
-	0xcd,
-
-	/* unknown */
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	
-	/* second test, this byte is ignored */
-	0x00,
-
-	/* checks the result of a calculation ( skips blue screen ) */
-	0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00,
-
-	/* default value */
-	0x00,
-};
 
 /* decodetaito.c */
 static unsigned char tt_protection_hack[] =
@@ -440,12 +401,7 @@ static DRIVER_INIT( zn )
 	cpu_setbank( 7, memory_region( REGION_CPU1 ) + 0x0400000 ); /* bios */
 
 #if PROTECTION_HACK
-	if( strcmp( Machine->gamedrv->name, "sncwgltd" ) == 0 )
-	{
-		p_sio0_ret = kn_protection_hack;
-		n_sio0_ret_size = sizeof( kn_protection_hack );
-	}
-	else if( strcmp( Machine->gamedrv->name, "ftimpcta" ) == 0 ||
+	if( strcmp( Machine->gamedrv->name, "ftimpcta" ) == 0 ||
 		strcmp( Machine->gamedrv->name, "gdarius" ) == 0 ||
 		strcmp( Machine->gamedrv->name, "gdarius2" ) == 0 ||
 		strcmp( Machine->gamedrv->name, "mgcldate" ) == 0 ||
@@ -2115,6 +2071,106 @@ static MACHINE_DRIVER_START( coh1002e )
 MACHINE_DRIVER_END
 
 
+/***************************************************************************
+
+  Video System (COH-1002V), as in current MAME
+
+  ZN-1 main board with 2MB VRAM and the Video System BIOS; CAT702 KN01 on
+  the main board, KN02 on the ROM board. Game ROM: 2.5MB fixed at
+  0x1f000000, and 24 banks of 1MB at 0x1fb00000, selected by the byte
+  written at 0x1fb00000. Sound: the PSX SPU only.
+
+***************************************************************************/
+
+static UINT32 visco_bank;
+
+static void visco_bank_update( void )
+{
+	UINT32 n_banks = memory_region_length( REGION_USER2 ) / 0x100000;
+	cpu_setbank( 13, memory_region( REGION_USER2 ) + ( visco_bank % n_banks ) * 0x100000 );
+}
+
+static WRITE32_HANDLER( visco_bank_w )	/* byte at 0x1fb00000 */
+{
+	if( ACCESSING_LSB32 )
+	{
+		visco_bank = data & 0xff;
+		visco_bank_update();
+	}
+}
+
+static MEMORY_READ32_START( visco_zn_readmem )
+	ZN_MAIN_READ
+	{ 0x1f000000, 0x1f27ffff, MRA32_BANK1 },  /* fixed game rom */
+	{ 0x1fb00000, 0x1fbfffff, MRA32_BANK13 }, /* banked game rom */
+MEMORY_END
+
+static MEMORY_WRITE32_START( visco_zn_writemem )
+	ZN_MAIN_WRITE
+	{ 0x1f000000, 0x1f27ffff, MWA32_ROM },
+	{ 0x1fb00000, 0x1fb00003, visco_bank_w },
+MEMORY_END
+
+static void visco_postload( void )
+{
+	visco_bank_update();
+}
+
+static DRIVER_INIT( coh1002v )
+{
+	zn_scratchpad = auto_malloc( 0x400 );
+	zn_eeprom = auto_malloc( 0x800 );
+	memset( zn_scratchpad, 0, 0x400 );
+	memset( zn_eeprom, 0xff, 0x800 );
+
+	zn_vram_2mb = 1;
+	zn_coin_tecmo = 0;
+	zn_eeprom_default = 0;
+
+	zn_board_init();
+	cpu_setbank( 1, memory_region( REGION_USER1 ) );
+	znsec_init( 0, memory_region( REGION_USER4 ) );	/* KN01 */
+	znsec_init( 1, memory_region( REGION_USER5 ) );	/* KN02 */
+
+	state_save_register_UINT32( "zn", 0, "visco_bank", &visco_bank, 1 );
+	state_save_register_UINT32( "zn", 0, "scratchpad", zn_scratchpad, 0x100 );
+	state_save_register_func_postload( visco_postload );
+}
+
+static MACHINE_INIT( visco_zn )
+{
+	visco_bank = 0;
+	visco_bank_update();
+	zn_board_reset();
+}
+
+/* ZN-1, 2MB VRAM (COH-1002V), SPU sound */
+static MACHINE_DRIVER_START( coh1002v )
+	MDRV_CPU_ADD_TAG( "main", PSXCPU, 33868800 / 2 )	/* CXD8530CQ, 67.7376MHz XTAL; as System 11 */
+	MDRV_CPU_MEMORY( visco_zn_readmem, visco_zn_writemem )
+	MDRV_CPU_VBLANK_INT( psx_vblank, 1 )
+
+	MDRV_FRAMES_PER_SECOND( 60 )
+	MDRV_VBLANK_DURATION( 0 )
+
+	MDRV_MACHINE_INIT( visco_zn )
+	MDRV_NVRAM_HANDLER( zn )
+
+	MDRV_VIDEO_ATTRIBUTES( VIDEO_TYPE_RASTER | VIDEO_RGB_DIRECT )
+	MDRV_SCREEN_SIZE( 640, 480 )
+	MDRV_VISIBLE_AREA( 0, 639, 0, 479 )
+	MDRV_PALETTE_LENGTH( 65536 )
+
+	MDRV_PALETTE_INIT( psx )
+	MDRV_VIDEO_START( psx_type2_1024x1024 )
+	MDRV_VIDEO_UPDATE( psx )
+	MDRV_VIDEO_STOP( psx )
+
+	MDRV_SOUND_ATTRIBUTES( SOUND_SUPPORTS_STEREO )
+	MDRV_SOUND_ADD( PSXSPU, zn_spu_interface )
+MACHINE_DRIVER_END
+
+
 INPUT_PORTS_START( zn )
 	PORT_START		/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER1 )
@@ -2325,6 +2381,30 @@ INPUT_PORTS_END
 	PORT_DIPSETTING(    0x08, DEF_STR( Off ) ) \
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) ) \
 	PORT_BIT( 0xf0, IP_ACTIVE_HIGH, IPT_UNUSED )
+
+/* Aero Fighters Special: two players, two buttons; DSW 3 test mode, 4 save */
+INPUT_PORTS_START( aerofgts )
+	TPS_PLAYER_PORT( 1, 0, 0 )
+	TPS_PLAYER_PORT( 2, 0, 0 )
+	TPS_SERVICE_PORT( 0 )
+	TPS_SYSTEM_PORT( 1, 1, 0 )
+	TPS_UNUSED_PORT
+	TPS_UNUSED_PORT
+	PORT_START	/* DSW */
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Service_Mode ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x04, 0x04, "Test Mode" )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x08, "Save" )
+	PORT_DIPSETTING(    0x08, DEF_STR( Yes ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( No ) )
+	PORT_BIT( 0xf0, IP_ACTIVE_HIGH, IPT_UNUSED )
+INPUT_PORTS_END
 
 /* Bloody Roar 2: two players, four buttons; the fourth on the P3 port */
 INPUT_PORTS_START( bldyror2 )
@@ -3191,27 +3271,67 @@ ROM_START( mfjump )
 ROM_END
 
 
-/* video system */
+/* Video System (COH-1002V) */
 
-#define KN_BIOS \
-	ROM_REGION( 0x480400, REGION_CPU1, 0 ) \
-	ROM_LOAD( "coh1002v.bin", 0x0400000, 0x080000, CRC(5ff165f3) SHA1(8f59314c1093446b9bcb06d232244da6df78e206) )
+#define VIDEO_SYSTEM_BIOS \
+	ROM_REGION32_LE( 0x400000, REGION_CPU1, ROMREGION_ERASE00 ) /* ram */ \
+	ROM_REGION32_LE( 0x080000, REGION_USER3, 0 ) /* bios */ \
+	ROM_LOAD( "coh-1002v.ic353", 0x0000000, 0x080000, CRC(5ff165f3) SHA1(8f59314c1093446b9bcb06d232244da6df78e206) ) \
+	ROM_REGION( 0x000008, REGION_USER4, 0 ) /* CAT702, main board */ \
+	ROM_LOAD( "kn01.ic652", 0x000000, 0x000008, CRC(1ce271df) SHA1(b01479dc75a4a8a86bee7ac7cd10af2bda332544) )
+
+#define VIDEO_SYSTEM_BANKED_ROMS \
+	ROM_REGION32_LE( 0x1800000, REGION_USER2, 0 ) /* banked game rom, 1MB banks */ \
+	ROM_LOAD( "ic11.bin", 0x0000000, 0x400000, CRC(a93f6fee) SHA1(6f079643b50833f8fb497c49945ad23326cc9170) ) \
+	ROM_LOAD( "ic12.bin", 0x0400000, 0x400000, CRC(9f584ef7) SHA1(12c04e198f17d1915f58e83aff45ca2e76773df8) ) \
+	ROM_LOAD( "ic13.bin", 0x0800000, 0x400000, CRC(652e9c78) SHA1(a929b2944de72606338acb822c1031463e2b1cc5) ) \
+	ROM_LOAD( "ic14.bin", 0x0c00000, 0x400000, CRC(c4ef1424) SHA1(1734a6ee6d0be94d24afefcf2a125b74747f53d0) ) \
+	ROM_LOAD( "ic15.bin", 0x1000000, 0x400000, CRC(2551d816) SHA1(e1500d4bfa8cc55220c366a5852263ac2070da82) ) \
+	ROM_LOAD( "ic16.bin", 0x1400000, 0x400000, CRC(21b401bc) SHA1(89374b80453c474aa1dd3a219422f557f95a262c) ) \
+	ROM_REGION( 0x000008, REGION_USER5, 0 ) /* CAT702, rom board */ \
+	ROM_LOAD( "kn02", 0x000000, 0x000008, CRC(0d2001b4) SHA1(740d7794a1b94a42351d81947cbfae138c56ecc9) )
+
+ROM_START( coh1002v )
+	VIDEO_SYSTEM_BIOS
+ROM_END
+
+ROM_START( aerofgts )
+	VIDEO_SYSTEM_BIOS
+
+	ROM_REGION32_LE( 0x0280000, REGION_USER1, 0 ) /* fixed game rom */
+	ROM_LOAD( "1-8_prog0_usa_aa9e.ic5", 0x0000000, 0x080000, CRC(d15a4904) SHA1(4e329f56584df4b057b56e21f0230dda4ec46bcf) )
+	ROM_LOAD( "1-8_prog1_usa_0a1e.ic6", 0x0080000, 0x080000, CRC(d6625176) SHA1(018bba263effda1a0b64023aa08b384f0590245b) )
+	ROM_LOAD( "1-8_prog2_usa_c4b3.ic7", 0x0100000, 0x080000, CRC(df5ba2f7) SHA1(19153084e7cff632380b67a2fff800644a2fbf7d) )
+	ROM_LOAD( "1-8_prog3_usa_e1d8.ic8", 0x0180000, 0x080000, CRC(8711574a) SHA1(d02a9dac78ee468985c2f2c8d3b9a588f6fc7c02) )
+	ROM_LOAD( "1-8_prog4_usa_9127.ic9", 0x0200000, 0x080000, CRC(670d9b27) SHA1(a4bca91c36d06cb0663d2478096bbc1668e01d60) )
+
+	VIDEO_SYSTEM_BANKED_ROMS
+ROM_END
+
+ROM_START( aerofgtst )
+	VIDEO_SYSTEM_BIOS
+
+	ROM_REGION32_LE( 0x0280000, REGION_USER1, 0 ) /* fixed game rom */
+	ROM_LOAD( "vs.ic5", 0x0000000, 0x080000, CRC(453dd514) SHA1(189fe5598485de160f5c0add90235ed63ed92747) )
+	ROM_LOAD( "vs.ic6", 0x0080000, 0x080000, CRC(24257295) SHA1(fe6d969c407f2c26c3af2a2a5015dc83b1675e9a) )
+	ROM_LOAD( "vs.ic7", 0x0100000, 0x080000, CRC(df5ba2f7) SHA1(19153084e7cff632380b67a2fff800644a2fbf7d) )
+	ROM_LOAD( "vs.ic8", 0x0180000, 0x080000, CRC(df638f92) SHA1(5704eed2ef798a91a0398948af0324955ec38534) )
+	ROM_LOAD( "vs.ic9", 0x0200000, 0x080000, CRC(1294aa24) SHA1(07ca2cc3f117cfd48d2ca558d9435a3fc238c0fe) )
+
+	VIDEO_SYSTEM_BANKED_ROMS
+ROM_END
 
 ROM_START( sncwgltd )
-	KN_BIOS
+	VIDEO_SYSTEM_BIOS
 
-	ROM_REGION32_LE( 0x01a80000, REGION_USER1, 0 )
-	ROM_LOAD( "ic5.bin",      0x0000000, 0x080000, CRC(458f14aa) SHA1(b4e50be60ffb9b7911561dd35b6a7e0df3432a3a) )
-	ROM_LOAD( "ic6.bin",      0x0080000, 0x080000, CRC(8233dd1e) SHA1(1422b4530d671e3b8b471ec16c20ef7c819ab762) )
-	ROM_LOAD( "ic7.bin",      0x0100000, 0x080000, CRC(df5ba2f7) SHA1(19153084e7cff632380b67a2fff800644a2fbf7d) )
-	ROM_LOAD( "ic8.bin",      0x0180000, 0x080000, CRC(e8145f2b) SHA1(3a1cb189426998856dfeda47267fde64be34c6ec) )
-	ROM_LOAD( "ic9.bin",      0x0200000, 0x080000, CRC(605c9370) SHA1(9734549cae3028c089f4c9f2336ee374b3f950f8) )
-	ROM_LOAD( "ic11.bin",     0x0280000, 0x400000, CRC(a93f6fee) SHA1(6f079643b50833f8fb497c49945ad23326cc9170) )
-	ROM_LOAD( "ic12.bin",     0x0680000, 0x400000, CRC(9f584ef7) SHA1(12c04e198f17d1915f58e83aff45ca2e76773df8) )
-	ROM_LOAD( "ic13.bin",     0x0a80000, 0x400000, CRC(652e9c78) SHA1(a929b2944de72606338acb822c1031463e2b1cc5) )
-	ROM_LOAD( "ic14.bin",     0x0e80000, 0x400000, CRC(c4ef1424) SHA1(1734a6ee6d0be94d24afefcf2a125b74747f53d0) )
-	ROM_LOAD( "ic15.bin",     0x1280000, 0x400000, CRC(2551d816) SHA1(e1500d4bfa8cc55220c366a5852263ac2070da82) )
-	ROM_LOAD( "ic16.bin",     0x1680000, 0x400000, CRC(21b401bc) SHA1(89374b80453c474aa1dd3a219422f557f95a262c) )
+	ROM_REGION32_LE( 0x0280000, REGION_USER1, 0 ) /* fixed game rom */
+	ROM_LOAD( "ic5.bin", 0x0000000, 0x080000, CRC(458f14aa) SHA1(b4e50be60ffb9b7911561dd35b6a7e0df3432a3a) )
+	ROM_LOAD( "ic6.bin", 0x0080000, 0x080000, CRC(8233dd1e) SHA1(1422b4530d671e3b8b471ec16c20ef7c819ab762) )
+	ROM_LOAD( "ic7.bin", 0x0100000, 0x080000, CRC(df5ba2f7) SHA1(19153084e7cff632380b67a2fff800644a2fbf7d) )
+	ROM_LOAD( "ic8.bin", 0x0180000, 0x080000, CRC(e8145f2b) SHA1(3a1cb189426998856dfeda47267fde64be34c6ec) )
+	ROM_LOAD( "ic9.bin", 0x0200000, 0x080000, CRC(605c9370) SHA1(9734549cae3028c089f4c9f2336ee374b3f950f8) )
+
+	VIDEO_SYSTEM_BANKED_ROMS
 ROM_END
 
 
@@ -4115,9 +4235,10 @@ GAMEX( 2001, mfjump,    coh1002m, coh1002m, tps2p,    coh1002m, ROT0, "Tecmo", "
 
 /* Video System */
 
-/* only one game dumped on this system, so coh1002v.bin is included in the game zip file */
-
-GAMEX( 1996, sncwgltd, 0,        zn,       zn, zn,   ROT0, "Video System", "Sonic Wings Limited (JAPAN)", GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )
+GAMEX( 1996, coh1002v,  0,        coh1002v, zn,       coh1002v, ROT0,   "Video System Co.", "Video System ZN-1", NOT_A_DRIVER )
+GAMEX( 1996, aerofgts,  coh1002v, coh1002v, aerofgts, coh1002v, ROT270, "McO'River, Inc.", "Aero Fighters Special (USA)", 0 )
+GAMEX( 1996, aerofgtst, aerofgts, coh1002v, aerofgts, coh1002v, ROT270, "Video System Co.", "Aero Fighters Special (Taiwan)", 0 )
+GAMEX( 1996, sncwgltd,  aerofgts, coh1002v, aerofgts, coh1002v, ROT270, "Video System Co.", "Sonic Wings Limited (Japan)", 0 )
 
 /* Taito FX-1A */
 
