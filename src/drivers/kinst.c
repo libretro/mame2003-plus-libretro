@@ -20,6 +20,7 @@
 #include "machine/midwayic.h"
 #include "sndhrdw/dcs.h"
 #include "kinst.h"
+#include "state.h"
 
 
 /* constants */
@@ -33,6 +34,10 @@ static data32_t *kinst_speedup;
 
 static const UINT8 *control_map;
 
+/* the end of the IRQ 0 pulse, with its time left for the save states */
+static void *irq0_timer;
+static double irq0_timer_left;
+
 
 
 /*************************************
@@ -40,6 +45,36 @@ static const UINT8 *control_map;
  *	Machine init
  *
  *************************************/
+
+static void irq0_stop(int param);
+
+static void kinst_presave(void)
+{
+	irq0_timer_left = timer_timeleft(irq0_timer);
+}
+
+
+/* after a load: the displayed buffer, from the VRAM control register, and
+   the end of the IRQ 0 pulse where it was. (A wait of the speedup is not
+   saved: after a load the CPU runs the delay loop again, and waits again.) */
+static void kinst_postload(void)
+{
+	kinst_set_video_base(&rambase1[((kinst_control[0] & 4) ? 0x58000 : 0x30000) / 4]);
+	timer_adjust(irq0_timer, (irq0_timer_left < TIME_NEVER / 2) ? irq0_timer_left : TIME_NEVER, 0, 0);
+}
+
+
+static void kinst_register_state(void)
+{
+	irq0_timer = timer_alloc(irq0_stop);
+
+	/* the control registers ($80-$ff) are not RAM of the memory map */
+	state_save_register_UINT32("kinst", 0, "control", kinst_control, 0x80 / 4);
+	state_save_register_double("kinst", 0, "irq0_timer_left", &irq0_timer_left, 1);
+	state_save_register_func_presave(kinst_presave);
+	state_save_register_func_postload(kinst_postload);
+}
+
 
 static MACHINE_INIT( kinst )
 {
@@ -71,7 +106,7 @@ static void irq0_stop(int param)
 static INTERRUPT_GEN( irq0_start )
 {
 	cpu_set_irq_line(0, 0, ASSERT_LINE);
-	timer_set(TIME_IN_USEC(50), 0, irq0_stop);
+	timer_adjust(irq0_timer, TIME_IN_USEC(50), 0, 0);
 }
 
 
@@ -832,6 +867,8 @@ static DRIVER_INIT( kinst )
 
 	/* set the fastest DRC options */
 	mips3drc_set_options(0, MIPS3DRC_FASTEST_OPTIONS);
+
+	kinst_register_state();
 }
 
 
@@ -874,6 +911,8 @@ static DRIVER_INIT( kinst2 )
 
 	/* set the fastest DRC options */
 	mips3drc_set_options(0, MIPS3DRC_FASTEST_OPTIONS);
+
+	kinst_register_state();
 }
 
 

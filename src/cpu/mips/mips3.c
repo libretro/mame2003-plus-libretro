@@ -628,8 +628,39 @@ static void compare_int_callback(int cpu)
 }
 
 
+/* the Compare interrupt timer is not saved by the core: whether it is set
+   is. After a load it is set again from Count and Compare, in cycles of
+   this CPU, as a write to Compare sets it (both functions run in the
+   context of this CPU) */
+static UINT8 compare_timer_set;
+
+static void mips3_presave(void)
+{
+	compare_timer_set = (timer_timeleft(mips3.compare_int_timer) < TIME_NEVER / 2);
+}
+
+static void mips3_postload(void)
+{
+	int cpunum = cpu_getactivecpu();
+
+	timer_adjust(mips3.compare_int_timer, TIME_NEVER, cpunum, 0);
+	if (compare_timer_set)
+	{
+		UINT32 count = (cpu_gettotalcycles64(cpunum) - mips3.count_zero_time) / 2;
+		UINT32 cyclesleft = (UINT32)mips3.cpr[0][COP0_Compare] - count;
+		timer_adjust(mips3.compare_int_timer, TIME_IN_CYCLES(((UINT64)cyclesleft * 2), cpunum), cpunum, 0);
+	}
+
+	if (mips3.bigendian)
+		change_pc32bedw(mips3.pc);
+	else
+		change_pc32ledw(mips3.pc);
+}
+
 void mips3_init(void)
 {
+	int cpunum = cpu_getactivecpu();
+
 	/* optional speedups are off until a driver asks for them */
 	fastram_count = 0;
 	fastram_has_wait = 0;
@@ -639,6 +670,24 @@ void mips3_init(void)
 	pollread_count = 0;
 
 	mips3.compare_int_timer = timer_alloc(compare_int_callback);
+
+	/* save states: the registers of the active context, swapped in per CPU
+	   when the state is saved; the 64-bit registers as pairs of 32 bits */
+	state_save_register_UINT32("mips3", cpunum, "pc",               &mips3.pc, 1);
+	state_save_register_UINT32("mips3", cpunum, "hi",               (UINT32 *)&mips3.hi, 2);
+	state_save_register_UINT32("mips3", cpunum, "lo",               (UINT32 *)&mips3.lo, 2);
+	state_save_register_UINT32("mips3", cpunum, "r",                (UINT32 *)mips3.r, 32 * 2);
+	state_save_register_UINT32("mips3", cpunum, "cpr",              (UINT32 *)mips3.cpr, 4 * 32 * 2);
+	state_save_register_UINT32("mips3", cpunum, "ccr",              (UINT32 *)mips3.ccr, 4 * 32 * 2);
+	state_save_register_UINT8 ("mips3", cpunum, "cf",               mips3.cf, 4);
+	state_save_register_UINT32("mips3", cpunum, "ppc",              &mips3.ppc, 1);
+	state_save_register_UINT32("mips3", cpunum, "nextpc",           &mips3.nextpc, 1);
+	state_save_register_int   ("mips3", cpunum, "op",               &mips3.op);
+	state_save_register_int   ("mips3", cpunum, "interrupt_cycles", &mips3.interrupt_cycles);
+	state_save_register_UINT32("mips3", cpunum, "count_zero_time",  (UINT32 *)&mips3.count_zero_time, 2);
+	state_save_register_UINT8 ("mips3", cpunum, "compare_timer_set", &compare_timer_set, 1);
+	state_save_register_func_presave(mips3_presave);
+	state_save_register_func_postload(mips3_postload);
 }
 
 
