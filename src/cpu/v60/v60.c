@@ -360,6 +360,7 @@ static void base_init(const char *type)
 
 	v60.irq_cb = v60_default_irq_cb;
 	v60.irq_line = CLEAR_LINE;
+	v60_set_idle_loops(NULL, 0);
 	v60.nmi_line = CLEAR_LINE;
 
 	state_save_register_UINT32(type, cpu, "reg",       v60.reg, 68);
@@ -410,6 +411,7 @@ void v60_reset(void *param)
 
 void v60_exit(void)
 {
+	v60_set_idle_loops(NULL, 0);
 }
 
 static void v60_do_irq(int vector)
@@ -485,9 +487,73 @@ void v60_set_irq_callback(int (*irq_cb)(int irqline))
 
 /* Actual cycles/instruction is unknown*/
 
+/*
+	Idle loop fast-forward (opt-in, set by the driver with v60_set_idle_loops)
+
+	A game that waits for an interrupt by polling RAM spends most of its time
+	in a loop like "[inc counter] / test mem / branch back". Only the CPU
+	itself can change that RAM, and the interrupt line does not change while
+	the CPU runs its slice. So once a whole iteration has run without an
+	interrupt (the branch back came exactly one iteration of cycles after the
+	previous one), every further iteration of the slice is the same: the
+	counter goes up by one and 8 cycles are spent per instruction. This runs
+	those iterations at once, leaving the last one and the end of the slice
+	to the interpreter, so the CPU state, the counter and the cycle count are
+	exactly what the instruction-by-instruction run gives.
+
+	The whole uninterrupted iteration is needed: an interrupt taken between
+	the test and the branch returns to the branch with the flags of the old
+	test, so a branch back alone does not prove that the loop goes on.
+*/
+
+static const struct v60_idle_loop *v60_idle;
+static int v60_idle_count;
+static int v60_idle_armed;		/* index + 1 of the loop seen at the last branch back in this slice */
+static int v60_idle_icount;		/* v60_ICount at that branch back */
+
+void v60_set_idle_loops(const struct v60_idle_loop *loops, int count)
+{
+	v60_idle = loops;
+	v60_idle_count = loops ? count : 0;
+	v60_idle_armed = 0;
+}
+
+static void v60_idle_fast_forward(void)
+{
+	int i;
+
+	for (i = 0; i < v60_idle_count; i++)
+	{
+		const struct v60_idle_loop *l = &v60_idle[i];
+		if (PC == l->start && PPC == l->branch)
+		{
+			int iteration = 8 * l->instructions;
+			if (v60_idle_armed == i + 1 && v60_idle_icount - v60_ICount == iteration)
+			{
+				int k = v60_ICount / iteration - 1;
+				if (k > 0)
+				{
+					v60_ICount -= k * iteration;
+					switch (l->counter)
+					{
+						case V60_IDLE_COUNTER_REG:   v60.reg[l->counter_addr] += k; break;
+						case V60_IDLE_COUNTER_MEM8:  MemWrite8(l->counter_addr, (UINT8)(MemRead8(l->counter_addr) + k)); break;
+						case V60_IDLE_COUNTER_MEM16: MemWrite16(l->counter_addr, (UINT16)(MemRead16(l->counter_addr) + k)); break;
+						case V60_IDLE_COUNTER_MEM32: MemWrite32(l->counter_addr, MemRead32(l->counter_addr) + k); break;
+					}
+				}
+			}
+			v60_idle_armed = i + 1;
+			v60_idle_icount = v60_ICount;
+			return;
+		}
+	}
+}
+
 int v60_execute(int cycles)
 {
 	v60_ICount = cycles;
+	v60_idle_armed = 0;
 	if(v60.irq_line != CLEAR_LINE)
 		v60_try_irq();
 	while(v60_ICount >= 0) {
@@ -497,6 +563,8 @@ int v60_execute(int cycles)
 		PC += OpCodeTable[OpRead8(PC)]();
 		if(v60.irq_line != CLEAR_LINE)
 			v60_try_irq();
+		if(v60_idle_count)
+			v60_idle_fast_forward();
 	}
 
 	return cycles - v60_ICount;

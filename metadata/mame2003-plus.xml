@@ -314908,8 +314908,8 @@
 		</dipswitch>
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="1024"/>
 	</game>
-	<game name="hayaosi1" sourcefile="ms32.c">
-		<description>Hayaoshi Quiz Ouza Ketteisen</description>
+	<game name="hayaosi2" sourcefile="ms32.c">
+		<description>Hayaoshi Quiz Grand Champion Taikai</description>
 		<year>1994</year>
 		<manufacturer>Jaleco</manufacturer>
 		<rom name="mb93138a.25" size="524288" crc="563c6f2f" sha1="bc2a61fd2e0adf58256feeef8491b67af6d6eacf" region="cpu1" offset="3"/>
@@ -314929,42 +314929,26 @@
 		<rom name="mr92042.01" size="2097152" crc="0fa26f65" sha1="e92b14862fbce33ea4ab4567ec48199bfcbbdd84" region="sound1" soundonly="yes" offset="0"/>
 		<rom name="mr93038.01" size="2097152" crc="b8a38bfc" sha1="1aa7b69beebceb6f09a1ee006de054cb84002e94" region="sound1" soundonly="yes" offset="200000"/>
 		<chip type="cpu" name="V70" clock="20000000"/>
-		<chip type="cpu" soundonly="yes" name="Z80" clock="4000000"/>
+		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
 		<chip type="audio" name="YMF271"/>
-		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="59.410645"/>
 		<sound channels="2"/>
 		<input players="3" buttons="5" coins="2" service="yes"/>
-		<dipswitch name="Coin A">
-			<dipvalue name="5 Coins/1 Credit"/>
-			<dipvalue name="4 Coins/1 Credit"/>
-			<dipvalue name="3 Coins/1 Credit"/>
-			<dipvalue name="2 Coins/1 Credit"/>
-			<dipvalue name="1 Coin/1 Credit" default="yes"/>
-			<dipvalue name="1 Coin/2 Credits"/>
-			<dipvalue name="1 Coin/3 Credits"/>
-			<dipvalue name="1 Coin/4 Credits"/>
-		</dipswitch>
-		<dipswitch name="Coin B">
-			<dipvalue name="5 Coins/1 Credit"/>
-			<dipvalue name="4 Coins/1 Credit"/>
-			<dipvalue name="3 Coins/1 Credit"/>
-			<dipvalue name="2 Coins/1 Credit"/>
-			<dipvalue name="1 Coin/1 Credit" default="yes"/>
-			<dipvalue name="1 Coin/2 Credits"/>
-			<dipvalue name="1 Coin/3 Credits"/>
-			<dipvalue name="1 Coin/4 Credits"/>
-		</dipswitch>
-		<dipswitch name="Free Play">
+		<dipswitch name="Unknown">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Service Mode">
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Computer's AI (VS Mode)">
-			<dipvalue name="Low"/>
-			<dipvalue name="Normal" default="yes"/>
-			<dipvalue name="High"/>
-			<dipvalue name="Highest"/>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Questions (VS Mode)">
+			<dipvalue name="Default" default="yes"/>
+			<dipvalue name="More"/>
 		</dipswitch>
 		<dipswitch name="Time (Race Mode)">
 			<dipvalue name="Default - 0:15"/>
@@ -314972,25 +314956,275 @@
 			<dipvalue name="Default" default="yes"/>
 			<dipvalue name="Default + 0:15"/>
 		</dipswitch>
+		<dipswitch name="Computer's AI (VS Mode)">
+			<dipvalue name="Low"/>
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="High"/>
+			<dipvalue name="Highest"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Free Play">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Coin B">
+			<dipvalue name="5 Coins/1 Credit"/>
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+		</dipswitch>
+		<dipswitch name="Coin A">
+			<dipvalue name="5 Coins/1 Credit"/>
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="32768"/>
+	</game>
+	<game name="hayaosi3" sourcefile="ms32.c">
+		<description>Hayaoshi Quiz Nettou Namahousou (ver 1.5)</description>
+		<year>1994</year>
+		<manufacturer>Jaleco</manufacturer>
+		<rom name="mb93138_25_ver1.5.25" size="524288" crc="ba8cec03" sha1="edaa52e0b07307bb21168205ee0d5d6ff8168de9" region="cpu1" offset="3"/>
+		<rom name="mb93138_27_ver1.5.27" size="524288" crc="571725df" sha1="66575ec1a29d6fc1b50ae5a5ce8025bb1043deaf" region="cpu1" offset="2"/>
+		<rom name="mb93138_29_ver1.5.29" size="524288" crc="da891976" sha1="27e8c395e92ca01b47bffdf766bc95a6c2150815" region="cpu1" offset="1"/>
+		<rom name="mb93138_31_ver1.5.31" size="524288" crc="2d17bb06" sha1="623b603c4002734427c882424a1e0dc889cf7e02" region="cpu1" offset="0"/>
+		<rom name="mr94027.01" size="2097152" crc="c72e5c6e" sha1="b98cd656c48c775953d00b5d8bafd4ffde76d8df" region="gfx1" offset="0"/>
+		<rom name="mr94027.02" size="2097152" crc="59976568" sha1="a280c352d612913834c76b8e23d86c937fd21281" region="gfx1" offset="2"/>
+		<rom name="mr94027.03" size="2097152" crc="3ff68f4f" sha1="1e367b92560c32c87e27fc0e99be3bdb5eb0510b" region="gfx1" offset="400000"/>
+		<rom name="mr94027.04" size="2097152" crc="6a16d13a" sha1="65a7751c248c966fd01149418ce6bedba7a0d48a" region="gfx1" offset="400002"/>
+		<rom name="mr94027.05" size="2097152" crc="59545977" sha1="2e0a83efd7ae210c0b4360e9572dd7eec38cd974" region="gfx1" offset="800000"/>
+		<rom name="mr94027.06" size="2097152" crc="1618785a" sha1="3f2698d07a52947429313a78ebcedfdae478efd7" region="gfx1" offset="800002"/>
+		<rom name="mr94027.07" size="2097152" crc="c66099c4" sha1="5a6edffa39a98f38cc3cffbad9191fb2e794a812" region="gfx1" offset="c00000"/>
+		<rom name="mr94027.08" size="2097152" crc="753b05e0" sha1="0424e92b32a73c27ecb549e6e9449446ea938e40" region="gfx1" offset="c00002"/>
+		<rom name="mr94027.09" size="2097152" crc="32ead437" sha1="b94175cf186b4ebcc180a4c092d2ffcdd9ff3b1d" region="gfx2" offset="0"/>
+		<rom name="mr94027.11" size="2097152" crc="b65d5096" sha1="2c4e1e3e9f96be8369cb2de142a82f94506f85c0" region="gfx3" offset="0"/>
+		<rom name="mb93138_32_ver1.0.32" size="524288" crc="df5d00b4" sha1="2bbbcd546d5b5170d81bf33b37b46b70b417c9c7" region="gfx4" offset="0"/>
+		<rom name="mb93138.21" size="262144" crc="008bc217" sha1="eec66a86f285ccbc47eba17a4bb83cc1f8a5f425" region="cpu2" offset="0"/>
+		<rom name="mr92042.01" size="2097152" crc="0fa26f65" sha1="e92b14862fbce33ea4ab4567ec48199bfcbbdd84" region="sound1" soundonly="yes" offset="0"/>
+		<rom name="mr94027.10" size="2097152" crc="e7cabe41" sha1="5d903baed690a98856f7581319cf4dbfe1db47bb" region="sound1" soundonly="yes" offset="200000"/>
+		<chip type="cpu" name="V70" clock="20000000"/>
+		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
+		<chip type="audio" name="YMF271"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="59.410645"/>
+		<sound channels="2"/>
+		<input players="3" buttons="5" coins="2" service="yes"/>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
 		<dipswitch name="Questions (VS Mode)">
 			<dipvalue name="Default" default="yes"/>
 			<dipvalue name="More"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
+		<dipswitch name="Time (Race Mode)">
+			<dipvalue name="Default - 0:15"/>
+			<dipvalue name="Default - 0:10"/>
+			<dipvalue name="Default" default="yes"/>
+			<dipvalue name="Default + 0:15"/>
+		</dipswitch>
+		<dipswitch name="Computer's AI (VS Mode)">
+			<dipvalue name="Low"/>
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="High"/>
+			<dipvalue name="Highest"/>
 		</dipswitch>
 		<dipswitch name="Unknown">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
+		<dipswitch name="Free Play">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Coin B">
+			<dipvalue name="5 Coins/1 Credit"/>
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+		</dipswitch>
+		<dipswitch name="Coin A">
+			<dipvalue name="5 Coins/1 Credit"/>
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="32768"/>
+	</game>
+	<game name="hayaosi3a" sourcefile="ms32.c" cloneof="hayaosi3" romof="hayaosi3">
+		<description>Hayaoshi Quiz Nettou Namahousou (ver 1.2)</description>
+		<year>1994</year>
+		<manufacturer>Jaleco</manufacturer>
+		<rom name="mb93138_25_ver1.2.25" size="524288" crc="71b1f51b" sha1="bd1c4f75c2949a998ce0f5acaf6def7e7069e40b" region="cpu1" offset="3"/>
+		<rom name="mb93138_27_ver1.2.27" size="524288" crc="2657e8dc" sha1="efeafe8c890d447ab4584fd7509538fc86fd555b" region="cpu1" offset="2"/>
+		<rom name="mb93138_29_ver1.2.29" size="524288" crc="8999b41b" sha1="95b94112105bfa2b708bad44bbbdc33616ad2182" region="cpu1" offset="1"/>
+		<rom name="mb93138_31_ver1.2.31" size="524288" crc="f5d4ef54" sha1="ed208cb6ed171acac312cb282b2fabc8af70610e" region="cpu1" offset="0"/>
+		<rom name="mr94027.01" merge="mr94027.01" size="2097152" crc="c72e5c6e" sha1="b98cd656c48c775953d00b5d8bafd4ffde76d8df" region="gfx1" offset="0"/>
+		<rom name="mr94027.02" merge="mr94027.02" size="2097152" crc="59976568" sha1="a280c352d612913834c76b8e23d86c937fd21281" region="gfx1" offset="2"/>
+		<rom name="mr94027.03" merge="mr94027.03" size="2097152" crc="3ff68f4f" sha1="1e367b92560c32c87e27fc0e99be3bdb5eb0510b" region="gfx1" offset="400000"/>
+		<rom name="mr94027.04" merge="mr94027.04" size="2097152" crc="6a16d13a" sha1="65a7751c248c966fd01149418ce6bedba7a0d48a" region="gfx1" offset="400002"/>
+		<rom name="mr94027.05" merge="mr94027.05" size="2097152" crc="59545977" sha1="2e0a83efd7ae210c0b4360e9572dd7eec38cd974" region="gfx1" offset="800000"/>
+		<rom name="mr94027.06" merge="mr94027.06" size="2097152" crc="1618785a" sha1="3f2698d07a52947429313a78ebcedfdae478efd7" region="gfx1" offset="800002"/>
+		<rom name="mr94027.07" merge="mr94027.07" size="2097152" crc="c66099c4" sha1="5a6edffa39a98f38cc3cffbad9191fb2e794a812" region="gfx1" offset="c00000"/>
+		<rom name="mr94027.08" merge="mr94027.08" size="2097152" crc="753b05e0" sha1="0424e92b32a73c27ecb549e6e9449446ea938e40" region="gfx1" offset="c00002"/>
+		<rom name="mr94027.09" merge="mr94027.09" size="2097152" crc="32ead437" sha1="b94175cf186b4ebcc180a4c092d2ffcdd9ff3b1d" region="gfx2" offset="0"/>
+		<rom name="mr94027.11" merge="mr94027.11" size="2097152" crc="b65d5096" sha1="2c4e1e3e9f96be8369cb2de142a82f94506f85c0" region="gfx3" offset="0"/>
+		<rom name="mb93138_32_ver1.0.32" merge="mb93138_32_ver1.0.32" size="524288" crc="df5d00b4" sha1="2bbbcd546d5b5170d81bf33b37b46b70b417c9c7" region="gfx4" offset="0"/>
+		<rom name="mb93138_21_ver1.0.21" merge="mb93138.21" size="262144" crc="008bc217" sha1="eec66a86f285ccbc47eba17a4bb83cc1f8a5f425" region="cpu2" offset="0"/>
+		<rom name="mr92042.01" merge="mr92042.01" size="2097152" crc="0fa26f65" sha1="e92b14862fbce33ea4ab4567ec48199bfcbbdd84" region="sound1" soundonly="yes" offset="0"/>
+		<rom name="mr94027.10" merge="mr94027.10" size="2097152" crc="e7cabe41" sha1="5d903baed690a98856f7581319cf4dbfe1db47bb" region="sound1" soundonly="yes" offset="200000"/>
+		<chip type="cpu" name="V70" clock="20000000"/>
+		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
+		<chip type="audio" name="YMF271"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="59.410645"/>
+		<sound channels="2"/>
+		<input players="3" buttons="5" coins="2" service="yes"/>
 		<dipswitch name="Unknown">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unused">
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Questions (VS Mode)">
+			<dipvalue name="Default" default="yes"/>
+			<dipvalue name="More"/>
+		</dipswitch>
+		<dipswitch name="Time (Race Mode)">
+			<dipvalue name="Default - 0:15"/>
+			<dipvalue name="Default - 0:10"/>
+			<dipvalue name="Default" default="yes"/>
+			<dipvalue name="Default + 0:15"/>
+		</dipswitch>
+		<dipswitch name="Computer's AI (VS Mode)">
+			<dipvalue name="Low"/>
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="High"/>
+			<dipvalue name="Highest"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Free Play">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Coin B">
+			<dipvalue name="5 Coins/1 Credit"/>
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+		</dipswitch>
+		<dipswitch name="Coin A">
+			<dipvalue name="5 Coins/1 Credit"/>
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
 		</dipswitch>
 		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
@@ -315020,505 +315254,42 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="32768"/>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="32768"/>
 	</game>
 	<game name="bbbxing" sourcefile="ms32.c">
-		<description>Best Bout Boxing</description>
+		<description>Best Bout Boxing (ver 1.3)</description>
 		<year>1994</year>
 		<manufacturer>Jaleco</manufacturer>
-		<rom name="bbbx25.bin" size="524288" crc="b526b41e" sha1="44945931b159646468a954d5acdd2c6c61daf098" region="cpu1" offset="3"/>
-		<rom name="bbbx27.bin" size="524288" crc="45b27ad8" sha1="0af415b17400aabecdcb6d1d069f28b64780017f" region="cpu1" offset="2"/>
-		<rom name="bbbx29.bin" size="524288" crc="85bbbe79" sha1="bc5ebb96491762e6a0d202ddf7faeb57c66211b4" region="cpu1" offset="1"/>
-		<rom name="bbbx31.bin" size="524288" crc="e0c865ed" sha1="f21e8dc174c50d7afdd3f82c1c66dfcc002bdd07" region="cpu1" offset="0"/>
-		<rom name="bbbx1.bin" size="2097152" crc="c1c10c3b" sha1="e1f739f38e148c4d7aff6b81b3e42131c5c6c3dd" region="gfx1" offset="2"/>
-		<rom name="bbbx13.bin" size="2097152" crc="4b8c1574" sha1="c389c70b532d54528a175f460ca3f329b34cf67c" region="gfx1" offset="0"/>
-		<rom name="bbbx2.bin" size="2097152" crc="03b77c1e" sha1="f156ae6a4f2a8ae99815eb5a7b28425d273c1c3e" region="gfx1" offset="400002"/>
-		<rom name="bbbx14.bin" size="2097152" crc="e9cfd83b" sha1="8580c571a4144ea27c7fca7e86e3e4f5e4f5facb" region="gfx1" offset="400000"/>
-		<rom name="bbbx3.bin" size="2097152" crc="bba0d1a4" sha1="15f8de7478182c36927a84ee8de8eb8ac3e65d7b" region="gfx1" offset="800002"/>
-		<rom name="bbbx15.bin" size="2097152" crc="6ab64a10" sha1="4ee2cec6b9f8d729ff53851f7949c5cd3a8029d8" region="gfx1" offset="800000"/>
-		<rom name="bbbx4.bin" size="2097152" crc="97f97e3a" sha1="260603a10fe742986aa4f7fb90e4f141bdadae17" region="gfx1" offset="c00002"/>
-		<rom name="bbbx16.bin" size="2097152" crc="e001d6cb" sha1="c887dbf192e6b46c86fd86bb5f58b44ab8fe8d73" region="gfx1" offset="c00000"/>
-		<rom name="bbbx5.bin" size="524288" crc="64989edf" sha1="033eab0e8a53607b2bb420f6356804b2cfa1544c" region="gfx1" offset="1000002"/>
-		<rom name="bbbx17.bin" size="524288" crc="1d7ebaf0" sha1="5aac7cb01013ce3be206318678aced5812bff9a9" region="gfx1" offset="1000000"/>
-		<rom name="bbbx9.bin" size="2097152" crc="a41cb650" sha1="1c55a4afe55c1250806f2d93c25842dc3fb7f987" region="gfx2" offset="0"/>
-		<rom name="bbbx11.bin" size="2097152" crc="85238ca9" sha1="1ce32d585fe66764d621c11882ef9d2abaea6256" region="gfx3" offset="0"/>
-		<rom name="bbbx32-2.bin" size="524288" crc="3ffdae75" sha1="2b837d28f7ecdd49e8525bd5c249e83021d5fe9f" region="gfx4" offset="0"/>
-		<rom name="bbbx21.bin" size="262144" crc="5f3ea01f" sha1="761f6a5852312d2b12de009f3cf0476f5b2e906c" region="cpu2" offset="0"/>
-		<rom name="bbbx22.bin" size="2097152" crc="0fa26f65" sha1="e92b14862fbce33ea4ab4567ec48199bfcbbdd84" region="sound1" soundonly="yes" offset="0"/>
-		<rom name="bbbx23.bin" size="2097152" crc="b7875a23" sha1="62bb4c1318f98ea68894658d92ce08e84d386d0c" region="sound1" soundonly="yes" offset="200000"/>
+		<rom name="mb93138a_25_ver1.3.25" size="524288" crc="b526b41e" sha1="44945931b159646468a954d5acdd2c6c61daf098" region="cpu1" offset="3"/>
+		<rom name="mb93138a_27_ver1.3.27" size="524288" crc="45b27ad8" sha1="0af415b17400aabecdcb6d1d069f28b64780017f" region="cpu1" offset="2"/>
+		<rom name="mb93138a_29_ver1.3.29" size="524288" crc="85bbbe79" sha1="bc5ebb96491762e6a0d202ddf7faeb57c66211b4" region="cpu1" offset="1"/>
+		<rom name="mb93138a_31_ver1.3.31" size="524288" crc="e0c865ed" sha1="f21e8dc174c50d7afdd3f82c1c66dfcc002bdd07" region="cpu1" offset="0"/>
+		<rom name="mr92042-07.1" size="2097152" crc="c1c10c3b" sha1="e1f739f38e148c4d7aff6b81b3e42131c5c6c3dd" region="gfx1" offset="2"/>
+		<rom name="mr92042-06.13" size="2097152" crc="4b8c1574" sha1="c389c70b532d54528a175f460ca3f329b34cf67c" region="gfx1" offset="0"/>
+		<rom name="mr92042-09.2" size="2097152" crc="03b77c1e" sha1="f156ae6a4f2a8ae99815eb5a7b28425d273c1c3e" region="gfx1" offset="400002"/>
+		<rom name="mr92042-08.14" size="2097152" crc="e9cfd83b" sha1="8580c571a4144ea27c7fca7e86e3e4f5e4f5facb" region="gfx1" offset="400000"/>
+		<rom name="mr92042-11.3" size="2097152" crc="bba0d1a4" sha1="15f8de7478182c36927a84ee8de8eb8ac3e65d7b" region="gfx1" offset="800002"/>
+		<rom name="mr92042-10.15" size="2097152" crc="6ab64a10" sha1="4ee2cec6b9f8d729ff53851f7949c5cd3a8029d8" region="gfx1" offset="800000"/>
+		<rom name="mr92042-13.4" size="2097152" crc="97f97e3a" sha1="260603a10fe742986aa4f7fb90e4f141bdadae17" region="gfx1" offset="c00002"/>
+		<rom name="mr92042-12.16" size="2097152" crc="e001d6cb" sha1="c887dbf192e6b46c86fd86bb5f58b44ab8fe8d73" region="gfx1" offset="c00000"/>
+		<rom name="mb93138a_5_ver1.0.5" size="524288" crc="64989edf" sha1="033eab0e8a53607b2bb420f6356804b2cfa1544c" region="gfx1" offset="1000002"/>
+		<rom name="mb93138a_17_ver1.0.17" size="524288" crc="1d7ebaf0" sha1="5aac7cb01013ce3be206318678aced5812bff9a9" region="gfx1" offset="1000000"/>
+		<rom name="mr92042-05.9" size="2097152" crc="a41cb650" sha1="1c55a4afe55c1250806f2d93c25842dc3fb7f987" region="gfx2" offset="0"/>
+		<rom name="mr92042-04.11" size="2097152" crc="85238ca9" sha1="1ce32d585fe66764d621c11882ef9d2abaea6256" region="gfx3" offset="0"/>
+		<rom name="mr92042-01.32" size="524288" crc="3ffdae75" sha1="2b837d28f7ecdd49e8525bd5c249e83021d5fe9f" region="gfx4" offset="0"/>
+		<rom name="mb93138a_21_ver1.0.21" size="262144" crc="5f3ea01f" sha1="761f6a5852312d2b12de009f3cf0476f5b2e906c" region="cpu2" offset="0"/>
+		<rom name="mr92042-01.22" size="2097152" crc="0fa26f65" sha1="e92b14862fbce33ea4ab4567ec48199bfcbbdd84" region="sound1" soundonly="yes" offset="0"/>
+		<rom name="mr92042-02.23" size="2097152" crc="b7875a23" sha1="62bb4c1318f98ea68894658d92ce08e84d386d0c" region="sound1" soundonly="yes" offset="200000"/>
 		<chip type="cpu" name="V70" clock="20000000"/>
-		<chip type="cpu" soundonly="yes" name="Z80" clock="4000000"/>
+		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
 		<chip type="audio" name="YMF271"/>
-		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="59.410645"/>
 		<sound channels="2"/>
-		<input players="2" control="joy8way" buttons="3" coins="2" service="yes"/>
-		<dipswitch name="Coin A">
-			<dipvalue name="5 Coins/1 Credit"/>
-			<dipvalue name="4 Coins/1 Credit"/>
-			<dipvalue name="3 Coins/1 Credit"/>
-			<dipvalue name="2 Coins/1 Credit"/>
-			<dipvalue name="1 Coin/1 Credit" default="yes"/>
-			<dipvalue name="1 Coin/2 Credits"/>
-			<dipvalue name="1 Coin/3 Credits"/>
-			<dipvalue name="1 Coin/4 Credits"/>
-		</dipswitch>
-		<dipswitch name="Coin B">
-			<dipvalue name="5 Coins/1 Credit"/>
-			<dipvalue name="4 Coins/1 Credit"/>
-			<dipvalue name="3 Coins/1 Credit"/>
-			<dipvalue name="2 Coins/1 Credit"/>
-			<dipvalue name="1 Coin/1 Credit" default="yes"/>
-			<dipvalue name="1 Coin/2 Credits"/>
-			<dipvalue name="1 Coin/3 Credits"/>
-			<dipvalue name="1 Coin/4 Credits"/>
-		</dipswitch>
-		<dipswitch name="Free Play">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Service Mode">
-		</dipswitch>
-		<dipswitch name="Difficulty">
-			<dipvalue name="Easy"/>
-			<dipvalue name="Normal" default="yes"/>
-			<dipvalue name="Hard"/>
-			<dipvalue name="Hardest"/>
-		</dipswitch>
-		<dipswitch name="Timer Speed">
-			<dipvalue name="60/60" default="yes"/>
-			<dipvalue name="50/60"/>
-			<dipvalue name="40/60"/>
-			<dipvalue name="35/60"/>
-		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Demo Sounds">
-			<dipvalue name="Off"/>
-			<dipvalue name="On" default="yes"/>
-		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Flip Screen">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="32768"/>
-	</game>
-	<game name="47pie2" sourcefile="ms32.c">
-		<description>Idol Janshi Su-Chi-Pie 2 (v1.1)</description>
-		<year>1994</year>
-		<manufacturer>Jaleco</manufacturer>
-		<rom name="93166-26.v11" size="524288" crc="e4e62134" sha1="224b3e8dba56009bf2af6eceb7495e60302a6360" region="cpu1" offset="3"/>
-		<rom name="93166-27.v11" size="524288" crc="7bd00919" sha1="60565b5e1da5fee00ac4a7fb1202d7150dab49ee" region="cpu1" offset="2"/>
-		<rom name="93166-28.v11" size="524288" crc="aa49eec2" sha1="173afc596caa1c464fc3247cb64d36c1d97a1520" region="cpu1" offset="1"/>
-		<rom name="93166-29.v11" size="524288" crc="92763e41" sha1="eb593bbb586661c4c4e8728d845b146974d0bdf8" region="cpu1" offset="0"/>
-		<rom name="94019-02.1" size="2097152" crc="f9d692f2" sha1="666df55d26e00be39073173fa3616ac9dafbe615" region="gfx1" offset="2"/>
-		<rom name="94019-01.13" size="2097152" crc="1ddfe825" sha1="27fbf492fdb4f0b4b8db18330e840c130213e15e" region="gfx1" offset="0"/>
-		<rom name="94019-04.2" size="2097152" crc="24ca77ec" sha1="a5c575224ab276cbed5785f40fc0d35dd2748e74" region="gfx1" offset="400002"/>
-		<rom name="94019-03.14" size="2097152" crc="b26426c4" sha1="2d95137edea7d0c380dd8fd99852254ad3e4c837" region="gfx1" offset="400000"/>
-		<rom name="94019-06.3" size="2097152" crc="c8aa4b57" sha1="55da6a43ba6f0cb32f5d024f67cae21d04019d2a" region="gfx1" offset="800002"/>
-		<rom name="94019-05.15" size="2097152" crc="1da63eb4" sha1="8193ad27ddfe6ba242b73082d1b4a400e88401ba" region="gfx1" offset="800000"/>
-		<rom name="94019-08.4" size="2097152" crc="4b07edc9" sha1="22aaa923a94a7bec997d2adabc8ec2c7696c33a5" region="gfx1" offset="c00002"/>
-		<rom name="94019-07.16" size="2097152" crc="34f471a8" sha1="4c9c358a9bfdb436a211caa14d085e631609681d" region="gfx1" offset="c00000"/>
-		<rom name="94019-09.11" size="2097152" crc="cde7bb6f" sha1="47454dac4ce67ce8d7e0c5ef3a732477ac8170a7" region="gfx2" offset="0"/>
-		<rom name="94019-12.10" size="1048576" crc="15ae05d9" sha1="ac00d3766c42ccba4585b9acfacc81bcb940ac26" region="gfx3" offset="0"/>
-		<rom name="93166-30.bin" size="524288" crc="0c738883" sha1="e552c1842d759e5e617eb9c6cc178620a461b4dd" region="gfx4" offset="0"/>
-		<rom name="93166-21.bin" size="262144" crc="e7fd1bf4" sha1="74567530364bfd93bffddb588758d8498e197668" region="cpu2" offset="0"/>
-		<rom name="94019-10.22" size="2097152" crc="745d41ec" sha1="9118d0f27b65c9d37970326ccf86fdccb81d32f5" region="sound1" soundonly="yes" offset="0"/>
-		<rom name="94019-11.23" size="2097152" crc="021dc350" sha1="c71936091f86440201fdbdc94b0d1d22c4018188" region="sound1" soundonly="yes" offset="200000"/>
-		<chip type="cpu" name="V70" clock="20000000"/>
-		<chip type="cpu" soundonly="yes" name="Z80" clock="4000000"/>
-		<chip type="audio" name="YMF271"/>
-		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
-		<sound channels="2"/>
-		<input players="1" coins="2" service="yes"/>
-		<dipswitch name="Coin A">
-			<dipvalue name="5 Coins/1 Credit"/>
-			<dipvalue name="4 Coins/1 Credit"/>
-			<dipvalue name="3 Coins/1 Credit"/>
-			<dipvalue name="2 Coins/1 Credit"/>
-			<dipvalue name="1 Coin/1 Credit" default="yes"/>
-			<dipvalue name="1 Coin/2 Credits"/>
-			<dipvalue name="1 Coin/3 Credits"/>
-			<dipvalue name="1 Coin/4 Credits"/>
-		</dipswitch>
-		<dipswitch name="Coin B">
-			<dipvalue name="5 Coins/1 Credit"/>
-			<dipvalue name="4 Coins/1 Credit"/>
-			<dipvalue name="3 Coins/1 Credit"/>
-			<dipvalue name="2 Coins/1 Credit"/>
-			<dipvalue name="1 Coin/1 Credit" default="yes"/>
-			<dipvalue name="1 Coin/2 Credits"/>
-			<dipvalue name="1 Coin/3 Credits"/>
-			<dipvalue name="1 Coin/4 Credits"/>
-		</dipswitch>
-		<dipswitch name="Free Play">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Service Mode">
-		</dipswitch>
-		<dipswitch name="Difficulty">
-			<dipvalue name="Easiest"/>
-			<dipvalue name="Very Easy"/>
-			<dipvalue name="Easier"/>
-			<dipvalue name="Easy"/>
-			<dipvalue name="Normal" default="yes"/>
-			<dipvalue name="Hard"/>
-			<dipvalue name="Harder"/>
-			<dipvalue name="Hardest"/>
-		</dipswitch>
-		<dipswitch name="Demo Sounds">
-			<dipvalue name="Off"/>
-			<dipvalue name="On" default="yes"/>
-		</dipswitch>
-		<dipswitch name="Tumo Pinfu">
-			<dipvalue name="Off"/>
-			<dipvalue name="On" default="yes"/>
-		</dipswitch>
-		<dipswitch name="Campaign Mode">
-			<dipvalue name="Off"/>
-			<dipvalue name="On" default="yes"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off"/>
-			<dipvalue name="On" default="yes"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="32768"/>
-	</game>
-	<game name="47pie2o" sourcefile="ms32.c" cloneof="47pie2" romof="47pie2">
-		<description>Idol Janshi Su-Chi-Pie 2 (v1.0)</description>
-		<year>1994</year>
-		<manufacturer>Jaleco</manufacturer>
-		<rom name="93166-26.v10" size="524288" crc="21dc94dd" sha1="faf2eea891cb061d5df47ef31d9538feb0c1233c" region="cpu1" offset="3"/>
-		<rom name="93166-27.v10" size="524288" crc="5bf18a7d" sha1="70869dc37e6ad79ce4e85db71a03c5cccf9d732b" region="cpu1" offset="2"/>
-		<rom name="93166-28.v10" size="524288" crc="b1261d51" sha1="3f393aeb7a076c4d2d2cc7f22ead05f405186d80" region="cpu1" offset="1"/>
-		<rom name="93166-29.v10" size="524288" crc="9211c82a" sha1="0aa3f93293b81e0f66b985046eb5e91708693959" region="cpu1" offset="0"/>
-		<rom name="94019-02.1" merge="94019-02.1" size="2097152" crc="f9d692f2" sha1="666df55d26e00be39073173fa3616ac9dafbe615" region="gfx1" offset="2"/>
-		<rom name="94019-01.13" merge="94019-01.13" size="2097152" crc="1ddfe825" sha1="27fbf492fdb4f0b4b8db18330e840c130213e15e" region="gfx1" offset="0"/>
-		<rom name="94019-04.2" merge="94019-04.2" size="2097152" crc="24ca77ec" sha1="a5c575224ab276cbed5785f40fc0d35dd2748e74" region="gfx1" offset="400002"/>
-		<rom name="94019-03.14" merge="94019-03.14" size="2097152" crc="b26426c4" sha1="2d95137edea7d0c380dd8fd99852254ad3e4c837" region="gfx1" offset="400000"/>
-		<rom name="94019-06.3" merge="94019-06.3" size="2097152" crc="c8aa4b57" sha1="55da6a43ba6f0cb32f5d024f67cae21d04019d2a" region="gfx1" offset="800002"/>
-		<rom name="94019-05.15" merge="94019-05.15" size="2097152" crc="1da63eb4" sha1="8193ad27ddfe6ba242b73082d1b4a400e88401ba" region="gfx1" offset="800000"/>
-		<rom name="94019-08.4" merge="94019-08.4" size="2097152" crc="4b07edc9" sha1="22aaa923a94a7bec997d2adabc8ec2c7696c33a5" region="gfx1" offset="c00002"/>
-		<rom name="94019-07.16" merge="94019-07.16" size="2097152" crc="34f471a8" sha1="4c9c358a9bfdb436a211caa14d085e631609681d" region="gfx1" offset="c00000"/>
-		<rom name="94019-09.11" merge="94019-09.11" size="2097152" crc="cde7bb6f" sha1="47454dac4ce67ce8d7e0c5ef3a732477ac8170a7" region="gfx2" offset="0"/>
-		<rom name="94019-12.10" merge="94019-12.10" size="1048576" crc="15ae05d9" sha1="ac00d3766c42ccba4585b9acfacc81bcb940ac26" region="gfx3" offset="0"/>
-		<rom name="93166-30.bin" merge="93166-30.bin" size="524288" crc="0c738883" sha1="e552c1842d759e5e617eb9c6cc178620a461b4dd" region="gfx4" offset="0"/>
-		<rom name="93166-21.bin" merge="93166-21.bin" size="262144" crc="e7fd1bf4" sha1="74567530364bfd93bffddb588758d8498e197668" region="cpu2" offset="0"/>
-		<rom name="94019-10.22" merge="94019-10.22" size="2097152" crc="745d41ec" sha1="9118d0f27b65c9d37970326ccf86fdccb81d32f5" region="sound1" soundonly="yes" offset="0"/>
-		<rom name="94019-11.23" merge="94019-11.23" size="2097152" crc="021dc350" sha1="c71936091f86440201fdbdc94b0d1d22c4018188" region="sound1" soundonly="yes" offset="200000"/>
-		<chip type="cpu" name="V70" clock="20000000"/>
-		<chip type="cpu" soundonly="yes" name="Z80" clock="4000000"/>
-		<chip type="audio" name="YMF271"/>
-		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
-		<sound channels="2"/>
-		<input players="1" coins="2" service="yes"/>
-		<dipswitch name="Coin A">
-			<dipvalue name="5 Coins/1 Credit"/>
-			<dipvalue name="4 Coins/1 Credit"/>
-			<dipvalue name="3 Coins/1 Credit"/>
-			<dipvalue name="2 Coins/1 Credit"/>
-			<dipvalue name="1 Coin/1 Credit" default="yes"/>
-			<dipvalue name="1 Coin/2 Credits"/>
-			<dipvalue name="1 Coin/3 Credits"/>
-			<dipvalue name="1 Coin/4 Credits"/>
-		</dipswitch>
-		<dipswitch name="Coin B">
-			<dipvalue name="5 Coins/1 Credit"/>
-			<dipvalue name="4 Coins/1 Credit"/>
-			<dipvalue name="3 Coins/1 Credit"/>
-			<dipvalue name="2 Coins/1 Credit"/>
-			<dipvalue name="1 Coin/1 Credit" default="yes"/>
-			<dipvalue name="1 Coin/2 Credits"/>
-			<dipvalue name="1 Coin/3 Credits"/>
-			<dipvalue name="1 Coin/4 Credits"/>
-		</dipswitch>
-		<dipswitch name="Free Play">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Service Mode">
-		</dipswitch>
-		<dipswitch name="Difficulty">
-			<dipvalue name="Easiest"/>
-			<dipvalue name="Very Easy"/>
-			<dipvalue name="Easier"/>
-			<dipvalue name="Easy"/>
-			<dipvalue name="Normal" default="yes"/>
-			<dipvalue name="Hard"/>
-			<dipvalue name="Harder"/>
-			<dipvalue name="Hardest"/>
-		</dipswitch>
-		<dipswitch name="Demo Sounds">
-			<dipvalue name="Off"/>
-			<dipvalue name="On" default="yes"/>
-		</dipswitch>
-		<dipswitch name="Tumo Pinfu">
-			<dipvalue name="Off"/>
-			<dipvalue name="On" default="yes"/>
-		</dipswitch>
-		<dipswitch name="Campaign Mode">
-			<dipvalue name="Off"/>
-			<dipvalue name="On" default="yes"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off"/>
-			<dipvalue name="On" default="yes"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="32768"/>
-	</game>
-	<game name="desertwr" sourcefile="ms32.c">
-		<description>Desert War - Wangan Sensou</description>
-		<year>1995</year>
-		<manufacturer>Jaleco</manufacturer>
-		<rom name="93166-26.37" size="524288" crc="582b9584" sha1="027a987cde7e9e1b24aef6a3086eba61679ad0b6" region="cpu1" offset="3"/>
-		<rom name="93166-27.38" size="524288" crc="cb60dda3" sha1="0499b8ab19abdf8db8c18d778b3f9f6e0d277ff0" region="cpu1" offset="2"/>
-		<rom name="93166-28.39" size="524288" crc="0de40efb" sha1="c49c3b27939e428dec1f642b7fdb9a1ff760289a" region="cpu1" offset="1"/>
-		<rom name="93166-29.40" size="524288" crc="fc25eae2" sha1="a4d47fcb4d4c3285cf67d77d8a21478f344b98ca" region="cpu1" offset="0"/>
-		<rom name="94038-01.20" size="2097152" crc="f11f83e2" sha1="e3c99e6583003210483163c79182cb14aa334702" region="gfx1" offset="0"/>
-		<rom name="94038-02.3" size="2097152" crc="3d1fa710" sha1="5fae3e8c714cca88e22e432dd7275c6898c631a8" region="gfx1" offset="2"/>
-		<rom name="94038-03.21" size="2097152" crc="84fd5790" sha1="6187ff32a63f3b4105ea875f52237f0d4314f8b6" region="gfx1" offset="400000"/>
-		<rom name="94038-04.4" size="2097152" crc="b9ef5b78" sha1="e2f160a93532f67948a557db717d44c926ae0e49" region="gfx1" offset="400002"/>
-		<rom name="94038-05.22" size="2097152" crc="feee1b8d" sha1="39e1d424dd56257139ab5ab8e897caa1c9cd4e71" region="gfx1" offset="800000"/>
-		<rom name="94038-06.5" size="2097152" crc="d417f289" sha1="39cca11989bb5dc95ef03013d23a7c100bcb36ab" region="gfx1" offset="800002"/>
-		<rom name="94038-07.23" size="2097152" crc="426f4193" sha1="98a16a70c225d7cd061fcd6e88992d393e6ef9fd" region="gfx1" offset="c00000"/>
-		<rom name="94038-08.6" size="2097152" crc="f4088399" sha1="9d53880996f85776815840bca1f8c3958de4c275" region="gfx1" offset="c00002"/>
-		<rom name="94038-11.13" size="2097152" crc="bf2ec3a3" sha1="904cd5ab2e855bdb94bc70efa6db42af672337d7" region="gfx2" offset="0"/>
-		<rom name="94038-12.14" size="2097152" crc="d0e113da" sha1="57f27cbd58421a0afe724fec5628c4a29aad8868" region="gfx2" offset="200000"/>
-		<rom name="94038-09.12" size="2097152" crc="72ec1ce7" sha1="88bd9ca3aa7a6410e8fcf6fd70304f12724653bb" region="gfx3" offset="0"/>
-		<rom name="94038-10.11" size="2097152" crc="1e17f2a9" sha1="19e6be1daa157593fbab84149f1f739dd39c9226" region="gfx3" offset="200000"/>
-		<rom name="93166-30.41" size="524288" crc="980ab89c" sha1="8468fc13a5988e25750e8d99ff464f46e86ab412" region="gfx4" offset="0"/>
-		<rom name="93166-21.30" size="262144" crc="9300be4c" sha1="a8e9c1704abf26545aeb9a5d28fd0cafd38f2d84" region="cpu2" offset="0"/>
-		<rom name="92042-01.33" size="2097152" crc="0fa26f65" sha1="e92b14862fbce33ea4ab4567ec48199bfcbbdd84" region="sound1" soundonly="yes" offset="0"/>
-		<rom name="94038-13.34" size="2097152" crc="b0cac8f2" sha1="f7d2e32d9c2f301341f7c02678c2c1e09ce655ba" region="sound1" soundonly="yes" offset="200000"/>
-		<chip type="cpu" name="V70" clock="20000000"/>
-		<chip type="cpu" soundonly="yes" name="Z80" clock="4000000"/>
-		<chip type="audio" name="YMF271"/>
-		<video screen="raster" orientation="vertical" width="224" height="320" aspectx="3" aspecty="4" refresh="60.000000"/>
-		<sound channels="2"/>
-		<input players="2" control="joy8way" buttons="2" coins="2" service="yes"/>
-		<dipswitch name="Coin A">
-			<dipvalue name="5 Coins/1 Credit"/>
-			<dipvalue name="4 Coins/1 Credit"/>
-			<dipvalue name="3 Coins/1 Credit"/>
-			<dipvalue name="2 Coins/1 Credit"/>
-			<dipvalue name="1 Coin/1 Credit" default="yes"/>
-			<dipvalue name="1 Coin/2 Credits"/>
-			<dipvalue name="1 Coin/3 Credits"/>
-			<dipvalue name="1 Coin/4 Credits"/>
-		</dipswitch>
-		<dipswitch name="Coin B">
-			<dipvalue name="5 Coins/1 Credit"/>
-			<dipvalue name="4 Coins/1 Credit"/>
-			<dipvalue name="3 Coins/1 Credit"/>
-			<dipvalue name="2 Coins/1 Credit"/>
-			<dipvalue name="1 Coin/1 Credit" default="yes"/>
-			<dipvalue name="1 Coin/2 Credits"/>
-			<dipvalue name="1 Coin/3 Credits"/>
-			<dipvalue name="1 Coin/4 Credits"/>
-		</dipswitch>
-		<dipswitch name="Free Play">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Service Mode">
-		</dipswitch>
-		<dipswitch name="Difficulty">
-			<dipvalue name="Easy"/>
-			<dipvalue name="Normal" default="yes"/>
-			<dipvalue name="Hard"/>
-			<dipvalue name="Hardest"/>
-		</dipswitch>
-		<dipswitch name="Armors">
-			<dipvalue name="2"/>
-			<dipvalue name="3" default="yes"/>
-			<dipvalue name="4"/>
-		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Demo Sounds">
-			<dipvalue name="Off"/>
-			<dipvalue name="On" default="yes"/>
-		</dipswitch>
+		<input players="2" control="joy8way" buttons="5" coins="2" service="yes"/>
 		<dipswitch name="Flip Screen">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
@@ -315527,9 +315298,420 @@
 			<dipvalue name="Japanese"/>
 			<dipvalue name="English" default="yes"/>
 		</dipswitch>
-		<dipswitch name="FBI Logo">
-			<dipvalue name="No" default="yes"/>
-			<dipvalue name="Yes"/>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Timer Speed">
+			<dipvalue name="60/60"/>
+			<dipvalue name="50/60"/>
+			<dipvalue name="40/60"/>
+			<dipvalue name="35/60" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Difficulty">
+			<dipvalue name="Easy"/>
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Hardest"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
+		</dipswitch>
+		<dipswitch name="Free Play">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Coin B">
+			<dipvalue name="5 Coins/1 Credit"/>
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+		</dipswitch>
+		<dipswitch name="Coin A">
+			<dipvalue name="5 Coins/1 Credit"/>
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Grute's Attacking Power">
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Harder"/>
+		</dipswitch>
+		<dipswitch name="Biff's Attacking Power">
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Harder"/>
+		</dipswitch>
+		<dipswitch name="Carolde's Attacking Power">
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Harder"/>
+		</dipswitch>
+		<dipswitch name="Jose's Attacking Power">
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Harder"/>
+		</dipswitch>
+		<dipswitch name="Thamalatt's Attacking Power">
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Harder"/>
+		</dipswitch>
+		<dipswitch name="Kim's Attacking Power">
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Harder"/>
+		</dipswitch>
+		<dipswitch name="Jyoji's Attacking Power">
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Harder"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="32768"/>
+	</game>
+	<game name="suchie2" sourcefile="ms32.c">
+		<description>Idol Janshi Suchie-Pai II (ver 1.1)</description>
+		<year>1994</year>
+		<manufacturer>Jaleco</manufacturer>
+		<rom name="mb-93166-26_ver1.1.26" size="524288" crc="e4e62134" sha1="224b3e8dba56009bf2af6eceb7495e60302a6360" region="cpu1" offset="3"/>
+		<rom name="mb-93166-27_ver1.1.27" size="524288" crc="7bd00919" sha1="60565b5e1da5fee00ac4a7fb1202d7150dab49ee" region="cpu1" offset="2"/>
+		<rom name="mb-93166-28_ver1.1.28" size="524288" crc="aa49eec2" sha1="173afc596caa1c464fc3247cb64d36c1d97a1520" region="cpu1" offset="1"/>
+		<rom name="mb-93166-29_ver1.1.29" size="524288" crc="92763e41" sha1="eb593bbb586661c4c4e8728d845b146974d0bdf8" region="cpu1" offset="0"/>
+		<rom name="mb94019-02.1" size="2097152" crc="f9d692f2" sha1="666df55d26e00be39073173fa3616ac9dafbe615" region="gfx1" offset="2"/>
+		<rom name="mb94019-01.13" size="2097152" crc="1ddfe825" sha1="27fbf492fdb4f0b4b8db18330e840c130213e15e" region="gfx1" offset="0"/>
+		<rom name="mb94019-04.2" size="2097152" crc="24ca77ec" sha1="a5c575224ab276cbed5785f40fc0d35dd2748e74" region="gfx1" offset="400002"/>
+		<rom name="mb94019-03.14" size="2097152" crc="b26426c4" sha1="2d95137edea7d0c380dd8fd99852254ad3e4c837" region="gfx1" offset="400000"/>
+		<rom name="mb94019-06.3" size="2097152" crc="c8aa4b57" sha1="55da6a43ba6f0cb32f5d024f67cae21d04019d2a" region="gfx1" offset="800002"/>
+		<rom name="mb94019-05.15" size="2097152" crc="1da63eb4" sha1="8193ad27ddfe6ba242b73082d1b4a400e88401ba" region="gfx1" offset="800000"/>
+		<rom name="mb94019-08.4" size="2097152" crc="4b07edc9" sha1="22aaa923a94a7bec997d2adabc8ec2c7696c33a5" region="gfx1" offset="c00002"/>
+		<rom name="mb94019-07.16" size="2097152" crc="34f471a8" sha1="4c9c358a9bfdb436a211caa14d085e631609681d" region="gfx1" offset="c00000"/>
+		<rom name="94019-09.11" size="2097152" crc="cde7bb6f" sha1="47454dac4ce67ce8d7e0c5ef3a732477ac8170a7" region="gfx2" offset="0"/>
+		<rom name="mb94019-12.10" size="1048576" crc="15ae05d9" sha1="ac00d3766c42ccba4585b9acfacc81bcb940ac26" region="gfx3" offset="0"/>
+		<rom name="mb-93166-30_ver1.0.30" size="524288" crc="0c738883" sha1="e552c1842d759e5e617eb9c6cc178620a461b4dd" region="gfx4" offset="0"/>
+		<rom name="mb-93166-21_ver1.0.21" size="262144" crc="e7fd1bf4" sha1="74567530364bfd93bffddb588758d8498e197668" region="cpu2" offset="0"/>
+		<rom name="mb94019-10.22" size="2097152" crc="745d41ec" sha1="9118d0f27b65c9d37970326ccf86fdccb81d32f5" region="sound1" soundonly="yes" offset="0"/>
+		<rom name="mb94019-11.23" size="2097152" crc="021dc350" sha1="c71936091f86440201fdbdc94b0d1d22c4018188" region="sound1" soundonly="yes" offset="200000"/>
+		<chip type="cpu" name="V70" clock="20000000"/>
+		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
+		<chip type="audio" name="YMF271"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="59.410645"/>
+		<sound channels="2"/>
+		<input players="1" coins="1" service="yes"/>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Difficulty">
+			<dipvalue name="Easy"/>
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Hardest"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
+		</dipswitch>
+		<dipswitch name="Free Play">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Campaign Mode">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Tsumo Pinfu">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Coinage">
+			<dipvalue name="5 Coins/1 Credit"/>
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="32768"/>
+	</game>
+	<game name="suchie2o" sourcefile="ms32.c" cloneof="suchie2" romof="suchie2">
+		<description>Idol Janshi Suchie-Pai II (ver 1.0)</description>
+		<year>1994</year>
+		<manufacturer>Jaleco</manufacturer>
+		<rom name="mb-93166-26_ver1.0.26" size="524288" crc="21dc94dd" sha1="faf2eea891cb061d5df47ef31d9538feb0c1233c" region="cpu1" offset="3"/>
+		<rom name="mb-93166-27_ver1.0.27" size="524288" crc="5bf18a7d" sha1="70869dc37e6ad79ce4e85db71a03c5cccf9d732b" region="cpu1" offset="2"/>
+		<rom name="mb-93166-28_ver1.0.28" size="524288" crc="b1261d51" sha1="3f393aeb7a076c4d2d2cc7f22ead05f405186d80" region="cpu1" offset="1"/>
+		<rom name="mb-93166-29_ver1.0.29" size="524288" crc="9211c82a" sha1="0aa3f93293b81e0f66b985046eb5e91708693959" region="cpu1" offset="0"/>
+		<rom name="mb94019-02.1" merge="mb94019-02.1" size="2097152" crc="f9d692f2" sha1="666df55d26e00be39073173fa3616ac9dafbe615" region="gfx1" offset="2"/>
+		<rom name="mb94019-01.13" merge="mb94019-01.13" size="2097152" crc="1ddfe825" sha1="27fbf492fdb4f0b4b8db18330e840c130213e15e" region="gfx1" offset="0"/>
+		<rom name="mb94019-04.2" merge="mb94019-04.2" size="2097152" crc="24ca77ec" sha1="a5c575224ab276cbed5785f40fc0d35dd2748e74" region="gfx1" offset="400002"/>
+		<rom name="mb94019-03.14" merge="mb94019-03.14" size="2097152" crc="b26426c4" sha1="2d95137edea7d0c380dd8fd99852254ad3e4c837" region="gfx1" offset="400000"/>
+		<rom name="mb94019-06.3" merge="mb94019-06.3" size="2097152" crc="c8aa4b57" sha1="55da6a43ba6f0cb32f5d024f67cae21d04019d2a" region="gfx1" offset="800002"/>
+		<rom name="mb94019-05.15" merge="mb94019-05.15" size="2097152" crc="1da63eb4" sha1="8193ad27ddfe6ba242b73082d1b4a400e88401ba" region="gfx1" offset="800000"/>
+		<rom name="mb94019-08.4" merge="mb94019-08.4" size="2097152" crc="4b07edc9" sha1="22aaa923a94a7bec997d2adabc8ec2c7696c33a5" region="gfx1" offset="c00002"/>
+		<rom name="mb94019-07.16" merge="mb94019-07.16" size="2097152" crc="34f471a8" sha1="4c9c358a9bfdb436a211caa14d085e631609681d" region="gfx1" offset="c00000"/>
+		<rom name="mb94019-09.11" merge="94019-09.11" size="2097152" crc="cde7bb6f" sha1="47454dac4ce67ce8d7e0c5ef3a732477ac8170a7" region="gfx2" offset="0"/>
+		<rom name="mb94019-12.10" merge="mb94019-12.10" size="1048576" crc="15ae05d9" sha1="ac00d3766c42ccba4585b9acfacc81bcb940ac26" region="gfx3" offset="0"/>
+		<rom name="mb-93166-30_ver1.0.30" merge="mb-93166-30_ver1.0.30" size="524288" crc="0c738883" sha1="e552c1842d759e5e617eb9c6cc178620a461b4dd" region="gfx4" offset="0"/>
+		<rom name="mb-93166-21_ver1.0.21" merge="mb-93166-21_ver1.0.21" size="262144" crc="e7fd1bf4" sha1="74567530364bfd93bffddb588758d8498e197668" region="cpu2" offset="0"/>
+		<rom name="mb94019-10.22" merge="mb94019-10.22" size="2097152" crc="745d41ec" sha1="9118d0f27b65c9d37970326ccf86fdccb81d32f5" region="sound1" soundonly="yes" offset="0"/>
+		<rom name="mb94019-11.23" merge="mb94019-11.23" size="2097152" crc="021dc350" sha1="c71936091f86440201fdbdc94b0d1d22c4018188" region="sound1" soundonly="yes" offset="200000"/>
+		<chip type="cpu" name="V70" clock="20000000"/>
+		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
+		<chip type="audio" name="YMF271"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="59.410645"/>
+		<sound channels="2"/>
+		<input players="1" coins="1" service="yes"/>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Difficulty">
+			<dipvalue name="Easy"/>
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Hardest"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
+		</dipswitch>
+		<dipswitch name="Free Play">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Campaign Mode">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Tsumo Pinfu">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Coinage">
+			<dipvalue name="5 Coins/1 Credit"/>
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="32768"/>
+	</game>
+	<game name="desertwr" sourcefile="ms32.c">
+		<description>Desert War / Wangan Sensou (ver 1.0)</description>
+		<year>1995</year>
+		<manufacturer>Jaleco</manufacturer>
+		<rom name="mb93166_ver1.0-26.26" size="524288" crc="582b9584" sha1="027a987cde7e9e1b24aef6a3086eba61679ad0b6" region="cpu1" offset="3"/>
+		<rom name="mb93166_ver1.0-27.27" size="524288" crc="cb60dda3" sha1="0499b8ab19abdf8db8c18d778b3f9f6e0d277ff0" region="cpu1" offset="2"/>
+		<rom name="mb93166_ver1.0-28.28" size="524288" crc="0de40efb" sha1="c49c3b27939e428dec1f642b7fdb9a1ff760289a" region="cpu1" offset="1"/>
+		<rom name="mb93166_ver1.0-29.29" size="524288" crc="fc25eae2" sha1="a4d47fcb4d4c3285cf67d77d8a21478f344b98ca" region="cpu1" offset="0"/>
+		<rom name="mb94038-01.13" size="2097152" crc="f11f83e2" sha1="e3c99e6583003210483163c79182cb14aa334702" region="gfx1" offset="0"/>
+		<rom name="mb94038-02.1" size="2097152" crc="3d1fa710" sha1="5fae3e8c714cca88e22e432dd7275c6898c631a8" region="gfx1" offset="2"/>
+		<rom name="mb94038-03.14" size="2097152" crc="84fd5790" sha1="6187ff32a63f3b4105ea875f52237f0d4314f8b6" region="gfx1" offset="400000"/>
+		<rom name="mb94038-04.2" size="2097152" crc="b9ef5b78" sha1="e2f160a93532f67948a557db717d44c926ae0e49" region="gfx1" offset="400002"/>
+		<rom name="mb94038-05.15" size="2097152" crc="feee1b8d" sha1="39e1d424dd56257139ab5ab8e897caa1c9cd4e71" region="gfx1" offset="800000"/>
+		<rom name="mb94038-06.3" size="2097152" crc="d417f289" sha1="39cca11989bb5dc95ef03013d23a7c100bcb36ab" region="gfx1" offset="800002"/>
+		<rom name="mb94038-07.16" size="2097152" crc="426f4193" sha1="98a16a70c225d7cd061fcd6e88992d393e6ef9fd" region="gfx1" offset="c00000"/>
+		<rom name="mb94038-08.4" size="2097152" crc="f4088399" sha1="9d53880996f85776815840bca1f8c3958de4c275" region="gfx1" offset="c00002"/>
+		<rom name="mb94038-11.11" size="2097152" crc="bf2ec3a3" sha1="904cd5ab2e855bdb94bc70efa6db42af672337d7" region="gfx2" offset="0"/>
+		<rom name="mb94038-12.12" size="2097152" crc="d0e113da" sha1="57f27cbd58421a0afe724fec5628c4a29aad8868" region="gfx2" offset="200000"/>
+		<rom name="mb94038-09.10" size="2097152" crc="72ec1ce7" sha1="88bd9ca3aa7a6410e8fcf6fd70304f12724653bb" region="gfx3" offset="0"/>
+		<rom name="mb94038-10.9" size="2097152" crc="1e17f2a9" sha1="19e6be1daa157593fbab84149f1f739dd39c9226" region="gfx3" offset="200000"/>
+		<rom name="mb93166_ver1.0-29.30" size="524288" crc="980ab89c" sha1="8468fc13a5988e25750e8d99ff464f46e86ab412" region="gfx4" offset="0"/>
+		<rom name="mb93166_ver1.0-21.21" size="262144" crc="9300be4c" sha1="a8e9c1704abf26545aeb9a5d28fd0cafd38f2d84" region="cpu2" offset="0"/>
+		<rom name="mb92042-01.22" size="2097152" crc="0fa26f65" sha1="e92b14862fbce33ea4ab4567ec48199bfcbbdd84" region="sound1" soundonly="yes" offset="0"/>
+		<rom name="mb94038-13.23" size="2097152" crc="b0cac8f2" sha1="f7d2e32d9c2f301341f7c02678c2c1e09ce655ba" region="sound1" soundonly="yes" offset="200000"/>
+		<chip type="cpu" name="V70" clock="20000000"/>
+		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
+		<chip type="audio" name="YMF271"/>
+		<video screen="raster" orientation="vertical" width="224" height="320" aspectx="3" aspecty="4" refresh="59.410645"/>
+		<sound channels="2"/>
+		<input players="2" control="joy8way" buttons="5" coins="2" service="yes"/>
+		<dipswitch name="Flip Screen">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Armors">
+			<dipvalue name="2"/>
+			<dipvalue name="3" default="yes"/>
+			<dipvalue name="4"/>
+		</dipswitch>
+		<dipswitch name="Difficulty">
+			<dipvalue name="Easy"/>
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Hardest"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
+		</dipswitch>
+		<dipswitch name="Free Play">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Coin B">
+			<dipvalue name="5 Coins/1 Credit"/>
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+		</dipswitch>
+		<dipswitch name="Coin A">
+			<dipvalue name="5 Coins/1 Credit"/>
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
 		</dipswitch>
 		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
@@ -315543,81 +315725,61 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
+		<dipswitch name="FBI Logo">
+			<dipvalue name="No" default="yes"/>
+			<dipvalue name="Yes"/>
 		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
+		<dipswitch name="Language">
+			<dipvalue name="Japanese"/>
+			<dipvalue name="English" default="yes"/>
 		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="32768"/>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="32768"/>
 	</game>
 	<game name="gametngk" sourcefile="ms32.c">
-		<description>The Game Paradise - Master of Shooting! - Game Tengoku - The Game Paradise</description>
+		<description>The Game Paradise - Master of Shooting! / Game Tengoku - The Game Paradise (ver 1.0)</description>
 		<year>1995</year>
 		<manufacturer>Jaleco</manufacturer>
-		<rom name="mr94041.26" size="524288" crc="e622e774" sha1="203c2a3563a337af4cec92a66e0fa410d901b01f" region="cpu1" offset="3"/>
-		<rom name="mr94041.27" size="524288" crc="da862b9c" sha1="17dc6da08d7f5551c8f4bc4d9c416dbfc82d8397" region="cpu1" offset="2"/>
-		<rom name="mr94041.28" size="524288" crc="b3738934" sha1="cd07572e55e83807e76179cfc6b97e0410067911" region="cpu1" offset="1"/>
-		<rom name="mr94041.29" size="524288" crc="45154a45" sha1="4c7c2c6738fdfe54ebe41a0ac6222cbfce5d7757" region="cpu1" offset="0"/>
-		<rom name="mr94041.01" size="2097152" crc="3f99adf7" sha1="cbb8d2fc253b0c58e7eb9286c66e6b36daf9d4af" region="gfx1" offset="0"/>
-		<rom name="mr94041.02" size="2097152" crc="c3c5ae69" sha1="5ed7f57a7139f87c680c68e44ea4022b917a9381" region="gfx1" offset="2"/>
-		<rom name="mr94041.03" size="2097152" crc="d858b6de" sha1="a06cf529c9508c8c8508894e2e004373edd9debf" region="gfx1" offset="400000"/>
-		<rom name="mr94041.04" size="2097152" crc="8c96ca20" sha1="097cab64ef8e515c59178c36171f87bed4b3d1e5" region="gfx1" offset="400002"/>
-		<rom name="mr94041.05" size="2097152" crc="ac664a0b" sha1="bd002822a38369599a1b5a7456957de1d9cd976e" region="gfx1" offset="800000"/>
-		<rom name="mr94041.06" size="2097152" crc="70dd0dd4" sha1="da648c16ad0cb12ac66656522da14392be7772c9" region="gfx1" offset="800002"/>
-		<rom name="mr94041.07" size="2097152" crc="a6966af5" sha1="3a65824f3f325af39d8e9932357ce9f8878f0321" region="gfx1" offset="c00000"/>
-		<rom name="mr94041.08" size="2097152" crc="d7d2f73a" sha1="0eb28f4cdea73aa8fed0b62cbac6cd7d7694c2ee" region="gfx1" offset="c00002"/>
-		<rom name="mr94041.11" size="2097152" crc="00dcdbc3" sha1="f7e34bc9f714ea81fc9855d90db792dd1e99bae8" region="gfx2" offset="0"/>
-		<rom name="mr94041.12" size="2097152" crc="0ce48329" sha1="9c198cef998eb3b9c33123bd8cc02210498f82d9" region="gfx2" offset="200000"/>
-		<rom name="mr94041.09" size="2097152" crc="a33e6051" sha1="d6e34b022eb36dcfa8cfe6d6d1254f994b3b3dca" region="gfx3" offset="0"/>
-		<rom name="mr94041.10" size="2097152" crc="b3497147" sha1="df7d8ea7ec3e3df5e0c6658f14995df5479181bf" region="gfx3" offset="200000"/>
-		<rom name="mr94041.30" size="524288" crc="c0f27b7f" sha1="874fe80aa4b46520f844ef6efa61f28eabccbc4f" region="gfx4" offset="0"/>
-		<rom name="mr94041.21" size="262144" crc="38dcb837" sha1="29fdde54e52dec4ee39a6f2db8e0d67774320d15" region="cpu2" offset="0"/>
-		<rom name="mr94041.13" size="2097152" crc="fba84caf" sha1="318270dbf825a8e0f315992c49a2dc34dd1df7c1" region="sound1" soundonly="yes" offset="0"/>
-		<rom name="mr94041.14" size="2097152" crc="2d6308bd" sha1="600b6ccdbb976301075e0b287124a9fd5fe7fc1b" region="sound1" soundonly="yes" offset="200000"/>
+		<rom name="mb94166_ver1.0-26.26" size="524288" crc="e622e774" sha1="203c2a3563a337af4cec92a66e0fa410d901b01f" region="cpu1" offset="3"/>
+		<rom name="mb94166_ver1.0-27.27" size="524288" crc="da862b9c" sha1="17dc6da08d7f5551c8f4bc4d9c416dbfc82d8397" region="cpu1" offset="2"/>
+		<rom name="mb94166_ver1.0-28.28" size="524288" crc="b3738934" sha1="cd07572e55e83807e76179cfc6b97e0410067911" region="cpu1" offset="1"/>
+		<rom name="mb94166_ver1.0-29.29" size="524288" crc="45154a45" sha1="4c7c2c6738fdfe54ebe41a0ac6222cbfce5d7757" region="cpu1" offset="0"/>
+		<rom name="mr94041-01.13" size="2097152" crc="3f99adf7" sha1="cbb8d2fc253b0c58e7eb9286c66e6b36daf9d4af" region="gfx1" offset="0"/>
+		<rom name="mr94041-02.1" size="2097152" crc="c3c5ae69" sha1="5ed7f57a7139f87c680c68e44ea4022b917a9381" region="gfx1" offset="2"/>
+		<rom name="mr94041-03.14" size="2097152" crc="d858b6de" sha1="a06cf529c9508c8c8508894e2e004373edd9debf" region="gfx1" offset="400000"/>
+		<rom name="mr94041-04.2" size="2097152" crc="8c96ca20" sha1="097cab64ef8e515c59178c36171f87bed4b3d1e5" region="gfx1" offset="400002"/>
+		<rom name="mr94041-05.15" size="2097152" crc="ac664a0b" sha1="bd002822a38369599a1b5a7456957de1d9cd976e" region="gfx1" offset="800000"/>
+		<rom name="mr94041-06.3" size="2097152" crc="70dd0dd4" sha1="da648c16ad0cb12ac66656522da14392be7772c9" region="gfx1" offset="800002"/>
+		<rom name="mr94041-07.16" size="2097152" crc="a6966af5" sha1="3a65824f3f325af39d8e9932357ce9f8878f0321" region="gfx1" offset="c00000"/>
+		<rom name="mr94041-08.4" size="2097152" crc="d7d2f73a" sha1="0eb28f4cdea73aa8fed0b62cbac6cd7d7694c2ee" region="gfx1" offset="c00002"/>
+		<rom name="mr94041-11.11" size="2097152" crc="00dcdbc3" sha1="f7e34bc9f714ea81fc9855d90db792dd1e99bae8" region="gfx2" offset="0"/>
+		<rom name="mr94041-12.12" size="2097152" crc="0ce48329" sha1="9c198cef998eb3b9c33123bd8cc02210498f82d9" region="gfx2" offset="200000"/>
+		<rom name="mr94041-09.10" size="2097152" crc="a33e6051" sha1="d6e34b022eb36dcfa8cfe6d6d1254f994b3b3dca" region="gfx3" offset="0"/>
+		<rom name="mr94041-10.9" size="2097152" crc="b3497147" sha1="df7d8ea7ec3e3df5e0c6658f14995df5479181bf" region="gfx3" offset="200000"/>
+		<rom name="mb94166_ver1.0-30.30" size="524288" crc="c0f27b7f" sha1="874fe80aa4b46520f844ef6efa61f28eabccbc4f" region="gfx4" offset="0"/>
+		<rom name="mb94166_ver1.0-21.21" size="262144" crc="38dcb837" sha1="29fdde54e52dec4ee39a6f2db8e0d67774320d15" region="cpu2" offset="0"/>
+		<rom name="mr94041-13.22" size="2097152" crc="fba84caf" sha1="318270dbf825a8e0f315992c49a2dc34dd1df7c1" region="sound1" soundonly="yes" offset="0"/>
+		<rom name="mr94041-14.23" size="2097152" crc="2d6308bd" sha1="600b6ccdbb976301075e0b287124a9fd5fe7fc1b" region="sound1" soundonly="yes" offset="200000"/>
 		<chip type="cpu" name="V70" clock="20000000"/>
-		<chip type="cpu" soundonly="yes" name="Z80" clock="4000000"/>
+		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
 		<chip type="audio" name="YMF271"/>
-		<video screen="raster" orientation="vertical" width="224" height="320" aspectx="3" aspecty="4" refresh="60.000000"/>
+		<video screen="raster" orientation="vertical" width="224" height="320" aspectx="3" aspecty="4" refresh="59.410645"/>
 		<sound channels="2"/>
-		<input players="2" control="joy8way" buttons="2" coins="2" service="yes"/>
-		<dipswitch name="Coin A">
-			<dipvalue name="5 Coins/1 Credit"/>
-			<dipvalue name="4 Coins/1 Credit"/>
-			<dipvalue name="3 Coins/1 Credit"/>
-			<dipvalue name="2 Coins/1 Credit"/>
-			<dipvalue name="1 Coin/1 Credit" default="yes"/>
-			<dipvalue name="1 Coin/2 Credits"/>
-			<dipvalue name="1 Coin/3 Credits"/>
-			<dipvalue name="1 Coin/4 Credits"/>
-		</dipswitch>
-		<dipswitch name="Coin B">
-			<dipvalue name="5 Coins/1 Credit"/>
-			<dipvalue name="4 Coins/1 Credit"/>
-			<dipvalue name="3 Coins/1 Credit"/>
-			<dipvalue name="2 Coins/1 Credit"/>
-			<dipvalue name="1 Coin/1 Credit" default="yes"/>
-			<dipvalue name="1 Coin/2 Credits"/>
-			<dipvalue name="1 Coin/3 Credits"/>
-			<dipvalue name="1 Coin/4 Credits"/>
-		</dipswitch>
-		<dipswitch name="Free Play">
+		<input players="2" control="joy8way" buttons="5" coins="2" service="yes"/>
+		<dipswitch name="Flip Screen">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Service Mode">
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
 		</dipswitch>
-		<dipswitch name="Difficulty">
-			<dipvalue name="Easy"/>
-			<dipvalue name="Normal" default="yes"/>
-			<dipvalue name="Hard"/>
-			<dipvalue name="Hardest"/>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
 		</dipswitch>
 		<dipswitch name="Lives">
 			<dipvalue name="1"/>
@@ -315625,85 +315787,17 @@
 			<dipvalue name="4"/>
 			<dipvalue name="5"/>
 		</dipswitch>
-		<dipswitch name="Unused">
+		<dipswitch name="Difficulty">
+			<dipvalue name="Easy"/>
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Hardest"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
+		</dipswitch>
+		<dipswitch name="Free Play">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Demo Sounds">
-			<dipvalue name="Off"/>
-			<dipvalue name="On" default="yes"/>
-		</dipswitch>
-		<dipswitch name="Flip Screen">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Language">
-			<dipvalue name="Japanese"/>
-			<dipvalue name="English" default="yes"/>
-		</dipswitch>
-		<dipswitch name="FBI Logo">
-			<dipvalue name="No" default="yes"/>
-			<dipvalue name="Yes"/>
-		</dipswitch>
-		<dipswitch name="Voice">
-			<dipvalue name="No"/>
-			<dipvalue name="Yes" default="yes"/>
-		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Invulnerability">
-		</dipswitch>
-		<dipswitch name="Freeze">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="32768"/>
-	</game>
-	<game name="tetrisp" sourcefile="ms32.c">
-		<description>Tetris Plus</description>
-		<year>1995</year>
-		<manufacturer>Jaleco / BPS</manufacturer>
-		<rom name="mr95024.26" size="524288" crc="d318a9ba" sha1="cae86d86518fdfeb736e7b2040277c76cc3b4017" region="cpu1" offset="3"/>
-		<rom name="mr95024.27" size="524288" crc="2d69b6d3" sha1="f0a513f449aa25808672fb27e3691ccabfba48a1" region="cpu1" offset="2"/>
-		<rom name="mr95024.28" size="524288" crc="87522e16" sha1="4f0d8abec046884d89c559e3a4a5ac9e0e47a0dc" region="cpu1" offset="1"/>
-		<rom name="mr95024.29" size="524288" crc="43a61941" sha1="a097c88c45d8486eb6ffdd13904b6eb2a3fa45b9" region="cpu1" offset="0"/>
-		<rom name="mr95024.01" size="2097152" crc="cb0e92b9" sha1="179cc9e2d819d7f6238e924184e8a383d172aa72" region="gfx1" offset="2"/>
-		<rom name="mr95024.13" size="2097152" crc="4a825990" sha1="f99ba9f88f5582259ba0e50480451d4e9d1d03b7" region="gfx1" offset="0"/>
-		<rom name="mr95024.11" size="2097152" crc="c0d5246f" sha1="413285f6b40001281c4fcec1ce73400c3ae610ed" region="gfx2" offset="0"/>
-		<rom name="mr95024.10" size="2097152" crc="a03e4a8d" sha1="d52c78d5e9d874dce514ffb035f2424409d8fb7a" region="gfx3" offset="0"/>
-		<rom name="mr95024.30" size="524288" crc="cea7002d" sha1="5462edaeb9339790b95ed15a4bfaab8fae655b12" region="gfx4" offset="0"/>
-		<rom name="mr95024.21" size="262144" crc="5c565e3b" sha1="d349a8ca50d03c06d8978e6d3632b624f019dee4" region="cpu2" offset="0"/>
-		<rom name="mr95024.22" size="2097152" crc="0fa26f65" sha1="e92b14862fbce33ea4ab4567ec48199bfcbbdd84" region="sound1" soundonly="yes" offset="0"/>
-		<rom name="mr95024.23" size="2097152" crc="57502a17" sha1="ce880188854dc17d9ebbfa3c373469cf5e6858c2" region="sound1" soundonly="yes" offset="200000"/>
-		<chip type="cpu" name="V70" clock="20000000"/>
-		<chip type="cpu" soundonly="yes" name="Z80" clock="4000000"/>
-		<chip type="audio" name="YMF271"/>
-		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
-		<sound channels="2"/>
-		<input players="2" control="joy8way" buttons="2" coins="2" service="yes"/>
-		<dipswitch name="Coin A">
-			<dipvalue name="5 Coins/1 Credit"/>
-			<dipvalue name="4 Coins/1 Credit"/>
-			<dipvalue name="3 Coins/1 Credit"/>
-			<dipvalue name="2 Coins/1 Credit"/>
-			<dipvalue name="1 Coin/1 Credit" default="yes"/>
-			<dipvalue name="1 Coin/2 Credits"/>
-			<dipvalue name="1 Coin/3 Credits"/>
-			<dipvalue name="1 Coin/4 Credits"/>
 		</dipswitch>
 		<dipswitch name="Coin B">
 			<dipvalue name="5 Coins/1 Credit"/>
@@ -315715,17 +315809,84 @@
 			<dipvalue name="1 Coin/3 Credits"/>
 			<dipvalue name="1 Coin/4 Credits"/>
 		</dipswitch>
-		<dipswitch name="Free Play">
+		<dipswitch name="Coin A">
+			<dipvalue name="5 Coins/1 Credit"/>
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+		</dipswitch>
+		<dipswitch name="Freeze">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Service Mode">
+		<dipswitch name="Invulnerability (Cheat)">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Difficulty">
-			<dipvalue name="Easy"/>
-			<dipvalue name="Normal" default="yes"/>
-			<dipvalue name="Hard"/>
-			<dipvalue name="Hardest"/>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Voice">
+			<dipvalue name="No"/>
+			<dipvalue name="Yes" default="yes"/>
+		</dipswitch>
+		<dipswitch name="FBI Logo">
+			<dipvalue name="No" default="yes"/>
+			<dipvalue name="Yes"/>
+		</dipswitch>
+		<dipswitch name="Language">
+			<dipvalue name="Japanese"/>
+			<dipvalue name="English" default="yes"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="32768"/>
+	</game>
+	<game name="tetrisp" sourcefile="ms32.c">
+		<description>Tetris Plus (ver 1.0)</description>
+		<year>1995</year>
+		<manufacturer>Jaleco / BPS</manufacturer>
+		<rom name="mb93166_ver1.0-26.26" size="524288" crc="d318a9ba" sha1="cae86d86518fdfeb736e7b2040277c76cc3b4017" region="cpu1" offset="3"/>
+		<rom name="mb93166_ver1.0-27.27" size="524288" crc="2d69b6d3" sha1="f0a513f449aa25808672fb27e3691ccabfba48a1" region="cpu1" offset="2"/>
+		<rom name="mb93166_ver1.0-28.28" size="524288" crc="87522e16" sha1="4f0d8abec046884d89c559e3a4a5ac9e0e47a0dc" region="cpu1" offset="1"/>
+		<rom name="mb93166_ver1.0-29.29" size="524288" crc="43a61941" sha1="a097c88c45d8486eb6ffdd13904b6eb2a3fa45b9" region="cpu1" offset="0"/>
+		<rom name="mr95024-01.01" size="2097152" crc="cb0e92b9" sha1="179cc9e2d819d7f6238e924184e8a383d172aa72" region="gfx1" offset="2"/>
+		<rom name="mr95024-02.13" size="2097152" crc="4a825990" sha1="f99ba9f88f5582259ba0e50480451d4e9d1d03b7" region="gfx1" offset="0"/>
+		<rom name="mr95024-04.11" size="2097152" crc="c0d5246f" sha1="413285f6b40001281c4fcec1ce73400c3ae610ed" region="gfx2" offset="0"/>
+		<rom name="mr95024-03.10" size="2097152" crc="a03e4a8d" sha1="d52c78d5e9d874dce514ffb035f2424409d8fb7a" region="gfx3" offset="0"/>
+		<rom name="mb93166_ver1.0-30.30" size="524288" crc="cea7002d" sha1="5462edaeb9339790b95ed15a4bfaab8fae655b12" region="gfx4" offset="0"/>
+		<rom name="mb93166_ver1.0-21.21" size="262144" crc="5c565e3b" sha1="d349a8ca50d03c06d8978e6d3632b624f019dee4" region="cpu2" offset="0"/>
+		<rom name="mr92042-01.22" size="2097152" crc="0fa26f65" sha1="e92b14862fbce33ea4ab4567ec48199bfcbbdd84" region="sound1" soundonly="yes" offset="0"/>
+		<rom name="mr95024-05.23" size="2097152" crc="57502a17" sha1="ce880188854dc17d9ebbfa3c373469cf5e6858c2" region="sound1" soundonly="yes" offset="200000"/>
+		<chip type="cpu" name="V70" clock="20000000"/>
+		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
+		<chip type="audio" name="YMF271"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="59.410645"/>
+		<sound channels="2"/>
+		<input players="2" control="joy8way" buttons="5" coins="2" service="yes"/>
+		<dipswitch name="Flip Screen">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Join In">
+			<dipvalue name="All Modes" default="yes"/>
+			<dipvalue name="Normal and Puzzle Modes"/>
+			<dipvalue name="VS Mode"/>
 		</dipswitch>
 		<dipswitch name="Winning Rounds (Player VS Player)">
 			<dipvalue name="1/1"/>
@@ -315733,92 +315894,17 @@
 			<dipvalue name="3/5"/>
 			<dipvalue name="4/7"/>
 		</dipswitch>
-		<dipswitch name="Join In">
-			<dipvalue name="All Modes" default="yes"/>
-			<dipvalue name="Normal and Puzzle Modes"/>
-			<dipvalue name="VS Mode"/>
+		<dipswitch name="Difficulty">
+			<dipvalue name="Easy"/>
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Hardest"/>
 		</dipswitch>
-		<dipswitch name="Demo Sounds">
-			<dipvalue name="Off"/>
-			<dipvalue name="On" default="yes"/>
+		<dipswitch name="Service Mode">
 		</dipswitch>
-		<dipswitch name="Flip Screen">
+		<dipswitch name="Free Play">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Language">
-			<dipvalue name="Japanese"/>
-			<dipvalue name="English" default="yes"/>
-		</dipswitch>
-		<dipswitch name="FBI Logo">
-			<dipvalue name="No" default="yes"/>
-			<dipvalue name="Yes"/>
-		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Voice">
-			<dipvalue name="English Only"/>
-			<dipvalue name="Yes" default="yes"/>
-		</dipswitch>
-		<dipswitch name="After VS Mode">
-			<dipvalue name="Game Ends" default="yes"/>
-			<dipvalue name="Winner Continues"/>
-		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Freeze">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="32768"/>
-	</game>
-	<game name="p47aces" sourcefile="ms32.c">
-		<description>P-47 Aces</description>
-		<year>1995</year>
-		<manufacturer>Jaleco</manufacturer>
-		<rom name="p47-26.bin" size="524288" crc="e017b819" sha1="942fb48e8bb3a263534a0351a1a9979d786bc475" region="cpu1" offset="3"/>
-		<rom name="p47-27.bin" size="524288" crc="bd1b81e0" sha1="b15f157fe3a30295f999a4c285da2d6f22d7fba6" region="cpu1" offset="2"/>
-		<rom name="p47-28.bin" size="524288" crc="4742a5f7" sha1="cd297aa150082c545647c9a755cf2cdbdc98c988" region="cpu1" offset="1"/>
-		<rom name="p47-29.bin" size="524288" crc="86e17d8b" sha1="73004f243c6dfb86ce4cc61475dc7caaf452750e" region="cpu1" offset="0"/>
-		<rom name="p47-01.bin" size="2097152" crc="28732d3c" sha1="15b2687bcad31793fc7d6a9dc3eccb7ad9b5f659" region="gfx1" offset="2"/>
-		<rom name="p47-13.bin" size="2097152" crc="a6ccf999" sha1="5d32fb6f6987ede6c125bec9581da4695ad64dff" region="gfx1" offset="0"/>
-		<rom name="p47-02.bin" size="2097152" crc="128db576" sha1="f6561f54f6b95842a5f14d29682449bf0d837a85" region="gfx1" offset="400002"/>
-		<rom name="p47-14.bin" size="2097152" crc="efc52b38" sha1="589caaaba4e3ddaf41e05f0f12b8d4bc6d63fa5c" region="gfx1" offset="400000"/>
-		<rom name="p47-03.bin" size="2097152" crc="324cd504" sha1="79b3ef3ae0aa14d903113ccf5b57d459c329cf12" region="gfx1" offset="800002"/>
-		<rom name="p47-15.bin" size="2097152" crc="ca164b17" sha1="ea1cb0894632442f40d321b5843125f874768aae" region="gfx1" offset="800000"/>
-		<rom name="p47-04.bin" size="1048576" crc="4b3372be" sha1="cdc7d7615b6b5d45ca071b2967980dc6c6294ac0" region="gfx1" offset="c00002"/>
-		<rom name="p47-16.bin" size="1048576" crc="c23c5467" sha1="5ff51ecb86ccbae2af160599890e13a7cc70072d" region="gfx1" offset="c00000"/>
-		<rom name="p47-11.bin" size="2097152" crc="c1fe16b3" sha1="8b9d2483ba06ab8072676e73d949c696535b3d26" region="gfx2" offset="0"/>
-		<rom name="p47-12.bin" size="2097152" crc="75871325" sha1="9191263a52ec6ac325cf6130b35be7cdd1ec2f50" region="gfx2" offset="200000"/>
-		<rom name="p47-10.bin" size="2097152" crc="a44e9e06" sha1="ff51796e160d996e931b92049e6214982f270caa" region="gfx3" offset="0"/>
-		<rom name="p47-09.bin" size="2097152" crc="226014a6" sha1="090bdc1f6d2b9d33b431dbb49a457a4bb36cd3ad" region="gfx3" offset="200000"/>
-		<rom name="p47-30.bin" size="524288" crc="7ba90fad" sha1="c0a3d4458816f00b8f5eb4b6d4531d1abeaccbe5" region="gfx4" offset="0"/>
-		<rom name="p47-21.bin" size="262144" crc="f2d43927" sha1="69ac20f339a515d58cafbcd6f7d7982ca5cda681" region="cpu2" offset="0"/>
-		<rom name="p47-22.bin" size="2097152" crc="0fa26f65" sha1="e92b14862fbce33ea4ab4567ec48199bfcbbdd84" region="sound1" soundonly="yes" offset="0"/>
-		<rom name="p47-23.bin" size="2097152" crc="547fa4d4" sha1="8a5ecb3300646762f63d37a27e643e1f6ce5e775" region="sound1" soundonly="yes" offset="200000"/>
-		<chip type="cpu" name="V70" clock="20000000"/>
-		<chip type="cpu" soundonly="yes" name="Z80" clock="4000000"/>
-		<chip type="audio" name="YMF271"/>
-		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
-		<sound channels="2"/>
-		<input players="2" control="joy8way" buttons="2" coins="2" service="yes"/>
-		<dipswitch name="Coin A">
-			<dipvalue name="5 Coins/1 Credit"/>
-			<dipvalue name="4 Coins/1 Credit"/>
-			<dipvalue name="3 Coins/1 Credit"/>
-			<dipvalue name="2 Coins/1 Credit"/>
-			<dipvalue name="1 Coin/1 Credit" default="yes"/>
-			<dipvalue name="1 Coin/2 Credits"/>
-			<dipvalue name="1 Coin/3 Credits"/>
-			<dipvalue name="1 Coin/4 Credits"/>
 		</dipswitch>
 		<dipswitch name="Coin B">
 			<dipvalue name="5 Coins/1 Credit"/>
@@ -315830,29 +315916,81 @@
 			<dipvalue name="1 Coin/3 Credits"/>
 			<dipvalue name="1 Coin/4 Credits"/>
 		</dipswitch>
-		<dipswitch name="Free Play">
+		<dipswitch name="Coin A">
+			<dipvalue name="5 Coins/1 Credit"/>
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+		</dipswitch>
+		<dipswitch name="Freeze">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Service Mode">
-		</dipswitch>
-		<dipswitch name="Difficulty">
-			<dipvalue name="Easy"/>
-			<dipvalue name="Normal" default="yes"/>
-			<dipvalue name="Hard"/>
-			<dipvalue name="Hardest"/>
-		</dipswitch>
-		<dipswitch name="Lives">
-			<dipvalue name="1"/>
-			<dipvalue name="2"/>
-			<dipvalue name="3" default="yes"/>
-			<dipvalue name="4"/>
 		</dipswitch>
 		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
 		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="After VS Mode">
+			<dipvalue name="Game Ends" default="yes"/>
+			<dipvalue name="Winner Continues"/>
+		</dipswitch>
+		<dipswitch name="Voice">
+			<dipvalue name="English Only"/>
+			<dipvalue name="Yes" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="FBI Logo">
+			<dipvalue name="No" default="yes"/>
+			<dipvalue name="Yes"/>
+		</dipswitch>
+		<dipswitch name="Language">
+			<dipvalue name="Japanese"/>
+			<dipvalue name="English" default="yes"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="32768"/>
+	</game>
+	<game name="p47aces" sourcefile="ms32.c">
+		<description>P-47 Aces (ver 1.1)</description>
+		<year>1995</year>
+		<manufacturer>Jaleco</manufacturer>
+		<rom name="p-47_aces_3-31_rom_26_ver1.1.26" size="524288" crc="99c0e211" sha1="6fc3b1e5ddadda85934145a2e62b55ccb2011fb5" region="cpu1" offset="3"/>
+		<rom name="p-47_aces_3-31_rom_27_ver1.1.27" size="524288" crc="2a0c107a" sha1="1d83bd55acaad62a5823f09b1683f846631fdeca" region="cpu1" offset="2"/>
+		<rom name="p-47_aces_3-31_rom_28_ver1.1.28" size="524288" crc="53509d28" sha1="44e6388ade514bb747a84bfef17f852393b44a37" region="cpu1" offset="1"/>
+		<rom name="p-47_aces_3-31_rom_29_ver1.1.29" size="524288" crc="91e7b7da" sha1="f3a0e193c59e285d97a7ea9bc92a7b3c5c009532" region="cpu1" offset="0"/>
+		<rom name="mr94020-02.1" size="2097152" crc="28732d3c" sha1="15b2687bcad31793fc7d6a9dc3eccb7ad9b5f659" region="gfx1" offset="2"/>
+		<rom name="mr94020-01.13" size="2097152" crc="a6ccf999" sha1="5d32fb6f6987ede6c125bec9581da4695ad64dff" region="gfx1" offset="0"/>
+		<rom name="mr94020-04.2" size="2097152" crc="128db576" sha1="f6561f54f6b95842a5f14d29682449bf0d837a85" region="gfx1" offset="400002"/>
+		<rom name="mr94020-03.14" size="2097152" crc="efc52b38" sha1="589caaaba4e3ddaf41e05f0f12b8d4bc6d63fa5c" region="gfx1" offset="400000"/>
+		<rom name="mr94020-06.3" size="2097152" crc="324cd504" sha1="79b3ef3ae0aa14d903113ccf5b57d459c329cf12" region="gfx1" offset="800002"/>
+		<rom name="mr94020-05.15" size="2097152" crc="ca164b17" sha1="ea1cb0894632442f40d321b5843125f874768aae" region="gfx1" offset="800000"/>
+		<rom name="mr94020-08.4" size="1048576" crc="4b3372be" sha1="cdc7d7615b6b5d45ca071b2967980dc6c6294ac0" region="gfx1" offset="c00002"/>
+		<rom name="mr94020-07.16" size="1048576" crc="c23c5467" sha1="5ff51ecb86ccbae2af160599890e13a7cc70072d" region="gfx1" offset="c00000"/>
+		<rom name="mr94020-11.11" size="2097152" crc="c1fe16b3" sha1="8b9d2483ba06ab8072676e73d949c696535b3d26" region="gfx2" offset="0"/>
+		<rom name="mr94020-12.12" size="2097152" crc="75871325" sha1="9191263a52ec6ac325cf6130b35be7cdd1ec2f50" region="gfx2" offset="200000"/>
+		<rom name="mr94020-10.10" size="2097152" crc="a44e9e06" sha1="ff51796e160d996e931b92049e6214982f270caa" region="gfx3" offset="0"/>
+		<rom name="mr94020-09.9" size="2097152" crc="226014a6" sha1="090bdc1f6d2b9d33b431dbb49a457a4bb36cd3ad" region="gfx3" offset="200000"/>
+		<rom name="p-47_ver1.0-30.30" size="524288" crc="7ba90fad" sha1="c0a3d4458816f00b8f5eb4b6d4531d1abeaccbe5" region="gfx4" offset="0"/>
+		<rom name="p-47_ver1.0-21.21" size="262144" crc="f2d43927" sha1="69ac20f339a515d58cafbcd6f7d7982ca5cda681" region="cpu2" offset="0"/>
+		<rom name="mr92042-01.22" size="2097152" crc="0fa26f65" sha1="e92b14862fbce33ea4ab4567ec48199bfcbbdd84" region="sound1" soundonly="yes" offset="0"/>
+		<rom name="mr94020-13.23" size="2097152" crc="547fa4d4" sha1="8a5ecb3300646762f63d37a27e643e1f6ce5e775" region="sound1" soundonly="yes" offset="200000"/>
+		<chip type="cpu" name="V70" clock="20000000"/>
+		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
+		<chip type="audio" name="YMF271"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="59.410645"/>
+		<sound channels="2"/>
+		<input players="2" control="joy8way" buttons="5" coins="2" service="yes"/>
+		<dipswitch name="Flip Screen">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
@@ -315860,78 +315998,146 @@
 			<dipvalue name="Off"/>
 			<dipvalue name="On" default="yes"/>
 		</dipswitch>
-		<dipswitch name="Flip Screen">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Language">
-			<dipvalue name="Japanese"/>
-			<dipvalue name="English" default="yes"/>
-		</dipswitch>
-		<dipswitch name="FBI Logo">
-			<dipvalue name="No" default="yes"/>
-			<dipvalue name="Yes"/>
+		<dipswitch name="Bonus Life">
+			<dipvalue name="500k" default="yes"/>
+			<dipvalue name="None"/>
 		</dipswitch>
 		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unused">
+		<dipswitch name="Lives">
+			<dipvalue name="1"/>
+			<dipvalue name="2"/>
+			<dipvalue name="3" default="yes"/>
+			<dipvalue name="4"/>
+		</dipswitch>
+		<dipswitch name="Difficulty">
+			<dipvalue name="Easy"/>
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Hardest"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
+		</dipswitch>
+		<dipswitch name="Free Play">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
+		<dipswitch name="Coin B">
+			<dipvalue name="5 Coins/1 Credit"/>
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
 		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
+		<dipswitch name="Coin A">
+			<dipvalue name="5 Coins/1 Credit"/>
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
 		</dipswitch>
 		<dipswitch name="FG/BG X offset">
 			<dipvalue name="0/0" default="yes"/>
 			<dipvalue name="5/5"/>
 			<dipvalue name="2/4"/>
 		</dipswitch>
-		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="32768"/>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="FBI Logo">
+			<dipvalue name="No" default="yes"/>
+			<dipvalue name="Yes"/>
+		</dipswitch>
+		<dipswitch name="Language">
+			<dipvalue name="Japanese"/>
+			<dipvalue name="English" default="yes"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="32768"/>
 	</game>
-	<game name="akiss" sourcefile="ms32.c">
-		<description>Mahjong Angel Kiss</description>
+	<game name="p47acesa" sourcefile="ms32.c" cloneof="p47aces" romof="p47aces">
+		<description>P-47 Aces (ver 1.0)</description>
 		<year>1995</year>
 		<manufacturer>Jaleco</manufacturer>
-		<rom name="93166.26" size="524288" crc="5bdd01ee" sha1="21b8e07bb7ef6b437a43719b02deeba970330900" region="cpu1" offset="3"/>
-		<rom name="93166.27" size="524288" crc="bb11b2c9" sha1="86ba06d28bc8f560ac3d05515d061e05c90d1628" region="cpu1" offset="2"/>
-		<rom name="93166.28" size="524288" crc="20565478" sha1="d532ab55be287f45d8d81317bb844c675eb1292c" region="cpu1" offset="1"/>
-		<rom name="93166.29" size="524288" crc="ff454f0d" sha1="db81aaaf4160eb62badbe08fc01543463470ac97" region="cpu1" offset="0"/>
-		<rom name="95008-01.13" size="2097152" crc="1be66420" sha1="9fc85e6108f230418e012ad05586010235139039" region="gfx1" offset="0"/>
-		<rom name="95008-02.1" size="2097152" crc="1cc4808e" sha1="70a19d66b4f187320c67760bc453b6afb7d66f9a" region="gfx1" offset="2"/>
-		<rom name="95008-03.14" size="2097152" crc="4045f0dc" sha1="5ba9786618ecad9410dbdf3664f9dda848a754f7" region="gfx1" offset="400000"/>
-		<rom name="95008-04.2" size="2097152" crc="ef3c139d" sha1="3de374e77443dd4e967dbb5da820fe1c8c78aa1b" region="gfx1" offset="400002"/>
-		<rom name="95008-05.15" size="2097152" crc="43ea4a84" sha1="d9d9898edcf432998ed6b9a1622812def45cf369" region="gfx1" offset="800000"/>
-		<rom name="95008-06.3" size="2097152" crc="24f23d4e" sha1="8a7b6f28f25227391df73edb096695c5fe8df7dc" region="gfx1" offset="800002"/>
-		<rom name="95008-07.16" size="2097152" crc="bf47747e" sha1="b97121953f41039182e25ea023802df4524cf9bd" region="gfx1" offset="c00000"/>
-		<rom name="95008-08.4" size="2097152" crc="34829a09" sha1="7229c56fee53a9d4d29cf0c9dec471b6cc4dc30b" region="gfx1" offset="c00002"/>
-		<rom name="95008-10.11" size="2097152" crc="52da2e9e" sha1="d7a29bdd1c6801aa8d36bc098e75091c63ba0766" region="gfx2" offset="0"/>
-		<rom name="95008-09.10" size="2097152" crc="7236f6a0" sha1="98dbb55f08d669ef3bf69394bb9739d0e6137fcb" region="gfx3" offset="0"/>
-		<rom name="93166.30" size="524288" crc="1807c1ea" sha1="94696b8319c4982cb5d33423f56e2348f210cdb5" region="gfx4" offset="0"/>
-		<rom name="93166.21" size="262144" crc="01a03687" sha1="2340c4ed19f434e8c23709edfc93259313aefaf9" region="cpu2" offset="0"/>
-		<rom name="95008-11.22" size="2097152" crc="23b9af76" sha1="98b4087c142500dc759bda94d71c77634452a7ad" region="sound1" soundonly="yes" offset="0"/>
-		<rom name="95008-12.23" size="2097152" crc="780a2f45" sha1="770cbf04e34ae7d72e6eb2304bcdfaff483cd8c1" region="sound1" soundonly="yes" offset="200000"/>
+		<rom name="p47_ver1.0-26.26" size="524288" crc="e017b819" sha1="942fb48e8bb3a263534a0351a1a9979d786bc475" region="cpu1" offset="3"/>
+		<rom name="p47_ver1.0-27.27" size="524288" crc="bd1b81e0" sha1="b15f157fe3a30295f999a4c285da2d6f22d7fba6" region="cpu1" offset="2"/>
+		<rom name="p47_ver1.0-28.28" size="524288" crc="4742a5f7" sha1="cd297aa150082c545647c9a755cf2cdbdc98c988" region="cpu1" offset="1"/>
+		<rom name="p47_ver1.0-29.29" size="524288" crc="86e17d8b" sha1="73004f243c6dfb86ce4cc61475dc7caaf452750e" region="cpu1" offset="0"/>
+		<rom name="mr94020-02.1" merge="mr94020-02.1" size="2097152" crc="28732d3c" sha1="15b2687bcad31793fc7d6a9dc3eccb7ad9b5f659" region="gfx1" offset="2"/>
+		<rom name="mr94020-01.13" merge="mr94020-01.13" size="2097152" crc="a6ccf999" sha1="5d32fb6f6987ede6c125bec9581da4695ad64dff" region="gfx1" offset="0"/>
+		<rom name="mr94020-04.2" merge="mr94020-04.2" size="2097152" crc="128db576" sha1="f6561f54f6b95842a5f14d29682449bf0d837a85" region="gfx1" offset="400002"/>
+		<rom name="mr94020-03.14" merge="mr94020-03.14" size="2097152" crc="efc52b38" sha1="589caaaba4e3ddaf41e05f0f12b8d4bc6d63fa5c" region="gfx1" offset="400000"/>
+		<rom name="mr94020-06.3" merge="mr94020-06.3" size="2097152" crc="324cd504" sha1="79b3ef3ae0aa14d903113ccf5b57d459c329cf12" region="gfx1" offset="800002"/>
+		<rom name="mr94020-05.15" merge="mr94020-05.15" size="2097152" crc="ca164b17" sha1="ea1cb0894632442f40d321b5843125f874768aae" region="gfx1" offset="800000"/>
+		<rom name="mr94020-08.4" merge="mr94020-08.4" size="1048576" crc="4b3372be" sha1="cdc7d7615b6b5d45ca071b2967980dc6c6294ac0" region="gfx1" offset="c00002"/>
+		<rom name="mr94020-07.16" merge="mr94020-07.16" size="1048576" crc="c23c5467" sha1="5ff51ecb86ccbae2af160599890e13a7cc70072d" region="gfx1" offset="c00000"/>
+		<rom name="mr94020-11.11" merge="mr94020-11.11" size="2097152" crc="c1fe16b3" sha1="8b9d2483ba06ab8072676e73d949c696535b3d26" region="gfx2" offset="0"/>
+		<rom name="mr94020-12.12" merge="mr94020-12.12" size="2097152" crc="75871325" sha1="9191263a52ec6ac325cf6130b35be7cdd1ec2f50" region="gfx2" offset="200000"/>
+		<rom name="mr94020-10.10" merge="mr94020-10.10" size="2097152" crc="a44e9e06" sha1="ff51796e160d996e931b92049e6214982f270caa" region="gfx3" offset="0"/>
+		<rom name="mr94020-09.9" merge="mr94020-09.9" size="2097152" crc="226014a6" sha1="090bdc1f6d2b9d33b431dbb49a457a4bb36cd3ad" region="gfx3" offset="200000"/>
+		<rom name="p-47_ver1.0-30.30" merge="p-47_ver1.0-30.30" size="524288" crc="7ba90fad" sha1="c0a3d4458816f00b8f5eb4b6d4531d1abeaccbe5" region="gfx4" offset="0"/>
+		<rom name="p-47_ver1.0-21.21" merge="p-47_ver1.0-21.21" size="262144" crc="f2d43927" sha1="69ac20f339a515d58cafbcd6f7d7982ca5cda681" region="cpu2" offset="0"/>
+		<rom name="mr92042-01.22" merge="mr92042-01.22" size="2097152" crc="0fa26f65" sha1="e92b14862fbce33ea4ab4567ec48199bfcbbdd84" region="sound1" soundonly="yes" offset="0"/>
+		<rom name="mr94020-13.23" merge="mr94020-13.23" size="2097152" crc="547fa4d4" sha1="8a5ecb3300646762f63d37a27e643e1f6ce5e775" region="sound1" soundonly="yes" offset="200000"/>
 		<chip type="cpu" name="V70" clock="20000000"/>
-		<chip type="cpu" soundonly="yes" name="Z80" clock="4000000"/>
+		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
 		<chip type="audio" name="YMF271"/>
-		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="59.410645"/>
 		<sound channels="2"/>
-		<input players="1" coins="2" service="yes"/>
-		<dipswitch name="Coin A">
-			<dipvalue name="5 Coins/1 Credit"/>
-			<dipvalue name="4 Coins/1 Credit"/>
-			<dipvalue name="3 Coins/1 Credit"/>
-			<dipvalue name="2 Coins/1 Credit"/>
-			<dipvalue name="1 Coin/1 Credit" default="yes"/>
-			<dipvalue name="1 Coin/2 Credits"/>
-			<dipvalue name="1 Coin/3 Credits"/>
-			<dipvalue name="1 Coin/4 Credits"/>
+		<input players="2" control="joy8way" buttons="5" coins="2" service="yes"/>
+		<dipswitch name="Flip Screen">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Bonus Life">
+			<dipvalue name="500k" default="yes"/>
+			<dipvalue name="None"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Lives">
+			<dipvalue name="1"/>
+			<dipvalue name="2"/>
+			<dipvalue name="3" default="yes"/>
+			<dipvalue name="4"/>
+		</dipswitch>
+		<dipswitch name="Difficulty">
+			<dipvalue name="Easy"/>
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Hardest"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
+		</dipswitch>
+		<dipswitch name="Free Play">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
 		</dipswitch>
 		<dipswitch name="Coin B">
 			<dipvalue name="5 Coins/1 Credit"/>
@@ -315943,144 +316149,347 @@
 			<dipvalue name="1 Coin/3 Credits"/>
 			<dipvalue name="1 Coin/4 Credits"/>
 		</dipswitch>
-		<dipswitch name="Free Play">
+		<dipswitch name="Coin A">
+			<dipvalue name="5 Coins/1 Credit"/>
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+		</dipswitch>
+		<dipswitch name="FG/BG X offset">
+			<dipvalue name="0/0" default="yes"/>
+			<dipvalue name="5/5"/>
+			<dipvalue name="2/4"/>
+		</dipswitch>
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Service Mode">
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="FBI Logo">
+			<dipvalue name="No" default="yes"/>
+			<dipvalue name="Yes"/>
+		</dipswitch>
+		<dipswitch name="Language">
+			<dipvalue name="Japanese"/>
+			<dipvalue name="English" default="yes"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="32768"/>
+	</game>
+	<game name="akiss" sourcefile="ms32.c">
+		<description>Mahjong Angel Kiss (ver 1.0, 92047-01 version)</description>
+		<year>1995</year>
+		<manufacturer>Jaleco</manufacturer>
+		<rom name="mb93166_ver1.0-26.26" size="524288" crc="5bdd01ee" sha1="21b8e07bb7ef6b437a43719b02deeba970330900" region="cpu1" offset="3"/>
+		<rom name="mb93166_ver1.0-27.27" size="524288" crc="bb11b2c9" sha1="86ba06d28bc8f560ac3d05515d061e05c90d1628" region="cpu1" offset="2"/>
+		<rom name="mb93166_ver1.0-28.28" size="524288" crc="20565478" sha1="d532ab55be287f45d8d81317bb844c675eb1292c" region="cpu1" offset="1"/>
+		<rom name="mb93166_ver1.0-29.29" size="524288" crc="ff454f0d" sha1="db81aaaf4160eb62badbe08fc01543463470ac97" region="cpu1" offset="0"/>
+		<rom name="mb95008-01.13" size="2097152" crc="1be66420" sha1="9fc85e6108f230418e012ad05586010235139039" region="gfx1" offset="0"/>
+		<rom name="mb95008-02.1" size="2097152" crc="1cc4808e" sha1="70a19d66b4f187320c67760bc453b6afb7d66f9a" region="gfx1" offset="2"/>
+		<rom name="mb95008-03.14" size="2097152" crc="4045f0dc" sha1="5ba9786618ecad9410dbdf3664f9dda848a754f7" region="gfx1" offset="400000"/>
+		<rom name="mb95008-04.2" size="2097152" crc="ef3c139d" sha1="3de374e77443dd4e967dbb5da820fe1c8c78aa1b" region="gfx1" offset="400002"/>
+		<rom name="mb95008-05.15" size="2097152" crc="43ea4a84" sha1="d9d9898edcf432998ed6b9a1622812def45cf369" region="gfx1" offset="800000"/>
+		<rom name="mb95008-06.3" size="2097152" crc="24f23d4e" sha1="8a7b6f28f25227391df73edb096695c5fe8df7dc" region="gfx1" offset="800002"/>
+		<rom name="mb95008-07.16" size="2097152" crc="bf47747e" sha1="b97121953f41039182e25ea023802df4524cf9bd" region="gfx1" offset="c00000"/>
+		<rom name="mb95008-08.4" size="2097152" crc="34829a09" sha1="7229c56fee53a9d4d29cf0c9dec471b6cc4dc30b" region="gfx1" offset="c00002"/>
+		<rom name="mb95008-10.11" size="2097152" crc="52da2e9e" sha1="d7a29bdd1c6801aa8d36bc098e75091c63ba0766" region="gfx2" offset="0"/>
+		<rom name="mb95008-09.10" size="2097152" crc="7236f6a0" sha1="98dbb55f08d669ef3bf69394bb9739d0e6137fcb" region="gfx3" offset="0"/>
+		<rom name="mb93166_ver1.0-30.30" size="524288" crc="1807c1ea" sha1="94696b8319c4982cb5d33423f56e2348f210cdb5" region="gfx4" offset="0"/>
+		<rom name="mb93166_ver1.0-21.21" size="262144" crc="01a03687" sha1="2340c4ed19f434e8c23709edfc93259313aefaf9" region="cpu2" offset="0"/>
+		<rom name="mb95008-11.22" size="2097152" crc="23b9af76" sha1="98b4087c142500dc759bda94d71c77634452a7ad" region="sound1" soundonly="yes" offset="0"/>
+		<rom name="mb95008-12.23" size="2097152" crc="780a2f45" sha1="770cbf04e34ae7d72e6eb2304bcdfaff483cd8c1" region="sound1" soundonly="yes" offset="200000"/>
+		<chip type="cpu" name="V70" clock="20000000"/>
+		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
+		<chip type="audio" name="YMF271"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="59.410645"/>
+		<sound channels="2"/>
+		<input players="1" coins="1" service="yes"/>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
 		</dipswitch>
 		<dipswitch name="Difficulty">
-			<dipvalue name="Easiest"/>
-			<dipvalue name="Very Easy"/>
-			<dipvalue name="Easier"/>
 			<dipvalue name="Easy"/>
 			<dipvalue name="Normal" default="yes"/>
 			<dipvalue name="Hard"/>
-			<dipvalue name="Harder"/>
 			<dipvalue name="Hardest"/>
 		</dipswitch>
-		<dipswitch name="Demo Sounds">
-			<dipvalue name="Off"/>
-			<dipvalue name="On" default="yes"/>
+		<dipswitch name="Service Mode">
 		</dipswitch>
-		<dipswitch name="Tumo Pinfu">
-			<dipvalue name="Off"/>
-			<dipvalue name="On" default="yes"/>
+		<dipswitch name="Free Play">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
 		</dipswitch>
 		<dipswitch name="Campaign Mode">
 			<dipvalue name="Off"/>
 			<dipvalue name="On" default="yes"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Tsumo Pinfu">
 			<dipvalue name="Off"/>
 			<dipvalue name="On" default="yes"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Coinage">
+			<dipvalue name="5 Coins/1 Credit"/>
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+		</dipswitch>
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="32768"/>
+	</game>
+	<game name="akissa" sourcefile="ms32.c" cloneof="akiss" romof="akiss">
+		<description>Mahjong Angel Kiss (ver 1.0, 92048-01 version)</description>
+		<year>1995</year>
+		<manufacturer>Jaleco</manufacturer>
+		<rom name="mb93166_ver1.0-26.26" merge="mb93166_ver1.0-26.26" size="524288" crc="5bdd01ee" sha1="21b8e07bb7ef6b437a43719b02deeba970330900" region="cpu1" offset="3"/>
+		<rom name="mb93166_ver1.0-27.27" merge="mb93166_ver1.0-27.27" size="524288" crc="bb11b2c9" sha1="86ba06d28bc8f560ac3d05515d061e05c90d1628" region="cpu1" offset="2"/>
+		<rom name="mb93166_ver1.0-28.28" merge="mb93166_ver1.0-28.28" size="524288" crc="20565478" sha1="d532ab55be287f45d8d81317bb844c675eb1292c" region="cpu1" offset="1"/>
+		<rom name="mb93166_ver1.0-29.29" merge="mb93166_ver1.0-29.29" size="524288" crc="ff454f0d" sha1="db81aaaf4160eb62badbe08fc01543463470ac97" region="cpu1" offset="0"/>
+		<rom name="mb95008-01.13" merge="mb95008-01.13" size="2097152" crc="1be66420" sha1="9fc85e6108f230418e012ad05586010235139039" region="gfx1" offset="0"/>
+		<rom name="mb95008-02.1" merge="mb95008-02.1" size="2097152" crc="1cc4808e" sha1="70a19d66b4f187320c67760bc453b6afb7d66f9a" region="gfx1" offset="2"/>
+		<rom name="mb95008-03.14" merge="mb95008-03.14" size="2097152" crc="4045f0dc" sha1="5ba9786618ecad9410dbdf3664f9dda848a754f7" region="gfx1" offset="400000"/>
+		<rom name="mb95008-04.2" merge="mb95008-04.2" size="2097152" crc="ef3c139d" sha1="3de374e77443dd4e967dbb5da820fe1c8c78aa1b" region="gfx1" offset="400002"/>
+		<rom name="mb95008-05.15" merge="mb95008-05.15" size="2097152" crc="43ea4a84" sha1="d9d9898edcf432998ed6b9a1622812def45cf369" region="gfx1" offset="800000"/>
+		<rom name="mb95008-06.3" merge="mb95008-06.3" size="2097152" crc="24f23d4e" sha1="8a7b6f28f25227391df73edb096695c5fe8df7dc" region="gfx1" offset="800002"/>
+		<rom name="mb95008-07.16" merge="mb95008-07.16" size="2097152" crc="bf47747e" sha1="b97121953f41039182e25ea023802df4524cf9bd" region="gfx1" offset="c00000"/>
+		<rom name="mb95008-08.4" merge="mb95008-08.4" size="2097152" crc="34829a09" sha1="7229c56fee53a9d4d29cf0c9dec471b6cc4dc30b" region="gfx1" offset="c00002"/>
+		<rom name="mb95008-10.11" merge="mb95008-10.11" size="2097152" crc="52da2e9e" sha1="d7a29bdd1c6801aa8d36bc098e75091c63ba0766" region="gfx2" offset="0"/>
+		<rom name="mb93166_ver1.1-10.10" size="1048576" crc="af0753be" sha1="ea8e0fbfd95093d05ea5daec502bb488dc1cf5ec" region="gfx3" offset="0"/>
+		<rom name="mb93166_ver1.1-30.30" size="524288" crc="e658f120" sha1="b942e8e1333ed337bce03a7671c4a45ed370b266" region="gfx4" offset="0"/>
+		<rom name="mb93166_ver1.0-21.21" merge="mb93166_ver1.0-21.21" size="262144" crc="01a03687" sha1="2340c4ed19f434e8c23709edfc93259313aefaf9" region="cpu2" offset="0"/>
+		<rom name="mb95008-11.22" merge="mb95008-11.22" size="2097152" crc="23b9af76" sha1="98b4087c142500dc759bda94d71c77634452a7ad" region="sound1" soundonly="yes" offset="0"/>
+		<rom name="mb95008-12.23" merge="mb95008-12.23" size="2097152" crc="780a2f45" sha1="770cbf04e34ae7d72e6eb2304bcdfaff483cd8c1" region="sound1" soundonly="yes" offset="200000"/>
+		<chip type="cpu" name="V70" clock="20000000"/>
+		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
+		<chip type="audio" name="YMF271"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="59.410645"/>
+		<sound channels="2"/>
+		<input players="1" coins="1" service="yes"/>
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Difficulty">
+			<dipvalue name="Easy"/>
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Hardest"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
+		</dipswitch>
+		<dipswitch name="Free Play">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Campaign Mode">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Tsumo Pinfu">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Coinage">
+			<dipvalue name="5 Coins/1 Credit"/>
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+		</dipswitch>
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="32768"/>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="32768"/>
 	</game>
 	<game name="gratia" sourcefile="ms32.c">
-		<description>Gratia - Second Earth (92047-01 version)</description>
+		<description>Gratia - Second Earth (ver 1.0, 92047-01 version)</description>
 		<year>1996</year>
 		<manufacturer>Jaleco</manufacturer>
-		<rom name="94019.026" size="524288" crc="f398cba5" sha1="11e06abebfdfc8a99b5c56e9f6ed389f645b6c72" region="cpu1" offset="3"/>
-		<rom name="94019.027" size="524288" crc="ba3318c5" sha1="9b100988b998c39b586b51fe9fee874dbf711610" region="cpu1" offset="2"/>
-		<rom name="94019.028" size="524288" crc="e0762e89" sha1="a567c347e7f73f1ef1c753d14ac4f58311380fac" region="cpu1" offset="1"/>
-		<rom name="94019.029" size="524288" crc="8059800b" sha1="7548d01b6ea15e962353b3585db6515e5819e5ce" region="cpu1" offset="0"/>
-		<rom name="94019.01" size="2097152" crc="92d8ae9b" sha1="02b36e6e14b28a9830e07fd328772dbb20b76889" region="gfx1" offset="0"/>
-		<rom name="94019.02" size="2097152" crc="f7bd9cc4" sha1="5658bfb4081439ab06c6ade2531581aa60d1c6be" region="gfx1" offset="2"/>
-		<rom name="94019.03" size="2097152" crc="62a69590" sha1="d95cc1e1ec85161ee6cd1ae77b405cf8ef81217a" region="gfx1" offset="400000"/>
-		<rom name="94019.04" size="2097152" crc="5a76a39b" sha1="fc7c1ff9a0a3c2639fc52720aefe8b2a9e5d2857" region="gfx1" offset="400002"/>
-		<rom name="94019.05" size="2097152" crc="a16994df" sha1="9170b1fd9252d7a9601c3b2e6b1ba86686730b86" region="gfx1" offset="800000"/>
-		<rom name="94019.06" size="2097152" crc="01d52ef1" sha1="1585c7eb3729bab78467f627b7b671d619451a74" region="gfx1" offset="800002"/>
-		<rom name="94019.08" size="2097152" crc="abd124e0" sha1="2da1d818c909e4abbb79ed03f3dbf15d744439ce" region="gfx2" offset="0"/>
-		<rom name="94019.09" size="2097152" crc="711ab08b" sha1="185b80b965ac3aba4857b4f83637008c2c1cc6ff" region="gfx2" offset="200000"/>
+		<rom name="94019_26_ver1.0.26" size="524288" crc="f398cba5" sha1="11e06abebfdfc8a99b5c56e9f6ed389f645b6c72" region="cpu1" offset="3"/>
+		<rom name="94019_27_ver1.0.27" size="524288" crc="ba3318c5" sha1="9b100988b998c39b586b51fe9fee874dbf711610" region="cpu1" offset="2"/>
+		<rom name="94019_28_ver1.0.28" size="524288" crc="e0762e89" sha1="a567c347e7f73f1ef1c753d14ac4f58311380fac" region="cpu1" offset="1"/>
+		<rom name="94019_29_ver1.0.29" size="524288" crc="8059800b" sha1="7548d01b6ea15e962353b3585db6515e5819e5ce" region="cpu1" offset="0"/>
+		<rom name="mr94019-01.13" size="2097152" crc="92d8ae9b" sha1="02b36e6e14b28a9830e07fd328772dbb20b76889" region="gfx1" offset="0"/>
+		<rom name="mr94019-02.1" size="2097152" crc="f7bd9cc4" sha1="5658bfb4081439ab06c6ade2531581aa60d1c6be" region="gfx1" offset="2"/>
+		<rom name="mr94019-03.14" size="2097152" crc="62a69590" sha1="d95cc1e1ec85161ee6cd1ae77b405cf8ef81217a" region="gfx1" offset="400000"/>
+		<rom name="mr94019-04.2" size="2097152" crc="5a76a39b" sha1="fc7c1ff9a0a3c2639fc52720aefe8b2a9e5d2857" region="gfx1" offset="400002"/>
+		<rom name="mr94019-05.15" size="2097152" crc="a16994df" sha1="9170b1fd9252d7a9601c3b2e6b1ba86686730b86" region="gfx1" offset="800000"/>
+		<rom name="mr94019-06.3" size="2097152" crc="01d52ef1" sha1="1585c7eb3729bab78467f627b7b671d619451a74" region="gfx1" offset="800002"/>
+		<rom name="mr94019-08.11" size="2097152" crc="abd124e0" sha1="2da1d818c909e4abbb79ed03f3dbf15d744439ce" region="gfx2" offset="0"/>
+		<rom name="mr94019-09.12" size="2097152" crc="711ab08b" sha1="185b80b965ac3aba4857b4f83637008c2c1cc6ff" region="gfx2" offset="200000"/>
 		<rom name="94019_2.07" size="2097152" crc="043f969b" sha1="ad10339e561c1a65451a2e9a8e79ceda3787674a" region="gfx3" offset="0"/>
 		<rom name="94019_2.030" size="524288" crc="f9543fcf" sha1="8466c7893bc6c43e2a80b8f91a776fd0a345ea6c" region="gfx4" offset="0"/>
-		<rom name="94019.021" size="262144" crc="6e8dd039" sha1="f1e69c9b40b14ba0f8377a6d9b6c3933919bc803" region="cpu2" offset="0"/>
-		<rom name="92042.01" size="2097152" crc="0fa26f65" sha1="e92b14862fbce33ea4ab4567ec48199bfcbbdd84" region="sound1" soundonly="yes" offset="0"/>
-		<rom name="94019.10" size="2097152" crc="a751e316" sha1="3d658370c71b83582fd132b3da441089df9bfd05" region="sound1" soundonly="yes" offset="200000"/>
+		<rom name="94019_21ver1.0.21" size="262144" crc="6e8dd039" sha1="f1e69c9b40b14ba0f8377a6d9b6c3933919bc803" region="cpu2" offset="0"/>
+		<rom name="mr92042-01.22" size="2097152" crc="0fa26f65" sha1="e92b14862fbce33ea4ab4567ec48199bfcbbdd84" region="sound1" soundonly="yes" offset="0"/>
+		<rom name="mr94019-10.23" size="2097152" crc="a751e316" sha1="3d658370c71b83582fd132b3da441089df9bfd05" region="sound1" soundonly="yes" offset="200000"/>
 		<chip type="cpu" name="V70" clock="20000000"/>
-		<chip type="cpu" soundonly="yes" name="Z80" clock="4000000"/>
+		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
 		<chip type="audio" name="YMF271"/>
-		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="59.410645"/>
 		<sound channels="2"/>
-		<input players="2" control="joy8way" buttons="3" coins="2" service="yes"/>
-		<dipswitch name="Coin A">
-			<dipvalue name="5 Coins/1 Credit"/>
-			<dipvalue name="4 Coins/1 Credit"/>
-			<dipvalue name="3 Coins/1 Credit"/>
-			<dipvalue name="2 Coins/1 Credit"/>
-			<dipvalue name="1 Coin/1 Credit" default="yes"/>
-			<dipvalue name="1 Coin/2 Credits"/>
-			<dipvalue name="1 Coin/3 Credits"/>
-			<dipvalue name="1 Coin/4 Credits"/>
+		<input players="2" control="joy8way" buttons="5" coins="2" service="yes"/>
+		<dipswitch name="Flip Screen">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Bonus Life">
+			<dipvalue name="200k and every 1000k" default="yes"/>
+			<dipvalue name="None"/>
+		</dipswitch>
+		<dipswitch name="Invulnerability (Cheat)">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Lives">
+			<dipvalue name="1"/>
+			<dipvalue name="2"/>
+			<dipvalue name="3" default="yes"/>
+			<dipvalue name="4"/>
+		</dipswitch>
+		<dipswitch name="Difficulty">
+			<dipvalue name="Easy"/>
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Hardest"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
+		</dipswitch>
+		<dipswitch name="Free Play">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
 		</dipswitch>
 		<dipswitch name="Coin B">
 			<dipvalue name="5 Coins/1 Credit"/>
@@ -316092,108 +316501,110 @@
 			<dipvalue name="1 Coin/3 Credits"/>
 			<dipvalue name="1 Coin/4 Credits"/>
 		</dipswitch>
-		<dipswitch name="Free Play">
+		<dipswitch name="Coin A">
+			<dipvalue name="5 Coins/1 Credit"/>
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+		</dipswitch>
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Service Mode">
-		</dipswitch>
-		<dipswitch name="Difficulty">
-			<dipvalue name="Easy"/>
-			<dipvalue name="Normal" default="yes"/>
-			<dipvalue name="Hard"/>
-			<dipvalue name="Hardest"/>
-		</dipswitch>
-		<dipswitch name="Lives">
-			<dipvalue name="1"/>
-			<dipvalue name="2"/>
-			<dipvalue name="3" default="yes"/>
-			<dipvalue name="4"/>
-		</dipswitch>
-		<dipswitch name="Invulnerability">
-		</dipswitch>
-		<dipswitch name="Bonus Life">
-			<dipvalue name="200k and every 1000k" default="yes"/>
-			<dipvalue name="None"/>
-		</dipswitch>
-		<dipswitch name="Demo Sounds">
-			<dipvalue name="Off"/>
-			<dipvalue name="On" default="yes"/>
-		</dipswitch>
-		<dipswitch name="Flip Screen">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Language">
-			<dipvalue name="Japanese"/>
-			<dipvalue name="English" default="yes"/>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
 		</dipswitch>
 		<dipswitch name="FBI Logo">
 			<dipvalue name="No" default="yes"/>
 			<dipvalue name="Yes"/>
 		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
+		<dipswitch name="Language">
+			<dipvalue name="Japanese"/>
+			<dipvalue name="English" default="yes"/>
 		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="32768"/>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="32768"/>
 	</game>
 	<game name="gratiaa" sourcefile="ms32.c" cloneof="gratia" romof="gratia">
-		<description>Gratia - Second Earth (91022-10 version)</description>
+		<description>Gratia - Second Earth (ver 1.0, 91022-10 version)</description>
 		<year>1996</year>
 		<manufacturer>Jaleco</manufacturer>
-		<rom name="94019.026" merge="94019.026" size="524288" crc="f398cba5" sha1="11e06abebfdfc8a99b5c56e9f6ed389f645b6c72" region="cpu1" offset="3"/>
-		<rom name="94019.027" merge="94019.027" size="524288" crc="ba3318c5" sha1="9b100988b998c39b586b51fe9fee874dbf711610" region="cpu1" offset="2"/>
-		<rom name="94019.028" merge="94019.028" size="524288" crc="e0762e89" sha1="a567c347e7f73f1ef1c753d14ac4f58311380fac" region="cpu1" offset="1"/>
-		<rom name="94019.029" merge="94019.029" size="524288" crc="8059800b" sha1="7548d01b6ea15e962353b3585db6515e5819e5ce" region="cpu1" offset="0"/>
-		<rom name="94019.01" merge="94019.01" size="2097152" crc="92d8ae9b" sha1="02b36e6e14b28a9830e07fd328772dbb20b76889" region="gfx1" offset="0"/>
-		<rom name="94019.02" merge="94019.02" size="2097152" crc="f7bd9cc4" sha1="5658bfb4081439ab06c6ade2531581aa60d1c6be" region="gfx1" offset="2"/>
-		<rom name="94019.03" merge="94019.03" size="2097152" crc="62a69590" sha1="d95cc1e1ec85161ee6cd1ae77b405cf8ef81217a" region="gfx1" offset="400000"/>
-		<rom name="94019.04" merge="94019.04" size="2097152" crc="5a76a39b" sha1="fc7c1ff9a0a3c2639fc52720aefe8b2a9e5d2857" region="gfx1" offset="400002"/>
-		<rom name="94019.05" merge="94019.05" size="2097152" crc="a16994df" sha1="9170b1fd9252d7a9601c3b2e6b1ba86686730b86" region="gfx1" offset="800000"/>
-		<rom name="94019.06" merge="94019.06" size="2097152" crc="01d52ef1" sha1="1585c7eb3729bab78467f627b7b671d619451a74" region="gfx1" offset="800002"/>
-		<rom name="94019.08" merge="94019.08" size="2097152" crc="abd124e0" sha1="2da1d818c909e4abbb79ed03f3dbf15d744439ce" region="gfx2" offset="0"/>
-		<rom name="94019.09" merge="94019.09" size="2097152" crc="711ab08b" sha1="185b80b965ac3aba4857b4f83637008c2c1cc6ff" region="gfx2" offset="200000"/>
-		<rom name="94019.07" size="2097152" crc="acb75824" sha1="3b43e00a2d240761565042c8feead25a83ef0eb1" region="gfx3" status="baddump" offset="0"/>
-		<rom name="94019.030" size="524288" crc="026b5379" sha1="b9237477f1bf8ae83174e8231492fe667e6d6a13" region="gfx4" offset="0"/>
-		<rom name="94019.021" merge="94019.021" size="262144" crc="6e8dd039" sha1="f1e69c9b40b14ba0f8377a6d9b6c3933919bc803" region="cpu2" offset="0"/>
-		<rom name="92042.01" merge="92042.01" size="2097152" crc="0fa26f65" sha1="e92b14862fbce33ea4ab4567ec48199bfcbbdd84" region="sound1" soundonly="yes" offset="0"/>
-		<rom name="94019.10" merge="94019.10" size="2097152" crc="a751e316" sha1="3d658370c71b83582fd132b3da441089df9bfd05" region="sound1" soundonly="yes" offset="200000"/>
+		<rom name="94019_26_ver1.0.26" merge="94019_26_ver1.0.26" size="524288" crc="f398cba5" sha1="11e06abebfdfc8a99b5c56e9f6ed389f645b6c72" region="cpu1" offset="3"/>
+		<rom name="94019_27_ver1.0.27" merge="94019_27_ver1.0.27" size="524288" crc="ba3318c5" sha1="9b100988b998c39b586b51fe9fee874dbf711610" region="cpu1" offset="2"/>
+		<rom name="94019_28_ver1.0.28" merge="94019_28_ver1.0.28" size="524288" crc="e0762e89" sha1="a567c347e7f73f1ef1c753d14ac4f58311380fac" region="cpu1" offset="1"/>
+		<rom name="94019_29_ver1.0.29" merge="94019_29_ver1.0.29" size="524288" crc="8059800b" sha1="7548d01b6ea15e962353b3585db6515e5819e5ce" region="cpu1" offset="0"/>
+		<rom name="mr94019-01.13" merge="mr94019-01.13" size="2097152" crc="92d8ae9b" sha1="02b36e6e14b28a9830e07fd328772dbb20b76889" region="gfx1" offset="0"/>
+		<rom name="mr94019-02.1" merge="mr94019-02.1" size="2097152" crc="f7bd9cc4" sha1="5658bfb4081439ab06c6ade2531581aa60d1c6be" region="gfx1" offset="2"/>
+		<rom name="mr94019-03.14" merge="mr94019-03.14" size="2097152" crc="62a69590" sha1="d95cc1e1ec85161ee6cd1ae77b405cf8ef81217a" region="gfx1" offset="400000"/>
+		<rom name="mr94019-04.2" merge="mr94019-04.2" size="2097152" crc="5a76a39b" sha1="fc7c1ff9a0a3c2639fc52720aefe8b2a9e5d2857" region="gfx1" offset="400002"/>
+		<rom name="mr94019-05.15" merge="mr94019-05.15" size="2097152" crc="a16994df" sha1="9170b1fd9252d7a9601c3b2e6b1ba86686730b86" region="gfx1" offset="800000"/>
+		<rom name="mr94019-06.3" merge="mr94019-06.3" size="2097152" crc="01d52ef1" sha1="1585c7eb3729bab78467f627b7b671d619451a74" region="gfx1" offset="800002"/>
+		<rom name="mr94019-08.11" merge="mr94019-08.11" size="2097152" crc="abd124e0" sha1="2da1d818c909e4abbb79ed03f3dbf15d744439ce" region="gfx2" offset="0"/>
+		<rom name="mr94019-09.12" merge="mr94019-09.12" size="2097152" crc="711ab08b" sha1="185b80b965ac3aba4857b4f83637008c2c1cc6ff" region="gfx2" offset="200000"/>
+		<rom name="mr94019-07.10" size="2097152" crc="561a786b" sha1="23df08d50801bd6e4a2f12dd3bb50632ff77f0f2" region="gfx3" offset="0"/>
+		<rom name="94019_30ver1.0.30" size="524288" crc="026b5379" sha1="b9237477f1bf8ae83174e8231492fe667e6d6a13" region="gfx4" offset="0"/>
+		<rom name="94019_21ver1.0.21" merge="94019_21ver1.0.21" size="262144" crc="6e8dd039" sha1="f1e69c9b40b14ba0f8377a6d9b6c3933919bc803" region="cpu2" offset="0"/>
+		<rom name="mr92042-01.22" merge="mr92042-01.22" size="2097152" crc="0fa26f65" sha1="e92b14862fbce33ea4ab4567ec48199bfcbbdd84" region="sound1" soundonly="yes" offset="0"/>
+		<rom name="mr94019-10.23" merge="mr94019-10.23" size="2097152" crc="a751e316" sha1="3d658370c71b83582fd132b3da441089df9bfd05" region="sound1" soundonly="yes" offset="200000"/>
 		<chip type="cpu" name="V70" clock="20000000"/>
-		<chip type="cpu" soundonly="yes" name="Z80" clock="4000000"/>
+		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
 		<chip type="audio" name="YMF271"/>
-		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="59.410645"/>
 		<sound channels="2"/>
-		<input players="2" control="joy8way" buttons="3" coins="2" service="yes"/>
-		<dipswitch name="Coin A">
-			<dipvalue name="5 Coins/1 Credit"/>
-			<dipvalue name="4 Coins/1 Credit"/>
-			<dipvalue name="3 Coins/1 Credit"/>
-			<dipvalue name="2 Coins/1 Credit"/>
-			<dipvalue name="1 Coin/1 Credit" default="yes"/>
-			<dipvalue name="1 Coin/2 Credits"/>
-			<dipvalue name="1 Coin/3 Credits"/>
-			<dipvalue name="1 Coin/4 Credits"/>
+		<input players="2" control="joy8way" buttons="5" coins="2" service="yes"/>
+		<dipswitch name="Flip Screen">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Bonus Life">
+			<dipvalue name="200k and every 1000k" default="yes"/>
+			<dipvalue name="None"/>
+		</dipswitch>
+		<dipswitch name="Invulnerability (Cheat)">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Lives">
+			<dipvalue name="1"/>
+			<dipvalue name="2"/>
+			<dipvalue name="3" default="yes"/>
+			<dipvalue name="4"/>
+		</dipswitch>
+		<dipswitch name="Difficulty">
+			<dipvalue name="Easy"/>
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Hardest"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
+		</dipswitch>
+		<dipswitch name="Free Play">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
 		</dipswitch>
 		<dipswitch name="Coin B">
 			<dipvalue name="5 Coins/1 Credit"/>
@@ -316205,74 +316616,52 @@
 			<dipvalue name="1 Coin/3 Credits"/>
 			<dipvalue name="1 Coin/4 Credits"/>
 		</dipswitch>
-		<dipswitch name="Free Play">
+		<dipswitch name="Coin A">
+			<dipvalue name="5 Coins/1 Credit"/>
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+		</dipswitch>
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Service Mode">
-		</dipswitch>
-		<dipswitch name="Difficulty">
-			<dipvalue name="Easy"/>
-			<dipvalue name="Normal" default="yes"/>
-			<dipvalue name="Hard"/>
-			<dipvalue name="Hardest"/>
-		</dipswitch>
-		<dipswitch name="Lives">
-			<dipvalue name="1"/>
-			<dipvalue name="2"/>
-			<dipvalue name="3" default="yes"/>
-			<dipvalue name="4"/>
-		</dipswitch>
-		<dipswitch name="Invulnerability">
-		</dipswitch>
-		<dipswitch name="Bonus Life">
-			<dipvalue name="200k and every 1000k" default="yes"/>
-			<dipvalue name="None"/>
-		</dipswitch>
-		<dipswitch name="Demo Sounds">
-			<dipvalue name="Off"/>
-			<dipvalue name="On" default="yes"/>
-		</dipswitch>
-		<dipswitch name="Flip Screen">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Language">
-			<dipvalue name="Japanese"/>
-			<dipvalue name="English" default="yes"/>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
 		</dipswitch>
 		<dipswitch name="FBI Logo">
 			<dipvalue name="No" default="yes"/>
 			<dipvalue name="Yes"/>
 		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
+		<dipswitch name="Language">
+			<dipvalue name="Japanese"/>
+			<dipvalue name="English" default="yes"/>
 		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="32768"/>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="32768"/>
 	</game>
 	<game name="kirarast" sourcefile="ms32.c">
-		<description>Ryuusei Janshi Kirara Star</description>
+		<description>Ryuusei Janshi Kirara Star (ver 1.0, 92047-01 version)</description>
 		<year>1996</year>
 		<manufacturer>Jaleco</manufacturer>
 		<rom name="mr95025.26" size="524288" crc="eb7faf5f" sha1="5b79ff3043db5ef2622ae1665145462d949c9bb8" region="cpu1" offset="3"/>
@@ -316295,36 +316684,30 @@
 		<rom name="mr95025.12" size="2097152" crc="1dd4f766" sha1="455befd3a216f2197cd2e7e4899d4f1af7d20bf7" region="sound1" soundonly="yes" offset="0"/>
 		<rom name="mr95025.13" size="2097152" crc="0adfe5b8" sha1="02309e5789b58896e5f68603502c76d4a917bd91" region="sound1" soundonly="yes" offset="200000"/>
 		<chip type="cpu" name="V70" clock="20000000"/>
-		<chip type="cpu" soundonly="yes" name="Z80" clock="4000000"/>
+		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
 		<chip type="audio" name="YMF271"/>
-		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="59.410645"/>
 		<sound channels="2"/>
 		<input players="1" coins="2" service="yes"/>
-		<dipswitch name="Coin A">
-			<dipvalue name="5 Coins/1 Credit"/>
-			<dipvalue name="4 Coins/1 Credit"/>
-			<dipvalue name="3 Coins/1 Credit"/>
-			<dipvalue name="2 Coins/1 Credit"/>
-			<dipvalue name="1 Coin/1 Credit" default="yes"/>
-			<dipvalue name="1 Coin/2 Credits"/>
-			<dipvalue name="1 Coin/3 Credits"/>
-			<dipvalue name="1 Coin/4 Credits"/>
-		</dipswitch>
-		<dipswitch name="Coin B">
-			<dipvalue name="5 Coins/1 Credit"/>
-			<dipvalue name="4 Coins/1 Credit"/>
-			<dipvalue name="3 Coins/1 Credit"/>
-			<dipvalue name="2 Coins/1 Credit"/>
-			<dipvalue name="1 Coin/1 Credit" default="yes"/>
-			<dipvalue name="1 Coin/2 Credits"/>
-			<dipvalue name="1 Coin/3 Credits"/>
-			<dipvalue name="1 Coin/4 Credits"/>
-		</dipswitch>
-		<dipswitch name="Free Play">
+		<dipswitch name="Flip Screen">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Service Mode">
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Campaign Mode">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Tsumo Pinfu">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
 		</dipswitch>
 		<dipswitch name="Difficulty">
 			<dipvalue name="Easiest"/>
@@ -316336,114 +316719,25 @@
 			<dipvalue name="Harder"/>
 			<dipvalue name="Hardest"/>
 		</dipswitch>
-		<dipswitch name="Demo Sounds">
-			<dipvalue name="Off"/>
-			<dipvalue name="On" default="yes"/>
+		<dipswitch name="Service Mode">
 		</dipswitch>
-		<dipswitch name="Tumo Pinfu">
-			<dipvalue name="Off"/>
-			<dipvalue name="On" default="yes"/>
-		</dipswitch>
-		<dipswitch name="Campaign Mode">
-			<dipvalue name="Off"/>
-			<dipvalue name="On" default="yes"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off"/>
-			<dipvalue name="On" default="yes"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Free Play">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="32768"/>
-	</game>
-	<game name="tp2m32" sourcefile="ms32.c" cloneof="tetrisp2" romof="tetrisp2">
-		<description>Tetris Plus 2 (MegaSystem 32 Version)</description>
-		<year>1997</year>
-		<manufacturer>Jaleco</manufacturer>
-		<rom name="tp2m3226.26" size="524288" crc="152f0ccf" sha1="1e318e125a54216ebf3f85740db1dd85aacac819" region="cpu1" offset="3"/>
-		<rom name="tp2m3227.27" size="524288" crc="d89468d0" sha1="023fbc13b0f6332217904c89225b330aa5742f20" region="cpu1" offset="2"/>
-		<rom name="tp2m3228.28" size="524288" crc="041aac23" sha1="3f7863ffa897978493e98445fe020dccbe521752" region="cpu1" offset="1"/>
-		<rom name="tp2m3229.29" size="524288" crc="4e83b2ca" sha1="2766793f050a6952f4f53a763686f95bd7544f3f" region="cpu1" offset="0"/>
-		<rom name="96019-01.9" merge="96019-01.9" size="4194304" crc="06f7dc64" sha1="722c51b707b9854c0293afdff18b27ec7cae6719" region="gfx1" offset="0"/>
-		<rom name="96019-02.8" merge="96019-02.8" size="4194304" crc="3e613bed" sha1="038b5e43fa3d69654107c8093126eeb2e8fa4ddc" region="gfx1" offset="2"/>
-		<rom name="tp2m3204.11" size="2097152" crc="b5a03129" sha1="a50d8b70615c49216f647534d1658c1a6d58a783" region="gfx2" offset="0"/>
-		<rom name="tp2m3203.10" size="4194304" crc="94af8057" sha1="e3bc6e02fe4c503ae51284770a76abbeff989147" region="gfx3" offset="0"/>
-		<rom name="tp2m3230.30" size="524288" crc="6845e476" sha1="61c33714db2e2b5ccdcef0e0d3efdc391fe6aba2" region="gfx4" offset="0"/>
-		<rom name="tp2m3221.21" size="262144" crc="2bcc4176" sha1="74740fa13ab81b9819b4cfbe9d34a0749ba23b8f" region="cpu2" offset="0"/>
-		<rom name="tp2m3205.22" size="2097152" crc="74aa5c31" sha1="7e3f86198fb678244fab76bee9c72bbdfc818118" region="sound1" soundonly="yes" offset="0"/>
-		<chip type="cpu" name="V70" clock="20000000"/>
-		<chip type="cpu" soundonly="yes" name="Z80" clock="4000000"/>
-		<chip type="audio" name="YMF271"/>
-		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
-		<sound channels="2"/>
-		<input players="2" control="joy8way" buttons="5" coins="2" service="yes"/>
-		<dipswitch name="Coin A">
+		<dipswitch name="Coinage">
 			<dipvalue name="5 Coins/1 Credit"/>
 			<dipvalue name="4 Coins/1 Credit"/>
 			<dipvalue name="3 Coins/1 Credit"/>
@@ -316452,6 +316746,214 @@
 			<dipvalue name="1 Coin/2 Credits"/>
 			<dipvalue name="1 Coin/3 Credits"/>
 			<dipvalue name="1 Coin/4 Credits"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="32768"/>
+	</game>
+	<game name="kirarasta" sourcefile="ms32.c" cloneof="kirarast" romof="kirarast">
+		<description>Ryuusei Janshi Kirara Star (ver 1.0, 91022-10 version)</description>
+		<year>1996</year>
+		<manufacturer>Jaleco</manufacturer>
+		<rom name="mb93166_ver1.0-26.26" merge="mr95025.26" size="524288" crc="eb7faf5f" sha1="5b79ff3043db5ef2622ae1665145462d949c9bb8" region="cpu1" offset="3"/>
+		<rom name="mb93166_ver1.0-27.27" merge="mr95025.27" size="524288" crc="80644d05" sha1="6da8bf8aeb1477112f9022c0c5f472cbcd27df8e" region="cpu1" offset="2"/>
+		<rom name="mb93166_ver1.0-28.28" merge="mr95025.28" size="524288" crc="6df8c384" sha1="3ad01d3d51cfc1f48029c16ee1cc74fc59d7603c" region="cpu1" offset="1"/>
+		<rom name="mb93166_ver1.0-29.29" merge="mr95025.29" size="524288" crc="3b6e681b" sha1="148fa10631db53a4ad1dcdfb60b4f0654e077396" region="cpu1" offset="0"/>
+		<rom name="mr95025.01" merge="mr95025.01" size="2097152" crc="02279069" sha1="fb3ce00701271d0163f72e4f2e56faa9f16d8fd0" region="gfx1" offset="0"/>
+		<rom name="mr95025.02" merge="mr95025.02" size="2097152" crc="885161d4" sha1="1bc82de0b2759758d437db3ef9f0f7805f759b59" region="gfx1" offset="2"/>
+		<rom name="mr95025.03" merge="mr95025.03" size="2097152" crc="1ae06df9" sha1="e1493a386fd8c54c88afab43d13d73869ae467ee" region="gfx1" offset="400000"/>
+		<rom name="mr95025.04" merge="mr95025.04" size="2097152" crc="91ab7006" sha1="0b99c352a696e21b2f31207cbf9b4a64edf543ce" region="gfx1" offset="400002"/>
+		<rom name="mr95025.05" merge="mr95025.05" size="2097152" crc="e61af029" sha1="685315e833a168383c4c5cdaf72de172f14995b6" region="gfx1" offset="800000"/>
+		<rom name="mr95025.06" merge="mr95025.06" size="2097152" crc="63f64ffc" sha1="a2a109be24b5f1ec2e41e423d4194394ea8c3c8b" region="gfx1" offset="800002"/>
+		<rom name="mr95025.07" merge="mr95025.07" size="2097152" crc="0263a010" sha1="b9c85647b406c89f0e839eac93eaf5d2e6963f7d" region="gfx1" offset="c00000"/>
+		<rom name="mr95025.08" merge="mr95025.08" size="2097152" crc="8efc00d6" sha1="f750e0e21310ceceeae3ad80eb2fe2920f5a0076" region="gfx1" offset="c00002"/>
+		<rom name="mr95025.10" merge="mr95025.10" size="2097152" crc="ba7ad413" sha1="b1f1c218dea3217f21d5e2f44db3786055ed879a" region="gfx2" offset="0"/>
+		<rom name="mr95025.11" merge="mr95025.11" size="2097152" crc="11557299" sha1="6efa56f897ab026f965376a0d4032f7a0d20cafe" region="gfx2" offset="200000"/>
+		<rom name="mr95025-14-10.10" size="2097152" crc="6b62d346" sha1="29b07212901d6314dea98fc6382c5689cf2486bd" region="gfx3" offset="0"/>
+		<rom name="mb93166_ver1.0-30-10.30" size="524288" crc="331e6365" sha1="3aa51ca38eacf3011a3e547c23e12d2897fe9705" region="gfx4" offset="0"/>
+		<rom name="mb93166_ver1.0-21.21" merge="mr95025.21" size="262144" crc="a6c70c7f" sha1="fe2108f3e8d46ed53d8c5c98e8d0fdb19b77075d" region="cpu2" offset="0"/>
+		<rom name="mr95025.12" merge="mr95025.12" size="2097152" crc="1dd4f766" sha1="455befd3a216f2197cd2e7e4899d4f1af7d20bf7" region="sound1" soundonly="yes" offset="0"/>
+		<rom name="mr95025.13" merge="mr95025.13" size="2097152" crc="0adfe5b8" sha1="02309e5789b58896e5f68603502c76d4a917bd91" region="sound1" soundonly="yes" offset="200000"/>
+		<chip type="cpu" name="V70" clock="20000000"/>
+		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
+		<chip type="audio" name="YMF271"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="59.410645"/>
+		<sound channels="2"/>
+		<input players="1" coins="2" service="yes"/>
+		<dipswitch name="Flip Screen">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Campaign Mode">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Tsumo Pinfu">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Difficulty">
+			<dipvalue name="Easiest"/>
+			<dipvalue name="Very Easy"/>
+			<dipvalue name="Easier"/>
+			<dipvalue name="Easy"/>
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Harder"/>
+			<dipvalue name="Hardest"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
+		</dipswitch>
+		<dipswitch name="Free Play">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Coinage">
+			<dipvalue name="5 Coins/1 Credit"/>
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="32768"/>
+	</game>
+	<game name="tp2m32" sourcefile="ms32.c" cloneof="tetrisp2" romof="tetrisp2">
+		<description>Tetris Plus 2 (ver 1.0, MegaSystem 32 Version)</description>
+		<year>1997</year>
+		<manufacturer>Jaleco</manufacturer>
+		<rom name="mp2_26.ver1.0.26" size="524288" crc="152f0ccf" sha1="1e318e125a54216ebf3f85740db1dd85aacac819" region="cpu1" offset="3"/>
+		<rom name="mp2_27.ver1.0.27" size="524288" crc="d89468d0" sha1="023fbc13b0f6332217904c89225b330aa5742f20" region="cpu1" offset="2"/>
+		<rom name="mp2_28.ver1.0.28" size="524288" crc="041aac23" sha1="3f7863ffa897978493e98445fe020dccbe521752" region="cpu1" offset="1"/>
+		<rom name="mp2_29.ver1.0.29" size="524288" crc="4e83b2ca" sha1="2766793f050a6952f4f53a763686f95bd7544f3f" region="cpu1" offset="0"/>
+		<rom name="mr96019-01.13" merge="96019-01.9" size="4194304" crc="06f7dc64" sha1="722c51b707b9854c0293afdff18b27ec7cae6719" region="gfx1" offset="0"/>
+		<rom name="mr96019-02.1" merge="96019-02.8" size="4194304" crc="3e613bed" sha1="038b5e43fa3d69654107c8093126eeb2e8fa4ddc" region="gfx1" offset="2"/>
+		<rom name="mr96019-04.11" size="2097152" crc="b5a03129" sha1="a50d8b70615c49216f647534d1658c1a6d58a783" region="gfx2" offset="0"/>
+		<rom name="mr96019-03.10" size="4194304" crc="94af8057" sha1="e3bc6e02fe4c503ae51284770a76abbeff989147" region="gfx3" offset="0"/>
+		<rom name="mp2_30.ver1.0.30" size="524288" crc="6845e476" sha1="61c33714db2e2b5ccdcef0e0d3efdc391fe6aba2" region="gfx4" offset="0"/>
+		<rom name="mp2_21.ver1.0.21" size="262144" crc="2bcc4176" sha1="74740fa13ab81b9819b4cfbe9d34a0749ba23b8f" region="cpu2" offset="0"/>
+		<rom name="mr96019-05.22" size="2097152" crc="74aa5c31" sha1="7e3f86198fb678244fab76bee9c72bbdfc818118" region="sound1" soundonly="yes" offset="0"/>
+		<chip type="cpu" name="V70" clock="20000000"/>
+		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
+		<chip type="audio" name="YMF271"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="59.410645"/>
+		<sound channels="2"/>
+		<input players="2" control="joy8way" buttons="5" coins="2" service="yes"/>
+		<dipswitch name="Flip Screen">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="VS Match">
+			<dipvalue name="1"/>
+			<dipvalue name="3" default="yes"/>
+			<dipvalue name="5"/>
+			<dipvalue name="7"/>
+		</dipswitch>
+		<dipswitch name="Puzzle Difficulty">
+			<dipvalue name="Easy"/>
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Very Hard"/>
+		</dipswitch>
+		<dipswitch name="Endless Difficulty">
+			<dipvalue name="Easy"/>
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Very Hard"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
+		</dipswitch>
+		<dipswitch name="Free Play">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
 		</dipswitch>
 		<dipswitch name="Coin B">
 			<dipvalue name="5 Coins/1 Credit"/>
@@ -316463,57 +316965,19 @@
 			<dipvalue name="1 Coin/3 Credits"/>
 			<dipvalue name="1 Coin/4 Credits"/>
 		</dipswitch>
-		<dipswitch name="Free Play">
+		<dipswitch name="Coin A">
+			<dipvalue name="5 Coins/1 Credit"/>
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+		</dipswitch>
+		<dipswitch name="Freeze">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Service Mode">
-		</dipswitch>
-		<dipswitch name="Endless Difficulty">
-			<dipvalue name="Easy"/>
-			<dipvalue name="Normal" default="yes"/>
-			<dipvalue name="Hard"/>
-			<dipvalue name="Very Hard"/>
-		</dipswitch>
-		<dipswitch name="Puzzle Difficulty">
-			<dipvalue name="Easy"/>
-			<dipvalue name="Normal" default="yes"/>
-			<dipvalue name="Hard"/>
-			<dipvalue name="Very Hard"/>
-		</dipswitch>
-		<dipswitch name="VS Match">
-			<dipvalue name="1"/>
-			<dipvalue name="3" default="yes"/>
-			<dipvalue name="5"/>
-			<dipvalue name="7"/>
-		</dipswitch>
-		<dipswitch name="Demo Sounds">
-			<dipvalue name="Off"/>
-			<dipvalue name="On" default="yes"/>
-		</dipswitch>
-		<dipswitch name="Flip Screen">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Language">
-			<dipvalue name="Japanese"/>
-			<dipvalue name="English" default="yes"/>
-		</dipswitch>
-		<dipswitch name="FBI Logo">
-			<dipvalue name="No" default="yes"/>
-			<dipvalue name="Yes"/>
-		</dipswitch>
-		<dipswitch name="Voice">
-			<dipvalue name="Off"/>
-			<dipvalue name="On" default="yes"/>
-		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Join In">
-			<dipvalue name="Off"/>
-			<dipvalue name="On" default="yes"/>
 		</dipswitch>
 		<dipswitch name="Bomb">
 			<dipvalue name="0"/>
@@ -316521,14 +316985,149 @@
 			<dipvalue name="2" default="yes"/>
 			<dipvalue name="3"/>
 		</dipswitch>
-		<dipswitch name="Freeze">
+		<dipswitch name="Join In">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="32768"/>
+		<dipswitch name="Voice">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="FBI Logo">
+			<dipvalue name="No" default="yes"/>
+			<dipvalue name="Yes"/>
+		</dipswitch>
+		<dipswitch name="Language">
+			<dipvalue name="Japanese"/>
+			<dipvalue name="English" default="yes"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="32768"/>
+	</game>
+	<game name="wpksocv2" sourcefile="ms32.c">
+		<description>World PK Soccer V2 (ver 1.1)</description>
+		<year>1996</year>
+		<manufacturer>Jaleco</manufacturer>
+		<rom name="pk_soccer_v2_rom_25_ver._1.1.25" size="524288" crc="6c22a56c" sha1="a03cbcfc024b39d2776f9e9897d1da07df6ae2d7" region="cpu1" offset="3"/>
+		<rom name="pk_soccer_v2_rom_27_ver._1.1.27" size="524288" crc="50c594a8" sha1="454a63d7b2a07399a64449205271b797bca1dec1" region="cpu1" offset="2"/>
+		<rom name="pk_soccer_v2_rom_29_ver._1.1.29" size="524288" crc="22acd835" sha1="0fa96a6dfde737d541842f85dc257776044e15b5" region="cpu1" offset="1"/>
+		<rom name="pk_soccer_v2_rom_31_ver._1.1.31" size="524288" crc="f25e50f5" sha1="b58722f11a8b94ef053caf531ac94a959350288a" region="cpu1" offset="0"/>
+		<rom name="mr95033-01.13" size="2097152" crc="1f76ed57" sha1="af9076b4b4c26b362825d892f46d2c04b4bb9d07" region="gfx1" offset="0"/>
+		<rom name="mr95033-02.1" size="2097152" crc="5b119910" sha1="aff44e355227dd159e388ab85a5b6d48644ff421" region="gfx1" offset="2"/>
+		<rom name="mr95033-03.14" size="2097152" crc="8b6099ed" sha1="c514cec1491aed00a5714c0b8d17c96e87ba50aa" region="gfx1" offset="400000"/>
+		<rom name="mr95033-04.2" size="2097152" crc="59144dc6" sha1="0e192001d668791c91ca2af6b367067a5106a4b2" region="gfx1" offset="400002"/>
+		<rom name="mr95033-05.15" size="2097152" crc="cc5b8d0b" sha1="70a5b9db600fc168d13ad54653cf1c8d2a45d991" region="gfx1" offset="800000"/>
+		<rom name="mr95033-06.3" size="2097152" crc="2f79942f" sha1="73417d10f37bcd539b8081312226cf142a5a0d3d" region="gfx1" offset="800002"/>
+		<rom name="mr95033-07.9" size="2097152" crc="76cd2e0b" sha1="41aa18dfb4e06547d1f6d7ce49e5225027d16bbb" region="gfx2" offset="0"/>
+		<rom name="mr95033-09.11" size="2097152" crc="8a6dae81" sha1="e235f2865a9a003330bff1e4d0a017e5d10efd2a" region="gfx3" offset="0"/>
+		<rom name="pk_soccer_v2_rom_32_ver._1.1.32" size="524288" crc="becc25c2" sha1="4ae7665cd45ebd9586068e99327145194ba216fc" region="gfx4" offset="0"/>
+		<rom name="mb93139_ver1.0_ws-21.21" size="262144" crc="bdeff5d6" sha1="920a6fc983d53f09510887e4e81ee89ccd5079e6" region="cpu2" offset="0"/>
+		<rom name="mr92042-01.22" size="2097152" crc="0fa26f65" sha1="e92b14862fbce33ea4ab4567ec48199bfcbbdd84" region="sound1" soundonly="yes" offset="0"/>
+		<rom name="mr95033-08.23" size="2097152" crc="89a291fa" sha1="7746a0490134fc902ce2dc7b0d33b455d792c105" region="sound1" soundonly="yes" offset="200000"/>
+		<chip type="cpu" name="V70" clock="20000000"/>
+		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
+		<chip type="audio" name="YMF271"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="59.410645"/>
+		<sound channels="2"/>
+		<input players="1" control="joy8way" coins="2" service="yes"/>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Coinage">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Tickets">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Region">
+			<dipvalue name="USA"/>
+			<dipvalue name="Asia" default="yes"/>
+			<dipvalue name="Japan"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="32768"/>
 	</game>
 	<game name="f1superb" sourcefile="ms32.c">
-		<description>F1 Super Battle</description>
+		<description>F-1 Super Battle</description>
 		<year>1994</year>
 		<manufacturer>Jaleco</manufacturer>
 		<rom name="f1sb26.bin" size="524288" crc="042fccd5" sha1="4a69de3aef51adad502d54987468170b9e7bb8ac" region="cpu1" offset="3"/>
@@ -316557,28 +317156,54 @@
 		<rom name="f1sb12.bin" size="2097152" crc="edecd5f4" sha1="9b86802d08e5c8ec1a6dcea75dc8f050d3e96970" region="gfx2" offset="600000"/>
 		<rom name="f1sb31.bin" size="2097152" crc="1d0d2efd" sha1="e6446ef9c71be9316c286157f71e0043347c6a5c" region="gfx3" offset="0"/>
 		<rom name="f1sb32.bin" size="524288" crc="1b31fcce" sha1="354cc6f43cd3bf3ba921ac8c5631ab993bedf563" region="gfx4" offset="0"/>
-		<rom name="f1sb2b.bin" size="2097152" crc="18d73b16" sha1="f06f4d31b15658cc1e1b559ae3b8a90b797546ca" region="user1" offset="0"/>
-		<rom name="f1sb3b.bin" size="2097152" crc="ce728fe0" sha1="e0fd7b8f4d3dc9e2b15ddf027c61e67e5c1f22b5" region="user1" offset="200000"/>
-		<rom name="f1sb4b.bin" size="2097152" crc="077180c5" sha1="ab16739da709ecdbbb1264beba349ef6ecf3f8b1" region="user1" offset="400000"/>
-		<rom name="f1sb5b.bin" size="2097152" crc="efabc47d" sha1="195afde8a1f45da4fc04c3080a3cf5fdfff7be5e" region="user1" offset="600000"/>
+		<rom name="f1sb2b.bin" size="2097152" crc="18d73b16" sha1="f06f4d31b15658cc1e1b559ae3b8a90b797546ca" region="gfx5" offset="0"/>
+		<rom name="f1sb3b.bin" size="2097152" crc="ce728fe0" sha1="e0fd7b8f4d3dc9e2b15ddf027c61e67e5c1f22b5" region="gfx5" offset="200000"/>
+		<rom name="f1sb4b.bin" size="2097152" crc="077180c5" sha1="ab16739da709ecdbbb1264beba349ef6ecf3f8b1" region="gfx5" offset="400000"/>
+		<rom name="f1sb5b.bin" size="2097152" crc="efabc47d" sha1="195afde8a1f45da4fc04c3080a3cf5fdfff7be5e" region="gfx5" offset="600000"/>
 		<rom name="f1sb21.bin" size="262144" crc="e131e1c7" sha1="33f95a074930c49548069518d8c6dcde7fa25627" region="cpu2" offset="0"/>
-		<rom name="f1sb23.bin" size="2097152" crc="bfefa3ab" sha1="7770cc9b091e258ede7f2780df61a592cc008dd7" region="sound1" soundonly="yes" offset="0"/>
-		<rom name="f1sb24.bin" size="2097152" crc="0fa26f65" sha1="e92b14862fbce33ea4ab4567ec48199bfcbbdd84" region="sound1" soundonly="yes" offset="200000"/>
+		<rom name="mr92042-01.22" size="2097152" crc="0fa26f65" sha1="e92b14862fbce33ea4ab4567ec48199bfcbbdd84" region="sound1" soundonly="yes" offset="0"/>
+		<rom name="f1sb23.bin" size="2097152" crc="bfefa3ab" sha1="7770cc9b091e258ede7f2780df61a592cc008dd7" region="sound1" soundonly="yes" offset="200000"/>
 		<chip type="cpu" name="V70" clock="20000000"/>
-		<chip type="cpu" soundonly="yes" name="Z80" clock="4000000"/>
+		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
 		<chip type="audio" name="YMF271"/>
-		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="59.410645"/>
 		<sound channels="2"/>
-		<input players="4" control="stick" buttons="5" coins="2" service="yes"/>
-		<dipswitch name="Coin A">
-			<dipvalue name="5 Coins/1 Credit"/>
-			<dipvalue name="4 Coins/1 Credit"/>
-			<dipvalue name="3 Coins/1 Credit"/>
-			<dipvalue name="2 Coins/1 Credit"/>
-			<dipvalue name="1 Coin/1 Credit" default="yes"/>
-			<dipvalue name="1 Coin/2 Credits"/>
-			<dipvalue name="1 Coin/3 Credits"/>
-			<dipvalue name="1 Coin/4 Credits"/>
+		<input players="1" control="stick" buttons="2" coins="2" service="yes"/>
+		<dipswitch name="Credit Counter">
+			<dipvalue name="Eremite"/>
+			<dipvalue name="Display" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Speed Meter Display">
+			<dipvalue name="mph"/>
+			<dipvalue name="km/h" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Time Up Mode">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Difficulty">
+			<dipvalue name="Easy"/>
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Hardest"/>
+		</dipswitch>
+		<dipswitch name="Region">
+			<dipvalue name="USA"/>
+			<dipvalue name="Europe" default="yes"/>
+			<dipvalue name="Europe"/>
+			<dipvalue name="Japan"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Free Play">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
 		</dipswitch>
 		<dipswitch name="Coin B">
 			<dipvalue name="5 Coins/1 Credit"/>
@@ -316590,19 +317215,15 @@
 			<dipvalue name="1 Coin/3 Credits"/>
 			<dipvalue name="1 Coin/4 Credits"/>
 		</dipswitch>
-		<dipswitch name="Free Play">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Service Mode">
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
+		<dipswitch name="Coin A">
+			<dipvalue name="5 Coins/1 Credit"/>
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
 		</dipswitch>
 		<dipswitch name="Unknown">
 			<dipvalue name="Off" default="yes"/>
@@ -316632,67 +317253,25 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Shift Brake">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
+		<dipswitch name="Communication Mode">
+			<dipvalue name="Master" default="yes"/>
+			<dipvalue name="Slave"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
+		<dipswitch name="Car ID">
+			<dipvalue name="1" default="yes"/>
+			<dipvalue name="2"/>
+			<dipvalue name="3"/>
+			<dipvalue name="4"/>
+			<dipvalue name="5"/>
+			<dipvalue name="6"/>
+			<dipvalue name="7"/>
+			<dipvalue name="8"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<driver status="preliminary" color="good" sound="preliminary" graphic="good" palettesize="32768"/>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="32768"/>
 	</game>
 	<game name="rabiolep" sourcefile="rpunch.c">
 		<description>Rabio Lepus (Japan)</description>

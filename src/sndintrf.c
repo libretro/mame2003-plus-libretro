@@ -1209,7 +1209,7 @@ struct snd_interface sndintf[] =
 		YMF271_sh_start,
 		YMF271_sh_stop,
 		0,
-		0
+		YMF271_sh_reset
 	},
 #endif
 #if (HAS_ICS2115)
