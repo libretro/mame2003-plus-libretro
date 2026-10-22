@@ -149,6 +149,12 @@ struct ide_state
 	void *	last_status_timer;
 	void *	reset_timer;
 
+	/* the delayed events, on timers whose time left is in the save state:
+	   slot 0 the interrupts, slot 1 the sector reads and writes */
+	void *	event_timer[2];
+	UINT8	event_kind[2];
+	double	event_left[2];
+
 	int	master_password_enable;
 	int	user_password_enable;
 	UINT8 *	master_password;
@@ -174,6 +180,13 @@ static struct ide_state idestate[MAX_IDE_CONTROLLERS];
  *************************************/
 
 static void reset_callback(int param);
+
+enum { IDE_EVENT_NONE = 0, IDE_EVENT_INTERRUPT, IDE_EVENT_INTERRUPT_BUFFER_READY,
+	IDE_EVENT_READ_SECTOR, IDE_EVENT_WRITE_SECTOR, IDE_EVENT_SECURITY_ERROR };
+static void ide_event(struct ide_state *ide, int slot, double time, int kind);
+static void ide_event_fired(int param);
+static void ide_event_presave(void);
+static void ide_event_postload(void);
 
 static void ide_build_features(struct ide_state *ide);
 
@@ -247,10 +260,7 @@ static INLINE void signal_delayed_interrupt(struct ide_state *ide, double time, 
 	ide->status |= IDE_STATUS_BUSY;
 	
 	/* set a timer */
-	if (buffer_ready)
-		timer_set(time, ide - idestate, delayed_interrupt_buffer_ready);
-	else
-		timer_set(time, ide - idestate, delayed_interrupt);
+	ide_event(ide, 0, time, buffer_ready ? IDE_EVENT_INTERRUPT_BUFFER_READY : IDE_EVENT_INTERRUPT);
 }
 
 
@@ -298,6 +308,8 @@ int ide_controller_init_custom(int which, struct ide_interface *intf, struct har
 	/* create a timer for timing status */
 	ide->last_status_timer = timer_alloc(NULL);
 	ide->reset_timer = timer_alloc(reset_callback);
+	ide->event_timer[0] = timer_alloc(ide_event_fired);
+	ide->event_timer[1] = timer_alloc(ide_event_fired);
 
 	/* register ide status */
 	state_save_register_UINT8 ("ide", which, "adapter_control",        &ide->adapter_control,       1);
@@ -341,6 +353,14 @@ int ide_controller_init_custom(int which, struct ide_interface *intf, struct har
 	state_save_register_UINT8 ("ide", which, "config_unknown",         &ide->config_unknown,        1);
 	state_save_register_UINT8 ("ide", which, "config_register",        ide->config_register,        IDE_CONFIG_REGISTERS);
 	state_save_register_UINT8 ("ide", which, "config_register_num",    &ide->config_register_num,   1);
+
+	state_save_register_UINT8 ("ide", which, "event_kind",             ide->event_kind,             2);
+	state_save_register_double("ide", which, "event_left",             ide->event_left,             2);
+	if (which == 0)
+	{
+		state_save_register_func_presave(ide_event_presave);
+		state_save_register_func_postload(ide_event_postload);
+	}
 
 	state_save_register_int   ("ide", which, "master_password_enable", &ide->master_password_enable);
 	state_save_register_int   ("ide", which, "user_password_enable",   &ide->user_password_enable);
@@ -716,7 +736,7 @@ static void security_error(struct ide_state *ide)
 	ide->status &= ~IDE_STATUS_DRIVE_READY;
 
 	/* just set a timer and mark ourselves error */
-	timer_set(TIME_SECURITY_ERROR, ide - idestate, security_error_done);
+	ide_event(ide, 1, TIME_SECURITY_ERROR, IDE_EVENT_SECURITY_ERROR);
 }
 
 
@@ -895,10 +915,10 @@ static void read_first_sector(struct ide_state *ide)
 		}
 		ide->cur_lba = new_lba;
 
-		timer_set(seek_time, ide - idestate, read_sector_done);
+		ide_event(ide, 1, seek_time, IDE_EVENT_READ_SECTOR);
 	}
 	else
-		timer_set(ide->command == IDE_COMMAND_READ_DMA ? TIME_IN_NSEC(400) + TIME_IN_USEC(15) : TIME_PER_SECTOR, ide - idestate, read_sector_done);
+		ide_event(ide, 1, ide->command == IDE_COMMAND_READ_DMA ? TIME_IN_NSEC(400) + TIME_IN_USEC(15) : TIME_PER_SECTOR, IDE_EVENT_READ_SECTOR);
 }
 
 
@@ -914,11 +934,11 @@ static void read_next_sector(struct ide_state *ide)
 			read_sector_done(ide - idestate);
 		else
 			/* just set a timer */
-			timer_set(TIME_IN_USEC(1), ide - idestate, read_sector_done);
+			ide_event(ide, 1, TIME_IN_USEC(1), IDE_EVENT_READ_SECTOR);
 	}
 	else
 		/* just set a timer */
-		timer_set(ide->command == IDE_COMMAND_READ_DMA ? TIME_IN_NSEC(400) + TIME_IN_USEC(15) : TIME_PER_SECTOR, ide - idestate, read_sector_done);
+		ide_event(ide, 1, ide->command == IDE_COMMAND_READ_DMA ? TIME_IN_NSEC(400) + TIME_IN_USEC(15) : TIME_PER_SECTOR, IDE_EVENT_READ_SECTOR);
 }
 
 
@@ -950,13 +970,13 @@ static void continue_write(struct ide_state *ide)
 		else
 		{
 			/* set a timer to do the write */
-			timer_set(TIME_PER_SECTOR, ide - idestate, write_sector_done);
+			ide_event(ide, 1, TIME_PER_SECTOR, IDE_EVENT_WRITE_SECTOR);
 		}
 	}
 	else
 	{
 		/* set a timer to do the write */
-		timer_set(TIME_PER_SECTOR, ide - idestate, write_sector_done);
+		ide_event(ide, 1, TIME_PER_SECTOR, IDE_EVENT_WRITE_SECTOR);
 	}
 }
 
@@ -1690,4 +1710,61 @@ WRITE16_HANDLER( ide_controller16_0_w )
 	size = convert_to_offset_and_size16(&offset, mem_mask);
 
 	ide_controller_write(&idestate[0], offset, size, data >> ((offset & 1) * 8));
+}
+
+
+
+/*************************************
+ *
+ *	Delayed events
+ *
+ *************************************/
+
+static void write_sector_done(int which);
+static void security_error_done(int which);
+
+static void ide_event_fired(int param)
+{
+	int which = param >> 1, slot = param & 1;
+	struct ide_state *ide = &idestate[which];
+	int kind = ide->event_kind[slot];
+
+	ide->event_kind[slot] = IDE_EVENT_NONE;
+	switch (kind)
+	{
+		case IDE_EVENT_INTERRUPT:				delayed_interrupt(which); break;
+		case IDE_EVENT_INTERRUPT_BUFFER_READY:	delayed_interrupt_buffer_ready(which); break;
+		case IDE_EVENT_READ_SECTOR:				read_sector_done(which); break;
+		case IDE_EVENT_WRITE_SECTOR:			write_sector_done(which); break;
+		case IDE_EVENT_SECURITY_ERROR:			security_error_done(which); break;
+	}
+}
+
+static void ide_event(struct ide_state *ide, int slot, double time, int kind)
+{
+	ide->event_kind[slot] = kind;
+	timer_adjust(ide->event_timer[slot], time, (int)(ide - idestate) * 2 + slot, 0);
+}
+
+static void ide_event_presave(void)
+{
+	int which, slot;
+	for (which = 0; which < MAX_IDE_CONTROLLERS; which++)
+		for (slot = 0; slot < 2; slot++)
+			if (idestate[which].event_timer[slot] && idestate[which].event_kind[slot] != IDE_EVENT_NONE)
+				idestate[which].event_left[slot] = timer_timeleft(idestate[which].event_timer[slot]);
+}
+
+static void ide_event_postload(void)
+{
+	int which, slot;
+	for (which = 0; which < MAX_IDE_CONTROLLERS; which++)
+		for (slot = 0; slot < 2; slot++)
+			if (idestate[which].event_timer[slot])
+			{
+				if (idestate[which].event_kind[slot] != IDE_EVENT_NONE)
+					timer_adjust(idestate[which].event_timer[slot], idestate[which].event_left[slot], which * 2 + slot, 0);
+				else
+					timer_adjust(idestate[which].event_timer[slot], TIME_NEVER, which * 2 + slot, 0);
+			}
 }

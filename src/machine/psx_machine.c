@@ -115,9 +115,29 @@ static UINT32 m_p_n_dma_lastscanline[ 7 ];
 static UINT32 m_n_dpcp;
 static UINT32 m_n_dicr;
 
+/* a block write to the SPU (DMA channel 4) takes 24000 system clocks, as in
+   MAME: the data goes to the SPU and the channel finishes when they have
+   passed. The time left is in the save state. */
+#define DMA_SPU_PENDING ( 0xfffffffe )
+#define DMA_SPU_TICKS ( 24000 )
+static double m_f_dma_spu_left;
+
+/* the post-load functions run in the context of the CPU, whose local time
+   (restored) can be past the timer system's time: the times left saved
+   are from the timer system's time */
+static double psx_postload_time( void )
+{
+	int n_cpu = cpu_getactivecpu();
+	return n_cpu >= 0 ? cpunum_get_localtime( n_cpu ) : 0;
+}
+
 static void dma_timer( int n_channel, UINT32 n_scanline )
 {
-	if( n_scanline != 0xffffffff )
+	if( n_scanline == DMA_SPU_PENDING )
+	{
+		timer_adjust( m_p_timer_dma[ n_channel ], m_f_dma_spu_left, n_channel, 0 );
+	}
+	else if( n_scanline != 0xffffffff )
 	{
 		timer_adjust( m_p_timer_dma[ n_channel ], cpu_getscanlinetime( n_scanline ), n_channel, 0 );
 	}
@@ -128,8 +148,21 @@ static void dma_timer( int n_channel, UINT32 n_scanline )
 	m_p_n_dma_lastscanline[ n_channel ] = n_scanline;
 }
 
+static INT32 dma_clamp( UINT32 n_address, INT32 n_size );
+
 void dma_finished( int n_channel )
 {
+	if( m_p_n_dma_lastscanline[ n_channel ] == DMA_SPU_PENDING && m_p_fn_dma_write[ n_channel ] != NULL )
+	{
+		UINT32 n_address = ( m_p_n_dmabase[ n_channel ] & m_n_ramsize & ~3 );
+		INT32 n_size = m_p_n_dmablockcontrol[ n_channel ];
+		if( ( m_p_n_dmachannelcontrol[ n_channel ] & 0x200 ) != 0 )
+		{
+			n_size = ( n_size & 0xffff ) * ( n_size >> 16 );
+		}
+		m_p_fn_dma_write[ n_channel ]( n_address, dma_clamp( n_address, n_size ) );
+	}
+
 	m_p_n_dmachannelcontrol[ n_channel ] &= ~( ( 1L << 0x18 ) | ( 1L << 0x1c ) );
 
 	if( ( m_n_dicr & ( 1 << ( 16 + n_channel ) ) ) != 0 )
@@ -290,8 +323,16 @@ WRITE32_HANDLER( psx_dma_w )
 				{
 					verboselog( 1, "dma %d write block %08x %08x\n",
 						n_channel, m_p_n_dmabase[ n_channel ], m_p_n_dmablockcontrol[ n_channel ] );
-					m_p_fn_dma_write[ n_channel ]( n_address, dma_clamp( n_address, n_size ) );
-					dma_finished( n_channel );
+					if( n_channel == 4 )
+					{
+						m_f_dma_spu_left = TIME_IN_HZ( 33868800 ) * DMA_SPU_TICKS;
+						dma_timer( n_channel, DMA_SPU_PENDING );
+					}
+					else
+					{
+						m_p_fn_dma_write[ n_channel ]( n_address, dma_clamp( n_address, n_size ) );
+						dma_finished( n_channel );
+					}
 				}
 				else if( m_p_n_dmachannelcontrol[ n_channel ] == 0x01000401 &&
 					n_channel == 2 &&
@@ -462,6 +503,7 @@ static UINT64 m_p_n_root_start[ 3 ];
    left (negative: not armed), so a load neither restarts them nor adds
    interrupts */
 static data16_t m_p_n_root_saved[ 3 ];
+static UINT32 m_p_n_root_frac[ 3 ];	/* system clock ticks into the current count */
 static double m_p_f_root_timeleft[ 3 ];
 
 #define PSX_SYSCLK ( 33868800 )
@@ -585,6 +627,7 @@ static void root_presave( void )
 		timer_enable( m_p_timer_root[ n ], b_enabled );
 		m_p_f_root_timeleft[ n ] = b_enabled ? timer_timeleft( m_p_timer_root[ n ] ) : -1;
 		m_p_n_root_saved[ n ] = root_current( n );
+		m_p_n_root_frac[ n ] = (UINT32)( ( root_ticks() - m_p_n_root_start[ n ] ) % root_divider( n ) );
 	}
 }
 
@@ -595,10 +638,10 @@ static void root_postload( void )
 	for( n = 0; n < 3; n++ )
 	{
 		m_p_n_root_count[ n ] = m_p_n_root_saved[ n ];
-		m_p_n_root_start[ n ] = root_ticks();
+		m_p_n_root_start[ n ] = root_ticks() - m_p_n_root_frac[ n ];
 		if( m_p_f_root_timeleft[ n ] >= 0 )
 		{
-			timer_adjust( m_p_timer_root[ n ], m_p_f_root_timeleft[ n ], n, 0 );
+			timer_adjust( m_p_timer_root[ n ], m_p_f_root_timeleft[ n ] - psx_postload_time(), n, 0 );
 		}
 		else
 		{
@@ -1334,12 +1377,24 @@ void psx_machine_init( void )
 	psx_gpu_reset();
 }
 
+static void psx_dma_presave( void )
+{
+	if( m_p_n_dma_lastscanline[ 4 ] == DMA_SPU_PENDING )
+	{
+		m_f_dma_spu_left = timer_timeleft( m_p_timer_dma[ 4 ] );
+	}
+}
+
 static void psx_postload( void )
 {
 	int n;
 
 	psx_irq_update();
 
+	if( m_p_n_dma_lastscanline[ 4 ] == DMA_SPU_PENDING )
+	{
+		m_f_dma_spu_left -= psx_postload_time();
+	}
 	for( n = 0; n < 7; n++ )
 	{
 		dma_timer( n, m_p_n_dma_lastscanline[ n ] );
@@ -1406,12 +1461,15 @@ void psx_driver_init( void )
 	state_save_register_UINT32( "psx", 0, "m_p_n_dmablockcontrol", m_p_n_dmablockcontrol, 7 );
 	state_save_register_UINT32( "psx", 0, "m_p_n_dmachannelcontrol", m_p_n_dmachannelcontrol, 7 );
 	state_save_register_UINT32( "psx", 0, "m_p_n_dma_lastscanline", m_p_n_dma_lastscanline, 7 );
+	state_save_register_double( "psx", 0, "m_f_dma_spu_left", &m_f_dma_spu_left, 1 );
+	state_save_register_func_presave( psx_dma_presave );
 	state_save_register_UINT32( "psx", 0, "m_n_dpcp", &m_n_dpcp, 1 );
 	state_save_register_UINT32( "psx", 0, "m_n_dicr", &m_n_dicr, 1 );
 	state_save_register_UINT16( "psx", 0, "m_p_n_root_count", m_p_n_root_count, 3 );
 	state_save_register_UINT16( "psx", 0, "m_p_n_root_mode", m_p_n_root_mode, 3 );
 	state_save_register_UINT16( "psx", 0, "m_p_n_root_target", m_p_n_root_target, 3 );
 	state_save_register_UINT16( "psx", 0, "m_p_n_root_saved", m_p_n_root_saved, 3 );
+	state_save_register_UINT32( "psx", 0, "m_p_n_root_frac", m_p_n_root_frac, 3 );
 	state_save_register_double( "psx", 0, "m_p_f_root_timeleft", m_p_f_root_timeleft, 3 );
 	state_save_register_func_presave( root_presave );
 	/* tag 0 post-loads run newest first, before the CPU cycle counts are

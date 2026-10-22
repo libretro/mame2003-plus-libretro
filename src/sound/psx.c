@@ -63,6 +63,10 @@ static INT16 m_p_n_blockbuffer[ MAX_CHANNEL * SAMPLES_PER_BLOCK ];
 static INT16 m_p_n_s1[ MAX_CHANNEL ];
 static INT16 m_p_n_s2[ MAX_CHANNEL ];
 static data32_t m_n_loop[ MAX_CHANNEL ];
+/* the repeat address written while the voice plays: the loop start flags
+   of its blocks no longer change it, until the next key on (as DuckStation
+   and Mednafen) */
+static UINT8 m_p_n_ignoreloopstart[ MAX_CHANNEL ];
 static INT32 m_p_n_envcounter[ MAX_CHANNEL ];	/* sample cycles to the next envelope step */
 static data32_t m_n_endx;	/* voices that reached an end flag since their key-on */
 static data32_t m_n_spu_delay;
@@ -210,7 +214,7 @@ static int spu_block_header( int n_channel, int *p_shift, int *p_predict )
 	if( *p_predict > 4 )
 		*p_predict = 0;
 	n_flags = ( n_header >> 8 ) & 0xff;
-	if( ( n_flags & 4 ) != 0 )
+	if( ( n_flags & 4 ) != 0 && !m_p_n_ignoreloopstart[ n_channel ] )
 	{
 		m_n_loop[ n_channel ] = m_p_n_blockaddress[ n_channel ];
 		m_p_n_repeataddress[ n_channel ] = m_n_loop[ n_channel ] / 4;
@@ -426,6 +430,7 @@ int PSX_sh_start( const struct MachineSound *msound )
 		m_p_n_s2[ n_channel ] = 0;
 		m_n_loop[ n_channel ] = 0;
 		m_p_n_envcounter[ n_channel ] = 0;
+		m_p_n_ignoreloopstart[ n_channel ] = 0;
 	}
 	m_n_endx = 0;
 	memset( m_p_n_blockbuffer, 0, sizeof( m_p_n_blockbuffer ) );
@@ -474,6 +479,7 @@ int PSX_sh_start( const struct MachineSound *msound )
 	state_save_register_INT16( "psxspu", 0, "s1", m_p_n_s1, MAX_CHANNEL );
 	state_save_register_INT16( "psxspu", 0, "s2", m_p_n_s2, MAX_CHANNEL );
 	state_save_register_UINT32( "psxspu", 0, "loop", m_n_loop, MAX_CHANNEL );
+	state_save_register_UINT8( "psxspu", 0, "ignoreloopstart", m_p_n_ignoreloopstart, MAX_CHANNEL );
 	state_save_register_INT32( "psxspu", 0, "envcounter", m_p_n_envcounter, MAX_CHANNEL );
 	state_save_register_UINT32( "psxspu", 0, "endx", &m_n_endx, 1 );
 	state_save_register_UINT32( "psxspu", 0, "spu_delay", &m_n_spu_delay, 1 );
@@ -573,6 +579,8 @@ WRITE32_HANDLER( psx_spu_w )
 				/* the repeat address, also when the voice plays */
 				m_p_n_repeataddress[ n_channel ] = data >> 16;
 				m_n_loop[ n_channel ] = ( m_p_n_repeataddress[ n_channel ] * 4 ) % ( SPU_RAM_SIZE / 2 );
+				if( m_p_n_blockstatus[ n_channel ] && m_p_n_envelopestate[ n_channel ] != e_releaseend )
+					m_p_n_ignoreloopstart[ n_channel ] = 1;
 			}
 			break;
 		}
@@ -604,6 +612,7 @@ WRITE32_HANDLER( psx_spu_w )
 				m_p_n_envelopestate[ n_channel ] = e_attack;
 				m_p_n_adsrvolume[ n_channel ] = 0;
 				m_p_n_envcounter[ n_channel ] = 0;
+				m_p_n_ignoreloopstart[ n_channel ] = 0;
 				m_n_endx &= ~( 1 << n_channel );
 			}
 		}

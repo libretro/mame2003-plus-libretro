@@ -2748,7 +2748,7 @@ V-V                           TP-027
 	DRIVER( brvbladej )	/* Brave Blade (Japan) */
 
 	/* Atari PSX */
-	DRIVER( primrag2 )	/* Primal Rage 2 */
+	DRIVER( primrag2 )	/* Primal Rage II (Test Version 0.36a) */
 
 	/* Acclaim PSX */
 	DRIVER( nbajamex )	/* NBA Jam Extreme */
