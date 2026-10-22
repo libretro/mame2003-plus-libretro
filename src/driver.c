@@ -2665,29 +2665,54 @@ V-V                           TP-027
 	DRIVER( sfiii4n )
 	DRIVER( sfiii3ws )   /* hack, Street Fighter III 3rd Strike: Fight for the Future (Widescreen 20220908) */
 
-	/* Capcom ZN1 */
-	DRIVER( ts2 )		/* Battle Arena Toshinden 2 (USA 951124) */
-	DRIVER( ts2j )		/* Battle Arena Toshinden 2 (JAPAN 951124) */
-	DRIVER( starglad )	/* Star Gladiator (USA 960627) */
-	DRIVER( sfex )		/* Street Fighter EX (ASIA 961219) */
-	DRIVER( sfexj )		/* Street Fighter EX (JAPAN 961130) */
-	DRIVER( glpracr )	/* Gallop Racer (JAPAN Ver 9.01.12) */
-	DRIVER( sfexp )		/* Street Fighter EX Plus (USA 970311) */
-	DRIVER( sfexpj )	/* Street Fighter EX Plus (JAPAN 970311) */
-	DRIVER( rvschool )	/* Rival Schools (ASIA 971117) */
-	DRIVER( jgakuen )	/* Justice Gakuen (JAPAN 971117) */
-	DRIVER( tgmj )		/* Tetris The Grand Master (JAPAN 980710) */
+	/* Capcom ZN-1 */
+	DRIVER( ts2 )	/* Battle Arena Toshinden 2 (Europe 951124) */
+	DRIVER( ts2u )	/* Battle Arena Toshinden 2 (USA 951124) */
+	DRIVER( ts2ua )	/* Battle Arena Toshinden 2 (USA 951124, 32Mb mask ROMs) */
+	DRIVER( ts2j )	/* Battle Arena Toshinden 2 (Japan 951124) */
+	DRIVER( ts2ja )	/* Battle Arena Toshinden 2 (Japan 951124, 32Mb mask ROMs) */
+	DRIVER( starglad )	/* Star Gladiator Episode I: Final Crusade (USA 960627) */
+	DRIVER( stargladj )	/* Star Gladiator Episode I: Final Crusade (Japan 960627) */
+	DRIVER( glpracr )	/* Gallop Racer (English Ver 10.17.K) */
+	DRIVER( glpracrj )	/* Gallop Racer (Japanese Ver 9.01.12) */
+	DRIVER( sfex )	/* Street Fighter EX (Europe 961219) */
+	DRIVER( sfexu )	/* Street Fighter EX (USA 961219) */
+	DRIVER( sfexa )	/* Street Fighter EX (Asia 961219) */
+	DRIVER( sfexj )	/* Street Fighter EX (Japan 961130) */
+	DRIVER( sfexp )	/* Street Fighter EX Plus (USA 970407) */
+	DRIVER( sfexpu1 )	/* Street Fighter EX Plus (USA 970311) */
+	DRIVER( sfexpj )	/* Street Fighter EX Plus (Japan 970407) */
 
-	/* Capcom ZN2 */
-	DRIVER( sfex2 )		/* Street Fighter EX 2 (JAPAN 980312) */
-	DRIVER( sg2j )		/* Star Gladiator 2 (JAPAN 980316) */
-	DRIVER( techromn )	/* Tech Romancer (USA 980914) */
-	DRIVER( kikaioh )	/* Kikaioh (JAPAN 980914) */
-	DRIVER( sfex2p )	/* Street Fighter EX 2 Plus (JAPAN 990611) */
-	DRIVER( strider2 )	/* Strider 2 (USA 991213) */
-	DRIVER( stridr2a )	/* Strider 2 (ASIA 991213) */
-	DRIVER( shiryu2 )	/* Strider Hiryu 2 (JAPAN 991213) */
-						/* Rival Schools 2 */
+	/* Capcom ZN-2 */
+	DRIVER( sfexpj1 )	/* Street Fighter EX Plus (Japan 970311) */
+	DRIVER( rvschool )	/* Rival Schools: United By Fate (Europe 971117) */
+	DRIVER( rvschoolu )	/* Rival Schools: United By Fate (USA 971117) */
+	DRIVER( rvschoola )	/* Rival Schools: United By Fate (Asia 971117) */
+	DRIVER( jgakuen )	/* Shiritsu Justice Gakuen: Legion of Heroes (Japan 971216) */
+	DRIVER( jgakuen1 )	/* Shiritsu Justice Gakuen: Legion of Heroes (Japan 971117) */
+	DRIVER( sfex2 )	/* Street Fighter EX2 (Europe 980312) */
+	DRIVER( sfex2u )	/* Street Fighter EX2 (USA 980526) */
+	DRIVER( sfex2u1 )	/* Street Fighter EX2 (USA 980312) */
+	DRIVER( sfex2a )	/* Street Fighter EX2 (Asia 980312) */
+	DRIVER( sfex2h )	/* Street Fighter EX2 (Hispanic 980312) */
+	DRIVER( sfex2j )	/* Street Fighter EX2 (Japan 980312) */
+	DRIVER( plsmaswd )	/* Plasma Sword: Nightmare of Bilstein (USA 980316) */
+	DRIVER( plsmaswda )	/* Plasma Sword: Nightmare of Bilstein (Asia 980316) */
+	DRIVER( stargld2 )	/* Star Gladiator 2: Nightmare of Bilstein (Japan 980316) */
+	DRIVER( tgmj )	/* Tetris: The Grand Master (Japan 980710) */
+	DRIVER( techromn )	/* Tech Romancer (Europe 980914) */
+	DRIVER( techromnu )	/* Tech Romancer (USA 980914) */
+	DRIVER( techromna )	/* Tech Romancer (Asia 980914) */
+	DRIVER( kikaioh )	/* Choukou Senki Kikaioh (Japan 980914) */
+	DRIVER( sfex2p )	/* Street Fighter EX2 Plus (Europe 990611) */
+	DRIVER( sfex2pu )	/* Street Fighter EX2 Plus (USA 990611) */
+	DRIVER( sfex2pa )	/* Street Fighter EX2 Plus (Asia 990611) */
+	DRIVER( sfex2ph )	/* Street Fighter EX2 Plus (Hispanic 990611) */
+	DRIVER( sfex2pj )	/* Street Fighter EX2 Plus (Japan 990611) */
+	DRIVER( strider2 )	/* Strider 2 (Europe 991213) */
+	DRIVER( strider2u )	/* Strider 2 (USA 991213) */
+	DRIVER( strider2a )	/* Strider 2 (Asia 991213) */
+	DRIVER( shiryu2 )	/* Strider Hiryu 2 (Japan 991213) */
 
 	/* Tecmo TPS (ZN1) */
 	DRIVER( glpracr2 )	/* Gallop Racer 2 (Export) */
