@@ -127,6 +127,10 @@ Sound: Analog Devices ADSP-2181
 #include "state.h"
 #include "sound/psx.h"
 
+static int zn_bank_secsel;	/* the game ROM bank follows this register (Raizing) */
+static UINT32 tecmo_bank;
+static void tecmo_bank_update( void );
+
 #if PROTECTION_HACK
 
 /* decodebp.c */
@@ -291,12 +295,6 @@ static unsigned char cpzn2_protection_hack [] =
 	0x00,
 };
 
-/* ?.c */
-static unsigned char psarc95_protection_hack [] =
-{
-	/* not dumped yet */0x00,
-};
-
 static unsigned short n_sio0_ptr;
 static unsigned char *p_sio0_ret;
 static unsigned short n_sio0_ret_size;
@@ -433,6 +431,7 @@ PORT_END
 
 static DRIVER_INIT( zn )
 {
+	zn_bank_secsel = 0;
 	cpu_setbank( 1, memory_region( REGION_USER1 ) ); /* game rom */
 	cpu_setbank( 3, memory_region( REGION_CPU1 ) + 0x0480000 ); /* scratch pad */
 	cpu_setbank( 4, memory_region( REGION_CPU1 ) ); /* ram mirror */
@@ -484,12 +483,6 @@ static DRIVER_INIT( zn )
 	{
 		p_sio0_ret = cpzn2_protection_hack;
 		n_sio0_ret_size = sizeof( cpzn2_protection_hack );
-	}
-	else if ( strcmp( Machine->gamedrv->name, "beastrzr" ) == 0 ||
-		strcmp( Machine->gamedrv->name, "brvblade" ) == 0 )
-	{
-		p_sio0_ret = psarc95_protection_hack;
-		n_sio0_ret_size = sizeof( psarc95_protection_hack );
 	}
 	else
 	{
@@ -932,6 +925,12 @@ static WRITE32_HANDLER( znsecsel_w )
 {
 	COMBINE_DATA( &m_n_znsecsel );
 
+	if( zn_bank_secsel )
+	{
+		tecmo_bank = m_n_znsecsel & 3;
+		tecmo_bank_update();
+	}
+
 	if( ( m_n_znsecsel & 0x80 ) == 0 )
 	{
 		zn_sio_fn = sio_pad_handler;
@@ -1145,6 +1144,7 @@ static void zn_board_init( void )
 	int n_game;
 	const struct GameDriver *drv;
 
+	zn_bank_secsel = 0;
 	cpu_setbank( 3, zn_scratchpad );
 	cpu_setbank( 4, memory_region( REGION_CPU1 ) );
 	cpu_setbank( 5, memory_region( REGION_CPU1 ) );
@@ -1408,7 +1408,6 @@ static DRIVER_INIT( glpracr )
 
 ***************************************************************************/
 
-static UINT32 tecmo_bank;
 
 static void tecmo_bank_update( void )
 {
@@ -1968,6 +1967,154 @@ static MACHINE_DRIVER_START( coh1002tb )
 MACHINE_DRIVER_END
 
 
+/***************************************************************************
+
+  Eighting / Raizing (COH-1002E), as in current MAME
+
+  ZN-1 main board with 2MB VRAM and the Raizing BIOS (Brave Blade: the
+  Tecmo board and BIOS); CAT702 ET01 (MG01) on the main board, ETnn (MG11)
+  on the ROM board. Game ROM: 8MB banks at 0x1f000000, bits 0-1 of the
+  CAT702 / DIP select register. Sound: a 68000 with a YMF271, commands
+  through a latch at 0x1fb00000, IRQ 2 at 0x1fb00004; and the PSX SPU.
+
+***************************************************************************/
+
+static WRITE32_HANDLER( raizing_soundlatch_w )	/* byte at 0x1fb00000 */
+{
+	if( ACCESSING_LSB32 )
+		soundlatch_w( 0, data & 0xff );
+}
+
+static WRITE32_HANDLER( raizing_sound_irq_w )	/* byte at 0x1fb00004 */
+{
+	if( ACCESSING_LSB32 )
+		cpu_set_irq_line( 1, 2, HOLD_LINE );
+}
+
+static MEMORY_READ32_START( raizing_zn_readmem )
+	ZN_MAIN_READ
+	{ 0x1f000000, 0x1f7fffff, MRA32_BANK1 },  /* banked game rom */
+MEMORY_END
+
+static MEMORY_WRITE32_START( raizing_zn_writemem )
+	ZN_MAIN_WRITE
+	{ 0x1f000000, 0x1f7fffff, MWA32_ROM },
+	{ 0x1fb00000, 0x1fb00003, raizing_soundlatch_w },
+	{ 0x1fb00004, 0x1fb00007, raizing_sound_irq_w },
+MEMORY_END
+
+/* the YMF271 on the low byte of each word */
+static READ16_HANDLER( raizing_ymf271_r )
+{
+	return YMF271_0_r( offset );
+}
+
+static WRITE16_HANDLER( raizing_ymf271_w )
+{
+	if( ACCESSING_LSB16 )
+		YMF271_0_w( offset, data & 0xff );
+}
+
+static READ16_HANDLER( raizing_soundlatch_r )
+{
+	return soundlatch_r( 0 );
+}
+
+static MEMORY_READ16_START( raizing_sound_readmem )
+	{ 0x000000, 0x07ffff, MRA16_ROM },
+	{ 0x080000, 0x0fffff, MRA16_RAM },
+	{ 0x100000, 0x10001f, raizing_ymf271_r },
+	{ 0x180008, 0x180009, raizing_soundlatch_r },
+MEMORY_END
+
+static MEMORY_WRITE16_START( raizing_sound_writemem )
+	{ 0x000000, 0x07ffff, MWA16_NOP },
+	{ 0x080000, 0x0fffff, MWA16_RAM },
+	{ 0x100000, 0x10001f, raizing_ymf271_w },
+	{ 0x100020, 0xffffff, MWA16_NOP },
+MEMORY_END
+
+static struct YMF271interface raizing_ymf271_interface =
+{
+	1,
+	{ REGION_SOUND1 },
+	{ YM3012_VOL( 100, MIXER_PAN_LEFT, 100, MIXER_PAN_RIGHT ) },
+	{ 0 },
+	{ 0 },
+	{ 0 }
+};
+
+static void raizing_postload( void )
+{
+	tecmo_bank_update();
+}
+
+static void raizing_zn_init( void )
+{
+	zn_scratchpad = auto_malloc( 0x400 );
+	zn_eeprom = auto_malloc( 0x800 );
+	memset( zn_scratchpad, 0, 0x400 );
+	memset( zn_eeprom, 0xff, 0x800 );
+
+	zn_vram_2mb = 1;
+	zn_coin_tecmo = 0;
+	zn_eeprom_default = REGION_USER6;	/* factory settings, when the set has them */
+
+	zn_board_init();
+	zn_bank_secsel = 1;
+	znsec_init( 0, memory_region( REGION_USER4 ) );	/* ET01 / MG01 */
+	znsec_init( 1, memory_region( REGION_USER5 ) );	/* ETnn / MG11 */
+
+	state_save_register_UINT32( "zn", 0, "raizing_bank", &tecmo_bank, 1 );
+	state_save_register_UINT32( "zn", 0, "scratchpad", zn_scratchpad, 0x100 );
+	state_save_register_func_postload( raizing_postload );
+}
+
+static DRIVER_INIT( coh1002e )
+{
+	raizing_zn_init();
+}
+
+static MACHINE_INIT( raizing_zn )
+{
+	tecmo_bank = 0;
+	tecmo_bank_update();
+	zn_board_reset();
+}
+
+/* ZN-1, 2MB VRAM (COH-1002E), 68000 + YMF271 sound */
+static MACHINE_DRIVER_START( coh1002e )
+	MDRV_CPU_ADD_TAG( "main", PSXCPU, 33868800 / 2 )	/* CXD8530CQ, 67.7376MHz XTAL; as System 11 */
+	MDRV_CPU_MEMORY( raizing_zn_readmem, raizing_zn_writemem )
+	MDRV_CPU_VBLANK_INT( psx_vblank, 1 )
+
+	MDRV_CPU_ADD( M68000, 12000000 )
+	MDRV_CPU_FLAGS( CPU_AUDIO_CPU )
+	MDRV_CPU_MEMORY( raizing_sound_readmem, raizing_sound_writemem )
+
+	MDRV_FRAMES_PER_SECOND( 60 )
+	MDRV_VBLANK_DURATION( 0 )
+	MDRV_INTERLEAVE( 100 )
+
+	MDRV_MACHINE_INIT( raizing_zn )
+	MDRV_NVRAM_HANDLER( zn )
+
+	MDRV_VIDEO_ATTRIBUTES( VIDEO_TYPE_RASTER | VIDEO_RGB_DIRECT )
+	MDRV_SCREEN_SIZE( 640, 480 )
+	MDRV_VISIBLE_AREA( 0, 639, 0, 479 )
+	MDRV_PALETTE_LENGTH( 65536 )
+
+	MDRV_PALETTE_INIT( psx )
+	MDRV_VIDEO_START( psx_type2_1024x1024 )
+	MDRV_VIDEO_UPDATE( psx )
+	MDRV_VIDEO_STOP( psx )
+
+	MDRV_SOUND_ATTRIBUTES( SOUND_SUPPORTS_STEREO )
+	MDRV_SOUND_ADD( PSXSPU, zn_spu_interface )
+	MDRV_SOUND_ADD( YMF271, raizing_ymf271_interface )
+MACHINE_DRIVER_END
+
+
 INPUT_PORTS_START( zn )
 	PORT_START		/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER1 )
@@ -2178,6 +2325,21 @@ INPUT_PORTS_END
 	PORT_DIPSETTING(    0x08, DEF_STR( Off ) ) \
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) ) \
 	PORT_BIT( 0xf0, IP_ACTIVE_HIGH, IPT_UNUSED )
+
+/* Bloody Roar 2: two players, four buttons; the fourth on the P3 port */
+INPUT_PORTS_START( bldyror2 )
+	TPS_PLAYER_PORT( 1, 1, 0 )
+	TPS_PLAYER_PORT( 2, 1, 0 )
+	TPS_SERVICE_PORT( 0 )
+	TPS_SYSTEM_PORT( 1, 1, 0 )
+	PORT_START	/* P3 */
+	PORT_BIT( 0x0f, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER1 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER2 )
+	PORT_BIT( 0xc0, IP_ACTIVE_LOW, IPT_UNUSED )
+	TPS_UNUSED_PORT
+	TAITO_FX_DSW_PORT
+INPUT_PORTS_END
 
 /* Taito FX-1A: two players, three buttons */
 INPUT_PORTS_START( znt2p )
@@ -3502,33 +3664,271 @@ ROM_START( taitofx1 )
 	TAITOFX1_BIOS
 ROM_END
 
-/* Eighteen Raizing */
+/* Eighting / Raizing (COH-1002E) */
 
-#define PSARC95_BIOS \
-	ROM_REGION( 0x480400, REGION_CPU1, 0 ) \
-	ROM_LOAD( "coh1002e.bin", 0x0400000, 0x080000, NO_DUMP )
+#define RAIZING_BIOS \
+	ROM_REGION32_LE( 0x400000, REGION_CPU1, ROMREGION_ERASE00 ) /* ram */ \
+	ROM_REGION32_LE( 0x080000, REGION_USER3, 0 ) /* bios */ \
+	ROM_LOAD( "m27c402cz-54.ic353", 0x0000000, 0x080000, CRC(910f3a8b) SHA1(cd68532967a25f476a6d73473ec6b6f4df2e1689) ) \
+	ROM_REGION( 0x000008, REGION_USER4, 0 ) /* CAT702, main board */ \
+	ROM_LOAD( "et01.ic652", 0x000000, 0x000008, CRC(a7dd922e) SHA1(1069c1d9015028a51a1b314cfacb014ea90aa425) )
 
-ROM_START( psarc95 )
-	PSARC95_BIOS
+ROM_START( coh1002e )
+	RAIZING_BIOS
 ROM_END
 
 ROM_START( beastrzr )
-	PSARC95_BIOS
+	RAIZING_BIOS
 
-	ROM_REGION32_LE( 0x0200000, REGION_USER1, 0 )
-	ROM_LOAD( "broar_u0.212", 0x000000, 0x080000, CRC(1c85d7fb) SHA1(aa406a42c424cc16a9e5330c68dda9acf8760088) )
-	ROM_LOAD( "broar_u0.213", 0x080000, 0x080000, CRC(2c586534) SHA1(a38dfc3a45446d24a1caac89b0f560989d46ded5) )
-	ROM_LOAD( "broar_u0.214", 0x100000, 0x080000, CRC(911e6c90) SHA1(724e4cae49bb124200e188a0288516b3a7d5ab53) )
-	ROM_LOAD( "broar_u0.215", 0x180000, 0x080000, CRC(31c8e055) SHA1(2811789ab6221b972d1e3ffe98916587990f7564) )
+	ROM_REGION32_LE( 0x1800000, REGION_USER1, 0 ) /* game rom, 8MB banks */
+	ROM_LOAD16_BYTE( "b.roar_u0213.u0213",  0x000001, 0x080000, CRC(2c586534) SHA1(a38dfc3a45446d24a1caac89b0f560989d46ded5) )
+	ROM_LOAD16_BYTE( "b.roar_u0212.u0212",  0x000000, 0x080000, CRC(1c85d7fb) SHA1(aa406a42c424cc16a9e5330c68dda9acf8760088) )
+	ROM_LOAD16_BYTE( "b.roar_u0215.u0215",  0x100001, 0x080000, CRC(31c8e055) SHA1(2811789ab6221b972d1e3ffe98916587990f7564) )
+	ROM_LOAD16_BYTE( "b.roar_u0214.u0214",  0x100000, 0x080000, CRC(1cdc450a) SHA1(9215e5fec52f7c5c0070feb621eb9c77f98e2362) )
+	ROM_LOAD( "8ing_ra-b.roar_rom-1.u0217", 0x400000, 0x400000, CRC(11f1ba36) SHA1(d41ae686c2c607640cbadf906215c89134758050) )
+	ROM_LOAD( "8ing_ra-b.roar_rom-2.u0216", 0x800000, 0x400000, CRC(d46d46b7) SHA1(1c42cb5dcda4b26c08c4ecf95efeadaf3a1d1dd2) )
 
-	ROM_REGION( 0x080000, REGION_CPU2, 0 )
-	ROM_LOAD( "broar_u.042",  0x000000, 0x040000, CRC(4d537f88) SHA1(1760367d70a81606e29885ea315185d2c2a9409b) )
-	ROM_LOAD( "broar_u.046",  0x040000, 0x040000, CRC(d4bb261a) SHA1(9a295b1354ef15f37ea09bb209cf0cb98437c462) )
+	ROM_REGION( 0x080000, REGION_CPU2, 0 ) /* 68000 */
+	ROM_LOAD16_BYTE( "b.roar_u046.u046", 0x000001, 0x040000, CRC(d4bb261a) SHA1(9a295b1354ef15f37ea09bb209cf0cb98437c462) )
+	ROM_LOAD16_BYTE( "b.roar_u042.u042", 0x000000, 0x040000, CRC(4d537f88) SHA1(1760367d70a81606e29885ea315185d2c2a9409b) )
 
-	ROM_REGION( 0xc00000, REGION_SOUND1, ROMREGION_SOUNDONLY )
-	ROM_LOAD( "rabroar1.217", 0x000000, 0x400000, CRC(11f1ba36) SHA1(d41ae686c2c607640cbadf906215c89134758050) )
-	ROM_LOAD( "rabroar2.216", 0x400000, 0x400000, CRC(d46d46b7) SHA1(1c42cb5dcda4b26c08c4ecf95efeadaf3a1d1dd2) )
-	ROM_LOAD( "rabroar3.snd", 0x800000, 0x400000, CRC(b74cc4d1) SHA1(eb5485582a12959ae06927a2f1d8a7e63e0f956f) )
+	ROM_REGION( 0x400000, REGION_SOUND1, 0 ) /* ymf271 */
+	ROM_LOAD( "8ing_ra-b.roar_rom-3.u0326", 0x000000, 0x400000, CRC(b74cc4d1) SHA1(eb5485582a12959ae06927a2f1d8a7e63e0f956f) )
+
+	ROM_REGION( 0x000008, REGION_USER5, 0 ) /* CAT702, rom board */
+	ROM_LOAD( "et02", 0x000000, 0x000008, CRC(187ce61a) SHA1(521122b0f7b3f278dd2a2b1d73c252b952b5f55d) )
+ROM_END
+
+ROM_START( beastrzra )
+	RAIZING_BIOS
+
+	ROM_REGION32_LE( 0x1800000, REGION_USER1, 0 ) /* game rom, 8MB banks */
+	ROM_LOAD16_BYTE( "b.roar_u0213.u0213",  0x000001, 0x080000, CRC(5c3ca4d3) SHA1(f246de057c2ea725e5e628dd32597f3bc7d22070) )
+	ROM_LOAD16_BYTE( "b.roar_u0212.u0212",  0x000000, 0x080000, CRC(45f1269b) SHA1(4754bc97c261dfcb5e379fe765689ea737dd5e1d) )
+	ROM_LOAD16_BYTE( "b.roar_u0215.u0215",  0x100001, 0x080000, CRC(31c8e055) SHA1(2811789ab6221b972d1e3ffe98916587990f7564) )
+	ROM_LOAD16_BYTE( "b.roar_u0214.u0214",  0x100000, 0x080000, CRC(1cdc450a) SHA1(9215e5fec52f7c5c0070feb621eb9c77f98e2362) )
+	ROM_LOAD( "8ing_ra-b.roar_rom-1.u0217", 0x400000, 0x400000, CRC(11f1ba36) SHA1(d41ae686c2c607640cbadf906215c89134758050) )
+	ROM_LOAD( "8ing_ra-b.roar_rom-2.u0216", 0x800000, 0x400000, CRC(d46d46b7) SHA1(1c42cb5dcda4b26c08c4ecf95efeadaf3a1d1dd2) )
+
+	ROM_REGION( 0x080000, REGION_CPU2, 0 ) /* 68000 */
+	ROM_LOAD16_BYTE( "b.roar_u046.u046", 0x000001, 0x040000, CRC(d4bb261a) SHA1(9a295b1354ef15f37ea09bb209cf0cb98437c462) )
+	ROM_LOAD16_BYTE( "b.roar_u042.u042", 0x000000, 0x040000, CRC(4d537f88) SHA1(1760367d70a81606e29885ea315185d2c2a9409b) )
+
+	ROM_REGION( 0x400000, REGION_SOUND1, 0 ) /* ymf271 */
+	ROM_LOAD( "8ing_ra-b.roar_rom-3.u0326", 0x000000, 0x400000, CRC(b74cc4d1) SHA1(eb5485582a12959ae06927a2f1d8a7e63e0f956f) )
+
+	ROM_REGION( 0x000008, REGION_USER5, 0 ) /* CAT702, rom board */
+	ROM_LOAD( "et02", 0x000000, 0x000008, CRC(187ce61a) SHA1(521122b0f7b3f278dd2a2b1d73c252b952b5f55d) )
+ROM_END
+
+ROM_START( bldyroar )
+	RAIZING_BIOS
+
+	ROM_REGION32_LE( 0x1800000, REGION_USER1, 0 ) /* game rom, 8MB banks */
+	ROM_LOAD16_BYTE( "b.roar_u0213.u0213",  0x000001, 0x080000, CRC(63769342) SHA1(7231188073b997b039467db85ce7c85383daf591) )
+	ROM_LOAD16_BYTE( "b.roar_u0212.u0212",  0x000000, 0x080000, CRC(966b7169) SHA1(63e025cacb84e89d30b40ed6cfa5c63d84c298c4) )
+	ROM_LOAD16_BYTE( "b.roar_u0215.u0215",  0x100001, 0x080000, CRC(31c8e055) SHA1(2811789ab6221b972d1e3ffe98916587990f7564) )
+	ROM_LOAD16_BYTE( "b.roar_u0214.u0214",  0x100000, 0x080000, CRC(1cdc450a) SHA1(9215e5fec52f7c5c0070feb621eb9c77f98e2362) )
+	ROM_LOAD( "8ing_ra-b.roar_rom-1.u0217", 0x400000, 0x400000, CRC(11f1ba36) SHA1(d41ae686c2c607640cbadf906215c89134758050) )
+	ROM_LOAD( "8ing_ra-b.roar_rom-2.u0216", 0x800000, 0x400000, CRC(d46d46b7) SHA1(1c42cb5dcda4b26c08c4ecf95efeadaf3a1d1dd2) )
+
+	ROM_REGION( 0x080000, REGION_CPU2, 0 ) /* 68000 */
+	ROM_LOAD16_BYTE( "b.roar_u046.u046", 0x000001, 0x040000, CRC(d4bb261a) SHA1(9a295b1354ef15f37ea09bb209cf0cb98437c462) )
+	ROM_LOAD16_BYTE( "b.roar_u042.u042", 0x000000, 0x040000, CRC(4d537f88) SHA1(1760367d70a81606e29885ea315185d2c2a9409b) )
+
+	ROM_REGION( 0x400000, REGION_SOUND1, 0 ) /* ymf271 */
+	ROM_LOAD( "8ing_ra-b.roar_rom-3.u0326", 0x000000, 0x400000, CRC(b74cc4d1) SHA1(eb5485582a12959ae06927a2f1d8a7e63e0f956f) )
+
+	ROM_REGION( 0x000008, REGION_USER5, 0 ) /* CAT702, rom board */
+	ROM_LOAD( "et02", 0x000000, 0x000008, CRC(187ce61a) SHA1(521122b0f7b3f278dd2a2b1d73c252b952b5f55d) )
+ROM_END
+
+ROM_START( bldyror2 )
+	RAIZING_BIOS
+
+	ROM_REGION32_LE( 0x1800000, REGION_USER1, 0 ) /* game rom, 8MB banks */
+	ROM_LOAD( "flash0.021", 0x0000000, 0x200000, CRC(fa7602e1) SHA1(6fb6af09656fbb86d2abda35804b2ed4a4cd7461) )
+	ROM_LOAD( "flash1.024", 0x0200000, 0x200000, CRC(03465a69) SHA1(7c29aff2bf19c379873d3927c260892c78281882) )
+	ROM_LOAD( "rom-1a.028", 0x0800000, 0x400000, CRC(0e711461) SHA1(1d0bd80e6885432ef0623babde28e5760b714bfa) )
+	ROM_LOAD( "rom-1b.29",  0x0c00000, 0x400000, CRC(0cf153f9) SHA1(53bb9f8642079f56d8e925792b069362df666819) )
+	ROM_LOAD( "rom-2a.026", 0x1000000, 0x400000, CRC(b71d955d) SHA1(49fce452c70ceafc8a149fa9ff073589b7261882) )
+	ROM_LOAD( "rom-2b.210", 0x1400000, 0x400000, CRC(89959dde) SHA1(99d54b9876f38f5e625334bbd1439618cdf01d56) )
+
+	ROM_REGION( 0x100000, REGION_CPU2, 0 ) /* 68000 */
+	ROM_LOAD16_BYTE( "br2_u0412.412", 0x000001, 0x080000, CRC(e254dd8a) SHA1(5b8fcafcf2176e0b55efcf37799d7c0d97e01bdc) )
+	ROM_LOAD16_BYTE( "br2_u049.049",  0x000000, 0x080000, CRC(10dc855b) SHA1(4e6e3a71911c8976ae07c2b6cac5a36f98193def) )
+
+	ROM_REGION( 0x400000, REGION_SOUND1, 0 ) /* ymf271 */
+	ROM_LOAD( "rom-3.336", 0x000000, 0x400000, CRC(b74cc4d1) SHA1(eb5485582a12959ae06927a2f1d8a7e63e0f956f) )
+
+	ROM_REGION( 0x000800, REGION_USER6, 0 ) /* factory settings */
+	ROM_LOAD( "at28c16_world", 0x000000, 0x000800, CRC(01b42397) SHA1(853553a38e81e64a17c040173b29c7bfd6f79f31) )
+
+	ROM_REGION( 0x000008, REGION_USER5, 0 ) /* CAT702, rom board */
+	ROM_LOAD( "et03", 0x000000, 0x000008, CRC(779b0bfd) SHA1(76a188c78083bbb2740379d53143e1efaf637b85) )
+ROM_END
+
+ROM_START( bldyror2u )
+	RAIZING_BIOS
+
+	ROM_REGION32_LE( 0x1800000, REGION_USER1, 0 ) /* game rom, 8MB banks */
+	ROM_LOAD( "flash0.021", 0x0000000, 0x200000, CRC(fa7602e1) SHA1(6fb6af09656fbb86d2abda35804b2ed4a4cd7461) )
+	ROM_LOAD( "flash1.024", 0x0200000, 0x200000, CRC(03465a69) SHA1(7c29aff2bf19c379873d3927c260892c78281882) )
+	ROM_LOAD( "rom-1a.028", 0x0800000, 0x400000, CRC(0e711461) SHA1(1d0bd80e6885432ef0623babde28e5760b714bfa) )
+	ROM_LOAD( "rom-1b.29",  0x0c00000, 0x400000, CRC(0cf153f9) SHA1(53bb9f8642079f56d8e925792b069362df666819) )
+	ROM_LOAD( "rom-2a.026", 0x1000000, 0x400000, CRC(b71d955d) SHA1(49fce452c70ceafc8a149fa9ff073589b7261882) )
+	ROM_LOAD( "rom-2b.210", 0x1400000, 0x400000, CRC(89959dde) SHA1(99d54b9876f38f5e625334bbd1439618cdf01d56) )
+
+	ROM_REGION( 0x100000, REGION_CPU2, 0 ) /* 68000 */
+	ROM_LOAD16_BYTE( "br2_u0412.412", 0x000001, 0x080000, CRC(e254dd8a) SHA1(5b8fcafcf2176e0b55efcf37799d7c0d97e01bdc) )
+	ROM_LOAD16_BYTE( "br2_u049.049",  0x000000, 0x080000, CRC(10dc855b) SHA1(4e6e3a71911c8976ae07c2b6cac5a36f98193def) )
+
+	ROM_REGION( 0x400000, REGION_SOUND1, 0 ) /* ymf271 */
+	ROM_LOAD( "rom-3.336", 0x000000, 0x400000, CRC(b74cc4d1) SHA1(eb5485582a12959ae06927a2f1d8a7e63e0f956f) )
+
+	ROM_REGION( 0x000800, REGION_USER6, 0 ) /* factory settings */
+	ROM_LOAD( "at28c16_usa", 0x000000, 0x000800, CRC(b78d6fc3) SHA1(49d8b6f44c31d74f36cba981af7f4c7e23dd9007) )
+
+	ROM_REGION( 0x000008, REGION_USER5, 0 ) /* CAT702, rom board */
+	ROM_LOAD( "et03", 0x000000, 0x000008, CRC(779b0bfd) SHA1(76a188c78083bbb2740379d53143e1efaf637b85) )
+ROM_END
+
+ROM_START( bldyror2a )
+	RAIZING_BIOS
+
+	ROM_REGION32_LE( 0x1800000, REGION_USER1, 0 ) /* game rom, 8MB banks */
+	ROM_LOAD( "flash0.021", 0x0000000, 0x200000, CRC(fa7602e1) SHA1(6fb6af09656fbb86d2abda35804b2ed4a4cd7461) )
+	ROM_LOAD( "flash1.024", 0x0200000, 0x200000, CRC(03465a69) SHA1(7c29aff2bf19c379873d3927c260892c78281882) )
+	ROM_LOAD( "rom-1a.028", 0x0800000, 0x400000, CRC(0e711461) SHA1(1d0bd80e6885432ef0623babde28e5760b714bfa) )
+	ROM_LOAD( "rom-1b.29",  0x0c00000, 0x400000, CRC(0cf153f9) SHA1(53bb9f8642079f56d8e925792b069362df666819) )
+	ROM_LOAD( "rom-2a.026", 0x1000000, 0x400000, CRC(b71d955d) SHA1(49fce452c70ceafc8a149fa9ff073589b7261882) )
+	ROM_LOAD( "rom-2b.210", 0x1400000, 0x400000, CRC(89959dde) SHA1(99d54b9876f38f5e625334bbd1439618cdf01d56) )
+
+	ROM_REGION( 0x100000, REGION_CPU2, 0 ) /* 68000 */
+	ROM_LOAD16_BYTE( "br2_u0412.412", 0x000001, 0x080000, CRC(e254dd8a) SHA1(5b8fcafcf2176e0b55efcf37799d7c0d97e01bdc) )
+	ROM_LOAD16_BYTE( "br2_u049.049",  0x000000, 0x080000, CRC(10dc855b) SHA1(4e6e3a71911c8976ae07c2b6cac5a36f98193def) )
+
+	ROM_REGION( 0x400000, REGION_SOUND1, 0 ) /* ymf271 */
+	ROM_LOAD( "rom-3.336", 0x000000, 0x400000, CRC(b74cc4d1) SHA1(eb5485582a12959ae06927a2f1d8a7e63e0f956f) )
+
+	ROM_REGION( 0x000800, REGION_USER6, 0 ) /* factory settings */
+	ROM_LOAD( "at28c16_asia", 0x000000, 0x000800, CRC(da8c1a64) SHA1(14cbb751f498c96d9d8fce3eea3781ebc45f6291) )
+
+	ROM_REGION( 0x000008, REGION_USER5, 0 ) /* CAT702, rom board */
+	ROM_LOAD( "et03", 0x000000, 0x000008, CRC(779b0bfd) SHA1(76a188c78083bbb2740379d53143e1efaf637b85) )
+ROM_END
+
+ROM_START( bldyror2j )
+	RAIZING_BIOS
+
+	ROM_REGION32_LE( 0x1800000, REGION_USER1, 0 ) /* game rom, 8MB banks */
+	ROM_LOAD( "flash0.021", 0x0000000, 0x200000, CRC(fa7602e1) SHA1(6fb6af09656fbb86d2abda35804b2ed4a4cd7461) )
+	ROM_LOAD( "flash1.024", 0x0200000, 0x200000, CRC(03465a69) SHA1(7c29aff2bf19c379873d3927c260892c78281882) )
+	ROM_LOAD( "rom-1a.028", 0x0800000, 0x400000, CRC(0e711461) SHA1(1d0bd80e6885432ef0623babde28e5760b714bfa) )
+	ROM_LOAD( "rom-1b.29",  0x0c00000, 0x400000, CRC(0cf153f9) SHA1(53bb9f8642079f56d8e925792b069362df666819) )
+	ROM_LOAD( "rom-2a.026", 0x1000000, 0x400000, CRC(b71d955d) SHA1(49fce452c70ceafc8a149fa9ff073589b7261882) )
+	ROM_LOAD( "rom-2b.210", 0x1400000, 0x400000, CRC(89959dde) SHA1(99d54b9876f38f5e625334bbd1439618cdf01d56) )
+
+	ROM_REGION( 0x100000, REGION_CPU2, 0 ) /* 68000 */
+	ROM_LOAD16_BYTE( "br2_u0412.412", 0x000001, 0x080000, CRC(e254dd8a) SHA1(5b8fcafcf2176e0b55efcf37799d7c0d97e01bdc) )
+	ROM_LOAD16_BYTE( "br2_u049.049",  0x000000, 0x080000, CRC(10dc855b) SHA1(4e6e3a71911c8976ae07c2b6cac5a36f98193def) )
+
+	ROM_REGION( 0x400000, REGION_SOUND1, 0 ) /* ymf271 */
+	ROM_LOAD( "rom-3.336", 0x000000, 0x400000, CRC(b74cc4d1) SHA1(eb5485582a12959ae06927a2f1d8a7e63e0f956f) )
+
+	ROM_REGION( 0x000800, REGION_USER6, 0 ) /* factory settings */
+	ROM_LOAD( "at28c16_japan", 0x000000, 0x000800, CRC(6cb55630) SHA1(b840bc0339485dd82f7c9aa669faf90ae371218f) )
+
+	ROM_REGION( 0x000008, REGION_USER5, 0 ) /* CAT702, rom board */
+	ROM_LOAD( "et03", 0x000000, 0x000008, CRC(779b0bfd) SHA1(76a188c78083bbb2740379d53143e1efaf637b85) )
+ROM_END
+
+ROM_START( brvblade )
+	TPS_BIOS
+
+	ROM_REGION32_LE( 0x1800000, REGION_USER1, 0 ) /* game rom, 8MB banks */
+	ROM_LOAD( "flash0.021",      0x0000000, 0x200000, CRC(97e12c63) SHA1(382970617a363f6c98ee741f26be6a75c9752bdb) )
+	ROM_LOAD( "flash1.024",      0x0200000, 0x200000, CRC(d9d40a34) SHA1(c91dbc6f85404e9397fa79a4bac28e8c3c1a5228) )
+	ROM_LOAD( "ra-bbl_rom1.028", 0x0800000, 0x400000, CRC(418535e0) SHA1(7c443e651704f2cd552565c35f4a93f2dc250558) )
+
+	ROM_REGION( 0x100000, REGION_CPU2, 0 ) /* 68000 */
+	ROM_LOAD16_BYTE( "spu1u412.bin", 0x0000001, 0x080000, CRC(6408b5b2) SHA1(ba60aa1074df87e98fa260211e9ec99cea25023f) )
+	ROM_LOAD16_BYTE( "spu0u049.bin", 0x0000000, 0x080000, CRC(c9df8ed9) SHA1(00a58522189091c48d781b6703e4378e04343c33) )
+
+	ROM_REGION( 0x400000, REGION_SOUND1, 0 ) /* ymf271 */
+	ROM_LOAD( "ra-bbl_rom2.336", 0x000000, 0x400000, CRC(cd052c02) SHA1(d955a70a89b3b1a0b505a05c0887c399fe7a2c68) )
+
+	ROM_REGION( 0x000800, REGION_USER6, 0 ) /* factory settings */
+	ROM_LOAD( "at28c16_world", 0x000000, 0x000800, CRC(fe7f7d34) SHA1(18f6ae14e57afa668b3eef821b4cf0a7599a21ac) )
+
+	ROM_REGION( 0x000008, REGION_USER5, 0 ) /* CAT702, rom board */
+	ROM_LOAD( "mg11", 0x000000, 0x000008, CRC(56d917de) SHA1(3c1cdbf552265dbff6051853d933ac34047bcdae) )
+ROM_END
+
+ROM_START( brvbladeu )
+	TPS_BIOS
+
+	ROM_REGION32_LE( 0x1800000, REGION_USER1, 0 ) /* game rom, 8MB banks */
+	ROM_LOAD( "flash0.021",      0x0000000, 0x200000, CRC(97e12c63) SHA1(382970617a363f6c98ee741f26be6a75c9752bdb) )
+	ROM_LOAD( "flash1.024",      0x0200000, 0x200000, CRC(d9d40a34) SHA1(c91dbc6f85404e9397fa79a4bac28e8c3c1a5228) )
+	ROM_LOAD( "ra-bbl_rom1.028", 0x0800000, 0x400000, CRC(418535e0) SHA1(7c443e651704f2cd552565c35f4a93f2dc250558) )
+
+	ROM_REGION( 0x100000, REGION_CPU2, 0 ) /* 68000 */
+	ROM_LOAD16_BYTE( "spu1u412.bin", 0x0000001, 0x080000, CRC(6408b5b2) SHA1(ba60aa1074df87e98fa260211e9ec99cea25023f) )
+	ROM_LOAD16_BYTE( "spu0u049.bin", 0x0000000, 0x080000, CRC(c9df8ed9) SHA1(00a58522189091c48d781b6703e4378e04343c33) )
+
+	ROM_REGION( 0x400000, REGION_SOUND1, 0 ) /* ymf271 */
+	ROM_LOAD( "ra-bbl_rom2.336", 0x000000, 0x400000, CRC(cd052c02) SHA1(d955a70a89b3b1a0b505a05c0887c399fe7a2c68) )
+
+	ROM_REGION( 0x000800, REGION_USER6, 0 ) /* factory settings */
+	ROM_LOAD( "at28c16_usa", 0x000000, 0x000800, CRC(0a2c042f) SHA1(147651d2e55873a82295214b3b0bd6c46cdad239) )
+
+	ROM_REGION( 0x000008, REGION_USER5, 0 ) /* CAT702, rom board */
+	ROM_LOAD( "mg11", 0x000000, 0x000008, CRC(56d917de) SHA1(3c1cdbf552265dbff6051853d933ac34047bcdae) )
+ROM_END
+
+ROM_START( brvbladea )
+	TPS_BIOS
+
+	ROM_REGION32_LE( 0x1800000, REGION_USER1, 0 ) /* game rom, 8MB banks */
+	ROM_LOAD( "flash0.021",      0x0000000, 0x200000, CRC(97e12c63) SHA1(382970617a363f6c98ee741f26be6a75c9752bdb) )
+	ROM_LOAD( "flash1.024",      0x0200000, 0x200000, CRC(d9d40a34) SHA1(c91dbc6f85404e9397fa79a4bac28e8c3c1a5228) )
+	ROM_LOAD( "ra-bbl_rom1.028", 0x0800000, 0x400000, CRC(418535e0) SHA1(7c443e651704f2cd552565c35f4a93f2dc250558) )
+
+	ROM_REGION( 0x100000, REGION_CPU2, 0 ) /* 68000 */
+	ROM_LOAD16_BYTE( "spu1u412.bin", 0x0000001, 0x080000, CRC(6408b5b2) SHA1(ba60aa1074df87e98fa260211e9ec99cea25023f) )
+	ROM_LOAD16_BYTE( "spu0u049.bin", 0x0000000, 0x080000, CRC(c9df8ed9) SHA1(00a58522189091c48d781b6703e4378e04343c33) )
+
+	ROM_REGION( 0x400000, REGION_SOUND1, 0 ) /* ymf271 */
+	ROM_LOAD( "ra-bbl_rom2.336", 0x000000, 0x400000, CRC(cd052c02) SHA1(d955a70a89b3b1a0b505a05c0887c399fe7a2c68) )
+
+	ROM_REGION( 0x000800, REGION_USER6, 0 ) /* factory settings */
+	ROM_LOAD( "at28c16_asia", 0x000000, 0x000800, CRC(adb1aa3d) SHA1(118a17b8a15108666e4f9f2d1798031b3b893536) )
+
+	ROM_REGION( 0x000008, REGION_USER5, 0 ) /* CAT702, rom board */
+	ROM_LOAD( "mg11", 0x000000, 0x000008, CRC(56d917de) SHA1(3c1cdbf552265dbff6051853d933ac34047bcdae) )
+ROM_END
+
+ROM_START( brvbladej )
+	TPS_BIOS
+
+	ROM_REGION32_LE( 0x1800000, REGION_USER1, 0 ) /* game rom, 8MB banks */
+	ROM_LOAD( "flash0.021",      0x0000000, 0x200000, CRC(97e12c63) SHA1(382970617a363f6c98ee741f26be6a75c9752bdb) )
+	ROM_LOAD( "flash1.024",      0x0200000, 0x200000, CRC(d9d40a34) SHA1(c91dbc6f85404e9397fa79a4bac28e8c3c1a5228) )
+	ROM_LOAD( "ra-bbl_rom1.028", 0x0800000, 0x400000, CRC(418535e0) SHA1(7c443e651704f2cd552565c35f4a93f2dc250558) )
+
+	ROM_REGION( 0x100000, REGION_CPU2, 0 ) /* 68000 */
+	ROM_LOAD16_BYTE( "spu1u412.bin", 0x0000001, 0x080000, CRC(6408b5b2) SHA1(ba60aa1074df87e98fa260211e9ec99cea25023f) )
+	ROM_LOAD16_BYTE( "spu0u049.bin", 0x0000000, 0x080000, CRC(c9df8ed9) SHA1(00a58522189091c48d781b6703e4378e04343c33) )
+
+	ROM_REGION( 0x400000, REGION_SOUND1, 0 ) /* ymf271 */
+	ROM_LOAD( "ra-bbl_rom2.336", 0x000000, 0x400000, CRC(cd052c02) SHA1(d955a70a89b3b1a0b505a05c0887c399fe7a2c68) )
+
+	ROM_REGION( 0x000800, REGION_USER6, 0 ) /* factory settings */
+	ROM_LOAD( "at28c16_japan", 0x000000, 0x000800, CRC(59e2d326) SHA1(53f48b6ad7243aa92b54863515f104a7a54b2810) )
+
+	ROM_REGION( 0x000008, REGION_USER5, 0 ) /* CAT702, rom board */
+	ROM_LOAD( "mg11", 0x000000, 0x000008, CRC(56d917de) SHA1(3c1cdbf552265dbff6051853d933ac34047bcdae) )
 ROM_END
 
 ROM_START( beastrzb )
@@ -3547,22 +3947,6 @@ ROM_START( beastrzb )
 	ROM_LOAD( "27c240.3",     0x0100000, 0x080000, CRC(509cdc8b) SHA1(8b92b79be09de56e7d40c2d02fcbeca92bb60226) )
 ROM_END
 
-ROM_START( brvblade )
-	PSARC95_BIOS
-
-	ROM_REGION32_LE( 0x0c00000, REGION_USER1, 0 )
-	/* TSOP56 Flash EEPROMs are not dumped */
-	ROM_LOAD( "tsop56.1",     0x0000000, 0x400000, NO_DUMP )
-	ROM_LOAD( "tsop56.2",     0x0400000, 0x400000, NO_DUMP )
-
-	ROM_REGION( 0x100000, REGION_CPU2, 0 )
-	ROM_LOAD( "spu0u049.bin", 0x0000000, 0x080000, CRC(c9df8ed9) SHA1(00a58522189091c48d781b6703e4378e04343c33) )
-	ROM_LOAD( "spu1u412.bin", 0x0080000, 0x080000, CRC(6408b5b2) SHA1(ba60aa1074df87e98fa260211e9ec99cea25023f) )
-
-	ROM_REGION( 0x400000, REGION_SOUND1, ROMREGION_SOUNDONLY )
-	ROM_LOAD( "rom1u028.bin", 0x0000000, 0x200000, CRC(cb7bc657) SHA1(e29ec5f5e18a1022757631caa341c5d6ef7b7033) )
-	ROM_LOAD( "rom2u336.bin", 0x0200000, 0x200000, CRC(4709026a) SHA1(f9e66bb267931b0b5860c92cd5277966f7ecc12f) )
-ROM_END
 
 /* Atari PSX */
 
@@ -3768,14 +4152,18 @@ GAMEX( 1997, gdariusj,  gdarius2, coh1002tb, znt2p,    coh1002tb, ROT0, "Taito",
 
 GAMEX( 1995, taitofx1, 0,        zn,       zn, zn,   ROT0, "Sony/Taito", "Taito FX1", NOT_A_DRIVER )
 
-/* Eighting/Raizing */
+/* Eighting / Raizing (COH-1002E) */
 
-/* A dummy driver, so that the bios can be debugged, and to serve as */
-/* parent for the coh1002e.bin file, so that we do not have to include */
-/* it in every zip file */
-
-GAMEX( 1997, psarc95,  0,        zn,       zn, zn,   ROT0, "Sony/Eighting/Raizing", "PS Arcade 95", NOT_A_DRIVER )
-
-GAMEX( 1997, beastrzr, psarc95,  zn,       zn, zn,   ROT0, "Eighting/Raizing", "Beastorizer", GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )
-GAMEX( 1997, beastrzb, taitofx1, zn,       zn, zn,   ROT0, "Eighting/Raizing", "Beastorizer (bootleg)", GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )
-GAMEX( 2000, brvblade, psarc95,  zn,       zn, zn,   ROT0, "Eighting/Raizing", "Brave Blade (JAPAN)", GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )
+GAMEX( 1996, coh1002e,  0,        coh1002e, znt2p,    coh1002e, ROT0,   "Eighting / Raizing", "Eighting / Raizing ZN-1", NOT_A_DRIVER )
+GAMEX( 1997, beastrzr,  coh1002e, coh1002e, znt2p,    coh1002e, ROT0,   "Eighting / Raizing", "Beastorizer (USA, Sep 22 1997)", 0 )
+GAMEX( 1997, beastrzra, beastrzr, coh1002e, znt2p,    coh1002e, ROT0,   "Eighting / Raizing", "Beastorizer (USA, Jun 21 1997)", 0 )
+GAMEX( 1997, bldyroar,  beastrzr, coh1002e, znt2p,    coh1002e, ROT0,   "Eighting / Raizing", "Bloody Roar (Japan, Jun 21 1997)", 0 )
+GAMEX( 1997, beastrzb,  taitofx1, zn,       zn,       zn,       ROT0,   "Eighting/Raizing", "Beastorizer (bootleg)", GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )
+GAMEX( 1998, bldyror2,  coh1002e, coh1002e, bldyror2, coh1002e, ROT0,   "Eighting / Raizing", "Bloody Roar 2 (World)", 0 )
+GAMEX( 1998, bldyror2u, bldyror2, coh1002e, bldyror2, coh1002e, ROT0,   "Eighting / Raizing", "Bloody Roar 2 (USA)", 0 )
+GAMEX( 1998, bldyror2a, bldyror2, coh1002e, bldyror2, coh1002e, ROT0,   "Eighting / Raizing", "Bloody Roar 2 (Asia)", 0 )
+GAMEX( 1998, bldyror2j, bldyror2, coh1002e, bldyror2, coh1002e, ROT0,   "Eighting / Raizing", "Bloody Roar 2 (Japan)", 0 )
+GAMEX( 2000, brvblade,  coh1002m, coh1002e, znt2p,    coh1002e, ROT270, "Eighting / Raizing", "Brave Blade (World)", 0 )
+GAMEX( 2000, brvbladeu, brvblade, coh1002e, znt2p,    coh1002e, ROT270, "Eighting / Raizing", "Brave Blade (USA)", 0 )
+GAMEX( 2000, brvbladea, brvblade, coh1002e, znt2p,    coh1002e, ROT270, "Eighting / Raizing", "Brave Blade (Asia)", 0 )
+GAMEX( 2000, brvbladej, brvblade, coh1002e, znt2p,    coh1002e, ROT270, "Eighting / Raizing", "Brave Blade (Japan)", 0 )

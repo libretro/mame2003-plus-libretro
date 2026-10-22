@@ -2709,9 +2709,18 @@ V-V                           TP-027
 	DRIVER( twcupmil )	/* Tecmo World Cup Millennium (Japan) */
 	DRIVER( mfjump )	/* Monster Farm Jump (Japan) */
 
-	/* PS Arcade 95 */
-	DRIVER( brvblade )	/* Brave Blade */
-	DRIVER( beastrzr )	/* Beastorizer */
+	/* Eighting / Raizing (COH-1002E) */
+	DRIVER( beastrzr )	/* Beastorizer (USA, Sep 22 1997) */
+	DRIVER( beastrzra )	/* Beastorizer (USA, Jun 21 1997) */
+	DRIVER( bldyroar )	/* Bloody Roar (Japan, Jun 21 1997) */
+	DRIVER( bldyror2 )	/* Bloody Roar 2 (World) */
+	DRIVER( bldyror2u )	/* Bloody Roar 2 (USA) */
+	DRIVER( bldyror2a )	/* Bloody Roar 2 (Asia) */
+	DRIVER( bldyror2j )	/* Bloody Roar 2 (Japan) */
+	DRIVER( brvblade )	/* Brave Blade (World) */
+	DRIVER( brvbladeu )	/* Brave Blade (USA) */
+	DRIVER( brvbladea )	/* Brave Blade (Asia) */
+	DRIVER( brvbladej )	/* Brave Blade (Japan) */
 
 	/* Atari PSX */
 	DRIVER( primrag2 )	/* Primal Rage 2 */
