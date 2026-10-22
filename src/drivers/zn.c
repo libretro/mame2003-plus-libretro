@@ -102,6 +102,14 @@ Sound: Analog Devices ADSP-2181
     KN01 - Motherboard
     KN02 - Sonic Wings Limited
 
+  Atlus ( coh-1001l )
+  -------------------
+
+    Key
+    ---
+    AT01 - Motherboard
+    AT02 - Heaven's Gate
+
   Tecmo ( coh-1002m )
   -------------------
 
@@ -2171,6 +2179,189 @@ static MACHINE_DRIVER_START( coh1002v )
 MACHINE_DRIVER_END
 
 
+/***************************************************************************
+
+  Atlus (COH-1001L), as in current MAME
+
+  ZN-1 main board with 2MB VRAM and the Atlus BIOS; CAT702 AT01 on the
+  main board, AT02 on the ROM board. Game ROM: 4 banks of 8MB at
+  0x1f000000, selected by the byte written at 0x1fb00002. Sound: a 68000
+  at 10MHz with a YMZ280B, and the PSX SPU. The main CPU writes 16-bit
+  commands to a latch at 0x1fb00000; a pending command holds 68000 IRQ 3,
+  which the read of the latch clears. The YMZ280B interrupts on IRQ 2.
+
+***************************************************************************/
+
+static UINT16 atlus_latch;
+static UINT8 atlus_latch_pending;
+
+static void atlus_latch_irq_update( void )
+{
+	cpu_set_irq_line( 1, 3, atlus_latch_pending ? ASSERT_LINE : CLEAR_LINE );
+}
+
+static void atlus_latch_callback( int param )
+{
+	atlus_latch = param;
+	atlus_latch_pending = 1;
+	atlus_latch_irq_update();
+}
+
+static WRITE32_HANDLER( atlus_zn_w )	/* latch at 0x1fb00000, bank at 0x1fb00002 */
+{
+	if( ( mem_mask & 0x0000ffff ) != 0x0000ffff )
+	{
+		UINT16 n_latch = atlus_latch;
+		n_latch = ( n_latch & ( mem_mask & 0xffff ) ) | ( data & ~mem_mask & 0xffff );
+		/* the CPUs synchronize before the 68000 sees the command */
+		timer_set( TIME_NOW, n_latch, atlus_latch_callback );
+	}
+	if( ( mem_mask & 0x00ff0000 ) == 0 )
+	{
+		tecmo_bank = ( data >> 16 ) & 3;
+		tecmo_bank_update();
+	}
+}
+
+static MEMORY_READ32_START( atlus_zn_readmem )
+	ZN_MAIN_READ
+	{ 0x1f000000, 0x1f7fffff, MRA32_BANK1 },  /* banked game rom */
+MEMORY_END
+
+static MEMORY_WRITE32_START( atlus_zn_writemem )
+	ZN_MAIN_WRITE
+	{ 0x1f000000, 0x1f7fffff, MWA32_ROM },
+	{ 0x1fb00000, 0x1fb00003, atlus_zn_w },
+MEMORY_END
+
+static READ16_HANDLER( atlus_latch_r )
+{
+	atlus_latch_pending = 0;
+	atlus_latch_irq_update();
+	return atlus_latch;
+}
+
+/* the YMZ280B on the low byte of each word: register, then data / status */
+static READ16_HANDLER( atlus_ymz280b_r )
+{
+	return offset ? YMZ280B_status_0_r( 0 ) : 0xff;
+}
+
+static WRITE16_HANDLER( atlus_ymz280b_w )
+{
+	if( ACCESSING_LSB16 )
+	{
+		if( offset )
+			YMZ280B_data_0_w( 0, data & 0xff );
+		else
+			YMZ280B_register_0_w( 0, data & 0xff );
+	}
+}
+
+static MEMORY_READ16_START( atlus_sound_readmem )
+	{ 0x000000, 0x03ffff, MRA16_ROM },
+	{ 0x100000, 0x100001, atlus_latch_r },
+	{ 0x200000, 0x200003, atlus_ymz280b_r },
+	{ 0x700000, 0x70ffff, MRA16_RAM },
+MEMORY_END
+
+static MEMORY_WRITE16_START( atlus_sound_writemem )
+	{ 0x000000, 0x03ffff, MWA16_ROM },
+	{ 0x100000, 0x100001, MWA16_NOP },	/* irq ack maybe */
+	{ 0x200000, 0x200003, atlus_ymz280b_w },
+	{ 0x700000, 0x70ffff, MWA16_RAM },
+MEMORY_END
+
+static void atlus_ymz280b_irq( int state )
+{
+	cpu_set_irq_line( 1, 2, state ? ASSERT_LINE : CLEAR_LINE );
+}
+
+static struct YMZ280Binterface atlus_ymz280b_interface =
+{
+	1,
+	{ 16934400 },
+	{ REGION_SOUND1 },
+	{ YM3012_VOL( 18, MIXER_PAN_LEFT, 18, MIXER_PAN_RIGHT ) },	/* 0.35 in MAME, whose YMZ280B is half as loud */
+	{ atlus_ymz280b_irq }
+};
+
+/* the PSX SPU of the Atlus board (0.175 in MAME) */
+static struct PSXSPUinterface atlus_spu_interface =
+{
+	18
+};
+
+static void atlus_postload( void )
+{
+	tecmo_bank_update();
+	atlus_latch_irq_update();
+}
+
+static DRIVER_INIT( coh1001l )
+{
+	zn_scratchpad = auto_malloc( 0x400 );
+	zn_eeprom = auto_malloc( 0x800 );
+	memset( zn_scratchpad, 0, 0x400 );
+	memset( zn_eeprom, 0xff, 0x800 );
+
+	zn_vram_2mb = 1;
+	zn_coin_tecmo = 0;
+	zn_eeprom_default = 0;
+
+	zn_board_init();
+	znsec_init( 0, memory_region( REGION_USER4 ) );	/* AT01 */
+	znsec_init( 1, memory_region( REGION_USER5 ) );	/* AT02 */
+
+	state_save_register_UINT32( "zn", 0, "atlus_bank", &tecmo_bank, 1 );
+	state_save_register_UINT16( "zn", 0, "atlus_latch", &atlus_latch, 1 );
+	state_save_register_UINT8( "zn", 0, "atlus_latch_pending", &atlus_latch_pending, 1 );
+	state_save_register_UINT32( "zn", 0, "scratchpad", zn_scratchpad, 0x100 );
+	state_save_register_func_postload( atlus_postload );
+}
+
+static MACHINE_INIT( atlus_zn )
+{
+	tecmo_bank = 0;
+	tecmo_bank_update();
+	atlus_latch = 0;
+	atlus_latch_pending = 0;
+	zn_board_reset();
+}
+
+/* ZN-1, 2MB VRAM (COH-1001L), 68000 + YMZ280B sound */
+static MACHINE_DRIVER_START( coh1001l )
+	MDRV_CPU_ADD_TAG( "main", PSXCPU, 33868800 / 2 )	/* CXD8530CQ, 67.7376MHz XTAL; as System 11 */
+	MDRV_CPU_MEMORY( atlus_zn_readmem, atlus_zn_writemem )
+	MDRV_CPU_VBLANK_INT( psx_vblank, 1 )
+
+	MDRV_CPU_ADD( M68000, 10000000 )
+	MDRV_CPU_FLAGS( CPU_AUDIO_CPU )
+	MDRV_CPU_MEMORY( atlus_sound_readmem, atlus_sound_writemem )
+
+	MDRV_FRAMES_PER_SECOND( 60 )
+	MDRV_VBLANK_DURATION( 0 )
+	MDRV_INTERLEAVE( 100 )
+
+	MDRV_MACHINE_INIT( atlus_zn )
+	MDRV_NVRAM_HANDLER( zn )
+
+	MDRV_VIDEO_ATTRIBUTES( VIDEO_TYPE_RASTER | VIDEO_RGB_DIRECT )
+	MDRV_SCREEN_SIZE( 640, 480 )
+	MDRV_VISIBLE_AREA( 0, 639, 0, 479 )
+	MDRV_PALETTE_LENGTH( 65536 )
+
+	MDRV_PALETTE_INIT( psx )
+	MDRV_VIDEO_START( psx_type2_1024x1024 )
+	MDRV_VIDEO_UPDATE( psx )
+	MDRV_VIDEO_STOP( psx )
+
+	MDRV_SOUND_ATTRIBUTES( SOUND_SUPPORTS_STEREO )
+	MDRV_SOUND_ADD( PSXSPU, atlus_spu_interface )
+	MDRV_SOUND_ADD( YMZ280B, atlus_ymz280b_interface )
+MACHINE_DRIVER_END
+
+
 INPUT_PORTS_START( zn )
 	PORT_START		/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER1 )
@@ -3335,6 +3526,43 @@ ROM_START( sncwgltd )
 ROM_END
 
 
+/* Atlus (COH-1001L), MAME names */
+
+#define ATLUS_BIOS \
+	ROM_REGION32_LE( 0x400000, REGION_CPU1, ROMREGION_ERASE00 ) /* ram */ \
+	ROM_REGION32_LE( 0x080000, REGION_USER3, 0 ) /* bios */ \
+	ROM_LOAD( "m534002c-17.ic353", 0x000000, 0x080000, CRC(6721146b) SHA1(9511d24bfe25eb180fb2db0835b131cb4a12730e) ) \
+	ROM_REGION( 0x000008, REGION_USER4, 0 ) /* CAT702, main board */ \
+	ROM_LOAD( "at01.ic652", 0x000000, 0x000008, CRC(181668b3) SHA1(8d2fe1facb4473cc20b4b477aaf881f9280939cf) )
+
+ROM_START( coh1001l )
+	ATLUS_BIOS
+ROM_END
+
+ROM_START( hvnsgate )
+	ATLUS_BIOS
+
+	ROM_REGION32_LE( 0x2000000, REGION_USER1, ROMREGION_ERASEFF ) /* game rom, 4 banks of 8MB */
+	ROM_LOAD16_BYTE( "athg-01b.18", 0x0000001, 0x080000, CRC(e820136f) SHA1(2bc3465928dd08060736a2a67d98864d634275d6) )
+	ROM_LOAD16_BYTE( "athg-02b.17", 0x0000000, 0x080000, CRC(11bfa89b) SHA1(f23e4c9d8eb90bd3bb3327d9950edd7a467ce8da) )
+	ROM_LOAD( "athg-07.027",        0x0100000, 0x400000, CRC(46411f67) SHA1(2e8f37c3d9d7f5f3c79fca8ffeaf4c2fd1634b91) )
+	ROM_LOAD( "athg-08.028",        0x0500000, 0x400000, CRC(85289345) SHA1(6385fe27451b80f97e7bad823b3b59eff3efa541) )
+	ROM_LOAD( "athg-09.210",        0x0900000, 0x400000, CRC(19e558b5) SHA1(c195bc7dc3cfe4f099d27afdebd6f9cfe064e1df) )
+	ROM_LOAD( "athg-10.029",        0x0d00000, 0x400000, CRC(748f936e) SHA1(134e78ea71bb9646f36cc503c704496a2b622ee9) )
+	ROM_LOAD( "athg-11.215",        0x1100000, 0x200000, CRC(ac8e53bd) SHA1(002c4be1aa57d810c5d810c475631d9f14e1d2ab) )
+
+	ROM_REGION( 0x040000, REGION_CPU2, 0 ) /* 68000 */
+	ROM_LOAD16_BYTE( "athg-04.21", 0x000001, 0x020000, CRC(18523e85) SHA1(0ecc2116760f05fca8e5366b0a97dfe26fa9bc0c) )
+	ROM_LOAD16_BYTE( "athg-03.22", 0x000000, 0x020000, CRC(7eef7e68) SHA1(65b8ae18ef4ff636c548326a360b481aeb316869) )
+
+	ROM_REGION( 0x800000, REGION_SOUND1, ROMREGION_ERASEFF ) /* YMZ280B samples */
+	ROM_LOAD( "athg-05.4136", 0x400000, 0x200000, CRC(74469a15) SHA1(0faa883900d7fd2e5240f486db33b3d868f1f05f) )
+	ROM_LOAD( "athg-06.4134", 0x600000, 0x200000, CRC(443ade73) SHA1(6ef6aa68c525b9749833125dcab929d1d65d3b90) )
+
+	ROM_REGION( 0x000008, REGION_USER5, 0 ) /* CAT702, rom board */
+	ROM_LOAD( "at02", 0x000000, 0x000008, CRC(55fe469e) SHA1(a99d41e21bd1df67b387558314763864eaae0265) )
+ROM_END
+
 /* Taito FX-1A (COH-1000T), MAME names */
 
 #define TAITO_FX1_BIOS \
@@ -4239,6 +4467,11 @@ GAMEX( 1996, coh1002v,  0,        coh1002v, zn,       coh1002v, ROT0,   "Video S
 GAMEX( 1996, aerofgts,  coh1002v, coh1002v, aerofgts, coh1002v, ROT270, "McO'River, Inc.", "Aero Fighters Special (USA)", 0 )
 GAMEX( 1996, aerofgtst, aerofgts, coh1002v, aerofgts, coh1002v, ROT270, "Video System Co.", "Aero Fighters Special (Taiwan)", 0 )
 GAMEX( 1996, sncwgltd,  aerofgts, coh1002v, aerofgts, coh1002v, ROT270, "Video System Co.", "Sonic Wings Limited (Japan)", 0 )
+
+/* Atlus */
+
+GAMEX( 1995, coh1001l,  0,        coh1001l, tps2p,    coh1001l, ROT0,   "Atlus", "Atlus ZN-1", NOT_A_DRIVER )
+GAMEX( 1996, hvnsgate,  coh1001l, coh1001l, tps2p,    coh1001l, ROT0,   "Racdym / Atlus", "Heaven's Gate", 0 )
 
 /* Taito FX-1A */
 
