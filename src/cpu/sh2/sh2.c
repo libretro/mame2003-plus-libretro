@@ -1145,22 +1145,20 @@ static INLINE void MAC_L(UINT32 m, UINT32 n)
 	}
 	if (sh2.sr & S)
 	{
-		Res0 = sh2.macl + Res0;
-		if (sh2.macl > Res0)
-			Res2++;
-		Res2 += (sh2.mach & 0x0000ffff);
-		if (((INT32) Res2 < 0) && (Res2 < 0xffff8000))
+		/* full 64-bit accumulate, saturated to the 48-bit range with the sign of the product (as MAME) */
+		UINT64 sum = ((((UINT64)sh2.mach) << 32) | sh2.macl) + ((((UINT64)Res2) << 32) | Res0);
+		UINT32 sum_hi = (UINT32)(sum >> 32);
+
+		/* outside 0xffff800000000000 .. 0x00007fffffffffff */
+		if (sum_hi > 0x00007fff && sum_hi < 0xffff8000)
 		{
-			Res2 = 0x00008000;
-			Res0 = 0x00000000;
+			if (fnLmL < 0)
+				sum = ((UINT64)0xffff8000) << 32;
+			else
+				sum = (((UINT64)0x00007fff) << 32) | 0xffffffff;
 		}
-		else if (((INT32) Res2 > 0) && (Res2 > 0x00007fff))
-		{
-			Res2 = 0x00007fff;
-			Res0 = 0xffffffff;
-		}
-		sh2.mach = Res2;
-		sh2.macl = Res0;
+		sh2.mach = (UINT32)(sum >> 32);
+		sh2.macl = (UINT32)sum;
 	}
 	else
 	{
@@ -1210,12 +1208,19 @@ static INLINE void MAC_W(UINT32 m, UINT32 n)
 	if (sh2.sr & S)
 	{
 		if (ans == 1)
+		{
+			/* both addends with the same sign: the sign change is an overflow */
+			if (src == 0)
 			{
-				if (src == 0)
-					sh2.macl = 0x7fffffff;
-				if (src == 2)
-					sh2.macl = 0x80000000;
+				sh2.macl = 0x7fffffff;
+				sh2.mach |= 1;
 			}
+			else if (src == 2)
+			{
+				sh2.macl = 0x80000000;
+				sh2.mach |= 1;
+			}
+		}
 	}
 	else
 	{
