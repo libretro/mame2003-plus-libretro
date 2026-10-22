@@ -5231,20 +5231,26 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( cybattlr )	/* (c) 1993 */
 	DRIVER( peekaboo )	/* (c) 1993 */
 
-	/* Jaleco Mega System 1 games */
-	DRIVER( hayaosi1 )	/* (c) 1994 */
+	/* Jaleco Mega System 32 games */
+	DRIVER( hayaosi2 )	/* (c) 1994 */
+	DRIVER( hayaosi3 )	/* (c) 1994 */
+	DRIVER( hayaosi3a )	/* (c) 1994 */
 	DRIVER( bbbxing )	/* (c) 1994 */
-	DRIVER( 47pie2 )	/* (c) 1994 */
-	DRIVER( 47pie2o )	/* (c) 1994 */
+	DRIVER( suchie2 )	/* (c) 1994 */
+	DRIVER( suchie2o )	/* (c) 1994 */
 	DRIVER( desertwr )	/* (c) 1995 */
 	DRIVER( gametngk )	/* (c) 1995 */
 	DRIVER( tetrisp )	/* (c) 1995 Jaleco / BPS */
 	DRIVER( p47aces )	/* (c) 1995 */
+	DRIVER( p47acesa )	/* (c) 1995 */
 	DRIVER( akiss )		/* (c) 1995 */
+	DRIVER( akissa )	/* (c) 1995 */
 	DRIVER( gratia )	/* (c) 1996 */
 	DRIVER( gratiaa )	/* (c) 1996 */
 	DRIVER( kirarast )	/* (c) 1996 */
+	DRIVER( kirarasta )	/* (c) 1996 */
 	DRIVER( tp2m32 )	/* (c) 1997 */
+	DRIVER( wpksocv2 )	/* (c) 1996 */
 	DRIVER( f1superb )	/* (c) 1994 */
 
 	/* Video System Co. games */

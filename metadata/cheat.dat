@@ -1654,100 +1654,100 @@
 40love:0:8546:03:001:"Game" Score = 30 Now! CPU
 
 ; [ Idol Janshi Su-Chi-Pie 2 (v1.1) ]
-47pie2:0:FEE00118:63:000:Infinite Credits
-:47pie2:00000020:FEE00B01:00000005:FFFFFFFF:Infinite Time
-:47pie2:00010020:FEE00B97:00000000:FFFFFFFF:Infinite Time (2/2)
-:47pie2:00000000:FEE01788:00000009:FFFFFFFF:Infinite Bonus Game Left
-:47pie2:00000101:FEE01784:00000020:FFFFFFFF:Select Change Point
-:47pie2:60000000:00000000:00000000:00000000:[ The winning hand cheat must be activated when  ]
-:47pie2:60000000:00000000:00000000:00000000:[ there are 14 tiles in your hand, then press    ]
-:47pie2:60000000:00000000:00000000:00000000:[ the RON key ('Z' by default). The tiles do not ]
-:47pie2:60000000:00000000:00000000:00000000:[ visually change until you make a move.         ]
-:47pie2:00300001:FEE00868:34000000:FFFFFFFF:Get winning hand Now!
-:47pie2:00310001:FEE0086C:34000000:FFFFFFFF:Get winning hand Now! (02/14)
-:47pie2:00310001:FEE00870:34000000:FFFFFFFF:Get winning hand Now! (03/14)
-:47pie2:00310001:FEE00874:34000001:FFFFFFFF:Get winning hand Now! (04/14)
-:47pie2:00310001:FEE00878:34000001:FFFFFFFF:Get winning hand Now! (05/14)
-:47pie2:00310001:FEE0087C:34000001:FFFFFFFF:Get winning hand Now! (06/14)
-:47pie2:00310001:FEE00880:34000002:FFFFFFFF:Get winning hand Now! (07/14)
-:47pie2:00310001:FEE00884:34000002:FFFFFFFF:Get winning hand Now! (08/14)
-:47pie2:00310001:FEE00888:34000002:FFFFFFFF:Get winning hand Now! (09/14)
-:47pie2:00310001:FEE0088C:34000003:FFFFFFFF:Get winning hand Now! (10/14)
-:47pie2:00310001:FEE00890:34000003:FFFFFFFF:Get winning hand Now! (11/14)
-:47pie2:00310001:FEE00894:34000003:FFFFFFFF:Get winning hand Now! (12/14)
-:47pie2:00310001:FEE00898:34000004:FFFFFFFF:Get winning hand Now! (13/14)
-:47pie2:00310001:FEE0089C:34000004:FFFFFFFF:Get winning hand Now! (14/14)
-:47pie2:00300000:FEE00868:34000000:FFFFFFFF:Always winning hand
-:47pie2:00310000:FEE0086C:34000000:FFFFFFFF:Always winning hand (02/14)
-:47pie2:00310000:FEE00870:34000000:FFFFFFFF:Always winning hand (03/14)
-:47pie2:00310000:FEE00874:34000001:FFFFFFFF:Always winning hand (04/14)
-:47pie2:00310000:FEE00878:34000001:FFFFFFFF:Always winning hand (05/14)
-:47pie2:00310000:FEE0087C:34000001:FFFFFFFF:Always winning hand (06/14)
-:47pie2:00310000:FEE00880:34000002:FFFFFFFF:Always winning hand (07/14)
-:47pie2:00310000:FEE00884:34000002:FFFFFFFF:Always winning hand (08/14)
-:47pie2:00310000:FEE00888:34000002:FFFFFFFF:Always winning hand (09/14)
-:47pie2:00310000:FEE0088C:34000003:FFFFFFFF:Always winning hand (10/14)
-:47pie2:00310000:FEE00890:34000003:FFFFFFFF:Always winning hand (11/14)
-:47pie2:00310000:FEE00894:34000003:FFFFFFFF:Always winning hand (12/14)
-:47pie2:00310000:FEE00898:34000004:FFFFFFFF:Always winning hand (13/14)
-:47pie2:00310000:FEE0089C:34000004:FFFFFFFF:Always winning hand (14/14)
-:47pie2:00000000:FEE00F48:00000009:FFFFFFFF:Infinite "Sue-Chi Stick"
-:47pie2:00000000:FEE00F4C:00000009:FFFFFFFF:Infinite "Fire Sekkan"
-:47pie2:00000000:FEE00F50:00000009:FFFFFFFF:Infinite "Special Syoukan"
-:47pie2:00000000:FEE00F54:00000009:FFFFFFFF:Infinite "Helper"
-:47pie2:00000000:FEE00F58:00000009:FFFFFFFF:Infinite "Hyper Eye"
-:47pie2:00000000:FEE00B08:0000001F:FFFFFFFF:Always Join All Associates:If you don't join associates who Peach Pie, Lemon Pie, Cherry Pie and Milky Pie the game's end is the bad one.
-:47pie2:00000000:FEE00AF8:00000004:FFFFFFFF:Start on Shiho Katagiri:Turn this cheat OFF after you've started the game
-:47pie2:00000000:FEE00AF8:00000005:FFFFFFFF:Start on Sesir.D:Turn this cheat OFF after you've started the game
-:47pie2:00000000:FEE00AF8:00000006:FFFFFFFF:Start on Sesir.D (Final):Turn this cheat OFF after you've started the game
+suchie2:0:FEE00118:63:000:Infinite Credits
+:suchie2:00000020:FEE00B01:00000005:FFFFFFFF:Infinite Time
+:suchie2:00010020:FEE00B97:00000000:FFFFFFFF:Infinite Time (2/2)
+:suchie2:00000000:FEE01788:00000009:FFFFFFFF:Infinite Bonus Game Left
+:suchie2:00000101:FEE01784:00000020:FFFFFFFF:Select Change Point
+:suchie2:60000000:00000000:00000000:00000000:[ The winning hand cheat must be activated when  ]
+:suchie2:60000000:00000000:00000000:00000000:[ there are 14 tiles in your hand, then press    ]
+:suchie2:60000000:00000000:00000000:00000000:[ the RON key ('Z' by default). The tiles do not ]
+:suchie2:60000000:00000000:00000000:00000000:[ visually change until you make a move.         ]
+:suchie2:00300001:FEE00868:34000000:FFFFFFFF:Get winning hand Now!
+:suchie2:00310001:FEE0086C:34000000:FFFFFFFF:Get winning hand Now! (02/14)
+:suchie2:00310001:FEE00870:34000000:FFFFFFFF:Get winning hand Now! (03/14)
+:suchie2:00310001:FEE00874:34000001:FFFFFFFF:Get winning hand Now! (04/14)
+:suchie2:00310001:FEE00878:34000001:FFFFFFFF:Get winning hand Now! (05/14)
+:suchie2:00310001:FEE0087C:34000001:FFFFFFFF:Get winning hand Now! (06/14)
+:suchie2:00310001:FEE00880:34000002:FFFFFFFF:Get winning hand Now! (07/14)
+:suchie2:00310001:FEE00884:34000002:FFFFFFFF:Get winning hand Now! (08/14)
+:suchie2:00310001:FEE00888:34000002:FFFFFFFF:Get winning hand Now! (09/14)
+:suchie2:00310001:FEE0088C:34000003:FFFFFFFF:Get winning hand Now! (10/14)
+:suchie2:00310001:FEE00890:34000003:FFFFFFFF:Get winning hand Now! (11/14)
+:suchie2:00310001:FEE00894:34000003:FFFFFFFF:Get winning hand Now! (12/14)
+:suchie2:00310001:FEE00898:34000004:FFFFFFFF:Get winning hand Now! (13/14)
+:suchie2:00310001:FEE0089C:34000004:FFFFFFFF:Get winning hand Now! (14/14)
+:suchie2:00300000:FEE00868:34000000:FFFFFFFF:Always winning hand
+:suchie2:00310000:FEE0086C:34000000:FFFFFFFF:Always winning hand (02/14)
+:suchie2:00310000:FEE00870:34000000:FFFFFFFF:Always winning hand (03/14)
+:suchie2:00310000:FEE00874:34000001:FFFFFFFF:Always winning hand (04/14)
+:suchie2:00310000:FEE00878:34000001:FFFFFFFF:Always winning hand (05/14)
+:suchie2:00310000:FEE0087C:34000001:FFFFFFFF:Always winning hand (06/14)
+:suchie2:00310000:FEE00880:34000002:FFFFFFFF:Always winning hand (07/14)
+:suchie2:00310000:FEE00884:34000002:FFFFFFFF:Always winning hand (08/14)
+:suchie2:00310000:FEE00888:34000002:FFFFFFFF:Always winning hand (09/14)
+:suchie2:00310000:FEE0088C:34000003:FFFFFFFF:Always winning hand (10/14)
+:suchie2:00310000:FEE00890:34000003:FFFFFFFF:Always winning hand (11/14)
+:suchie2:00310000:FEE00894:34000003:FFFFFFFF:Always winning hand (12/14)
+:suchie2:00310000:FEE00898:34000004:FFFFFFFF:Always winning hand (13/14)
+:suchie2:00310000:FEE0089C:34000004:FFFFFFFF:Always winning hand (14/14)
+:suchie2:00000000:FEE00F48:00000009:FFFFFFFF:Infinite "Sue-Chi Stick"
+:suchie2:00000000:FEE00F4C:00000009:FFFFFFFF:Infinite "Fire Sekkan"
+:suchie2:00000000:FEE00F50:00000009:FFFFFFFF:Infinite "Special Syoukan"
+:suchie2:00000000:FEE00F54:00000009:FFFFFFFF:Infinite "Helper"
+:suchie2:00000000:FEE00F58:00000009:FFFFFFFF:Infinite "Hyper Eye"
+:suchie2:00000000:FEE00B08:0000001F:FFFFFFFF:Always Join All Associates:If you don't join associates who Peach Pie, Lemon Pie, Cherry Pie and Milky Pie the game's end is the bad one.
+:suchie2:00000000:FEE00AF8:00000004:FFFFFFFF:Start on Shiho Katagiri:Turn this cheat OFF after you've started the game
+:suchie2:00000000:FEE00AF8:00000005:FFFFFFFF:Start on Sesir.D:Turn this cheat OFF after you've started the game
+:suchie2:00000000:FEE00AF8:00000006:FFFFFFFF:Start on Sesir.D (Final):Turn this cheat OFF after you've started the game
 
 ; [ Idol Janshi Su-Chi-Pie 2 (v1.0) ]
-47pie2o:0:FEE00118:63:000:Infinite Credits
-:47pie2o:00000020:FEE00B01:00000005:FFFFFFFF:Infinite Time
-:47pie2o:00010020:FEE00B97:00000000:FFFFFFFF:Infinite Time (2/2)
-:47pie2o:00000000:FEE01788:00000009:FFFFFFFF:Infinite Bonus Game Left
-:47pie2o:00000101:FEE01784:00000020:FFFFFFFF:Select Change Point
-:47pie2o:60000000:00000000:00000000:00000000:[ The winning hand cheat must be activated when  ]
-:47pie2o:60000000:00000000:00000000:00000000:[ there are 14 tiles in your hand, then press    ]
-:47pie2o:60000000:00000000:00000000:00000000:[ the RON key ('Z' by default). The tiles do not ]
-:47pie2o:60000000:00000000:00000000:00000000:[ visually change until you make a move.         ]
-:47pie2o:00300001:FEE00868:34000000:FFFFFFFF:Get winning hand Now!
-:47pie2o:00310001:FEE0086C:34000000:FFFFFFFF:Get winning hand Now! (02/14)
-:47pie2o:00310001:FEE00870:34000000:FFFFFFFF:Get winning hand Now! (03/14)
-:47pie2o:00310001:FEE00874:34000001:FFFFFFFF:Get winning hand Now! (04/14)
-:47pie2o:00310001:FEE00878:34000001:FFFFFFFF:Get winning hand Now! (05/14)
-:47pie2o:00310001:FEE0087C:34000001:FFFFFFFF:Get winning hand Now! (06/14)
-:47pie2o:00310001:FEE00880:34000002:FFFFFFFF:Get winning hand Now! (07/14)
-:47pie2o:00310001:FEE00884:34000002:FFFFFFFF:Get winning hand Now! (08/14)
-:47pie2o:00310001:FEE00888:34000002:FFFFFFFF:Get winning hand Now! (09/14)
-:47pie2o:00310001:FEE0088C:34000003:FFFFFFFF:Get winning hand Now! (10/14)
-:47pie2o:00310001:FEE00890:34000003:FFFFFFFF:Get winning hand Now! (11/14)
-:47pie2o:00310001:FEE00894:34000003:FFFFFFFF:Get winning hand Now! (12/14)
-:47pie2o:00310001:FEE00898:34000004:FFFFFFFF:Get winning hand Now! (13/14)
-:47pie2o:00310001:FEE0089C:34000004:FFFFFFFF:Get winning hand Now! (14/14)
-:47pie2o:00300000:FEE00868:34000000:FFFFFFFF:Always winning hand
-:47pie2o:00310000:FEE0086C:34000000:FFFFFFFF:Always winning hand (02/14)
-:47pie2o:00310000:FEE00870:34000000:FFFFFFFF:Always winning hand (03/14)
-:47pie2o:00310000:FEE00874:34000001:FFFFFFFF:Always winning hand (04/14)
-:47pie2o:00310000:FEE00878:34000001:FFFFFFFF:Always winning hand (05/14)
-:47pie2o:00310000:FEE0087C:34000001:FFFFFFFF:Always winning hand (06/14)
-:47pie2o:00310000:FEE00880:34000002:FFFFFFFF:Always winning hand (07/14)
-:47pie2o:00310000:FEE00884:34000002:FFFFFFFF:Always winning hand (08/14)
-:47pie2o:00310000:FEE00888:34000002:FFFFFFFF:Always winning hand (09/14)
-:47pie2o:00310000:FEE0088C:34000003:FFFFFFFF:Always winning hand (10/14)
-:47pie2o:00310000:FEE00890:34000003:FFFFFFFF:Always winning hand (11/14)
-:47pie2o:00310000:FEE00894:34000003:FFFFFFFF:Always winning hand (12/14)
-:47pie2o:00310000:FEE00898:34000004:FFFFFFFF:Always winning hand (13/14)
-:47pie2o:00310000:FEE0089C:34000004:FFFFFFFF:Always winning hand (14/14)
-:47pie2o:00000000:FEE00F48:00000009:FFFFFFFF:Infinite "Sue-Chi Stick"
-:47pie2o:00000000:FEE00F4C:00000009:FFFFFFFF:Infinite "Fire Sekkan"
-:47pie2o:00000000:FEE00F50:00000009:FFFFFFFF:Infinite "Special Syoukan"
-:47pie2o:00000000:FEE00F54:00000009:FFFFFFFF:Infinite "Helper"
-:47pie2o:00000000:FEE00F58:00000009:FFFFFFFF:Infinite "Hyper Eye"
-:47pie2o:00000000:FEE00B08:0000001F:FFFFFFFF:Always Join All Associates:If you don't join associates who Peach Pie, Lemon Pie, Cherry Pie and Milky Pie the game's end is the bad one.
-:47pie2o:00000000:FEE00AF8:00000004:FFFFFFFF:Start on Shiho Katagiri:Turn this cheat OFF after you've started the game
-:47pie2o:00000000:FEE00AF8:00000005:FFFFFFFF:Start on Sesir.D:Turn this cheat OFF after you've started the game
-:47pie2o:00000000:FEE00AF8:00000006:FFFFFFFF:Start on Sesir.D (Final):Turn this cheat OFF after you've started the game
+suchie2o:0:FEE00118:63:000:Infinite Credits
+:suchie2o:00000020:FEE00B01:00000005:FFFFFFFF:Infinite Time
+:suchie2o:00010020:FEE00B97:00000000:FFFFFFFF:Infinite Time (2/2)
+:suchie2o:00000000:FEE01788:00000009:FFFFFFFF:Infinite Bonus Game Left
+:suchie2o:00000101:FEE01784:00000020:FFFFFFFF:Select Change Point
+:suchie2o:60000000:00000000:00000000:00000000:[ The winning hand cheat must be activated when  ]
+:suchie2o:60000000:00000000:00000000:00000000:[ there are 14 tiles in your hand, then press    ]
+:suchie2o:60000000:00000000:00000000:00000000:[ the RON key ('Z' by default). The tiles do not ]
+:suchie2o:60000000:00000000:00000000:00000000:[ visually change until you make a move.         ]
+:suchie2o:00300001:FEE00868:34000000:FFFFFFFF:Get winning hand Now!
+:suchie2o:00310001:FEE0086C:34000000:FFFFFFFF:Get winning hand Now! (02/14)
+:suchie2o:00310001:FEE00870:34000000:FFFFFFFF:Get winning hand Now! (03/14)
+:suchie2o:00310001:FEE00874:34000001:FFFFFFFF:Get winning hand Now! (04/14)
+:suchie2o:00310001:FEE00878:34000001:FFFFFFFF:Get winning hand Now! (05/14)
+:suchie2o:00310001:FEE0087C:34000001:FFFFFFFF:Get winning hand Now! (06/14)
+:suchie2o:00310001:FEE00880:34000002:FFFFFFFF:Get winning hand Now! (07/14)
+:suchie2o:00310001:FEE00884:34000002:FFFFFFFF:Get winning hand Now! (08/14)
+:suchie2o:00310001:FEE00888:34000002:FFFFFFFF:Get winning hand Now! (09/14)
+:suchie2o:00310001:FEE0088C:34000003:FFFFFFFF:Get winning hand Now! (10/14)
+:suchie2o:00310001:FEE00890:34000003:FFFFFFFF:Get winning hand Now! (11/14)
+:suchie2o:00310001:FEE00894:34000003:FFFFFFFF:Get winning hand Now! (12/14)
+:suchie2o:00310001:FEE00898:34000004:FFFFFFFF:Get winning hand Now! (13/14)
+:suchie2o:00310001:FEE0089C:34000004:FFFFFFFF:Get winning hand Now! (14/14)
+:suchie2o:00300000:FEE00868:34000000:FFFFFFFF:Always winning hand
+:suchie2o:00310000:FEE0086C:34000000:FFFFFFFF:Always winning hand (02/14)
+:suchie2o:00310000:FEE00870:34000000:FFFFFFFF:Always winning hand (03/14)
+:suchie2o:00310000:FEE00874:34000001:FFFFFFFF:Always winning hand (04/14)
+:suchie2o:00310000:FEE00878:34000001:FFFFFFFF:Always winning hand (05/14)
+:suchie2o:00310000:FEE0087C:34000001:FFFFFFFF:Always winning hand (06/14)
+:suchie2o:00310000:FEE00880:34000002:FFFFFFFF:Always winning hand (07/14)
+:suchie2o:00310000:FEE00884:34000002:FFFFFFFF:Always winning hand (08/14)
+:suchie2o:00310000:FEE00888:34000002:FFFFFFFF:Always winning hand (09/14)
+:suchie2o:00310000:FEE0088C:34000003:FFFFFFFF:Always winning hand (10/14)
+:suchie2o:00310000:FEE00890:34000003:FFFFFFFF:Always winning hand (11/14)
+:suchie2o:00310000:FEE00894:34000003:FFFFFFFF:Always winning hand (12/14)
+:suchie2o:00310000:FEE00898:34000004:FFFFFFFF:Always winning hand (13/14)
+:suchie2o:00310000:FEE0089C:34000004:FFFFFFFF:Always winning hand (14/14)
+:suchie2o:00000000:FEE00F48:00000009:FFFFFFFF:Infinite "Sue-Chi Stick"
+:suchie2o:00000000:FEE00F4C:00000009:FFFFFFFF:Infinite "Fire Sekkan"
+:suchie2o:00000000:FEE00F50:00000009:FFFFFFFF:Infinite "Special Syoukan"
+:suchie2o:00000000:FEE00F54:00000009:FFFFFFFF:Infinite "Helper"
+:suchie2o:00000000:FEE00F58:00000009:FFFFFFFF:Infinite "Hyper Eye"
+:suchie2o:00000000:FEE00B08:0000001F:FFFFFFFF:Always Join All Associates:If you don't join associates who Peach Pie, Lemon Pie, Cherry Pie and Milky Pie the game's end is the bad one.
+:suchie2o:00000000:FEE00AF8:00000004:FFFFFFFF:Start on Shiho Katagiri:Turn this cheat OFF after you've started the game
+:suchie2o:00000000:FEE00AF8:00000005:FFFFFFFF:Start on Sesir.D:Turn this cheat OFF after you've started the game
+:suchie2o:00000000:FEE00AF8:00000006:FFFFFFFF:Start on Sesir.D (Final):Turn this cheat OFF after you've started the game
 
 ; [ 4-D Warriors ]
 4dwarrio:0:C028:09:000:Infinite Credits
@@ -42660,25 +42660,25 @@ hattrick:0:015F:99:073:Select Score RED TEAM
 hattrick:0:013A:99:073:Select Score BLUE TEAM
 
 ; [ Hayaoshi Quiz Ouza Ketteisen ]
-hayaosi1:0:0000:00:999:[ This game should be   ]:REASON 10
-hayaosi1:0:0000:00:999:[ quite straighforward  ]:REASON 10
-hayaosi1:0:0000:00:999:[ enough to find cheats ]:REASON 10
-hayaosi1:0:0000:00:999:[ for. But no cheats    ]:REASON 10
-hayaosi1:0:0000:00:999:[ have been submitted   ]:REASON 10
-hayaosi1:0:0000:00:999:[ at the time this cheat]:REASON 10
-hayaosi1:0:0000:00:999:[ file was compiled     ]:REASON 10
-hayaosi1:0:0000:00:999:[ due to the game       ]:REASON 10
-hayaosi1:0:0000:00:999:[ generating zero       ]:REASON 10
-hayaosi1:0:0000:00:999:[ interest from cheat   ]:REASON 10
-hayaosi1:0:0000:00:999:[ finders. If you have  ]:REASON 10
-hayaosi1:0:0000:00:999:[ made some cheats for  ]:REASON 10
-hayaosi1:0:0000:00:999:[ this game please post ]:REASON 10
-hayaosi1:0:0000:00:999:[ them on the cheat     ]:REASON 10
-hayaosi1:0:0000:00:999:[ forums. Don't forget  ]:REASON 10
-hayaosi1:0:0000:00:999:[ to search the cheat   ]:REASON 10
-hayaosi1:0:0000:00:999:[ forums first though as]:REASON 10
-hayaosi1:0:0000:00:999:[ cheats may have been  ]:REASON 10
-hayaosi1:0:0000:00:999:[ found in the meanwhile]:REASON 10
+hayaosi2:0:0000:00:999:[ This game should be   ]:REASON 10
+hayaosi2:0:0000:00:999:[ quite straighforward  ]:REASON 10
+hayaosi2:0:0000:00:999:[ enough to find cheats ]:REASON 10
+hayaosi2:0:0000:00:999:[ for. But no cheats    ]:REASON 10
+hayaosi2:0:0000:00:999:[ have been submitted   ]:REASON 10
+hayaosi2:0:0000:00:999:[ at the time this cheat]:REASON 10
+hayaosi2:0:0000:00:999:[ file was compiled     ]:REASON 10
+hayaosi2:0:0000:00:999:[ due to the game       ]:REASON 10
+hayaosi2:0:0000:00:999:[ generating zero       ]:REASON 10
+hayaosi2:0:0000:00:999:[ interest from cheat   ]:REASON 10
+hayaosi2:0:0000:00:999:[ finders. If you have  ]:REASON 10
+hayaosi2:0:0000:00:999:[ made some cheats for  ]:REASON 10
+hayaosi2:0:0000:00:999:[ this game please post ]:REASON 10
+hayaosi2:0:0000:00:999:[ them on the cheat     ]:REASON 10
+hayaosi2:0:0000:00:999:[ forums. Don't forget  ]:REASON 10
+hayaosi2:0:0000:00:999:[ to search the cheat   ]:REASON 10
+hayaosi2:0:0000:00:999:[ forums first though as]:REASON 10
+hayaosi2:0:0000:00:999:[ cheats may have been  ]:REASON 10
+hayaosi2:0:0000:00:999:[ found in the meanwhile]:REASON 10
 
 ; [ Heavy Barrel (US) ]
 hbarrel:0:FF8032:80:000:Invincibility PL1
