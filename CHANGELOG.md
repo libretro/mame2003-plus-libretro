@@ -222,6 +222,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Space Raider
 * Spectrum 2000 (Euro)
 * Squash
+* Stadium Cross (World, linkable) and (US) - Romsets `scrossa`, `scrossu`; `scross` now uses the ROM names of current MAME
 * Star Fire 2
 * Steel Worker
 * Street Fighter III 3rd Strike: Fight for the Future (Widescreen 20220908, Bank Bank hack) - Romset `sfiii3ws`
