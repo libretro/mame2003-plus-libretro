@@ -5,8 +5,8 @@
 	CXD2922BQ/CXD2925Q
 
 	preliminary version by smf; backported from MAME 0.135 (2009): voices
-	are decoded and played (no envelopes, no reverb), the SPU interrupt is
-	raised when a voice reaches the IRQ address.
+	are decoded and played with their ADSR envelopes (no reverb), the SPU
+	interrupt is raised when a voice reaches the IRQ address.
 
 ***************************************************************************/
 
@@ -63,6 +63,8 @@ static INT16 m_p_n_blockbuffer[ MAX_CHANNEL * SAMPLES_PER_BLOCK ];
 static INT16 m_p_n_s1[ MAX_CHANNEL ];
 static INT16 m_p_n_s2[ MAX_CHANNEL ];
 static data32_t m_n_loop[ MAX_CHANNEL ];
+static INT32 m_p_n_envcounter[ MAX_CHANNEL ];	/* sample cycles to the next envelope step */
+static data32_t m_n_endx;	/* voices that reached an end flag since their key-on */
 static data32_t m_n_spu_delay;
 
 #define SPU_REG( a ) ( ( a - 0xc00 ) / 4 )
@@ -89,6 +91,180 @@ static INLINE int spu_limit( int v )
 	return v;
 }
 
+/*
+	ADSR envelope, as the hardware (nocash PSX specifications): the level
+	(0-0x7fff) moves by a step every 2^max(0, shift - 11) samples, the step
+	being scaled by 2^max(0, 11 - shift); an exponential increase slows down
+	by 4 above 0x6000, an exponential decrease is proportional to the level.
+	Attack up to 0x7fff, decay down to the sustain level, sustain until the
+	key off, release down to 0.
+*/
+static void spu_envelope_rate( int n_channel, int *p_shift, int *p_step, int *p_exp, int *p_dec )
+{
+	int adsl = m_p_n_attackdecaysustain[ n_channel ];
+	int srrr = m_p_n_sustainrelease[ n_channel ];
+
+	switch( m_p_n_envelopestate[ n_channel ] )
+	{
+	case e_attack:
+		*p_shift = ( adsl >> 10 ) & 0x1f;
+		*p_step = 7 - ( ( adsl >> 8 ) & 3 );
+		*p_exp = ( adsl & 0x8000 ) != 0;
+		*p_dec = 0;
+		break;
+	case e_decay:
+		*p_shift = ( adsl >> 4 ) & 0x0f;
+		*p_step = -8;
+		*p_exp = 1;
+		*p_dec = 1;
+		break;
+	case e_sustain:
+		*p_shift = ( srrr >> 8 ) & 0x1f;
+		*p_dec = ( srrr & 0x4000 ) != 0;
+		*p_step = *p_dec ? -8 + ( ( srrr >> 6 ) & 3 ) : 7 - ( ( srrr >> 6 ) & 3 );
+		*p_exp = ( srrr & 0x8000 ) != 0;
+		break;
+	default:	/* release */
+		*p_shift = srrr & 0x1f;
+		*p_step = -8;
+		*p_exp = ( srrr & 0x20 ) != 0;
+		*p_dec = 1;
+		break;
+	}
+}
+
+static INLINE void spu_envelope_tick( int n_channel )
+{
+	int n_level = m_p_n_adsrvolume[ n_channel ];
+	int n_shift, n_step, n_exp, n_dec, n_cycles;
+
+	if( m_p_n_envelopestate[ n_channel ] == e_releaseend )
+		return;
+
+	if( --m_p_n_envcounter[ n_channel ] > 0 )
+		return;
+
+	spu_envelope_rate( n_channel, &n_shift, &n_step, &n_exp, &n_dec );
+	n_cycles = 1 << ( n_shift > 11 ? n_shift - 11 : 0 );
+	n_step <<= ( n_shift < 11 ? 11 - n_shift : 0 );
+	if( n_exp )
+	{
+		if( !n_dec && n_level > 0x6000 )
+			n_cycles *= 4;
+		if( n_dec )
+			n_step = ( n_step * n_level ) >> 15;
+	}
+	m_p_n_envcounter[ n_channel ] = n_cycles;
+
+	n_level += n_step;
+	if( n_level < 0 )
+		n_level = 0;
+	else if( n_level > 0x7fff )
+		n_level = 0x7fff;
+
+	switch( m_p_n_envelopestate[ n_channel ] )
+	{
+	case e_attack:
+		if( n_level >= 0x7fff )
+		{
+			m_p_n_envelopestate[ n_channel ] = e_decay;
+			m_p_n_envcounter[ n_channel ] = 0;
+		}
+		break;
+	case e_decay:
+		if( n_level <= ( ( m_p_n_attackdecaysustain[ n_channel ] & 0x0f ) + 1 ) * 0x800 )
+		{
+			m_p_n_envelopestate[ n_channel ] = e_sustain;
+			m_p_n_envcounter[ n_channel ] = 0;
+		}
+		break;
+	case e_release:
+		if( n_level == 0 )
+			m_p_n_envelopestate[ n_channel ] = e_releaseend;
+		break;
+	}
+	m_p_n_adsrvolume[ n_channel ] = n_level;
+}
+
+/* the header of the next block of a voice: the IRQ address check, the loop
+   start flag; returns the flags */
+static int spu_block_header( int n_channel, int *p_shift, int *p_predict )
+{
+	int n_header, n_flags;
+
+	if( ( m_n_spucontrol & 0x40 ) != 0 &&
+		( m_n_irqaddress * 4 ) >= m_p_n_blockaddress[ n_channel ] &&
+		( m_n_irqaddress * 4 ) <= m_p_n_blockaddress[ n_channel ] + 7 )
+	{
+		/* raised once, until the IRQ is disabled (SPUSTAT bit 6) */
+		if( ( m_n_spustatus & ( 0x40 << 16 ) ) == 0 )
+		{
+			m_n_spustatus |= 0x40 << 16;
+			psx_irq_set( 0x0200 );
+		}
+	}
+
+	n_header = m_p_n_spuram[ m_p_n_blockaddress[ n_channel ] ];
+	*p_shift = n_header & 0x0f;
+	*p_predict = ( n_header >> 4 ) & 0x0f;
+	if( *p_predict > 4 )
+		*p_predict = 0;
+	n_flags = ( n_header >> 8 ) & 0xff;
+	if( ( n_flags & 4 ) != 0 )
+	{
+		m_n_loop[ n_channel ] = m_p_n_blockaddress[ n_channel ];
+		m_p_n_repeataddress[ n_channel ] = m_n_loop[ n_channel ] / 4;
+	}
+	m_p_n_blockaddress[ n_channel ] = ( m_p_n_blockaddress[ n_channel ] + 1 ) % ( SPU_RAM_SIZE / 2 );
+	return n_flags;
+}
+
+/* after the 7 data words of a block */
+static void spu_block_end( int n_channel, int n_flags )
+{
+	if( ( n_flags & 1 ) != 0 )
+	{
+		/* end: jump to the repeat address, or without the repeat flag
+		   release the voice at level 0 (it goes on reading) */
+		m_n_endx |= 1 << n_channel;
+		m_p_n_blockaddress[ n_channel ] = m_n_loop[ n_channel ];
+		if( ( n_flags & 2 ) == 0 )
+		{
+			m_p_n_envelopestate[ n_channel ] = e_releaseend;
+			m_p_n_adsrvolume[ n_channel ] = 0;
+		}
+	}
+	m_p_n_blockoffset[ n_channel ] %= ( SAMPLES_PER_BLOCK << PITCH_SHIFT );
+}
+
+/* a voice released to 0 makes no sound until its next key on, which also
+   resets its decoder: only its address moves on (IRQ address, flags) */
+static void spu_silent_voice( int n_channel, int samples )
+{
+	const UINT32 n_limit = SAMPLES_PER_BLOCK << PITCH_SHIFT;
+	UINT32 n_pitch = m_p_n_pitch[ n_channel ];
+
+	if( n_pitch == 0 )
+		return;
+	while( samples > 0 )
+	{
+		UINT32 n_steps;
+		if( m_p_n_blockoffset[ n_channel ] >= n_limit )
+		{
+			int n_shift, n_predict, n_flags;
+			n_flags = spu_block_header( n_channel, &n_shift, &n_predict );
+			m_p_n_blockaddress[ n_channel ] = ( m_p_n_blockaddress[ n_channel ] + 7 ) % ( SPU_RAM_SIZE / 2 );
+			spu_block_end( n_channel, n_flags );
+		}
+		/* the samples played before the next block */
+		n_steps = ( n_limit - m_p_n_blockoffset[ n_channel ] + n_pitch - 1 ) / n_pitch;
+		if( n_steps > (UINT32)samples )
+			n_steps = samples;
+		m_p_n_blockoffset[ n_channel ] += n_steps * n_pitch;
+		samples -= n_steps;
+	}
+}
+
 static void spu_update( int param, INT16 **outputs, int samples )
 {
 	static const int f[ 5 ][ 2 ] =
@@ -111,18 +287,19 @@ static void spu_update( int param, INT16 **outputs, int samples )
 	{
 		int voll, volr, n_sample;
 
-		/* the envelopes are not emulated: a voice in release is silenced, so
-		   that looped sounds don't play forever */
-		if( m_p_n_envelopestate[ n_channel ] == e_release )
+		/* a voice never keyed on */
+		if( !m_p_n_blockstatus[ n_channel ] )
+			continue;
+		if( m_p_n_envelopestate[ n_channel ] == e_releaseend )
 		{
-			voll = 0;
-			volr = 0;
+			/* without the IRQ, nothing can see where it reads */
+			if( ( m_n_spucontrol & 0x40 ) != 0 )
+				spu_silent_voice( n_channel, samples );
+			continue;
 		}
-		else
-		{
-			voll = spu_volume( m_p_n_volumeleft[ n_channel ] );
-			volr = spu_volume( m_p_n_volumeright[ n_channel ] );
-		}
+
+		voll = spu_volume( m_p_n_volumeleft[ n_channel ] );
+		volr = spu_volume( m_p_n_volumeright[ n_channel ] );
 
 		for( n_sample = 0; n_sample < samples; n_sample++ )
 		{
@@ -130,24 +307,16 @@ static void spu_update( int param, INT16 **outputs, int samples )
 			if( m_p_n_blockoffset[ n_channel ] >= ( SAMPLES_PER_BLOCK << PITCH_SHIFT ) )
 			{
 				int n_shift, n_predict, n_flags, n_word;
-				if( !m_p_n_blockstatus[ n_channel ] )
-					break;
-				if( ( m_n_spucontrol & 0x40 ) != 0 &&
-					( m_n_irqaddress * 4 ) >= m_p_n_blockaddress[ n_channel ] &&
-					( m_n_irqaddress * 4 ) <= m_p_n_blockaddress[ n_channel ] + 7 )
+
+				/* released to 0 in the last block */
+				if( m_p_n_envelopestate[ n_channel ] == e_releaseend )
 				{
-					psx_irq_set( 0x0200 );
+					if( ( m_n_spucontrol & 0x40 ) != 0 )
+						spu_silent_voice( n_channel, samples - n_sample );
+					break;
 				}
 
-				n_shift =   ( m_p_n_spuram[ m_p_n_blockaddress[ n_channel ] ] >> 0 ) & 0x0f;
-				n_predict = ( m_p_n_spuram[ m_p_n_blockaddress[ n_channel ] ] >> 4 ) & 0x0f;
-				n_flags =   ( m_p_n_spuram[ m_p_n_blockaddress[ n_channel ] ] >> 8 ) & 0xff;
-				if( n_predict > 4 )
-					n_predict = 0;
-				if( ( n_flags & 4 ) != 0 )
-					m_n_loop[ n_channel ] = m_p_n_blockaddress[ n_channel ];
-				m_p_n_blockaddress[ n_channel ] = ( m_p_n_blockaddress[ n_channel ] + 1 ) % ( SPU_RAM_SIZE / 2 );
-
+				n_flags = spu_block_header( n_channel, &n_shift, &n_predict );
 				for( n_word = 0; n_word < 7; n_word++ )
 				{
 					int n_nibble;
@@ -169,17 +338,12 @@ static void spu_update( int param, INT16 **outputs, int samples )
 						n_packed >>= 4;
 					}
 				}
-				if( ( n_flags & 1 ) != 0 )
-				{
-					if( n_flags != 3 )
-						m_p_n_blockstatus[ n_channel ] = 0;
-					else
-						m_p_n_blockaddress[ n_channel ] = m_n_loop[ n_channel ];
-				}
-				m_p_n_blockoffset[ n_channel ] %= ( SAMPLES_PER_BLOCK << PITCH_SHIFT );
+				spu_block_end( n_channel, n_flags );
 			}
 			v = m_p_n_blockbuffer[ ( n_channel * SAMPLES_PER_BLOCK ) + ( m_p_n_blockoffset[ n_channel ] >> PITCH_SHIFT ) ];
 			m_p_n_blockoffset[ n_channel ] += m_p_n_pitch[ n_channel ];
+			spu_envelope_tick( n_channel );
+			v = ( v * m_p_n_adsrvolume[ n_channel ] ) >> 15;
 			outputs[ 0 ][ n_sample ] = spu_limit( outputs[ 0 ][ n_sample ] + ( ( v * voll ) / 0x4000 ) );
 			outputs[ 1 ][ n_sample ] = spu_limit( outputs[ 1 ][ n_sample ] + ( ( v * volr ) / 0x4000 ) );
 		}
@@ -261,7 +425,9 @@ int PSX_sh_start( const struct MachineSound *msound )
 		m_p_n_s1[ n_channel ] = 0;
 		m_p_n_s2[ n_channel ] = 0;
 		m_n_loop[ n_channel ] = 0;
+		m_p_n_envcounter[ n_channel ] = 0;
 	}
+	m_n_endx = 0;
 	memset( m_p_n_blockbuffer, 0, sizeof( m_p_n_blockbuffer ) );
 	memset( m_p_n_effect, 0, sizeof( m_p_n_effect ) );
 
@@ -308,6 +474,8 @@ int PSX_sh_start( const struct MachineSound *msound )
 	state_save_register_INT16( "psxspu", 0, "s1", m_p_n_s1, MAX_CHANNEL );
 	state_save_register_INT16( "psxspu", 0, "s2", m_p_n_s2, MAX_CHANNEL );
 	state_save_register_UINT32( "psxspu", 0, "loop", m_n_loop, MAX_CHANNEL );
+	state_save_register_INT32( "psxspu", 0, "envcounter", m_p_n_envcounter, MAX_CHANNEL );
+	state_save_register_UINT32( "psxspu", 0, "endx", &m_n_endx, 1 );
 	state_save_register_UINT32( "psxspu", 0, "spu_delay", &m_n_spu_delay, 1 );
 
 	psx_dma_install_read_handler( 4, spu_read );
@@ -368,6 +536,7 @@ READ32_HANDLER( psx_spu_r )
 	case SPU_REG( 0xd90 ): return m_n_modulationmode;
 	case SPU_REG( 0xd94 ): return m_n_noisemode;
 	case SPU_REG( 0xd98 ): return m_n_reverbmode;
+	case SPU_REG( 0xd9c ): return m_n_endx;
 	case SPU_REG( 0xda4 ): return ( ( m_n_spuoffset / 4 ) << 16 ) | m_n_irqaddress;
 	case SPU_REG( 0xda8 ): return m_n_spudata | ( m_n_spucontrol << 16 );
 	case SPU_REG( 0xdac ): return m_n_spustatus;
@@ -399,7 +568,12 @@ WRITE32_HANDLER( psx_spu_w )
 			break;
 		case SPU_CHANNEL_REG( 0xc ):
 			if( ACCESSING_LSW32 ) m_p_n_adsrvolume[ n_channel ] = data & 0xffff;
-			if( ACCESSING_MSW32 ) m_p_n_repeataddress[ n_channel ] = data >> 16;
+			if( ACCESSING_MSW32 )
+			{
+				/* the repeat address, also when the voice plays */
+				m_p_n_repeataddress[ n_channel ] = data >> 16;
+				m_n_loop[ n_channel ] = ( m_p_n_repeataddress[ n_channel ] * 4 ) % ( SPU_RAM_SIZE / 2 );
+			}
 			break;
 		}
 		return;
@@ -428,6 +602,9 @@ WRITE32_HANDLER( psx_spu_w )
 				m_p_n_s2[ n_channel ] = 0;
 				m_p_n_blockstatus[ n_channel ] = 1;
 				m_p_n_envelopestate[ n_channel ] = e_attack;
+				m_p_n_adsrvolume[ n_channel ] = 0;
+				m_p_n_envcounter[ n_channel ] = 0;
+				m_n_endx &= ~( 1 << n_channel );
 			}
 		}
 		break;
@@ -438,7 +615,10 @@ WRITE32_HANDLER( psx_spu_w )
 		{
 			/* key off: the envelope goes to the release state */
 			if( ( m_n_voiceoff & ( 1 << n_channel ) ) != 0 && m_p_n_envelopestate[ n_channel ] < e_release )
+			{
 				m_p_n_envelopestate[ n_channel ] = e_release;
+				m_p_n_envcounter[ n_channel ] = 0;
+			}
 		}
 		break;
 	case SPU_REG( 0xd90 ):
@@ -467,11 +647,25 @@ WRITE32_HANDLER( psx_spu_w )
 			m_p_n_spuram[ m_n_spuoffset ] = m_n_spudata;
 			m_n_spuoffset = ( m_n_spuoffset + 1 ) % ( SPU_RAM_SIZE / 2 );
 		}
-		if( ACCESSING_MSW32 ) m_n_spucontrol = data >> 16;
+		if( ACCESSING_MSW32 )
+		{
+			m_n_spucontrol = data >> 16;
+			/* SPUSTAT (0x1f801dae): bits 0-5 follow SPUCNT, bits 7-9 the
+			   transfer mode (DMA request, DMA write, DMA read), as MAME */
+			m_n_spustatus = ( m_n_spustatus & ~( ( 0x3f | 0x380 ) << 16 ) ) | ( ( m_n_spucontrol & 0x3f ) << 16 );
+			if( ( m_n_spucontrol & 0x30 ) == 0x20 )
+				m_n_spustatus |= ( 0x80 | 0x100 ) << 16;
+			else if( ( m_n_spucontrol & 0x30 ) == 0x30 )
+				m_n_spustatus |= ( 0x80 | 0x200 ) << 16;
+			/* the IRQ flag goes when the IRQ is disabled */
+			if( ( m_n_spucontrol & 0x40 ) == 0 )
+				m_n_spustatus &= ~( 0x40 << 16 );
+		}
 		break;
 	case SPU_REG( 0xdac ):
-		COMBINE_DATA( &m_n_spustatus );
-		m_n_spustatus &= 0xf800ffff;
+		/* SPU RAM transfer control; SPUSTAT above is read only */
+		if( ACCESSING_LSW32 )
+			m_n_spustatus = ( m_n_spustatus & 0xffff0000 ) | ( data & 0xffff );
 		break;
 	case SPU_REG( 0xdb0 ):
 		if( ACCESSING_LSW32 ) m_n_cdvolumeleft = data & 0xffff;
