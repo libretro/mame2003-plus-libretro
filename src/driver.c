@@ -2760,6 +2760,9 @@ V-V                           TP-027
 	DRIVER( aerofgtst )	/* Aero Fighters Special (Taiwan) */
 	DRIVER( sncwgltd )	/* Sonic Wings Limited (Japan) */
 
+	/* Atlus ZN1 */
+	DRIVER( hvnsgate )	/* Heaven's Gate */
+
 	/* Taito FX-1A */
 	DRIVER( sfchamp )	/* Super Football Champ (Ver 2.5O) */
 	DRIVER( sfchampo )	/* Super Football Champ (Ver 2.4O) */
