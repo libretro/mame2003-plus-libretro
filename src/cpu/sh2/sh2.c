@@ -154,8 +154,8 @@ static SH2 sh2;
 
 /* Atrocious hack that makes the soldivid music correct*/
 
-/*static const int div_tab[4] = { 3, 5, 7, 0 };*/
-static const int div_tab[4] = { 3, 5, 3, 0 };
+/* FRT clock: internal clock / 8, / 32, / 128, external */
+static const int div_tab[4] = { 3, 5, 7, 0 };
 
 enum {
 	ICF  = 0x00800000,
@@ -2413,9 +2413,15 @@ static void sh2_timer_resync(void)
 	int divider = div_tab[(sh2.m[5] >> 8) & 3];
 	UINT32 cur_time = cpunum_gettotalcycles(sh2.cpu_number);
 
-	if(divider)
-		sh2.frc += (cur_time - sh2.frc_base) >> divider;
-	sh2.frc_base = cur_time;
+	UINT32 add = (cur_time - sh2.frc_base) >> divider;
+
+	/* keep the cycles that don't make a whole count yet (as MAME) */
+	if (add > 0)
+	{
+		if (divider)
+			sh2.frc += add;
+		sh2.frc_base = cur_time;
+	}
 }
 
 static void sh2_timer_activate(void)
