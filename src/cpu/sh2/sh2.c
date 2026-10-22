@@ -2749,7 +2749,7 @@ WRITE32_HANDLER( sh2_internal_w )
 		{
 			INT64 a = sh2.m[0x45] | ((UINT64)(sh2.m[0x44]) << 32);
 			INT64 b = sh2.m[0x40];
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "SH2 #%d div+mod %lld/%lld\n", cpu_getactivecpu(), a, b);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "SH2 #%d div+mod %08x%08x/%08x\n", cpu_getactivecpu(), sh2.m[0x44], sh2.m[0x45], sh2.m[0x40]);
 			if (b)
 			{
 				INT64 q = a / b;
