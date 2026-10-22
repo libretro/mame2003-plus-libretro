@@ -901,7 +901,6 @@ void print_mame_xml()
 	PRINT_RESOURCE(coh1000t);
 	PRINT_RESOURCE(taitofx1);
 	PRINT_RESOURCE(coh1000a);
-	PRINT_RESOURCE(acpsx);
 	PRINT_RESOURCE(namcoc76);
 	PRINT_RESOURCE(ptblank2);
 #endif

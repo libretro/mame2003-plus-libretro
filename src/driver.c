@@ -2751,9 +2751,10 @@ V-V                           TP-027
 	DRIVER( primrag2 )	/* Primal Rage II (Test Version 0.36a) */
 
 	/* Acclaim PSX */
-	DRIVER( nbajamex )	/* NBA Jam Extreme */
 	DRIVER( jdredd )	/* Judge Dredd (Rev C Dec. 17 1997) */
 	DRIVER( jdreddb )	/* Judge Dredd (Rev B Nov. 26 1997) */
+	DRIVER( nbajamex )	/* NBA Jam Extreme (ver. 1.10I) */
+	DRIVER( nbajamexa )	/* NBA Jam Extreme (ver. 1.04) */
 
 	/* Video System ZN1 */
 	DRIVER( aerofgts )	/* Aero Fighters Special (USA) */

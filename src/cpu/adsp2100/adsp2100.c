@@ -47,6 +47,10 @@
 #define CHIP_TYPE_ADSP2104	2
 #define CHIP_TYPE_ADSP2105	3
 #define CHIP_TYPE_ADSP2115	4
+#define CHIP_TYPE_ADSP2181	5
+
+/* interrupt lines: 5 up to the ADSP-2115, 10 on the ADSP-2181 */
+#define ADSP_MAX_IRQ		10
 
 
 /*###################################################################################################
@@ -159,13 +163,17 @@ typedef struct
 	UINT8		fl2;
 
 	/* interrupt handling */
-	UINT8		imask;
+	UINT16		imask;
 	UINT8		icntl;
 	UINT16		ifc;
-    UINT8    	irq_state[5];
-    UINT8    	irq_latch[5];
+    UINT8    	irq_state[ADSP_MAX_IRQ];
+    UINT8    	irq_latch[ADSP_MAX_IRQ];
     INT32		interrupt_cycles;
     int			(*irq_callback)(int irqline);
+
+	/* ADSP-2181 memory overlays */
+	UINT16		pmovlay;
+	UINT16		dmovlay;
 } adsp2100_Regs;
 
 
@@ -194,6 +202,13 @@ static UINT8 *condition_table = 0;
 static RX_CALLBACK sport_rx_callback = 0;
 static TX_CALLBACK sport_tx_callback = 0;
 
+#if (HAS_ADSP2181)
+/* ADSP-2181: the I/O space and the data memory overlay, given by the driver */
+static ADSP2181_IO_READ io_read_callback = 0;
+static ADSP2181_IO_WRITE io_write_callback = 0;
+static ADSP2181_DMOVLAY dmovlay_callback = 0;
+#endif
+
 #if TRACK_HOTSPOTS
 static UINT32 pcbucket[0x4000];
 #endif
@@ -214,10 +229,10 @@ static void check_irqs(void);
 /* data memory words the recompiler reaches through a direct pointer (RAM), or NULL */
 static UINT16 **adsp_dm_rptr, **adsp_dm_wptr;
 
-/* 'fast' is a constant: 0 in the interpreter, 1 in the recompiler's copies */
+/* 'fast' is a constant: bit 0 set in the recompiler's copies */
 static INLINE ADSP_ALWAYS_INLINE UINT32 RWORD_DATA_F(UINT32 addr, int fast)
 {
-	if (fast)
+	if (fast & 1)
 	{
 		UINT16 *p = adsp_dm_rptr[addr & 0x3fff];
 		if (p && addr <= 0x3fff)
@@ -229,7 +244,7 @@ static INLINE ADSP_ALWAYS_INLINE UINT32 RWORD_DATA_F(UINT32 addr, int fast)
 
 static INLINE ADSP_ALWAYS_INLINE void WWORD_DATA_F(UINT32 addr, UINT32 data, int fast)
 {
-	if (fast)
+	if (fast & 1)
 	{
 		UINT16 *p = adsp_dm_wptr[addr & 0x3fff];
 		if (p && addr <= 0x3fff)
@@ -316,6 +331,15 @@ static INLINE void set_core_2115(void)
 }
 #endif
 
+#if (HAS_ADSP2181)
+static INLINE void set_core_2181(void)
+{
+	chip_type = CHIP_TYPE_ADSP2181;
+	mstat_mask = 0x7f;
+	imask_mask = 0x3ff;
+}
+#endif
+
 
 /*###################################################################################################
 **	IMPORT CORE UTILITIES
@@ -379,9 +403,90 @@ static INLINE int adsp2101_generate_irq(int which, int indx)
 }
 
 
+#if (HAS_ADSP2181)
+static INLINE int adsp2181_generate_irq(int which, int indx)
+{
+	/* skip if masked */
+	if (!(adsp2100.imask & (0x200 >> indx)))
+		return 0;
+
+	/* clear the latch */
+	adsp2100.irq_latch[which] = 0;
+
+	/* push the PC and the status */
+	pc_stack_push();
+	stat_stack_push();
+
+	/* vector to location & stop idling */
+	adsp2100.pc = 0x04 + indx * 4;
+	adsp2100.idle = 0;
+
+	/* mask other interrupts based on the nesting bit */
+	if (adsp2100.icntl & 0x10) adsp2100.imask &= ~(0x3ff >> indx);
+	else adsp2100.imask &= ~0x3ff;
+
+	return 1;
+}
+
+/* the ADSP-2181 interrupts, highest priority first */
+static void adsp2181_check_irqs(void)
+{
+	UINT8 check;
+
+	check = (adsp2100.icntl & 4) ? adsp2100.irq_latch[ADSP2181_IRQ2] : adsp2100.irq_state[ADSP2181_IRQ2];
+	if (check && adsp2181_generate_irq(ADSP2181_IRQ2, 0))
+		return;
+
+	check = adsp2100.irq_state[ADSP2181_IRQL1];
+	if (check && adsp2181_generate_irq(ADSP2181_IRQL1, 1))
+		return;
+
+	check = adsp2100.irq_state[ADSP2181_IRQL0];
+	if (check && adsp2181_generate_irq(ADSP2181_IRQL0, 2))
+		return;
+
+	check = adsp2100.irq_latch[ADSP2181_SPORT0_TX];
+	if (check && adsp2181_generate_irq(ADSP2181_SPORT0_TX, 3))
+		return;
+
+	check = adsp2100.irq_latch[ADSP2181_SPORT0_RX];
+	if (check && adsp2181_generate_irq(ADSP2181_SPORT0_RX, 4))
+		return;
+
+	check = adsp2100.irq_latch[ADSP2181_IRQE];
+	if (check && adsp2181_generate_irq(ADSP2181_IRQE, 5))
+		return;
+
+	check = adsp2100.irq_latch[ADSP2181_BDMA];
+	if (check && adsp2181_generate_irq(ADSP2181_BDMA, 6))
+		return;
+
+	check = (adsp2100.icntl & 2) ? adsp2100.irq_latch[ADSP2181_IRQ1] : adsp2100.irq_state[ADSP2181_IRQ1];
+	if (check && adsp2181_generate_irq(ADSP2181_IRQ1, 7))
+		return;
+
+	check = (adsp2100.icntl & 1) ? adsp2100.irq_latch[ADSP2181_IRQ0] : adsp2100.irq_state[ADSP2181_IRQ0];
+	if (check && adsp2181_generate_irq(ADSP2181_IRQ0, 8))
+		return;
+
+	check = adsp2100.irq_latch[ADSP2181_TIMER];
+	if (check && adsp2181_generate_irq(ADSP2181_TIMER, 9))
+		return;
+}
+#endif
+
+
 static void check_irqs(void)
 {
 	UINT8 check;
+
+#if (HAS_ADSP2181)
+	if (chip_type == CHIP_TYPE_ADSP2181)
+	{
+		adsp2181_check_irqs();
+		return;
+	}
+#endif
 
 	if (chip_type >= CHIP_TYPE_ADSP2101)
 	{
@@ -437,7 +542,7 @@ static void check_irqs(void)
 
 void adsp2100_set_irq_line(int irqline, int state)
 {
-	if (irqline < 5)
+	if (irqline < ((chip_type == CHIP_TYPE_ADSP2181) ? 10 : 5))
 	{
 		/* update the latched state */
 		if (state != CLEAR_LINE && adsp2100.irq_state[irqline] == CLEAR_LINE)
@@ -527,6 +632,9 @@ static void adsp2100_register_core(int cpunum, const char *prefix, ADSPCORE *c)
 	sprintf(name, "%szero", prefix); state_save_register_UINT16("adsp2100", cpunum, name, &c->zero.u, 1);
 }
 
+/* set by adsp2181_init while it registers its state */
+static int adsp2100_init_2181;
+
 static void adsp2100_state_register(void)
 {
 	int cpunum = cpu_getactivecpu();
@@ -569,11 +677,16 @@ static void adsp2100_state_register(void)
 	state_save_register_UINT8 ("adsp2100", cpunum, "fl1",            &adsp2100.fl1, 1);
 	state_save_register_UINT8 ("adsp2100", cpunum, "fl2",            &adsp2100.fl2, 1);
 
-	state_save_register_UINT8 ("adsp2100", cpunum, "imask",          &adsp2100.imask, 1);
+	state_save_register_UINT16("adsp2100", cpunum, "imask",          &adsp2100.imask, 1);
 	state_save_register_UINT8 ("adsp2100", cpunum, "icntl",          &adsp2100.icntl, 1);
 	state_save_register_UINT16("adsp2100", cpunum, "ifc",            &adsp2100.ifc, 1);
-	state_save_register_UINT8 ("adsp2100", cpunum, "irq_state",      adsp2100.irq_state, 5);
-	state_save_register_UINT8 ("adsp2100", cpunum, "irq_latch",      adsp2100.irq_latch, 5);
+	state_save_register_UINT8 ("adsp2100", cpunum, "irq_state",      adsp2100.irq_state, adsp2100_init_2181 ? 10 : 5);
+	state_save_register_UINT8 ("adsp2100", cpunum, "irq_latch",      adsp2100.irq_latch, adsp2100_init_2181 ? 10 : 5);
+	if (adsp2100_init_2181)
+	{
+		state_save_register_UINT16("adsp2100", cpunum, "pmovlay",    &adsp2100.pmovlay, 1);
+		state_save_register_UINT16("adsp2100", cpunum, "dmovlay",    &adsp2100.dmovlay, 1);
+	}
 	state_save_register_INT32 ("adsp2100", cpunum, "interrupt_cycles", &adsp2100.interrupt_cycles, 1);
 }
 
@@ -618,6 +731,7 @@ void adsp2100_reset(void *param)
 		case CHIP_TYPE_ADSP2104:
 		case CHIP_TYPE_ADSP2105:
 		case CHIP_TYPE_ADSP2115:
+		case CHIP_TYPE_ADSP2181:
 			adsp2100.pc = 0;
 			break;
 
@@ -663,6 +777,19 @@ void adsp2100_reset(void *param)
 	adsp2100.irq_latch[2] = CLEAR_LINE;
 	adsp2100.irq_latch[3] = CLEAR_LINE;
 	adsp2100.interrupt_cycles = 0;
+
+#if (HAS_ADSP2181)
+	/* the other ADSP-2181 interrupts, and the overlays */
+	if (chip_type == CHIP_TYPE_ADSP2181)
+	{
+		int irq;
+		for (irq = 4; irq < ADSP_MAX_IRQ; irq++)
+			adsp2100.irq_state[irq] = adsp2100.irq_latch[irq] = CLEAR_LINE;
+		adsp2100.pmovlay = adsp2100.dmovlay = 0;
+		if (dmovlay_callback)
+			(*dmovlay_callback)(0);
+	}
+#endif
 }
 
 
@@ -839,8 +966,10 @@ static INLINE ADSP_ALWAYS_INLINE void adsp2100_advance(UINT32 op)
 }
 
 /* execute 'op' (opclass = op >> 16; a constant where the recompiler
-   calls it for one class) */
-static INLINE ADSP_ALWAYS_INLINE void adsp2100_execute_op(UINT32 op, UINT32 opclass, int fast)
+   calls it for one class); 'x2181' is a constant too: 1 only in the
+   ADSP-2181 copy of the interpreter loop, so that the other chips pay
+   nothing for its instructions */
+static INLINE ADSP_ALWAYS_INLINE void adsp2100_execute_op_x(UINT32 op, UINT32 opclass, int fast, int x2181)
 {
 	UINT32 temp;
 
@@ -850,6 +979,20 @@ static INLINE ADSP_ALWAYS_INLINE void adsp2100_execute_op(UINT32 op, UINT32 opcl
 		case 0x00:
 			/* 00000000 00000000 00000000  NOP */
 			break;
+#if (HAS_ADSP2181)
+		case 0x01:
+			/* 00000001 0xxxxxxx xxxxxxxx  dst = IO(x) */
+			/* 00000001 1xxxxxxx xxxxxxxx  IO(x) = dst */
+			/* ADSP-2181 only */
+			if (x2181)
+			{
+				if (!(op & 0x008000))
+					WRITE_REG(0, op & 15, io_read_callback ? (*io_read_callback)((op >> 4) & 0x7ff) : 0xffff);
+				else if (io_write_callback)
+					(*io_write_callback)((op >> 4) & 0x7ff, READ_REG(0, op & 15));
+			}
+			break;
+#endif
 		case 0x02:
 			/* 00000010 0000xxxx xxxxxxxx  modify flag out */
 			/* 00000010 10000000 00000000  idle */
@@ -975,7 +1118,7 @@ static INLINE ADSP_ALWAYS_INLINE void adsp2100_execute_op(UINT32 op, UINT32 opcl
 		case 0x09:
 			/* 00001001 00000000 000xxxxx  modify address register */
 			temp = (op >> 2) & 4;
-			modify_address(temp + ((op >> 2) & 3), temp + (op & 3));
+			modify_address(temp + ((op >> 2) & 3), temp + (op & 3), x2181);
 			break;
 		case 0x0a:
 			/* 00001010 00000000 000xxxxx  conditional return */
@@ -1034,39 +1177,39 @@ static INLINE ADSP_ALWAYS_INLINE void adsp2100_execute_op(UINT32 op, UINT32 opcl
 			/* 00010001 xxxxxxxx xxxxxxxx  shift with pgm memory read/write */
 			if (op & 0x8000)
 			{
-				pgm_write_dag2(op, READ_REG(0, (op >> 4) & 15));
+				pgm_write_dag2(op, READ_REG(0, (op >> 4) & 15), x2181);
 				shift_op(op);
 			}
 			else
 			{
 				shift_op(op);
-				WRITE_REG(0, (op >> 4) & 15, pgm_read_dag2(op));
+				WRITE_REG(0, (op >> 4) & 15, pgm_read_dag2(op, x2181));
 			}
 			break;
 		case 0x12:
 			/* 00010010 xxxxxxxx xxxxxxxx  shift with data memory read/write DAG1 */
 			if (op & 0x8000)
 			{
-				data_write_dag1_f(op, READ_REG(0, (op >> 4) & 15), fast);
+				data_write_dag1_f(op, READ_REG(0, (op >> 4) & 15), fast | (x2181 << 1));
 				shift_op(op);
 			}
 			else
 			{
 				shift_op(op);
-				WRITE_REG(0, (op >> 4) & 15, data_read_dag1_f(op, fast));
+				WRITE_REG(0, (op >> 4) & 15, data_read_dag1_f(op, fast | (x2181 << 1)));
 			}
 			break;
 		case 0x13:
 			/* 00010011 xxxxxxxx xxxxxxxx  shift with data memory read/write DAG2 */
 			if (op & 0x8000)
 			{
-				data_write_dag2_f(op, READ_REG(0, (op >> 4) & 15), fast);
+				data_write_dag2_f(op, READ_REG(0, (op >> 4) & 15), fast | (x2181 << 1));
 				shift_op(op);
 			}
 			else
 			{
 				shift_op(op);
-				WRITE_REG(0, (op >> 4) & 15, data_read_dag2_f(op, fast));
+				WRITE_REG(0, (op >> 4) & 15, data_read_dag2_f(op, fast | (x2181 << 1)));
 			}
 			break;
 		case 0x14: case 0x15: case 0x16: case 0x17:
@@ -1091,19 +1234,53 @@ static INLINE ADSP_ALWAYS_INLINE void adsp2100_execute_op(UINT32 op, UINT32 opcl
 			break;
 		case 0x20: case 0x21:
 			/* 0010000x xxxxxxxx xxxxxxxx  conditional MAC to MR */
-			if (CONDITION(op & 15)) mac_op_mr(op);
+			/* (ADSP-2181: X * X when bits 4 and 11-12 say so) */
+			if (CONDITION(op & 15))
+			{
+#if (HAS_ADSP2181)
+				if (x2181 && (op & 0x0018f0) == 0x000010)
+					mac_op_mr_xop(op);
+				else
+#endif
+				mac_op_mr(op);
+			}
 			break;
 		case 0x22: case 0x23:
 			/* 0010001x xxxxxxxx xxxxxxxx  conditional ALU to AR */
-			if (CONDITION(op & 15)) alu_op_ar(op);
+			/* (ADSP-2181: constant Y when bit 4 is set) */
+			if (CONDITION(op & 15))
+			{
+#if (HAS_ADSP2181)
+				if (x2181 && (op & 0x10))
+					alu_op_ar_const(op);
+				else
+#endif
+				alu_op_ar(op);
+			}
 			break;
 		case 0x24: case 0x25:
 			/* 0010010x xxxxxxxx xxxxxxxx  conditional MAC to MF */
-			if (CONDITION(op & 15)) mac_op_mf(op);
+			if (CONDITION(op & 15))
+			{
+#if (HAS_ADSP2181)
+				if (x2181 && (op & 0x0018f0) == 0x000010)
+					mac_op_mf_xop(op);
+				else
+#endif
+				mac_op_mf(op);
+			}
 			break;
 		case 0x26: case 0x27:
 			/* 0010011x xxxxxxxx xxxxxxxx  conditional ALU to AF */
-			if (CONDITION(op & 15)) alu_op_af(op);
+			if (CONDITION(op & 15))
+			{
+#if (HAS_ADSP2181)
+				if (x2181 && (op & 0x10))
+					alu_op_af_const(op);
+				else
+#endif
+				alu_op_af(op);
+			}
 			break;
 		case 0x28: case 0x29:
 			/* 0010100x xxxxxxxx xxxxxxxx  MAC to MR with internal data register move */
@@ -1113,6 +1290,14 @@ static INLINE ADSP_ALWAYS_INLINE void adsp2100_execute_op(UINT32 op, UINT32 opcl
 			break;
 		case 0x2a: case 0x2b:
 			/* 0010101x xxxxxxxx xxxxxxxx  ALU to AR with internal data register move */
+#if (HAS_ADSP2181)
+			/* (ADSP-2181: NONE = ALU, when the low byte is 0xaa) */
+			if (x2181 && (op & 0xff) == 0xaa)
+			{
+				alu_op_none(op);
+				break;
+			}
+#endif
 			temp = READ_REG(0, op & 15);
 			alu_op_ar(op);
 			WRITE_REG(0, (op >> 4) & 15, temp);
@@ -1153,361 +1338,392 @@ static INLINE ADSP_ALWAYS_INLINE void adsp2100_execute_op(UINT32 op, UINT32 opcl
 		case 0x50: case 0x51:
 			/* 0101000x xxxxxxxx xxxxxxxx  MAC to MR with pgm memory read */
 			mac_op_mr(op);
-			WRITE_REG(0, (op >> 4) & 15, pgm_read_dag2(op));
+			WRITE_REG(0, (op >> 4) & 15, pgm_read_dag2(op, x2181));
 			break;
 		case 0x52: case 0x53:
 			/* 0101001x xxxxxxxx xxxxxxxx  ALU to AR with pgm memory read */
 			alu_op_ar(op);
-			WRITE_REG(0, (op >> 4) & 15, pgm_read_dag2(op));
+			WRITE_REG(0, (op >> 4) & 15, pgm_read_dag2(op, x2181));
 			break;
 		case 0x54: case 0x55:
 			/* 0101010x xxxxxxxx xxxxxxxx  MAC to MF with pgm memory read */
 			mac_op_mf(op);
-			WRITE_REG(0, (op >> 4) & 15, pgm_read_dag2(op));
+			WRITE_REG(0, (op >> 4) & 15, pgm_read_dag2(op, x2181));
 			break;
 		case 0x56: case 0x57:
 			/* 0101011x xxxxxxxx xxxxxxxx  ALU to AF with pgm memory read */
 			alu_op_af(op);
-			WRITE_REG(0, (op >> 4) & 15, pgm_read_dag2(op));
+			WRITE_REG(0, (op >> 4) & 15, pgm_read_dag2(op, x2181));
 			break;
 		case 0x58: case 0x59:
 			/* 0101100x xxxxxxxx xxxxxxxx  MAC to MR with pgm memory write */
-			pgm_write_dag2(op, READ_REG(0, (op >> 4) & 15));
+			pgm_write_dag2(op, READ_REG(0, (op >> 4) & 15), x2181);
 			mac_op_mr(op);
 			break;
 		case 0x5a: case 0x5b:
 			/* 0101101x xxxxxxxx xxxxxxxx  ALU to AR with pgm memory write */
-			pgm_write_dag2(op, READ_REG(0, (op >> 4) & 15));
+			pgm_write_dag2(op, READ_REG(0, (op >> 4) & 15), x2181);
 			alu_op_ar(op);
 			break;
 		case 0x5c: case 0x5d:
 			/* 0101110x xxxxxxxx xxxxxxxx  ALU to MR with pgm memory write */
-			pgm_write_dag2(op, READ_REG(0, (op >> 4) & 15));
+			pgm_write_dag2(op, READ_REG(0, (op >> 4) & 15), x2181);
 			mac_op_mf(op);
 			break;
 		case 0x5e: case 0x5f:
 			/* 0101111x xxxxxxxx xxxxxxxx  ALU to MF with pgm memory write */
-			pgm_write_dag2(op, READ_REG(0, (op >> 4) & 15));
+			pgm_write_dag2(op, READ_REG(0, (op >> 4) & 15), x2181);
 			alu_op_af(op);
 			break;
 		case 0x60: case 0x61:
 			/* 0110000x xxxxxxxx xxxxxxxx  MAC to MR with data memory read DAG1 */
 			mac_op_mr(op);
-			WRITE_REG(0, (op >> 4) & 15, data_read_dag1_f(op, fast));
+			WRITE_REG(0, (op >> 4) & 15, data_read_dag1_f(op, fast | (x2181 << 1)));
 			break;
 		case 0x62: case 0x63:
 			/* 0110001x xxxxxxxx xxxxxxxx  ALU to AR with data memory read DAG1 */
 			alu_op_ar(op);
-			WRITE_REG(0, (op >> 4) & 15, data_read_dag1_f(op, fast));
+			WRITE_REG(0, (op >> 4) & 15, data_read_dag1_f(op, fast | (x2181 << 1)));
 			break;
 		case 0x64: case 0x65:
 			/* 0110010x xxxxxxxx xxxxxxxx  MAC to MF with data memory read DAG1 */
 			mac_op_mf(op);
-			WRITE_REG(0, (op >> 4) & 15, data_read_dag1_f(op, fast));
+			WRITE_REG(0, (op >> 4) & 15, data_read_dag1_f(op, fast | (x2181 << 1)));
 			break;
 		case 0x66: case 0x67:
 			/* 0110011x xxxxxxxx xxxxxxxx  ALU to AF with data memory read DAG1 */
 			alu_op_af(op);
-			WRITE_REG(0, (op >> 4) & 15, data_read_dag1_f(op, fast));
+			WRITE_REG(0, (op >> 4) & 15, data_read_dag1_f(op, fast | (x2181 << 1)));
 			break;
 		case 0x68: case 0x69:
 			/* 0110100x xxxxxxxx xxxxxxxx  MAC to MR with data memory write DAG1 */
-			data_write_dag1_f(op, READ_REG(0, (op >> 4) & 15), fast);
+			data_write_dag1_f(op, READ_REG(0, (op >> 4) & 15), fast | (x2181 << 1));
 			mac_op_mr(op);
 			break;
 		case 0x6a: case 0x6b:
 			/* 0110101x xxxxxxxx xxxxxxxx  ALU to AR with data memory write DAG1 */
-			data_write_dag1_f(op, READ_REG(0, (op >> 4) & 15), fast);
+			data_write_dag1_f(op, READ_REG(0, (op >> 4) & 15), fast | (x2181 << 1));
 			alu_op_ar(op);
 			break;
 		case 0x6c: case 0x6d:
 			/* 0111110x xxxxxxxx xxxxxxxx  MAC to MF with data memory write DAG1 */
-			data_write_dag1_f(op, READ_REG(0, (op >> 4) & 15), fast);
+			data_write_dag1_f(op, READ_REG(0, (op >> 4) & 15), fast | (x2181 << 1));
 			mac_op_mf(op);
 			break;
 		case 0x6e: case 0x6f:
 			/* 0111111x xxxxxxxx xxxxxxxx  ALU to AF with data memory write DAG1 */
-			data_write_dag1_f(op, READ_REG(0, (op >> 4) & 15), fast);
+			data_write_dag1_f(op, READ_REG(0, (op >> 4) & 15), fast | (x2181 << 1));
 			alu_op_af(op);
 			break;
 		case 0x70: case 0x71:
 			/* 0111000x xxxxxxxx xxxxxxxx  MAC to MR with data memory read DAG2 */
 			mac_op_mr(op);
-			WRITE_REG(0, (op >> 4) & 15, data_read_dag2_f(op, fast));
+			WRITE_REG(0, (op >> 4) & 15, data_read_dag2_f(op, fast | (x2181 << 1)));
 			break;
 		case 0x72: case 0x73:
 			/* 0111001x xxxxxxxx xxxxxxxx  ALU to AR with data memory read DAG2 */
 			alu_op_ar(op);
-			WRITE_REG(0, (op >> 4) & 15, data_read_dag2_f(op, fast));
+			WRITE_REG(0, (op >> 4) & 15, data_read_dag2_f(op, fast | (x2181 << 1)));
 			break;
 		case 0x74: case 0x75:
 			/* 0111010x xxxxxxxx xxxxxxxx  MAC to MF with data memory read DAG2 */
 			mac_op_mf(op);
-			WRITE_REG(0, (op >> 4) & 15, data_read_dag2_f(op, fast));
+			WRITE_REG(0, (op >> 4) & 15, data_read_dag2_f(op, fast | (x2181 << 1)));
 			break;
 		case 0x76: case 0x77:
 			/* 0111011x xxxxxxxx xxxxxxxx  ALU to AF with data memory read DAG2 */
 			alu_op_af(op);
-			WRITE_REG(0, (op >> 4) & 15, data_read_dag2_f(op, fast));
+			WRITE_REG(0, (op >> 4) & 15, data_read_dag2_f(op, fast | (x2181 << 1)));
 			break;
 		case 0x78: case 0x79:
 			/* 0111100x xxxxxxxx xxxxxxxx  MAC to MR with data memory write DAG2 */
-			data_write_dag2_f(op, READ_REG(0, (op >> 4) & 15), fast);
+			data_write_dag2_f(op, READ_REG(0, (op >> 4) & 15), fast | (x2181 << 1));
 			mac_op_mr(op);
 			break;
 		case 0x7a: case 0x7b:
 			/* 0111101x xxxxxxxx xxxxxxxx  ALU to AR with data memory write DAG2 */
-			data_write_dag2_f(op, READ_REG(0, (op >> 4) & 15), fast);
+			data_write_dag2_f(op, READ_REG(0, (op >> 4) & 15), fast | (x2181 << 1));
 			alu_op_ar(op);
 			break;
 		case 0x7c: case 0x7d:
 			/* 0111110x xxxxxxxx xxxxxxxx  MAC to MF with data memory write DAG2 */
-			data_write_dag2_f(op, READ_REG(0, (op >> 4) & 15), fast);
+			data_write_dag2_f(op, READ_REG(0, (op >> 4) & 15), fast | (x2181 << 1));
 			mac_op_mf(op);
 			break;
 		case 0x7e: case 0x7f:
 			/* 0111111x xxxxxxxx xxxxxxxx  ALU to AF with data memory write DAG2 */
-			data_write_dag2_f(op, READ_REG(0, (op >> 4) & 15), fast);
+			data_write_dag2_f(op, READ_REG(0, (op >> 4) & 15), fast | (x2181 << 1));
 			alu_op_af(op);
 			break;
 		case 0x80: case 0x81: case 0x82: case 0x83:
 			/* 100000xx xxxxxxxx xxxxxxxx  read data memory (immediate addr) to reg group 0 */
-			WRITE_REG(0, op & 15, RWORD_DATA_F((op >> 4) & 0x3fff, fast));
+			WRITE_REG(0, op & 15, RWORD_DATA_F((op >> 4) & 0x3fff, fast | (x2181 << 1)));
 			break;
 		case 0x84: case 0x85: case 0x86: case 0x87:
 			/* 100001xx xxxxxxxx xxxxxxxx  read data memory (immediate addr) to reg group 1 */
-			WRITE_REG(1, op & 15, RWORD_DATA_F((op >> 4) & 0x3fff, fast));
+			WRITE_REG(1, op & 15, RWORD_DATA_F((op >> 4) & 0x3fff, fast | (x2181 << 1)));
 			break;
 		case 0x88: case 0x89: case 0x8a: case 0x8b:
 			/* 100010xx xxxxxxxx xxxxxxxx  read data memory (immediate addr) to reg group 2 */
-			WRITE_REG(2, op & 15, RWORD_DATA_F((op >> 4) & 0x3fff, fast));
+			WRITE_REG(2, op & 15, RWORD_DATA_F((op >> 4) & 0x3fff, fast | (x2181 << 1)));
 			break;
 		case 0x8c: case 0x8d: case 0x8e: case 0x8f:
 			/* 100011xx xxxxxxxx xxxxxxxx  read data memory (immediate addr) to reg group 3 */
-			WRITE_REG(3, op & 15, RWORD_DATA_F((op >> 4) & 0x3fff, fast));
+			WRITE_REG(3, op & 15, RWORD_DATA_F((op >> 4) & 0x3fff, fast | (x2181 << 1)));
 			break;
 		case 0x90: case 0x91: case 0x92: case 0x93:
 			/* 1001xxxx xxxxxxxx xxxxxxxx  write data memory (immediate addr) from reg group 0 */
-			WWORD_DATA_F((op >> 4) & 0x3fff, READ_REG(0, op & 15), fast);
+			WWORD_DATA_F((op >> 4) & 0x3fff, READ_REG(0, op & 15), fast | (x2181 << 1));
 			break;
 		case 0x94: case 0x95: case 0x96: case 0x97:
 			/* 1001xxxx xxxxxxxx xxxxxxxx  write data memory (immediate addr) from reg group 1 */
-			WWORD_DATA_F((op >> 4) & 0x3fff, READ_REG(1, op & 15), fast);
+			WWORD_DATA_F((op >> 4) & 0x3fff, READ_REG(1, op & 15), fast | (x2181 << 1));
 			break;
 		case 0x98: case 0x99: case 0x9a: case 0x9b:
 			/* 1001xxxx xxxxxxxx xxxxxxxx  write data memory (immediate addr) from reg group 2 */
-			WWORD_DATA_F((op >> 4) & 0x3fff, READ_REG(2, op & 15), fast);
+			WWORD_DATA_F((op >> 4) & 0x3fff, READ_REG(2, op & 15), fast | (x2181 << 1));
 			break;
 		case 0x9c: case 0x9d: case 0x9e: case 0x9f:
 			/* 1001xxxx xxxxxxxx xxxxxxxx  write data memory (immediate addr) from reg group 3 */
-			WWORD_DATA_F((op >> 4) & 0x3fff, READ_REG(3, op & 15), fast);
+			WWORD_DATA_F((op >> 4) & 0x3fff, READ_REG(3, op & 15), fast | (x2181 << 1));
 			break;
 		case 0xa0: case 0xa1: case 0xa2: case 0xa3: case 0xa4: case 0xa5: case 0xa6: case 0xa7:
 		case 0xa8: case 0xa9: case 0xaa: case 0xab: case 0xac: case 0xad: case 0xae: case 0xaf:
 			/* 1010xxxx xxxxxxxx xxxxxxxx  data memory write (immediate) DAG1 */
-			data_write_dag1_f(op, (op >> 4) & 0xffff, fast);
+			data_write_dag1_f(op, (op >> 4) & 0xffff, fast | (x2181 << 1));
 			break;
 		case 0xb0: case 0xb1: case 0xb2: case 0xb3: case 0xb4: case 0xb5: case 0xb6: case 0xb7:
 		case 0xb8: case 0xb9: case 0xba: case 0xbb: case 0xbc: case 0xbd: case 0xbe: case 0xbf:
 			/* 1011xxxx xxxxxxxx xxxxxxxx  data memory write (immediate) DAG2 */
-			data_write_dag2_f(op, (op >> 4) & 0xffff, fast);
+			data_write_dag2_f(op, (op >> 4) & 0xffff, fast | (x2181 << 1));
 			break;
 		case 0xc0: case 0xc1:
 			/* 1100000x xxxxxxxx xxxxxxxx  MAC to MR with data read to AX0 & pgm read to AY0 */
 			mac_op_mr(op);
-			adsp2100.core.ax0.u = data_read_dag1_f(op, fast);
-			adsp2100.core.ay0.u = pgm_read_dag2(op >> 4);
+			adsp2100.core.ax0.u = data_read_dag1_f(op, fast | (x2181 << 1));
+			adsp2100.core.ay0.u = pgm_read_dag2(op >> 4, x2181);
 			break;
 		case 0xc2: case 0xc3:
 			/* 1100001x xxxxxxxx xxxxxxxx  ALU to AR with data read to AX0 & pgm read to AY0 */
 			alu_op_ar(op);
-			adsp2100.core.ax0.u = data_read_dag1_f(op, fast);
-			adsp2100.core.ay0.u = pgm_read_dag2(op >> 4);
+			adsp2100.core.ax0.u = data_read_dag1_f(op, fast | (x2181 << 1));
+			adsp2100.core.ay0.u = pgm_read_dag2(op >> 4, x2181);
 			break;
 		case 0xc4: case 0xc5:
 			/* 1100010x xxxxxxxx xxxxxxxx  MAC to MR with data read to AX1 & pgm read to AY0 */
 			mac_op_mr(op);
-			adsp2100.core.ax1.u = data_read_dag1_f(op, fast);
-			adsp2100.core.ay0.u = pgm_read_dag2(op >> 4);
+			adsp2100.core.ax1.u = data_read_dag1_f(op, fast | (x2181 << 1));
+			adsp2100.core.ay0.u = pgm_read_dag2(op >> 4, x2181);
 			break;
 		case 0xc6: case 0xc7:
 			/* 1100011x xxxxxxxx xxxxxxxx  ALU to AR with data read to AX1 & pgm read to AY0 */
 			alu_op_ar(op);
-			adsp2100.core.ax1.u = data_read_dag1_f(op, fast);
-			adsp2100.core.ay0.u = pgm_read_dag2(op >> 4);
+			adsp2100.core.ax1.u = data_read_dag1_f(op, fast | (x2181 << 1));
+			adsp2100.core.ay0.u = pgm_read_dag2(op >> 4, x2181);
 			break;
 		case 0xc8: case 0xc9:
 			/* 1100100x xxxxxxxx xxxxxxxx  MAC to MR with data read to MX0 & pgm read to AY0 */
 			mac_op_mr(op);
-			adsp2100.core.mx0.u = data_read_dag1_f(op, fast);
-			adsp2100.core.ay0.u = pgm_read_dag2(op >> 4);
+			adsp2100.core.mx0.u = data_read_dag1_f(op, fast | (x2181 << 1));
+			adsp2100.core.ay0.u = pgm_read_dag2(op >> 4, x2181);
 			break;
 		case 0xca: case 0xcb:
 			/* 1100101x xxxxxxxx xxxxxxxx  ALU to AR with data read to MX0 & pgm read to AY0 */
 			alu_op_ar(op);
-			adsp2100.core.mx0.u = data_read_dag1_f(op, fast);
-			adsp2100.core.ay0.u = pgm_read_dag2(op >> 4);
+			adsp2100.core.mx0.u = data_read_dag1_f(op, fast | (x2181 << 1));
+			adsp2100.core.ay0.u = pgm_read_dag2(op >> 4, x2181);
 			break;
 		case 0xcc: case 0xcd:
 			/* 1100110x xxxxxxxx xxxxxxxx  MAC to MR with data read to MX1 & pgm read to AY0 */
 			mac_op_mr(op);
-			adsp2100.core.mx1.u = data_read_dag1_f(op, fast);
-			adsp2100.core.ay0.u = pgm_read_dag2(op >> 4);
+			adsp2100.core.mx1.u = data_read_dag1_f(op, fast | (x2181 << 1));
+			adsp2100.core.ay0.u = pgm_read_dag2(op >> 4, x2181);
 			break;
 		case 0xce: case 0xcf:
 			/* 1100111x xxxxxxxx xxxxxxxx  ALU to AR with data read to MX1 & pgm read to AY0 */
 			alu_op_ar(op);
-			adsp2100.core.mx1.u = data_read_dag1_f(op, fast);
-			adsp2100.core.ay0.u = pgm_read_dag2(op >> 4);
+			adsp2100.core.mx1.u = data_read_dag1_f(op, fast | (x2181 << 1));
+			adsp2100.core.ay0.u = pgm_read_dag2(op >> 4, x2181);
 			break;
 		case 0xd0: case 0xd1:
 			/* 1101000x xxxxxxxx xxxxxxxx  MAC to MR with data read to AX0 & pgm read to AY1 */
 			mac_op_mr(op);
-			adsp2100.core.ax0.u = data_read_dag1_f(op, fast);
-			adsp2100.core.ay1.u = pgm_read_dag2(op >> 4);
+			adsp2100.core.ax0.u = data_read_dag1_f(op, fast | (x2181 << 1));
+			adsp2100.core.ay1.u = pgm_read_dag2(op >> 4, x2181);
 			break;
 		case 0xd2: case 0xd3:
 			/* 1101001x xxxxxxxx xxxxxxxx  ALU to AR with data read to AX0 & pgm read to AY1 */
 			alu_op_ar(op);
-			adsp2100.core.ax0.u = data_read_dag1_f(op, fast);
-			adsp2100.core.ay1.u = pgm_read_dag2(op >> 4);
+			adsp2100.core.ax0.u = data_read_dag1_f(op, fast | (x2181 << 1));
+			adsp2100.core.ay1.u = pgm_read_dag2(op >> 4, x2181);
 			break;
 		case 0xd4: case 0xd5:
 			/* 1101010x xxxxxxxx xxxxxxxx  MAC to MR with data read to AX1 & pgm read to AY1 */
 			mac_op_mr(op);
-			adsp2100.core.ax1.u = data_read_dag1_f(op, fast);
-			adsp2100.core.ay1.u = pgm_read_dag2(op >> 4);
+			adsp2100.core.ax1.u = data_read_dag1_f(op, fast | (x2181 << 1));
+			adsp2100.core.ay1.u = pgm_read_dag2(op >> 4, x2181);
 			break;
 		case 0xd6: case 0xd7:
 			/* 1101011x xxxxxxxx xxxxxxxx  ALU to AR with data read to AX1 & pgm read to AY1 */
 			alu_op_ar(op);
-			adsp2100.core.ax1.u = data_read_dag1_f(op, fast);
-			adsp2100.core.ay1.u = pgm_read_dag2(op >> 4);
+			adsp2100.core.ax1.u = data_read_dag1_f(op, fast | (x2181 << 1));
+			adsp2100.core.ay1.u = pgm_read_dag2(op >> 4, x2181);
 			break;
 		case 0xd8: case 0xd9:
 			/* 1101100x xxxxxxxx xxxxxxxx  MAC to MR with data read to MX0 & pgm read to AY1 */
 			mac_op_mr(op);
-			adsp2100.core.mx0.u = data_read_dag1_f(op, fast);
-			adsp2100.core.ay1.u = pgm_read_dag2(op >> 4);
+			adsp2100.core.mx0.u = data_read_dag1_f(op, fast | (x2181 << 1));
+			adsp2100.core.ay1.u = pgm_read_dag2(op >> 4, x2181);
 			break;
 		case 0xda: case 0xdb:
 			/* 1101101x xxxxxxxx xxxxxxxx  ALU to AR with data read to MX0 & pgm read to AY1 */
 			alu_op_ar(op);
-			adsp2100.core.mx0.u = data_read_dag1_f(op, fast);
-			adsp2100.core.ay1.u = pgm_read_dag2(op >> 4);
+			adsp2100.core.mx0.u = data_read_dag1_f(op, fast | (x2181 << 1));
+			adsp2100.core.ay1.u = pgm_read_dag2(op >> 4, x2181);
 			break;
 		case 0xdc: case 0xdd:
 			/* 1101110x xxxxxxxx xxxxxxxx  MAC to MR with data read to MX1 & pgm read to AY1 */
 			mac_op_mr(op);
-			adsp2100.core.mx1.u = data_read_dag1_f(op, fast);
-			adsp2100.core.ay1.u = pgm_read_dag2(op >> 4);
+			adsp2100.core.mx1.u = data_read_dag1_f(op, fast | (x2181 << 1));
+			adsp2100.core.ay1.u = pgm_read_dag2(op >> 4, x2181);
 			break;
 		case 0xde: case 0xdf:
 			/* 1101111x xxxxxxxx xxxxxxxx  ALU to AR with data read to MX1 & pgm read to AY1 */
 			alu_op_ar(op);
-			adsp2100.core.mx1.u = data_read_dag1_f(op, fast);
-			adsp2100.core.ay1.u = pgm_read_dag2(op >> 4);
+			adsp2100.core.mx1.u = data_read_dag1_f(op, fast | (x2181 << 1));
+			adsp2100.core.ay1.u = pgm_read_dag2(op >> 4, x2181);
 			break;
 		case 0xe0: case 0xe1:
 			/* 1110000x xxxxxxxx xxxxxxxx  MAC to MR with data read to AX0 & pgm read to MY0 */
 			mac_op_mr(op);
-			adsp2100.core.ax0.u = data_read_dag1_f(op, fast);
-			adsp2100.core.my0.u = pgm_read_dag2(op >> 4);
+			adsp2100.core.ax0.u = data_read_dag1_f(op, fast | (x2181 << 1));
+			adsp2100.core.my0.u = pgm_read_dag2(op >> 4, x2181);
 			break;
 		case 0xe2: case 0xe3:
 			/* 1110001x xxxxxxxx xxxxxxxx  ALU to AR with data read to AX0 & pgm read to MY0 */
 			alu_op_ar(op);
-			adsp2100.core.ax0.u = data_read_dag1_f(op, fast);
-			adsp2100.core.my0.u = pgm_read_dag2(op >> 4);
+			adsp2100.core.ax0.u = data_read_dag1_f(op, fast | (x2181 << 1));
+			adsp2100.core.my0.u = pgm_read_dag2(op >> 4, x2181);
 			break;
 		case 0xe4: case 0xe5:
 			/* 1110010x xxxxxxxx xxxxxxxx  MAC to MR with data read to AX1 & pgm read to MY0 */
 			mac_op_mr(op);
-			adsp2100.core.ax1.u = data_read_dag1_f(op, fast);
-			adsp2100.core.my0.u = pgm_read_dag2(op >> 4);
+			adsp2100.core.ax1.u = data_read_dag1_f(op, fast | (x2181 << 1));
+			adsp2100.core.my0.u = pgm_read_dag2(op >> 4, x2181);
 			break;
 		case 0xe6: case 0xe7:
 			/* 1110011x xxxxxxxx xxxxxxxx  ALU to AR with data read to AX1 & pgm read to MY0 */
 			alu_op_ar(op);
-			adsp2100.core.ax1.u = data_read_dag1_f(op, fast);
-			adsp2100.core.my0.u = pgm_read_dag2(op >> 4);
+			adsp2100.core.ax1.u = data_read_dag1_f(op, fast | (x2181 << 1));
+			adsp2100.core.my0.u = pgm_read_dag2(op >> 4, x2181);
 			break;
 		case 0xe8: case 0xe9:
 			/* 1110100x xxxxxxxx xxxxxxxx  MAC to MR with data read to MX0 & pgm read to MY0 */
 			mac_op_mr(op);
-			adsp2100.core.mx0.u = data_read_dag1_f(op, fast);
-			adsp2100.core.my0.u = pgm_read_dag2(op >> 4);
+			adsp2100.core.mx0.u = data_read_dag1_f(op, fast | (x2181 << 1));
+			adsp2100.core.my0.u = pgm_read_dag2(op >> 4, x2181);
 			break;
 		case 0xea: case 0xeb:
 			/* 1110101x xxxxxxxx xxxxxxxx  ALU to AR with data read to MX0 & pgm read to MY0 */
 			alu_op_ar(op);
-			adsp2100.core.mx0.u = data_read_dag1_f(op, fast);
-			adsp2100.core.my0.u = pgm_read_dag2(op >> 4);
+			adsp2100.core.mx0.u = data_read_dag1_f(op, fast | (x2181 << 1));
+			adsp2100.core.my0.u = pgm_read_dag2(op >> 4, x2181);
 			break;
 		case 0xec: case 0xed:
 			/* 1110110x xxxxxxxx xxxxxxxx  MAC to MR with data read to MX1 & pgm read to MY0 */
 			mac_op_mr(op);
-			adsp2100.core.mx1.u = data_read_dag1_f(op, fast);
-			adsp2100.core.my0.u = pgm_read_dag2(op >> 4);
+			adsp2100.core.mx1.u = data_read_dag1_f(op, fast | (x2181 << 1));
+			adsp2100.core.my0.u = pgm_read_dag2(op >> 4, x2181);
 			break;
 		case 0xee: case 0xef:
 			/* 1110111x xxxxxxxx xxxxxxxx  ALU to AR with data read to MX1 & pgm read to MY0 */
 			alu_op_ar(op);
-			adsp2100.core.mx1.u = data_read_dag1_f(op, fast);
-			adsp2100.core.my0.u = pgm_read_dag2(op >> 4);
+			adsp2100.core.mx1.u = data_read_dag1_f(op, fast | (x2181 << 1));
+			adsp2100.core.my0.u = pgm_read_dag2(op >> 4, x2181);
 			break;
 		case 0xf0: case 0xf1:
 			/* 1111000x xxxxxxxx xxxxxxxx  MAC to MR with data read to AX0 & pgm read to MY1 */
 			mac_op_mr(op);
-			adsp2100.core.ax0.u = data_read_dag1_f(op, fast);
-			adsp2100.core.my1.u = pgm_read_dag2(op >> 4);
+			adsp2100.core.ax0.u = data_read_dag1_f(op, fast | (x2181 << 1));
+			adsp2100.core.my1.u = pgm_read_dag2(op >> 4, x2181);
 			break;
 		case 0xf2: case 0xf3:
 			/* 1111001x xxxxxxxx xxxxxxxx  ALU to AR with data read to AX0 & pgm read to MY1 */
 			alu_op_ar(op);
-			adsp2100.core.ax0.u = data_read_dag1_f(op, fast);
-			adsp2100.core.my1.u = pgm_read_dag2(op >> 4);
+			adsp2100.core.ax0.u = data_read_dag1_f(op, fast | (x2181 << 1));
+			adsp2100.core.my1.u = pgm_read_dag2(op >> 4, x2181);
 			break;
 		case 0xf4: case 0xf5:
 			/* 1111010x xxxxxxxx xxxxxxxx  MAC to MR with data read to AX1 & pgm read to MY1 */
 			mac_op_mr(op);
-			adsp2100.core.ax1.u = data_read_dag1_f(op, fast);
-			adsp2100.core.my1.u = pgm_read_dag2(op >> 4);
+			adsp2100.core.ax1.u = data_read_dag1_f(op, fast | (x2181 << 1));
+			adsp2100.core.my1.u = pgm_read_dag2(op >> 4, x2181);
 			break;
 		case 0xf6: case 0xf7:
 			/* 1111011x xxxxxxxx xxxxxxxx  ALU to AR with data read to AX1 & pgm read to MY1 */
 			alu_op_ar(op);
-			adsp2100.core.ax1.u = data_read_dag1_f(op, fast);
-			adsp2100.core.my1.u = pgm_read_dag2(op >> 4);
+			adsp2100.core.ax1.u = data_read_dag1_f(op, fast | (x2181 << 1));
+			adsp2100.core.my1.u = pgm_read_dag2(op >> 4, x2181);
 			break;
 		case 0xf8: case 0xf9:
 			/* 1111100x xxxxxxxx xxxxxxxx  MAC to MR with data read to MX0 & pgm read to MY1 */
 			mac_op_mr(op);
-			adsp2100.core.mx0.u = data_read_dag1_f(op, fast);
-			adsp2100.core.my1.u = pgm_read_dag2(op >> 4);
+			adsp2100.core.mx0.u = data_read_dag1_f(op, fast | (x2181 << 1));
+			adsp2100.core.my1.u = pgm_read_dag2(op >> 4, x2181);
 			break;
 		case 0xfa: case 0xfb:
 			/* 1111101x xxxxxxxx xxxxxxxx  ALU to AR with data read to MX0 & pgm read to MY1 */
 			alu_op_ar(op);
-			adsp2100.core.mx0.u = data_read_dag1_f(op, fast);
-			adsp2100.core.my1.u = pgm_read_dag2(op >> 4);
+			adsp2100.core.mx0.u = data_read_dag1_f(op, fast | (x2181 << 1));
+			adsp2100.core.my1.u = pgm_read_dag2(op >> 4, x2181);
 			break;
 		case 0xfc: case 0xfd:
 			/* 1111110x xxxxxxxx xxxxxxxx  MAC to MR with data read to MX1 & pgm read to MY1 */
 			mac_op_mr(op);
-			adsp2100.core.mx1.u = data_read_dag1_f(op, fast);
-			adsp2100.core.my1.u = pgm_read_dag2(op >> 4);
+			adsp2100.core.mx1.u = data_read_dag1_f(op, fast | (x2181 << 1));
+			adsp2100.core.my1.u = pgm_read_dag2(op >> 4, x2181);
 			break;
 		case 0xfe: case 0xff:
 			/* 1111111x xxxxxxxx xxxxxxxx  ALU to AR with data read to MX1 & pgm read to MY1 */
 			alu_op_ar(op);
-			adsp2100.core.mx1.u = data_read_dag1_f(op, fast);
-			adsp2100.core.my1.u = pgm_read_dag2(op >> 4);
+			adsp2100.core.mx1.u = data_read_dag1_f(op, fast | (x2181 << 1));
+			adsp2100.core.my1.u = pgm_read_dag2(op >> 4, x2181);
 			break;
 	}
 }
 
+/* the other chips, and the recompiler */
+#define adsp2100_execute_op(op, opclass, fast)	adsp2100_execute_op_x(op, opclass, fast, 0)
+
+
 #include "adsp2100jit.c"
+
+#if (HAS_ADSP2181)
+/* the interpreter loop of the ADSP-2181, apart: its instructions cost
+   nothing to the loop of the other chips */
+static void adsp2181_run(void)
+{
+	do
+	{
+		UINT32 op;
+
+		/* debugging */
+		adsp2100.ppc = adsp2100.pc;	/* copy PC to previous PC */
+		CALL_MAME_DEBUG;
+
+		/* instruction fetch */
+		op = ROPCODE();
+
+		adsp2100_advance(op);
+
+		/* parse the instruction */
+		adsp2100_execute_op_x(op, op >> 16, 0, 1);
+
+		adsp2100_icount--;
+
+	} while (adsp2100_icount > 0);
+}
+#endif
 
 /* execute instructions on this CPU until icount expires */
 int adsp2100_execute(int cycles)
@@ -1524,6 +1740,13 @@ int adsp2100_execute(int cycles)
 	if (adsp_jit_enabled)
 		adsp_jit_run();
 	else
+
+#if (HAS_ADSP2181)
+	/* the ADSP-2181 interpreter loop */
+	if (chip_type == CHIP_TYPE_ADSP2181)
+		adsp2181_run();
+	else
+#endif
 
 	/* core execution loop */
 	do
@@ -2385,6 +2608,120 @@ void adsp2115_set_tx_callback(TX_CALLBACK cb)
 void adsp2115_load_boot_data(data8_t *srcdata, data32_t *dstdata)
 {
 	adsp2104_load_boot_data(srcdata, dstdata);
+}
+
+#endif
+
+
+#if (HAS_ADSP2181)
+/**************************************************************************
+ * ADSP2181 section
+ **************************************************************************/
+
+static UINT8 adsp2181_reg_layout[] =
+{
+	ADSP2100_PC,		ADSP2100_AX0,	ADSP2100_MX0,	-1,
+	ADSP2100_CNTR, 		ADSP2100_AX1,	ADSP2100_MX1,	-1,
+	ADSP2100_MSTAT, 	ADSP2100_AY0,	ADSP2100_MY0,	-1,
+	ADSP2100_SSTAT, 	ADSP2100_AY1,	ADSP2100_MY1,	-1,
+	ADSP2100_PX, 		ADSP2100_AR,	ADSP2100_MR0,	-1,
+	ADSP2100_PCSP, 		ADSP2100_AF,	ADSP2100_MR1,	-1,
+	ADSP2100_CNTRSP, 	ADSP2100_SI,	ADSP2100_MR2,	-1,
+	ADSP2100_STATSP, 	ADSP2100_SE,	ADSP2100_MF,	-1,
+	ADSP2100_LOOPSP, 	ADSP2100_SB,	100,			-1,
+	ADSP2100_IMASK,		ADSP2100_SR0,	100,			-1,
+	ADSP2100_ICNTL,		ADSP2100_SR1,	100,			-1,
+	ADSP2100_I0,		ADSP2100_L0,	ADSP2100_M0,	-1,
+	ADSP2100_I1,		ADSP2100_L1,	ADSP2100_M1,	-1,
+	ADSP2100_I2,		ADSP2100_L2,	ADSP2100_M2,	-1,
+	ADSP2100_I3,		ADSP2100_L3,	ADSP2100_M3,	-1,
+	ADSP2100_I4,		ADSP2100_L4,	ADSP2100_M4,	-1,
+	ADSP2100_I5,		ADSP2100_L5,	ADSP2100_M5,	-1,
+	ADSP2100_I6,		ADSP2100_L6,	ADSP2100_M6,	-1,
+	ADSP2100_I7,		ADSP2100_L7,	ADSP2100_M7,	0
+};
+
+static UINT8 adsp2181_win_layout[] =
+{
+	 0, 0,30,20,	/* register window (top rows) */
+	31, 0,48,14,	/* disassembler window (left colums) */
+	 0,21,30, 1,	/* memory #1 window (right, upper middle) */
+	31,15,48, 7,	/* memory #2 window (right, lower middle) */
+	 0,23,80, 1,	/* command line window (bottom rows) */
+};
+
+void adsp2181_init(void)
+{
+	set_core_2181();
+	adsp2100_init_2181 = 1;
+	adsp2100_init();
+	adsp2100_init_2181 = 0;
+}
+
+void adsp2181_reset(void *param)
+{
+	set_core_2181();
+	adsp2100_reset(param);
+}
+
+void adsp2181_exit(void)
+{
+	adsp2100_exit();
+	sport_rx_callback = 0;
+	sport_tx_callback = 0;
+	io_read_callback = 0;
+	io_write_callback = 0;
+	dmovlay_callback = 0;
+}
+int adsp2181_execute(int cycles) { return adsp2100_execute(cycles); }
+unsigned adsp2181_get_context(void *dst) { return adsp2100_get_context(dst); }
+void adsp2181_set_context(void *src)  { set_core_2181(); adsp2100_set_context(src); }
+unsigned adsp2181_get_reg(int regnum) { return adsp2100_get_reg(regnum); }
+void adsp2181_set_reg(int regnum, unsigned val) { adsp2100_set_reg(regnum,val); }
+void adsp2181_set_irq_line(int irqline, int state) { adsp2100_set_irq_line(irqline,state); }
+void adsp2181_set_irq_callback(int (*callback)(int irqline)) { adsp2100_set_irq_callback(callback); }
+const char *adsp2181_info(void *context, int regnum)
+{
+	switch( regnum )
+    {
+		case CPU_INFO_NAME: return "ADSP2181";
+		case CPU_INFO_VERSION: return "1.0";
+		case CPU_INFO_REG_LAYOUT: return (const char*)adsp2181_reg_layout;
+		case CPU_INFO_WIN_LAYOUT: return (const char*)adsp2181_win_layout;
+	}
+	return adsp2100_info(context,regnum);
+}
+
+unsigned adsp2181_dasm(char *buffer, unsigned pc)
+{
+#ifdef MAME_DEBUG
+	extern unsigned dasm2100(char *, unsigned);
+    return dasm2100(buffer, pc);
+#else
+	sprintf(buffer, "$%06X", RWORD_PGM(pc));
+	return 1;
+#endif
+}
+
+void adsp2181_set_rx_callback(RX_CALLBACK cb)
+{
+	sport_rx_callback = cb;
+}
+
+void adsp2181_set_tx_callback(TX_CALLBACK cb)
+{
+	sport_tx_callback = cb;
+}
+
+void adsp2181_set_io_callbacks(ADSP2181_IO_READ rd, ADSP2181_IO_WRITE wr)
+{
+	io_read_callback = rd;
+	io_write_callback = wr;
+}
+
+void adsp2181_set_dmovlay_callback(ADSP2181_DMOVLAY cb)
+{
+	dmovlay_callback = cb;
 }
 
 #endif
