@@ -95,11 +95,10 @@ static void adsp_jit_free_dead(void)
 		sljit_free_code(adsp_jit_dead[--adsp_jit_ndead], NULL);
 }
 
-static void adsp_jit_flush(void)
+/* frees every translation */
+static void adsp_jit_free_all(void)
 {
 	int i;
-	if (!adsp_jit_code)
-		return;
 	adsp_jit_free_dead();
 	for (i = 0; i < 0x4000; i++)
 		if (adsp_jit_code[i])
@@ -107,6 +106,16 @@ static void adsp_jit_flush(void)
 			sljit_free_code(adsp_jit_code[i], NULL);
 			adsp_jit_code[i] = NULL;
 		}
+}
+
+/* drops every translation, and finds the loop ends again in program
+   memory: only while the ADSP is the active CPU (its program memory is
+   reached through OP_ROM) */
+static void adsp_jit_flush(void)
+{
+	if (!adsp_jit_code)
+		return;
+	adsp_jit_free_all();
 	adsp2100_pgm_dirty = 0;
 	adsp_jit_flush_all = 0;
 	adsp_jit_scan_loops();
@@ -1102,9 +1111,12 @@ static void adsp_jit_run(void)
 	} while (adsp2100_icount > 0);
 }
 
+/* at exit there is no active CPU, and OP_ROM no longer points to the
+   program memory of the ADSP: the translations are freed without
+   scanning it again */
 static void adsp_jit_exit(void)
 {
-	adsp_jit_flush();
+	adsp_jit_free_all();
 	free(adsp_jit_code);
 	free(adsp_dm_rptr);
 	free(adsp_dm_wptr);
