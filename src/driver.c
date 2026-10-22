@@ -3302,6 +3302,8 @@ Sep.1994 Quiz Ghost Hunter
 	DRIVER( harddunj )	/* (c) 1994 (Japan) */
 	DRIVER( titlef )    /* (c) 1992 */
 	DRIVER( scross )	/* (c) 1992 (World) */
+	DRIVER( scrossa )	/* (c) 1992 (World, linkable) */
+	DRIVER( scrossu )	/* (c) 1992 (US) */
 
 	/* Sega ST-V games */
 	DRIVER( astrass )

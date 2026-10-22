@@ -193100,23 +193100,96 @@
 		<description>Stadium Cross (World)</description>
 		<year>1992</year>
 		<manufacturer>Sega</manufacturer>
-		<rom name="epr15093.bin" size="262144" crc="2adc7a4b" sha1="dca71f00d94898c0758394704d819e13482bf120" region="cpu1" offset="0"/>
-		<rom name="epr15094.bin" size="262144" crc="bbb0ae73" sha1="0d8837706405f301adf8fa85c8d4813d7600af98" region="cpu1" offset="2"/>
-		<rom name="epr15018.bin" size="524288" crc="3a98385e" sha1="8088d337655030c28e290da4bbf44cb647dab66c" region="cpu1" offset="100000"/>
-		<rom name="epr15019.bin" size="524288" crc="8bf4ac83" sha1="e594d9d9b42d0765ed8a20a40b7dd92b75124d34" region="cpu1" offset="100002"/>
-		<rom name="epr15192.bin" size="131072" crc="7524290b" sha1="ee58be2c0c4293ee19622b96ca493f4ce4da0038" region="cpu2" offset="0"/>
-		<rom name="epr15020.bin" size="2097152" crc="65afea2f" sha1="ad573727398bfac8e94f321be84b60e5690bfba6" region="gfx1" offset="0"/>
-		<rom name="epr15021.bin" size="2097152" crc="27bc6969" sha1="d6bb446becb2d36b73bca5055357a43b837afc0a" region="gfx1" offset="1"/>
-		<rom name="epr15022.bin" size="2097152" crc="09ca9608" sha1="cbd0138c1c7811d42b051fed6a7e3526cc4e457f" region="gfx2" offset="0"/>
-		<rom name="epr15024.bin" size="2097152" crc="0dc920eb" sha1="d24d637aa0dcd3bae779ef7e12663df81667dbf7" region="gfx2" offset="2"/>
-		<rom name="epr15026.bin" size="2097152" crc="67637c37" sha1="7c250e7e9dd5c07da4fa35bacdfcecd5e8fa4ec7" region="gfx2" offset="4"/>
-		<rom name="epr15028.bin" size="2097152" crc="9929abdc" sha1="34b6624ddd3a0aedec0a2b433643a37f745ec66d" region="gfx2" offset="6"/>
-		<rom name="epr15023.bin" size="2097152" crc="0e42a2bb" sha1="503214caf5fa9a2324b61e04f378fd1a790322df" region="gfx2" offset="800000"/>
-		<rom name="epr15025.bin" size="2097152" crc="0c677fc6" sha1="fc2207008417072e7ee91f722797d827e150ce2d" region="gfx2" offset="800002"/>
-		<rom name="epr15027.bin" size="2097152" crc="d6d077f9" sha1="928cefae9ae58239fbffb1dcee282c6ac1e661fe" region="gfx2" offset="800004"/>
-		<rom name="epr15029.bin" size="2097152" crc="707af749" sha1="fae5325c983df3cf198878220ad88d47339ac512" region="gfx2" offset="800006"/>
-		<rom name="epr15031.bin" size="2097152" crc="663a7fd2" sha1="b4393a687225b075db21960d19a6ddd7a9d7d086" region="sound1" offset="0"/>
-		<rom name="epr15032.bin" size="2097152" crc="cb709f3d" sha1="3962c8b5907d1f8f611f58ddac693cc47364a79c" region="sound1" offset="200000"/>
+		<rom name="epr-15093.ic37" size="262144" crc="2adc7a4b" sha1="dca71f00d94898c0758394704d819e13482bf120" region="cpu1" offset="0"/>
+		<rom name="epr-15094.ic40" size="262144" crc="bbb0ae73" sha1="0d8837706405f301adf8fa85c8d4813d7600af98" region="cpu1" offset="2"/>
+		<rom name="mpr-15018.ic36" size="524288" crc="3a98385e" sha1="8088d337655030c28e290da4bbf44cb647dab66c" region="cpu1" offset="100000"/>
+		<rom name="mpr-15019.ic39" size="524288" crc="8bf4ac83" sha1="e594d9d9b42d0765ed8a20a40b7dd92b75124d34" region="cpu1" offset="100002"/>
+		<rom name="epr-15192.ic31" size="131072" crc="7524290b" sha1="ee58be2c0c4293ee19622b96ca493f4ce4da0038" region="cpu2" offset="0"/>
+		<rom name="mpr-15020.ic3" size="1048576" crc="de47006a" sha1="dbef7b9ff8c39992b8596d38985e65c627d6fa79" region="gfx1" offset="0"/>
+		<rom name="mpr-15021.ic11" size="1048576" crc="3677db02" sha1="7aeeb85f1632253fcdc8f7881512066e97837e5e" region="gfx1" offset="1"/>
+		<rom name="mpr-15022.ic14" size="1048576" crc="baee6fd5" sha1="ddf022c61f0805af45a84c65eb5d01006c153c07" region="gfx2" offset="0"/>
+		<rom name="mpr-15024.ic15" size="1048576" crc="b9f339e2" sha1="4b9a392459132a19d62928ef3939e1f2356e3994" region="gfx2" offset="2"/>
+		<rom name="mpr-15026.ic10" size="1048576" crc="b72e8df6" sha1="a7a87f79814b022985121e163c7f88244c50e427" region="gfx2" offset="4"/>
+		<rom name="mpr-15028.ic38" size="1048576" crc="183f6eb0" sha1="5a2172d5afd696af361ff9f8a92f5911e05c578d" region="gfx2" offset="6"/>
+		<rom name="mpr-15023.ic22" size="1048576" crc="230735ed" sha1="36075504e27b8a32d63fa3b8abd7037d17440ebf" region="gfx2" offset="800000"/>
+		<rom name="mpr-15025.ic23" size="1048576" crc="da4315cb" sha1="3910c5654e34b17851d6d93615e3404b3b397fea" region="gfx2" offset="800002"/>
+		<rom name="mpr-15027.ic18" size="1048576" crc="b765efb8" sha1="61f3865f92b36ca4b3cd20c0716a7121755eea73" region="gfx2" offset="800004"/>
+		<rom name="mpr-15029.ic41" size="1048576" crc="cf8e3b2b" sha1="c158810d9d82b10a753bc739d1f56572042dac0b" region="gfx2" offset="800006"/>
+		<rom name="mpr-15031.ic1" size="1048576" crc="6af139dc" sha1="2378c2ad0c52c114eb93206a6fbee723c038d030" region="sound1" offset="0"/>
+		<rom name="mpr-15032.ic2" size="1048576" crc="915d6096" sha1="e1f670949b1254f5a3c3131993ca9b3baa4d9f6b" region="sound1" offset="200000"/>
+		<rom name="epr-15033.ic17" size="131072" crc="dc19ac00" sha1="16bbb5af034e5419673e637be30283b73ab7b290" region="user1" offset="0"/>
+		<chip type="cpu" name="V60" clock="20000000"/>
+		<chip type="cpu" name="Z80" clock="8053975"/>
+		<chip type="audio" name="YM3438" clock="8053975"/>
+		<chip type="audio" name="Sega 315-5560"/>
+		<video screen="raster" orientation="horizontal" width="832" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="2"/>
+		<input players="2" control="stick" buttons="4" coins="2" service="yes"/>
+		<dipswitch name="Monitors">
+			<dipvalue name="A only" default="yes"/>
+			<dipvalue name="A and B"/>
+			<dipvalue name="B only"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="32768"/>
+	</game>
+	<game name="scrossa" sourcefile="segas32.c" cloneof="scross" romof="scross">
+		<description>Stadium Cross (World, linkable)</description>
+		<year>1992</year>
+		<manufacturer>Sega</manufacturer>
+		<rom name="ic37" size="262144" crc="240a7655" sha1="7cfdce002fb4783e8c1debf206922d88647c106e" region="cpu1" offset="0"/>
+		<rom name="ic40" size="262144" crc="3a073060" sha1="c92c8d8921d94d85c8484c103cbf9cd6ad651333" region="cpu1" offset="2"/>
+		<rom name="mpr-15018.ic36" merge="mpr-15018.ic36" size="524288" crc="3a98385e" sha1="8088d337655030c28e290da4bbf44cb647dab66c" region="cpu1" offset="100000"/>
+		<rom name="mpr-15019.ic39" merge="mpr-15019.ic39" size="524288" crc="8bf4ac83" sha1="e594d9d9b42d0765ed8a20a40b7dd92b75124d34" region="cpu1" offset="100002"/>
+		<rom name="epr-15192.ic31" merge="epr-15192.ic31" size="131072" crc="7524290b" sha1="ee58be2c0c4293ee19622b96ca493f4ce4da0038" region="cpu2" offset="0"/>
+		<rom name="mpr-15020.ic3" merge="mpr-15020.ic3" size="1048576" crc="de47006a" sha1="dbef7b9ff8c39992b8596d38985e65c627d6fa79" region="gfx1" offset="0"/>
+		<rom name="mpr-15021.ic11" merge="mpr-15021.ic11" size="1048576" crc="3677db02" sha1="7aeeb85f1632253fcdc8f7881512066e97837e5e" region="gfx1" offset="1"/>
+		<rom name="mpr-15022.ic14" merge="mpr-15022.ic14" size="1048576" crc="baee6fd5" sha1="ddf022c61f0805af45a84c65eb5d01006c153c07" region="gfx2" offset="0"/>
+		<rom name="mpr-15024.ic15" merge="mpr-15024.ic15" size="1048576" crc="b9f339e2" sha1="4b9a392459132a19d62928ef3939e1f2356e3994" region="gfx2" offset="2"/>
+		<rom name="mpr-15026.ic10" merge="mpr-15026.ic10" size="1048576" crc="b72e8df6" sha1="a7a87f79814b022985121e163c7f88244c50e427" region="gfx2" offset="4"/>
+		<rom name="mpr-15028.ic38" merge="mpr-15028.ic38" size="1048576" crc="183f6eb0" sha1="5a2172d5afd696af361ff9f8a92f5911e05c578d" region="gfx2" offset="6"/>
+		<rom name="mpr-15023.ic22" merge="mpr-15023.ic22" size="1048576" crc="230735ed" sha1="36075504e27b8a32d63fa3b8abd7037d17440ebf" region="gfx2" offset="800000"/>
+		<rom name="mpr-15025.ic23" merge="mpr-15025.ic23" size="1048576" crc="da4315cb" sha1="3910c5654e34b17851d6d93615e3404b3b397fea" region="gfx2" offset="800002"/>
+		<rom name="mpr-15027.ic18" merge="mpr-15027.ic18" size="1048576" crc="b765efb8" sha1="61f3865f92b36ca4b3cd20c0716a7121755eea73" region="gfx2" offset="800004"/>
+		<rom name="mpr-15029.ic41" merge="mpr-15029.ic41" size="1048576" crc="cf8e3b2b" sha1="c158810d9d82b10a753bc739d1f56572042dac0b" region="gfx2" offset="800006"/>
+		<rom name="mpr-15031.ic1" merge="mpr-15031.ic1" size="1048576" crc="6af139dc" sha1="2378c2ad0c52c114eb93206a6fbee723c038d030" region="sound1" offset="0"/>
+		<rom name="mpr-15032.ic2" merge="mpr-15032.ic2" size="1048576" crc="915d6096" sha1="e1f670949b1254f5a3c3131993ca9b3baa4d9f6b" region="sound1" offset="200000"/>
+		<rom name="epr-15033.ic17" merge="epr-15033.ic17" size="131072" crc="dc19ac00" sha1="16bbb5af034e5419673e637be30283b73ab7b290" region="user1" offset="0"/>
+		<chip type="cpu" name="V60" clock="20000000"/>
+		<chip type="cpu" name="Z80" clock="8053975"/>
+		<chip type="audio" name="YM3438" clock="8053975"/>
+		<chip type="audio" name="Sega 315-5560"/>
+		<video screen="raster" orientation="horizontal" width="832" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="2"/>
+		<input players="2" control="stick" buttons="4" coins="2" service="yes"/>
+		<dipswitch name="Monitors">
+			<dipvalue name="A only" default="yes"/>
+			<dipvalue name="A and B"/>
+			<dipvalue name="B only"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="32768"/>
+	</game>
+	<game name="scrossu" sourcefile="segas32.c" cloneof="scross" romof="scross">
+		<description>Stadium Cross (US)</description>
+		<year>1992</year>
+		<manufacturer>Sega</manufacturer>
+		<rom name="epr-15091.ic37" size="262144" crc="2c572293" sha1="6377a6eb6084f7332ce6eeaaf0c37200da792d0c" region="cpu1" offset="0"/>
+		<rom name="epr-15092.ic40" size="262144" crc="6e3e175a" sha1="feaca0720646e2a4b78b376e99dc86788adb98e7" region="cpu1" offset="2"/>
+		<rom name="mpr-15018.ic36" merge="mpr-15018.ic36" size="524288" crc="3a98385e" sha1="8088d337655030c28e290da4bbf44cb647dab66c" region="cpu1" offset="100000"/>
+		<rom name="mpr-15019.ic39" merge="mpr-15019.ic39" size="524288" crc="8bf4ac83" sha1="e594d9d9b42d0765ed8a20a40b7dd92b75124d34" region="cpu1" offset="100002"/>
+		<rom name="epr-15192.ic31" merge="epr-15192.ic31" size="131072" crc="7524290b" sha1="ee58be2c0c4293ee19622b96ca493f4ce4da0038" region="cpu2" offset="0"/>
+		<rom name="mpr-15020.ic3" merge="mpr-15020.ic3" size="1048576" crc="de47006a" sha1="dbef7b9ff8c39992b8596d38985e65c627d6fa79" region="gfx1" offset="0"/>
+		<rom name="mpr-15021.ic11" merge="mpr-15021.ic11" size="1048576" crc="3677db02" sha1="7aeeb85f1632253fcdc8f7881512066e97837e5e" region="gfx1" offset="1"/>
+		<rom name="mpr-15022.ic14" merge="mpr-15022.ic14" size="1048576" crc="baee6fd5" sha1="ddf022c61f0805af45a84c65eb5d01006c153c07" region="gfx2" offset="0"/>
+		<rom name="mpr-15024.ic15" merge="mpr-15024.ic15" size="1048576" crc="b9f339e2" sha1="4b9a392459132a19d62928ef3939e1f2356e3994" region="gfx2" offset="2"/>
+		<rom name="mpr-15026.ic10" merge="mpr-15026.ic10" size="1048576" crc="b72e8df6" sha1="a7a87f79814b022985121e163c7f88244c50e427" region="gfx2" offset="4"/>
+		<rom name="mpr-15028.ic38" merge="mpr-15028.ic38" size="1048576" crc="183f6eb0" sha1="5a2172d5afd696af361ff9f8a92f5911e05c578d" region="gfx2" offset="6"/>
+		<rom name="mpr-15023.ic22" merge="mpr-15023.ic22" size="1048576" crc="230735ed" sha1="36075504e27b8a32d63fa3b8abd7037d17440ebf" region="gfx2" offset="800000"/>
+		<rom name="mpr-15025.ic23" merge="mpr-15025.ic23" size="1048576" crc="da4315cb" sha1="3910c5654e34b17851d6d93615e3404b3b397fea" region="gfx2" offset="800002"/>
+		<rom name="mpr-15027.ic18" merge="mpr-15027.ic18" size="1048576" crc="b765efb8" sha1="61f3865f92b36ca4b3cd20c0716a7121755eea73" region="gfx2" offset="800004"/>
+		<rom name="mpr-15029.ic41" merge="mpr-15029.ic41" size="1048576" crc="cf8e3b2b" sha1="c158810d9d82b10a753bc739d1f56572042dac0b" region="gfx2" offset="800006"/>
+		<rom name="mpr-15031.ic1" merge="mpr-15031.ic1" size="1048576" crc="6af139dc" sha1="2378c2ad0c52c114eb93206a6fbee723c038d030" region="sound1" offset="0"/>
+		<rom name="mpr-15032.ic2" merge="mpr-15032.ic2" size="1048576" crc="915d6096" sha1="e1f670949b1254f5a3c3131993ca9b3baa4d9f6b" region="sound1" offset="200000"/>
+		<rom name="epr-15033.ic17" merge="epr-15033.ic17" size="131072" crc="dc19ac00" sha1="16bbb5af034e5419673e637be30283b73ab7b290" region="user1" offset="0"/>
 		<chip type="cpu" name="V60" clock="20000000"/>
 		<chip type="cpu" name="Z80" clock="8053975"/>
 		<chip type="audio" name="YM3438" clock="8053975"/>
