@@ -130,6 +130,14 @@ Sound: Analog Devices ADSP-2181
     MG05 - Dead or Alive ++
     MG09 - Tondemo Crisis
 
+  Atari / Time Warner ( coh-1000w )
+  ---------------------------------
+
+    Key
+    ---
+    TW01 - Motherboard
+    TW02 - Primal Rage II
+
   ***************************************************************************/
 
 #define PROTECTION_HACK ( 1 )
@@ -144,6 +152,7 @@ Sound: Analog Devices ADSP-2181
 #include "includes/psx.h"
 #include "state.h"
 #include "sound/psx.h"
+#include "machine/idectrl.h"
 
 static int zn_bank_secsel;	/* the game ROM bank follows this register (Raizing) */
 static UINT32 tecmo_bank;
@@ -795,7 +804,10 @@ static READ32_HANDLER( boardconfig_r )
 {
 	/* --00/01 mem=4M, 10 mem=8M, 11 mem=16M; -1-- smem=2M; 1--- vmem=2M;
 	   011----- rev=1 */
-	return zn_vram_2mb ? 64|32|8 : 64|32;
+	int n_config = zn_vram_2mb ? 64|32|8 : 64|32;
+	if( memory_region_length( REGION_CPU1 ) == 0x800000 )
+		n_config |= 2;	/* 8MB (Atari) */
+	return n_config;
 }
 
 static READ32_HANDLER( zn_unknown_r )
@@ -940,8 +952,9 @@ static data32_t *zn_scratchpad;
 
 /* direct access to RAM, scratchpad and BIOS for the PSX CPU core, and the
    recompiler (core option, as on System 11/12). Called at machine init,
-   after the cpu init that clears them. The RAM is 4 MB here, the
-   BIOS is in REGION_USER3, so psx_machine_cpu_speedups() does not fit */
+   after the cpu init that clears them. The RAM is 4 MB (8 MB on the
+   Atari board), the BIOS is in REGION_USER3, so psx_machine_cpu_speedups()
+   does not fit */
 static void zn_cpu_speedups( void )
 {
 	static const offs_t ram_base[] = { 0x00000000, 0x80000000, 0xa0000000 };
@@ -950,7 +963,7 @@ static void zn_cpu_speedups( void )
 	UINT32 n_bios = memory_region_length( REGION_USER3 );
 	int i;
 
-	if( n_ram > 0x00400000 ) n_ram = 0x00400000;
+	if( n_ram > 0x00800000 ) n_ram = 0x00800000;
 	for( i = 0; i < 3; i++ )
 	{
 		psxcpu_add_fastram( ram_base[ i ], ram_base[ i ] + n_ram - 1, 0, memory_region( REGION_CPU1 ) );
@@ -1955,6 +1968,172 @@ MACHINE_DRIVER_END
 
 /***************************************************************************
 
+  Atari / Time Warner (COH-1000W), as in current MAME
+
+  ZN-1 main board with 2MB VRAM, 8MB of RAM and the Time Warner BIOS;
+  CAT702 TW01 on the main board, TW02 on the ROM board. Game ROM: 2MB at
+  0x1f000000. A VT83C461 IDE controller with the hard disk: its registers
+  at 0x1f7e4000, a 32-bit data port at 0x1f7f4000 (the high half is
+  latched), an interrupt enable at 0x1f7e8000 (bit 0), the interrupt on
+  PSX IRQ 10 and the sector data on PSX DMA channel 5. Sound: the PSX SPU
+  only.
+
+***************************************************************************/
+
+static UINT16 atari_irqctrl;
+static UINT16 atari_latch;
+static UINT8 atari_ide_irq;
+
+static void atari_ide_interrupt( int state )
+{
+	atari_ide_irq = ( state != CLEAR_LINE );
+	if( atari_ide_irq && ( atari_irqctrl & 1 ) )
+		psx_irq_set( 0x400 );
+}
+
+static struct ide_interface atari_ide_intf =
+{
+	atari_ide_interrupt
+};
+
+static READ32_HANDLER( atari_irqctrl_r )
+{
+	return atari_irqctrl;
+}
+
+static WRITE32_HANDLER( atari_irqctrl_w )
+{
+	UINT32 n_ctrl = atari_irqctrl;
+	COMBINE_DATA( &n_ctrl );
+	atari_irqctrl = n_ctrl & 0xffff;
+}
+
+/* the 32-bit data port: a read of 0x1f0 returns the low half and latches
+   the high half, which a read of 0x1f2 returns */
+static READ32_HANDLER( atari_ide32_r )
+{
+	UINT32 n_data = 0xffffffff;
+	if( offset == 0x1f0 / 4 )
+	{
+		if( ( mem_mask & 0x0000ffff ) == 0 )
+		{
+			UINT32 n_data32 = ide_controller32_0_r( 0x1f0 / 4, 0 );
+			atari_latch = n_data32 >> 16;
+			n_data = ( n_data & 0xffff0000 ) | ( n_data32 & 0xffff );
+		}
+		if( ( mem_mask & 0xffff0000 ) == 0 )
+			n_data = ( n_data & 0x0000ffff ) | ( (UINT32)atari_latch << 16 );
+	}
+	return n_data;
+}
+
+/* the sector data on DMA channel 5, 16 bits at a time */
+static void atari_dma_read( UINT32 n_address, INT32 n_size )
+{
+	UINT8 *p_ram = memory_region( REGION_CPU1 );
+	UINT32 n_mask = memory_region_length( REGION_CPU1 ) - 1;
+
+	n_size <<= 1;
+	while( n_size > 0 )
+	{
+		UINT16 n_word = ide_controller32_0_r( 0x1f0 / 4, 0xffff0000 ) & 0xffff;
+		*( (UINT16 *)( p_ram + WORD_XOR_LE( n_address & n_mask ) ) ) = n_word;
+		n_address += 2;
+		n_size--;
+	}
+}
+
+static void atari_dma_write( UINT32 n_address, INT32 n_size )
+{
+}
+
+static MEMORY_READ32_START( atari_zn_readmem )
+	{ 0x00000000, 0x007fffff, MRA32_RAM },    /* ram, 8MB */
+	{ 0x80000000, 0x807fffff, MRA32_BANK5 },  /* ram mirror */
+	{ 0xa0000000, 0xa07fffff, MRA32_BANK9 },  /* ram mirror */
+	{ 0x1f000000, 0x1f1fffff, MRA32_BANK1 },  /* game rom */
+	{ 0x1f7e4000, 0x1f7e4fff, ide_controller32_0_r },
+	{ 0x1f7e8000, 0x1f7e8003, atari_irqctrl_r },
+	{ 0x1f7f4000, 0x1f7f4fff, atari_ide32_r },
+	ZN_MAIN_READ
+MEMORY_END
+
+static MEMORY_WRITE32_START( atari_zn_writemem )
+	{ 0x00000000, 0x007fffff, MWA32_RAM },
+	{ 0x80000000, 0x807fffff, MWA32_BANK5 },
+	{ 0xa0000000, 0xa07fffff, MWA32_BANK9 },
+	{ 0x1f000000, 0x1f000003, MWA32_NOP },    /* watchdog (DS1232) */
+	{ 0x1f000004, 0x1f1fffff, MWA32_ROM },
+	{ 0x1f7e4000, 0x1f7e4fff, ide_controller32_0_w },
+	{ 0x1f7e8000, 0x1f7e8003, atari_irqctrl_w },
+	{ 0x1f7f4000, 0x1f7f4fff, MWA32_NOP },
+	ZN_MAIN_WRITE
+MEMORY_END
+
+static DRIVER_INIT( coh1000w )
+{
+	zn_scratchpad = auto_malloc( 0x400 );
+	zn_eeprom = auto_malloc( 0x800 );
+	memset( zn_scratchpad, 0, 0x400 );
+	memset( zn_eeprom, 0xff, 0x800 );
+
+	zn_vram_2mb = 1;
+	zn_coin_tecmo = 0;
+	zn_eeprom_default = REGION_USER6;	/* factory settings */
+
+	zn_board_init();
+	cpu_setbank( 1, memory_region( REGION_USER1 ) );
+	znsec_init( 0, memory_region( REGION_USER4 ) );	/* TW01 */
+	znsec_init( 1, memory_region( REGION_USER5 ) );	/* TW02 */
+
+	psx_dma_install_read_handler( 5, atari_dma_read );
+	psx_dma_install_write_handler( 5, atari_dma_write );
+	ide_controller_init( 0, &atari_ide_intf );
+
+	state_save_register_UINT16( "zn", 0, "atari_irqctrl", &atari_irqctrl, 1 );
+	state_save_register_UINT16( "zn", 0, "atari_latch", &atari_latch, 1 );
+	state_save_register_UINT8( "zn", 0, "atari_ide_irq", &atari_ide_irq, 1 );
+	state_save_register_UINT32( "zn", 0, "scratchpad", zn_scratchpad, 0x100 );
+}
+
+static MACHINE_INIT( atari_zn )
+{
+	atari_irqctrl = 0;
+	atari_latch = 0;
+	atari_ide_irq = 0;
+	ide_controller_reset( 0 );
+	zn_board_reset();
+}
+
+/* ZN-1, 2MB VRAM, 8MB RAM (COH-1000W), SPU sound */
+static MACHINE_DRIVER_START( coh1000w )
+	MDRV_CPU_ADD_TAG( "main", PSXCPU, 33868800 / 2 )	/* CXD8530CQ, 67.7376MHz XTAL; as System 11 */
+	MDRV_CPU_MEMORY( atari_zn_readmem, atari_zn_writemem )
+	MDRV_CPU_VBLANK_INT( psx_vblank, 1 )
+
+	MDRV_FRAMES_PER_SECOND( 60 )
+	MDRV_VBLANK_DURATION( 0 )
+
+	MDRV_MACHINE_INIT( atari_zn )
+	MDRV_NVRAM_HANDLER( zn )
+
+	MDRV_VIDEO_ATTRIBUTES( VIDEO_TYPE_RASTER | VIDEO_RGB_DIRECT )
+	MDRV_SCREEN_SIZE( 640, 480 )
+	MDRV_VISIBLE_AREA( 0, 639, 0, 479 )
+	MDRV_PALETTE_LENGTH( 65536 )
+
+	MDRV_PALETTE_INIT( psx )
+	MDRV_VIDEO_START( psx_type2_1024x1024 )
+	MDRV_VIDEO_UPDATE( psx )
+	MDRV_VIDEO_STOP( psx )
+
+	MDRV_SOUND_ATTRIBUTES( SOUND_SUPPORTS_STEREO )
+	MDRV_SOUND_ADD( PSXSPU, zn_spu_interface )
+MACHINE_DRIVER_END
+
+
+/***************************************************************************
+
   Video System (COH-1002V), as in current MAME
 
   ZN-1 main board with 2MB VRAM and the Video System BIOS; CAT702 KN01 on
@@ -2457,6 +2636,26 @@ INPUT_PORTS_START( tgmj )
 	TPS_SYSTEM_PORT( 1, 1, 0 )
 	TPS_UNUSED_PORT
 	TPS_UNUSED_PORT
+	ZN_DSW_PORT
+INPUT_PORTS_END
+
+/* Primal Rage 2: two players, six buttons; buttons 4 to 6 of both players
+   on the P4 inputs */
+INPUT_PORTS_START( primrag2 )
+	TPS_PLAYER_PORT( 1, 1, 0 )
+	TPS_PLAYER_PORT( 2, 1, 0 )
+	TPS_SERVICE_PORT( 0 )
+	TPS_SYSTEM_PORT( 1, 1, 0 )
+	TPS_UNUSED_PORT
+	PORT_START	/* P4 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER1 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER1 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON6 | IPF_PLAYER1 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER2 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER2 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON6 | IPF_PLAYER2 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED )
 	ZN_DSW_PORT
 INPUT_PORTS_END
 
@@ -4938,27 +5137,36 @@ ROM_START( beastrzb )
 ROM_END
 
 
-/* Atari PSX */
+/* Atari / Time Warner (COH-1000W), MAME names */
 
-#define AT_BIOS \
-	ROM_REGION( 0x480400, REGION_CPU1, 0 ) \
-	ROM_LOAD( "coh1000t.bin", 0x0400000, 0x080000, NO_DUMP )
+#define TIME_WARNER_BIOS \
+	ROM_REGION32_LE( 0x800000, REGION_CPU1, ROMREGION_ERASE00 ) /* ram, 8MB */ \
+	ROM_REGION32_LE( 0x080000, REGION_USER3, 0 ) /* bios */ \
+	ROM_LOAD( "msm27c402zb.ic353", 0x000000, 0x080000, CRC(45e8a4b4) SHA1(815488d8563c85f97fbc3384ff21f08e4c88b7b7) ) \
+	ROM_REGION( 0x000008, REGION_USER4, 0 ) /* CAT702, main board */ \
+	ROM_LOAD( "tw01.ic652", 0x000000, 0x000008, CRC(1cac067e) SHA1(8e87941bfb374172628c8a37647e3a66b7166aa8) )
 
-ROM_START( atpsx )
-	AT_BIOS
+ROM_START( coh1000w )
+	TIME_WARNER_BIOS
 ROM_END
 
 ROM_START( primrag2 )
-	AT_BIOS
+	TIME_WARNER_BIOS
 
-	ROM_REGION32_LE( 0x080000, REGION_USER1, 0 )
-	ROM_LOAD( "pr2_036.u14",  0x000000, 0x080000, CRC(c86450cd) SHA1(19c3c50d839a9efb6ffa9ada8a072f56697c1abb) ) 
-	ROM_LOAD( "pr2_036.u15",  0x000000, 0x080000, CRC(4b24bd54) SHA1(7f27cd524d10e5869aab6d4dc6a4217d049c475d) ) 
-	ROM_LOAD( "pr2_036.u16",  0x000000, 0x080000, CRC(3ee39e4f) SHA1(dbd859b54fb9be33effc14eb847dcd829024eea3) ) 
-	ROM_LOAD( "pr2_036.u17",  0x000000, 0x080000, CRC(3681516c) SHA1(714f73ea4ac190c36a6eb2308616a4aecabc4e69) ) 
+	ROM_REGION32_LE( 0x200000, REGION_USER1, 0 ) /* game rom */
+	ROM_LOAD16_BYTE( "pr2_036.u16",  0x000001, 0x080000, CRC(3ee39e4f) SHA1(dbd859b54fb9be33effc14eb847dcd829024eea3) )
+	ROM_LOAD16_BYTE( "pr2_036.u14",  0x000000, 0x080000, CRC(c86450cd) SHA1(19c3c50d839a9efb6ffa9ada8a072f56697c1abb) )
+	ROM_LOAD16_BYTE( "pr2_036.u17",  0x100001, 0x080000, CRC(3681516c) SHA1(714f73ea4ac190c36a6eb2308616a4aecabc4e69) )
+	ROM_LOAD16_BYTE( "pr2_036.u15",  0x100000, 0x080000, CRC(4b24bd54) SHA1(7f27cd524d10e5869aab6d4dc6a4217d049c475d) )
+
+	ROM_REGION( 0x000800, REGION_USER6, 0 ) /* at28c16, factory settings */
+	ROM_LOAD( "at28c16", 0x000000, 0x000800, CRC(62c21283) SHA1(6013d831fb97c025682603a1bb9d62bd93e1b893) )
+
+	ROM_REGION( 0x000008, REGION_USER5, 0 ) /* CAT702, rom board */
+	ROM_LOAD( "tw02", 0x000000, 0x000008, CRC(583e8e1c) SHA1(0af99e3feb3fa684883a5daefba2c38a442f3884) )
 
 	DISK_REGION( REGION_DISKS )
-/*	DISK_IMAGE() */
+	DISK_IMAGE( "primrag2", 0, SHA1(bc615068ddf4fd967f770ee01c02f285c052c4c5) )
 ROM_END
 
 /* Acclaim PSX */
@@ -5077,13 +5285,8 @@ GAMEX( 1999, shiryu2,  strider2, coh3002c, strider2, coh3002c, ROT0, "Capcom", "
 
 /* Atari */
 
-/* A dummy driver, so that the bios can be debugged, and to serve as */
-/* parent for the coh1000t.bin file, so that we do not have to include */
-/* it in every zip file */
-
-GAMEX( 1996, atpsx,    0,        zn,       zn, zn,   ROT0, "Atari", "Atari PSX", NOT_A_DRIVER )
-
-GAMEX( 1996, primrag2, 0,        zn,       zn, zn,   ROT0, "Atari", "Primal Rage 2", GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )
+GAMEX( 1995, coh1000w,  0,        coh1000w, tps2p,    coh1000w, ROT0,   "Atari", "Time Warner ZN-1", NOT_A_DRIVER )
+GAMEX( 1997, primrag2,  coh1000w, coh1000w, primrag2, coh1000w, ROT0,   "Atari", "Primal Rage II (Test Version 0.36a)", 0 )
 
 /* Acclaim */
 
