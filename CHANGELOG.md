@@ -224,6 +224,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Squash
 * Star Fire 2
 * Steel Worker
+* Street Fighter III 3rd Strike: Fight for the Future (Widescreen 20220908, Bank Bank hack) - Romset `sfiii3ws`
 * Success Joe
 * Super Bishi Bashi Championship (ver JAA, 2 Players)
 * Super Bubble Bobble (Sun Mixing, Megadrive clone hardware)

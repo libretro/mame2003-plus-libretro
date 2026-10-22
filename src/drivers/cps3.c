@@ -751,6 +751,13 @@ VIDEO_UPDATE( cps3 )
 		screenwidth = width;
 	}
 
+	/* the wide video mode (sfiii2) at 16:9, unless the "Wide Screen Aspect"
+	   DIP switch asks for the 4:3 of the arcade monitor */
+	if (screenwidth > 384 && !(readinputport(4) & 0x10))
+		set_display_aspect_ratio(16, 9);
+	else
+		set_display_aspect_ratio(4, 3);
+
 	fullscreenzoomx = cps3_ppu_crtc_zoom[3] & 0x000000ff;
 	fullscreenzoomy = cps3_ppu_crtc_zoom[7] & 0x000000ff;
 	/* clamp at 0x80, not known to be accurate */
@@ -1589,7 +1596,7 @@ MEMORY_END
 
 /* not on the board: the cart's region byte, patched at reset. The default
    is Europe, USA for the games with no European release */
-#define CPS3_REGION_DIP(def) \
+#define CPS3_REGION_SETTINGS(def) \
 	PORT_START \
 	PORT_DIPNAME( 0x0f, def, "Region" ) \
 	PORT_DIPSETTING(    0x00, "As BIOS" ) \
@@ -1600,18 +1607,37 @@ MEMORY_END
 	PORT_DIPSETTING(    0x05, "Hispanic" ) \
 	PORT_DIPSETTING(    0x06, "Brazil" ) \
 	PORT_DIPSETTING(    0x07, "Oceania" ) \
-	PORT_DIPSETTING(    0x08, "Asia (BIOS set 2)" ) \
+	PORT_DIPSETTING(    0x08, "Asia (BIOS set 2)" )
+
+#define CPS3_REGION_DIP(def) \
+	CPS3_REGION_SETTINGS(def) \
 	PORT_BIT( 0xf0, IP_ACTIVE_HIGH, IPT_UNUSED )
+
+/* not on the board either: the shape of the display in the wide (496 pixels)
+   video mode, see VIDEO_UPDATE( cps3 ). On the arcade monitor the wide mode
+   stays 4:3 with narrower pixels; 16:9 keeps the pixels of the 384 mode */
+#define CPS3_REGION_WIDE_DIP(def) \
+	CPS3_REGION_SETTINGS(def) \
+	PORT_DIPNAME( 0x10, 0x00, "Wide Screen Aspect" ) \
+	PORT_DIPSETTING(    0x00, "16:9" ) \
+	PORT_DIPSETTING(    0x10, "4:3" ) \
+	PORT_BIT( 0xe0, IP_ACTIVE_HIGH, IPT_UNUSED )
 
 INPUT_PORTS_START( cps3 )
 	CPS3_COMMON_INPUTS
 	CPS3_REGION_DIP( 0x03 )
 INPUT_PORTS_END
 
-/* 2nd Impact: USA, Japan, Asia and Hispanic only */
+/* 2nd Impact: USA, Japan, Asia and Hispanic only. Uses the wide video mode */
 INPUT_PORTS_START( sfiii2 )
 	CPS3_COMMON_INPUTS
-	CPS3_REGION_DIP( 0x04 )
+	CPS3_REGION_WIDE_DIP( 0x04 )
+INPUT_PORTS_END
+
+/* 3rd Strike widescreen hack: always in the wide video mode */
+INPUT_PORTS_START( sfiii3ws )
+	CPS3_COMMON_INPUTS
+	CPS3_REGION_WIDE_DIP( 0x03 )
 INPUT_PORTS_END
 
 
@@ -2612,6 +2638,56 @@ ROM_START( sfiii4n )
 	ROM_LOAD16_BYTE( "sfiii3-simm6.7", 0x3c00001, 0x200000, CRC(cc5f4187) SHA1(248ddace21ed4736a56e92f77cc6ad219d7fef0b) )
 ROM_END
 
+/* Street Fighter III 3rd Strike widescreen hack (Bank Bank, 20220908): the
+   990608 game drawn in the 496 pixel wide video mode, 16:9 by default (see
+   the "Wide Screen Aspect" setting). ROM names follow the FBNeo set */
+ROM_START( sfiii3ws )
+	ROM_REGION32_BE( 0x080000, REGION_CPU1, 0 ) /* BIOS */
+	ROM_LOAD( "sfiii3_japan_nocd.29f400.u2", 0x000000, 0x080000, CRC(1edc6366) SHA1(60b4b9adeb030a33059d74fdf03873029e465b52) )
+	ROM_REGION( 0x1000000, REGION_USER1, ROMREGION_ERASEFF ) /* SIMM 1-2: program, 4 chips each */
+	ROM_LOAD32_BYTE( "sfiii3ws-simm1.0", 0x0000000, 0x200000, CRC(16843828) SHA1(b2e3e47ecca1422cb7adc1a0aab9120fa44fbef0) )
+	ROM_LOAD32_BYTE( "sfiii3ws-simm1.1", 0x0000001, 0x200000, CRC(0d084fbc) SHA1(750602b92ea3c994d81e91f09031081bc465a8a4) )
+	ROM_LOAD32_BYTE( "sfiii3ws-simm1.2", 0x0000002, 0x200000, CRC(3f6d1f52) SHA1(c50a2f327adb38ece5a572ac453732de02559d70) )
+	ROM_LOAD32_BYTE( "sfiii3ws-simm1.3", 0x0000003, 0x200000, CRC(3ff7516b) SHA1(2ff27926017f81a9330c16ed9d3559e71263b03d) )
+	ROM_LOAD32_BYTE( "sfiii3-simm2.0", 0x0800000, 0x200000, CRC(06eb969e) SHA1(d89f6a6585b76692d57d337f0f8186398fb056da) )
+	ROM_LOAD32_BYTE( "sfiii3-simm2.1", 0x0800001, 0x200000, CRC(e7039f82) SHA1(8e81e66b5a4f45ae14b070a491bde47a6a74499f) )
+	ROM_LOAD32_BYTE( "sfiii3-simm2.2", 0x0800002, 0x200000, CRC(645c96f7) SHA1(06d5a54874d4bf100b776131ec9060da209ad037) )
+	ROM_LOAD32_BYTE( "sfiii3-simm2.3", 0x0800003, 0x200000, CRC(610efab1) SHA1(bbc21ed6ff6220ff6017a3f02ebd9a341fbc9040) )
+	ROM_REGION( 0x4000000, REGION_USER2, ROMREGION_ERASEFF ) /* SIMM 3-6: graphics and samples, chip pairs */
+	ROM_LOAD16_BYTE( "sfiii3-simm3.0", 0x0000000, 0x200000, CRC(7baa1f79) SHA1(3f409df28c24dd7221966b5340d59898ea756b6f) )
+	ROM_LOAD16_BYTE( "sfiii3-simm3.1", 0x0000001, 0x200000, CRC(234bf8fe) SHA1(2191781ae4d726cab28de97f27efa4a13f3bdd69) )
+	ROM_LOAD16_BYTE( "sfiii3-simm3.2", 0x0400000, 0x200000, CRC(d9ebc308) SHA1(af6a0dca77e5181c9f20533a06760a782c5fd51d) )
+	ROM_LOAD16_BYTE( "sfiii3-simm3.3", 0x0400001, 0x200000, CRC(293cba77) SHA1(294604cacdc24261aec4d39e489de91c41fa1758) )
+	ROM_LOAD16_BYTE( "sfiii3-simm3.4", 0x0800000, 0x200000, CRC(6055e747) SHA1(3813852c5a4a5355ef739ca8f0913bbd390b984b) )
+	ROM_LOAD16_BYTE( "sfiii3-simm3.5", 0x0800001, 0x200000, CRC(499aa6fc) SHA1(5b9b6eab3e99ff3e1d7c1f50b9d8bc6a81f3f8a9) )
+	ROM_LOAD16_BYTE( "sfiii3-simm3.6", 0x0c00000, 0x200000, CRC(6c13879e) SHA1(de189b0b8f42bc7dd89983e62bc2ecb4237b3277) )
+	ROM_LOAD16_BYTE( "sfiii3-simm3.7", 0x0c00001, 0x200000, CRC(cf4f8ede) SHA1(e0fb68fcb0e445f824c62fa828d6e1dcd7e3683a) )
+	ROM_LOAD16_BYTE( "sfiii3-simm4.0", 0x1000000, 0x200000, CRC(091fd5ba) SHA1(3327ad7c2623c119bf728af717ea2ce3b74673a9) )
+	ROM_LOAD16_BYTE( "sfiii3-simm4.1", 0x1000001, 0x200000, CRC(0bca8917) SHA1(b7b284e2f16f46d46bcfaae779b232c5b980924f) )
+	ROM_LOAD16_BYTE( "sfiii3-simm4.2", 0x1400000, 0x200000, CRC(a0fd578b) SHA1(100c9db9f00ecd88d518076f5a0822e6ac3695b3) )
+	ROM_LOAD16_BYTE( "sfiii3-simm4.3", 0x1400001, 0x200000, CRC(4bf8c699) SHA1(2c0b4288b5ebc5e54d9e782dfc39eb8c78fd4c21) )
+	ROM_LOAD16_BYTE( "sfiii3-simm4.4", 0x1800000, 0x200000, CRC(137b8785) SHA1(56a579520a8ce2abbf36be57777f024e80474eee) )
+	ROM_LOAD16_BYTE( "sfiii3-simm4.5", 0x1800001, 0x200000, CRC(4fb70671) SHA1(9aba83c18cfc099a5ce18793119bff0c2b9c777f) )
+	ROM_LOAD16_BYTE( "sfiii3-simm4.6", 0x1c00000, 0x200000, CRC(832374a4) SHA1(c84629e32fbf47cb7b5b4ee7555bfc2ac9b3857f) )
+	ROM_LOAD16_BYTE( "sfiii3-simm4.7", 0x1c00001, 0x200000, CRC(1c88576d) SHA1(0f039944d0c2305999ed5dbd351c3eb87812dc3b) )
+	ROM_LOAD16_BYTE( "sfiii3-simm5.0", 0x2000000, 0x200000, CRC(c67d9190) SHA1(d265475244099d0ec153059986f3445c7bd910a3) )
+	ROM_LOAD16_BYTE( "sfiii3-simm5.1", 0x2000001, 0x200000, CRC(6cb79868) SHA1(c94237f30e05bfcb2e23945530c812d9e4c73416) )
+	ROM_LOAD16_BYTE( "sfiii3-simm5.2", 0x2400000, 0x200000, CRC(df69930e) SHA1(c76b7c559a1d5558138afbc796249efa2f49f6a8) )
+	ROM_LOAD16_BYTE( "sfiii3-simm5.3", 0x2400001, 0x200000, CRC(333754e0) SHA1(4c18a569c26524a492ecd6f4c8b3c8e803a077d3) )
+	ROM_LOAD16_BYTE( "sfiii3-simm5.4", 0x2800000, 0x200000, CRC(78f6d417) SHA1(a69577cc5399fcf0a24548661168f27f3e7e8e40) )
+	ROM_LOAD16_BYTE( "sfiii3-simm5.5", 0x2800001, 0x200000, CRC(8ccad9b1) SHA1(f8bda399f87be2497b7ac39e9661f9863bf4f873) )
+	ROM_LOAD16_BYTE( "sfiii3-simm5.6", 0x2c00000, 0x200000, CRC(85de59e5) SHA1(748b5c91f15777b85d8c1d35b685cd90d3185ec6) )
+	ROM_LOAD16_BYTE( "sfiii3-simm5.7", 0x2c00001, 0x200000, CRC(ee7e29b3) SHA1(63dc30c6904ca2f58d229249bee5eef51fafa158) )
+	ROM_LOAD16_BYTE( "sfiii3-simm6.0", 0x3000000, 0x200000, CRC(8da69042) SHA1(fd3d08295342635b2136e48d543c9350d287bb22) )
+	ROM_LOAD16_BYTE( "sfiii3-simm6.1", 0x3000001, 0x200000, CRC(1c8c7ac4) SHA1(ac9f8353a4c356ef98aa7c226baba00b01f5a80f) )
+	ROM_LOAD16_BYTE( "sfiii3-simm6.2", 0x3400000, 0x200000, CRC(a671341d) SHA1(636f4c04962bc1e1ddb29d2e01244b00389b234f) )
+	ROM_LOAD16_BYTE( "sfiii3-simm6.3", 0x3400001, 0x200000, CRC(1a990249) SHA1(2acc639e2c0c53bf24096b8620eab090bc25d03b) )
+	ROM_LOAD16_BYTE( "sfiii3-simm6.4", 0x3800000, 0x200000, CRC(20cb39ac) SHA1(7d13a0fea1ef719dd2ff77dfb547d53c6023cc9e) )
+	ROM_LOAD16_BYTE( "sfiii3-simm6.5", 0x3800001, 0x200000, CRC(5f844b2f) SHA1(564e4934f89ed3b92a4c4874519f8f00f3b48696) )
+	ROM_LOAD16_BYTE( "sfiii3-simm6.6", 0x3c00000, 0x200000, CRC(450e8d28) SHA1(885db658132aa27926df617ec2d2a1f38abdbb60) )
+	ROM_LOAD16_BYTE( "sfiii3-simm6.7", 0x3c00001, 0x200000, CRC(cc5f4187) SHA1(248ddace21ed4736a56e92f77cc6ad219d7fef0b) )
+ROM_END
+
 
 GAME( 1996, redearth,   0,        cps3, cps3, redearthcd, ROT0, "Capcom", "Red Earth (Europe 961121)" )
 GAME( 1996, warzard,    redearth, cps3, cps3, redearthcd, ROT0, "Capcom", "Warzard (Japan 961121)" )
@@ -2667,3 +2743,4 @@ GAME( 1999, jojobajr2,  jojoba,   cps3, cps3, jojoba,  ROT0, "Capcom", "JoJo no 
 GAME( 1999, jojobanr2,  jojoba,   cps3, cps3, jojoba,  ROT0, "Capcom", "JoJo no Kimyou na Bouken: Mirai e no Isan (Japan 990913, NO CD)" )
 GAME( 1999, jojobaner2, jojoba,   cps3, cps3, jojoba,  ROT0, "Capcom", "JoJo's Bizarre Adventure (Europe 990913, NO CD)" )
 GAME( 2013, sfiii4n,    sfiii3,   cps3, cps3, sfiii3,  ROT0, "hack", "Street Fighter III 3rd Strike: Fight for the Future (4rd Arrange Edition 2013)" )
+GAME( 2022, sfiii3ws,   sfiii3,   cps3, sfiii3ws, sfiii3,  ROT0, "hack", "Street Fighter III 3rd Strike: Fight for the Future (Widescreen 20220908)" )
