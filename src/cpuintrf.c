@@ -145,6 +145,9 @@
 #if (HAS_PSXCPU)
 #include "cpu/mips/psx.h"
 #endif
+#if (HAS_MN10200)
+#include "cpu/mn10200/mn10200.h"
+#endif
 #if (HAS_H83002)
 #include "cpu/h83002/h83002.h"
 #endif
@@ -585,6 +588,9 @@ const struct cpu_interface cpuintrf[] =
 #endif
 #if (HAS_H83002)
 	CPU0(H83002,   h8_3002,	 8,  0,1.00,16,24bew,  0,24,BE,2,10 ),
+#endif
+#if (HAS_MN10200)
+	CPU0(MN10200,  mn10200,	 4,  0,1.00,16,24lew,  0,24,LE,1, 6 ),
 #endif
 #if (HAS_M37702)
 	/* 16 cpuint lines: the maskable ones (M37710_LINE_ADC..IRQ0); the

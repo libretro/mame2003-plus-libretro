@@ -1861,6 +1861,15 @@ else
 CPUDEFS += -DHAS_H83002=0
 endif
 
+CPU=$(strip $(findstring MN10200@,$(CPUS)))
+ifneq ($(CPU),)
+OBJDIRS += $(CORE_DIR)/cpu/mn10200
+CPUDEFS += -DHAS_MN10200=1
+SOURCES_C += $(CORE_DIR)/cpu/mn10200/mn10200.c
+else
+CPUDEFS += -DHAS_MN10200=0
+endif
+
 CPU=$(strip $(findstring M37702@,$(CPUS)))
 ifneq ($(CPU),)
 OBJDIRS += $(CORE_DIR)/cpu/m37710

@@ -180,6 +180,7 @@ CPUS+=ADSP2105@
 CPUS+=ADSP2115@
 CPUS+=PSXCPU@
 CPUS+=H83002@
+CPUS+=MN10200@
 CPUS+=M37702@
 CPUS+=ASAP@
 CPUS+=UPD7810@
@@ -490,7 +491,7 @@ SOURCES_C += \
 	$(CORE_DIR)/vidhrdw/mitchell_vidhrdw.c $(CORE_DIR)/drivers/mitchell.c \
 	$(CORE_DIR)/vidhrdw/cbasebal_vidhrdw.c $(CORE_DIR)/drivers/cbasebal.c \
 	$(CORE_DIR)/vidhrdw/cps1_vidhrdw.c $(CORE_DIR)/drivers/cps1.c $(CORE_DIR)/drivers/cps2.c $(CORE_DIR)/machine/cps2crypt.c\
-	$(CORE_DIR)/drivers/zn.c \
+	$(CORE_DIR)/drivers/zn.c $(CORE_DIR)/sndhrdw/taitozoom.c $(CORE_DIR)/sound/zsg2.c $(CORE_DIR)/cpu/tms57002/tms57002.c \
 	$(CORE_DIR)/drivers/cps3.c $(CORE_DIR)/sndhrdw/cps3_sndhrdw.c \
 	$(CORE_DIR)/vidhrdw/tms34061_vidhrdw.c \
 	$(CORE_DIR)/machine/capbowl_machine.c $(CORE_DIR)/vidhrdw/capbowl_vidhrdw.c $(CORE_DIR)/drivers/capbowl.c \
@@ -1927,6 +1928,15 @@ CPUDEFS += -DHAS_H83002=1
 SOURCES_C += $(CORE_DIR)/cpu/h83002/h83002.c
 else
 CPUDEFS += -DHAS_H83002=0
+endif
+
+CPU=$(strip $(findstring MN10200@,$(CPUS)))
+ifneq ($(CPU),)
+OBJDIRS += $(CORE_DIR)/cpu/mn10200
+CPUDEFS += -DHAS_MN10200=1
+SOURCES_C += $(CORE_DIR)/cpu/mn10200/mn10200.c
+else
+CPUDEFS += -DHAS_MN10200=0
 endif
 
 CPU=$(strip $(findstring M37702@,$(CPUS)))

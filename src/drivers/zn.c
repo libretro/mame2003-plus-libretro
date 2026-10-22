@@ -121,6 +121,8 @@ Sound: Analog Devices ADSP-2181
 #include "cpu/mips/psx.h"
 #include "cpu/z80/z80.h"
 #include "sndhrdw/taitosnd.h"
+#include "sndhrdw/taitozoom.h"
+#include "cpu/mn10200/mn10200.h"
 #include "includes/psx.h"
 #include "state.h"
 #include "sound/psx.h"
@@ -498,12 +500,6 @@ static DRIVER_INIT( zn )
 	psx_driver_init();
 }
 
-static DRIVER_INIT( fx1b )
-{
-	cpu_setbank( 10, memory_region( REGION_CPU2 ) );
-	init_zn();
-}
-
 static MACHINE_INIT( zn )
 {
 #if PROTECTION_HACK
@@ -515,32 +511,6 @@ static MACHINE_INIT( zn )
 static MACHINE_DRIVER_START( zn )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(PSXCPU, 33868800) /* 33MHz ?? */
-	MDRV_CPU_MEMORY(zn_readmem,zn_writemem)
-	MDRV_CPU_VBLANK_INT(psx_vblank,1)
-
-	MDRV_FRAMES_PER_SECOND(60)
-	MDRV_VBLANK_DURATION(0)
-
-	MDRV_MACHINE_INIT(zn)
-
-	/* video hardware */
-	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
-	MDRV_SCREEN_SIZE(640, 480)
-	MDRV_VISIBLE_AREA(0, 479, 0, 479)
-	MDRV_PALETTE_LENGTH(65536)
-
-	MDRV_PALETTE_INIT(psx)
-	MDRV_VIDEO_START(psx_type2_1024x1024)
-	MDRV_VIDEO_UPDATE(psx)
-	MDRV_VIDEO_STOP(psx)
-
-	/* sound hardware */
-	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-MACHINE_DRIVER_END
-
-static MACHINE_DRIVER_START( fx1b )
-	/* basic machine hardware */
-	MDRV_CPU_ADD(PSXCPU, 33000000) /* 33MHz ?? */
 	MDRV_CPU_MEMORY(zn_readmem,zn_writemem)
 	MDRV_CPU_VBLANK_INT(psx_vblank,1)
 
@@ -1851,6 +1821,152 @@ static MACHINE_DRIVER_START( coh1000ta )
 	MDRV_SOUND_ADD( YM2610B, taito_fx1a_ym2610b_interface )
 MACHINE_DRIVER_END
 
+/***************************************************************************
+
+  Taito FX-1B (COH-1000T / COH-1002T with the ZROM board), as current MAME
+
+  The FX-1A main board (1MB VRAM; G-Darius has 2MB) with the Taito Zoom
+  sound board: an MN10200 sound CPU, a ZSG-2 PCM chip and a TMS57002 DSP.
+  The main CPU talks to it through two registers at 0x1fb80000 (address
+  at +2, data at +0), a sound IRQ at 0x1fba0000 and 256 bytes of shared
+  RAM at 0x1fbe0000 (lanes 0 and 2). 512 bytes of FRAM at 0x1fb00000
+  (lanes 0 and 2) are kept in the NVRAM with the EEPROM.
+
+***************************************************************************/
+
+static UINT8 taito_fx1b_fram[ 0x200 ];
+/* a byte at lanes 0 and 2 of each word: byte offset * 2 + ( lane 2 ) */
+static READ32_HANDLER( taito_fx1b_fram_r )
+{
+	return taito_fx1b_fram[ offset * 2 ] | ( taito_fx1b_fram[ offset * 2 + 1 ] << 16 );
+}
+
+static WRITE32_HANDLER( taito_fx1b_fram_w )
+{
+	if( ACCESSING_LSB32 )
+		taito_fx1b_fram[ offset * 2 ] = data & 0xff;
+	if( !( mem_mask & 0x00ff0000 ) )
+		taito_fx1b_fram[ offset * 2 + 1 ] = ( data >> 16 ) & 0xff;
+}
+
+/* the SPU at 0.3, as MAME on this board */
+static struct PSXSPUinterface taito_fx1b_spu_interface =
+{
+	30
+};
+
+static MEMORY_READ32_START( taito_fx1b_readmem )
+	ZN_MAIN_READ
+	{ 0x1f000000, 0x1f7fffff, MRA32_BANK1 },  /* banked game rom */
+	{ 0x1fb00000, 0x1fb003ff, taito_fx1b_fram_r },
+	{ 0x1fbc0000, 0x1fbc0003, taitozoom_sound_irq_r },
+	{ 0x1fbe0000, 0x1fbe01ff, taitozoom_shared_r },
+MEMORY_END
+
+static MEMORY_WRITE32_START( taito_fx1b_writemem )
+	ZN_MAIN_WRITE
+	{ 0x1f000000, 0x1f7fffff, MWA32_ROM },
+	{ 0x1fb00000, 0x1fb003ff, taito_fx1b_fram_w },
+	{ 0x1fb40000, 0x1fb40003, taito_fx1_bank_w },
+	{ 0x1fb80000, 0x1fb80003, taitozoom_reg_w },
+	{ 0x1fba0000, 0x1fba0003, taitozoom_sound_irq_w },
+	{ 0x1fbe0000, 0x1fbe01ff, taitozoom_shared_w },
+MEMORY_END
+
+static NVRAM_HANDLER( taito_fx1b )
+{
+	nvram_handler_zn( file, read_or_write );
+	if( read_or_write )
+		mame_fwrite( file, taito_fx1b_fram, sizeof( taito_fx1b_fram ) );
+	else if( file )
+		mame_fread( file, taito_fx1b_fram, sizeof( taito_fx1b_fram ) );
+	else
+		memset( taito_fx1b_fram, 0xff, sizeof( taito_fx1b_fram ) );
+}
+
+static void taito_fx1b_postload( void )
+{
+	tecmo_bank_update();
+}
+
+static void taito_fx1b_init( int vram_2mb )
+{
+	zn_scratchpad = auto_malloc( 0x400 );
+	zn_eeprom = auto_malloc( 0x800 );
+	memset( zn_scratchpad, 0, 0x400 );
+	memset( zn_eeprom, 0xff, 0x800 );
+
+	zn_vram_2mb = vram_2mb;
+	zn_coin_tecmo = 0;
+	zn_eeprom_default = 0;
+
+	zn_board_init();
+	znsec_init( 0, memory_region( REGION_USER4 ) );	/* TT01 */
+	znsec_init( 1, memory_region( REGION_USER5 ) );	/* TTnn */
+
+	state_save_register_UINT32( "zn", 0, "taito_bank", &tecmo_bank, 1 );
+	state_save_register_UINT8( "zn", 0, "taito_fram", taito_fx1b_fram, sizeof( taito_fx1b_fram ) );
+	taitozoom_init();
+	state_save_register_UINT32( "zn", 0, "scratchpad", zn_scratchpad, 0x100 );
+	state_save_register_func_postload( taito_fx1b_postload );
+}
+
+static DRIVER_INIT( coh1000tb )
+{
+	taito_fx1b_init( 0 );
+}
+
+static DRIVER_INIT( coh1002tb )
+{
+	taito_fx1b_init( 1 );
+}
+
+static MACHINE_INIT( taito_fx1b )
+{
+	tecmo_bank = 0;
+	tecmo_bank_update();
+	taitozoom_reset();
+	zn_board_reset();
+}
+
+/* ZN-1, 1MB VRAM (COH-1000T), FX-1B (Taito Zoom) sound */
+static MACHINE_DRIVER_START( coh1000tb )
+	MDRV_CPU_ADD_TAG( "main", PSXCPU, 33868800 / 2 )	/* CXD8530CQ, 67.7376MHz XTAL; as System 11 */
+	MDRV_CPU_MEMORY( taito_fx1b_readmem, taito_fx1b_writemem )
+	MDRV_CPU_VBLANK_INT( psx_vblank, 1 )
+
+	MDRV_CPU_ADD( MN10200, 25000000 / 2 / 2 )	/* MN1020012A, 12.5MHz, internal / 2 */
+	MDRV_CPU_FLAGS( CPU_AUDIO_CPU )
+	MDRV_CPU_MEMORY( taitozoom_mn_readmem, taitozoom_mn_writemem )
+
+	MDRV_FRAMES_PER_SECOND( 60 )
+	MDRV_VBLANK_DURATION( 0 )
+	MDRV_INTERLEAVE( 100 )
+
+	MDRV_MACHINE_INIT( taito_fx1b )
+	MDRV_NVRAM_HANDLER( taito_fx1b )
+
+	MDRV_VIDEO_ATTRIBUTES( VIDEO_TYPE_RASTER | VIDEO_RGB_DIRECT )
+	MDRV_SCREEN_SIZE( 640, 480 )
+	MDRV_VISIBLE_AREA( 0, 639, 0, 479 )
+	MDRV_PALETTE_LENGTH( 65536 )
+
+	MDRV_PALETTE_INIT( psx )
+	MDRV_VIDEO_START( psx_type2_1024x512 )
+	MDRV_VIDEO_UPDATE( psx )
+	MDRV_VIDEO_STOP( psx )
+
+	MDRV_SOUND_ATTRIBUTES( SOUND_SUPPORTS_STEREO )
+	MDRV_SOUND_ADD( PSXSPU, taito_fx1b_spu_interface )
+	MDRV_SOUND_ADD( CUSTOM, taitozoom_custom_interface )
+MACHINE_DRIVER_END
+
+/* ZN-1, 2MB VRAM (COH-1002T), FX-1B sound: G-Darius */
+static MACHINE_DRIVER_START( coh1002tb )
+	MDRV_IMPORT_FROM( coh1000tb )
+	MDRV_VIDEO_START( psx_type2_1024x1024 )
+MACHINE_DRIVER_END
+
 
 INPUT_PORTS_START( zn )
 	PORT_START		/* IN0 */
@@ -2046,7 +2162,24 @@ INPUT_PORTS_START( tps1p )
 	ZN_DSW_PORT
 INPUT_PORTS_END
 
-/* Taito FX-1A: two players, three buttons, DSW 4 is the test mode */
+/* Taito FX: DSW 4 is the test mode; the 4 bits not fitted read as 0 */
+#define TAITO_FX_DSW_PORT \
+	PORT_START	/* DSW */ \
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) ) \
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) ) \
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) ) \
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Service_Mode ) ) \
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) ) \
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) ) \
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) ) \
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) ) \
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) ) \
+	PORT_DIPNAME( 0x08, 0x08, "Test Mode" ) \
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) ) \
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) ) \
+	PORT_BIT( 0xf0, IP_ACTIVE_HIGH, IPT_UNUSED )
+
+/* Taito FX-1A: two players, three buttons */
 INPUT_PORTS_START( znt2p )
 	TPS_PLAYER_PORT( 1, 1, 0 )
 	TPS_PLAYER_PORT( 2, 1, 0 )
@@ -2054,20 +2187,18 @@ INPUT_PORTS_START( znt2p )
 	TPS_SYSTEM_PORT( 1, 1, 0 )
 	TPS_UNUSED_PORT
 	TPS_UNUSED_PORT
-	PORT_START	/* DSW */
-	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Service_Mode ) )
-	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x08, 0x08, "Test Mode" )
-	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_BIT( 0xf0, IP_ACTIVE_HIGH, IPT_UNUSED )	/* not fitted: read as 0 */
+	TAITO_FX_DSW_PORT
+INPUT_PORTS_END
+
+/* Taito FX-1B RayStorm: two players, two buttons */
+INPUT_PORTS_START( raystorm )
+	TPS_PLAYER_PORT( 1, 0, 0 )
+	TPS_PLAYER_PORT( 2, 0, 0 )
+	TPS_SERVICE_PORT( 0 )
+	TPS_SYSTEM_PORT( 1, 1, 0 )
+	TPS_UNUSED_PORT
+	TPS_UNUSED_PORT
+	TAITO_FX_DSW_PORT
 INPUT_PORTS_END
 
 /* two players, two buttons, one coin slot */
@@ -3119,7 +3250,249 @@ ROM_START( mgcldate )
 	ROM_LOAD( "tt06", 0x000000, 0x000008, CRC(ce282fc9) SHA1(dfc1f679ec70f2ff32869cfeb452acf9ac154aef) )
 ROM_END
 
-/* Taito FX-1B, not working yet */
+/* Taito FX-1B (COH-1000T + ZROM), MAME names */
+
+ROM_START( raystorm )
+	TAITO_FX1_BIOS
+
+	ROM_REGION32_LE( 0x1000000, REGION_USER1, 0 ) /* game rom */
+	ROM_LOAD16_BYTE( "e24-xx.ic4", 0x0000001, 0x080000, CRC(33f63638) SHA1(fdda33ffc9902b3605a3272fae5a614e93856a86) )
+	ROM_LOAD16_BYTE( "e24-xx.ic3", 0x0000000, 0x080000, CRC(5eeed3b2) SHA1(d8bb1613d7285eabdc6f0a2d231d2eeeb52f307b) )
+	ROM_LOAD( "e24-02.1",          0x0400000, 0x400000, CRC(9f70950d) SHA1(b3e4f925a61ae2e5dd4cc5d7ec3030a0d5c2c04d) )
+	ROM_LOAD( "e24-03.2",          0x0800000, 0x400000, CRC(6c1f0a5d) SHA1(1aac37a7ff23e54021a4cec18c9bb93242337180) )
+
+	ROM_REGION16_LE( 0x100000, REGION_CPU2, 0 ) /* mn10200 */
+	ROM_LOAD( "e24-09.14", 0x080000, 0x080000, CRC(808589e1) SHA1(46ada4c6d68c2462186a0b962abb435ee740c0ba) )
+
+	ROM_REGION32_LE( 0x400000, REGION_SOUND1, 0 ) /* zsg2 */
+	ROM_LOAD( "e24-04.27", 0x000000, 0x400000, CRC(f403493a) SHA1(3e49fd2a060a3893e26f14cc3cf47c4ba91e17d4) )
+
+	ROM_REGION( 0x000008, REGION_USER5, 0 ) /* CAT702, rom board */
+	ROM_LOAD( "tt04", 0x000000, 0x000008, CRC(013363df) SHA1(f04d04c7c858a8e2eaff0c51e782ad76d6ebbed1) )
+ROM_END
+
+ROM_START( raystormo )
+	TAITO_FX1_BIOS
+
+	ROM_REGION32_LE( 0x1000000, REGION_USER1, 0 ) /* game rom */
+	ROM_LOAD16_BYTE( "e24-08.4", 0x0000001, 0x080000, CRC(ae071b95) SHA1(0e1597220808d6e3998ef1e9d88779e0187ba0af) )
+	ROM_LOAD16_BYTE( "e24-06.3", 0x0000000, 0x080000, CRC(d70cdf46) SHA1(da6163d69d3ea9c1e3f4b7961a548f1f9d8d9909) )
+	ROM_LOAD( "e24-02.1",        0x0400000, 0x400000, CRC(9f70950d) SHA1(b3e4f925a61ae2e5dd4cc5d7ec3030a0d5c2c04d) )
+	ROM_LOAD( "e24-03.2",        0x0800000, 0x400000, CRC(6c1f0a5d) SHA1(1aac37a7ff23e54021a4cec18c9bb93242337180) )
+
+	ROM_REGION16_LE( 0x100000, REGION_CPU2, 0 ) /* mn10200 */
+	ROM_LOAD( "e24-09.14", 0x080000, 0x080000, CRC(808589e1) SHA1(46ada4c6d68c2462186a0b962abb435ee740c0ba) )
+
+	ROM_REGION32_LE( 0x400000, REGION_SOUND1, 0 ) /* zsg2 */
+	ROM_LOAD( "e24-04.27", 0x000000, 0x400000, CRC(f403493a) SHA1(3e49fd2a060a3893e26f14cc3cf47c4ba91e17d4) )
+
+	ROM_REGION( 0x000008, REGION_USER5, 0 ) /* CAT702, rom board */
+	ROM_LOAD( "tt04", 0x000000, 0x000008, CRC(013363df) SHA1(f04d04c7c858a8e2eaff0c51e782ad76d6ebbed1) )
+ROM_END
+
+ROM_START( raystormu )
+	TAITO_FX1_BIOS
+
+	ROM_REGION32_LE( 0x1000000, REGION_USER1, 0 ) /* game rom */
+	ROM_LOAD16_BYTE( "e24-07.4", 0x0000001, 0x080000, CRC(d9002b03) SHA1(bdb0aa88536c4c98c150ece87387930b3dbdd258) )
+	ROM_LOAD16_BYTE( "e24-06.3", 0x0000000, 0x080000, CRC(d70cdf46) SHA1(da6163d69d3ea9c1e3f4b7961a548f1f9d8d9909) )
+	ROM_LOAD( "e24-02.1",        0x0400000, 0x400000, CRC(9f70950d) SHA1(b3e4f925a61ae2e5dd4cc5d7ec3030a0d5c2c04d) )
+	ROM_LOAD( "e24-03.2",        0x0800000, 0x400000, CRC(6c1f0a5d) SHA1(1aac37a7ff23e54021a4cec18c9bb93242337180) )
+
+	ROM_REGION16_LE( 0x100000, REGION_CPU2, 0 ) /* mn10200 */
+	ROM_LOAD( "e24-09.14", 0x080000, 0x080000, CRC(808589e1) SHA1(46ada4c6d68c2462186a0b962abb435ee740c0ba) )
+
+	ROM_REGION32_LE( 0x400000, REGION_SOUND1, 0 ) /* zsg2 */
+	ROM_LOAD( "e24-04.27", 0x000000, 0x400000, CRC(f403493a) SHA1(3e49fd2a060a3893e26f14cc3cf47c4ba91e17d4) )
+
+	ROM_REGION( 0x000008, REGION_USER5, 0 ) /* CAT702, rom board */
+	ROM_LOAD( "tt04", 0x000000, 0x000008, CRC(013363df) SHA1(f04d04c7c858a8e2eaff0c51e782ad76d6ebbed1) )
+ROM_END
+
+ROM_START( raystormj )
+	TAITO_FX1_BIOS
+
+	ROM_REGION32_LE( 0x1000000, REGION_USER1, 0 ) /* game rom */
+	ROM_LOAD16_BYTE( "e24-05.4", 0x0000001, 0x080000, CRC(40097ab9) SHA1(67e73568b35515c2c5a9119e97ac4709baff8c5a) )
+	ROM_LOAD16_BYTE( "e24-06.3", 0x0000000, 0x080000, CRC(d70cdf46) SHA1(da6163d69d3ea9c1e3f4b7961a548f1f9d8d9909) )
+	ROM_LOAD( "e24-02.1",        0x0400000, 0x400000, CRC(9f70950d) SHA1(b3e4f925a61ae2e5dd4cc5d7ec3030a0d5c2c04d) )
+	ROM_LOAD( "e24-03.2",        0x0800000, 0x400000, CRC(6c1f0a5d) SHA1(1aac37a7ff23e54021a4cec18c9bb93242337180) )
+
+	ROM_REGION16_LE( 0x100000, REGION_CPU2, 0 ) /* mn10200 */
+	ROM_LOAD( "e24-09.14", 0x080000, 0x080000, CRC(808589e1) SHA1(46ada4c6d68c2462186a0b962abb435ee740c0ba) )
+
+	ROM_REGION32_LE( 0x400000, REGION_SOUND1, 0 ) /* zsg2 */
+	ROM_LOAD( "e24-04.27", 0x000000, 0x400000, CRC(f403493a) SHA1(3e49fd2a060a3893e26f14cc3cf47c4ba91e17d4) )
+
+	ROM_REGION( 0x000008, REGION_USER5, 0 ) /* CAT702, rom board */
+	ROM_LOAD( "tt04", 0x000000, 0x000008, CRC(013363df) SHA1(f04d04c7c858a8e2eaff0c51e782ad76d6ebbed1) )
+ROM_END
+
+ROM_START( ftimpcta )
+	TAITO_FX1_BIOS
+
+	ROM_REGION32_LE( 0x1000000, REGION_USER1, 0 ) /* game rom */
+	ROM_LOAD16_BYTE( "e25-13.4", 0x0000001, 0x100000, CRC(7f078d7b) SHA1(df9800dd6885dbc33736c5143d877b0847221061) )
+	ROM_LOAD16_BYTE( "e25-14.3", 0x0000000, 0x100000, CRC(0c5f474f) SHA1(ce7031ba860297b99cddd6d0177f07e03520faeb) )
+	ROM_LOAD( "e25-01.1",        0x0400000, 0x400000, CRC(8cc4be0c) SHA1(9ca15558a83b7e332e50accf1f7852444a7ce730) )
+	ROM_LOAD( "e25-02.2",        0x0800000, 0x400000, CRC(8e8b4c82) SHA1(55c9d4d3a08fc3226a75ab3a674be433af83e289) )
+	ROM_LOAD( "e25-03.12",       0x0c00000, 0x400000, CRC(43b1c085) SHA1(6e53550e9be0d2f415fc6b4f3b8a71185c5370b2) )
+
+	ROM_REGION16_LE( 0x100000, REGION_CPU2, 0 ) /* mn10200 */
+	ROM_LOAD( "e25-10.14", 0x080000, 0x080000, CRC(2b2ad1b1) SHA1(6d064d0b6805d43ce42929ac8f5645b56384f53c) )
+
+	ROM_REGION32_LE( 0x600000, REGION_SOUND1, 0 ) /* zsg2 */
+	ROM_LOAD( "e25-04.27", 0x000000, 0x400000, CRC(09a66d35) SHA1(f0df24bc9bfc9eb0f5150dc035c19fc5b8a39bf9) )
+	ROM_LOAD( "e25-05.28", 0x400000, 0x200000, CRC(3fb57636) SHA1(aa38bfac11ecf10fd55143cf4525a2a529be8bb6) )
+
+	ROM_REGION( 0x000008, REGION_USER5, 0 ) /* CAT702, rom board */
+	ROM_LOAD( "tt05", 0x000000, 0x000008, CRC(66045c83) SHA1(b040fa87e855fd512fa99e80056d37aba895805b) )
+ROM_END
+
+ROM_START( ftimpact )
+	TAITO_FX1_BIOS
+
+	ROM_REGION32_LE( 0x1000000, REGION_USER1, 0 ) /* game rom */
+	ROM_LOAD16_BYTE( "e25-09.4", 0x0000001, 0x080000, CRC(d457bfc7) SHA1(e974a9c3e7b0748ef89d78e76a7dbb763c42b6f7) )
+	ROM_LOAD16_BYTE( "e25-07.3", 0x0000000, 0x080000, CRC(829be1cc) SHA1(64b139d7c3696ab2f0b9a4842c19a38fe6a8cede) )
+	ROM_LOAD( "e25-01.1",        0x0400000, 0x400000, CRC(8cc4be0c) SHA1(9ca15558a83b7e332e50accf1f7852444a7ce730) )
+	ROM_LOAD( "e25-02.2",        0x0800000, 0x400000, CRC(8e8b4c82) SHA1(55c9d4d3a08fc3226a75ab3a674be433af83e289) )
+	ROM_LOAD( "e25-03.12",       0x0c00000, 0x400000, CRC(43b1c085) SHA1(6e53550e9be0d2f415fc6b4f3b8a71185c5370b2) )
+
+	ROM_REGION16_LE( 0x100000, REGION_CPU2, 0 ) /* mn10200 */
+	ROM_LOAD( "e25-10.14", 0x080000, 0x080000, CRC(2b2ad1b1) SHA1(6d064d0b6805d43ce42929ac8f5645b56384f53c) )
+
+	ROM_REGION32_LE( 0x600000, REGION_SOUND1, 0 ) /* zsg2 */
+	ROM_LOAD( "e25-04.27", 0x000000, 0x400000, CRC(09a66d35) SHA1(f0df24bc9bfc9eb0f5150dc035c19fc5b8a39bf9) )
+	ROM_LOAD( "e25-05.28", 0x400000, 0x200000, CRC(3fb57636) SHA1(aa38bfac11ecf10fd55143cf4525a2a529be8bb6) )
+
+	ROM_REGION( 0x000008, REGION_USER5, 0 ) /* CAT702, rom board */
+	ROM_LOAD( "tt05", 0x000000, 0x000008, CRC(66045c83) SHA1(b040fa87e855fd512fa99e80056d37aba895805b) )
+ROM_END
+
+ROM_START( ftimpactu )
+	TAITO_FX1_BIOS
+
+	ROM_REGION32_LE( 0x1000000, REGION_USER1, 0 ) /* game rom */
+	ROM_LOAD16_BYTE( "e25-08.4", 0x0000001, 0x080000, CRC(a3508f51) SHA1(fd4c3cc186e280497dc905ebda92472d5b72b1b4) )
+	ROM_LOAD16_BYTE( "e25-07.3", 0x0000000, 0x080000, CRC(829be1cc) SHA1(64b139d7c3696ab2f0b9a4842c19a38fe6a8cede) )
+	ROM_LOAD( "e25-01.1",        0x0400000, 0x400000, CRC(8cc4be0c) SHA1(9ca15558a83b7e332e50accf1f7852444a7ce730) )
+	ROM_LOAD( "e25-02.2",        0x0800000, 0x400000, CRC(8e8b4c82) SHA1(55c9d4d3a08fc3226a75ab3a674be433af83e289) )
+	ROM_LOAD( "e25-03.12",       0x0c00000, 0x400000, CRC(43b1c085) SHA1(6e53550e9be0d2f415fc6b4f3b8a71185c5370b2) )
+
+	ROM_REGION16_LE( 0x100000, REGION_CPU2, 0 ) /* mn10200 */
+	ROM_LOAD( "e25-10.14", 0x080000, 0x080000, CRC(2b2ad1b1) SHA1(6d064d0b6805d43ce42929ac8f5645b56384f53c) )
+
+	ROM_REGION32_LE( 0x600000, REGION_SOUND1, 0 ) /* zsg2 */
+	ROM_LOAD( "e25-04.27", 0x000000, 0x400000, CRC(09a66d35) SHA1(f0df24bc9bfc9eb0f5150dc035c19fc5b8a39bf9) )
+	ROM_LOAD( "e25-05.28", 0x400000, 0x200000, CRC(3fb57636) SHA1(aa38bfac11ecf10fd55143cf4525a2a529be8bb6) )
+
+	ROM_REGION( 0x000008, REGION_USER5, 0 ) /* CAT702, rom board */
+	ROM_LOAD( "tt05", 0x000000, 0x000008, CRC(66045c83) SHA1(b040fa87e855fd512fa99e80056d37aba895805b) )
+ROM_END
+
+ROM_START( ftimpactj )
+	TAITO_FX1_BIOS
+
+	ROM_REGION32_LE( 0x1000000, REGION_USER1, 0 ) /* game rom */
+	ROM_LOAD16_BYTE( "e25-06.4", 0x0000001, 0x080000, CRC(3a59deeb) SHA1(4377c5829fb5b6f5d0120caf992b1ee714897641) )
+	ROM_LOAD16_BYTE( "e25-07.3", 0x0000000, 0x080000, CRC(829be1cc) SHA1(64b139d7c3696ab2f0b9a4842c19a38fe6a8cede) )
+	ROM_LOAD( "e25-01.1",        0x0400000, 0x400000, CRC(8cc4be0c) SHA1(9ca15558a83b7e332e50accf1f7852444a7ce730) )
+	ROM_LOAD( "e25-02.2",        0x0800000, 0x400000, CRC(8e8b4c82) SHA1(55c9d4d3a08fc3226a75ab3a674be433af83e289) )
+	ROM_LOAD( "e25-03.12",       0x0c00000, 0x400000, CRC(43b1c085) SHA1(6e53550e9be0d2f415fc6b4f3b8a71185c5370b2) )
+
+	ROM_REGION16_LE( 0x100000, REGION_CPU2, 0 ) /* mn10200 */
+	ROM_LOAD( "e25-10.14", 0x080000, 0x080000, CRC(2b2ad1b1) SHA1(6d064d0b6805d43ce42929ac8f5645b56384f53c) )
+
+	ROM_REGION32_LE( 0x600000, REGION_SOUND1, 0 ) /* zsg2 */
+	ROM_LOAD( "e25-04.27", 0x000000, 0x400000, CRC(09a66d35) SHA1(f0df24bc9bfc9eb0f5150dc035c19fc5b8a39bf9) )
+	ROM_LOAD( "e25-05.28", 0x400000, 0x200000, CRC(3fb57636) SHA1(aa38bfac11ecf10fd55143cf4525a2a529be8bb6) )
+
+	ROM_REGION( 0x000008, REGION_USER5, 0 ) /* CAT702, rom board */
+	ROM_LOAD( "tt05", 0x000000, 0x000008, CRC(66045c83) SHA1(b040fa87e855fd512fa99e80056d37aba895805b) )
+ROM_END
+
+ROM_START( gdarius2 )
+	TAITO_FX1_BIOS
+
+	ROM_REGION32_LE( 0x1000000, REGION_USER1, 0 ) /* game rom */
+	ROM_LOAD16_BYTE( "e39-12.4", 0x0000001, 0x100000, CRC(b23266c3) SHA1(80aaddaaf10e40280ade4c7d11f45ddab47ee9a6) )
+	ROM_LOAD16_BYTE( "e39-11.3", 0x0000000, 0x100000, CRC(766f73df) SHA1(9ce24c153920d259bc7fdef0778083eb6d639be3) )
+	ROM_LOAD( "e39-01.1",        0x0400000, 0x400000, CRC(bdaaa251) SHA1(a42daa706ee859c2b66be179e08c0ad7990f919e) )
+	ROM_LOAD( "e39-02.2",        0x0800000, 0x400000, CRC(a47aab5d) SHA1(64b58e47035ad9d8d6dcaf475cbcc3ad85f4d82f) )
+	ROM_LOAD( "e39-03.12",       0x0c00000, 0x400000, CRC(a883b6a5) SHA1(b8d00d944c90f8cd9c2b076688f4c68b2e6d557a) )
+
+	ROM_REGION16_LE( 0x100000, REGION_CPU2, 0 ) /* mn10200 */
+	ROM_LOAD( "e39-07.14", 0x080000, 0x080000, CRC(2252c7c1) SHA1(92b9908e0d87cad6587f1acc0eef69eaae8c6a98) )
+
+	ROM_REGION32_LE( 0x400000, REGION_SOUND1, 0 ) /* zsg2 */
+	ROM_LOAD( "e39-04.27", 0x000000, 0x400000, CRC(6ee35e68) SHA1(fdfe63203d8cecf84cb869039fb893d5b63cdd67) )
+
+	ROM_REGION( 0x000008, REGION_USER5, 0 ) /* CAT702, rom board */
+	ROM_LOAD( "tt07", 0x000000, 0x000008, CRC(ccf2f332) SHA1(6eb07cd5fab29f5536fd94aa88a2b09f28cc3494) )
+ROM_END
+
+ROM_START( gdarius )
+	TAITO_FX1_BIOS
+
+	ROM_REGION32_LE( 0x1000000, REGION_USER1, 0 ) /* game rom */
+	ROM_LOAD16_BYTE( "e39-09.ic4", 0x0000001, 0x100000, CRC(f457794d) SHA1(43571770b239298e3442d3da8aa4f4507380d639) )
+	ROM_LOAD16_BYTE( "e39-10.ic3", 0x0000000, 0x100000, CRC(6ba4d941) SHA1(75f2d8c920d29102c09e041fc3198e32ad57dbaf) )
+	ROM_LOAD( "e39-01.1",          0x0400000, 0x400000, CRC(bdaaa251) SHA1(a42daa706ee859c2b66be179e08c0ad7990f919e) )
+	ROM_LOAD( "e39-02.2",          0x0800000, 0x400000, CRC(a47aab5d) SHA1(64b58e47035ad9d8d6dcaf475cbcc3ad85f4d82f) )
+	ROM_LOAD( "e39-03.12",         0x0c00000, 0x400000, CRC(a883b6a5) SHA1(b8d00d944c90f8cd9c2b076688f4c68b2e6d557a) )
+
+	ROM_REGION16_LE( 0x100000, REGION_CPU2, 0 ) /* mn10200 */
+	ROM_LOAD( "e39-07.14", 0x080000, 0x080000, CRC(2252c7c1) SHA1(92b9908e0d87cad6587f1acc0eef69eaae8c6a98) )
+
+	ROM_REGION32_LE( 0x400000, REGION_SOUND1, 0 ) /* zsg2 */
+	ROM_LOAD( "e39-04.27", 0x000000, 0x400000, CRC(6ee35e68) SHA1(fdfe63203d8cecf84cb869039fb893d5b63cdd67) )
+
+	ROM_REGION( 0x000008, REGION_USER5, 0 ) /* CAT702, rom board */
+	ROM_LOAD( "tt07", 0x000000, 0x000008, CRC(ccf2f332) SHA1(6eb07cd5fab29f5536fd94aa88a2b09f28cc3494) )
+ROM_END
+
+ROM_START( gdariusu )
+	TAITO_FX1_BIOS
+
+	ROM_REGION32_LE( 0x1000000, REGION_USER1, 0 ) /* game rom */
+	ROM_LOAD16_BYTE( "e39-08.ic4", 0x0000001, 0x100000, CRC(835049db) SHA1(2b230c8fd6c6ea4e30740fda28f631344b018b79) )
+	ROM_LOAD16_BYTE( "e39-10.ic3", 0x0000000, 0x100000, CRC(6ba4d941) SHA1(75f2d8c920d29102c09e041fc3198e32ad57dbaf) )
+	ROM_LOAD( "e39-01.1",          0x0400000, 0x400000, CRC(bdaaa251) SHA1(a42daa706ee859c2b66be179e08c0ad7990f919e) )
+	ROM_LOAD( "e39-02.2",          0x0800000, 0x400000, CRC(a47aab5d) SHA1(64b58e47035ad9d8d6dcaf475cbcc3ad85f4d82f) )
+	ROM_LOAD( "e39-03.12",         0x0c00000, 0x400000, CRC(a883b6a5) SHA1(b8d00d944c90f8cd9c2b076688f4c68b2e6d557a) )
+
+	ROM_REGION16_LE( 0x100000, REGION_CPU2, 0 ) /* mn10200 */
+	ROM_LOAD( "e39-07.14", 0x080000, 0x080000, CRC(2252c7c1) SHA1(92b9908e0d87cad6587f1acc0eef69eaae8c6a98) )
+
+	ROM_REGION32_LE( 0x400000, REGION_SOUND1, 0 ) /* zsg2 */
+	ROM_LOAD( "e39-04.27", 0x000000, 0x400000, CRC(6ee35e68) SHA1(fdfe63203d8cecf84cb869039fb893d5b63cdd67) )
+
+	ROM_REGION( 0x000008, REGION_USER5, 0 ) /* CAT702, rom board */
+	ROM_LOAD( "tt07", 0x000000, 0x000008, CRC(ccf2f332) SHA1(6eb07cd5fab29f5536fd94aa88a2b09f28cc3494) )
+ROM_END
+
+ROM_START( gdariusj )
+	TAITO_FX1_BIOS
+
+	ROM_REGION32_LE( 0x1000000, REGION_USER1, 0 ) /* game rom */
+	ROM_LOAD16_BYTE( "e39-06.4", 0x0000001, 0x100000, CRC(2980c30d) SHA1(597321642125c3ae37581c2d9abc2723c7909996) )
+	ROM_LOAD16_BYTE( "e39-05.3", 0x0000000, 0x100000, CRC(750e5b13) SHA1(68fe9cbd7d506cfd587dccc40b6ae0b0b6ee7c29) )
+	ROM_LOAD( "e39-01.1",        0x0400000, 0x400000, CRC(bdaaa251) SHA1(a42daa706ee859c2b66be179e08c0ad7990f919e) )
+	ROM_LOAD( "e39-02.2",        0x0800000, 0x400000, CRC(a47aab5d) SHA1(64b58e47035ad9d8d6dcaf475cbcc3ad85f4d82f) )
+	ROM_LOAD( "e39-03.12",       0x0c00000, 0x400000, CRC(a883b6a5) SHA1(b8d00d944c90f8cd9c2b076688f4c68b2e6d557a) )
+
+	ROM_REGION16_LE( 0x100000, REGION_CPU2, 0 ) /* mn10200 */
+	ROM_LOAD( "e39-07.14", 0x080000, 0x080000, CRC(2252c7c1) SHA1(92b9908e0d87cad6587f1acc0eef69eaae8c6a98) )
+
+	ROM_REGION32_LE( 0x400000, REGION_SOUND1, 0 ) /* zsg2 */
+	ROM_LOAD( "e39-04.27", 0x000000, 0x400000, CRC(6ee35e68) SHA1(fdfe63203d8cecf84cb869039fb893d5b63cdd67) )
+
+	ROM_REGION( 0x000008, REGION_USER5, 0 ) /* CAT702, rom board */
+	ROM_LOAD( "tt07", 0x000000, 0x000008, CRC(ccf2f332) SHA1(6eb07cd5fab29f5536fd94aa88a2b09f28cc3494) )
+ROM_END
+
+/* Taito FX1 old BIOS layout, for the Beastorizer bootleg (zn machine) */
 
 #define TAITOFX1_BIOS \
 	ROM_REGION( 0x480400, REGION_CPU1, 0 ) \
@@ -3127,74 +3500,6 @@ ROM_END
 
 ROM_START( taitofx1 )
 	TAITOFX1_BIOS
-ROM_END
-
-ROM_START( ftimpcta )
-	TAITOFX1_BIOS
-
-	ROM_REGION32_LE( 0x00e00000, REGION_USER1, 0 )
-	ROM_LOAD16_BYTE( "e25-14.3",     0x0000001, 0x100000, CRC(0c5f474f) SHA1(ce7031ba860297b99cddd6d0177f07e03520faeb) )
-	ROM_LOAD16_BYTE( "e25-13.4",     0x0000000, 0x100000, CRC(7f078d7b) SHA1(df9800dd6885dbc33736c5143d877b0847221061) )
-	ROM_LOAD( "e25-01.1",            0x0200000, 0x400000, CRC(8cc4be0c) SHA1(9ca15558a83b7e332e50accf1f7852444a7ce730) )
-	ROM_LOAD( "e25-02.2",            0x0600000, 0x400000, CRC(8e8b4c82) SHA1(55c9d4d3a08fc3226a75ab3a674be433af83e289) )
-	ROM_LOAD( "e25-03.12",           0x0a00000, 0x400000, CRC(43b1c085) SHA1(6e53550e9be0d2f415fc6b4f3b8a71185c5370b2) )
-
-	ROM_REGION( 0x080000, REGION_CPU2, 0 )
-	ROM_LOAD( "e25-10.14",    0x0000000, 0x080000, CRC(2b2ad1b1) SHA1(6d064d0b6805d43ce42929ac8f5645b56384f53c) )
-
-	ROM_REGION( 0x600000, REGION_SOUND1, ROMREGION_SOUNDONLY )
-	ROM_LOAD( "e25-04.27",    0x0000000, 0x400000, CRC(09a66d35) SHA1(f0df24bc9bfc9eb0f5150dc035c19fc5b8a39bf9) )
-	ROM_LOAD( "e25-05.28",    0x0040000, 0x200000, CRC(3fb57636) SHA1(aa38bfac11ecf10fd55143cf4525a2a529be8bb6) )
-ROM_END
-
-ROM_START( gdarius )
-	TAITOFX1_BIOS
-
-	ROM_REGION32_LE( 0x00e00000, REGION_USER1, 0 )
-	ROM_LOAD16_BYTE( "e39-05.3",     0x0000001, 0x100000, CRC(750e5b13) SHA1(68fe9cbd7d506cfd587dccc40b6ae0b0b6ee7c29) )
-	ROM_LOAD16_BYTE( "e39-06.4",     0x0000000, 0x100000, CRC(2980c30d) SHA1(597321642125c3ae37581c2d9abc2723c7909996) )
-	ROM_LOAD( "e39-01.1",            0x0200000, 0x400000, CRC(bdaaa251) SHA1(a42daa706ee859c2b66be179e08c0ad7990f919e) )
-	ROM_LOAD( "e39-02.2",            0x0600000, 0x400000, CRC(a47aab5d) SHA1(64b58e47035ad9d8d6dcaf475cbcc3ad85f4d82f) )
-	ROM_LOAD( "e39-03.12",           0x0a00000, 0x400000, CRC(a883b6a5) SHA1(b8d00d944c90f8cd9c2b076688f4c68b2e6d557a) )
-
-	ROM_REGION( 0x080000, REGION_CPU2, 0 )
-	ROM_LOAD( "e39-07.14",    0x0000000, 0x080000, CRC(2252c7c1) SHA1(92b9908e0d87cad6587f1acc0eef69eaae8c6a98) )
-
-	ROM_REGION( 0x400000, REGION_SOUND1, ROMREGION_SOUNDONLY )
-	ROM_LOAD( "e39-04.27",    0x0000000, 0x400000, CRC(6ee35e68) SHA1(fdfe63203d8cecf84cb869039fb893d5b63cdd67) )
-ROM_END
-
-ROM_START( gdarius2 )
-	TAITOFX1_BIOS
-
-	ROM_REGION32_LE( 0x00e00000, REGION_USER1, 0 )
-	ROM_LOAD16_BYTE( "e39-11.3",     0x0000001, 0x100000, CRC(766f73df) SHA1(9ce24c153920d259bc7fdef0778083eb6d639be3) )
-	ROM_LOAD16_BYTE( "e39-12.4",     0x0000000, 0x100000, CRC(b23266c3) SHA1(80aaddaaf10e40280ade4c7d11f45ddab47ee9a6) )
-	ROM_LOAD( "e39-01.1",            0x0200000, 0x400000, CRC(bdaaa251) SHA1(a42daa706ee859c2b66be179e08c0ad7990f919e) )
-	ROM_LOAD( "e39-02.2",            0x0600000, 0x400000, CRC(a47aab5d) SHA1(64b58e47035ad9d8d6dcaf475cbcc3ad85f4d82f) )
-	ROM_LOAD( "e39-03.12",           0x0a00000, 0x400000, CRC(a883b6a5) SHA1(b8d00d944c90f8cd9c2b076688f4c68b2e6d557a) )
-
-	ROM_REGION( 0x080000, REGION_CPU2, 0 )
-	ROM_LOAD( "e39-07.14",    0x0000000, 0x080000, CRC(2252c7c1) SHA1(92b9908e0d87cad6587f1acc0eef69eaae8c6a98) )
-
-	ROM_REGION( 0x400000, REGION_SOUND1, ROMREGION_SOUNDONLY )
-	ROM_LOAD( "e39-04.27",    0x0000000, 0x400000, CRC(6ee35e68) SHA1(fdfe63203d8cecf84cb869039fb893d5b63cdd67) )
-ROM_END
-
-ROM_START( raystorm )
-	TAITOFX1_BIOS
-
-	ROM_REGION32_LE( 0x00900000, REGION_USER1, 0 )
-	ROM_LOAD16_BYTE( "e24-06.3",     0x0000001, 0x080000, CRC(d70cdf46) SHA1(da6163d69d3ea9c1e3f4b7961a548f1f9d8d9909) )
-	ROM_LOAD16_BYTE( "e24-05.4",     0x0000000, 0x080000, CRC(40097ab9) SHA1(67e73568b35515c2c5a9119e97ac4709baff8c5a) )
-	ROM_LOAD( "e24-02.1",            0x0100000, 0x400000, CRC(9f70950d) SHA1(b3e4f925a61ae2e5dd4cc5d7ec3030a0d5c2c04d) )
-	ROM_LOAD( "e24-03.2",            0x0500000, 0x400000, CRC(6c1f0a5d) SHA1(1aac37a7ff23e54021a4cec18c9bb93242337180) )
-
-	ROM_REGION( 0x080000, REGION_CPU2, 0 )
-	ROM_LOAD( "e24-09.14",    0x0000000, 0x080000, CRC(808589e1) SHA1(46ada4c6d68c2462186a0b962abb435ee740c0ba) )
-
-	ROM_REGION( 0x400000, REGION_SOUND1, ROMREGION_SOUNDONLY )
-	ROM_LOAD( "e24-04.27",    0x0000000, 0x400000, CRC(f403493a) SHA1(3e49fd2a060a3893e26f14cc3cf47c4ba91e17d4) )
 ROM_END
 
 /* Eighteen Raizing */
@@ -3444,14 +3749,24 @@ GAMEX( 1995, psyforcex, psyforce, coh1000ta, znt2p, coh1000ta, ROT0, "Taito", "P
 GAMEX( 1997, mgcldtex,  coh1000t, coh1000ta, znt2p, coh1000ta, ROT0, "Taito", "Magical Date EX / Magical Date - Sotsugyou Kokuhaku Daisakusen (Ver 2.01J)", 0 )
 GAMEX( 1996, mgcldate,  mgcldtex, coh1000ta, znt2p, coh1000ta, ROT0, "Taito", "Magical Date / Magical Date - Dokidoki Kokuhaku Daisakusen (Ver 2.02J)", 0 )
 
-/* Taito FX-1B (old driver, not working yet) */
+/* Taito FX-1B */
 
-GAMEX( 1995, taitofx1, 0,        fx1b,     zn, zn,   ROT0, "Sony/Taito", "Taito FX1", NOT_A_DRIVER )
+GAMEX( 1996, raystorm,  coh1000t, coh1000tb, raystorm, coh1000tb, ROT0, "Taito", "RayStorm (Ver 2.06A)", 0 )
+GAMEX( 1996, raystormo, raystorm, coh1000tb, raystorm, coh1000tb, ROT0, "Taito", "RayStorm (Ver 2.05O)", 0 )
+GAMEX( 1996, raystormu, raystorm, coh1000tb, raystorm, coh1000tb, ROT0, "Taito America", "RayStorm (Ver 2.05A)", 0 )
+GAMEX( 1996, raystormj, raystorm, coh1000tb, raystorm, coh1000tb, ROT0, "Taito", "RayStorm (Ver 2.05J)", 0 )
+GAMEX( 1997, ftimpcta,  coh1000t, coh1000tb, znt2p,    coh1000tb, ROT0, "Taito", "Fighters' Impact A (Ver 2.00J)", 0 )
+GAMEX( 1996, ftimpact,  ftimpcta, coh1000tb, znt2p,    coh1000tb, ROT0, "Taito", "Fighters' Impact (Ver 2.02O)", 0 )
+GAMEX( 1996, ftimpactu, ftimpcta, coh1000tb, znt2p,    coh1000tb, ROT0, "Taito America", "Fighters' Impact (Ver 2.02A)", 0 )
+GAMEX( 1996, ftimpactj, ftimpcta, coh1000tb, znt2p,    coh1000tb, ROT0, "Taito", "Fighters' Impact (Ver 2.02J)", 0 )
+GAMEX( 1997, gdarius2,  coh1000t, coh1002tb, znt2p,    coh1002tb, ROT0, "Taito", "G-Darius Ver.2 (Ver 2.03J)", 0 )
+GAMEX( 1997, gdarius,   gdarius2, coh1002tb, znt2p,    coh1002tb, ROT0, "Taito", "G-Darius (Ver 2.02O)", 0 )
+GAMEX( 1997, gdariusu,  gdarius2, coh1002tb, znt2p,    coh1002tb, ROT0, "Taito America", "G-Darius (Ver 2.02A)", 0 )
+GAMEX( 1997, gdariusj,  gdarius2, coh1002tb, znt2p,    coh1002tb, ROT0, "Taito", "G-Darius (Ver 2.01J)", 0 )
 
-GAMEX( 1996, raystorm, taitofx1, fx1b,     zn, fx1b, ROT0, "Taito", "Ray Storm (JAPAN)", GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )
-GAMEX( 1996, ftimpcta, taitofx1, fx1b,     zn, fx1b, ROT0, "Taito", "Fighter's Impact Ace (JAPAN)", GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )
-GAMEX( 1997, gdarius,  taitofx1, fx1b,     zn, fx1b, ROT0, "Taito", "G-Darius (JAPAN)", GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )
-GAMEX( 1997, gdarius2, gdarius,  fx1b,     zn, fx1b, ROT0, "Taito", "G-Darius Ver.2 (JAPAN)", GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )
+/* Taito FX1, old BIOS layout: parent of the Beastorizer bootleg only */
+
+GAMEX( 1995, taitofx1, 0,        zn,       zn, zn,   ROT0, "Sony/Taito", "Taito FX1", NOT_A_DRIVER )
 
 /* Eighting/Raizing */
 

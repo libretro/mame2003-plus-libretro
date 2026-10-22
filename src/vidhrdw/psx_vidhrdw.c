@@ -2950,6 +2950,15 @@ static void MonochromeLine( void )
 	UINT32 n_g;
 	UINT32 n_b;
 	UINT16 *p_vram;
+	UINT8 n_cmd;
+	UINT32 n_abr;
+	UINT16 *p_n_f;
+	UINT16 *p_n_redb;
+	UINT16 *p_n_greenb;
+	UINT16 *p_n_blueb;
+	UINT16 *p_n_redtrans;
+	UINT16 *p_n_greentrans;
+	UINT16 *p_n_bluetrans;
 
 #if defined( MAME_DEBUG )
 	if( m_n_debugskip == 5 )
@@ -2960,6 +2969,9 @@ static void MonochromeLine( void )
 	DebugMesh( COORD_X( m_packet.MonochromeLine.vertex[ 1 ].n_coord ) + m_n_drawoffset_x, COORD_Y( m_packet.MonochromeLine.vertex[ 1 ].n_coord ) + m_n_drawoffset_y );
 	DebugMeshEnd();
 #endif
+
+	n_cmd = BGR_C( m_packet.MonochromeLine.n_bgr );
+	SOLIDSETUP( m_n_drawmode )
 
 	n_xstart = COORD_X( m_packet.MonochromeLine.vertex[ 0 ].n_coord ) + m_n_drawoffset_x;
 	n_xend = COORD_X( m_packet.MonochromeLine.vertex[ 1 ].n_coord ) + m_n_drawoffset_x;
@@ -3019,9 +3031,19 @@ static void MonochromeLine( void )
 			(INT16)n_y.w.h <= (INT32)m_n_drawarea_y2 )
 		{
 			p_vram = m_p_p_vram[ n_y.w.h ] + n_x.w.h;
-			*( p_vram ) = m_p_n_redshade[ MID_LEVEL | n_r ] |
-				m_p_n_greenshade[ MID_LEVEL | n_g ] |
-				m_p_n_blueshade[ MID_LEVEL | n_b ];
+			if( n_cmd & 0x02 )
+			{
+				/* transparency on */
+				*( p_vram ) = p_n_redtrans[ p_n_f[ MID_LEVEL | n_r ] | p_n_redb[ *( p_vram ) ] ] |
+					p_n_greentrans[ p_n_f[ MID_LEVEL | n_g ] | p_n_greenb[ *( p_vram ) ] ] |
+					p_n_bluetrans[ p_n_f[ MID_LEVEL | n_b ] | p_n_blueb[ *( p_vram ) ] ];
+			}
+			else
+			{
+				*( p_vram ) = m_p_n_redshade[ MID_LEVEL | n_r ] |
+					m_p_n_greenshade[ MID_LEVEL | n_g ] |
+					m_p_n_blueshade[ MID_LEVEL | n_b ];
+			}
 		}
 		n_x.d += n_dx;
 		n_y.d += n_dy;
@@ -3055,6 +3077,15 @@ static void GouraudLine( void )
 	PAIR n_cg2;
 	PAIR n_cb2;
 	UINT16 *p_vram;
+	UINT8 n_cmd;
+	UINT32 n_abr;
+	UINT16 *p_n_f;
+	UINT16 *p_n_redb;
+	UINT16 *p_n_greenb;
+	UINT16 *p_n_blueb;
+	UINT16 *p_n_redtrans;
+	UINT16 *p_n_greentrans;
+	UINT16 *p_n_bluetrans;
 
 #if defined( MAME_DEBUG )
 	if( m_n_debugskip == 6 )
@@ -3065,6 +3096,9 @@ static void GouraudLine( void )
 	DebugMesh( COORD_X( m_packet.GouraudLine.vertex[ 1 ].n_coord ) + m_n_drawoffset_x, COORD_Y( m_packet.GouraudLine.vertex[ 1 ].n_coord ) + m_n_drawoffset_y );
 	DebugMeshEnd();
 #endif
+
+	n_cmd = BGR_C( m_packet.GouraudLine.vertex[ 0 ].n_bgr );
+	SOLIDSETUP( m_n_drawmode )
 
 	n_xstart = COORD_X( m_packet.GouraudLine.vertex[ 0 ].n_coord ) + m_n_drawoffset_x;
 	n_ystart = COORD_Y( m_packet.GouraudLine.vertex[ 0 ].n_coord ) + m_n_drawoffset_y;
@@ -3130,9 +3164,19 @@ static void GouraudLine( void )
 			(INT16)n_y.w.h <= (INT32)m_n_drawarea_y2 )
 		{
 			p_vram = m_p_p_vram[ n_y.w.h ] + n_x.w.h;
-			*( p_vram ) = m_p_n_redshade[ MID_LEVEL | n_r.w.h ] |
-				m_p_n_greenshade[ MID_LEVEL | n_g.w.h ] |
-				m_p_n_blueshade[ MID_LEVEL | n_b.w.h ];
+			if( n_cmd & 0x02 )
+			{
+				/* transparency on */
+				*( p_vram ) = p_n_redtrans[ p_n_f[ MID_LEVEL | n_r.w.h ] | p_n_redb[ *( p_vram ) ] ] |
+					p_n_greentrans[ p_n_f[ MID_LEVEL | n_g.w.h ] | p_n_greenb[ *( p_vram ) ] ] |
+					p_n_bluetrans[ p_n_f[ MID_LEVEL | n_b.w.h ] | p_n_blueb[ *( p_vram ) ] ];
+			}
+			else
+			{
+				*( p_vram ) = m_p_n_redshade[ MID_LEVEL | n_r.w.h ] |
+					m_p_n_greenshade[ MID_LEVEL | n_g.w.h ] |
+					m_p_n_blueshade[ MID_LEVEL | n_b.w.h ];
+			}
 		}
 		n_x.d += n_dx;
 		n_y.d += n_dy;
@@ -3540,6 +3584,15 @@ static void Dot( void )
 	UINT32 n_g;
 	UINT32 n_b;
 	UINT16 *p_vram;
+	UINT8 n_cmd;
+	UINT32 n_abr;
+	UINT16 *p_n_f;
+	UINT16 *p_n_redb;
+	UINT16 *p_n_greenb;
+	UINT16 *p_n_blueb;
+	UINT16 *p_n_redtrans;
+	UINT16 *p_n_greentrans;
+	UINT16 *p_n_bluetrans;
 
 #if defined( MAME_DEBUG )
 	if( m_n_debugskip == 12 )
@@ -3549,6 +3602,9 @@ static void Dot( void )
 	DebugMesh( COORD_X( m_packet.Dot.vertex.n_coord ) + m_n_drawoffset_x, COORD_Y( m_packet.Dot.vertex.n_coord ) + m_n_drawoffset_y );
 	DebugMeshEnd();
 #endif
+
+	n_cmd = BGR_C( m_packet.Dot.n_bgr );
+	SOLIDSETUP( m_n_drawmode )
 
 	n_r = BGR_R( m_packet.Dot.n_bgr );
 	n_g = BGR_G( m_packet.Dot.n_bgr );
@@ -3562,9 +3618,19 @@ static void Dot( void )
 		(INT16)n_y <= (INT32)m_n_drawarea_y2 )
 	{
 		p_vram = m_p_p_vram[ n_y ] + n_x;
-		*( p_vram ) = m_p_n_redshade[ MID_LEVEL | n_r ] |
-			m_p_n_greenshade[ MID_LEVEL | n_g ] |
-			m_p_n_blueshade[ MID_LEVEL | n_b ];
+		if( n_cmd & 0x02 )
+		{
+			/* transparency on */
+			*( p_vram ) = p_n_redtrans[ p_n_f[ MID_LEVEL | n_r ] | p_n_redb[ *( p_vram ) ] ] |
+				p_n_greentrans[ p_n_f[ MID_LEVEL | n_g ] | p_n_greenb[ *( p_vram ) ] ] |
+				p_n_bluetrans[ p_n_f[ MID_LEVEL | n_b ] | p_n_blueb[ *( p_vram ) ] ];
+		}
+		else
+		{
+			*( p_vram ) = m_p_n_redshade[ MID_LEVEL | n_r ] |
+				m_p_n_greenshade[ MID_LEVEL | n_g ] |
+				m_p_n_blueshade[ MID_LEVEL | n_b ];
+		}
 	}
 }
 
@@ -3620,7 +3686,8 @@ enum
 	PSX_DRAW_GOURAUDTEXTUREDPOLYGON3, PSX_DRAW_GOURAUDTEXTUREDPOLYGON4,
 	PSX_DRAW_MONOCHROMELINE, PSX_DRAW_GOURAUDLINE,
 	PSX_DRAW_FRAMEBUFFERRECTANGLE, PSX_DRAW_FLATRECTANGLE, PSX_DRAW_FLATTEXTUREDRECTANGLE,
-	PSX_DRAW_SPRITE8X8, PSX_DRAW_SPRITE16X16, PSX_DRAW_DOT, PSX_DRAW_MOVEIMAGE
+	PSX_DRAW_SPRITE8X8, PSX_DRAW_SPRITE16X16, PSX_DRAW_DOT, PSX_DRAW_MOVEIMAGE,
+	PSX_DRAW_FLATRECTANGLE8X8, PSX_DRAW_FLATRECTANGLE16X16, PSX_DRAW_TEXTUREDDOT
 };
 
 static void psx_draw_run( int n_op )
@@ -3644,6 +3711,20 @@ static void psx_draw_run( int n_op )
 	case PSX_DRAW_SPRITE16X16: Sprite16x16(); break;
 	case PSX_DRAW_DOT: Dot(); break;
 	case PSX_DRAW_MOVEIMAGE: MoveImage(); break;
+	/* the fixed size primitives are drawn as rectangles of that size: the size
+	   word goes after the words of the command */
+	case PSX_DRAW_FLATRECTANGLE8X8:
+		m_packet.n_entry[ 2 ] = 0x00080008;
+		FlatRectangle();
+		break;
+	case PSX_DRAW_FLATRECTANGLE16X16:
+		m_packet.n_entry[ 2 ] = 0x00100010;
+		FlatRectangle();
+		break;
+	case PSX_DRAW_TEXTUREDDOT:
+		m_packet.n_entry[ 3 ] = 0x00010001;
+		FlatTexturedRectangle();
+		break;
 	}
 }
 
@@ -3853,6 +3934,8 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			break;
 		case 0x40:
 		case 0x41:
+		case 0x42:
+		case 0x43:
 			if( m_n_gpu_buffer_offset < 2 )
 			{
 				m_n_gpu_buffer_offset++;
@@ -3865,7 +3948,9 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			}
 			break;
 		case 0x48:
+		case 0x4a:
 		case 0x4c:
+		case 0x4e:
 			if( m_n_gpu_buffer_offset < 3 )
 			{
 				m_n_gpu_buffer_offset++;
@@ -3887,7 +3972,9 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			}
 			break;
 		case 0x50:
+		case 0x51:
 		case 0x52:
+		case 0x53:
 			if( m_n_gpu_buffer_offset < 3 )
 			{
 				m_n_gpu_buffer_offset++;
@@ -3900,7 +3987,9 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			}
 			break;
 		case 0x58:
+		case 0x5a:
 		case 0x5c:
+		case 0x5e:
 			if( m_n_gpu_buffer_offset < 5 &&
 				( m_n_gpu_buffer_offset != 4 || ( m_packet.n_entry[ 4 ] & 0xf000f000 ) != 0x50005000 ) )
 			{
@@ -3966,6 +4055,9 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			}
 			break;
 		case 0x68:
+		case 0x69:
+		case 0x6a:
+		case 0x6b:
 			if( m_n_gpu_buffer_offset < 1 )
 			{
 				m_n_gpu_buffer_offset++;
@@ -3982,7 +4074,37 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 				m_n_gpu_buffer_offset = 0;
 			}
 			break;
+		case 0x6c:
+		case 0x6d:
+		case 0x6e:
+		case 0x6f:
+			if( m_n_gpu_buffer_offset < 2 )
+			{
+				m_n_gpu_buffer_offset++;
+			}
+			else
+			{
+				psx_gpu_draw( PSX_DRAW_TEXTUREDDOT );
+				m_n_gpu_buffer_offset = 0;
+			}
+			break;
+		case 0x70:
+		case 0x71:
+		case 0x72:
+		case 0x73:
+			if( m_n_gpu_buffer_offset < 1 )
+			{
+				m_n_gpu_buffer_offset++;
+			}
+			else
+			{
+				psx_gpu_draw( PSX_DRAW_FLATRECTANGLE8X8 );
+				m_n_gpu_buffer_offset = 0;
+			}
+			break;
 		case 0x74:
+		case 0x75:
+		case 0x76:
 		case 0x77:
 			if( m_n_gpu_buffer_offset < 2 )
 			{
@@ -3998,7 +4120,23 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 				m_n_gpu_buffer_offset = 0;
 			}
 			break;
+		case 0x78:
+		case 0x79:
+		case 0x7a:
+		case 0x7b:
+			if( m_n_gpu_buffer_offset < 1 )
+			{
+				m_n_gpu_buffer_offset++;
+			}
+			else
+			{
+				psx_gpu_draw( PSX_DRAW_FLATRECTANGLE16X16 );
+				m_n_gpu_buffer_offset = 0;
+			}
+			break;
 		case 0x7c:
+		case 0x7d:
+		case 0x7e:
 		case 0x7f:
 			if( m_n_gpu_buffer_offset < 2 )
 			{

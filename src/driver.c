@@ -2735,11 +2735,19 @@ V-V                           TP-027
 	DRIVER( mgcldtex )	/* Magical Date EX (Ver 2.01J) */
 	DRIVER( mgcldate )	/* Magical Date (Ver 2.02J) */
 
-	/* Taito FX1b */
-	DRIVER( raystorm )	/* Ray Storm (JAPAN) */
-	DRIVER( ftimpcta )	/* Fighter's Impact Ace (JAPAN) */
-	DRIVER( gdarius )	/* G-Darius (JAPAN) */
-	DRIVER( gdarius2 )	/* G-Darius Ver.2 (JAPAN) */
+	/* Taito FX-1B */
+	DRIVER( raystorm )	/* RayStorm (Ver 2.06A) */
+	DRIVER( raystormo )	/* RayStorm (Ver 2.05O) */
+	DRIVER( raystormu )	/* RayStorm (Ver 2.05A) */
+	DRIVER( raystormj )	/* RayStorm (Ver 2.05J) */
+	DRIVER( ftimpcta )	/* Fighters' Impact A (Ver 2.00J) */
+	DRIVER( ftimpact )	/* Fighters' Impact (Ver 2.02O) */
+	DRIVER( ftimpactu )	/* Fighters' Impact (Ver 2.02A) */
+	DRIVER( ftimpactj )	/* Fighters' Impact (Ver 2.02J) */
+	DRIVER( gdarius2 )	/* G-Darius Ver.2 (Ver 2.03J) */
+	DRIVER( gdarius )	/* G-Darius (Ver 2.02O) */
+	DRIVER( gdariusu )	/* G-Darius (Ver 2.02A) */
+	DRIVER( gdariusj )	/* G-Darius (Ver 2.01J) */
 	DRIVER( beastrzb )	/* Beastorizer (bootleg)*/
 
 	/* Namco System 11 */
