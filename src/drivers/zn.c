@@ -73,7 +73,8 @@
     TT05 - Fighter's Impact Ace
     TT07 - G-Darius
 
-  Beastorizer bootleg runs on a ray storm motherboard, but doesn't have fx1b sound h/w.
+  The Beastorizer bootleg (beastrzrb) runs as the COH-1002E games below, with
+  its own sound board (AT89C4051 + OKI M6295, internal ROM undumped).
 
   PS Arcade 95 ( coh-1002e )
   --------------------------
@@ -140,8 +141,6 @@ Sound: Analog Devices ADSP-2181
 
   ***************************************************************************/
 
-#define PROTECTION_HACK ( 1 )
-
 #include "driver.h"
 #include "vidhrdw/generic.h"
 #include "cpu/mips/psx.h"
@@ -159,134 +158,6 @@ static int zn_bank_secsel;	/* the game ROM bank follows this register (Raizing) 
 static UINT32 tecmo_bank;
 static void tecmo_bank_update( void );
 
-#if PROTECTION_HACK
-
-
-/* decodetaito.c */
-static unsigned char tt_protection_hack[] =
-{
-	/* unknown */
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00,
-
-	/* first test, this byte is ignored */
-	0xef,
-
-	/* checked for explicitly ( skips red screen ) */
-	0xd7, 0x5f, 0xb7, 0xea, 0x51, 0x15, 0x96, 0x02,
-	0x0b, 0xf8, 0xf5, 0x54, 0xc5, 0xf9, 0x5d, 0x5d,
-	0xea, 0x13, 0xd0, 0x63, 0x95, 0xd4, 0x9f, 0xee,
-	0xeb, 0x3f, 0x94, 0x36, 0x42, 0x45, 0x81, 0xb0,
-	0x80, 0xc4, 0x3f, 0x42, 0x39, 0x2a, 0xa4, 0x28,
-	0x28, 0x20, 0xac, 0x00, 0x20, 0x8a, 0x28, 0x92,
-	0xa8,
-
-	/* unknown */
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-
-	/* second test, this byte is ignored */
-	0x00,
-
-	/* checks the result of a calculation ( skips blue screen ) */
-	0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00,
-
-	/* default value */
-	0x00,
-};
-
-static unsigned short n_sio0_ptr;
-static unsigned char *p_sio0_ret;
-static unsigned short n_sio0_ret_size;
-
-#endif
-
-static READ32_HANDLER( sio0_r )
-{
-	unsigned short n_return;
-
-	n_return = 0;
-	switch( offset )
-	{
-	case 0x00:
-		/* data */
-#if PROTECTION_HACK
-		if( p_sio0_ret != NULL )
-		{
-			n_return = p_sio0_ret[ n_sio0_ptr ];
-			if( n_sio0_ptr < n_sio0_ret_size - 1 )
-			{
-				n_sio0_ptr++;
-			}
-		}
-#endif
-		break;
-	case 0x01:
-		/* status */
-#if PROTECTION_HACK
-		if( p_sio0_ret != NULL )
-		{
-			n_return = 2;
-		}
-#endif
-		break;
-	case 0x02:
-		/* mode */
-		break;
-	case 0x03:
-		/* control */
-		break;
-	case 0x04:
-		/* baud */
-		break;
-	}
-	log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: sio0_r( %04x ) %04x\n", activecpu_get_pc(), offset, n_return );
-	return n_return;
-}
-
-static WRITE32_HANDLER( sio0_w )
-{
-	int n_char;
-	char s_char[ 5 ];
-
-	s_char[ 0 ] = 0;
-	switch( offset )
-	{
-	case 0x00:
-		/* data */
-		n_char = ( data & 0xff );
-		if( n_char >= 0x20 && n_char <= 0x7f )
-		{
-			sprintf( s_char, " '%c'", n_char );
-		}
-		else
-		{
-			sprintf( s_char, " $%02x", n_char );
-		}
-		break;
-	case 0x01:
-		/* status */
-		break;
-	case 0x02:
-		/* mode */
-		break;
-	case 0x03:
-		/* control */
-		break;
-	case 0x04:
-		/* baud */
-		break;
-	}
-	log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: sio0_w( %04x, %08x )%s\n", activecpu_get_pc(), offset, data, s_char );
-}
-
 static UINT8 qsound_bank;
 
 static void qsound_bank_update( void )
@@ -299,30 +170,6 @@ static WRITE_HANDLER( qsound_bankswitch_w )
 	qsound_bank = data & 0x0f;
 	qsound_bank_update();
 }
-
-static MEMORY_READ32_START( zn_readmem )
-	{ 0x00000000, 0x003fffff, MRA32_RAM },		/* ram */
-	{ 0x1f000000, 0x1f3fffff, MRA32_BANK1 },	/* game rom */
-	{ 0x1f800000, 0x1f8003ff, MRA32_BANK3 },	/* scratchpad */
-	{ 0x1f801040, 0x1f80104f, sio0_r },
-	{ 0x1f801810, 0x1f801817, psx_gpu_r },
-	{ 0x1fb80000, 0x1fbbffff, MRA32_BANK6 },	/* country rom */
-	{ 0x80000000, 0x803fffff, MRA32_BANK4 },	/* ram mirror */
-	{ 0xa0000000, 0xa03fffff, MRA32_BANK5 },	/* ram mirror */
-	{ 0xbfc00000, 0xbfc7ffff, MRA32_BANK7 },	/* bios */
-MEMORY_END
-
-static MEMORY_WRITE32_START( zn_writemem )
-	{ 0x00000000, 0x003fffff, MWA32_RAM },		/* ram */
-	{ 0x1f000000, 0x1f3fffff, MWA32_ROM },		/* game rom */
-	{ 0x1f800000, 0x1f8003ff, MWA32_BANK3 },	/* scratchpad */
-	{ 0x1f801040, 0x1f80104f, sio0_w },
-	{ 0x1f801810, 0x1f801817, psx_gpu_w },
-	{ 0x1fb80000, 0x1fbbffff, MWA32_ROM },		/* country rom */
-	{ 0x80000000, 0x803fffff, MWA32_BANK4 },	/* ram mirror */
-	{ 0xa0000000, 0xa03fffff, MWA32_BANK5 },	/* ram mirror */
-	{ 0xbfc00000, 0xbfc7ffff, MWA32_ROM },		/* bios */
-MEMORY_END
 
 static MEMORY_READ_START( qsound_readmem )
 	{ 0x0000, 0x7fff, MRA_ROM },
@@ -343,72 +190,6 @@ MEMORY_END
 static PORT_READ_START( qsound_readport )
 	{ 0x00, 0x00, soundlatch_r },
 PORT_END
-
-static DRIVER_INIT( zn )
-{
-	zn_bank_secsel = 0;
-	cpu_setbank( 1, memory_region( REGION_USER1 ) ); /* game rom */
-	cpu_setbank( 3, memory_region( REGION_CPU1 ) + 0x0480000 ); /* scratch pad */
-	cpu_setbank( 4, memory_region( REGION_CPU1 ) ); /* ram mirror */
-	cpu_setbank( 5, memory_region( REGION_CPU1 ) ); /* ram mirror */
-	cpu_setbank( 6, memory_region( REGION_USER2 ) ); /* capcom country rom */
-	cpu_setbank( 7, memory_region( REGION_CPU1 ) + 0x0400000 ); /* bios */
-
-#if PROTECTION_HACK
-	if( strcmp( Machine->gamedrv->name, "ftimpcta" ) == 0 ||
-		strcmp( Machine->gamedrv->name, "gdarius" ) == 0 ||
-		strcmp( Machine->gamedrv->name, "gdarius2" ) == 0 ||
-		strcmp( Machine->gamedrv->name, "mgcldate" ) == 0 ||
-		strcmp( Machine->gamedrv->name, "psyforce" ) == 0 ||
-		strcmp( Machine->gamedrv->name, "raystorm" ) == 0 ||
-		strcmp( Machine->gamedrv->name, "sfchamp" ) == 0 ||
-		strcmp( Machine->gamedrv->name, "beastrzb" ) == 0 )
-	{
-		p_sio0_ret = tt_protection_hack;
-		n_sio0_ret_size = sizeof( tt_protection_hack );
-	}
-	else
-	{
-		p_sio0_ret = NULL;
-		n_sio0_ret_size = 0;
-	}
-#endif
-	psx_driver_init();
-}
-
-static MACHINE_INIT( zn )
-{
-#if PROTECTION_HACK
-	n_sio0_ptr = 0;
-#endif
-	psx_machine_init();
-}
-
-static MACHINE_DRIVER_START( zn )
-	/* basic machine hardware */
-	MDRV_CPU_ADD(PSXCPU, 33868800) /* 33MHz ?? */
-	MDRV_CPU_MEMORY(zn_readmem,zn_writemem)
-	MDRV_CPU_VBLANK_INT(psx_vblank,1)
-
-	MDRV_FRAMES_PER_SECOND(60)
-	MDRV_VBLANK_DURATION(0)
-
-	MDRV_MACHINE_INIT(zn)
-
-	/* video hardware */
-	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
-	MDRV_SCREEN_SIZE(640, 480)
-	MDRV_VISIBLE_AREA(0, 479, 0, 479)
-	MDRV_PALETTE_LENGTH(65536)
-
-	MDRV_PALETTE_INIT(psx)
-	MDRV_VIDEO_START(psx_type2_1024x1024)
-	MDRV_VIDEO_UPDATE(psx)
-	MDRV_VIDEO_STOP(psx)
-
-	/* sound hardware */
-	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-MACHINE_DRIVER_END
 
 /***************************************************************************
 
@@ -1947,7 +1728,7 @@ static MACHINE_DRIVER_START( coh1002e )
 	MDRV_CPU_MEMORY( raizing_zn_readmem, raizing_zn_writemem )
 	MDRV_CPU_VBLANK_INT( psx_vblank, 1 )
 
-	MDRV_CPU_ADD( M68000, 12000000 )
+	MDRV_CPU_ADD_TAG( "raizing_sound", M68000, 12000000 )
 	MDRV_CPU_FLAGS( CPU_AUDIO_CPU )
 	MDRV_CPU_MEMORY( raizing_sound_readmem, raizing_sound_writemem )
 
@@ -1970,7 +1751,25 @@ static MACHINE_DRIVER_START( coh1002e )
 
 	MDRV_SOUND_ATTRIBUTES( SOUND_SUPPORTS_STEREO )
 	MDRV_SOUND_ADD( PSXSPU, zn_spu_interface )
-	MDRV_SOUND_ADD( YMF271, raizing_ymf271_interface )
+	MDRV_SOUND_ADD_TAG( "raizing_ymf", YMF271, raizing_ymf271_interface )
+MACHINE_DRIVER_END
+
+/* Beastorizer bootleg, as MAME beastrzrb_state: the COH-1002E board
+   without its sound board. The bootleg sound board (an AT89C4051 with an
+   OKI M6295) has an undumped internal ROM, so the commands sent to it at
+   0x1fb00000 go nowhere and the game has no sound, as in MAME. */
+static MEMORY_WRITE32_START( beastrzrb_writemem )
+	ZN_MAIN_WRITE
+	{ 0x1f000000, 0x1f7fffff, MWA32_ROM },
+	{ 0x1fb00000, 0x1fb00007, MWA32_NOP },
+MEMORY_END
+
+static MACHINE_DRIVER_START( beastrzrb )
+	MDRV_IMPORT_FROM( coh1002e )
+	MDRV_CPU_MODIFY( "main" )
+	MDRV_CPU_MEMORY( raizing_zn_readmem, beastrzrb_writemem )
+	MDRV_CPU_REMOVE( "raizing_sound" )
+	MDRV_SOUND_REMOVE( "raizing_ymf" )
 MACHINE_DRIVER_END
 
 
@@ -5762,16 +5561,6 @@ ROM_START( gdariusj )
 	ROM_LOAD( "tt07", 0x000000, 0x000008, CRC(ccf2f332) SHA1(6eb07cd5fab29f5536fd94aa88a2b09f28cc3494) )
 ROM_END
 
-/* Taito FX1 old BIOS layout, for the Beastorizer bootleg (zn machine) */
-
-#define TAITOFX1_BIOS \
-	ROM_REGION( 0x480400, REGION_CPU1, 0 ) \
-	ROM_LOAD( "coh1002t.bin", 0x0400000, 0x080000, CRC(e3f23b6e) SHA1(e18907cf8c6ba54d96edba0a9a00487a90219e0d) )
-
-ROM_START( taitofx1 )
-	TAITOFX1_BIOS
-ROM_END
-
 /* Eighting / Raizing (COH-1002E) */
 
 #define RAIZING_BIOS \
@@ -6039,20 +5828,28 @@ ROM_START( brvbladej )
 	ROM_LOAD( "mg11", 0x000000, 0x000008, CRC(56d917de) SHA1(3c1cdbf552265dbff6051853d933ac34047bcdae) )
 ROM_END
 
-ROM_START( beastrzb )
-	TAITOFX1_BIOS
+ROM_START( beastrzrb )
+	RAIZING_BIOS
 
-	ROM_REGION32_LE( 0x0900000, REGION_USER1, 0 )
-	ROM_LOAD( "27c160.1",     0x0000000, 0x200000, CRC(820855e2) SHA1(18bdd4d0b4a92ae4fde457e1f37c813be6eece71) )
-	ROM_LOAD( "27c160.2",     0x0200000, 0x200000, CRC(1712af34) SHA1(3a78997a2ad0fec1b09828b47150a4be611cd9ad) )
-	ROM_LOAD( "4",            0x0400000, 0x200000, CRC(bff21f44) SHA1(2dffc518c069f0692a3b75e10091658d9c10ecb5) )
-	ROM_LOAD( "27c160.5",     0x0600000, 0x200000, CRC(10fe6f4d) SHA1(9faee2faa6d741e1caf25edd093644be5723aa5c) )
-	ROM_LOAD( "27c800.3",     0x0800000, 0x100000, CRC(7192eb4e) SHA1(bb276a38261099d91080d8613dc7500322f6fcab) )
+	ROM_REGION32_LE( 0x1800000, REGION_USER1, 0 ) /* game rom, 8MB banks */
+	ROM_LOAD( "27c160.1", 0x000000, 0x200000, CRC(820855e2) SHA1(18bdd4d0b4a92ae4fde457e1f37c813be6eece71) )
+	ROM_LOAD( "27c160.4", 0x400000, 0x200000, CRC(2d2b25f4) SHA1(77d8ad94602e71f16b47de47bc2e0a97957c530b) )
+	ROM_LOAD( "27c160.5", 0x600000, 0x200000, CRC(10fe6f4d) SHA1(9faee2faa6d741e1caf25edd093644be5723aa5c) )
+	ROM_LOAD( "27c160.2", 0x800000, 0x200000, CRC(1712af34) SHA1(3a78997a2ad0fec1b09828b47150a4be611cd9ad) )
+	ROM_LOAD( "27c800.3", 0xb00000, 0x100000, CRC(7192eb4e) SHA1(bb276a38261099d91080d8613dc7500322f6fcab) )
 
-	ROM_REGION( 0x180000, REGION_CPU2, 0 )
-	ROM_LOAD( "27c4096.1",    0x0000000, 0x080000, CRC(217734a1) SHA1(de4f519215123c09b3b5f27509b4d74604b5e03d) )
-	ROM_LOAD( "27c4096.2",    0x0080000, 0x080000, CRC(d1f2a9b2) SHA1(d1475a453ce4e3b9f2ff59abedf0f57ba3c408fe) )
-	ROM_LOAD( "27c240.3",     0x0100000, 0x080000, CRC(509cdc8b) SHA1(8b92b79be09de56e7d40c2d02fcbeca92bb60226) )
+	ROM_REGION( 0x001000, REGION_CPU2, 0 ) /* AT89C4051, not emulated */
+	ROM_LOAD( "at89c4051", 0x000000, 0x001000, NO_DUMP ) /* undumped internal ROM */
+
+	ROM_REGION( 0x100000, REGION_SOUND1, 0 ) /* OKI M6295, not emulated */
+	ROM_LOAD( "27c4096.1", 0x000000, 0x080000, CRC(217734a1) SHA1(de4f519215123c09b3b5f27509b4d74604b5e03d) )
+	ROM_LOAD( "27c4096.2", 0x080000, 0x080000, CRC(d1f2a9b2) SHA1(d1475a453ce4e3b9f2ff59abedf0f57ba3c408fe) )
+
+	ROM_REGION( 0x080000, REGION_USER2, 0 ) /* bootleg protection, not used (as MAME) */
+	ROM_LOAD( "27c240.3", 0x000000, 0x080000, BAD_DUMP CRC(509cdc8b) SHA1(8b92b79be09de56e7d40c2d02fcbeca92bb60226) )
+
+	ROM_REGION( 0x000008, REGION_USER5, 0 ) /* CAT702, rom board */
+	ROM_LOAD( "et02", 0x000000, 0x000008, CRC(187ce61a) SHA1(521122b0f7b3f278dd2a2b1d73c252b952b5f55d) )
 ROM_END
 
 
@@ -6328,17 +6125,13 @@ GAMEX( 1997, gdarius,   gdarius2, coh1002tb, znt2p,    coh1002tb, ROT0, "Taito",
 GAMEX( 1997, gdariusu,  gdarius2, coh1002tb, znt2p,    coh1002tb, ROT0, "Taito America", "G-Darius (Ver 2.02A)", 0 )
 GAMEX( 1997, gdariusj,  gdarius2, coh1002tb, znt2p,    coh1002tb, ROT0, "Taito", "G-Darius (Ver 2.01J)", 0 )
 
-/* Taito FX1, old BIOS layout: parent of the Beastorizer bootleg only */
-
-GAMEX( 1995, taitofx1, 0,        zn,       zn, zn,   ROT0, "Sony/Taito", "Taito FX1", NOT_A_DRIVER )
-
 /* Eighting / Raizing (COH-1002E) */
 
 GAMEX( 1996, coh1002e,  0,        coh1002e, znt2p,    coh1002e, ROT0,   "Eighting / Raizing", "Eighting / Raizing ZN-1", NOT_A_DRIVER )
 GAMEX( 1997, beastrzr,  coh1002e, coh1002e, znt2p,    coh1002e, ROT0,   "Eighting / Raizing", "Beastorizer (USA, Sep 22 1997)", 0 )
 GAMEX( 1997, beastrzra, beastrzr, coh1002e, znt2p,    coh1002e, ROT0,   "Eighting / Raizing", "Beastorizer (USA, Jun 21 1997)", 0 )
 GAMEX( 1997, bldyroar,  beastrzr, coh1002e, znt2p,    coh1002e, ROT0,   "Eighting / Raizing", "Bloody Roar (Japan, Jun 21 1997)", 0 )
-GAMEX( 1997, beastrzb,  taitofx1, zn,       zn,       zn,       ROT0,   "Eighting/Raizing", "Beastorizer (bootleg)", GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )
+GAMEX( 1997, beastrzrb, beastrzr, beastrzrb, znt2p,   coh1002e, ROT0,   "bootleg",            "Beastorizer (USA bootleg)", GAME_NO_SOUND )
 GAMEX( 1998, bldyror2,  coh1002e, coh1002e, bldyror2, coh1002e, ROT0,   "Eighting / Raizing", "Bloody Roar 2 (World)", 0 )
 GAMEX( 1998, bldyror2u, bldyror2, coh1002e, bldyror2, coh1002e, ROT0,   "Eighting / Raizing", "Bloody Roar 2 (USA)", 0 )
 GAMEX( 1998, bldyror2a, bldyror2, coh1002e, bldyror2, coh1002e, ROT0,   "Eighting / Raizing", "Bloody Roar 2 (Asia)", 0 )
