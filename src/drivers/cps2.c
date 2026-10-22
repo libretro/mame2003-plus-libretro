@@ -97,6 +97,7 @@
 #include "cpu/m68000/m68000.h"
 #include "bootstrap.h"
 #include "inptport.h"
+#include "state.h"
 
 #include "cps1.h"       /* External CPS1 definitions */
 
@@ -512,6 +513,65 @@ INPUT_PORTS_START( cps2_2p6b )
     PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_COIN2 )
     PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON6 | IPF_PLAYER2  )
     PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNUSED )
+INPUT_PORTS_END
+
+/* Street Fighter Zero 3 Mix: cps2_2p6b, plus the aspect ratio DIP switch of FBNeo */
+INPUT_PORTS_START( sfz3mix )
+    PORT_START      /* IN0 (0x00) */
+    PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1 )
+    PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER1 )
+    PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER1 )
+    PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER1 )
+    PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
+    PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )
+    PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1 )
+    PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNUSED )
+    PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER2 )
+    PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER2 )
+    PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER2 )
+    PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER2 )
+    PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
+    PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
+    PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
+    PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNUSED )
+
+    PORT_START      /* IN1 (0x10) */
+    PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER1 )
+    PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER1 )
+    PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_BUTTON6 | IPF_PLAYER1 )
+    PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_UNUSED  )
+    PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER2 )
+    PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER2 )
+    PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNUSED )
+    PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNUSED )
+    PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_UNUSED )
+    PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_UNUSED )
+    PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_UNUSED )
+    PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_UNUSED )
+    PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_UNUSED )
+    PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_UNUSED )
+    PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNUSED )
+    PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNUSED )
+
+    PORT_START      /* IN2 (0x20) */
+    PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_SPECIAL )   /* EEPROM bit */
+    PORT_BITX(0x0002, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
+    PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
+    PORT_BIT( 0x00f8, IP_ACTIVE_LOW, IPT_UNUSED )
+    PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_START1 )
+    PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_START2 )
+    PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_UNUSED )
+    PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_UNUSED )
+    PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_COIN1 )
+    PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_COIN2 )
+    PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON6 | IPF_PLAYER2  )
+    PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNUSED )
+
+    PORT_START      /* fake DIP switch: display aspect ratio, see VIDEO_UPDATE( cps2turbo ) */
+    PORT_DIPNAME( 0x03, 0x00, "Aspect Ratio" )
+    PORT_DIPSETTING(    0x00, "16:9" )
+    PORT_DIPSETTING(    0x01, "4:3" )
+    PORT_DIPSETTING(    0x02, "112:81" )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( cps2_2p6bt )
@@ -1135,6 +1195,391 @@ static MACHINE_DRIVER_START( cps2 )
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
 	MDRV_SOUND_ADD(QSOUND, qsound_interface)
 MACHINE_DRIVER_END
+
+/*************************************
+ *
+ *  CPS2Turbo
+ *
+ *  The extended CPS2 that Zero800 made for his Street Fighter Zero 3 Mix
+ *  hack (https://sfz3mix.github.io/), from his MAME 0.261 driver
+ *  (cps2turbo.cpp) and the FBNeo one:
+ *  - 68000 and Z80 at twice the CPS2 clock
+ *  - 416x234 display, 16:9
+ *  - 6MB of program ROM space, so the CPS2 object output moves from
+ *    0x400000 to 0x665000
+ *  - 64MB of sprite ROM: bit 12 of the sprite Y selects the upper half
+ *    (cps1_vidhrdw.c)
+ *  - 16MB of QSound samples (qsound.c)
+ *  - optional music samples: the hacked Z80 program leaves the number of
+ *    the tune in its shared RAM, and a sample replaces the QSound music
+ *
+ *************************************/
+
+/* the object output, also seen at 0xfffff0 like in current MAME */
+static READ16_HANDLER( cps2turbo_output_mirror_r )
+{
+	return cps2_output[offset];
+}
+
+static WRITE16_HANDLER( cps2turbo_output_mirror_w )
+{
+	COMBINE_DATA(&cps2_output[offset]);
+}
+
+/* sample n is the left channel of tune n, sample 0x40+n the right one */
+static const char *sfz3mix_sample_names[] =
+{
+	"*sfz3mix",
+	"empty",
+	"L01",
+	"L02",
+	"L03",
+	"L04",
+	"L05",
+	"L06",
+	"L07",
+	"L08",
+	"L09",
+	"L0A",
+	"L0B",
+	"L0C",
+	"L0D",
+	"L0E",
+	"L0F",
+	"L10",
+	"L11",
+	"L12",
+	"L13",
+	"L14",
+	"L15",
+	"L16",
+	"L17",
+	"L18",
+	"L19",
+	"L1A",
+	"L1B",
+	"L1C",
+	"L1D",
+	"L1E",
+	"L1F",
+	"L20",
+	"L21",
+	"L22",
+	"L23",
+	"L24",
+	"L25",
+	"L26",
+	"L27",
+	"L28",
+	"L29",
+	"L2A",
+	"L2B",
+	"L2C",
+	"L2D",
+	"L2E",
+	"L2F",
+	"L30",
+	"L31",
+	"L32",
+	"L33",
+	"L34",
+	"L35",
+	"L36",
+	"L37",
+	"L38",
+	"L39",
+	"L3A",
+	"L3B",
+	"L3C",
+	"L3D",
+	"L3E",
+	"L3F",
+	"empty",
+	"R01",
+	"R02",
+	"R03",
+	"R04",
+	"R05",
+	"R06",
+	"R07",
+	"R08",
+	"R09",
+	"R0A",
+	"R0B",
+	"R0C",
+	"R0D",
+	"R0E",
+	"R0F",
+	"R10",
+	"R11",
+	"R12",
+	"R13",
+	"R14",
+	"R15",
+	"R16",
+	"R17",
+	"R18",
+	"R19",
+	"R1A",
+	"R1B",
+	"R1C",
+	"R1D",
+	"R1E",
+	"R1F",
+	"R20",
+	"R21",
+	"R22",
+	"R23",
+	"R24",
+	"R25",
+	"R26",
+	"R27",
+	"R28",
+	"R29",
+	"R2A",
+	"R2B",
+	"R2C",
+	"R2D",
+	"R2E",
+	"R2F",
+	"R30",
+	"R31",
+	"R32",
+	"R33",
+	"R34",
+	"R35",
+	"R36",
+	"R37",
+	"R38",
+	"R39",
+	"R3A",
+	"R3B",
+	"R3C",
+	"R3D",
+	"R3E",
+	"R3F",
+	0	/* end of array */
+};
+
+static struct Samplesinterface sfz3mix_samples_interface =
+{
+	2,	/* left, right */
+	10,	/* the samples are mixed at 1/10 of the QSound */
+	sfz3mix_sample_names
+};
+
+#define SFZ3MIX_SAMPLE_RIGHT	0x40
+
+static int cps2turbo_tune;	/* tune played by the samples, 0 = none (saved in the states) */
+
+static void cps2turbo_music_stop(void)
+{
+	sample_stop(0);
+	sample_stop(1);
+	cps2turbo_tune = 0;
+}
+
+/* returns whether the sample of that side is there and plays */
+static int cps2turbo_music_start(int side, int tune)
+{
+	sample_stop(side);
+	sample_start(side, side ? SFZ3MIX_SAMPLE_RIGHT + tune : tune, 1);
+	if (!sample_playing(side))
+	{
+		sample_stop(side);
+		return 0;
+	}
+	if (side)
+		sample_set_stereo_volume(1, 0, 255);
+	else
+		sample_set_stereo_volume(0, 255, 0);
+	return 1;
+}
+
+/* the 68000 side of the QSound shared RAM: watch the Z80 for the music */
+static WRITE16_HANDLER( cps2turbo_qsound_sharedram1_w )
+{
+	data8_t *ram1, *ram2;
+
+	if (!ACCESSING_LSB)
+		return;
+
+	ram1 = cps_qsound_sharedram1();
+	ram2 = cps_qsound_sharedram2();
+	data &= 0xff;
+
+	/* stop the samples */
+	if (offset == 0x001 && data == 0x00 && ram1[0x00] == 0xff)
+		cps2turbo_music_stop();
+
+	/* last byte of a sound command */
+	if (offset == 0xffe)
+	{
+		if (ram1[0x80] == 0x77)
+		{
+			/* the Z80 stops the music */
+			cps2turbo_music_stop();
+			ram2[0x27] = 0xc9;	/* QSound music volume back on */
+			ram1[0x80] = 0xff;
+			ram1[0x81] = 0xff;
+		}
+		else if (ram1[0x81] > 0x00 && ram1[0x81] < 0x40)
+		{
+			/* the Z80 starts a tune: play its sample instead, if there is one */
+			int tune = ram1[0x81];
+
+			ram1[0x80] = 0xff;
+			ram1[0x81] = 0xff;
+			cps2turbo_tune = 0;
+			if (cps2turbo_music_start(0, tune))
+			{
+				ram2[0x27] = 0x00;	/* QSound music volume off */
+				cps2turbo_tune = tune;
+			}
+			if (cps2turbo_music_start(1, tune))
+			{
+				ram2[0x27] = 0x00;
+				cps2turbo_tune = tune;
+			}
+		}
+		else if (ram2[0x27] == 0x00 && !sample_playing(0))
+		{
+			/* after a state load: no QSound music and no sample */
+			cps2turbo_music_stop();
+			ram2[0x27] = 0xc9;
+			ram1[0x80] = 0xff;
+			ram1[0x81] = 0xff;
+		}
+		else if (ram2[0x27] != 0x00 && sample_playing(0))
+		{
+			/* after a state load: QSound music and a sample */
+			cps2turbo_music_stop();
+			ram2[0x27] = 0xc9;
+			ram1[0x80] = 0xff;
+			ram1[0x81] = 0xff;
+		}
+		else if (data == 0x55)
+		{
+			/* boot */
+			cps2turbo_music_stop();
+		}
+	}
+
+	ram1[offset] = data;
+}
+
+static MEMORY_READ16_START( cps2turbo_readmem )
+	{ 0x000000, 0x5fffff, MRA16_ROM },				/* 68000 ROM */
+	{ 0x618000, 0x619fff, qsound_sharedram1_r },		/* Q RAM */
+	{ 0x660000, 0x663fff, MRA16_RAM },				/* Extra RAM, as on the other CPS2 games */
+	{ 0x664000, 0x664001, MRA16_RAM },				/* Unknown */
+	{ 0x665000, 0x66500b, MRA16_RAM },				/* CPS2 object output (0x400000 on CPS2) */
+	{ 0x708000, 0x709fff, cps2_objram2_r },			/* Object RAM */
+	{ 0x70a000, 0x70bfff, cps2_objram2_r },			/* mirror */
+	{ 0x70c000, 0x70dfff, cps2_objram2_r },			/* mirror */
+	{ 0x70e000, 0x70ffff, cps2_objram2_r },			/* mirror */
+	{ 0x800100, 0x8001ff, cps1_output_r },			/* Output ports mirror (sfa) */
+	{ 0x804000, 0x804001, input_port_0_word_r },		/* IN0 */
+	{ 0x804010, 0x804011, input_port_1_word_r },		/* IN1 */
+	{ 0x804020, 0x804021, cps2_eeprom_port_r  },		/* IN2 + EEPROM */
+	{ 0x804030, 0x804031, cps2_qsound_volume_r },		/* Master volume */
+	{ 0x8040b0, 0x8040b3, kludge_r },  				/* unknown */
+	{ 0x804100, 0x8041ff, cps1_output_r },			/* CPS1 Output ports */
+	{ 0x900000, 0x92ffff, MRA16_RAM },				/* Video RAM */
+	{ 0xfffff0, 0xfffffb, cps2turbo_output_mirror_r },	/* CPS2 object output */
+	{ 0xff0000, 0xffffff, MRA16_RAM },				/* RAM */
+MEMORY_END
+
+static MEMORY_WRITE16_START( cps2turbo_writemem )
+	{ 0x000000, 0x5fffff, MWA16_ROM },				/* ROM */
+	{ 0x618000, 0x619fff, cps2turbo_qsound_sharedram1_w },	/* Q RAM + music samples */
+	{ 0x660000, 0x663fff, MWA16_RAM },				/* Extra RAM */
+	{ 0x664000, 0x664001, MWA16_RAM },				/* Unknown */
+	{ 0x665000, 0x66500b, MWA16_RAM, &cps2_output, &cps2_output_size },	/* CPS2 object output */
+	{ 0x700000, 0x701fff, cps2_objram1_w, &cps2_objram1 },	/* Object RAM, no game seems to use it directly */
+	{ 0x708000, 0x709fff, cps2_objram2_w, &cps2_objram2 },	/* Object RAM */
+	{ 0x70a000, 0x70bfff, cps2_objram2_w },			/* mirror */
+	{ 0x70c000, 0x70dfff, cps2_objram2_w },			/* mirror */
+	{ 0x70e000, 0x70ffff, cps2_objram2_w },			/* mirror */
+	{ 0x800100, 0x8001ff, cps1_output_w },			/* Output ports mirror (sfa) */
+	{ 0x804040, 0x804041, cps2_eeprom_port_w },		/* EEPROM */
+	{ 0x8040a0, 0x8040a1, MWA16_NOP },				/* Unknown (reset once on startup) */
+	{ 0x8040e0, 0x8040e1, cps2_objram_bank_w },		/* bit 0 = Object ram bank swap */
+	{ 0x804100, 0x8041ff, cps1_output_w, &cps1_output, &cps1_output_size },  /* Output ports */
+	{ 0x900000, 0x92ffff, cps1_gfxram_w, &cps1_gfxram, &cps1_gfxram_size },
+	{ 0xfffff0, 0xfffffb, cps2turbo_output_mirror_w },	/* CPS2 object output */
+	{ 0xff0000, 0xffffff, MWA16_RAM },				/* RAM */
+MEMORY_END
+
+/* the aspect ratio DIP switch is for the display only, the game doesn't read it */
+static VIDEO_UPDATE( cps2turbo )
+{
+	static const int aspect[4][2] = { { 16, 9 }, { 4, 3 }, { 112, 81 }, { 16, 9 } };
+	int dip = readinputport(3) & 0x03;
+
+	set_display_aspect_ratio(aspect[dip][0], aspect[dip][1]);
+	video_update_cps1(bitmap, cliprect);
+}
+
+static MACHINE_DRIVER_START( cps2turbo )
+
+	/* basic machine hardware */
+	MDRV_CPU_ADD(M68000, 23600000)	/* 32MHz, slowed down like the CPS2 16MHz (11.8MHz) */
+	MDRV_CPU_CONFIG(cps2_encryption)
+	MDRV_CPU_MEMORY(cps2turbo_readmem,cps2turbo_writemem)
+	MDRV_CPU_VBLANK_INT(cps2_interrupt,262)	/* 262  ??? interrupts per frame*/
+
+	MDRV_CPU_ADD(Z80, 16000000)
+	MDRV_CPU_MEMORY(qsound_readmem,qsound_writemem)
+	MDRV_CPU_PERIODIC_INT(irq0_line_hold,251)
+
+	MDRV_FRAMES_PER_SECOND(59.633333)
+	MDRV_VBLANK_DURATION(0)
+
+	MDRV_NVRAM_HANDLER(cps2)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_NEEDS_6BITS_PER_GUN | VIDEO_UPDATE_BEFORE_VBLANK)
+	MDRV_SCREEN_SIZE(64*8, 32*8)
+	MDRV_VISIBLE_AREA(6*8, (64-6)*8-1, 12, 12+234-1 )	/* 416x234 */
+	MDRV_ASPECT_RATIO(16,9)
+	MDRV_GFXDECODE(gfxdecodeinfo)
+	MDRV_PALETTE_LENGTH(4096)
+
+	MDRV_VIDEO_START(cps2turbo)
+	MDRV_VIDEO_EOF(cps1)
+	MDRV_VIDEO_UPDATE(cps2turbo)
+
+	/* sound hardware */
+	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
+	MDRV_SOUND_ADD(QSOUND, qsound_interface)
+	MDRV_SOUND_ADD(SAMPLES, sfz3mix_samples_interface)
+MACHINE_DRIVER_END
+
+/* the samples aren't in the states: start again the tune of the state */
+static void cps2turbo_music_postload(void)
+{
+	int tune = cps2turbo_tune;
+
+	cps2turbo_music_stop();
+	if (tune)
+	{
+		int playing = cps2turbo_music_start(0, tune);
+
+		playing |= cps2turbo_music_start(1, tune);
+		if (playing)
+			cps2turbo_tune = tune;
+	}
+}
+
+static DRIVER_INIT( cps2turbo )
+{
+	init_my_cps2();
+
+	cps2turbo_tune = 0;
+	state_save_register_int("cps2turbo", 0, "tune", &cps2turbo_tune);
+	state_save_register_func_postload(cps2turbo_music_postload);
+}
 
 /*************************************
  *
@@ -7439,6 +7884,27 @@ ROM_START( sfz3ar1 )
 	ROM_LOAD( "sfz3a.key",    0x000000, 0x000014, CRC(09045d61) SHA1(0cfeb0b53973fff08b673a10b1f7e6e3b46aa214) )
 ROM_END
 
+/* Street Fighter Zero 3 Mix v0.32 - hack of Street Fighter Zero 3 by Zero800, on his CPS2Turbo hardware.
+   https://sfz3mix.github.io/ - ROM names follow the FBNeo set. Only the first 4MB of the program are used.
+   The optional music samples (samples/sfz3mix.zip, L01.wav ... R3F.wav) come from the site too. */
+ROM_START( sfz3mix )
+	ROM_REGION( 0x600000, REGION_CPU1, 0 )  /* 68000 code */
+	ROM_LOAD16_WORD( "sz3mx.03", 0x000000, 0x600000, CRC(7a968da6) SHA1(5656ff21d6b23f8eab21e9d7e222461ceefed69e) )
+
+	ROM_REGION( 0x4000000, REGION_GFX1, 0 )
+	ROM_LOAD( "sz3mx.13m", 0x0000000, 0x2000000, CRC(5389b651) SHA1(6032a925a0f37773fb26a1800d568dde0ea3082e) )
+	ROM_LOAD( "sz3mx.21m", 0x2000000, 0x2000000, CRC(914c7031) SHA1(7b7ce04e563ef23f6f9454f268a968b9114ac729) )
+
+	ROM_REGION( 0x80000, REGION_CPU2, 0 )  /* 64k for the audio CPU (+banks) */
+	ROM_LOAD( "sz3mx.01", 0x00000, 0x80000, CRC(52f98a5c) SHA1(5e1251b85d0bfb707b3e519aeb3a716893191a20) )
+
+	ROM_REGION( 0x1000000, REGION_SOUND1, 0 )  /* QSound samples */
+	ROM_LOAD( "sz3mx.11m", 0x000000, 0x1000000, CRC(395edce2) SHA1(0f6a4be84ed1e1a13319a480b41c1f35b36f35fc) )
+
+	ROM_REGION( 0x20, REGION_USER5, 0 )
+	ROM_LOAD( "phoenix.key",  0x000000, 0x000014, CRC(2cf772b0) SHA1(eff33c65a4f3862c231f9e4d6fefa7b34398dbf2) )
+ROM_END
+
 ROM_START( sfa3h )
 	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )  /* 68000 code */
 	ROM_LOAD16_WORD_SWAP( "sz3h.03c", 0x000000, 0x80000, CRC(b3b563a3) SHA1(27863508fedeb5d85e78b8d64361f0000d00e0a5) )
@@ -11954,6 +12420,7 @@ GAME( 1998, sfz3jr1,    sfa3,     cps2,     cps2_2p6b,  my_cps2,     ROT0,   "Ca
 GAME( 1998, sfz3jr2,    sfa3,     cps2,     cps2_2p6b,  my_cps2,     ROT0,   "Capcom", "Street Fighter Zero 3 (Japan 980629)")
 GAME( 1998, sfz3a,      sfa3,     cps2,     cps2_2p6b,  my_cps2,     ROT0,   "Capcom", "Street Fighter Zero 3 (Asia 980904)")
 GAME( 1998, sfz3ar1,    sfa3,     cps2,     cps2_2p6b,  my_cps2,     ROT0,   "Capcom", "Street Fighter Zero 3 (Asia 980701)")
+GAME( 2026, sfz3mix,    sfa3,     cps2turbo, sfz3mix,   cps2turbo,   ROT0,   "hack",   "Street Fighter Zero 3 Mix v0.32 (CPS2Turbo)")
 GAME( 1999, jyangoku,   0,        cps2,     cps2_1p2b,  my_cps2,     ROT0,   "Capcom", "Jyangokushi: Haoh no Saihai (Japan 990527)")
 GAMEC( 2004, hsf2,       0,        cps2,     cps2_2p6b,  my_cps2,     ROT0,   "Capcom", "Hyper Street Fighter II: The Anniversary Edition (USA 040202)", &sf2_ctrl, NULL )
 GAMEC( 2004, hsf2a,      hsf2,     cps2,     cps2_2p6b,  my_cps2,     ROT0,   "Capcom", "Hyper Street Fighter II: The Anniversary Edition (Asia 040202)", &sf2_ctrl, NULL )

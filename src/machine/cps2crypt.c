@@ -745,8 +745,10 @@ DRIVER_INIT( my_cps2 )
 {
 	data8_t *m_region_key = (data8_t *)memory_region(REGION_USER5);
 	data16_t *rom = (data16_t *)memory_region(REGION_CPU1);
+	/* CODE_SIZE, or more for the CPS2Turbo hack (sfz3mix) */
+	int length = memory_region_length(REGION_CPU1) > 0x0400000 ? memory_region_length(REGION_CPU1) : 0x0400000;
 /*	data16_t *decrypted_opcodes = (data16_t *)memory_region(REGION_USER1); */
-	data16_t *decrypted_opcodes = (data16_t *)auto_malloc(0x0400000);
+	data16_t *decrypted_opcodes = (data16_t *)auto_malloc(length);
 
 	cps_qsound_state_register();
 
@@ -795,7 +797,7 @@ DRIVER_INIT( my_cps2 )
 		logerror("cps2 decrypt 0x%08x,0x%08x,0x%08x,0x%08x\n", key[0], key[1], lower, upper);
 
 		/* we have a proper key so use it to decrypt */
-		cps2_decrypt((uint16_t *)rom, decrypted_opcodes, 0x0400000, key, lower , upper );
+		cps2_decrypt((uint16_t *)rom, decrypted_opcodes, length, key, lower , upper );
 		memory_set_opcode_base(0,decrypted_opcodes);
 		memory_set_encrypted_opcode_range(0,0,memory_region_length(REGION_CPU1));
 		cps2_gfx_decode();

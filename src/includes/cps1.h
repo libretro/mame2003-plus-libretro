@@ -41,4 +41,11 @@ extern int scanline;
 /* cps1.c: the QSound Z80 bank, saved for save states */
 void cps_qsound_state_register(void);
 
+/* cps1.c: the QSound Z80 shared RAM (0xc000 and 0xf000 in the Z80 map) */
+data8_t *cps_qsound_sharedram1(void);
+data8_t *cps_qsound_sharedram2(void);
+
+/* cps1_vidhrdw.c: CPS2Turbo (Street Fighter Zero 3 Mix) */
+VIDEO_START( cps2turbo );
+
 #endif

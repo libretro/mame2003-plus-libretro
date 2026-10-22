@@ -232,6 +232,17 @@ static WRITE16_HANDLER( qsound_sharedram2_w )
 		qsound_sharedram2[offset] = data;
 }
 
+/* the QSound Z80 shared RAM, for drivers that watch the sound commands */
+data8_t *cps_qsound_sharedram1(void)
+{
+	return qsound_sharedram1;
+}
+
+data8_t *cps_qsound_sharedram2(void)
+{
+	return qsound_sharedram2;
+}
+
 static int qsound_bank;	/* Z80 bank, kept for save states */
 
 static void qsound_banksw_set(void)
