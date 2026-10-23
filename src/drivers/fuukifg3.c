@@ -570,7 +570,7 @@ static struct YMF278B_interface ymf278b_interface =
 static struct YMF262interface ymf262_interface =
 {
 	1,					/* 1 chip */
-	14318180,			/* X1 ? */
+	14260547,			/* the FM part of the YMF278B: 33.8688MHz / 2.375, as in MAME 0.143u3 */
 	{ YAC512_VOL(50,MIXER_PAN_LEFT,50,MIXER_PAN_RIGHT) },	/* channels A and B */
 	{ YAC512_VOL(50,MIXER_PAN_LEFT,50,MIXER_PAN_RIGHT) },	/* channels C and D */
 	{ irqhandler },		/* irq */
