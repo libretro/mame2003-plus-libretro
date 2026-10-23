@@ -29,6 +29,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Bare Knuckle II (chinese bootleg of Megadrive version)
 * Bare Knuckle III (bootleg of Megadrive version)
 * Baryon: Future Assault
+* Beastie Feastie (Epos Tristar 9000) - Romset `beastf`; the Pac-Man conversion is now `beastfp`, as in current MAME
 * Big Fight - Big Trouble In The Atlantic Ocean
 * Bomb Kick
 * Boogie Wings
@@ -191,6 +192,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Raiden DX
 * Raiden II / Raiden DX New
 * Recalhorn (prototype)
+* Revenger '84 (newer) - Romset `revngr84`; the older set `revenger` is a bad dump and stays not working
 * Riot
 * Rolling Crush
 * Round Up 5 - Super Delta Force
@@ -497,6 +499,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Tapper - Romset `tapper`
 * Target Ball (Nude) - Romset `tgtball`
 * Task Force Harrier - Romsets `tharrier` and `tharierj`
+* The Dealer - Romset `dealer` - Epos Tristar 9000 board from current MAME
 * Thunder Blade - Romsets `thndrbld` and `thndrbld1`
 * Thunder Dragon - Romset `tdragon` - Minor sound issues remaining
 * Thunder Strike - Romset `tstrike`

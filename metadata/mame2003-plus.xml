@@ -2708,8 +2708,8 @@
 		</dipswitch>
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="32"/>
 	</game>
-	<game name="beastf" sourcefile="pacman.c" cloneof="suprglob" romof="suprglob">
-		<description>Beastie Feastie</description>
+	<game name="beastfp" sourcefile="pacman.c" cloneof="suprglob" romof="suprglob">
+		<description>Beastie Feastie (Pac-Man conversion)</description>
 		<year>1984</year>
 		<manufacturer>Epos Corporation</manufacturer>
 		<rom name="bf-u2.bin" size="8192" crc="3afc517b" sha1="5b74bca9e9cd4d8bcf94a340f8f0e53fe1dcfc1d" region="cpu1" offset="0"/>
@@ -4788,18 +4788,116 @@
 	</game>
 	<game name="dealer" sourcefile="epos.c">
 		<description>The Dealer</description>
-		<year>19??</year>
+		<year>1984</year>
 		<manufacturer>Epos Corporation</manufacturer>
 		<rom name="u1.bin" size="8192" crc="e06f3563" sha1="0d58cd1f2e1ca89adb9c64d7dd520bb1f2d50f1a" region="cpu1" offset="0"/>
 		<rom name="u2.bin" size="8192" crc="726bbbd6" sha1="3538f3d655899c2a0f984c43fb7545ea4be1b231" region="cpu1" offset="2000"/>
 		<rom name="u3.bin" size="8192" crc="ab721455" sha1="a477da0590e0431172baae972e765473e19dcbff" region="cpu1" offset="4000"/>
-		<rom name="u4.bin" size="8192" crc="ddb903e4" sha1="4c06a2048b1c6989c363b110a17c33180025b9c8" region="cpu1" status="baddump" offset="6000"/>
-		<rom name="82s123.u66" size="32" region="proms" status="nodump" offset="0"/>
-		<chip type="cpu" name="Z80" clock="2750000"/>
-		<chip type="audio" name="AY-3-8910" clock="2750000"/>
+		<rom name="u4.bin" size="8192" crc="ddb903e4" sha1="4c06a2048b1c6989c363b110a17c33180025b9c8" region="cpu1" offset="6000"/>
+		<rom name="dealer.nv" size="4096" crc="a6f88459" sha1="1deda2a71433c97fe3e5cb39defc285f4fa9c9b8" region="user1" offset="0"/>
+		<chip type="cpu" name="Z80" clock="2764800"/>
+		<chip type="audio" name="AY-3-8910" clock="691200"/>
 		<video screen="raster" orientation="vertical" width="236" height="272" aspectx="3" aspecty="4" refresh="60.000000"/>
 		<sound channels="1"/>
-		<input players="1" buttons="8"/>
+		<input players="1" buttons="8" coins="1" service="yes"/>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Free Play">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Cabinet">
+			<dipvalue name="Upright" default="yes"/>
+			<dipvalue name="Cocktail"/>
+		</dipswitch>
+		<dipswitch name="Flip Screen">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="32"/>
+	</game>
+	<game name="revngr84" sourcefile="epos.c">
+		<description>Revenger '84 (newer)</description>
+		<year>1984</year>
+		<manufacturer>Epos Corporation</manufacturer>
+		<rom name="u_1__revenger__r06254__=c=_epos_corp.m5l2764k.u1" size="8192" crc="308f231f" sha1="cf06695601bd0387e4fcb64d9b34143323e98b07" region="cpu1" offset="0"/>
+		<rom name="u_2__revenger__r06254__=c=_epos_corp.m5l2764k.u2" size="8192" crc="e80bbfb4" sha1="9302beaef8bbb7376b6a20e9ee5adbcf60d66dd8" region="cpu1" offset="2000"/>
+		<rom name="u_3__revenger__r06254__=c=_epos_corp.m5l2764k.u3" size="8192" crc="d9270929" sha1="a95034b5387a40e02f04bdfa79e1d8e65dad30fe" region="cpu1" offset="4000"/>
+		<rom name="u_4__revenger__r06254__=c=_epos_corp.m5l2764k.u4" size="8192" crc="d6e6cfa8" sha1="f10131bb2e9d088c7b6d6a5d5520073d78ad69cc" region="cpu1" offset="6000"/>
+		<rom name="dm74s288n.u60" size="32" crc="be2b0641" sha1="26982903b6d942af8e0a526412d8e01978d76420" region="proms" offset="0"/>
+		<rom name="revngr84.nv" size="4096" crc="a4417770" sha1="92eded82db0810e7818d2f52a0497032f390fcc1" region="user1" offset="0"/>
+		<chip type="cpu" name="Z80" clock="2764800"/>
+		<chip type="audio" name="AY-3-8910" clock="691200"/>
+		<video screen="raster" orientation="vertical" width="236" height="272" aspectx="3" aspecty="4" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="2" control="joy4way" buttons="2" coins="1" service="yes"/>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Free Play">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Cabinet">
+			<dipvalue name="Upright" default="yes"/>
+			<dipvalue name="Cocktail"/>
+		</dipswitch>
+		<dipswitch name="Flip Screen">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="32"/>
+	</game>
+	<game name="revenger" sourcefile="epos.c" cloneof="revngr84" romof="revngr84">
+		<description>Revenger '84 (older)</description>
+		<year>1984</year>
+		<manufacturer>Epos Corporation</manufacturer>
+		<rom name="r06124.u1" size="8192" crc="fad1a2a5" sha1="a31052c91fe67e2e90441abc40b6483f921ecfe3" region="cpu1" status="baddump" offset="0"/>
+		<rom name="r06124.u2" size="8192" crc="a8e0ee7b" sha1="f6f78e8ce40eab07de461b364876c1eb4a78d96e" region="cpu1" status="baddump" offset="2000"/>
+		<rom name="r06124.u3" size="8192" crc="cca414a5" sha1="1c9dd3ff63d57e9452e63083cdbd7f5d693bb686" region="cpu1" status="baddump" offset="4000"/>
+		<rom name="r06124.u4" size="8192" crc="0b81c303" sha1="9022d18dec11312eb4bb471c22b563f5f897b4f7" region="cpu1" status="baddump" offset="6000"/>
+		<rom name="dm74s288n.u60" merge="dm74s288n.u60" size="32" crc="be2b0641" sha1="26982903b6d942af8e0a526412d8e01978d76420" region="proms" offset="0"/>
+		<rom name="revngr84.nv" merge="revngr84.nv" size="4096" crc="a4417770" sha1="92eded82db0810e7818d2f52a0497032f390fcc1" region="user1" offset="0"/>
+		<chip type="cpu" name="Z80" clock="2764800"/>
+		<chip type="audio" name="AY-3-8910" clock="691200"/>
+		<video screen="raster" orientation="vertical" width="236" height="272" aspectx="3" aspecty="4" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="2" control="joy4way" buttons="2" coins="1" service="yes"/>
 		<dipswitch name="Demo Sounds">
 			<dipvalue name="Off"/>
 			<dipvalue name="On" default="yes"/>
@@ -4833,6 +4931,54 @@
 			<dipvalue name="On"/>
 		</dipswitch>
 		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="32"/>
+	</game>
+	<game name="beastf" sourcefile="epos.c" cloneof="suprglob" romof="suprglob">
+		<description>Beastie Feastie</description>
+		<year>1984</year>
+		<manufacturer>Epos Corporation</manufacturer>
+		<rom name="u_1__beastie__feastie__b09084.m5l2764k.u1" size="8192" crc="820d4019" sha1="e953aaeeb626776dd86c521066b553d054ae4422" region="cpu1" offset="0"/>
+		<rom name="u_2__beastie__feastie__b09084.m5l2764k.u2" size="8192" crc="967405d8" sha1="dd763be909e6966521b01ee878df9cef865c3b30" region="cpu1" offset="2000"/>
+		<rom name="u_3__beastie__feastie__b09084.m5l2764k.u3" size="8192" crc="3edb5381" sha1="14c236045e6df7a475c32222652860689d4f68ce" region="cpu1" offset="4000"/>
+		<rom name="u_4__beastie__feastie__b09084.m5l2764k.u4" size="8192" crc="c8cd9640" sha1="72da881b903ead873cc3f4df27646d1ffdd63c1c" region="cpu1" offset="6000"/>
+		<rom name="beastf.nv" size="4096" crc="98017b09" sha1="0e2b2071bb47fc179d5bc36ef9431a9d2727d36a" region="user1" offset="0"/>
+		<chip type="cpu" name="Z80" clock="2764800"/>
+		<chip type="audio" name="AY-3-8910" clock="691200"/>
+		<video screen="raster" orientation="vertical" width="236" height="272" aspectx="3" aspecty="4" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="2" control="joy4way" buttons="2" coins="1" service="yes"/>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Free Play">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Cabinet">
+			<dipvalue name="Upright" default="yes"/>
+			<dipvalue name="Cocktail"/>
+		</dipswitch>
+		<dipswitch name="Flip Screen">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="32"/>
 	</game>
 	<game name="galaxian" sourcefile="galaxian.c">
 		<description>Galaxian (Namco set 1)</description>
