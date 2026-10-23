@@ -350024,7 +350024,7 @@
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="8192"/>
 	</game>
 	<game name="asurabld" sourcefile="fuukifg3.c">
-		<description>Asura Blade - Sword of Dynasty</description>
+		<description>Asura Blade - Sword of Dynasty (Japan)</description>
 		<year>1998</year>
 		<manufacturer>Fuuki</manufacturer>
 		<rom name="pgm3.u1" size="524288" crc="053e9758" sha1="c2754d3f0c607c81c8fa33b667b576eb0474fd0b" region="cpu1" offset="0"/>
@@ -350057,13 +350057,10 @@
 			<dipvalue name="Red" default="yes"/>
 			<dipvalue name="Green"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
+		<dipswitch name="Demo Sounds &amp; Music">
+			<dipvalue name="Both On" default="yes"/>
+			<dipvalue name="Music Off"/>
+			<dipvalue name="Both Off"/>
 		</dipswitch>
 		<dipswitch name="Timer">
 			<dipvalue name="Slow"/>
@@ -350079,21 +350076,21 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Computer Level">
-			<dipvalue name="0" default="yes"/>
-			<dipvalue name="1"/>
-			<dipvalue name="2"/>
-			<dipvalue name="3"/>
-			<dipvalue name="4"/>
-			<dipvalue name="5"/>
-			<dipvalue name="6"/>
-			<dipvalue name="7"/>
+		<dipswitch name="Difficulty">
+			<dipvalue name="Easiest"/>
+			<dipvalue name="Very Easy"/>
+			<dipvalue name="Easier"/>
+			<dipvalue name="Easy"/>
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Very Hard"/>
+			<dipvalue name="Hardest"/>
 		</dipswitch>
 		<dipswitch name="Damage">
-			<dipvalue name="Lowest"/>
-			<dipvalue name="Low"/>
-			<dipvalue name="Medium" default="yes"/>
-			<dipvalue name="High"/>
+			<dipvalue name="75%"/>
+			<dipvalue name="100%" default="yes"/>
+			<dipvalue name="125%"/>
+			<dipvalue name="150%"/>
 		</dipswitch>
 		<dipswitch name="Max Rounds">
 			<dipvalue name="1"/>
@@ -350109,6 +350106,11 @@
 			<dipvalue name="3 Coins/1 Credit"/>
 			<dipvalue name="2 Coins/1 Credit"/>
 			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="2C Start / 1C Continue"/>
 			<dipvalue name="Free Play"/>
 		</dipswitch>
 		<dipswitch name="Coin B">
@@ -350120,18 +350122,23 @@
 			<dipvalue name="3 Coins/1 Credit"/>
 			<dipvalue name="2 Coins/1 Credit"/>
 			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="2C Start / 1C Continue"/>
 			<dipvalue name="Free Play"/>
 		</dipswitch>
 		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="8192"/>
 	</game>
 	<game name="asurabus" sourcefile="fuukifg3.c">
-		<description>Asura Buster - Eternal Warriors</description>
-		<year>2000</year>
+		<description>Asura Buster - Eternal Warriors (USA)</description>
+		<year>2001</year>
 		<manufacturer>Fuuki</manufacturer>
-		<rom name="pgm3.u1" size="524288" crc="2c6b5271" sha1="188371f1f003823ac719e962e048719d76696b2f" region="cpu1" offset="0"/>
-		<rom name="pgm2.u2" size="524288" crc="8f8694ec" sha1="3334df4aecc5ab2f8914ef6748c027a99b39ce26" region="cpu1" offset="1"/>
-		<rom name="pgm1.u3" size="524288" crc="0a040f0f" sha1="d5e86d33efcbbde7ee62cfc8dfe867f250a33415" region="cpu1" offset="2"/>
-		<rom name="pgm0.u4" size="524288" crc="9b71e9d8" sha1="9b705b5b6fff549f5679890422b481b5cf1d7bd7" region="cpu1" offset="3"/>
+		<rom name="uspgm3.u1" size="524288" crc="e152cec9" sha1="af1d93bdabc6732c0ff53972826d67a3753ef785" region="cpu1" offset="0"/>
+		<rom name="uspgm2.u2" size="524288" crc="b19787db" sha1="3d6757f38f297c1ee89003173567319b5dae8000" region="cpu1" offset="1"/>
+		<rom name="uspgm1.u3" size="524288" crc="6588e51a" sha1="9ab978c80d8ece447697557c8000be95760306f3" region="cpu1" offset="2"/>
+		<rom name="uspgm0.u4" size="524288" crc="981e6ff1" sha1="088d26a3cbd2361ffc756c3da8a67b94ae7bbd65" region="cpu1" offset="3"/>
 		<rom name="srom.u7" size="524288" crc="368da389" sha1="1423b709da40bf3033c9032c4bd07658f1a969de" region="cpu2" offset="0"/>
 		<rom name="sp01.u13" size="4194304" crc="5edea463" sha1="22a780912f060bae0c9a403a7bfd4d27f25b76e3" region="gfx1" dispose="yes" offset="0"/>
 		<rom name="sp23.u14" size="4194304" crc="91b1b0de" sha1="341367966559ef2027415b673eb0db704680c81f" region="gfx1" dispose="yes" offset="400000"/>
@@ -350160,13 +350167,11 @@
 			<dipvalue name="Red" default="yes"/>
 			<dipvalue name="Green"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
+		<dipswitch name="Demo Sounds &amp; Music">
+			<dipvalue name="Both On" default="yes"/>
+			<dipvalue name="Sounds Off"/>
+			<dipvalue name="Music Off"/>
+			<dipvalue name="Both Off"/>
 		</dipswitch>
 		<dipswitch name="Timer">
 			<dipvalue name="Slow"/>
@@ -350182,21 +350187,21 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Computer Level">
-			<dipvalue name="0" default="yes"/>
-			<dipvalue name="1"/>
-			<dipvalue name="2"/>
-			<dipvalue name="3"/>
-			<dipvalue name="4"/>
-			<dipvalue name="5"/>
-			<dipvalue name="6"/>
-			<dipvalue name="7"/>
+		<dipswitch name="Difficulty">
+			<dipvalue name="Easiest"/>
+			<dipvalue name="Very Easy"/>
+			<dipvalue name="Easier"/>
+			<dipvalue name="Easy"/>
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Very Hard"/>
+			<dipvalue name="Hardest"/>
 		</dipswitch>
 		<dipswitch name="Damage">
-			<dipvalue name="Lowest"/>
-			<dipvalue name="Low"/>
-			<dipvalue name="Medium" default="yes"/>
-			<dipvalue name="High"/>
+			<dipvalue name="75%"/>
+			<dipvalue name="100%" default="yes"/>
+			<dipvalue name="125%"/>
+			<dipvalue name="150%"/>
 		</dipswitch>
 		<dipswitch name="Max Rounds">
 			<dipvalue name="1"/>
@@ -350212,6 +350217,11 @@
 			<dipvalue name="3 Coins/1 Credit"/>
 			<dipvalue name="2 Coins/1 Credit"/>
 			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="2C Start / 1C Continue"/>
 			<dipvalue name="Free Play"/>
 		</dipswitch>
 		<dipswitch name="Coin B">
@@ -350223,6 +350233,344 @@
 			<dipvalue name="3 Coins/1 Credit"/>
 			<dipvalue name="2 Coins/1 Credit"/>
 			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="2C Start / 1C Continue"/>
+			<dipvalue name="Free Play"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="8192"/>
+	</game>
+	<game name="asurabusj" sourcefile="fuukifg3.c" cloneof="asurabus" romof="asurabus">
+		<description>Asura Buster - Eternal Warriors (Japan, set 1)</description>
+		<year>2000</year>
+		<manufacturer>Fuuki</manufacturer>
+		<rom name="pgm3.u1" size="524288" crc="2c6b5271" sha1="188371f1f003823ac719e962e048719d76696b2f" region="cpu1" offset="0"/>
+		<rom name="pgm2.u2" size="524288" crc="8f8694ec" sha1="3334df4aecc5ab2f8914ef6748c027a99b39ce26" region="cpu1" offset="1"/>
+		<rom name="pgm1.u3" size="524288" crc="0a040f0f" sha1="d5e86d33efcbbde7ee62cfc8dfe867f250a33415" region="cpu1" offset="2"/>
+		<rom name="pgm0.u4" size="524288" crc="9b71e9d8" sha1="9b705b5b6fff549f5679890422b481b5cf1d7bd7" region="cpu1" offset="3"/>
+		<rom name="srom.u7" merge="srom.u7" size="524288" crc="368da389" sha1="1423b709da40bf3033c9032c4bd07658f1a969de" region="cpu2" offset="0"/>
+		<rom name="sp01.u13" merge="sp01.u13" size="4194304" crc="5edea463" sha1="22a780912f060bae0c9a403a7bfd4d27f25b76e3" region="gfx1" dispose="yes" offset="0"/>
+		<rom name="sp23.u14" merge="sp23.u14" size="4194304" crc="91b1b0de" sha1="341367966559ef2027415b673eb0db704680c81f" region="gfx1" dispose="yes" offset="400000"/>
+		<rom name="sp45.u15" merge="sp45.u15" size="4194304" crc="96c69aac" sha1="cf053523026651427f884b9dd7c095af362dd24e" region="gfx1" dispose="yes" offset="800000"/>
+		<rom name="sp67.u16" merge="sp67.u16" size="4194304" crc="7c3d83bf" sha1="7188dd923c6c7eb6aee3323e7ab54aa240c35ea3" region="gfx1" dispose="yes" offset="c00000"/>
+		<rom name="sp89.u17" merge="sp89.u17" size="4194304" crc="cb1e14f8" sha1="941cea1887d7ceb52222adcf1d6913969e6163aa" region="gfx1" dispose="yes" offset="1000000"/>
+		<rom name="spab.u18" merge="spab.u18" size="4194304" crc="e5a4608d" sha1="b8e39f53e0b7ad1e16ae9c3726597776b404be1c" region="gfx1" dispose="yes" offset="1400000"/>
+		<rom name="spcd.u19" merge="spcd.u19" size="4194304" crc="99bfbe32" sha1="926a8afc4a175874f22f53300e76f59331d3b9ba" region="gfx1" dispose="yes" offset="1800000"/>
+		<rom name="spef.u20" merge="spef.u20" size="4194304" crc="c9c799cc" sha1="01373316700d8688deeea2e9e8f831d5f86c7f17" region="gfx1" dispose="yes" offset="1c00000"/>
+		<rom name="bg1012.u22" merge="bg1012.u22" size="4194304" crc="e3fb9af0" sha1="11900cc2873337692f66fb4f1eb9c574e5a967de" region="gfx2" dispose="yes" offset="0"/>
+		<rom name="bg1113.u23" merge="bg1113.u23" size="4194304" crc="5f8657e6" sha1="7c2854dc5d2d4efe55bda01e329da051350e0031" region="gfx2" dispose="yes" offset="400000"/>
+		<rom name="bg2022.u25" merge="bg2022.u25" size="4194304" crc="f46eda52" sha1="46530016b32a164bd76c4f53e7b53b2beb28db06" region="gfx3" dispose="yes" offset="0"/>
+		<rom name="bg2123.u24" merge="bg2123.u24" size="4194304" crc="c4ebb86b" sha1="a7093e6e02b64566d277cbbd5fa90cd430e7c8a0" region="gfx3" dispose="yes" offset="400000"/>
+		<rom name="map.u5" merge="map.u5" size="2097152" crc="bd179dc5" sha1="ce3fcac573b14fd5365eb5dcec3257e439d2c129" region="gfx4" dispose="yes" offset="0"/>
+		<rom name="opm.u6" merge="opm.u6" size="4194304" crc="31b05be4" sha1="d0f4f387f84a74591224b0f42b7f5c538a3dc498" region="sound1" offset="0"/>
+		<chip type="cpu" name="68EC020" clock="20000000"/>
+		<chip type="cpu" name="Z80" clock="6000000"/>
+		<chip type="audio" name="YMF262" clock="14318180"/>
+		<chip type="audio" name="YMF278B" clock="33868800"/>
+		<video screen="raster" orientation="horizontal" width="320" height="240" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="2"/>
+		<input players="2" control="joy8way" buttons="3" coins="2"/>
+		<dipswitch name="Service Mode">
+		</dipswitch>
+		<dipswitch name="Blood Colour">
+			<dipvalue name="Red" default="yes"/>
+			<dipvalue name="Green"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds &amp; Music">
+			<dipvalue name="Both On" default="yes"/>
+			<dipvalue name="Sounds Off"/>
+			<dipvalue name="Music Off"/>
+			<dipvalue name="Both Off"/>
+		</dipswitch>
+		<dipswitch name="Timer">
+			<dipvalue name="Slow"/>
+			<dipvalue name="Medium" default="yes"/>
+			<dipvalue name="Fast"/>
+			<dipvalue name="Very Fast"/>
+		</dipswitch>
+		<dipswitch name="Coinage Mode">
+			<dipvalue name="Split"/>
+			<dipvalue name="Joint" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Flip Screen">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Difficulty">
+			<dipvalue name="Easiest"/>
+			<dipvalue name="Very Easy"/>
+			<dipvalue name="Easier"/>
+			<dipvalue name="Easy"/>
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Very Hard"/>
+			<dipvalue name="Hardest"/>
+		</dipswitch>
+		<dipswitch name="Damage">
+			<dipvalue name="75%"/>
+			<dipvalue name="100%" default="yes"/>
+			<dipvalue name="125%"/>
+			<dipvalue name="150%"/>
+		</dipswitch>
+		<dipswitch name="Max Rounds">
+			<dipvalue name="1"/>
+			<dipvalue name="3" default="yes"/>
+			<dipvalue name="5"/>
+		</dipswitch>
+		<dipswitch name="Coin A">
+			<dipvalue name="8 Coins/1 Credit"/>
+			<dipvalue name="7 Coins/1 Credit"/>
+			<dipvalue name="6 Coins/1 Credit"/>
+			<dipvalue name="5 Coins/1 Credit"/>
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="2C Start / 1C Continue"/>
+			<dipvalue name="Free Play"/>
+		</dipswitch>
+		<dipswitch name="Coin B">
+			<dipvalue name="8 Coins/1 Credit"/>
+			<dipvalue name="7 Coins/1 Credit"/>
+			<dipvalue name="6 Coins/1 Credit"/>
+			<dipvalue name="5 Coins/1 Credit"/>
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="2C Start / 1C Continue"/>
+			<dipvalue name="Free Play"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="8192"/>
+	</game>
+	<game name="asurabusja" sourcefile="fuukifg3.c" cloneof="asurabus" romof="asurabus">
+		<description>Asura Buster - Eternal Warriors (Japan, set 2)</description>
+		<year>2000</year>
+		<manufacturer>Fuuki</manufacturer>
+		<rom name="pgm3_583a.u1" size="524288" crc="46ab3b0e" sha1="2d6a57352891a484fe11cda9addbff5b3940c17c" region="cpu1" offset="0"/>
+		<rom name="pgm2_0ff4.u2" size="524288" crc="fa7aa289" sha1="6f82371274c45f889a19a4fdd859015fb6ea249a" region="cpu1" offset="1"/>
+		<rom name="pgm1_bac7.u3" size="524288" crc="67364e19" sha1="959b896b201f103ef9189b537139c89bfc7144ea" region="cpu1" offset="2"/>
+		<rom name="pgm0_193a.u4" size="524288" crc="94d39c64" sha1="95ca2aa3e19e64bed7add3170653fa3364530fde" region="cpu1" offset="3"/>
+		<rom name="srom.u7" merge="srom.u7" size="524288" crc="368da389" sha1="1423b709da40bf3033c9032c4bd07658f1a969de" region="cpu2" offset="0"/>
+		<rom name="sp01.u13" merge="sp01.u13" size="4194304" crc="5edea463" sha1="22a780912f060bae0c9a403a7bfd4d27f25b76e3" region="gfx1" dispose="yes" offset="0"/>
+		<rom name="sp23.u14" merge="sp23.u14" size="4194304" crc="91b1b0de" sha1="341367966559ef2027415b673eb0db704680c81f" region="gfx1" dispose="yes" offset="400000"/>
+		<rom name="sp45.u15" merge="sp45.u15" size="4194304" crc="96c69aac" sha1="cf053523026651427f884b9dd7c095af362dd24e" region="gfx1" dispose="yes" offset="800000"/>
+		<rom name="sp67.u16" merge="sp67.u16" size="4194304" crc="7c3d83bf" sha1="7188dd923c6c7eb6aee3323e7ab54aa240c35ea3" region="gfx1" dispose="yes" offset="c00000"/>
+		<rom name="sp89.u17" merge="sp89.u17" size="4194304" crc="cb1e14f8" sha1="941cea1887d7ceb52222adcf1d6913969e6163aa" region="gfx1" dispose="yes" offset="1000000"/>
+		<rom name="spab.u18" merge="spab.u18" size="4194304" crc="e5a4608d" sha1="b8e39f53e0b7ad1e16ae9c3726597776b404be1c" region="gfx1" dispose="yes" offset="1400000"/>
+		<rom name="spcd.u19" merge="spcd.u19" size="4194304" crc="99bfbe32" sha1="926a8afc4a175874f22f53300e76f59331d3b9ba" region="gfx1" dispose="yes" offset="1800000"/>
+		<rom name="spef.u20" merge="spef.u20" size="4194304" crc="c9c799cc" sha1="01373316700d8688deeea2e9e8f831d5f86c7f17" region="gfx1" dispose="yes" offset="1c00000"/>
+		<rom name="bg1012.u22" merge="bg1012.u22" size="4194304" crc="e3fb9af0" sha1="11900cc2873337692f66fb4f1eb9c574e5a967de" region="gfx2" dispose="yes" offset="0"/>
+		<rom name="bg1113.u23" merge="bg1113.u23" size="4194304" crc="5f8657e6" sha1="7c2854dc5d2d4efe55bda01e329da051350e0031" region="gfx2" dispose="yes" offset="400000"/>
+		<rom name="bg2022.u25" merge="bg2022.u25" size="4194304" crc="f46eda52" sha1="46530016b32a164bd76c4f53e7b53b2beb28db06" region="gfx3" dispose="yes" offset="0"/>
+		<rom name="bg2123.u24" merge="bg2123.u24" size="4194304" crc="c4ebb86b" sha1="a7093e6e02b64566d277cbbd5fa90cd430e7c8a0" region="gfx3" dispose="yes" offset="400000"/>
+		<rom name="map.u5" merge="map.u5" size="2097152" crc="bd179dc5" sha1="ce3fcac573b14fd5365eb5dcec3257e439d2c129" region="gfx4" dispose="yes" offset="0"/>
+		<rom name="opm.u6" merge="opm.u6" size="4194304" crc="31b05be4" sha1="d0f4f387f84a74591224b0f42b7f5c538a3dc498" region="sound1" offset="0"/>
+		<chip type="cpu" name="68EC020" clock="20000000"/>
+		<chip type="cpu" name="Z80" clock="6000000"/>
+		<chip type="audio" name="YMF262" clock="14318180"/>
+		<chip type="audio" name="YMF278B" clock="33868800"/>
+		<video screen="raster" orientation="horizontal" width="320" height="240" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="2"/>
+		<input players="2" control="joy8way" buttons="3" coins="2"/>
+		<dipswitch name="Service Mode">
+		</dipswitch>
+		<dipswitch name="Blood Colour">
+			<dipvalue name="Red" default="yes"/>
+			<dipvalue name="Green"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds &amp; Music">
+			<dipvalue name="Both On" default="yes"/>
+			<dipvalue name="Sounds Off"/>
+			<dipvalue name="Music Off"/>
+			<dipvalue name="Both Off"/>
+		</dipswitch>
+		<dipswitch name="Timer">
+			<dipvalue name="Slow"/>
+			<dipvalue name="Medium" default="yes"/>
+			<dipvalue name="Fast"/>
+			<dipvalue name="Very Fast"/>
+		</dipswitch>
+		<dipswitch name="Coinage Mode">
+			<dipvalue name="Split"/>
+			<dipvalue name="Joint" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Flip Screen">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Difficulty">
+			<dipvalue name="Easiest"/>
+			<dipvalue name="Very Easy"/>
+			<dipvalue name="Easier"/>
+			<dipvalue name="Easy"/>
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Very Hard"/>
+			<dipvalue name="Hardest"/>
+		</dipswitch>
+		<dipswitch name="Damage">
+			<dipvalue name="75%"/>
+			<dipvalue name="100%" default="yes"/>
+			<dipvalue name="125%"/>
+			<dipvalue name="150%"/>
+		</dipswitch>
+		<dipswitch name="Max Rounds">
+			<dipvalue name="1"/>
+			<dipvalue name="3" default="yes"/>
+			<dipvalue name="5"/>
+		</dipswitch>
+		<dipswitch name="Coin A">
+			<dipvalue name="8 Coins/1 Credit"/>
+			<dipvalue name="7 Coins/1 Credit"/>
+			<dipvalue name="6 Coins/1 Credit"/>
+			<dipvalue name="5 Coins/1 Credit"/>
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="2C Start / 1C Continue"/>
+			<dipvalue name="Free Play"/>
+		</dipswitch>
+		<dipswitch name="Coin B">
+			<dipvalue name="8 Coins/1 Credit"/>
+			<dipvalue name="7 Coins/1 Credit"/>
+			<dipvalue name="6 Coins/1 Credit"/>
+			<dipvalue name="5 Coins/1 Credit"/>
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="2C Start / 1C Continue"/>
+			<dipvalue name="Free Play"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="8192"/>
+	</game>
+	<game name="asurabusjr" sourcefile="fuukifg3.c" cloneof="asurabus" romof="asurabus">
+		<description>Asura Buster - Eternal Warriors (Japan) (ARCADIA review build)</description>
+		<year>2000</year>
+		<manufacturer>Fuuki</manufacturer>
+		<rom name="24-31.pgm3" size="524288" crc="cfcb9c75" sha1="51e325d5e60d5bb058429f04a5170dcc17986b7d" region="cpu1" offset="0"/>
+		<rom name="16-23.pgm2" size="524288" crc="e4d07738" sha1="c6c949c5b0cbc129917bb8c93707539adabbd336" region="cpu1" offset="1"/>
+		<rom name="8-15.pgm1" size="524288" crc="1dd67fe7" sha1="3fd340ccd4a306783ba0ccd3343ae505c9de3a73" region="cpu1" offset="2"/>
+		<rom name="0-7.pgm0" size="524288" crc="3af08de3" sha1="1ecc69804693cab6c2c36120acfc6ced094a16e4" region="cpu1" offset="3"/>
+		<rom name="srom.u7" merge="srom.u7" size="524288" crc="368da389" sha1="1423b709da40bf3033c9032c4bd07658f1a969de" region="cpu2" offset="0"/>
+		<rom name="sp01.u13" merge="sp01.u13" size="4194304" crc="5edea463" sha1="22a780912f060bae0c9a403a7bfd4d27f25b76e3" region="gfx1" dispose="yes" offset="0"/>
+		<rom name="sp23.u14" merge="sp23.u14" size="4194304" crc="91b1b0de" sha1="341367966559ef2027415b673eb0db704680c81f" region="gfx1" dispose="yes" offset="400000"/>
+		<rom name="sp45.u15" merge="sp45.u15" size="4194304" crc="96c69aac" sha1="cf053523026651427f884b9dd7c095af362dd24e" region="gfx1" dispose="yes" offset="800000"/>
+		<rom name="sp67.u16" merge="sp67.u16" size="4194304" crc="7c3d83bf" sha1="7188dd923c6c7eb6aee3323e7ab54aa240c35ea3" region="gfx1" dispose="yes" offset="c00000"/>
+		<rom name="sp89.u17" merge="sp89.u17" size="4194304" crc="cb1e14f8" sha1="941cea1887d7ceb52222adcf1d6913969e6163aa" region="gfx1" dispose="yes" offset="1000000"/>
+		<rom name="spab.u18" merge="spab.u18" size="4194304" crc="e5a4608d" sha1="b8e39f53e0b7ad1e16ae9c3726597776b404be1c" region="gfx1" dispose="yes" offset="1400000"/>
+		<rom name="spcd.u19" merge="spcd.u19" size="4194304" crc="99bfbe32" sha1="926a8afc4a175874f22f53300e76f59331d3b9ba" region="gfx1" dispose="yes" offset="1800000"/>
+		<rom name="spef.u20" merge="spef.u20" size="4194304" crc="c9c799cc" sha1="01373316700d8688deeea2e9e8f831d5f86c7f17" region="gfx1" dispose="yes" offset="1c00000"/>
+		<rom name="bg1012.u22" merge="bg1012.u22" size="4194304" crc="e3fb9af0" sha1="11900cc2873337692f66fb4f1eb9c574e5a967de" region="gfx2" dispose="yes" offset="0"/>
+		<rom name="bg1113.u23" merge="bg1113.u23" size="4194304" crc="5f8657e6" sha1="7c2854dc5d2d4efe55bda01e329da051350e0031" region="gfx2" dispose="yes" offset="400000"/>
+		<rom name="bg2022.u25" merge="bg2022.u25" size="4194304" crc="f46eda52" sha1="46530016b32a164bd76c4f53e7b53b2beb28db06" region="gfx3" dispose="yes" offset="0"/>
+		<rom name="bg2123.u24" merge="bg2123.u24" size="4194304" crc="c4ebb86b" sha1="a7093e6e02b64566d277cbbd5fa90cd430e7c8a0" region="gfx3" dispose="yes" offset="400000"/>
+		<rom name="map.u5" merge="map.u5" size="2097152" crc="bd179dc5" sha1="ce3fcac573b14fd5365eb5dcec3257e439d2c129" region="gfx4" dispose="yes" offset="0"/>
+		<rom name="opm.u6" merge="opm.u6" size="4194304" crc="31b05be4" sha1="d0f4f387f84a74591224b0f42b7f5c538a3dc498" region="sound1" offset="0"/>
+		<chip type="cpu" name="68EC020" clock="20000000"/>
+		<chip type="cpu" name="Z80" clock="6000000"/>
+		<chip type="audio" name="YMF262" clock="14318180"/>
+		<chip type="audio" name="YMF278B" clock="33868800"/>
+		<video screen="raster" orientation="horizontal" width="320" height="240" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="2"/>
+		<input players="2" control="joy8way" buttons="4" coins="2"/>
+		<dipswitch name="Service Mode">
+		</dipswitch>
+		<dipswitch name="Blood Colour">
+			<dipvalue name="Red" default="yes"/>
+			<dipvalue name="Green"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds &amp; Music">
+			<dipvalue name="Both On" default="yes"/>
+			<dipvalue name="Sounds Off"/>
+			<dipvalue name="Music Off"/>
+			<dipvalue name="Both Off"/>
+		</dipswitch>
+		<dipswitch name="Timer">
+			<dipvalue name="Slow"/>
+			<dipvalue name="Medium" default="yes"/>
+			<dipvalue name="Fast"/>
+			<dipvalue name="Very Fast"/>
+		</dipswitch>
+		<dipswitch name="Coinage Mode">
+			<dipvalue name="Split"/>
+			<dipvalue name="Joint" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Flip Screen">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Difficulty">
+			<dipvalue name="Easiest"/>
+			<dipvalue name="Very Easy"/>
+			<dipvalue name="Easier"/>
+			<dipvalue name="Easy"/>
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Very Hard"/>
+			<dipvalue name="Hardest"/>
+		</dipswitch>
+		<dipswitch name="Damage">
+			<dipvalue name="75%"/>
+			<dipvalue name="100%" default="yes"/>
+			<dipvalue name="125%"/>
+			<dipvalue name="150%"/>
+		</dipswitch>
+		<dipswitch name="Max Rounds">
+			<dipvalue name="1"/>
+			<dipvalue name="3" default="yes"/>
+			<dipvalue name="5"/>
+		</dipswitch>
+		<dipswitch name="Coin A">
+			<dipvalue name="8 Coins/1 Credit"/>
+			<dipvalue name="7 Coins/1 Credit"/>
+			<dipvalue name="6 Coins/1 Credit"/>
+			<dipvalue name="5 Coins/1 Credit"/>
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="2C Start / 1C Continue"/>
+			<dipvalue name="Free Play"/>
+		</dipswitch>
+		<dipswitch name="Coin B">
+			<dipvalue name="8 Coins/1 Credit"/>
+			<dipvalue name="7 Coins/1 Credit"/>
+			<dipvalue name="6 Coins/1 Credit"/>
+			<dipvalue name="5 Coins/1 Credit"/>
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="2C Start / 1C Continue"/>
 			<dipvalue name="Free Play"/>
 		</dipswitch>
 		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="8192"/>

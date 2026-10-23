@@ -55,7 +55,8 @@ typedef struct
 	UINT32 step;	/* fixed-point frequency step */
 	UINT32 stepptr;	/* fixed-point pointer into the sample */
 
-	INT8 active;		/* slot keyed on */
+	INT8 active;		/* slot playing */
+	INT8 KEY_ON;		/* key on bit of the last write to register 0x68+ */
 	INT8 bits;		/* width of the samples */
 	UINT32 startaddr;
 	UINT32 loopaddr;
@@ -483,6 +484,13 @@ static void ymf278b_C_w(int num, UINT8 reg, UINT8 data)
 					unsigned int step;
 					int oct;
 
+					/* a key on with the key already on doesn't retrigger the
+					   sample (as in current MAME): Asura Buster writes the key
+					   on again about once a second while a sound plays */
+					if (slot->KEY_ON)
+						break;
+					slot->KEY_ON = 1;
+
 					slot->active = 1;
 
 					oct = slot->OCT;
@@ -512,6 +520,7 @@ static void ymf278b_C_w(int num, UINT8 reg, UINT8 data)
 #ifdef VERBOSE
 					log_cb(RETRO_LOG_DEBUG, LOGPRE "YMF278B: slot %2d off\n", snum);
 #endif
+					slot->KEY_ON = 0;
 					if(slot->active)
 					{
 						slot->env_step = 4;
