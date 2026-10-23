@@ -3091,7 +3091,7 @@
 		<rom name="82s129.a4" size="256" crc="3eb3a8e4" sha1="19097b5f60d1030f8b82d9f1d3a241f93e5c75d6" region="proms" offset="20"/>
 		<rom name="82s126.1m" size="256" crc="a9cc86bf" sha1="bbcec0570aeceb582ff8238a4bc8546a23430081" region="sound1" offset="0"/>
 		<rom name="82s126.3m" size="256" crc="77245b66" sha1="0c4d0bee858b97632411c440bea6948a74759746" region="sound1" offset="100"/>
-		<rom name="ab7.bin" size="2048" crc="52294ef5" sha1="1d76e16c95cb2873d898a4151a902113fccafe1c" region="user1" offset="0"/>
+		<rom name="ab7.bin" size="2048" crc="52294ef5" sha1="1d76e16c95cb2873d898a4151a902113fccafe1c" region="gfx2" offset="0"/>
 		<chip type="cpu" name="Z80" clock="3072000"/>
 		<chip type="audio" name="Namco 15XX"/>
 		<video screen="raster" orientation="vertical" width="224" height="288" aspectx="3" aspecty="4" refresh="60.606060"/>
@@ -3129,7 +3129,7 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="protection" color="good" sound="good" graphic="good" palettesize="32"/>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="32"/>
 	</game>
 	<game name="alibabab" sourcefile="pacman.c" cloneof="alibaba" romof="alibaba">
 		<description>Mustafa and 40 Thieves (bootleg)</description>
@@ -3149,7 +3149,7 @@
 		<rom name="82s129.a4" merge="82s129.a4" size="256" crc="3eb3a8e4" sha1="19097b5f60d1030f8b82d9f1d3a241f93e5c75d6" region="proms" offset="20"/>
 		<rom name="82s126.1m" merge="82s126.1m" size="256" crc="a9cc86bf" sha1="bbcec0570aeceb582ff8238a4bc8546a23430081" region="sound1" offset="0"/>
 		<rom name="82s126.3m" merge="82s126.3m" size="256" crc="77245b66" sha1="0c4d0bee858b97632411c440bea6948a74759746" region="sound1" offset="100"/>
-		<rom name="ab7.bin" merge="ab7.bin" size="2048" crc="52294ef5" sha1="1d76e16c95cb2873d898a4151a902113fccafe1c" region="user1" offset="0"/>
+		<rom name="ab7.bin" merge="ab7.bin" size="2048" crc="52294ef5" sha1="1d76e16c95cb2873d898a4151a902113fccafe1c" region="gfx2" offset="0"/>
 		<chip type="cpu" name="Z80" clock="3072000"/>
 		<chip type="audio" name="Namco 15XX"/>
 		<video screen="raster" orientation="vertical" width="224" height="288" aspectx="3" aspecty="4" refresh="60.606060"/>
@@ -3187,7 +3187,7 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="protection" color="good" sound="good" graphic="good" palettesize="32"/>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="32"/>
 	</game>
 	<game name="pengo" sourcefile="pengo.c">
 		<description>Pengo (World, not encrypted, rev A)</description>

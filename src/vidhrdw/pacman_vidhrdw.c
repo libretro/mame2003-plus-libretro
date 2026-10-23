@@ -219,19 +219,13 @@ WRITE_HANDLER( pacman_flipscreen_w )
   the main emulation engine.
 
 ***************************************************************************/
-VIDEO_UPDATE( pacman )
+static void pacman_draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *clip)
 {
-	if (bgpriority != 0)
-		fillbitmap(bitmap,Machine->pens[0],&Machine->visible_area);
-	else
-		tilemap_draw(bitmap,cliprect,tilemap,TILEMAP_IGNORE_TRANSPARENCY,0);
-
 	if( spriteram_size )
 	{
 		int offs;
 
-		struct rectangle spriteclip = spritevisiblearea;
-		sect_rect(&spriteclip, cliprect);
+		struct rectangle spriteclip = *clip;
 
 		/* Draw the sprites. Note that it is important to draw them exactly in this */
 		/* order, to have the correct priorities. */
@@ -282,9 +276,89 @@ VIDEO_UPDATE( pacman )
 					&spriteclip,TRANSPARENCY_COLOR,0);
 		}
 	}
+}
+
+VIDEO_UPDATE( pacman )
+{
+	struct rectangle spriteclip = spritevisiblearea;
+
+	if (bgpriority != 0)
+		fillbitmap(bitmap,Machine->pens[0],&Machine->visible_area);
+	else
+		tilemap_draw(bitmap,cliprect,tilemap,TILEMAP_IGNORE_TRANSPARENCY,0);
+
+	sect_rect(&spriteclip, cliprect);
+	pacman_draw_sprites(bitmap, &spriteclip);
 
 	if (bgpriority != 0)
 		tilemap_draw(bitmap,cliprect,tilemap,0,0);
+}
+
+
+/*************************************************************************
+
+	Sega Ali Baba
+
+**************************************************************************/
+
+/* the mystery item clock, in drivers/pacman.c */
+extern int alibaba_mystery_control, alibaba_mystery_clock;
+
+static void alibaba_draw_clock(struct mame_bitmap *bitmap, const struct rectangle *cliprect)
+{
+	int x, y, fx = 0, fy = 0;
+
+	/* inactive half */
+	if (alibaba_mystery_clock <= 16)
+	{
+		x = 120;
+		y = 112;
+		if (flipscreen)
+		{
+			x = 264 - x;
+			y = 208 - y;
+		}
+		drawgfx(bitmap, Machine->gfx[2], 0x1f, 1, 0, 0, x, y,
+				cliprect, TRANSPARENCY_PEN, 0);
+	}
+
+	/* active half */
+	x = 120;
+	y = 96 + (alibaba_mystery_clock & 0x10);
+	if (flipscreen)
+	{
+		x = 264 - x;
+		y = 208 - y;
+		fx = !fx;
+		fy = !fy;
+	}
+	drawgfx(bitmap, Machine->gfx[2], alibaba_mystery_clock ^ 0x1f, 1, fx, fy, x, y,
+			cliprect, TRANSPARENCY_PEN, 0);
+}
+
+VIDEO_UPDATE( alibaba )
+{
+	struct rectangle spriteclip = spritevisiblearea;
+
+	tilemap_draw(bitmap,cliprect,tilemap,TILEMAP_IGNORE_TRANSPARENCY,0);
+
+	/* the sprites are clipped to a different area than on Pac-Man */
+	if (flipscreen)
+	{
+		if (spriteclip.min_x < 6*8)
+			spriteclip.min_x = 6*8;
+	}
+	else
+	{
+		if (spriteclip.max_x > 30*8-1)
+			spriteclip.max_x = 30*8-1;
+	}
+	sect_rect(&spriteclip, cliprect);
+	pacman_draw_sprites(bitmap, &spriteclip);
+
+	/* the mystery item clock */
+	if (alibaba_mystery_control & 2)
+		alibaba_draw_clock(bitmap, cliprect);
 }
 
 
