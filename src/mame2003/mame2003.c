@@ -754,6 +754,15 @@ void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
 void retro_set_controller_port_device(unsigned in_port, unsigned device)
 {
   static bool run_update = false;
+
+  /* the frontend can set more ports than the core has: netplay sets all of
+   * its 16 ports on the clients, and RetroArch the ports of all its users.
+   * active_control_type[] has MAX_PLAYER_COUNT entries, and the fields that
+   * follow it in the options (4-way restrictor, TATE mode, sample rate,
+   * brightness...) must not be written. */
+  if (in_port >= MAX_PLAYER_COUNT)
+    return;
+
   if (in_port == (options.content_flags[CONTENT_CTRL_COUNT] - 1) ) run_update = true;
 
   options.active_control_type[in_port] = device;
