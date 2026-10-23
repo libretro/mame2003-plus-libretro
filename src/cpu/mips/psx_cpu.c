@@ -348,6 +348,12 @@ static INLINE void psx_write32( offs_t address, data32_t data )
 	cpu_writemem32ledw_dword( address, data );
 }
 
+/* a driver hook called before the instruction at one address runs (the */
+/* hacks MAME does with a debugger breakpoint or a read tap on the code) */
+#define PC_HOOK_NONE	1	/* never an instruction address */
+static UINT32 pc_hook_pc = PC_HOOK_NONE;
+static void ( *pc_hook_fn )( void );
+
 static void loop_arrive( UINT32 l, UINT32 from );
 static int loop_kind( UINT32 l );
 static int loop_pure_armed;
@@ -539,6 +545,8 @@ void mips_init( void )
 	fastram_count = 0;
 	fastram_last = &fastram[ 0 ];
 	psxcpu_set_jit( 0 );
+	pc_hook_pc = PC_HOOK_NONE;
+	pc_hook_fn = NULL;
 
 	state_save_register_UINT32( "psxcpu", cpu, "op", &mipscpu.op, 1 );
 	state_save_register_UINT32( "psxcpu", cpu, "pc", &mipscpu.pc, 1 );
@@ -565,6 +573,16 @@ void mips_reset( void *param )
 void mips_exit( void )
 {
 	psxcpu_set_jit( 0 );
+	pc_hook_pc = PC_HOOK_NONE;
+	pc_hook_fn = NULL;
+}
+
+void psxcpu_set_pc_hook( UINT32 pc, void ( *fn )( void ) )
+{
+	pc_hook_pc = fn != NULL && ( pc & 3 ) == 0 ? pc : PC_HOOK_NONE;
+	pc_hook_fn = fn;
+	/* the recompiler leaves that instruction to the interpreter */
+	jit_reset_flush();
 }
 
 /* one instruction at mipscpu.pc (opcode in mipscpu.op), without the cycle */
@@ -1789,6 +1807,10 @@ int mips_execute( int cycles )
 		}
 		{
 			UINT32 from = mipscpu.pc;
+			if( from == pc_hook_pc )
+			{
+				pc_hook_fn();
+			}
 			mipscpu.op = cpu_readop32( from );
 			mips_step();
 			mips_ICount--;

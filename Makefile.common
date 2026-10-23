@@ -79,6 +79,8 @@ SOURCES_C += \
 	$(CORE_DIR)/machine/8255ppi.c \
 	$(CORE_DIR)/machine/eeprom.c \
 	$(CORE_DIR)/machine/idectrl.c \
+	$(CORE_DIR)/machine/intelfsh.c \
+	$(CORE_DIR)/machine/ataflash.c \
 	$(CORE_DIR)/machine/mathbox.c \
 	$(CORE_DIR)/machine/mb87078.c \
 	$(CORE_DIR)/machine/random.c \

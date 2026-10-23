@@ -1377,6 +1377,11 @@ static void jit_compile( struct jit_block *block, UINT32 pc )
 	{
 		maxcount = JIT_MAX_BLOCK;
 	}
+	/* the hooked instruction runs in the interpreter: the block stops before it */
+	if( pc_hook_pc != PC_HOOK_NONE && pc_hook_pc >= pc && ( pc_hook_pc - pc ) / 4 < maxcount )
+	{
+		maxcount = ( pc_hook_pc - pc ) / 4;
+	}
 	for( i = 0; i < maxcount; i++ )
 	{
 		ops[ i ] = *(const UINT32 *)( host + i * 4 );

@@ -168,6 +168,14 @@ MEMORY_READ16_START( taitozoom_mn_readmem )
 	{ 0xe00000, 0xe000ff, zoom_shared16_r },
 MEMORY_END
 
+/* G-NET: the samples in the flashes */
+static UINT32 (*zoom_flash_samples_r)( UINT32 offset );
+
+void taitozoom_set_flash( UINT32 (*samples_r)( UINT32 offset ) )
+{
+	zoom_flash_samples_r = samples_r;
+}
+
 MEMORY_WRITE16_START( taitozoom_mn_writemem )
 	{ 0x080000, 0x0fffff, MWA16_ROM },
 	{ 0x400000, 0x41ffff, zoom_ram_w },
@@ -264,7 +272,14 @@ static int zoom_sh_start( const struct MachineSound *msound )
 	vols[ 0 ] = MIXER( 100, MIXER_PAN_LEFT );
 	vols[ 1 ] = MIXER( 100, MIXER_PAN_RIGHT );
 
-	zsg2_init( memory_region( REGION_SOUND1 ), memory_region_length( REGION_SOUND1 ) );
+	if( zoom_flash_samples_r != NULL )
+	{
+		/* G-NET: 6MB of samples in the three flashes */
+		zsg2_init( NULL, 0x600000 );
+		zsg2_set_ext_read( zoom_flash_samples_r );
+	}
+	else
+		zsg2_init( memory_region( REGION_SOUND1 ), memory_region_length( REGION_SOUND1 ) );
 	zsg2_reset();
 	tms57002dsp_init();
 	tms57002dsp_set_empty_callback( zoom_tms_empty );
@@ -305,6 +320,7 @@ static void taitozoom_postload( void )
 
 void taitozoom_init( void )
 {
+	zoom_flash_samples_r = NULL;
 	mn10200_set_port_handlers( zoom_port_r, zoom_port_w );
 	memset( zoom_shared, 0, sizeof( zoom_shared ) );
 
@@ -318,6 +334,15 @@ void taitozoom_init( void )
 	state_save_register_double( "taitozoom", 0, "dsp_left", &zoom_dsp_left, 1 );
 	state_save_register_func_presave( taitozoom_presave );
 	state_save_register_func_postload( taitozoom_postload );
+}
+
+void taitozoom_device_reset( void )
+{
+	if( zoom_stream >= 0 )
+		stream_update( zoom_stream, 0 );
+	zoom_reg_address = 0;
+	zsg2_reset();
+	tms57002dsp_reset();
 }
 
 void taitozoom_reset( void )

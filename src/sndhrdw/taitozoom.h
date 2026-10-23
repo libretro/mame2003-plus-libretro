@@ -22,6 +22,12 @@ WRITE32_HANDLER( taitozoom_shared_w );
 extern const struct Memory_ReadAddress16 taitozoom_mn_readmem[];
 extern const struct Memory_WriteAddress16 taitozoom_mn_writemem[];
 
+/* Taito G-NET: the ZSG-2 samples read by the driver (in flashes), as the */
+/* use_flash mode of MAME; the MN10200 program is in REGION_CPU2 as on the */
+/* FX-1B (the driver keeps its flash there). Set before the sound starts */
+void taitozoom_set_flash( UINT32 (*samples_r)( UINT32 offset ) );
+void taitozoom_device_reset( void );	/* the reset of the board (MAME device_reset) */
+
 extern struct CustomSound_interface taitozoom_custom_interface;
 
 void taitozoom_init( void );	/* driver init */

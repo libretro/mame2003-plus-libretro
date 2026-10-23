@@ -2784,6 +2784,45 @@ V-V                           TP-027
 	DRIVER( raystormo )	/* RayStorm (Ver 2.05O) */
 	DRIVER( raystormu )	/* RayStorm (Ver 2.05A) */
 	DRIVER( raystormj )	/* RayStorm (Ver 2.05J) */
+	DRIVER( chaoshea )	/* Chaos Heat (V2.09O 1998/10/02 17:00) */
+	DRIVER( chaosheaj )	/* Chaos Heat (V2.08J 1998/09/25 17:00) */
+	DRIVER( raycris )	/* RayCrisis (V2.03O 1998/11/15 15:43) */
+	DRIVER( raycrisj )	/* RayCrisis (V2.03J 1998/11/15 15:43) */
+	DRIVER( spuzbobl )	/* Super Puzzle Bobble (V2.05O 1999/2/24 18:00) */
+	DRIVER( spuzboblj )	/* Super Puzzle Bobble (V2.04J 1999/2/17 02:10) */
+	DRIVER( gobyrc )	/* Go By RC (V2.03O 1999/05/25 13:31) */
+	DRIVER( rcdego )	/* RC De Go (V2.03J 1999/05/22 19:29) */
+	DRIVER( flipmaze )	/* Flip Maze (V2.04J 1999/09/02 20:00) */
+	DRIVER( mawasunda )	/* Mawasunda!! (V2.08J 2000/02/01 11:02:54) */
+	DRIVER( shikigam )	/* Shikigami no Shiro (V2.03J 2001/08/07 18:11) */
+	DRIVER( shikigama )	/* Shikigami no Shiro - internal build (V1.02J 2001/09/27 18:45) */
+	DRIVER( sianniv )	/* Space Invaders Anniversary (V2.02J 2003/09/12 20:00) */
+	DRIVER( kollon )	/* Kollon (V2.04JA 2003/11/01 12:00) */
+	DRIVER( kollonc )	/* Kollon (V2.04JC 2003/11/01 12:00) */
+	DRIVER( otenamih )	/* Otenami Haiken (V2.04J 1999/02/01 18:00:00) */
+	DRIVER( psyvaria )	/* Psyvariar -Medium Unit- (V2.02O 2000/02/22 13:00) */
+	DRIVER( psyvarij )	/* Psyvariar -Medium Unit- (V2.04J 2000/02/15 11:00) */
+	DRIVER( psyvarrv )	/* Psyvariar -Revision- (V2.04J 2000/08/11 22:00) */
+	DRIVER( zokuoten )	/* Zoku Otenamihaiken (V2.05J 2003/05/12 18:00) */
+	DRIVER( zokuotena )	/* Zoku Otenamihaiken (V2.03J 2001/02/16 16:00) */
+	DRIVER( zooo )	/* Zooo (V2.01JA 2004/04/13 12:00) */
+	DRIVER( otenamhf )	/* Otenami Haiken Final (V2.07JC 2005/04/20 15:36) */
+	DRIVER( mahjngoh )	/* Mahjong Oh (V2.06J 1999/11/23 08:52:22) */
+	DRIVER( shanghss )	/* Shanghai Shoryu Sairin (V2.03J 2000/05/26 12:45:28) */
+	DRIVER( soutenry )	/* Soutenryu (V2.07J 2000/12/14 11:13:02) */
+	DRIVER( usagi )	/* Usagi (V2.02J 2001/10/02 12:41:19) */
+	DRIVER( shangtou )	/* Shanghai Sangokuhai Tougi (Ver 2.01J 2002/01/18 18:26:58) */
+	DRIVER( nightrai )	/* Night Raid (V2.03J 2001/02/26 17:00) */
+	DRIVER( otenki )	/* Otenki Kororin (V2.01J 2001/07/02 10:00) */
+	DRIVER( xiistag )	/* XII Stag (V2.01J 2002/6/26 22:27) */
+	DRIVER( aerofgtsg )	/* Aero Fighters Special (VER 1.00G) */
+	DRIVER( brvbladeg )	/* Brave Blade (VER 1.40G) */
+	DRIVER( flamegung )	/* Flame Gunner (VER 1.40G) */
+	DRIVER( ftimpactg )	/* Fighters' Impact (VER 2.10G) */
+	DRIVER( gdariusg )	/* G-Darius (VER 2.70G) */
+	DRIVER( raystormg )	/* RayStorm (VER 2.60G) */
+	DRIVER( shngmtkbg )	/* Shanghai Matekibuyuu (VER 1.20G) */
+	DRIVER( tblkkuzug )	/* The Block Kuzushi (VER 1.10G) */
 	DRIVER( ftimpcta )	/* Fighters' Impact A (Ver 2.00J) */
 	DRIVER( ftimpact )	/* Fighters' Impact (Ver 2.02O) */
 	DRIVER( ftimpactu )	/* Fighters' Impact (Ver 2.02A) */

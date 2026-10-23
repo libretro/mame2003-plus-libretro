@@ -152,6 +152,8 @@ Sound: Analog Devices ADSP-2181
 #include "state.h"
 #include "sound/psx.h"
 #include "machine/idectrl.h"
+#include "machine/intelfsh.h"
+#include "machine/ataflash.h"
 #include "cpu/adsp2100/adsp2100.h"
 
 static int zn_bank_secsel;	/* the game ROM bank follows this register (Raizing) */
@@ -536,6 +538,178 @@ static void zn_dip_timer_fired( int param )
 		timer_adjust( zn_dip_timer, TIME_IN_CYCLES( 50, 0 ), 0, 0 );
 }
 
+/*
+	The MCU (uPD78081) as current MAME znmcu_device, for the boards that
+	read analog or trackball inputs through it (Taito G-NET); the other
+	boards keep the DIP switch reads above. Selected when znsecsel bits
+	7, 3 and 2 are all set; bit 4 asks for the 8 analog inputs, bit 5 for
+	the 4 trackball counters. It sends a header byte (data byte count,
+	DIP switches) and the data bytes, a DSR pulse before each one.
+*/
+#define ZN_PORT_ANALOG1 ( 8 )	/* ANALOG1, ANALOG2: on the boards with the MCU */
+
+static int zn_znmcu;
+static UINT8 znmcu_select, znmcu_sck, znmcu_bit, znmcu_byte, znmcu_databytes;
+static UINT8 znmcu_analog_read, znmcu_trackball_read;
+static UINT8 znmcu_send[ 16 ];
+static UINT16 znmcu_trackball[ 4 ];
+static UINT16 ( *znmcu_trackball_cb )( int n );	/* NULL: no trackballs */
+static mame_timer *znmcu_timer;
+static INT32 znmcu_timer_param;
+static double znmcu_timer_left;	/* time left on the timer, for save states (-1: none) */
+
+static void znmcu_timer_adjust( double duration, int param )
+{
+	znmcu_timer_param = param;
+	timer_adjust( znmcu_timer, duration, param, 0 );
+}
+
+static void znmcu_tick( int param )
+{
+	/* the DSR line is active low */
+	zn_sio_input( ZN_SIO_IN_DSR, param ? 0 : ZN_SIO_IN_DSR );
+	znmcu_timer_left = -1;
+
+	if( !param )
+	{
+		if( znmcu_byte == 0 )
+		{
+			int i;
+
+			znmcu_databytes = znmcu_analog_read ? 8 : znmcu_trackball_read ? 6 : 1;
+			znmcu_send[ 0 ] = ( znmcu_databytes << 4 ) | ( readinputport( ZN_PORT_DSW ) & 0xf );
+			if( znmcu_analog_read )
+			{
+				for( i = 0; i < 8; i++ )
+					znmcu_send[ 1 + i ] = i < 2 ? readinputport( ZN_PORT_ANALOG1 + i ) : 0xff;
+			}
+			else if( znmcu_trackball_read )
+			{
+				UINT16 d[ 4 ];
+
+				for( i = 0; i < 4; i++ )
+				{
+					UINT16 c = znmcu_trackball_cb != NULL ? znmcu_trackball_cb( i ) : 0;
+					d[ i ] = c - znmcu_trackball[ i ];
+					znmcu_trackball[ i ] = c;
+				}
+				znmcu_send[ 1 ] = d[ 0 ];
+				znmcu_send[ 2 ] = ( ( d[ 0 ] & 0xf00 ) >> 8 ) | ( ( d[ 1 ] & 0xf00 ) >> 4 );
+				znmcu_send[ 3 ] = d[ 1 ];
+				znmcu_send[ 4 ] = d[ 2 ];
+				znmcu_send[ 5 ] = ( ( d[ 2 ] & 0xf00 ) >> 8 ) | ( ( d[ 3 ] & 0xf00 ) >> 4 );
+				znmcu_send[ 6 ] = d[ 3 ];
+			}
+		}
+		znmcu_timer_adjust( TIME_IN_USEC( 5 ), 1 );
+	}
+}
+
+static void sio_znmcu_handler( int n_data )
+{
+	int sck = ( n_data & ZN_SIO_OUT_CLOCK ) != 0;
+
+	if( sck != znmcu_sck )
+	{
+		if( !sck && !znmcu_select )
+		{
+			UINT8 data = 0;
+
+			if( znmcu_byte <= znmcu_databytes && znmcu_byte < sizeof( znmcu_send ) )
+				data = znmcu_send[ znmcu_byte ];
+			zn_sio_input( ZN_SIO_IN_DATA, ( ( data >> znmcu_bit ) & 1 ) * ZN_SIO_IN_DATA );
+			znmcu_bit++;
+			if( znmcu_bit == 8 )
+			{
+				if( znmcu_byte < znmcu_databytes )
+					znmcu_timer_adjust( TIME_IN_USEC( 50 ), 0 );
+				znmcu_bit = 0;
+				znmcu_byte++;
+			}
+		}
+		znmcu_sck = sck;
+	}
+}
+
+static void znmcu_select_w( int state )
+{
+	if( znmcu_select != state )
+	{
+		if( !state )
+		{
+			znmcu_bit = 0;
+			znmcu_byte = 0;
+			znmcu_timer_adjust( TIME_IN_USEC( 50 ), 0 );
+		}
+		else
+		{
+			zn_sio_input( ZN_SIO_IN_DATA | ZN_SIO_IN_DSR, ZN_SIO_IN_DATA );
+			znmcu_timer_adjust( TIME_NEVER, 0 );
+		}
+		znmcu_select = state;
+	}
+}
+
+/* the boards with the MCU read it all the time: the SIO bit clock is saved */
+/* too (0.78 does not save its timers) */
+static double zn_sio_timer_left;
+
+static void znmcu_presave( void )
+{
+	znmcu_timer_left = timer_timeleft( znmcu_timer );
+	if( znmcu_timer_left > 1.0 )
+		znmcu_timer_left = -1;
+	zn_sio_timer_left = timer_timeleft( zn_sio_timer );
+	if( zn_sio_timer_left > 1.0 )
+		zn_sio_timer_left = -1;
+}
+
+static void znmcu_postload( void )
+{
+	if( znmcu_timer_left >= 0 )
+		timer_adjust( znmcu_timer, znmcu_timer_left, znmcu_timer_param, 0 );
+	else
+		timer_adjust( znmcu_timer, TIME_NEVER, 0, 0 );
+	if( zn_sio_timer_left >= 0 )
+		timer_adjust( zn_sio_timer, zn_sio_timer_left, 0, 0 );
+	else
+		timer_adjust( zn_sio_timer, TIME_NEVER, 0, 0 );
+}
+
+/* driver init, after zn_board_init */
+static void znmcu_init( UINT16 ( *trackball )( int n ) )
+{
+	zn_znmcu = 1;
+	znmcu_trackball_cb = trackball;
+	znmcu_timer = timer_alloc( znmcu_tick );
+	state_save_register_UINT8( "znmcu", 0, "select", &znmcu_select, 1 );
+	state_save_register_UINT8( "znmcu", 0, "sck", &znmcu_sck, 1 );
+	state_save_register_UINT8( "znmcu", 0, "bit", &znmcu_bit, 1 );
+	state_save_register_UINT8( "znmcu", 0, "byte", &znmcu_byte, 1 );
+	state_save_register_UINT8( "znmcu", 0, "databytes", &znmcu_databytes, 1 );
+	state_save_register_UINT8( "znmcu", 0, "analog_read", &znmcu_analog_read, 1 );
+	state_save_register_UINT8( "znmcu", 0, "trackball_read", &znmcu_trackball_read, 1 );
+	state_save_register_UINT8( "znmcu", 0, "send", znmcu_send, sizeof( znmcu_send ) );
+	state_save_register_UINT16( "znmcu", 0, "trackball", znmcu_trackball, 4 );
+	state_save_register_INT32( "znmcu", 0, "timer_param", &znmcu_timer_param, 1 );
+	state_save_register_double( "znmcu", 0, "timer_left", &znmcu_timer_left, 1 );
+	state_save_register_double( "znmcu", 0, "sio_timer_left", &zn_sio_timer_left, 1 );
+	state_save_register_func_presave( znmcu_presave );
+	state_save_register_func_postload( znmcu_postload );
+}
+
+static void znmcu_reset( void )
+{
+	znmcu_select = 1;
+	znmcu_sck = 1;
+	znmcu_bit = znmcu_byte = znmcu_databytes = 0;
+	znmcu_analog_read = znmcu_trackball_read = 0;
+	memset( znmcu_send, 0, sizeof( znmcu_send ) );
+	memset( znmcu_trackball, 0, sizeof( znmcu_trackball ) );
+	znmcu_timer_left = -1;
+	znmcu_timer_adjust( TIME_NEVER, 0 );
+}
+
 static READ32_HANDLER( znsecsel_r )
 {
 	return m_n_znsecsel;
@@ -568,6 +742,10 @@ static WRITE32_HANDLER( znsecsel_w )
 		zn_sio_fn = sio_znsec0_handler;
 		zn_sio_input( ZN_SIO_IN_DSR, 0 );
 	}
+	else if( zn_znmcu )
+	{
+		zn_sio_fn = sio_znmcu_handler;
+	}
 	else
 	{
 		m_n_dip_bit = 0;
@@ -575,6 +753,13 @@ static WRITE32_HANDLER( znsecsel_w )
 		zn_sio_fn = sio_dip_handler;
 		zn_sio_input( ZN_SIO_IN_DSR, 0 );
 		timer_adjust( zn_dip_timer, TIME_IN_CYCLES( 100, 0 ), 1, 0 );
+	}
+
+	if( zn_znmcu )
+	{
+		znmcu_analog_read = ( m_n_znsecsel >> 4 ) & 1;
+		znmcu_trackball_read = ( m_n_znsecsel >> 5 ) & 1;
+		znmcu_select_w( ( m_n_znsecsel & 0x8c ) != 0x8c );
 	}
 }
 
@@ -615,8 +800,13 @@ static READ32_HANDLER( zn_inputs2_r )	/* P3, P4 at 0x1fa10000 + 0x100 each */
 
 static int zn_coin_tecmo;
 
+static UINT8 zn_coin;	/* the last coin write: the mahjong panel rows (Taito G-NET) */
+
 static WRITE32_HANDLER( zn_coin_w )
 {
+	if( ACCESSING_LSB32 )
+		zn_coin = data & 0xff;
+
 	if( zn_coin_tecmo )
 	{
 		/* Tecmo: four coin counters, no lockouts */
@@ -772,6 +962,7 @@ static void zn_cpu_speedups( void )
 static void zn_board_init( void )
 {
 	zn_bank_secsel = 0;
+	zn_znmcu = 0;
 	cpu_setbank( 3, zn_scratchpad );
 	cpu_setbank( 4, memory_region( REGION_CPU1 ) );
 	cpu_setbank( 5, memory_region( REGION_CPU1 ) );
@@ -1604,6 +1795,509 @@ MACHINE_DRIVER_END
 static MACHINE_DRIVER_START( coh1002tb )
 	MDRV_IMPORT_FROM( coh1000tb )
 	MDRV_VIDEO_START( psx_type2_1024x1024 )
+MACHINE_DRIVER_END
+
+
+/***************************************************************************
+
+  Taito G-NET (COH-3002T ZN-2 / COH-1002T ZN-1 2MB VRAM), as current MAME
+  taitogn.cpp (Olivier Galibert, smf)
+
+  The game is on a PC card (an ATA flash card, most of them locked by a
+  Taito key) behind a Ricoh RF5C296. On power-up the BIOS decrypts its
+  boot loader from the flash at U30 and checks the card: if the flash
+  memories do not hold the card's game, it copies it into them (U30 the
+  sub BIOS, U27 the MN10200 program, U29/U55/U56 the ZSG-2 samples),
+  which takes a minute or more ("Loading now"). The flashes are kept in
+  the NVRAM, so the next boots are immediate.
+
+  0x1f000000-0x1f7fffff: a bank, bit 2 of the control register and JP1:
+    bank 0: U30 sub BIOS, 0x200000 the card attribute memory, 0x300000
+            U27 (MN10200 program)
+    bank 1, 3: the three sample flashes
+    bank 2: the BIOS EPROM (the flasher on the mod BIOS boards), 0x100000
+            U27, 0x200000 U30
+  0x1fb00000: the RF5C296 I/O space (the ATA registers of the card)
+  0x1fb40000: control: bit 5 watchdog, bit 4 sound reset, bit 2 bank
+  Sound: the Taito Zoom board of the FX-1B on the main board, its program
+  and samples in the flashes (MAME use_flash), and the PSX SPU.
+
+***************************************************************************/
+
+#define GNET_FLASH_FIRM			( 0 )	/* U30, TE28F160: the sub BIOS */
+#define GNET_FLASH_ZOOMPROG		( 1 )	/* U27, E28F400B: the MN10200 program */
+#define GNET_FLASH_WAVE			( 2 )	/* U56, U55, U29, TE28F160: the samples */
+#define GNET_FLASHES			( 5 )
+
+#define GNET_PORT_JP1			( 7 )
+#define GNET_PORT_EXTRA			( 10 )	/* mahjong panel KEY0-3, Mawasunda HANDLE1-2 */
+
+enum
+{
+	GNET_STANDARD = 0,
+	GNET_MAHJONG,		/* the mahjong panel on P4, its rows on the coin register */
+	GNET_MAWASUNDA		/* the handles on the MCU trackball counters */
+};
+
+static int gnet_has_zoom;
+static int gnet_variant;
+static UINT8 gnet_control;
+static UINT16 gnet_control2;
+static UINT8 gnet_control3;
+static UINT8 gnet_bank;
+static UINT8 gnet_jp1;	/* the BIOS Flash jumper, as set at the machine init */
+static UINT8 gnet_jp1_auto;	/* JP1 on "Auto": restart when the flasher is done */
+static double gnet_flash_write_time;	/* the last write to a flash (-1: none) */
+static UINT8 gnet_zoom_reset;	/* the MN10200 reset line */
+static UINT16 gnet_mawasunda_trackball[ 2 ];
+
+/* the bank window: byte address in it, 16-bit accesses */
+static UINT16 gnet_bank_r16( UINT32 a, UINT16 mem_mask )
+{
+	switch( gnet_bank )
+	{
+	case 0:
+		if( a < 0x200000 )
+			return intelfsh_read( GNET_FLASH_FIRM, a >> 1 );
+		if( a < 0x300000 )
+			return rf5c296_mem_r( ( a - 0x200000 ) >> 1, mem_mask );
+		if( a < 0x380000 )
+			return intelfsh_read( GNET_FLASH_ZOOMPROG, ( a - 0x300000 ) >> 1 );
+		break;
+
+	case 1:
+	case 3:
+		if( a < 0x600000 )
+			return intelfsh_read( GNET_FLASH_WAVE + ( a >> 21 ), ( a & 0x1fffff ) >> 1 );
+		break;
+
+	case 2:
+		if( a < 0x100000 )
+			return ( (UINT16 *)memory_region( REGION_USER2 ) )[ a >> 1 ];
+		if( a < 0x200000 )
+			return intelfsh_read( GNET_FLASH_ZOOMPROG, ( a & 0x7ffff ) >> 1 );
+		if( a < 0x400000 )
+			return intelfsh_read( GNET_FLASH_FIRM, ( a - 0x200000 ) >> 1 );
+		break;
+	}
+	return 0;
+}
+
+static void gnet_bank_w16( UINT32 a, UINT16 data, UINT16 mem_mask )
+{
+	if( gnet_jp1_auto && gnet_jp1 )
+		gnet_flash_write_time = timer_get_time();
+	switch( gnet_bank )
+	{
+	case 0:
+		if( a < 0x200000 )
+			intelfsh_write( GNET_FLASH_FIRM, a >> 1, data );
+		else if( a < 0x300000 )
+			rf5c296_mem_w( ( a - 0x200000 ) >> 1, data, mem_mask );
+		else if( a < 0x380000 )
+			intelfsh_write( GNET_FLASH_ZOOMPROG, ( a - 0x300000 ) >> 1, data );
+		/* Mawasunda: 0x600000 the weights, 0x600002 the lamps */
+		break;
+
+	case 1:
+	case 3:
+		if( a < 0x600000 )
+			intelfsh_write( GNET_FLASH_WAVE + ( a >> 21 ), ( a & 0x1fffff ) >> 1, data );
+		break;
+
+	case 2:
+		if( a >= 0x100000 && a < 0x200000 )
+			intelfsh_write( GNET_FLASH_ZOOMPROG, ( a & 0x7ffff ) >> 1, data );
+		else if( a >= 0x200000 && a < 0x400000 )
+			intelfsh_write( GNET_FLASH_FIRM, ( a - 0x200000 ) >> 1, data );
+		break;
+	}
+}
+
+/* a 16-bit device on the 32-bit bus: the lanes that are accessed */
+#define GNET_LANE0( mask )	( (UINT16)( ~( mask ) & 0xffff ) )
+#define GNET_LANE1( mask )	( (UINT16)( ~( mask ) >> 16 ) )
+
+static READ32_HANDLER( gnet_flashbank_r )
+{
+	data32_t data = 0;
+
+	if( GNET_LANE0( mem_mask ) )
+		data |= gnet_bank_r16( offset * 4, GNET_LANE0( mem_mask ) );
+	if( GNET_LANE1( mem_mask ) )
+		data |= gnet_bank_r16( offset * 4 + 2, GNET_LANE1( mem_mask ) ) << 16;
+	return data;
+}
+
+static WRITE32_HANDLER( gnet_flashbank_w )
+{
+	if( GNET_LANE0( mem_mask ) )
+		gnet_bank_w16( offset * 4, data & 0xffff, GNET_LANE0( mem_mask ) );
+	if( GNET_LANE1( mem_mask ) )
+		gnet_bank_w16( offset * 4 + 2, data >> 16, GNET_LANE1( mem_mask ) );
+}
+
+static READ32_HANDLER( gnet_rf5c296_io_r )
+{
+	data32_t data = 0;
+
+	if( GNET_LANE0( mem_mask ) )
+		data |= rf5c296_io_r( offset * 2, GNET_LANE0( mem_mask ) );
+	if( GNET_LANE1( mem_mask ) )
+		data |= rf5c296_io_r( offset * 2 + 1, GNET_LANE1( mem_mask ) ) << 16;
+	return data;
+}
+
+static WRITE32_HANDLER( gnet_rf5c296_io_w )
+{
+	if( GNET_LANE0( mem_mask ) )
+		rf5c296_io_w( offset * 2, data & 0xffff, GNET_LANE0( mem_mask ) );
+	if( GNET_LANE1( mem_mask ) )
+		rf5c296_io_w( offset * 2 + 1, data >> 16, GNET_LANE1( mem_mask ) );
+}
+
+
+static void gnet_bank_update( void )
+{
+	/* bits 1-0 may be part of it too, but they are always 0 */
+	gnet_bank = ( ( gnet_control >> 2 ) & 1 ) | ( gnet_jp1 << 1 );
+}
+
+/*
+	JP1 on boots the flasher of the BIOS EPROM (the mod BIOS boards, and the
+	v2 BIOS of the Compact Flash games), which writes U30 and asks to turn
+	the power off; with JP1 off the board then boots from U30 and copies
+	the card. "Auto" (the default of those games) is on while U30 holds
+	what it comes with, off once the flasher wrote it.
+*/
+static void gnet_jp1_update( void )
+{
+	gnet_jp1 = readinputport( GNET_PORT_JP1 ) & 3;
+	gnet_jp1_auto = gnet_jp1 > 1;
+	if( gnet_jp1_auto )
+		gnet_jp1 = memcmp( intelfsh_data( GNET_FLASH_FIRM ), memory_region( REGION_USER1 ), intelfsh_size( GNET_FLASH_FIRM ) ) == 0;
+	gnet_flash_write_time = -1;
+}
+
+/* Auto: the flasher wrote U30 and has been idle for 3 seconds (it only */
+/* shows its message, kicking the watchdog): the power off of the board */
+static void gnet_jp1_auto_check( void )
+{
+	if( gnet_jp1_auto && gnet_jp1 && gnet_flash_write_time >= 0 && timer_get_time() - gnet_flash_write_time > 3.0 )
+	{
+		gnet_flash_write_time = -1;
+		machine_reset();
+	}
+}
+
+static void gnet_zoom_reset_line( int state )
+{
+	if( state != gnet_zoom_reset )
+	{
+		gnet_zoom_reset = state;
+		cpunum_set_reset_line( 1, state ? ASSERT_LINE : CLEAR_LINE );
+	}
+}
+
+static READ32_HANDLER( gnet_control_r )	/* byte at 0x1fb40000 */
+{
+	return gnet_control;
+}
+
+static WRITE32_HANDLER( gnet_control_w )
+{
+	int i;
+
+	if( !ACCESSING_LSB32 )
+		return;
+	data &= 0xff;
+
+	/* 0x20: the MB3773 watchdog (not emulated) */
+
+	/* 0x10: the sound board reset, on the games that use it */
+	if( gnet_has_zoom )
+	{
+		gnet_zoom_reset_line( ( data >> 4 ) & 1 );
+		if( ~data & gnet_control & 0x10 )
+		{
+			taitozoom_device_reset();
+			/* it also gets the sound flashes ready */
+			for( i = GNET_FLASH_ZOOMPROG; i < GNET_FLASHES; i++ )
+				intelfsh_write( i, 0, 0xff );
+		}
+	}
+
+	gnet_control = data;
+	gnet_bank_update();
+	gnet_jp1_auto_check();
+}
+
+static WRITE32_HANDLER( gnet_control2_w )
+{
+	if( ACCESSING_LSW32 )
+		gnet_control2 = data & 0xffff;
+}
+
+static READ32_HANDLER( gnet_control3_r )	/* byte at 0x1fa30000 */
+{
+	return gnet_control3;
+}
+
+static WRITE32_HANDLER( gnet_control3_w )
+{
+	if( ACCESSING_LSB32 )
+		gnet_control3 = data & 0xff;
+}
+
+static READ32_HANDLER( gnet_1fb70000_r )
+{
+	/* the BIOS tests bit 1 eight times: 2 always works */
+	return 2;
+}
+
+/* P4: the mahjong panel, the rows on coin register bits 2, 3, 6, 7 */
+static READ32_HANDLER( gnet_p4_r )
+{
+	UINT32 data = 0xff;
+
+	if( gnet_variant != GNET_MAHJONG )
+		return readinputport( 5 ) | 0xffffff00;
+	if( zn_coin & 0x04 ) data &= readinputport( GNET_PORT_EXTRA + 0 );
+	if( zn_coin & 0x08 ) data &= readinputport( GNET_PORT_EXTRA + 1 );
+	if( zn_coin & 0x40 ) data &= readinputport( GNET_PORT_EXTRA + 2 );
+	if( zn_coin & 0x80 ) data &= readinputport( GNET_PORT_EXTRA + 3 );
+	return data | 0xffffff00;
+}
+
+/* Mawasunda: the two handles turn the MCU trackball counters */
+static UINT16 gnet_mawasunda_trackball_r( int n )
+{
+	if( n > 1 )
+		return 0;
+	/* TODO (MAME): how each game balances the controls */
+	gnet_mawasunda_trackball[ n ] += ( ( (int)( readinputport( GNET_PORT_EXTRA + n ) & 0xff ) - 0x80 ) * ( n ? -193 : 256 ) ) / 256;
+	return gnet_mawasunda_trackball[ n ];
+}
+
+/* the Zoom board: the program in U27, the samples in the three wave flashes */
+static UINT32 gnet_zoom_samples_r( UINT32 offset )
+{
+	int chip;
+
+	offset <<= 1;
+	if( ( offset & 0x300000 ) == 0x300000 )
+		return 0;
+	chip = GNET_FLASH_WAVE + ( ( offset >> 20 ) & 3 );
+	offset &= 0xfffff;
+	return intelfsh_read( chip, offset ) | ( intelfsh_read( chip, offset | 1 ) << 16 );
+}
+
+/* ZN-2: bit 3 toggles at each read (MAME zn2_spu_hack_r); 0 on the ZN-1 */
+static UINT8 gnet_zn2_spu_hack;
+
+static READ32_HANDLER( gnet_zn2_spu_hack_r )
+{
+	if( gnet_variant == GNET_MAWASUNDA )
+		return 0;
+	gnet_zn2_spu_hack ^= 8;
+	return gnet_zn2_spu_hack;
+}
+
+static MEMORY_READ32_START( taitogn_readmem )
+	{ 0x1f000000, 0x1f7fffff, gnet_flashbank_r },
+	{ 0x1fa60000, 0x1fa60003, gnet_zn2_spu_hack_r },
+	{ 0x1f801020, 0x1f801023, MRA32_RAM },	/* COM_DELAY: the BIOS reads it back */
+	{ 0x1fa10100, 0x1fa10103, gnet_p4_r },
+	{ 0x1fa30000, 0x1fa30003, gnet_control3_r },
+	{ 0x1fb00000, 0x1fb0ffff, gnet_rf5c296_io_r },
+	{ 0x1fb40000, 0x1fb40003, gnet_control_r },
+	{ 0x1fb70000, 0x1fb70003, gnet_1fb70000_r },
+	{ 0x1fbc0000, 0x1fbc0003, taitozoom_sound_irq_r },
+	{ 0x1fbe0000, 0x1fbe01ff, taitozoom_shared_r },
+	ZN_MAIN_READ
+MEMORY_END
+
+static MEMORY_WRITE32_START( taitogn_writemem )
+	{ 0x1f000000, 0x1f7fffff, gnet_flashbank_w },
+	{ 0x1f801020, 0x1f801023, MWA32_RAM },
+	{ 0x1fa30000, 0x1fa30003, gnet_control3_w },
+	{ 0x1fb00000, 0x1fb0ffff, gnet_rf5c296_io_w },
+	{ 0x1fb40000, 0x1fb40003, gnet_control_w },
+	{ 0x1fb60000, 0x1fb60003, gnet_control2_w },
+	{ 0x1fb70000, 0x1fb70003, MWA32_NOP },	/* 0 or 1 all the time */
+	{ 0x1fb80000, 0x1fb80003, taitozoom_reg_w },
+	{ 0x1fba0000, 0x1fba0003, taitozoom_sound_irq_w },
+	{ 0x1fbe0000, 0x1fbe01ff, taitozoom_shared_w },
+	ZN_MAIN_WRITE
+MEMORY_END
+
+/* the flashes as MAME starts them: U30 from the ROM, the others erased */
+static void gnet_flash_default( void )
+{
+	const UINT16 *firm = (const UINT16 *)memory_region( REGION_USER1 );
+	int i;
+
+	for( i = 0; i < GNET_FLASHES; i++ )
+		memset( intelfsh_data( i ), 0xff, intelfsh_size( i ) );
+	memcpy( intelfsh_data( GNET_FLASH_FIRM ), firm, intelfsh_size( GNET_FLASH_FIRM ) );
+}
+
+static NVRAM_HANDLER( taitogn )
+{
+	int i;
+
+	nvram_handler_zn( file, read_or_write );
+	if( read_or_write )
+	{
+		for( i = 0; i < GNET_FLASHES; i++ )
+			intelfsh_nvram_save( i, file );
+	}
+	else if( file )
+	{
+		for( i = 0; i < GNET_FLASHES; i++ )
+			intelfsh_nvram_load( i, file );
+	}
+	else
+		gnet_flash_default();
+}
+
+static void taitogn_postload( void )
+{
+	/* the reset line of the MN10200 is in the CPU state */
+	gnet_bank_update();
+}
+
+/* Space Invaders Anniversary, Kollon: the IRQs are still enabled while the */
+/* game clears its BSS. As MAME (ttgnirq_state), a hack: they are masked */
+/* when the game code starts (at 0x80010008) */
+static int gnet_irq_hack;
+
+static void gnet_irq_hack_hook( void )
+{
+	psx_irq_w( 1, 0, 0 );	/* 0x1f801074, the IRQ mask */
+}
+
+static void taitogn_init( int vram_2mb, int card, int has_zoom, int variant )
+{
+	gnet_irq_hack = 0;
+	zn_scratchpad = auto_malloc( 0x400 );
+	zn_eeprom = auto_malloc( 0x800 );
+	memset( zn_scratchpad, 0, 0x400 );
+	memset( zn_eeprom, 0xff, 0x800 );
+
+	zn_vram_2mb = vram_2mb;
+	zn_coin_tecmo = 0;
+	zn_eeprom_default = 0;
+
+	zn_board_init();
+	znsec_init( 0, memory_region( REGION_USER4 ) );	/* TT10 / TT01 */
+	znsec_init( 1, memory_region( REGION_USER5 ) );	/* TT16 / TT99 */
+	znmcu_init( variant == GNET_MAWASUNDA ? gnet_mawasunda_trackball_r : NULL );
+
+	intelfsh_init( GNET_FLASH_FIRM, INTELFSH_INTEL_TE28F160, NULL );
+	/* U27 is the MN10200 program: its contents are the CPU's ROM region, read */
+	/* directly (the CPU is held in reset while U27 is written) */
+	intelfsh_init( GNET_FLASH_ZOOMPROG, INTELFSH_INTEL_E28F400B, (UINT16 *)( memory_region( REGION_CPU2 ) + 0x80000 ) );
+	intelfsh_init( GNET_FLASH_WAVE + 0, INTELFSH_INTEL_TE28F160, NULL );
+	intelfsh_init( GNET_FLASH_WAVE + 1, INTELFSH_INTEL_TE28F160, NULL );
+	intelfsh_init( GNET_FLASH_WAVE + 2, INTELFSH_INTEL_TE28F160, NULL );
+	gnet_flash_default();
+
+	ataflash_init( card, get_disk_handle( 0 ) );
+
+	taitozoom_init();
+	taitozoom_set_flash( gnet_zoom_samples_r );
+
+	gnet_has_zoom = has_zoom;
+	gnet_variant = variant;
+	gnet_control2 = 0;
+	gnet_control3 = 0;
+	gnet_zn2_spu_hack = 0;
+	memset( gnet_mawasunda_trackball, 0, sizeof( gnet_mawasunda_trackball ) );
+
+	state_save_register_UINT8( "taitogn", 0, "control", &gnet_control, 1 );
+	state_save_register_UINT8( "taitogn", 0, "jp1", &gnet_jp1, 1 );
+	state_save_register_UINT8( "taitogn", 0, "zn2_spu_hack", &gnet_zn2_spu_hack, 1 );
+	state_save_register_UINT16( "taitogn", 0, "control2", &gnet_control2, 1 );
+	state_save_register_UINT8( "taitogn", 0, "control3", &gnet_control3, 1 );
+	state_save_register_UINT8( "taitogn", 0, "zoom_reset", &gnet_zoom_reset, 1 );
+	state_save_register_UINT8( "zn", 0, "coin", &zn_coin, 1 );
+	state_save_register_UINT16( "taitogn", 0, "mawasunda_trackball", gnet_mawasunda_trackball, 2 );
+	state_save_register_UINT32( "zn", 0, "scratchpad", zn_scratchpad, 0x100 );
+	state_save_register_func_postload( taitogn_postload );
+}
+
+/* the card of each game, and whether it has the Zoom sound */
+static DRIVER_INIT( coh3002t )		{ taitogn_init( 1, ATAFLASH_TAITO_PCCARD1, 1, GNET_STANDARD ); }
+static DRIVER_INIT( coh3002t_nz )	{ taitogn_init( 1, ATAFLASH_TAITO_PCCARD1, 0, GNET_STANDARD ); }
+static DRIVER_INIT( coh3002t_t2 )	{ taitogn_init( 1, ATAFLASH_TAITO_PCCARD2, 1, GNET_STANDARD ); }
+static DRIVER_INIT( coh3002t_t2nz )	{ taitogn_init( 1, ATAFLASH_TAITO_PCCARD2, 0, GNET_STANDARD ); }
+static DRIVER_INIT( coh3002t_cf )	{ taitogn_init( 1, ATAFLASH_TAITO_CF, 1, GNET_STANDARD ); }
+static DRIVER_INIT( coh3002t_cfnz )	{ taitogn_init( 1, ATAFLASH_TAITO_CF, 0, GNET_STANDARD ); }
+static DRIVER_INIT( coh3002t_bl )	{ taitogn_init( 1, ATAFLASH_GENERIC, 1, GNET_STANDARD ); }
+static DRIVER_INIT( coh3002t_blnz )	{ taitogn_init( 1, ATAFLASH_GENERIC, 0, GNET_STANDARD ); }
+static DRIVER_INIT( mahjngoh )		{ taitogn_init( 1, ATAFLASH_TAITO_PCCARD1, 1, GNET_MAHJONG ); }
+static DRIVER_INIT( usagi )			{ taitogn_init( 1, ATAFLASH_TAITO_PCCARD2, 1, GNET_MAHJONG ); }
+static DRIVER_INIT( mawasunda )		{ taitogn_init( 1, ATAFLASH_TAITO_CF, 1, GNET_MAWASUNDA ); }
+static DRIVER_INIT( sianniv )		{ taitogn_init( 1, ATAFLASH_TAITO_PCCARD1, 0, GNET_STANDARD ); gnet_irq_hack = 1; }
+static DRIVER_INIT( kollon )		{ taitogn_init( 1, ATAFLASH_TAITO_PCCARD1, 1, GNET_STANDARD ); gnet_irq_hack = 1; }
+
+static MACHINE_INIT( taitogn )
+{
+	int i;
+
+	gnet_control = 0x10;
+	gnet_jp1_update();
+	gnet_bank_update();
+	for( i = 0; i < GNET_FLASHES; i++ )
+		intelfsh_reset( i );
+	taitozoom_reset();
+	/* the sound CPU is held in reset: no valid program at start */
+	gnet_zoom_reset = 1;
+	cpunum_set_reset_line( 1, ASSERT_LINE );
+	ataflash_reset();
+	znmcu_reset();
+	zn_board_reset();
+	if( gnet_irq_hack )
+		psxcpu_set_pc_hook( 0x80010008, gnet_irq_hack_hook );
+}
+
+/* ZN-2, Taito G-NET */
+static MACHINE_DRIVER_START( coh3002t )
+	MDRV_CPU_ADD_TAG( "main", PSXCPU, 100000000 / 4 )	/* CXD8661R, 100MHz XTAL; as COH-3002C */
+	MDRV_CPU_MEMORY( taitogn_readmem, taitogn_writemem )
+	MDRV_CPU_VBLANK_INT( psx_vblank, 1 )
+
+	MDRV_CPU_ADD( MN10200, 25000000 / 2 / 2 )	/* MN1020012A, 12.5MHz, internal / 2 */
+	MDRV_CPU_FLAGS( CPU_AUDIO_CPU )
+	MDRV_CPU_MEMORY( taitozoom_mn_readmem, taitozoom_mn_writemem )
+
+	MDRV_FRAMES_PER_SECOND( 60 )
+	MDRV_VBLANK_DURATION( 0 )
+	MDRV_INTERLEAVE( 100 )
+
+	MDRV_MACHINE_INIT( taitogn )
+	MDRV_NVRAM_HANDLER( taitogn )
+
+	MDRV_VIDEO_ATTRIBUTES( VIDEO_TYPE_RASTER | VIDEO_RGB_DIRECT )
+	MDRV_SCREEN_SIZE( 640, 480 )
+	MDRV_VISIBLE_AREA( 0, 639, 0, 479 )
+	MDRV_PALETTE_LENGTH( 65536 )
+
+	MDRV_PALETTE_INIT( psx )
+	MDRV_VIDEO_START( psx_type2_1024x1024 )
+	MDRV_VIDEO_UPDATE( psx )
+	MDRV_VIDEO_STOP( psx )
+
+	MDRV_SOUND_ATTRIBUTES( SOUND_SUPPORTS_STEREO )
+	MDRV_SOUND_ADD( PSXSPU, taito_fx1b_spu_interface )
+	MDRV_SOUND_ADD( CUSTOM, taitozoom_custom_interface )
+MACHINE_DRIVER_END
+
+/* ZN-1 2MB VRAM, Taito G-NET (Mawasunda) */
+static MACHINE_DRIVER_START( coh1002t )
+	MDRV_IMPORT_FROM( coh3002t )
+	MDRV_CPU_REPLACE( "main", PSXCPU, 33868800 / 2 )	/* CXD8530CQ, 67.7376MHz XTAL; as System 11 */
 MACHINE_DRIVER_END
 
 
@@ -3453,6 +4147,193 @@ INPUT_PORTS_START( raystorm )
 	TPS_UNUSED_PORT
 	TPS_UNUSED_PORT
 	TAITO_FX_DSW_PORT
+INPUT_PORTS_END
+
+/* Taito G-NET: the inputs of current MAME (taitogn, taitogn_jp1,
+   aerofgtsg, gobyrc, mahjngoh, mawasunda, raystormg, usagi). After the
+   DSW: JP1 (on: the BIOS EPROM in the bank window, the mod BIOS boards),
+   the two analog inputs of the MCU, then the mahjong panel or the
+   Mawasunda handles */
+#define GNET_JP1_PORT( on ) \
+	PORT_START	/* JP1 */ \
+	PORT_DIPNAME( 0x03, on, "BIOS Flash (JP1, restart)" ) \
+	PORT_DIPSETTING(    0x02, "Auto" ) \
+	PORT_DIPSETTING(    0x01, DEF_STR( On ) ) \
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) ) \
+	PORT_BIT( 0xfc, IP_ACTIVE_HIGH, IPT_UNUSED )
+
+#define GNET_PLAYER_UNUSED_PORT \
+	PORT_START \
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
+
+#define GNET_TEST_DSW_PORT \
+	PORT_START	/* DSW */ \
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) ) \
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) ) \
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) ) \
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Service_Mode ) ) \
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) ) \
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) ) \
+	PORT_DIPNAME( 0x04, 0x04, "Test Mode" ) \
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) ) \
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) ) \
+	PORT_DIPNAME( 0x08, 0x08, "Save" ) \
+	PORT_DIPSETTING(    0x08, DEF_STR( Yes ) ) \
+	PORT_DIPSETTING(    0x00, DEF_STR( No ) ) \
+	PORT_BIT( 0xf0, IP_ACTIVE_HIGH, IPT_UNUSED )
+
+/* the mahjong panel, as MAME mahjong_matrix_1p */
+#define GNET_MAHJONG_PORTS \
+	PORT_START	/* KEY0 */ \
+	PORT_BITX( 0x01, IP_ACTIVE_LOW, 0, "P1 A",     KEYCODE_A,        IP_JOY_NONE ) \
+	PORT_BITX( 0x02, IP_ACTIVE_LOW, 0, "P1 E",     KEYCODE_E,        IP_JOY_NONE ) \
+	PORT_BITX( 0x04, IP_ACTIVE_LOW, 0, "P1 I",     KEYCODE_I,        IP_JOY_NONE ) \
+	PORT_BITX( 0x08, IP_ACTIVE_LOW, 0, "P1 M",     KEYCODE_M,        IP_JOY_NONE ) \
+	PORT_BITX( 0x10, IP_ACTIVE_LOW, 0, "P1 Kan",   KEYCODE_LCONTROL, IP_JOY_NONE ) \
+	PORT_BIT(  0x20, IP_ACTIVE_LOW, IPT_START1 ) \
+	PORT_BIT(  0xc0, IP_ACTIVE_LOW, IPT_UNUSED ) \
+	PORT_START	/* KEY1 */ \
+	PORT_BITX( 0x01, IP_ACTIVE_LOW, 0, "P1 B",     KEYCODE_B,        IP_JOY_NONE ) \
+	PORT_BITX( 0x02, IP_ACTIVE_LOW, 0, "P1 F",     KEYCODE_F,        IP_JOY_NONE ) \
+	PORT_BITX( 0x04, IP_ACTIVE_LOW, 0, "P1 J",     KEYCODE_J,        IP_JOY_NONE ) \
+	PORT_BITX( 0x08, IP_ACTIVE_LOW, 0, "P1 N",     KEYCODE_N,        IP_JOY_NONE ) \
+	PORT_BITX( 0x10, IP_ACTIVE_LOW, 0, "P1 Reach", KEYCODE_LSHIFT,   IP_JOY_NONE ) \
+	PORT_BITX( 0x20, IP_ACTIVE_LOW, 0, "P1 Bet",   KEYCODE_RSHIFT,   IP_JOY_NONE ) \
+	PORT_BIT(  0xc0, IP_ACTIVE_LOW, IPT_UNUSED ) \
+	PORT_START	/* KEY2 */ \
+	PORT_BITX( 0x01, IP_ACTIVE_LOW, 0, "P1 C",     KEYCODE_C,        IP_JOY_NONE ) \
+	PORT_BITX( 0x02, IP_ACTIVE_LOW, 0, "P1 G",     KEYCODE_G,        IP_JOY_NONE ) \
+	PORT_BITX( 0x04, IP_ACTIVE_LOW, 0, "P1 K",     KEYCODE_K,        IP_JOY_NONE ) \
+	PORT_BITX( 0x08, IP_ACTIVE_LOW, 0, "P1 Chi",   KEYCODE_SPACE,    IP_JOY_NONE ) \
+	PORT_BITX( 0x10, IP_ACTIVE_LOW, 0, "P1 Ron",   KEYCODE_Z,        IP_JOY_NONE ) \
+	PORT_BIT(  0xe0, IP_ACTIVE_LOW, IPT_UNUSED ) \
+	PORT_START	/* KEY3 */ \
+	PORT_BITX( 0x01, IP_ACTIVE_LOW, 0, "P1 D",     KEYCODE_D,        IP_JOY_NONE ) \
+	PORT_BITX( 0x02, IP_ACTIVE_LOW, 0, "P1 H",     KEYCODE_H,        IP_JOY_NONE ) \
+	PORT_BITX( 0x04, IP_ACTIVE_LOW, 0, "P1 L",     KEYCODE_L,        IP_JOY_NONE ) \
+	PORT_BITX( 0x08, IP_ACTIVE_LOW, 0, "P1 Pon",   KEYCODE_LALT,     IP_JOY_NONE ) \
+	PORT_BIT(  0xf0, IP_ACTIVE_LOW, IPT_UNUSED )
+
+/* two players, three buttons */
+INPUT_PORTS_START( taitogn )
+	TPS_PLAYER_PORT( 1, 1, 0 )
+	TPS_PLAYER_PORT( 2, 1, 0 )
+	TPS_SERVICE_PORT( 0 )
+	TPS_SYSTEM_PORT( 1, 1, 0 )
+	TPS_UNUSED_PORT
+	TPS_UNUSED_PORT
+	TAITO_FX_DSW_PORT
+	GNET_JP1_PORT( 0x00 )
+	GNET_PLAYER_UNUSED_PORT	/* ANALOG1 */
+	GNET_PLAYER_UNUSED_PORT	/* ANALOG2 */
+INPUT_PORTS_END
+
+/* JP1 on: the Compact Flash games and the mod BIOS boards */
+INPUT_PORTS_START( taitogn_jp1 )
+	TPS_PLAYER_PORT( 1, 1, 0 )
+	TPS_PLAYER_PORT( 2, 1, 0 )
+	TPS_SERVICE_PORT( 0 )
+	TPS_SYSTEM_PORT( 1, 1, 0 )
+	TPS_UNUSED_PORT
+	TPS_UNUSED_PORT
+	TAITO_FX_DSW_PORT
+	GNET_JP1_PORT( 0x02 )
+	GNET_PLAYER_UNUSED_PORT
+	GNET_PLAYER_UNUSED_PORT
+INPUT_PORTS_END
+
+/* two players, two buttons */
+INPUT_PORTS_START( raystormg )
+	TPS_PLAYER_PORT( 1, 0, 0 )
+	TPS_PLAYER_PORT( 2, 0, 0 )
+	TPS_SERVICE_PORT( 0 )
+	TPS_SYSTEM_PORT( 1, 1, 0 )
+	TPS_UNUSED_PORT
+	TPS_UNUSED_PORT
+	TAITO_FX_DSW_PORT
+	GNET_JP1_PORT( 0x02 )
+	GNET_PLAYER_UNUSED_PORT
+	GNET_PLAYER_UNUSED_PORT
+INPUT_PORTS_END
+
+INPUT_PORTS_START( aerofgtsg )
+	TPS_PLAYER_PORT( 1, 0, 0 )
+	TPS_PLAYER_PORT( 2, 0, 0 )
+	TPS_SERVICE_PORT( 0 )
+	TPS_SYSTEM_PORT( 1, 1, 0 )
+	TPS_UNUSED_PORT
+	TPS_UNUSED_PORT
+	GNET_TEST_DSW_PORT
+	GNET_JP1_PORT( 0x02 )
+	GNET_PLAYER_UNUSED_PORT
+	GNET_PLAYER_UNUSED_PORT
+INPUT_PORTS_END
+
+/* one player: a wheel and a trigger */
+INPUT_PORTS_START( gobyrc )
+	GNET_PLAYER_UNUSED_PORT
+	GNET_PLAYER_UNUSED_PORT
+	TPS_SERVICE_PORT( 0 )
+	TPS_SYSTEM_PORT( 0, 1, 0 )
+	TPS_UNUSED_PORT
+	TPS_UNUSED_PORT
+	TAITO_FX_DSW_PORT
+	GNET_JP1_PORT( 0x00 )
+	PORT_START	/* ANALOG1: wheel */
+	PORT_ANALOG( 0xff, 0x80, IPT_PADDLE, 100, 30, 0x00, 0xff )
+	PORT_START	/* ANALOG2: trigger */
+	PORT_ANALOG( 0xff, 0x80, IPT_PADDLE_V | IPF_REVERSE, 100, 30, 0x00, 0xff )
+INPUT_PORTS_END
+
+/* one player, the mahjong panel on P4 */
+INPUT_PORTS_START( mahjngoh )
+	TPS_PLAYER_PORT( 1, 1, 0 )
+	GNET_PLAYER_UNUSED_PORT
+	TPS_SERVICE_PORT( 0 )
+	TPS_SYSTEM_PORT( 1, 1, 0 )
+	TPS_UNUSED_PORT
+	TPS_UNUSED_PORT
+	TAITO_FX_DSW_PORT
+	GNET_JP1_PORT( 0x00 )
+	GNET_PLAYER_UNUSED_PORT
+	GNET_PLAYER_UNUSED_PORT
+	GNET_MAHJONG_PORTS
+INPUT_PORTS_END
+
+INPUT_PORTS_START( usagi )
+	GNET_PLAYER_UNUSED_PORT
+	GNET_PLAYER_UNUSED_PORT
+	TPS_SERVICE_PORT( 0 )
+	PORT_START	/* SYSTEM */
+	PORT_BIT( 0x0f, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0xc0, IP_ACTIVE_LOW, IPT_UNUSED )
+	TPS_UNUSED_PORT
+	TPS_UNUSED_PORT
+	TAITO_FX_DSW_PORT
+	GNET_JP1_PORT( 0x00 )
+	GNET_PLAYER_UNUSED_PORT
+	GNET_PLAYER_UNUSED_PORT
+	GNET_MAHJONG_PORTS
+INPUT_PORTS_END
+
+/* two players, a handle each (and the start buttons) */
+INPUT_PORTS_START( mawasunda )
+	GNET_PLAYER_UNUSED_PORT
+	GNET_PLAYER_UNUSED_PORT
+	TPS_SERVICE_PORT( 0 )
+	TPS_SYSTEM_PORT( 1, 1, 0 )
+	TPS_UNUSED_PORT
+	TPS_UNUSED_PORT
+	TAITO_FX_DSW_PORT
+	GNET_JP1_PORT( 0x00 )
+	GNET_PLAYER_UNUSED_PORT
+	GNET_PLAYER_UNUSED_PORT
+	PORT_START	/* HANDLE1 */
+	PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_X | IPF_CENTER | IPF_PLAYER1, 100, 16, 0x01, 0xff )
+	PORT_START	/* HANDLE2 */
+	PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_X | IPF_CENTER | IPF_PLAYER2, 100, 16, 0x01, 0xff )
 INPUT_PORTS_END
 
 /* two players, two buttons, one coin slot */
@@ -5988,6 +6869,372 @@ ROM_START( nbajamexa )
 	ROM_LOAD( "ac02", 0x000000, 0x000008, CRC(1412d475) SHA1(c2f62232a261870f58353d09dc0d6ce2ad17a729) )
 ROM_END
 
+/* Taito G-NET, as current MAME: the main board BIOS, its CAT702 (TT10 on
+   the ZN-2, TT01 on the ZN-1), the CAT702 of the G-NET board (TT16 / TT99),
+   the U30 flash as it comes and the BIOS EPROM: v1 (MAME's default), v2
+   (the Compact Flash games) or the MB2011 mod BIOS (the bootlegs). The
+   game is the PC card CHD */
+#define COH3002T_BIOS \
+	ROM_REGION32_LE( 0x400000, REGION_CPU1, ROMREGION_ERASE00 ) /* ram */ \
+	ROM_REGION16_LE( 0x100000, REGION_CPU2, ROMREGION_ERASEFF ) /* mn10200: the program is in flash U27 */ \
+	ROM_REGION32_LE( 0x080000, REGION_USER3, 0 ) /* bios */ \
+	ROM_LOAD( "m534002c-60.ic353", 0x000000, 0x080000, CRC(03967fa7) SHA1(0e17fec2286e4e25deb23d40e41ce0986f373d49) ) /* english */ \
+	ROM_REGION( 0x000008, REGION_USER4, 0 ) /* CAT702, main board */ \
+	ROM_LOAD( "tt10.ic652", 0x000000, 0x000008, CRC(235510b1) SHA1(2cc02113207a8f0b078152d31ce6503411750e70) ) \
+	ROM_REGION( 0x000008, REGION_USER5, 0 ) /* CAT702, G-NET board */ \
+	ROM_LOAD( "tt16.u17", 0x000000, 0x000008, CRC(6bb167b3) SHA1(9dcba08f10775a9adf2b1f382c947460edd3d239) ) \
+	ROM_REGION16_LE( 0x200000, REGION_USER1, 0 ) /* flash U30 */ \
+	ROM_LOAD( "flash.u30", 0x000000, 0x200000, CRC(c48c8236) SHA1(c6dad60266ce2ff635696bc0d91903c543273559) )
+#define GNET_EPROM_V1 \
+	ROM_REGION16_LE( 0x100000, REGION_USER2, 0 ) /* bios eprom */ \
+	ROM_LOAD( "f35-01_m27c800_v1.bin", 0x000000, 0x100000, CRC(cd15cc30) SHA1(78361f46fa7186d5058937c86c66247a86b1257f) ) /* hand made */
+#define GNET_EPROM_V2 \
+	ROM_REGION16_LE( 0x100000, REGION_USER2, 0 ) /* bios eprom */ \
+	ROM_LOAD( "f35-01_m27c800.bin", 0x000000, 0x100000, CRC(6225ec11) SHA1(047852d456b6ff85f8e640887caa03cf3e63ffad) )
+#define GNET_EPROM_MB2009 \
+	ROM_REGION16_LE( 0x100000, REGION_USER2, 0 ) /* bios eprom */ \
+	ROM_LOAD( "f35-01_m27c800_modbios_mb-2009_dump_by_aje_fr.bin", 0x000000, 0x100000, CRC(6367aedf) SHA1(8400775e0c974c8b017e26ef9339144cad457c63) )
+#define GNET_EPROM_MB2011 \
+	ROM_REGION16_LE( 0x100000, REGION_USER2, 0 ) /* bios eprom */ \
+	ROM_LOAD( "f35-01_m27c800_modbios_mb-2011.bin", 0x000000, 0x100000, CRC(f98ae118) SHA1(c6918dfbb6fcf686dde4b731e84f740177ab31f0) )
+#define COH1002T_BIOS \
+	ROM_REGION32_LE( 0x400000, REGION_CPU1, ROMREGION_ERASE00 ) /* ram */ \
+	ROM_REGION16_LE( 0x100000, REGION_CPU2, ROMREGION_ERASEFF ) /* mn10200: the program is in flash U27 */ \
+	ROM_REGION32_LE( 0x080000, REGION_USER3, 0 ) /* bios */ \
+	ROM_LOAD( "m534002c-14.ic353", 0x000000, 0x080000, CRC(e3f23b6e) SHA1(e18907cf8c6ba54d96edba0a9a00487a90219e0d) ) /* japanese */ \
+	ROM_REGION( 0x000008, REGION_USER4, 0 ) /* CAT702, main board */ \
+	ROM_LOAD( "tt01.ic652", 0x000000, 0x000008, CRC(daac13e7) SHA1(96d94f2b06fb7ecd91454969f4959a583ffb9d5a) ) \
+	ROM_REGION( 0x000008, REGION_USER5, 0 ) /* CAT702, G-NET board */ \
+	ROM_LOAD( "tt99.u17", 0x000000, 0x000008, CRC(2989b6eb) SHA1(89981ec68d30729c27d31f820cbfd0c23ed14a03) ) \
+	ROM_REGION16_LE( 0x200000, REGION_USER1, 0 ) /* flash U30 */ \
+	ROM_LOAD( "flash.u30", 0x000000, 0x200000, CRC(9100dbf2) SHA1(9ce888bd2a7e575c8ca71d978cb85de22afb5660) ) \
+	ROM_REGION16_LE( 0x100000, REGION_USER2, ROMREGION_ERASEFF ) /* bios eprom: none */
+
+ROM_START( coh3002t )
+	COH3002T_BIOS
+	ROM_REGION16_LE( 0x400000, REGION_USER2, 0 ) /* the four bios eproms */
+	ROM_LOAD( "f35-01_m27c800_v1.bin", 0x000000, 0x100000, CRC(cd15cc30) SHA1(78361f46fa7186d5058937c86c66247a86b1257f) )
+	ROM_LOAD( "f35-01_m27c800.bin", 0x100000, 0x100000, CRC(6225ec11) SHA1(047852d456b6ff85f8e640887caa03cf3e63ffad) )
+	ROM_LOAD( "f35-01_m27c800_modbios_mb-2009_dump_by_aje_fr.bin", 0x200000, 0x100000, CRC(6367aedf) SHA1(8400775e0c974c8b017e26ef9339144cad457c63) )
+	ROM_LOAD( "f35-01_m27c800_modbios_mb-2011.bin", 0x300000, 0x100000, CRC(f98ae118) SHA1(c6918dfbb6fcf686dde4b731e84f740177ab31f0) )
+ROM_END
+
+ROM_START( coh1002t )
+	COH1002T_BIOS
+ROM_END
+ROM_START( chaoshea )
+	COH3002T_BIOS
+	GNET_EPROM_V1
+
+	DISK_REGION( REGION_DISKS )
+	DISK_IMAGE( "chaosheat", 0, SHA1(c13b7d7025eee05f1f696d108801c7bafb3f1356) )
+ROM_END
+
+ROM_START( chaosheaj )
+	COH3002T_BIOS
+	GNET_EPROM_V1
+
+	DISK_REGION( REGION_DISKS )
+	DISK_IMAGE( "chaosheatj", 0, SHA1(2f211ac08675ea8ec33c7659a13951db94eaa627) )
+ROM_END
+
+ROM_START( raycris )
+	COH3002T_BIOS
+	GNET_EPROM_V1
+
+	DISK_REGION( REGION_DISKS )
+	DISK_IMAGE( "raycris", 0, SHA1(9d255710c87c3286542d357820d828807cc6ca07) )
+ROM_END
+
+ROM_START( raycrisj )
+	COH3002T_BIOS
+	GNET_EPROM_V1
+
+	DISK_REGION( REGION_DISKS )
+	DISK_IMAGE( "raycrisj", 0, SHA1(015cb0e6c4421cc38809de28c4793b4491386aee) )
+ROM_END
+
+ROM_START( spuzbobl )
+	COH3002T_BIOS
+	GNET_EPROM_V1
+
+	DISK_REGION( REGION_DISKS )
+	DISK_IMAGE( "spuzbobl", 0, SHA1(1b1c72fb7e5656021485fefaef8f2ba48e2b4ea8) )
+ROM_END
+
+ROM_START( spuzboblj )
+	COH3002T_BIOS
+	GNET_EPROM_V1
+
+	DISK_REGION( REGION_DISKS )
+	DISK_IMAGE( "spuzbobj", 0, SHA1(dac433cf88543d2499bf797d7406b82ae4338726) )
+ROM_END
+
+ROM_START( gobyrc )
+	COH3002T_BIOS
+	GNET_EPROM_V1
+
+	DISK_REGION( REGION_DISKS )
+	DISK_IMAGE( "gobyrc", 0, SHA1(0bee1f495fc8b033fd56aad9260ae94abb35eb58) )
+ROM_END
+
+ROM_START( rcdego )
+	COH3002T_BIOS
+	GNET_EPROM_V1
+
+	DISK_REGION( REGION_DISKS )
+	DISK_IMAGE( "rcdego", 0, SHA1(9e177f2a3954cfea0c8c5a288e116324d10f5dd1) )
+ROM_END
+
+ROM_START( flipmaze )
+	COH3002T_BIOS
+	GNET_EPROM_V1
+
+	DISK_REGION( REGION_DISKS )
+	DISK_IMAGE( "flipmaze", 0, SHA1(423b6c06f4f2d9a608ce20b61a3ac11687d22c40) )
+ROM_END
+
+ROM_START( mawasunda )
+	COH1002T_BIOS
+
+	DISK_REGION( REGION_DISKS )
+	DISK_IMAGE( "e83-01__", 0, SHA1(ae5b14186905c93401ca65231dec43724df7957a) )
+ROM_END
+
+ROM_START( shikigam )
+	COH3002T_BIOS
+	GNET_EPROM_V1
+
+	DISK_REGION( REGION_DISKS )
+	DISK_IMAGE( "shikigam", 0, SHA1(fa49a0bc47f5cb7c30d7e49e2c3696b21bafb840) )
+ROM_END
+
+ROM_START( shikigama )
+	COH3002T_BIOS
+	GNET_EPROM_V1
+
+	DISK_REGION( REGION_DISKS )
+	DISK_IMAGE( "shikigama", 0, SHA1(a6fe194c86730963301be9710782ca4ac1bf3e8d) )
+ROM_END
+
+ROM_START( sianniv )
+	COH3002T_BIOS
+	GNET_EPROM_V1
+
+	DISK_REGION( REGION_DISKS )
+	DISK_IMAGE( "sianniv", 0, SHA1(1e08b813190a9e1baf29bc16884172d6c8da7ae3) )
+ROM_END
+
+ROM_START( kollon )
+	COH3002T_BIOS
+	GNET_EPROM_V1
+
+	DISK_REGION( REGION_DISKS )
+	DISK_IMAGE( "kollon", 0, SHA1(d8ea5b5b0ee99004b16ef89883e23de6c7ddd7ce) )
+ROM_END
+
+ROM_START( kollonc )
+	COH3002T_BIOS
+	GNET_EPROM_V2
+
+	DISK_REGION( REGION_DISKS )
+	DISK_IMAGE( "kollonc", 0, SHA1(ce62181659701cfb8f7c564870ab902be4d8e060) )
+ROM_END
+
+ROM_START( otenamih )
+	COH3002T_BIOS
+	GNET_EPROM_V1
+
+	DISK_REGION( REGION_DISKS )
+	DISK_IMAGE( "otenamih", 0, SHA1(b3babe3a1876c43745616ee1e7d87276ce7dad0b) )
+ROM_END
+
+ROM_START( psyvaria )
+	COH3002T_BIOS
+	GNET_EPROM_V1
+
+	DISK_REGION( REGION_DISKS )
+	DISK_IMAGE( "psyvaria", 0, SHA1(3c7fca5180356190a8bf94b22a847fdd2e6a4e13) )
+ROM_END
+
+ROM_START( psyvarij )
+	COH3002T_BIOS
+	GNET_EPROM_V1
+
+	DISK_REGION( REGION_DISKS )
+	DISK_IMAGE( "psyvarij", 0, SHA1(b981a42a10069322b77f7a268beae1d409b4156d) )
+ROM_END
+
+ROM_START( psyvarrv )
+	COH3002T_BIOS
+	GNET_EPROM_V1
+
+	DISK_REGION( REGION_DISKS )
+	DISK_IMAGE( "psyvarrv", 0, SHA1(277c4f52502bcd7acc1889840962ec80d56465f3) )
+ROM_END
+
+ROM_START( zokuoten )
+	COH3002T_BIOS
+	GNET_EPROM_V1
+
+	DISK_REGION( REGION_DISKS )
+	DISK_IMAGE( "zokuoten", 0, SHA1(116e58c90f39a3c18ca6fe0216c998ba02c58814) )
+ROM_END
+
+ROM_START( zokuotena )
+	COH3002T_BIOS
+	GNET_EPROM_V1
+
+	DISK_REGION( REGION_DISKS )
+	DISK_IMAGE( "zokuotena", 0, SHA1(5ce13db00518f96af64935176c71ec68d2a51938) )
+ROM_END
+
+ROM_START( zooo )
+	COH3002T_BIOS
+	GNET_EPROM_V1
+
+	DISK_REGION( REGION_DISKS )
+	DISK_IMAGE( "zooo", 0, SHA1(e275b3141b2bc49142990e6b497a5394a314a30b) )
+ROM_END
+
+ROM_START( otenamhf )
+	COH3002T_BIOS
+	GNET_EPROM_V2
+
+	DISK_REGION( REGION_DISKS )
+	DISK_IMAGE( "otenamhf", 0, SHA1(5b15c33bf401e5546d78e905f538513d6ffcf562) )
+ROM_END
+
+ROM_START( mahjngoh )
+	COH3002T_BIOS
+	GNET_EPROM_V1
+
+	DISK_REGION( REGION_DISKS )
+	DISK_IMAGE( "mahjngoh", 0, SHA1(3ef1110d15582d7c0187438d7ad61765dd121cff) )
+ROM_END
+
+ROM_START( shanghss )
+	COH3002T_BIOS
+	GNET_EPROM_V1
+
+	DISK_REGION( REGION_DISKS )
+	DISK_IMAGE( "shanghss", 0, SHA1(7964f71ec5c81d2120d83b63a82f97fbad5a8e6d) )
+ROM_END
+
+ROM_START( soutenry )
+	COH3002T_BIOS
+	GNET_EPROM_V1
+
+	DISK_REGION( REGION_DISKS )
+	DISK_IMAGE( "soutenry", 0, SHA1(9204d0be833d29f37b8cd3fbdf09da69b622254b) )
+ROM_END
+
+ROM_START( usagi )
+	COH3002T_BIOS
+	GNET_EPROM_V1
+
+	DISK_REGION( REGION_DISKS )
+	DISK_IMAGE( "usagi", 0, SHA1(edf9dd271957f6cb06feed238ae21100514bef8e) )
+ROM_END
+
+ROM_START( shangtou )
+	COH3002T_BIOS
+	GNET_EPROM_V1
+
+	DISK_REGION( REGION_DISKS )
+	DISK_IMAGE( "shanghaito", 0, SHA1(9901db5a9aae77e3af4157aa2c601eaab5b7ca85) )
+ROM_END
+
+ROM_START( nightrai )
+	COH3002T_BIOS
+	GNET_EPROM_V1
+
+	DISK_REGION( REGION_DISKS )
+	DISK_IMAGE( "nightrai", 0, SHA1(74d0458f851cbcf10453c5cc4c47bb4388244cdf) )
+ROM_END
+
+ROM_START( otenki )
+	COH3002T_BIOS
+	GNET_EPROM_V1
+
+	DISK_REGION( REGION_DISKS )
+	DISK_IMAGE( "otenki", 0, SHA1(7e745ca4c4570215f452fd09cdd56a42c39caeba) )
+ROM_END
+
+ROM_START( xiistag )
+	COH3002T_BIOS
+	GNET_EPROM_V1
+
+	DISK_REGION( REGION_DISKS )
+	DISK_IMAGE( "xiistag", 0, SHA1(586e37c8d926293b2bd928e5f0d693910cfb05a2) )
+ROM_END
+
+ROM_START( aerofgtsg )
+	COH3002T_BIOS
+	GNET_EPROM_MB2011
+
+	DISK_REGION( REGION_DISKS )
+	DISK_IMAGE( "aerofsp", 0, SHA1(2e768dc83d10e38b4814734f0c748cf55bb2b3ca) )
+ROM_END
+
+ROM_START( brvbladeg )
+	COH3002T_BIOS
+	GNET_EPROM_MB2011
+
+	DISK_REGION( REGION_DISKS )
+	DISK_IMAGE( "braveblade", 0, SHA1(63d6de481eb34b261b4f91d1127dbadae01210be) )
+ROM_END
+
+ROM_START( flamegung )
+	COH3002T_BIOS
+	GNET_EPROM_MB2011
+
+	DISK_REGION( REGION_DISKS )
+	DISK_IMAGE( "flamegun", 0, SHA1(4f011a88985620d4d5b696340c48d9ea2454b647) )
+ROM_END
+
+ROM_START( ftimpactg )
+	COH3002T_BIOS
+	GNET_EPROM_MB2011
+
+	DISK_REGION( REGION_DISKS )
+	DISK_IMAGE( "ftimpact", 0, SHA1(aa6a0c1002c02b4a4ddb41eed64f9e47ac6adfa8) )
+ROM_END
+
+ROM_START( gdariusg )
+	COH3002T_BIOS
+	GNET_EPROM_MB2011
+
+	DISK_REGION( REGION_DISKS )
+	DISK_IMAGE( "gdarius", 0, SHA1(2888fb3989c6628ad09307258ae78c175a8867c6) )
+ROM_END
+
+ROM_START( raystormg )
+	COH3002T_BIOS
+	GNET_EPROM_MB2011
+
+	DISK_REGION( REGION_DISKS )
+	DISK_IMAGE( "raystorm", 0, SHA1(3ff1979c45670d813f292a88ada1a0e9586718e7) )
+ROM_END
+
+ROM_START( shngmtkbg )
+	COH3002T_BIOS
+	GNET_EPROM_MB2011
+
+	DISK_REGION( REGION_DISKS )
+	DISK_IMAGE( "shangmtkb", 0, SHA1(ba4067698b92fa83202ea10b2f836c094cbfc357) )
+ROM_END
+
+ROM_START( tblkkuzug )
+	COH3002T_BIOS
+	GNET_EPROM_MB2011
+
+	DISK_REGION( REGION_DISKS )
+	DISK_IMAGE( "tblkkuzushi", 0, SHA1(2801a8b1c789a8b0ea73f083d4bd3db1ef6971d8) )
+ROM_END
+
+
+
 /* Capcom ZN-1 */
 
 GAMEX( 1995, coh1000c, 0,        coh1000c, capcom6b, coh1000c, ROT0, "Capcom", "Capcom ZN-1", NOT_A_DRIVER )
@@ -6140,3 +7387,46 @@ GAMEX( 2000, brvblade,  coh1002m, coh1002e, znt2p,    coh1002e, ROT270, "Eightin
 GAMEX( 2000, brvbladeu, brvblade, coh1002e, znt2p,    coh1002e, ROT270, "Eighting / Raizing", "Brave Blade (USA)", 0 )
 GAMEX( 2000, brvbladea, brvblade, coh1002e, znt2p,    coh1002e, ROT270, "Eighting / Raizing", "Brave Blade (Asia)", 0 )
 GAMEX( 2000, brvbladej, brvblade, coh1002e, znt2p,    coh1002e, ROT270, "Eighting / Raizing", "Brave Blade (Japan)", 0 )
+
+/* Taito G-NET */
+GAMEX( 1998, coh3002t, 0,        coh3002t, taitogn, coh3002t, ROT0, "Taito", "Taito G-NET (COH-3002T)", NOT_A_DRIVER )
+GAMEX( 1999, coh1002t, 0,        coh1002t, taitogn, coh3002t, ROT0, "Taito", "Taito G-NET (COH-1002T)", NOT_A_DRIVER )
+GAMEX( 1998, chaoshea, coh3002t, coh3002t, taitogn, coh3002t, ROT0, "Taito", "Chaos Heat (V2.09O 1998/10/02 17:00)", 0 )
+GAMEX( 1998, chaosheaj, chaoshea, coh3002t, taitogn, coh3002t, ROT0, "Taito", "Chaos Heat (V2.08J 1998/09/25 17:00)", 0 )
+GAMEX( 1998, raycris,  coh3002t, coh3002t, taitogn, coh3002t, ROT0, "Taito", "RayCrisis (V2.03O 1998/11/15 15:43)", 0 )
+GAMEX( 1998, raycrisj, raycris,  coh3002t, taitogn, coh3002t, ROT0, "Taito", "RayCrisis (V2.03J 1998/11/15 15:43)", 0 )
+GAMEX( 1999, spuzbobl, coh3002t, coh3002t, taitogn, coh3002t_t2, ROT0, "Taito", "Super Puzzle Bobble (V2.05O 1999/2/24 18:00)", 0 )
+GAMEX( 1999, spuzboblj, spuzbobl, coh3002t, taitogn, coh3002t_t2, ROT0, "Taito", "Super Puzzle Bobble (V2.04J 1999/2/17 02:10)", 0 )
+GAMEX( 1999, gobyrc,   coh3002t, coh3002t, gobyrc, coh3002t_t2, ROT0, "Taito", "Go By RC (V2.03O 1999/05/25 13:31)", 0 )
+GAMEX( 1999, rcdego,   gobyrc,   coh3002t, gobyrc, coh3002t, ROT0, "Taito", "RC De Go (V2.03J 1999/05/22 19:29)", 0 )
+GAMEX( 1999, flipmaze, coh3002t, coh3002t, taitogn, coh3002t, ROT0, "MOSS / Taito", "Flip Maze (V2.04J 1999/09/02 20:00)", 0 )
+GAMEX( 2000, mawasunda, coh1002t, coh1002t, mawasunda, mawasunda, ROT0, "Taito", "Mawasunda!! (V2.08J 2000/02/01 11:02:54)", 0 )
+GAMEX( 2001, shikigam, coh3002t, coh3002t, taitogn, coh3002t, ROT270, "Alfa System / Taito", "Shikigami no Shiro (V2.03J 2001/08/07 18:11)", 0 )
+GAMEX( 2001, shikigama, shikigam, coh3002t, taitogn, coh3002t, ROT270, "Alfa System / Taito", "Shikigami no Shiro - internal build (V1.02J 2001/09/27 18:45)", 0 )
+GAMEX( 2003, sianniv,  coh3002t, coh3002t, taitogn, sianniv, ROT270, "Taito", "Space Invaders Anniversary (V2.02J 2003/09/12 20:00)", 0 )
+GAMEX( 2003, kollon,   coh3002t, coh3002t, taitogn, kollon, ROT0, "CyberFront", "Kollon (V2.04JA 2003/11/01 12:00)", 0 )
+GAMEX( 2003, kollonc,  kollon,   coh3002t, taitogn_jp1, coh3002t_cf, ROT0, "CyberFront", "Kollon (V2.04JC 2003/11/01 12:00)", 0 )
+GAMEX( 1999, otenamih, coh3002t, coh3002t, taitogn, coh3002t_nz, ROT0, "Success", "Otenami Haiken (V2.04J 1999/02/01 18:00:00)", 0 )
+GAMEX( 2000, psyvaria, coh3002t, coh3002t, taitogn, coh3002t, ROT270, "Success", "Psyvariar -Medium Unit- (V2.02O 2000/02/22 13:00)", 0 )
+GAMEX( 2000, psyvarij, psyvaria, coh3002t, taitogn, coh3002t, ROT270, "Success", "Psyvariar -Medium Unit- (V2.04J 2000/02/15 11:00)", 0 )
+GAMEX( 2000, psyvarrv, coh3002t, coh3002t, taitogn, coh3002t, ROT270, "Success", "Psyvariar -Revision- (V2.04J 2000/08/11 22:00)", 0 )
+GAMEX( 2003, zokuoten, coh3002t, coh3002t, taitogn, coh3002t_t2nz, ROT0, "Success", "Zoku Otenamihaiken (V2.05J 2003/05/12 18:00)", 0 )
+GAMEX( 2001, zokuotena, zokuoten, coh3002t, taitogn, coh3002t_nz, ROT0, "Success", "Zoku Otenamihaiken (V2.03J 2001/02/16 16:00)", 0 )
+GAMEX( 2004, zooo,     coh3002t, coh3002t, taitogn, coh3002t_nz, ROT0, "Success", "Zooo (V2.01JA 2004/04/13 12:00)", 0 )
+GAMEX( 2005, otenamhf, coh3002t, coh3002t, taitogn_jp1, coh3002t_cfnz, ROT0, "Success / Warashi", "Otenami Haiken Final (V2.07JC 2005/04/20 15:36)", 0 )
+GAMEX( 1999, mahjngoh, coh3002t, coh3002t, mahjngoh, mahjngoh, ROT0, "Warashi / Mahjong Kobo / Taito", "Mahjong Oh (V2.06J 1999/11/23 08:52:22)", 0 )
+GAMEX( 2000, shanghss, coh3002t, coh3002t, taitogn, coh3002t, ROT0, "Warashi", "Shanghai Shoryu Sairin (V2.03J 2000/05/26 12:45:28)", 0 )
+GAMEX( 2000, soutenry, coh3002t, coh3002t, taitogn, coh3002t, ROT0, "Warashi", "Soutenryu (V2.07J 2000/12/14 11:13:02)", 0 )
+GAMEX( 2001, usagi,    coh3002t, coh3002t, usagi, usagi, ROT0, "Warashi / Mahjong Kobo / Taito", "Usagi (V2.02J 2001/10/02 12:41:19)", 0 )
+GAMEX( 2002, shangtou, coh3002t, coh3002t, taitogn, coh3002t, ROT0, "Warashi / Sunsoft / Taito", "Shanghai Sangokuhai Tougi (Ver 2.01J 2002/01/18 18:26:58)", 0 )
+GAMEX( 2001, nightrai, coh3002t, coh3002t, taitogn, coh3002t, ROT0, "Takumi", "Night Raid (V2.03J 2001/02/26 17:00)", 0 )
+GAMEX( 2001, otenki,   coh3002t, coh3002t, taitogn, coh3002t, ROT0, "Takumi", "Otenki Kororin (V2.01J 2001/07/02 10:00)", 0 )
+GAMEX( 2002, xiistag,  coh3002t, coh3002t, taitogn, coh3002t, ROT270, "Triangle Service", "XII Stag (V2.01J 2002/6/26 22:27)", 0 )
+GAMEX( 2011, aerofgtsg, coh3002t, coh3002t, aerofgtsg, coh3002t_blnz, ROT270, "bootleg (Arcade MOD BIOS)", "Aero Fighters Special (VER 1.00G)", 0 )
+GAMEX( 2011, brvbladeg, coh3002t, coh3002t, taitogn_jp1, coh3002t_blnz, ROT270, "bootleg (Arcade MOD BIOS)", "Brave Blade (VER 1.40G)", 0 )
+GAMEX( 2011, flamegung, coh3002t, coh3002t, taitogn_jp1, coh3002t_blnz, ROT0, "bootleg (Arcade MOD BIOS)", "Flame Gunner (VER 1.40G)", 0 )
+GAMEX( 2011, ftimpactg, coh3002t, coh3002t, taitogn_jp1, coh3002t_bl, ROT0, "bootleg (Arcade MOD BIOS)", "Fighters' Impact (VER 2.10G)", 0 )
+GAMEX( 2011, gdariusg, coh3002t, coh3002t, taitogn_jp1, coh3002t_bl, ROT0, "bootleg (Arcade MOD BIOS)", "G-Darius (VER 2.70G)", 0 )
+GAMEX( 2011, raystormg, coh3002t, coh3002t, raystormg, coh3002t_bl, ROT0, "bootleg (Arcade MOD BIOS)", "RayStorm (VER 2.60G)", 0 )
+GAMEX( 2011, shngmtkbg, coh3002t, coh3002t, taitogn_jp1, coh3002t_blnz, ROT0, "bootleg (Arcade MOD BIOS)", "Shanghai Matekibuyuu (VER 1.20G)", 0 )
+GAMEX( 2011, tblkkuzug, coh3002t, coh3002t, taitogn_jp1, coh3002t_blnz, ROT0, "bootleg (Arcade MOD BIOS)", "The Block Kuzushi (VER 1.10G)", 0 )

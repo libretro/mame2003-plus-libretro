@@ -15,6 +15,8 @@
 
 /* the sample ROM, little-endian 32-bit words (any host) */
 void zsg2_init(const UINT8 *rom, UINT32 rom_bytes);
+/* instead of the ROM (after zsg2_init): the 32-bit word at a word offset */
+void zsg2_set_ext_read(UINT32 (*read)(UINT32 offset));
 void zsg2_reset(void);
 /* offset in 16-bit words, 0x000-0x3ff */
 UINT16 zsg2_read(offs_t offset);

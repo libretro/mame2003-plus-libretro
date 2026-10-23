@@ -223,6 +223,9 @@ extern void psxcpu_ram_written(const void *host, UINT32 bytes);
    per machine. */
 extern int psxcpu_jit_available(void);
 extern void psxcpu_set_jit(int enable);
+/* fn is called before the instruction at pc runs (NULL: none); set at */
+/* machine init, cleared at the CPU init */
+extern void psxcpu_set_pc_hook(UINT32 pc, void (*fn)(void));
 
 #ifdef MAME_DEBUG
 extern unsigned DasmMIPS(char *buff, unsigned _pc);
