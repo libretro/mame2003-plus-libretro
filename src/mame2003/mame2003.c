@@ -423,7 +423,6 @@ void retro_run (void)
 void retro_unload_game(void)
 {
     mame_done();
-    applied_cpu_clock_scale = 0;
     /* do we need to be freeing things here? */
 
     free(options.romset_filename_noext);
