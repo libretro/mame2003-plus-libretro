@@ -330,6 +330,24 @@ static struct retro_core_option_v2_definition option_def_neogeo_bios = {
    "default"
 };
 
+/* ST-V games that check the BIOS region and only run with one (as MAME's
+   default BIOS for them) */
+static const char *stv_required_bios(const char *name)
+{
+  static const char *const games[][2] = {
+    { "diehard",  "us" },
+    { "smleague", "us" },
+    { "znpwfvt",  "taiwan" },
+    { "critcrsh", "europe" },
+    { "tatacot",  "japan" },
+  };
+  size_t i;
+  for (i = 0; i < sizeof(games) / sizeof(games[0]); i++)
+    if (strcmp(name, games[i][0]) == 0)
+      return games[i][1];
+  return NULL;
+}
+
 static struct retro_core_option_v2_definition option_def_stv_bios = {
    APPNAME"_stv_bios",
    "Specify Sega ST-V BIOS",
@@ -769,6 +787,38 @@ static struct retro_core_option_v2_definition option_def_mips_dynarec = {
    "enabled"
 };
 
+static struct retro_core_option_v2_definition option_def_sh2_dynarec = {
+   APPNAME"_sh2_dynarec",
+   "SH-2 Dynarec",
+   NULL,
+   "Restart core required. Recompile the SH-2 code (offered only for the games that support it, on x86 and ARM hosts, 32 and 64-bit, that allow it); turn it off to use the interpreter.",
+   NULL,
+   NULL,
+   {
+      { "enabled",  NULL },
+      { "disabled", NULL },
+      { NULL, NULL },
+   },
+   "disabled"
+};
+
+static struct retro_core_option_v2_definition option_def_stv_video_threads = {
+   APPNAME"_stv_video_threads",
+   "ST-V Threaded Video",
+   NULL,
+   "Draw the ST-V screen in horizontal bands on several threads (same picture, faster on multi-core hosts).",
+   NULL,
+   NULL,
+   {
+      { "disabled", NULL },
+      { "2",        NULL },
+      { "3",        NULL },
+      { "4",        NULL },
+      { NULL, NULL },
+   },
+   "disabled"
+};
+
 static struct retro_core_option_v2_definition option_def_adsp_dynarec = {
    APPNAME"_adsp_dynarec",
    "ADSP Dynarec",
@@ -920,6 +970,8 @@ void init_core_options(void)
   default_options[OPT_CPU_CLOCK_SCALE]           = option_def_cpu_clock_scale;
   default_options[OPT_MIPS_DYNAREC]              = option_def_mips_dynarec;
   default_options[OPT_ADSP_DYNAREC]              = option_def_adsp_dynarec;
+  default_options[OPT_SH2_DYNAREC]               = option_def_sh2_dynarec;
+  default_options[OPT_STV_VIDEO_THREADS]         = option_def_stv_video_threads;
   default_options[OPT_OVERRIDE_AD_STICK]         = option_def_override_ad_stick;
   default_options[OPT_INPUT_TOGGLE]              = option_def_input_toggle;
 #if (HAS_CYCLONE || HAS_DRZ80)
@@ -959,6 +1011,14 @@ static void set_variables(void)
       case OPT_ADSP_DYNAREC:
          if(!options.content_flags[CONTENT_ADSP_DYNAREC])
            continue; /* only offered for the games that use the recompiler */
+         break;
+      case OPT_SH2_DYNAREC:
+         if(!options.content_flags[CONTENT_SH2_DYNAREC])
+           continue; /* only offered for the games that use the recompiler */
+         break;
+      case OPT_STV_VIDEO_THREADS:
+         if(!options.content_flags[CONTENT_STV_VIDEO_THREADS])
+           continue; /* ST-V only, where threads are compiled in */
          break;
       case OPT_NEOGEO_BIOS:
           if(!options.content_flags[CONTENT_NEOGEO])
@@ -1133,8 +1193,8 @@ void update_variables(bool first_time)
         case OPT_STV_BIOS:
           if(!options.content_flags[CONTENT_STV])
             break;
-          if(options.content_flags[CONTENT_DIEHARD]) /* catch required bios for this one game. */
-            options.bios = "us";
+          if(stv_required_bios(game_driver->name)) /* a game that only runs with one region's BIOS */
+            options.bios = stv_required_bios(game_driver->name);
           else
             options.bios = (strcmp(var.value, "default") == 0) ? NULL : var.value;
           break;
@@ -1263,6 +1323,17 @@ void update_variables(bool first_time)
             options.mips_dynarec = true;
           else
             options.mips_dynarec = false;
+          break;
+
+        case OPT_SH2_DYNAREC:
+          if(strcmp(var.value, "enabled") == 0)
+            options.sh2_dynarec = true;
+          else
+            options.sh2_dynarec = false;
+          break;
+
+        case OPT_STV_VIDEO_THREADS:
+          options.stv_video_threads = atoi(var.value);	/* 0 for "disabled" */
           break;
 
         case OPT_ADSP_DYNAREC:
@@ -1399,6 +1470,23 @@ void set_content_flags(void)
   }
 #endif
 
+  /************ SEGA ST-V: SH-2 RECOMPILER ************/
+  /* the option means nothing where the recompiler is compiled out */
+#if (HAS_SH2)
+  {
+    extern int sh2_jit_available(void);
+    if (game_driver->source_file && strstr(game_driver->source_file, "stv.c") && sh2_jit_available())
+      options.content_flags[CONTENT_SH2_DYNAREC] = true;
+  }
+#endif
+#if (HAS_SH2)
+  {
+    extern int stv_video_threads_available(void);
+    if (game_driver->source_file && strstr(game_driver->source_file, "stv.c") && stv_video_threads_available())
+      options.content_flags[CONTENT_STV_VIDEO_THREADS] = true;
+  }
+#endif
+
   /************ DRIVERS WITH MULTIPLE BIOS OPTIONS ************/
 #ifndef SPLIT_CORE
  {
@@ -1426,10 +1514,6 @@ void set_content_flags(void)
     || strstr(game_driver->source_file, "zn.c")))
     options.content_flags[CONTENT_MIPS_DYNAREC] = true;
 #endif
-
-  /************ DIE HARD: ARCADE ************/
-  if(strcasecmp(game_driver->name, "diehard") == 0)
-    options.content_flags[CONTENT_DIEHARD] = true;
 
   /************ DRIVERS WITH VECTOR VIDEO DISPLAYS ************/
   if(Machine->drv->video_attributes & VIDEO_TYPE_VECTOR)
@@ -1592,7 +1676,8 @@ void set_content_flags(void)
 
   if(options.content_flags[CONTENT_NEOGEO])     log_cb(RETRO_LOG_INFO, LOGPRE "* Neo Geo BIOS required.\n");
   if(options.content_flags[CONTENT_STV])        log_cb(RETRO_LOG_INFO, LOGPRE "* STV BIOS required.\n");
-  if(options.content_flags[CONTENT_DIEHARD])    log_cb(RETRO_LOG_INFO, LOGPRE "* Die Hard: Arcade BIOS required.\n");
+  if(options.content_flags[CONTENT_STV] && stv_required_bios(game_driver->name))
+    log_cb(RETRO_LOG_INFO, LOGPRE "* ST-V BIOS forced: %s.\n", stv_required_bios(game_driver->name));
   if(options.content_flags[CONTENT_ALT_SOUND])  log_cb(RETRO_LOG_INFO, LOGPRE "* Alternative soundtrack available.\n");
   if(options.content_flags[CONTENT_VECTOR])     log_cb(RETRO_LOG_INFO, LOGPRE "* Vector display.\n");
 
