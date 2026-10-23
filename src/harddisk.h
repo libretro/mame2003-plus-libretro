@@ -48,6 +48,10 @@ void hard_disk_close_all(void);
 void hard_disk_get_hashes(struct hard_disk_file *file, char *datahash, char *imagehash);
 struct hard_disk_info *hard_disk_get_info(struct hard_disk_file *file);
 
+/* the first metadata entry of the CHD with this tag: its length, -1 if none; */
+/* what fits in buffer is copied */
+int hard_disk_get_metadata(struct hard_disk_file *file, UINT32 tag, void *buffer, UINT32 buflen);
+
 UINT32 hard_disk_read(struct hard_disk_file *file, UINT32 lbasector, UINT32 numsectors, void *buffer);
 UINT32 hard_disk_write(struct hard_disk_file *file, UINT32 lbasector, UINT32 numsectors, const void *buffer);
 

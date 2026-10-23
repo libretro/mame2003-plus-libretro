@@ -687,6 +687,20 @@ struct hard_disk_info *hard_disk_get_info(struct hard_disk_file *file)
 }
 
 
+/* reads the first metadata entry with this tag (as 'C','I','S',' ' -> */
+/* CHD_MAKE_TAG); returns its length (what fits in buffer is copied), */
+/* or -1 if the CHD has none */
+int hard_disk_get_metadata(struct hard_disk_file *file, UINT32 tag, void *buffer, UINT32 buflen)
+{
+	UINT32 metalength, metatag;
+	UINT8 metaflags;
+
+	if (chd_get_metadata(file->chd, tag, 0, buffer, buflen, &metalength, &metatag, &metaflags) != CHDERR_NONE)
+		return -1;
+	return metalength;
+}
+
+
 
 /*************************************
  *

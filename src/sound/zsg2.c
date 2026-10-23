@@ -70,11 +70,15 @@ static UINT32 read_address;
 static UINT32 *mem_copy;
 static INT16 *full_samples;
 
+static UINT32 (*ext_read)(UINT32 offset);
+
 static UINT32 read_memory(UINT32 offset)
 {
 	const UINT8 *p;
 	if (offset >= mem_blocks)
 		return 0;
+	if (ext_read)
+		return ext_read(offset);
 	p = mem_base + offset * 4;
 	return p[0] | (p[1] << 8) | (p[2] << 16) | ((UINT32)p[3] << 24);
 }
@@ -461,6 +465,7 @@ void zsg2_init(const UINT8 *rom, UINT32 rom_bytes)
 	memset(zsg2_reg, 0, sizeof(zsg2_reg));
 	mem_base = rom;
 	mem_blocks = rom_bytes / 4;
+	ext_read = NULL;
 	mem_copy = auto_malloc(mem_blocks * sizeof(UINT32));
 	full_samples = auto_malloc((mem_blocks * 4 + 4) * sizeof(INT16));
 	memset(mem_copy, 0, mem_blocks * sizeof(UINT32));
@@ -473,6 +478,11 @@ void zsg2_init(const UINT8 *rom, UINT32 rom_bytes)
 	for (i = 1; i < 32; i++)
 		gain_tab[i] = (UINT16)(pow(10, -(31 - i) / 20.) * 65535.);
 	gain_tab[0] = 0;
+}
+
+void zsg2_set_ext_read(UINT32 (*read)(UINT32 offset))
+{
+	ext_read = read;
 }
 
 void zsg2_reset(void)
