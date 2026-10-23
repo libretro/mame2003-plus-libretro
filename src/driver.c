@@ -2925,7 +2925,20 @@ V-V                           TP-027
 	DRIVER( g13knd )	/* Golgo 13 Kiseki no Dandou (Japan, GLS1/VER.A) */
 
 	/* Namco System 10 */
-	DRIVER( mrdrilr2 )	/* Mr Driller 2 */
+	DRIVER( mrdrilr2 )	/* Mr. Driller 2 (World, DR22 Ver.A) */
+	DRIVER( mrdrilr2j )	/* Mr. Driller 2 (Japan, DR21 Ver.A) */
+	DRIVER( mrdrilr2u )	/* Mr. Driller 2 (US, DR23 Ver.A) */
+	DRIVER( gjspace )	/* GekiToride-Jong Space (10011 Ver.A) */
+	DRIVER( knpuzzle )	/* Kotoba no Puzzle Mojipittan (Japan, KPM1 Ver.A) */
+	DRIVER( mrdrilrg )	/* Mr. Driller G (Japan, DRG1 Ver.A) */
+	DRIVER( chocovdr )	/* Uchuu Daisakusen: Chocovader Contactee (Japan, CVC1 Ver.A) */
+	DRIVER( gamshara )	/* Gamshara (20020912A / 10021 Ver.A) */
+	DRIVER( gamsharao )	/* Gamshara (20020716A / 10021 Ver.A) */
+	DRIVER( panikuru )	/* Panikuru Panekuru (Japan, PPA1 Ver.A) */
+	DRIVER( startrgn )	/* Star Trigon (Japan, STT1 Ver.A) */
+	DRIVER( konotako )	/* Kono e Tako (10021 Ver.A) */
+	DRIVER( ptblank3 )	/* Point Blank 3 (World, GNN2 Ver.A) */
+	DRIVER( gunbalina )	/* Gunbalina (Japan, GNN1 Ver.A) */
 
 	/* Konami GQ */
 	DRIVER( cryptklr )
