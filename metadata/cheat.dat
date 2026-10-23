@@ -8368,9 +8368,9 @@ bcstry:0:0000:00:999:[ forums.               ]:REASON 1
 beaminv:0:1847:08:000:Infinite Lives
 
 ; [ Beastie Feastie ]
-beastf:0:4C96:05:000:Infinite Lives PL1
-beastf:0:4C98:05:000:Infinite Lives PL2
-beastf:0:4C9D:A8:000:Infinite Energy
+beastfp:0:4C96:05:000:Infinite Lives PL1
+beastfp:0:4C98:05:000:Infinite Lives PL2
+beastfp:0:4C9D:A8:000:Infinite Energy
 
 ; [ Beastorizer (bootleg) ]
 beastrzb:0:0000:00:999:[ There are no cheats   ]:REASON 1

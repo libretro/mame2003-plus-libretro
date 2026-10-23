@@ -121,7 +121,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( ponpokov )	/* (c) 1982 Sigma Ent. Inc. + Venture Line license */
 	DRIVER( lizwiz )	/* (c) 1985 Techstar + "Sunn presents" */
 	DRIVER( theglobp )	/* (c) 1983 Epos Corporation */
-	DRIVER( beastf )	/* (c) 1984 Epos Corporation */
+	DRIVER( beastfp )	/* (c) 1984 Epos Corporation */
 	DRIVER( acitya )	/* (c) 1983 Epos Corporation */
 	DRIVER( bwcasino )	/* (c) 1983 Epos Coropration */
 	DRIVER( dremshpr )	/* (c) 1982 Sanritsu */
@@ -158,7 +158,10 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( theglob2 )	/* (c) 1983 */
 	DRIVER( theglob3 )	/* (c) 1983 */
 	DRIVER( igmo )		/* (c) 1984 */
-	DRIVER( dealer )	/* (c) 198? */
+	DRIVER( dealer )	/* (c) 1984 */
+	DRIVER( revngr84 )	/* (c) 1984 */
+	DRIVER( revenger )	/* (c) 1984 */
+	DRIVER( beastf )	/* (c) 1984 */
 
 	/* "Galaxian hardware" games */
 	DRIVER( galaxian )	/* (c) Namco */

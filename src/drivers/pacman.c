@@ -3900,7 +3900,7 @@ ROM_START( theglobp )
 ROM_END
 
 
-ROM_START( beastf )
+ROM_START( beastfp )
 	ROM_REGION( 0x20000, REGION_CPU1, 0 )	/* 64k for code */
 	ROM_LOAD( "bf-u2.bin",    0x0000, 0x2000, CRC(3afc517b) SHA1(5b74bca9e9cd4d8bcf94a340f8f0e53fe1dcfc1d) )
 	ROM_LOAD( "bf-u3.bin",    0x2000, 0x2000, CRC(8dbd76d0) SHA1(058c01e87ad583eb99d5043a821e6c68f1b30267) )
@@ -4617,7 +4617,7 @@ GAME( 1983, gorkans,   mrtnt,    pacman,    mrtnt,     0,        ROT90,  "Techst
 GAMEX(1983, eggor,     0,        pacman,    mrtnt,     eyes,     ROT90,  "Telko", "Eggor", GAME_WRONG_COLORS | GAME_IMPERFECT_SOUND  )
 GAME( 1985, lizwiz,    0,        pacman,    lizwiz,    0,        ROT90,  "Techstar (Sunn license)", "Lizard Wizard" )
 GAME( 1983, theglobp,  suprglob, theglobp,  theglobp,  0,        ROT90,  "Epos Corporation", "The Glob (Pac-Man hardware)" )
-GAME( 1984, beastf,    suprglob, theglobp,  theglobp,  0,        ROT90,  "Epos Corporation", "Beastie Feastie" )
+GAME( 1984, beastfp,   suprglob, theglobp,  theglobp,  0,        ROT90,  "Epos Corporation", "Beastie Feastie (Pac-Man conversion)" )
 GAME( 1983, bwcasino,  0,        acitya,    bwcasino,  0,        ROT90,  "Epos Corporation", "Boardwalk Casino" )
 GAME( 1982, dremshpr,  0,        dremshpr,  dremshpr,  0,        ROT270, "Sanritsu", "Dream Shopper" )
 GAME( 1983, acitya,    bwcasino, acitya,    acitya,    0,        ROT90,  "Epos Corporation", "Atlantic City Action" )

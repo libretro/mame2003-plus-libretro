@@ -20586,7 +20586,7 @@ Commodore Amiga (1990)
 $end
 
 
-$info=beastf,
+$info=beastf,beastfp,
 $bio
 
 Beastie Feastie (c) 1984 Epos Corporation.
@@ -187724,7 +187724,7 @@ Total planner / Total cordinator : The Alive
 $end
 
 
-$info=revenger,
+$info=revenger,revngr84,
 $bio
 
 Revenger (c) 1984 Epos.
