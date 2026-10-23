@@ -1,11 +1,12 @@
 /***************************************************************************
 
     Sega 315-5838 / 317-0229 compression and encryption
-    (Dead or Alive startup string on Model 2)
+    (DecAthlete graphics on ST-V, Dead or Alive startup string on Model 2)
 
     Translated to C from current MAME (sega/315-5838_317-0229_comp.cpp,
-    license BSD-3-Clause), 317-0229 variant only: a fixed word substitution
-    followed by a programmable prefix decompression.
+    license BSD-3-Clause): a fixed word substitution followed by a
+    programmable prefix decompression. The four variants differ only in the
+    substitution (routing, tables and affine masks).
 
 ***************************************************************************/
 
@@ -16,6 +17,7 @@
 #define BITN(x,n) (((x)>>(n))&1)
 
 static UINT16 (*comp_source_r)(UINT32 offset);
+static int comp_variant = SEGA315_5838_VARIANT_0229;
 static UINT16 m_tree[ 24 ];
 static UINT8 m_dictionary[ 256 ];
 static int m_tree_words, m_dictionary_bytes, m_upload_dictionary;
@@ -25,14 +27,27 @@ static int m_bits, m_abort;
 
 static UINT16 decipher( UINT16 c )
 {
-	/* 317-0229 */
-	static const UINT8 routing[ 4 ] = { 3, 2, 0, 1 };
-	static const UINT8 sboxes[ 4 ][ 8 ] =
+	/* routing, substitution tables and affine masks of 315-5838, 317-0229, 317-0230, 317-0231 */
+	static const UINT8 all_routing[ 4 ][ 4 ] = { { 0, 1, 2, 3 }, { 3, 2, 0, 1 }, { 2, 3, 1, 0 }, { 1, 0, 3, 2 } };
+	static const UINT8 all_sboxes[ 4 ][ 4 ][ 8 ] =
 	{
-		{ 6, 0, 5, 4, 7, 2, 1, 3 }, { 5, 6, 1, 3, 7, 0, 4, 2 },
-		{ 2, 6, 0, 1, 3, 4, 7, 5 }, { 6, 5, 7, 4, 1, 3, 0, 2 }
+		{ { 6, 7, 2, 0, 5, 1, 3, 4 }, { 5, 3, 7, 2, 1, 6, 4, 0 },
+		  { 2, 0, 6, 1, 3, 7, 4, 5 }, { 6, 5, 7, 4, 1, 3, 0, 2 } },
+		{ { 6, 0, 5, 4, 7, 2, 1, 3 }, { 5, 6, 1, 3, 7, 0, 4, 2 },
+		  { 2, 6, 0, 1, 3, 4, 7, 5 }, { 6, 5, 7, 4, 1, 3, 0, 2 } },
+		{ { 6, 2, 7, 0, 5, 3, 1, 4 }, { 5, 3, 7, 2, 1, 6, 4, 0 },
+		  { 2, 1, 3, 5, 6, 0, 4, 7 }, { 6, 1, 3, 5, 7, 0, 2, 4 } },
+		{ { 6, 0, 5, 4, 7, 2, 1, 3 }, { 5, 1, 6, 3, 7, 4, 0, 2 },
+		  { 2, 1, 3, 5, 6, 0, 4, 7 }, { 6, 3, 1, 5, 7, 2, 0, 4 } }
 	};
-	static const UINT8 affine_masks[ 4 ] = { 0x12, 0x11, 0x04, 0x1a };
+	static const UINT8 all_affine[ 4 ][ 4 ] =
+	{
+		{ 0x14, 0x18, 0x02, 0x15 }, { 0x12, 0x11, 0x04, 0x1a },
+		{ 0x14, 0x18, 0x02, 0x15 }, { 0x12, 0x11, 0x04, 0x1a }
+	};
+	const UINT8 *routing = all_routing[ comp_variant ];
+	const UINT8 (*sboxes)[ 8 ] = all_sboxes[ comp_variant ];
+	const UINT8 *affine_masks = all_affine[ comp_variant ];
 	static const UINT8 output_bits[ 4 ][ 3 ] = { { 0, 1, 7 }, { 2, 5, 9 }, { 4, 10, 13 }, { 6, 11, 15 } };
 	static const UINT8 affine_bits[ 4 ] = { 3, 8, 12, 14 };
 	UINT8 lanes[ 4 ];
@@ -62,9 +77,15 @@ static UINT16 decipher( UINT16 c )
 	return result;
 }
 
+void sega315_5838_set_variant( int variant )
+{
+	comp_variant = variant & 3;
+}
+
 void sega315_5838_init( UINT16 (*source_r)( UINT32 offset ) )
 {
 	comp_source_r = source_r;
+	comp_variant = SEGA315_5838_VARIANT_0229;
 	state_save_register_UINT16( "315_5838", 0, "tree", m_tree, 24 );
 	state_save_register_UINT8( "315_5838", 0, "dictionary", m_dictionary, 256 );
 	state_save_register_int( "315_5838", 0, "tree_words", &m_tree_words );

@@ -204980,7 +204980,7 @@
 		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
 		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
 		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
-		<rom name="epr20825.13" size="1048576" crc="94a9ad8f" sha1="861311c14cfa9f560752aa5b023c147a539cf135" region="user1" offset="0"/>
+		<rom name="epr20825.13" size="1048576" crc="94a9ad8f" sha1="861311c14cfa9f560752aa5b023c147a539cf135" region="user1" offset="1"/>
 		<rom name="mpr20827.2" size="4194304" crc="65cabbb3" sha1="5e7cb090101dc42207a4084465e419f4311b6baf" region="user1" offset="400000"/>
 		<rom name="mpr20828.3" size="4194304" crc="3934d44a" sha1="969406b8bfac43b30f4d732702ca8cffeeefffb9" region="user1" offset="800000"/>
 		<rom name="mpr20829.4" size="4194304" crc="814308c3" sha1="45c3f551690224c95acd156ae8f8397667927a04" region="user1" offset="c00000"/>
@@ -204993,7 +204993,7 @@
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -205060,7 +205060,7 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="preliminary" graphic="good" palettesize="2048"/>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
 	</game>
 	<game name="bakubaku" sourcefile="stv.c" romof="stvbios">
 		<description>Baku Baku Animal</description>
@@ -205078,7 +205078,7 @@
 		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
 		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
 		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
-		<rom name="fpr17969.13" size="1048576" crc="bee327e5" sha1="1d226db72d6ef68fd294f60659df7f882b25def6" region="user1" offset="0"/>
+		<rom name="fpr17969.13" size="1048576" crc="bee327e5" sha1="1d226db72d6ef68fd294f60659df7f882b25def6" region="user1" offset="1"/>
 		<rom name="mpr17970.2" size="4194304" crc="bc4d6f91" sha1="dcc241dcabea59325decfba3fd5e113c07958422" region="user1" offset="400000"/>
 		<rom name="mpr17971.3" size="4194304" crc="c780a3b3" sha1="99587eea528a6413cacc3e4d3d1dbfff57b03dca" region="user1" offset="800000"/>
 		<rom name="mpr17972.4" size="4194304" crc="8f29815a" sha1="e86acd8096f2aee5f5e3ddfd3abb4f5c2b11df66" region="user1" offset="c00000"/>
@@ -205087,7 +205087,7 @@
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -205154,7 +205154,7 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="good" color="good" sound="preliminary" graphic="imperfect" palettesize="2048"/>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
 	</game>
 	<game name="colmns97" sourcefile="stv.c" romof="stvbios">
 		<description>Columns 97</description>
@@ -205172,14 +205172,14 @@
 		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
 		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
 		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
-		<rom name="fpr19553.13" size="1048576" crc="d4fb6a5e" sha1="bd3cfb4f451b6c9612e42af5ddcbffa14f057329" region="user1" offset="0"/>
+		<rom name="fpr19553.13" size="1048576" crc="d4fb6a5e" sha1="bd3cfb4f451b6c9612e42af5ddcbffa14f057329" region="user1" offset="1"/>
 		<rom name="mpr19554.2" size="4194304" crc="5a3ebcac" sha1="46e3d1cf515a7ff8a8f97e5050b29dbbeb5060c0" region="user1" offset="400000"/>
 		<rom name="mpr19555.3" size="4194304" crc="74f6e6b8" sha1="8080860550eb770e04447e344fb337748a249761" region="user1" offset="800000"/>
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -205276,7 +205276,7 @@
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -205372,7 +205372,7 @@
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -205443,7 +205443,7 @@
 	</game>
 	<game name="decathlt" sourcefile="stv.c" romof="stvbios">
 		<description>Decathlete</description>
-		<year>1995</year>
+		<year>1996</year>
 		<manufacturer>Sega</manufacturer>
 		<biosset name="japan" description="Japan (bios epr19730)" default="yes"/>
 		<biosset name="japana" description="Japan (bios mp17951a)"/>
@@ -205457,7 +205457,7 @@
 		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
 		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
 		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
-		<rom name="epr18967.13" size="1048576" crc="c0446674" sha1="4917089d95613c9d2a936ed9fe3ebd22f461aa4f" region="user1" offset="0"/>
+		<rom name="epr18967a.13" size="1048576" crc="ac59c186" sha1="7d4924d1e4c1b9257b58a690de988b3f6486e86f" region="user1" offset="1"/>
 		<rom name="mpr18968.2" size="4194304" crc="11a891de" sha1="1a4fa8d7e07e1d8fdc8122ef8a5b93723c007cda" region="user1" offset="400000"/>
 		<rom name="mpr18969.3" size="4194304" crc="199cc47d" sha1="d78f7c6be7e9b43e208244c5c8722245f4c653e1" region="user1" offset="800000"/>
 		<rom name="mpr18970.4" size="4194304" crc="8b7a509e" sha1="8f4d36a858231764ed09b26a1141d1f055eee092" region="user1" offset="c00000"/>
@@ -205467,7 +205467,7 @@
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -205534,7 +205534,7 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="preliminary" graphic="good" palettesize="2048"/>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
 	</game>
 	<game name="diehard" sourcefile="stv.c" romof="stvbios">
 		<description>Die Hard Arcade (US)</description>
@@ -205552,7 +205552,7 @@
 		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
 		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
 		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
-		<rom name="fpr19119.13" size="1048576" crc="de5c4f7c" sha1="35f670a15e9c86edbe2fe718470f5a75b5b096ac" region="user1" offset="0"/>
+		<rom name="fpr19119.13" size="1048576" crc="de5c4f7c" sha1="35f670a15e9c86edbe2fe718470f5a75b5b096ac" region="user1" offset="1"/>
 		<rom name="mpr19115.2" size="4194304" crc="6fe06a30" sha1="dedb90f800bae8fd9df1023eb5bec7fb6c9d0179" region="user1" offset="400000"/>
 		<rom name="mpr19116.3" size="4194304" crc="af9e627b" sha1="a53921c3185a93ec95299bf1c29e744e2fa3b8c0" region="user1" offset="800000"/>
 		<rom name="mpr19117.4" size="4194304" crc="74520ff1" sha1="16c1acf878664b3bd866c9b94f3695ae892ac12f" region="user1" offset="c00000"/>
@@ -205561,7 +205561,7 @@
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -205646,7 +205646,7 @@
 		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
 		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
 		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
-		<rom name="fpr19114.13" size="1048576" crc="1fd22a5f" sha1="c3d9653b12354a73a3e15f23a2ab7992ffb83e46" region="user1" offset="0"/>
+		<rom name="fpr19114.13" size="1048576" crc="1fd22a5f" sha1="c3d9653b12354a73a3e15f23a2ab7992ffb83e46" region="user1" offset="1"/>
 		<rom name="mpr19115.2" merge="mpr19115.2" size="4194304" crc="6fe06a30" sha1="dedb90f800bae8fd9df1023eb5bec7fb6c9d0179" region="user1" offset="400000"/>
 		<rom name="mpr19116.3" merge="mpr19116.3" size="4194304" crc="af9e627b" sha1="a53921c3185a93ec95299bf1c29e744e2fa3b8c0" region="user1" offset="800000"/>
 		<rom name="mpr19117.4" merge="mpr19117.4" size="4194304" crc="74520ff1" sha1="16c1acf878664b3bd866c9b94f3695ae892ac12f" region="user1" offset="c00000"/>
@@ -205655,7 +205655,7 @@
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -205722,7 +205722,7 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="good" color="good" sound="preliminary" graphic="imperfect" palettesize="2048"/>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
 	</game>
 	<game name="ejihon" sourcefile="stv.c" romof="stvbios">
 		<description>Ejihon Tantei Jimusyo</description>
@@ -205740,7 +205740,7 @@
 		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
 		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
 		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
-		<rom name="epr18137.13" size="524288" crc="151aa9bc" sha1="0959c60f31634816825acb57413838dcddb17d31" region="user1" offset="0"/>
+		<rom name="epr18137.13" size="524288" crc="151aa9bc" sha1="0959c60f31634816825acb57413838dcddb17d31" region="user1" offset="1"/>
 		<rom name="mpr18138.2" size="4194304" crc="f5567049" sha1="6eb35e4b5fbda39cf7e8c42b6a568bd53a364d6d" region="user1" offset="400000"/>
 		<rom name="mpr18139.3" size="4194304" crc="f36b4878" sha1="e3f63c0046bd37b7ab02fb3865b8ebcf4cf68e75" region="user1" offset="800000"/>
 		<rom name="mpr18140.4" size="4194304" crc="228850a0" sha1="d83f7fa7df08407fa45a13661393679b88800805" region="user1" offset="c00000"/>
@@ -205750,7 +205750,7 @@
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -205847,7 +205847,7 @@
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -205914,7 +205914,7 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="preliminary" graphic="good" palettesize="2048"/>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
 	</game>
 	<game name="ffreveng" sourcefile="stv.c" romof="stvbios">
 		<description>Final Fight Revenge</description>
@@ -205932,6 +205932,7 @@
 		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
 		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
 		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
+		<rom name="ffr110.ic35" size="1048576" crc="3ffea541" sha1="715b070b1d574a99aeb12086de380b0b3aaa25a1" region="user1" offset="1"/>
 		<rom name="opr21872.7" size="2097152" crc="32d36fee" sha1="441c4254ef2e9301e1006d69462a850ce339314b" region="user1" offset="200000"/>
 		<rom name="mpr21873.2" size="4194304" crc="dac5bd98" sha1="6102035ce9eb2f83d7d9b20f989a151f45087c67" region="user1" offset="400000"/>
 		<rom name="mpr21874.3" size="4194304" crc="0a7be2f1" sha1="e2d13f36e54d1e2cb9d584db829c04a6ff65108c" region="user1" offset="800000"/>
@@ -205943,7 +205944,7 @@
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -206010,7 +206011,7 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="preliminary" graphic="good" palettesize="2048"/>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
 	</game>
 	<game name="fhboxers" sourcefile="stv.c" romof="stvbios">
 		<description>Funky Head Boxers</description>
@@ -206028,7 +206029,7 @@
 		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
 		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
 		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
-		<rom name="fr18541a.13" size="1048576" crc="8c61a17c" sha1="a8aef27b53482923a506f7daa4b7a38653b4d8a4" region="user1" offset="0"/>
+		<rom name="fr18541a.13" size="1048576" crc="8c61a17c" sha1="a8aef27b53482923a506f7daa4b7a38653b4d8a4" region="user1" offset="1"/>
 		<rom name="mpr18538.7" size="2097152" crc="7b5230c5" sha1="70cebc3281580b43adf42c37318e12159c28a13d" region="user1" offset="200000"/>
 		<rom name="mpr18533.2" size="4194304" crc="7181fe51" sha1="646f95e1a5b64d721e961352cee6fd5adfd031ec" region="user1" offset="400000"/>
 		<rom name="mpr18534.3" size="4194304" crc="c87ef125" sha1="c9ced130faf6dd9e626074b6519615654d8beb19" region="user1" offset="800000"/>
@@ -206038,11 +206039,12 @@
 		<rom name="mpr18532.1" size="4194304" crc="39528643" sha1="e35f4c35c9eb13e1cdcc26cb2599bb846f2c1af7" region="user1" offset="1800000"/>
 		<rom name="mpr18539.8" size="4194304" crc="62b3908c" sha1="3f00e49beb0e5575cc4250a25c41f04dc91d6ed0" region="user1" offset="1c00000"/>
 		<rom name="mpr18540.9" size="4194304" crc="4c2b59a4" sha1="4d15503fcff0e9e0d1ed3bac724278102b506da0" region="user1" offset="2000000"/>
+		<rom name="fhboxers.nv" size="128" crc="590fd6da" sha1="1abe71c62c51a246d854f02cd4cb79fd0d427e88" region="user3" offset="0"/>
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -206109,7 +206111,7 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="preliminary" graphic="good" palettesize="2048"/>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
 	</game>
 	<game name="findlove" sourcefile="stv.c" romof="stvbios">
 		<description>Find Love</description>
@@ -206127,7 +206129,7 @@
 		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
 		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
 		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
-		<rom name="epr20424.13" size="1048576" crc="4e61fa46" sha1="e34624d98cbdf2dd04d997167d3c4decd2f208f7" region="user1" offset="0"/>
+		<rom name="epr20424.13" size="1048576" crc="4e61fa46" sha1="e34624d98cbdf2dd04d997167d3c4decd2f208f7" region="user1" offset="1"/>
 		<rom name="mpr20431.7" size="2097152" crc="ea656ced" sha1="b2d6286081bd46a89d1284a2757b87d0bca1bbde" region="user1" offset="200000"/>
 		<rom name="mpr20426.2" size="4194304" crc="897d1747" sha1="f3fb2c4ef8bc2c1658907e822f2ee2b88582afdd" region="user1" offset="400000"/>
 		<rom name="mpr20427.3" size="4194304" crc="a488a694" sha1="80ec81f32e4b5712a607208b2a45cfdf6d5e1849" region="user1" offset="800000"/>
@@ -206140,11 +206142,12 @@
 		<rom name="mpr20434.10" size="4194304" crc="85c94afc" sha1="dfc2f16614bc499747ea87567a21c86e7bddce45" region="user1" offset="2400000"/>
 		<rom name="mpr20435.11" size="4194304" crc="263a2e48" sha1="27ef4bf577d240e36dcb6e6a09b9c5f24e59ce8c" region="user1" offset="2800000"/>
 		<rom name="mpr20436.12" size="4194304" crc="e3823f49" sha1="754d48635bd1d4fb01ff665bfe2a71593d92f688" region="user1" offset="2c00000"/>
+		<rom name="findlove.nv" size="128" crc="df2fa9f6" sha1="f05450e1648eafd2ffb52e50769f07bdc75ffb95" region="user3" offset="0"/>
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -206211,9 +206214,9 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="preliminary" graphic="good" palettesize="2048"/>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
 	</game>
-	<game name="finlarch" sourcefile="stv.c" cloneof="sleague" romof="sleague">
+	<game name="finlarch" sourcefile="stv.c" cloneof="smleague" romof="smleague">
 		<description>Final Arch (Japan)</description>
 		<year>1995</year>
 		<manufacturer>Sega</manufacturer>
@@ -206229,7 +206232,7 @@
 		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
 		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
 		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
-		<rom name="finlarch.13" size="1048576" crc="4505fa9e" sha1="96c6399146cf9c8f1d27a8fb6a265f937258004a" region="user1" offset="0"/>
+		<rom name="finlarch.13" size="1048576" crc="4505fa9e" sha1="96c6399146cf9c8f1d27a8fb6a265f937258004a" region="user1" offset="1"/>
 		<rom name="mpr18257.2" size="4194304" crc="137fdf55" sha1="07a02fe531b3707e063498f5bc9749bd1b4cadb3" region="user1" offset="400000"/>
 		<rom name="mpr18258.3" size="4194304" crc="f519c505" sha1="5cad39314e46b98c24a71f1c2c10c682ef3bdcf3" region="user1" offset="800000"/>
 		<rom name="mpr18259.4" size="4194304" crc="5cabc775" sha1="84383a4cbe3b1a9dcc6c140cff165425666dc780" region="user1" offset="c00000"/>
@@ -206238,7 +206241,7 @@
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -206305,7 +206308,7 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="preliminary" graphic="good" palettesize="2048"/>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
 	</game>
 	<game name="gaxeduel" sourcefile="stv.c" romof="stvbios">
 		<description>Golden Axe - The Duel</description>
@@ -206323,7 +206326,7 @@
 		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
 		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
 		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
-		<rom name="epr17766.13" size="524288" crc="a83fcd62" sha1="4ce77ebaa0e93c6553ad8f7fb87cbdc32433402b" region="user1" offset="0"/>
+		<rom name="epr17766.13" size="524288" crc="a83fcd62" sha1="4ce77ebaa0e93c6553ad8f7fb87cbdc32433402b" region="user1" offset="1"/>
 		<rom name="mpr17768.2" size="4194304" crc="d6808a7d" sha1="83a97bbe1160cb45b3bdcbde8adc0d9bae5ded60" region="user1" offset="400000"/>
 		<rom name="mpr17769.3" size="4194304" crc="3471dd35" sha1="24febddfe70984cebc0e6948ad718e0e6957fa82" region="user1" offset="800000"/>
 		<rom name="mpr17770.4" size="4194304" crc="06978a00" sha1="a8d1333a9f4322e28b23724937f595805315b136" region="user1" offset="c00000"/>
@@ -206334,7 +206337,7 @@
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -206401,7 +206404,7 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="preliminary" graphic="good" palettesize="2048"/>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
 	</game>
 	<game name="grdforce" sourcefile="stv.c" romof="stvbios">
 		<description>Guardian Force</description>
@@ -206429,7 +206432,7 @@
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -206527,7 +206530,7 @@
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -206594,7 +206597,7 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="imperfect" graphic="good" palettesize="2048"/>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
 	</game>
 	<game name="hanagumi" sourcefile="stv.c" romof="stvbios">
 		<description>Hanagumi Taisen Columns - Sakura Wars</description>
@@ -206628,7 +206631,7 @@
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -206713,7 +206716,7 @@
 		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
 		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
 		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
-		<rom name="epr18937.13" size="524288" crc="1f40d766" sha1="35d9751c1b23cfbf448f2a9e9cf3b121929368ae" region="user1" offset="0"/>
+		<rom name="epr18937.13" size="524288" crc="1f40d766" sha1="35d9751c1b23cfbf448f2a9e9cf3b121929368ae" region="user1" offset="1"/>
 		<rom name="mpr18944.7" size="1048576" crc="f7f75ce5" sha1="0787ece9f89cc1847889adbf08ba5d3ccbc405de" region="user1" offset="200000"/>
 		<rom name="mpr18939.2" size="4194304" crc="ef95a6e6" sha1="3026c52ad542997d5b0e621b389c0e01240cb486" region="user1" offset="400000"/>
 		<rom name="mpr18940.3" size="4194304" crc="cabab4cd" sha1="b251609573c4b0ccc933188f32226855b25fd9da" region="user1" offset="800000"/>
@@ -206725,7 +206728,7 @@
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -206792,7 +206795,7 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="preliminary" graphic="good" palettesize="2048"/>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
 	</game>
 	<game name="kiwames" sourcefile="stv.c" romof="stvbios">
 		<description>Pro Mahjong Kiwame S</description>
@@ -206810,15 +206813,16 @@
 		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
 		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
 		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
-		<rom name="epr18737.13" size="524288" crc="cfad6c49" sha1="fc69980a351ed13307706db506c79c774eabeb66" region="user1" offset="0"/>
+		<rom name="epr18737.13" size="524288" crc="cfad6c49" sha1="fc69980a351ed13307706db506c79c774eabeb66" region="user1" offset="1"/>
 		<rom name="mpr18738.2" size="4194304" crc="4b3c175a" sha1="b6d2438ae1d3d51950a7ed1eaadf2dae45c4e7b1" region="user1" offset="400000"/>
 		<rom name="mpr18739.3" size="4194304" crc="eb41fa67" sha1="d12acebb1df9eafd17aff1841087f5017225e7e7" region="user1" offset="800000"/>
 		<rom name="mpr18740.4" size="2097152" crc="9ca7962f" sha1="a09e0db2246b34ca7efa3165afbc5ba292a95398" region="user1" offset="c00000"/>
+		<rom name="kiwames.nv" size="128" crc="c7002732" sha1="57395d256a58ddcedd354ce1f2c458321be40505" region="user3" offset="0"/>
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -206885,7 +206889,7 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="preliminary" graphic="good" palettesize="2048"/>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
 	</game>
 	<game name="maruchan" sourcefile="stv.c" romof="stvbios">
 		<description>Maru-Chan de Goo!</description>
@@ -206903,7 +206907,7 @@
 		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
 		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
 		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
-		<rom name="epr20416.13" size="1048576" crc="8bf0176d" sha1="5bd468e2ffed042ee84e2ceb8712ff5883a1d824" region="user1" offset="0"/>
+		<rom name="epr20416.13" size="1048576" crc="8bf0176d" sha1="5bd468e2ffed042ee84e2ceb8712ff5883a1d824" region="user1" offset="1"/>
 		<rom name="mpr20417.2" size="4194304" crc="636c2a08" sha1="47986b71d68f6a1852e4e2b03ca7b6e48e83718b" region="user1" offset="400000"/>
 		<rom name="mpr20418.3" size="4194304" crc="3f0d9e34" sha1="2ec81e40ebf689d17b6421820bfb0a1280a8ef25" region="user1" offset="800000"/>
 		<rom name="mpr20419.4" size="4194304" crc="ec969815" sha1="b59782174051f5717b06f43e57dd8a2a6910d95f" region="user1" offset="c00000"/>
@@ -206916,7 +206920,7 @@
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -206983,7 +206987,7 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="preliminary" graphic="good" palettesize="2048"/>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
 	</game>
 	<game name="myfairld" sourcefile="stv.c" romof="stvbios">
 		<description>Virtual Mahjong 2 - My Fair Lady</description>
@@ -207009,11 +207013,12 @@
 		<rom name="mpr20999.6" size="4194304" crc="82e31f25" sha1="0cf74af14abb6ede21d19bc22041214232751594" region="user1" offset="1400000"/>
 		<rom name="mpr20994.1" size="4194304" crc="a69243a0" sha1="e5a1b6ec62bdd5b015ed6cf48f5a6aabaf4bd837" region="user1" offset="1800000"/>
 		<rom name="mpr21001.8" size="4194304" crc="95fbe549" sha1="8cfb48f353b2849600373d66f293f103bca700df" region="user1" offset="1c00000"/>
+		<rom name="myfairld.nv" size="128" crc="c7cf3a5a" sha1="5365f38047821305658f94395f03cf2c49c87576" region="user3" offset="0"/>
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -207080,7 +207085,7 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="preliminary" graphic="good" palettesize="2048"/>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
 	</game>
 	<game name="othellos" sourcefile="stv.c" romof="stvbios">
 		<description>Othello Shiyouyo</description>
@@ -207107,7 +207112,7 @@
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -207174,7 +207179,7 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="good" color="good" sound="preliminary" graphic="good" palettesize="2048"/>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
 	</game>
 	<game name="pblbeach" sourcefile="stv.c" romof="stvbios">
 		<description>Pebble Beach - The Great Shot</description>
@@ -207192,7 +207197,7 @@
 		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
 		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
 		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
-		<rom name="epr18852.13" size="524288" crc="d12414ec" sha1="0f42ec9e41983781b6892622b00398a102072aa7" region="user1" offset="0"/>
+		<rom name="epr18852.13" size="524288" crc="d12414ec" sha1="0f42ec9e41983781b6892622b00398a102072aa7" region="user1" offset="1"/>
 		<rom name="mpr18853.2" size="4194304" crc="b9268c97" sha1="8734e3f0e6b2849d173e3acc9d0308084a4e84fd" region="user1" offset="400000"/>
 		<rom name="mpr18854.3" size="4194304" crc="3113c8bc" sha1="4e4600646ddd1978988d27430ffdf0d1d405b804" region="user1" offset="800000"/>
 		<rom name="mpr18855.4" size="4194304" crc="daf6ad0c" sha1="2a14a6a42e4eb68abb7a427e43062dfde2d13c5c" region="user1" offset="c00000"/>
@@ -207201,7 +207206,7 @@
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -207268,7 +207273,7 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="preliminary" graphic="good" palettesize="2048"/>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
 	</game>
 	<game name="prikura" sourcefile="stv.c" romof="stvbios">
 		<description>Princess Clara Daisakusen</description>
@@ -207295,7 +207300,7 @@
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -207380,7 +207385,7 @@
 		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
 		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
 		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
-		<rom name="epr19531.13" size="524288" crc="ac81024f" sha1="b22c7c1798fade7ae992ff83b138dd23e6292d3f" region="user1" offset="0"/>
+		<rom name="epr19531.13" size="524288" crc="ac81024f" sha1="b22c7c1798fade7ae992ff83b138dd23e6292d3f" region="user1" offset="1"/>
 		<rom name="mpr19533.2" size="4194304" crc="17ec54ba" sha1="d4cdc86926519291cc78980ec513e1cfc677e76e" region="user1" offset="400000"/>
 		<rom name="mpr19534.3" size="4194304" crc="820e4781" sha1="7ea5626ad4e1929a5ec28a99ec12bc364df8f70d" region="user1" offset="800000"/>
 		<rom name="mpr19535.4" size="4194304" crc="94fadfa4" sha1="a7d0727cf601e00f1ea31e6bf3e591349c3f6030" region="user1" offset="c00000"/>
@@ -207393,7 +207398,7 @@
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -207487,7 +207492,7 @@
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -207554,7 +207559,7 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="preliminary" graphic="good" palettesize="2048"/>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
 	</game>
 	<game name="sandor" sourcefile="stv.c" romof="stvbios">
 		<description>Sando-R</description>
@@ -207572,7 +207577,7 @@
 		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
 		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
 		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
-		<rom name="sando-r.13" size="1048576" crc="fe63a239" sha1="01502d4494f968443581cd2c74f25967d41f775e" region="user1" offset="0"/>
+		<rom name="sando-r.13" size="1048576" crc="fe63a239" sha1="01502d4494f968443581cd2c74f25967d41f775e" region="user1" offset="1"/>
 		<rom name="mpr18635.8" size="4194304" crc="441e1368" sha1="acb2a7e8d44c2203b8d3c7a7b70e20ffb120bebf" region="user1" offset="1c00000"/>
 		<rom name="mpr18636.9" size="4194304" crc="fff1dd80" sha1="36b8e1526a4370ae33fd4671850faf51c448bca4" region="user1" offset="2000000"/>
 		<rom name="mpr18637.10" size="4194304" crc="83aced0f" sha1="6cd1702b9c2655dc4f56c666607c333f62b09fc0" region="user1" offset="2400000"/>
@@ -207581,7 +207586,7 @@
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -207668,15 +207673,15 @@
 		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
 		<rom name="th-ic7_2.stv" size="524288" crc="c4e993de" sha1="7aa433bc2623cb19a09d4ef4c8233a2d29901020" region="user1" offset="200000"/>
 		<rom name="th-ic7_1.stv" size="524288" crc="1355cc18" sha1="a9b731228a807b2b01f933fe0f7dcdbadaf89b7e" region="user1" offset="200001"/>
-		<rom name="thunt.2" size="4194304" region="user1" status="nodump" offset="400000"/>
-		<rom name="thunt.3" size="4194304" region="user1" status="nodump" offset="800000"/>
-		<rom name="thunt.4" size="4194304" region="user1" status="nodump" offset="c00000"/>
-		<rom name="thunt.5" size="4194304" region="user1" status="nodump" offset="1000000"/>
+		<rom name="th-e-2.ic2" size="4194304" crc="47315694" sha1="4a7cc195b98dbca146f5efe3b5b35be0f13b2f4a" region="user1" offset="400000"/>
+		<rom name="th-e-3.ic3" size="4194304" crc="c9290b44" sha1="4e51e667edf330cc20e600cf1500f332cc533e20" region="user1" offset="800000"/>
+		<rom name="th-e-4.ic4" size="4194304" crc="c672e40b" sha1="4ba189de7b8fb5ca45fb15c89cdaf0f860831d52" region="user1" offset="c00000"/>
+		<rom name="th-e-5.ic5" size="4194304" crc="3914b805" sha1="1331ce82ba0bdfc76fe3456a5252e69c00e2cf1f" region="user1" offset="1000000"/>
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -207745,9 +207750,9 @@
 		</dipswitch>
 		<driver status="preliminary" color="good" sound="preliminary" graphic="good" palettesize="2048"/>
 	</game>
-	<game name="sassisu" sourcefile="stv.c" romof="stvbios">
+	<game name="sasissu" sourcefile="stv.c" romof="stvbios">
 		<description>Taisen Tanto-R Sashissu!!</description>
-		<year>1996</year>
+		<year>1998</year>
 		<manufacturer>Sega</manufacturer>
 		<biosset name="japan" description="Japan (bios epr19730)" default="yes"/>
 		<biosset name="japana" description="Japan (bios mp17951a)"/>
@@ -207761,7 +207766,7 @@
 		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
 		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
 		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
-		<rom name="epr20542.13" size="1048576" crc="0e632db5" sha1="9bc52794892eec22d381387d13a0388042e30714" region="user1" offset="0"/>
+		<rom name="epr20542.13" size="1048576" crc="0e632db5" sha1="9bc52794892eec22d381387d13a0388042e30714" region="user1" offset="1"/>
 		<rom name="mpr20544.2" size="4194304" crc="661fff5e" sha1="41f4ddda7adf004b52cc9a076606a60f31947d19" region="user1" offset="400000"/>
 		<rom name="mpr20545.3" size="4194304" crc="8e3a37be" sha1="a3227cdc4f03bb088e7f9aed225b238da3283e01" region="user1" offset="800000"/>
 		<rom name="mpr20546.4" size="4194304" crc="72020886" sha1="e80bdeb11b726eb23f2283950d65d55e31a5672e" region="user1" offset="c00000"/>
@@ -207772,7 +207777,7 @@
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -207839,7 +207844,967 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="preliminary" graphic="good" palettesize="2048"/>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
+	</game>
+	<game name="sanjeon" sourcefile="stv.c" cloneof="sasissu" romof="sasissu">
+		<description>DaeJeon! SanJeon SuJeon</description>
+		<year>1999</year>
+		<manufacturer>Sega / Deniam</manufacturer>
+		<biosset name="japan" description="Japan (bios epr19730)" default="yes"/>
+		<biosset name="japana" description="Japan (bios mp17951a)"/>
+		<biosset name="us" description="USA (bios mp17952a)"/>
+		<biosset name="japanb" description="Japan (bios 20091)"/>
+		<biosset name="taiwan" description="Taiwan (bios mp17953a)"/>
+		<biosset name="europe" description="Europe (bios mp17954a)"/>
+		<rom name="epr19730.ic8" merge="epr19730.ic8" bios="japan" size="524288" crc="d0e0889d" sha1="fae53107c894e0c41c49e191dbe706c9cd6e50bd" region="cpu1" offset="0"/>
+		<rom name="mp17951a.s" merge="mp17951a.s" bios="japana" size="524288" crc="2672f9d8" sha1="63cf4a6432f6c87952f9cf3ab0f977aed2367303" region="cpu1" offset="0"/>
+		<rom name="mp17952a.s" merge="mp17952a.s" bios="us" size="524288" crc="d1be2adf" sha1="eaf1c3e5d602e1139d2090a78d7e19f04f916794" region="cpu1" offset="0"/>
+		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
+		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
+		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
+		<rom name="ic11" size="2097152" crc="9abae8d4" sha1="ddbe4c8fff8fa59d63e278e95f245145d2da8aeb" region="user1" offset="1"/>
+		<rom name="ic13" size="2097152" crc="f72c1d13" sha1="a2b168d187034024b83fbbe2f5eec78816285da9" region="user1" offset="400000"/>
+		<rom name="ic14" size="2097152" crc="bcd72105" sha1="fb88a1f2589fef5d9845027646259ec8e781771b" region="user1" offset="600000"/>
+		<rom name="ic15" size="2097152" crc="8c9c8352" sha1="312e9e6435c6e9a4a19b72e234b087d4f5b069a5" region="user1" offset="800000"/>
+		<rom name="ic16" size="2097152" crc="07e11512" sha1="5fb5e93a167aae501bd799aba98f7dbc3762a795" region="user1" offset="a00000"/>
+		<rom name="ic17" size="2097152" crc="46b7b344" sha1="a325b724e6346f585582bb2581d3063b1c8ddee9" region="user1" offset="c00000"/>
+		<rom name="ic18" size="2097152" crc="d48404e1" sha1="e4927d17cb19f6825f41b41056b89de224cf97de" region="user1" offset="e00000"/>
+		<rom name="ic19" size="2097152" crc="33d23bb9" sha1="0179438a0b14ad7eb553a24d86fae778671fcc49" region="user1" offset="1000000"/>
+		<rom name="ic20" size="2097152" crc="f8cc1038" sha1="06bcb25eb5df77bd503b0692a96ec66c00976fe9" region="user1" offset="1200000"/>
+		<rom name="ic21" size="2097152" crc="74ceb649" sha1="91b7eb699b7167f890528149178644a74ef3ad17" region="user1" offset="1400000"/>
+		<rom name="ic22" size="2097152" crc="85f31277" sha1="277c28d44cabd9081a8151d6ec27d47b5606435a" region="user1" offset="1600000"/>
+		<rom name="ic12" size="4194304" crc="d5ebc84e" sha1="f990b793cdfadbbac69c680191660f4a2f282ba2" region="user1" offset="1800000"/>
+		<chip type="cpu" name="SH-2" clock="28000000"/>
+		<chip type="cpu" name="SH-2" clock="28000000"/>
+		<chip type="cpu" name="68000" clock="12000000"/>
+		<chip type="audio" name="YMF292-F SCSP"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="2"/>
+		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
+		<dipswitch name="PDR1">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="PDR2">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
+	</game>
+	<game name="critcrsh" sourcefile="stv.c" romof="stvbios">
+		<description>Critter Crusher</description>
+		<year>1995</year>
+		<manufacturer>Sega</manufacturer>
+		<biosset name="japan" description="Japan (bios epr19730)" default="yes"/>
+		<biosset name="japana" description="Japan (bios mp17951a)"/>
+		<biosset name="us" description="USA (bios mp17952a)"/>
+		<biosset name="japanb" description="Japan (bios 20091)"/>
+		<biosset name="taiwan" description="Taiwan (bios mp17953a)"/>
+		<biosset name="europe" description="Europe (bios mp17954a)"/>
+		<rom name="epr19730.ic8" merge="epr19730.ic8" bios="japan" size="524288" crc="d0e0889d" sha1="fae53107c894e0c41c49e191dbe706c9cd6e50bd" region="cpu1" offset="0"/>
+		<rom name="mp17951a.s" merge="mp17951a.s" bios="japana" size="524288" crc="2672f9d8" sha1="63cf4a6432f6c87952f9cf3ab0f977aed2367303" region="cpu1" offset="0"/>
+		<rom name="mp17952a.s" merge="mp17952a.s" bios="us" size="524288" crc="d1be2adf" sha1="eaf1c3e5d602e1139d2090a78d7e19f04f916794" region="cpu1" offset="0"/>
+		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
+		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
+		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
+		<rom name="epr-18821.ic13" size="524288" crc="9a6658e2" sha1="16dbae3d9ab584713afcb403f89fe71049609245" region="user1" offset="1"/>
+		<rom name="mpr-18789.ic8" size="4194304" crc="b388616f" sha1="0b2c5a547c3a6a8fb9f4ca54336cf6dc9adb8c6a" region="user1" offset="1c00000"/>
+		<rom name="mpr-18788.ic9" size="4194304" crc="feae5867" sha1="7d2e47d5ab18700a246d53fdb7872a905cdac55a" region="user1" offset="2000000"/>
+		<rom name="critcrsh.nv" size="128" crc="3da9860e" sha1="05b315aa71fcfc4e617266e1c5e4954eccbf7854" region="user3" offset="0"/>
+		<chip type="cpu" name="SH-2" clock="28000000"/>
+		<chip type="cpu" name="SH-2" clock="28000000"/>
+		<chip type="cpu" name="68000" clock="12000000"/>
+		<chip type="audio" name="YMF292-F SCSP"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="2"/>
+		<input players="2" control="lightgun" buttons="6" coins="2" service="yes"/>
+		<dipswitch name="PDR1">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="PDR2">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
+	</game>
+	<game name="tatacot" sourcefile="stv.c" cloneof="critcrsh" romof="critcrsh">
+		<description>Tatacot (Japan)</description>
+		<year>1995</year>
+		<manufacturer>Sega</manufacturer>
+		<biosset name="japan" description="Japan (bios epr19730)" default="yes"/>
+		<biosset name="japana" description="Japan (bios mp17951a)"/>
+		<biosset name="us" description="USA (bios mp17952a)"/>
+		<biosset name="japanb" description="Japan (bios 20091)"/>
+		<biosset name="taiwan" description="Taiwan (bios mp17953a)"/>
+		<biosset name="europe" description="Europe (bios mp17954a)"/>
+		<rom name="epr19730.ic8" merge="epr19730.ic8" bios="japan" size="524288" crc="d0e0889d" sha1="fae53107c894e0c41c49e191dbe706c9cd6e50bd" region="cpu1" offset="0"/>
+		<rom name="mp17951a.s" merge="mp17951a.s" bios="japana" size="524288" crc="2672f9d8" sha1="63cf4a6432f6c87952f9cf3ab0f977aed2367303" region="cpu1" offset="0"/>
+		<rom name="mp17952a.s" merge="mp17952a.s" bios="us" size="524288" crc="d1be2adf" sha1="eaf1c3e5d602e1139d2090a78d7e19f04f916794" region="cpu1" offset="0"/>
+		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
+		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
+		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
+		<rom name="epr-18790.ic13" size="524288" crc="d95155dc" sha1="b08b75d15aad073eecf8b04fd2d718366bb6f6bb" region="user1" offset="1"/>
+		<rom name="mpr-18789.ic8" merge="mpr-18789.ic8" size="4194304" crc="b388616f" sha1="0b2c5a547c3a6a8fb9f4ca54336cf6dc9adb8c6a" region="user1" offset="1c00000"/>
+		<rom name="mpr-18788.ic9" merge="mpr-18788.ic9" size="4194304" crc="feae5867" sha1="7d2e47d5ab18700a246d53fdb7872a905cdac55a" region="user1" offset="2000000"/>
+		<rom name="critcrsh.nv" merge="critcrsh.nv" size="128" crc="3da9860e" sha1="05b315aa71fcfc4e617266e1c5e4954eccbf7854" region="user3" offset="0"/>
+		<chip type="cpu" name="SH-2" clock="28000000"/>
+		<chip type="cpu" name="SH-2" clock="28000000"/>
+		<chip type="cpu" name="68000" clock="12000000"/>
+		<chip type="audio" name="YMF292-F SCSP"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="2"/>
+		<input players="2" control="lightgun" buttons="6" coins="2" service="yes"/>
+		<dipswitch name="PDR1">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="PDR2">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
+	</game>
+	<game name="danchiq" sourcefile="stv.c" romof="stvbios">
+		<description>Danchi de Quiz: Okusan Yontaku Desuyo!</description>
+		<year>2000</year>
+		<manufacturer>Altron</manufacturer>
+		<biosset name="japan" description="Japan (bios epr19730)" default="yes"/>
+		<biosset name="japana" description="Japan (bios mp17951a)"/>
+		<biosset name="us" description="USA (bios mp17952a)"/>
+		<biosset name="japanb" description="Japan (bios 20091)"/>
+		<biosset name="taiwan" description="Taiwan (bios mp17953a)"/>
+		<biosset name="europe" description="Europe (bios mp17954a)"/>
+		<rom name="epr19730.ic8" merge="epr19730.ic8" bios="japan" size="524288" crc="d0e0889d" sha1="fae53107c894e0c41c49e191dbe706c9cd6e50bd" region="cpu1" offset="0"/>
+		<rom name="mp17951a.s" merge="mp17951a.s" bios="japana" size="524288" crc="2672f9d8" sha1="63cf4a6432f6c87952f9cf3ab0f977aed2367303" region="cpu1" offset="0"/>
+		<rom name="mp17952a.s" merge="mp17952a.s" bios="us" size="524288" crc="d1be2adf" sha1="eaf1c3e5d602e1139d2090a78d7e19f04f916794" region="cpu1" offset="0"/>
+		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
+		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
+		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
+		<rom name="ic22" size="2097152" crc="e216bfc8" sha1="7a08fa32281e272dbf5e7daea50a1800cc225c1b" region="user1" offset="200000"/>
+		<rom name="ic24" size="2097152" crc="b95aa5ac" sha1="2766c5414643034a0f6d746050557516bd3753df" region="user1" offset="400000"/>
+		<rom name="ic26" size="2097152" crc="df6ebd48" sha1="fcccafbee1b8b952b07ed0e7e86219eed9cf4a93" region="user1" offset="600000"/>
+		<rom name="ic28" size="2097152" crc="cf6a2b76" sha1="1f7522d446d57b78d099bae553133d5e7e54ff70" region="user1" offset="800000"/>
+		<rom name="ic30" size="2097152" crc="0b6a9901" sha1="b4c335199d3e49a9ae5d474b10130abc4718cdf9" region="user1" offset="a00000"/>
+		<rom name="ic32" size="2097152" crc="0b4604f5" sha1="547cba4a80baf126e87f87529aa933587643d359" region="user1" offset="c00000"/>
+		<rom name="ic34" size="2097152" crc="616e20fa" sha1="45c175e79b5701db9726d157ff92eee368f4bbf9" region="user1" offset="e00000"/>
+		<rom name="ic36" size="2097152" crc="43474e08" sha1="30b3ede287d5de93c6e0219bfd0a5d7ed5b6a958" region="user1" offset="1000000"/>
+		<rom name="ic23" size="2097152" crc="d080eb71" sha1="9c39b887697c8872f0cb655cff24282ad3b90e9b" region="user1" offset="1200000"/>
+		<rom name="ic25" size="2097152" crc="9a4109e5" sha1="ba59caac5f5a80fc52c507d8a47f322a380aa9a1" region="user1" offset="1400000"/>
+		<chip type="cpu" name="SH-2" clock="28000000"/>
+		<chip type="cpu" name="SH-2" clock="28000000"/>
+		<chip type="cpu" name="68000" clock="12000000"/>
+		<chip type="audio" name="YMF292-F SCSP"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="2"/>
+		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
+		<dipswitch name="PDR1">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="PDR2">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
+	</game>
+	<game name="micrombc" sourcefile="stv.c" romof="stvbios">
+		<description>Microman Battle Charge</description>
+		<year>1999</year>
+		<manufacturer>Sega</manufacturer>
+		<biosset name="japan" description="Japan (bios epr19730)" default="yes"/>
+		<biosset name="japana" description="Japan (bios mp17951a)"/>
+		<biosset name="us" description="USA (bios mp17952a)"/>
+		<biosset name="japanb" description="Japan (bios 20091)"/>
+		<biosset name="taiwan" description="Taiwan (bios mp17953a)"/>
+		<biosset name="europe" description="Europe (bios mp17954a)"/>
+		<rom name="epr19730.ic8" merge="epr19730.ic8" bios="japan" size="524288" crc="d0e0889d" sha1="fae53107c894e0c41c49e191dbe706c9cd6e50bd" region="cpu1" offset="0"/>
+		<rom name="mp17951a.s" merge="mp17951a.s" bios="japana" size="524288" crc="2672f9d8" sha1="63cf4a6432f6c87952f9cf3ab0f977aed2367303" region="cpu1" offset="0"/>
+		<rom name="mp17952a.s" merge="mp17952a.s" bios="us" size="524288" crc="d1be2adf" sha1="eaf1c3e5d602e1139d2090a78d7e19f04f916794" region="cpu1" offset="0"/>
+		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
+		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
+		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
+		<rom name="ic22" size="2097152" crc="8385bc45" sha1="0bd60d7560cb2313d68470d0572850a7b8c501fd" region="user1" offset="200000"/>
+		<rom name="ic24" size="2097152" crc="84ecb42f" sha1="005dee9a0912d4b1b7f5157bc3cde96548c1e348" region="user1" offset="400000"/>
+		<rom name="ic26" size="2097152" crc="869bc19c" sha1="638125007d331beef567c976ea6f4e7a21acdb64" region="user1" offset="600000"/>
+		<rom name="ic28" size="2097152" crc="0c3db354" sha1="c4d43da7cea1b4d5ca3ac545afde10344a4a385b" region="user1" offset="800000"/>
+		<rom name="ic30" size="2097152" crc="03b9eacf" sha1="d69c10f7613d9f52042dd6cce64e74e2b1ecc2d8" region="user1" offset="a00000"/>
+		<rom name="ic32" size="2097152" crc="62c10626" sha1="58cb0ca0330fa7a62b277ab0ff84bff65b81bb23" region="user1" offset="c00000"/>
+		<rom name="ic34" size="2097152" crc="8d89877e" sha1="7d76d48d64d7ac5411d714a4bb83f37e3e5b8df6" region="user1" offset="1000000"/>
+		<rom name="ic36" size="2097152" crc="8d89877e" sha1="7d76d48d64d7ac5411d714a4bb83f37e3e5b8df6" region="user1" offset="1200000"/>
+		<rom name="micrombc.nv" size="128" crc="6e89815f" sha1="4478f614fb61859f4ee7bf55462f737387887e6f" region="user3" offset="0"/>
+		<chip type="cpu" name="SH-2" clock="28000000"/>
+		<chip type="cpu" name="SH-2" clock="28000000"/>
+		<chip type="cpu" name="68000" clock="12000000"/>
+		<chip type="audio" name="YMF292-F SCSP"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="2"/>
+		<input players="2" buttons="6" coins="3" service="yes"/>
+		<dipswitch name="PDR1">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="PDR2">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
+	</game>
+	<game name="patocar" sourcefile="stv.c" romof="stvbios">
+		<description>Hashire Patrol Car</description>
+		<year>2001</year>
+		<manufacturer>Sega</manufacturer>
+		<biosset name="japan" description="Japan (bios epr19730)" default="yes"/>
+		<biosset name="japana" description="Japan (bios mp17951a)"/>
+		<biosset name="us" description="USA (bios mp17952a)"/>
+		<biosset name="japanb" description="Japan (bios 20091)"/>
+		<biosset name="taiwan" description="Taiwan (bios mp17953a)"/>
+		<biosset name="europe" description="Europe (bios mp17954a)"/>
+		<rom name="epr19730.ic8" merge="epr19730.ic8" bios="japan" size="524288" crc="d0e0889d" sha1="fae53107c894e0c41c49e191dbe706c9cd6e50bd" region="cpu1" offset="0"/>
+		<rom name="mp17951a.s" merge="mp17951a.s" bios="japana" size="524288" crc="2672f9d8" sha1="63cf4a6432f6c87952f9cf3ab0f977aed2367303" region="cpu1" offset="0"/>
+		<rom name="mp17952a.s" merge="mp17952a.s" bios="us" size="524288" crc="d1be2adf" sha1="eaf1c3e5d602e1139d2090a78d7e19f04f916794" region="cpu1" offset="0"/>
+		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
+		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
+		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
+		<rom name="ic22.bin" size="2097152" crc="b7e6d425" sha1="b7496cb390fe50ee786815082415427056e4e3e1" region="user1" offset="200000"/>
+		<rom name="ic24.bin" size="2097152" crc="cbbb687e" sha1="cfc87ae6124f9978bb2432b98d77f0da07d020b7" region="user1" offset="400000"/>
+		<rom name="ic26.bin" size="2097152" crc="91db9dbe" sha1="8652fe45ce56633016403c75e8b3a7b77f279819" region="user1" offset="600000"/>
+		<rom name="ic28.bin" size="2097152" crc="bff0cd9c" sha1="3c62aa2d7f71bd6fb147fdcd8d99cd7815f3047e" region="user1" offset="800000"/>
+		<rom name="ic30.bin" size="2097152" crc="9a4109e5" sha1="ba59caac5f5a80fc52c507d8a47f322a380aa9a1" region="user1" offset="a00000"/>
+		<rom name="patocar.nv" size="128" crc="d9873ee8" sha1="e74747816bba6745afd718b0beec67a884c6a31c" region="user3" offset="0"/>
+		<chip type="cpu" name="SH-2" clock="28000000"/>
+		<chip type="cpu" name="SH-2" clock="28000000"/>
+		<chip type="cpu" name="68000" clock="12000000"/>
+		<chip type="audio" name="YMF292-F SCSP"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="2"/>
+		<input players="2" buttons="6" coins="3" service="yes"/>
+		<dipswitch name="PDR1">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="PDR2">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
+	</game>
+	<game name="skychal" sourcefile="stv.c" romof="stvbios">
+		<description>Sky Challenger</description>
+		<year>2000</year>
+		<manufacturer>Sega</manufacturer>
+		<biosset name="japan" description="Japan (bios epr19730)" default="yes"/>
+		<biosset name="japana" description="Japan (bios mp17951a)"/>
+		<biosset name="us" description="USA (bios mp17952a)"/>
+		<biosset name="japanb" description="Japan (bios 20091)"/>
+		<biosset name="taiwan" description="Taiwan (bios mp17953a)"/>
+		<biosset name="europe" description="Europe (bios mp17954a)"/>
+		<rom name="epr19730.ic8" merge="epr19730.ic8" bios="japan" size="524288" crc="d0e0889d" sha1="fae53107c894e0c41c49e191dbe706c9cd6e50bd" region="cpu1" offset="0"/>
+		<rom name="mp17951a.s" merge="mp17951a.s" bios="japana" size="524288" crc="2672f9d8" sha1="63cf4a6432f6c87952f9cf3ab0f977aed2367303" region="cpu1" offset="0"/>
+		<rom name="mp17952a.s" merge="mp17952a.s" bios="us" size="524288" crc="d1be2adf" sha1="eaf1c3e5d602e1139d2090a78d7e19f04f916794" region="cpu1" offset="0"/>
+		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
+		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
+		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
+		<rom name="ic22.bin" size="2097152" crc="a12ccf64" sha1="eb3ff0cdc10fa17e40af5bddedfa5f758c7a5623" region="user1" offset="200000"/>
+		<rom name="ic24.bin" size="2097152" crc="9a929dcf" sha1="892e491fa33cc30cbbd24feb4ea6a63f9a9e1a62" region="user1" offset="400000"/>
+		<rom name="ic26.bin" size="2097152" crc="ed2183d3" sha1="7c43171a57e070a295c191408bd1b8ffee053d9b" region="user1" offset="600000"/>
+		<rom name="ic28.bin" size="2097152" crc="e7401d68" sha1="02f77439075b6367b46dc9ef7f67023b32a68526" region="user1" offset="800000"/>
+		<rom name="ic30.bin" size="2097152" crc="950f7a2f" sha1="1b4fd7b08eeb2fdf2cdfae7f8aa3240e8dce3b9a" region="user1" offset="a00000"/>
+		<rom name="ic32.bin" size="2097152" crc="a656212b" sha1="b2bf325cb4cf67787c836a9ac1bb7231068ffd82" region="user1" offset="c00000"/>
+		<rom name="skychal.nv" size="128" crc="a6515237" sha1="5e50cc93eb60ed67cdca408b23b80d16a398df02" region="user3" offset="0"/>
+		<chip type="cpu" name="SH-2" clock="28000000"/>
+		<chip type="cpu" name="SH-2" clock="28000000"/>
+		<chip type="cpu" name="68000" clock="12000000"/>
+		<chip type="audio" name="YMF292-F SCSP"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="2"/>
+		<input players="2" buttons="6" coins="3" service="yes"/>
+		<dipswitch name="PDR1">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="PDR2">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
+	</game>
+	<game name="supgoal" sourcefile="stv.c" romof="stvbios">
+		<description>Nerae! Super Goal</description>
+		<year>1998</year>
+		<manufacturer>Sega</manufacturer>
+		<biosset name="japan" description="Japan (bios epr19730)" default="yes"/>
+		<biosset name="japana" description="Japan (bios mp17951a)"/>
+		<biosset name="us" description="USA (bios mp17952a)"/>
+		<biosset name="japanb" description="Japan (bios 20091)"/>
+		<biosset name="taiwan" description="Taiwan (bios mp17953a)"/>
+		<biosset name="europe" description="Europe (bios mp17954a)"/>
+		<rom name="epr19730.ic8" merge="epr19730.ic8" bios="japan" size="524288" crc="d0e0889d" sha1="fae53107c894e0c41c49e191dbe706c9cd6e50bd" region="cpu1" offset="0"/>
+		<rom name="mp17951a.s" merge="mp17951a.s" bios="japana" size="524288" crc="2672f9d8" sha1="63cf4a6432f6c87952f9cf3ab0f977aed2367303" region="cpu1" offset="0"/>
+		<rom name="mp17952a.s" merge="mp17952a.s" bios="us" size="524288" crc="d1be2adf" sha1="eaf1c3e5d602e1139d2090a78d7e19f04f916794" region="cpu1" offset="0"/>
+		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
+		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
+		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
+		<rom name="ic22.bin" size="2097152" crc="a686f7a2" sha1="f4f9b63046d184864cfffe6ef8268a33b73298da" region="user1" offset="200000"/>
+		<rom name="ic24.bin" size="2097152" crc="56fbbeea" sha1="2c622ccc20aed0df7c611a00986ce76b84c61d70" region="user1" offset="400000"/>
+		<rom name="ic26.bin" size="2097152" crc="64701c2b" sha1="e9a426ce1882660d533b963899a8b1b6f41f85d4" region="user1" offset="600000"/>
+		<rom name="ic28.bin" size="2097152" crc="d9aebe8c" sha1="cd19cf1227d151a015c4dc3aed14bc3b2f78ce07" region="user1" offset="800000"/>
+		<rom name="ic30.bin" size="2097152" crc="26d4ade5" sha1="6b958aa4db293c7af88a735323d19f6417d86048" region="user1" offset="a00000"/>
+		<rom name="supgoal.nv" size="128" crc="63806aae" sha1="b82f0995799e9259a1f071ea8b64a719f9e3c9e9" region="user3" offset="0"/>
+		<chip type="cpu" name="SH-2" clock="28000000"/>
+		<chip type="cpu" name="SH-2" clock="28000000"/>
+		<chip type="cpu" name="68000" clock="12000000"/>
+		<chip type="audio" name="YMF292-F SCSP"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="2"/>
+		<input players="2" buttons="6" coins="3" service="yes"/>
+		<dipswitch name="PDR1">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="PDR2">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
+	</game>
+	<game name="techbowl" sourcefile="stv.c" romof="stvbios">
+		<description>Technical Bowling</description>
+		<year>1997</year>
+		<manufacturer>Sega</manufacturer>
+		<biosset name="japan" description="Japan (bios epr19730)" default="yes"/>
+		<biosset name="japana" description="Japan (bios mp17951a)"/>
+		<biosset name="us" description="USA (bios mp17952a)"/>
+		<biosset name="japanb" description="Japan (bios 20091)"/>
+		<biosset name="taiwan" description="Taiwan (bios mp17953a)"/>
+		<biosset name="europe" description="Europe (bios mp17954a)"/>
+		<rom name="epr19730.ic8" merge="epr19730.ic8" bios="japan" size="524288" crc="d0e0889d" sha1="fae53107c894e0c41c49e191dbe706c9cd6e50bd" region="cpu1" offset="0"/>
+		<rom name="mp17951a.s" merge="mp17951a.s" bios="japana" size="524288" crc="2672f9d8" sha1="63cf4a6432f6c87952f9cf3ab0f977aed2367303" region="cpu1" offset="0"/>
+		<rom name="mp17952a.s" merge="mp17952a.s" bios="us" size="524288" crc="d1be2adf" sha1="eaf1c3e5d602e1139d2090a78d7e19f04f916794" region="cpu1" offset="0"/>
+		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
+		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
+		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
+		<rom name="ic22" size="2097152" crc="5058db21" sha1="eec908bbfb9ec0fdca0002e69f32c1c030086456" region="user1" offset="200000"/>
+		<rom name="ic24" size="2097152" crc="34090f6d" sha1="b8bc344ab826d5c9584afb01dba1c720b8dbc74d" region="user1" offset="400000"/>
+		<rom name="ic26" size="2097152" crc="fb073352" sha1="a5164aa5854ab3095f704ab73b6e4fb9ed0e0785" region="user1" offset="600000"/>
+		<rom name="ic28" size="2097152" crc="530e0ceb" sha1="8d14eb9dbf253a4563587d256a15492384e7ca5c" region="user1" offset="800000"/>
+		<rom name="ic30" size="2097152" crc="8d89877e" sha1="7d76d48d64d7ac5411d714a4bb83f37e3e5b8df6" region="user1" offset="a00000"/>
+		<rom name="techbowl.nv" size="128" crc="5bebc2b7" sha1="e189e891e1753059fbaad4ce82ddf191d5e8176a" region="user3" offset="0"/>
+		<chip type="cpu" name="SH-2" clock="28000000"/>
+		<chip type="cpu" name="SH-2" clock="28000000"/>
+		<chip type="cpu" name="68000" clock="12000000"/>
+		<chip type="audio" name="YMF292-F SCSP"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="2"/>
+		<input players="2" buttons="6" coins="3" service="yes"/>
+		<dipswitch name="PDR1">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="PDR2">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
+	</game>
+	<game name="wasafari" sourcefile="stv.c" romof="stvbios">
+		<description>Wanpaku Safari</description>
+		<year>1998</year>
+		<manufacturer>Sega</manufacturer>
+		<biosset name="japan" description="Japan (bios epr19730)" default="yes"/>
+		<biosset name="japana" description="Japan (bios mp17951a)"/>
+		<biosset name="us" description="USA (bios mp17952a)"/>
+		<biosset name="japanb" description="Japan (bios 20091)"/>
+		<biosset name="taiwan" description="Taiwan (bios mp17953a)"/>
+		<biosset name="europe" description="Europe (bios mp17954a)"/>
+		<rom name="epr19730.ic8" merge="epr19730.ic8" bios="japan" size="524288" crc="d0e0889d" sha1="fae53107c894e0c41c49e191dbe706c9cd6e50bd" region="cpu1" offset="0"/>
+		<rom name="mp17951a.s" merge="mp17951a.s" bios="japana" size="524288" crc="2672f9d8" sha1="63cf4a6432f6c87952f9cf3ab0f977aed2367303" region="cpu1" offset="0"/>
+		<rom name="mp17952a.s" merge="mp17952a.s" bios="us" size="524288" crc="d1be2adf" sha1="eaf1c3e5d602e1139d2090a78d7e19f04f916794" region="cpu1" offset="0"/>
+		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
+		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
+		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
+		<rom name="ic22.bin" size="2097152" crc="d8bb2e2c" sha1="e55714425f8dcf01e8cb68d67c96f19a9d6f4e3a" region="user1" offset="200000"/>
+		<rom name="ic24.bin" size="2097152" crc="c1b0e173" sha1="92e5fe1f9fa70182c5bf8f087686782714cf4416" region="user1" offset="400000"/>
+		<rom name="ic26.bin" size="2097152" crc="a5c0577c" sha1="b6e19001e67c8222af6802eae7b58be65d8ca9fd" region="user1" offset="600000"/>
+		<rom name="ic28.bin" size="2097152" crc="2a8cfa97" sha1="a38ab55e88413e0df3f32f23c2a9dcccca4483be" region="user1" offset="800000"/>
+		<rom name="ic30.bin" size="2097152" crc="9a4109e5" sha1="ba59caac5f5a80fc52c507d8a47f322a380aa9a1" region="user1" offset="a00000"/>
+		<rom name="wasafari.nv" size="128" crc="50861c5a" sha1="c431703d7b56185f20af1aec04cabb5f49e2d4ba" region="user3" offset="0"/>
+		<chip type="cpu" name="SH-2" clock="28000000"/>
+		<chip type="cpu" name="SH-2" clock="28000000"/>
+		<chip type="cpu" name="68000" clock="12000000"/>
+		<chip type="audio" name="YMF292-F SCSP"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="2"/>
+		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
+		<dipswitch name="PDR1">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="PDR2">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="preliminary" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
 	</game>
 	<game name="seabass" sourcefile="stv.c" romof="stvbios">
 		<description>Sea Bass Fishing</description>
@@ -207857,7 +208822,7 @@
 		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
 		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
 		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
-		<rom name="seabassf.13" size="1048576" crc="6d7c39cc" sha1="d9d1663134420b75c65ee07d7d547254785f2f83" region="user1" offset="0"/>
+		<rom name="seabassf.13" size="1048576" crc="6d7c39cc" sha1="d9d1663134420b75c65ee07d7d547254785f2f83" region="user1" offset="1"/>
 		<rom name="mpr20551.2" size="4194304" crc="9a0c6dd8" sha1="26600372cc673ce3678945f4b5dc4e3ab31643a4" region="user1" offset="400000"/>
 		<rom name="mpr20552.3" size="4194304" crc="5f46b0aa" sha1="1aa576b15971c0ffb4e08d4802246841b31b6f35" region="user1" offset="800000"/>
 		<rom name="mpr20553.4" size="4194304" crc="c0f8a6b6" sha1="2038b9231a950450267be0db24b31d8035db79ad" region="user1" offset="c00000"/>
@@ -207866,11 +208831,12 @@
 		<rom name="mpr20550.1" size="4194304" crc="083e1ca8" sha1="03944dd8fe86f305ca4bd2d71e2140e03798ffc9" region="user1" offset="1800000"/>
 		<rom name="mpr20556.8" size="4194304" crc="1fd70c6c" sha1="d9d2e362d13238216f4f7e10095fb8383bbd91e8" region="user1" offset="1c00000"/>
 		<rom name="mpr20557.9" size="4194304" crc="3c9ba442" sha1="2e5b795cf4cdc11ab3e4887b2f77c7147c6e3eec" region="user1" offset="2000000"/>
+		<rom name="seabass.nv" size="128" crc="4e7c0944" sha1="dbba78f6a7f3e7d12d5c4fff36117db82f5f9c01" region="user3" offset="0"/>
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -207937,7 +208903,7 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="preliminary" graphic="good" palettesize="2048"/>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
 	</game>
 	<game name="shanhigw" sourcefile="stv.c" romof="stvbios">
 		<description>Shanghai - The Great Wall - Shanghai Triple Threat</description>
@@ -207961,7 +208927,7 @@
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -208049,11 +209015,12 @@
 		<rom name="mpr19631.7" size="2097152" crc="3a4b1abc" sha1="3b14b7fdebd4817da32ea374c15a38c695ffeff1" region="user1" offset="200000"/>
 		<rom name="mpr19632.2" size="4194304" crc="985fae46" sha1="f953bde91805b97b60d2ab9270f9d2933e064d95" region="user1" offset="400000"/>
 		<rom name="mpr19633.3" size="4194304" crc="e2f0b037" sha1="97861d09e10ce5d2b10bf5559574b3f489e28077" region="user1" offset="800000"/>
+		<rom name="eeprom-shienryu.bin" size="128" crc="98db6925" sha1="e78545e8f62d19f8e00197c62ff0e56f6c85e355" region="user1" offset="0"/>
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="vertical" width="480" height="704" aspectx="3" aspecty="4" refresh="60.000000"/>
+		<video screen="raster" orientation="vertical" width="224" height="320" aspectx="3" aspecty="4" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -208122,7 +209089,7 @@
 		</dipswitch>
 		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
 	</game>
-	<game name="sleague" sourcefile="stv.c" romof="stvbios">
+	<game name="smleague" sourcefile="stv.c" romof="stvbios">
 		<description>Super Major League (US)</description>
 		<year>1995</year>
 		<manufacturer>Sega</manufacturer>
@@ -208138,7 +209105,7 @@
 		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
 		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
 		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
-		<rom name="epr18777.13" size="524288" crc="8d180866" sha1="d47ebabab6e06400312d39f68cd818852e496b96" region="user1" offset="0"/>
+		<rom name="epr18777.13" size="524288" crc="8d180866" sha1="d47ebabab6e06400312d39f68cd818852e496b96" region="user1" offset="1"/>
 		<rom name="mpr18778.8" size="4194304" crc="25e1300e" sha1="64f3843f62cee34a47244ad5ee78fb2aa35289e3" region="user1" offset="1c00000"/>
 		<rom name="mpr18779.9" size="4194304" crc="51e2fabd" sha1="3aa361149af516f16d7d422596ee82014a183c2b" region="user1" offset="2000000"/>
 		<rom name="mpr18780.10" size="4194304" crc="8cd4dd74" sha1="9ffec1280b3965d52f643894bdfecdd792028191" region="user1" offset="2400000"/>
@@ -208148,7 +209115,7 @@
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -208215,7 +209182,7 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="preliminary" graphic="good" palettesize="2048"/>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
 	</game>
 	<game name="sokyugrt" sourcefile="stv.c" romof="stvbios">
 		<description>Soukyugurentai - Terra Diver</description>
@@ -208233,7 +209200,7 @@
 		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
 		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
 		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
-		<rom name="fpr19188.13" size="1048576" crc="45a27e32" sha1="96e1bab8bdadf7071afac2a0a6dd8fd8989f12a6" region="user1" offset="0"/>
+		<rom name="fpr19188.13" size="1048576" crc="45a27e32" sha1="96e1bab8bdadf7071afac2a0a6dd8fd8989f12a6" region="user1" offset="1"/>
 		<rom name="mpr19189.2" size="4194304" crc="0b202a3e" sha1="6691b5af2cacd6092ec03886b78c2565953fa297" region="user1" offset="400000"/>
 		<rom name="mpr19190.3" size="4194304" crc="1777ded8" sha1="dd332ac79f0a6d82b6bde35b795b2845003dd1a5" region="user1" offset="800000"/>
 		<rom name="mpr19191.4" size="4194304" crc="ec6eb07b" sha1="01fe4832ece8638ea6f4060099d9105fe8092c88" region="user1" offset="c00000"/>
@@ -208242,7 +209209,7 @@
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -208309,7 +209276,7 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="preliminary" graphic="good" palettesize="2048"/>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
 	</game>
 	<game name="sss" sourcefile="stv.c" romof="stvbios">
 		<description>Steep Slope Sliders</description>
@@ -208327,17 +209294,18 @@
 		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
 		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
 		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
-		<rom name="epr21488.13" size="524288" crc="71c9def1" sha1="a544a0b4046307172d2c1bf426ed24845f87d894" region="user1" offset="0"/>
+		<rom name="epr21488.13" size="524288" crc="71c9def1" sha1="a544a0b4046307172d2c1bf426ed24845f87d894" region="user1" offset="1"/>
 		<rom name="mpr21489.2" size="4194304" crc="4c85152b" sha1="78f2f1c31718d5bf631d8813daf9a11ea2a0e451" region="user1" offset="400000"/>
 		<rom name="mpr21490.3" size="4194304" crc="03da67f8" sha1="02f9ba7549ca552291dc0ff1b631103015838bba" region="user1" offset="800000"/>
 		<rom name="mpr21491.4" size="4194304" crc="cf7ee784" sha1="af823df2d60d8ef3d17628b95a04136b807ca095" region="user1" offset="c00000"/>
 		<rom name="mpr21492.5" size="4194304" crc="57753894" sha1="5c51167c158443d02a53d724a5ceb73055876c06" region="user1" offset="1000000"/>
 		<rom name="mpr21493.6" size="4194304" crc="efb2d271" sha1="a591e48206704fbda5fef3ce69ad279da1017ed6" region="user1" offset="1400000"/>
+		<rom name="sss.nv" size="128" crc="3473b2f3" sha1="6480b4b321af8ee6e967710e74f2556c17bfca97" region="user3" offset="0"/>
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -208404,7 +209372,7 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="preliminary" graphic="good" palettesize="2048"/>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
 	</game>
 	<game name="suikoenb" sourcefile="stv.c" romof="stvbios">
 		<description>Suikoenbu</description>
@@ -208422,7 +209390,7 @@
 		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
 		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
 		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
-		<rom name="fpr17834.13" size="1048576" crc="746ef686" sha1="e31c317991a687662a8a2a45aed411001e5f1941" region="user1" offset="0"/>
+		<rom name="fpr17834.13" size="1048576" crc="746ef686" sha1="e31c317991a687662a8a2a45aed411001e5f1941" region="user1" offset="1"/>
 		<rom name="mpr17836.2" size="4194304" crc="55e9642d" sha1="5198291cd1dce0398eb47760db2c19eae99273b0" region="user1" offset="400000"/>
 		<rom name="mpr17837.3" size="4194304" crc="13d1e667" sha1="cd513ceb33cc20032090113b61227638cf3b3998" region="user1" offset="800000"/>
 		<rom name="mpr17838.4" size="4194304" crc="f9e70032" sha1="8efdbcce01bdf77acfdb293545c59bf224a9c7d2" region="user1" offset="c00000"/>
@@ -208435,7 +209403,7 @@
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -208502,7 +209470,7 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="preliminary" graphic="good" palettesize="2048"/>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
 	</game>
 	<game name="twcup98" sourcefile="stv.c" romof="stvbios">
 		<description>Tecmo World Cup '98</description>
@@ -208520,16 +209488,16 @@
 		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
 		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
 		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
-		<rom name="epr20819.13" size="1048576" crc="d930dfc8" sha1="f66cc955181720661a0334fe67fa5750ddf9758b" region="user1" offset="0"/>
-		<rom name="mpr20821.2" size="4194304" crc="2d930d23" sha1="5fcaf4257f3639cb3aa407d2936f616499a09d97" region="user1" offset="400000"/>
-		<rom name="mpr20822.3" size="4194304" crc="8b33a5e2" sha1="d5689ac8aad63509febe9aa4077351be09b2d8d4" region="user1" offset="800000"/>
-		<rom name="mpr20823.4" size="4194304" crc="6e6d4e95" sha1="c387d03ba27580c62ac0bf780915fdf41552df6f" region="user1" offset="c00000"/>
-		<rom name="mpr20824.5" size="4194304" crc="4cf18a25" sha1="310961a5f114fea8938a3f514dffd5231e910a5a" region="user1" offset="1000000"/>
+		<rom name="epr20819.24" size="1048576" crc="d930dfc8" sha1="f66cc955181720661a0334fe67fa5750ddf9758b" region="user1" offset="1"/>
+		<rom name="mpr20821.12" size="4194304" crc="2d930d23" sha1="5fcaf4257f3639cb3aa407d2936f616499a09d97" region="user1" offset="400000"/>
+		<rom name="mpr20822.13" size="4194304" crc="8b33a5e2" sha1="d5689ac8aad63509febe9aa4077351be09b2d8d4" region="user1" offset="800000"/>
+		<rom name="mpr20823.14" size="4194304" crc="6e6d4e95" sha1="c387d03ba27580c62ac0bf780915fdf41552df6f" region="user1" offset="c00000"/>
+		<rom name="mpr20824.15" size="4194304" crc="4cf18a25" sha1="310961a5f114fea8938a3f514dffd5231e910a5a" region="user1" offset="1000000"/>
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -208596,7 +209564,7 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="preliminary" graphic="good" palettesize="2048"/>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
 	</game>
 	<game name="vfkids" sourcefile="stv.c" romof="stvbios">
 		<description>Virtua Fighter Kids</description>
@@ -208614,7 +209582,7 @@
 		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
 		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
 		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
-		<rom name="fpr18914.13" size="1048576" crc="cd35730a" sha1="645b52b449766beb740ab8f99957f8f431351ceb" region="user1" offset="0"/>
+		<rom name="fpr18914.13" size="1048576" crc="cd35730a" sha1="645b52b449766beb740ab8f99957f8f431351ceb" region="user1" offset="1"/>
 		<rom name="mpr18916.4" size="4194304" crc="4aae3ddb" sha1="b75479e73f1bce3f0c27fbd90820fa51eb1914a6" region="user1" offset="c00000"/>
 		<rom name="mpr18917.5" size="4194304" crc="edf6edc3" sha1="478e958f4f10a8126a00c83feca4a55ad6c25503" region="user1" offset="1000000"/>
 		<rom name="mpr18918.6" size="4194304" crc="d3a95036" sha1="e300bbbb71fb06027dc539c9bbb12946770ffc95" region="user1" offset="1400000"/>
@@ -208628,7 +209596,7 @@
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -208695,7 +209663,7 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="good" color="good" sound="preliminary" graphic="imperfect" palettesize="2048"/>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
 	</game>
 	<game name="vfremix" sourcefile="stv.c" romof="stvbios">
 		<description>Virtua Fighter Remix</description>
@@ -208713,7 +209681,7 @@
 		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
 		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
 		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
-		<rom name="epr17944.13" size="1048576" crc="a5bdc560" sha1="d3830480a611b7d88760c672ce46a2ea74076487" region="user1" offset="0"/>
+		<rom name="epr17944.13" size="524288" crc="3304c175" sha1="6d847efad73d361cac4d7fcb452ccf89efa13e24" region="user1" offset="1"/>
 		<rom name="mpr17946.2" size="4194304" crc="4cb245f7" sha1="363d9936b27043b5858c956a45736ac05aefc54e" region="user1" offset="400000"/>
 		<rom name="mpr17947.3" size="4194304" crc="fef4a9fb" sha1="1b4bd095962db769da17d3644df10f62d041e914" region="user1" offset="800000"/>
 		<rom name="mpr17948.4" size="4194304" crc="3e2b251a" sha1="be6191c18727d7cbc6399fd4c1aaae59304af30c" region="user1" offset="c00000"/>
@@ -208724,7 +209692,7 @@
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -208791,7 +209759,7 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="preliminary" graphic="good" palettesize="2048"/>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
 	</game>
 	<game name="vmahjong" sourcefile="stv.c" romof="stvbios">
 		<description>Virtual Mahjong</description>
@@ -208817,11 +209785,12 @@
 		<rom name="mpr19619.6" size="4194304" crc="0b76866c" sha1="10add2993dfe9daf757ec2ff8675390081a93c0a" region="user1" offset="1400000"/>
 		<rom name="mpr19614.1" size="4194304" crc="b83b3f03" sha1="e5a5919ee74964633eaaf4af2fe04c38604ccf16" region="user1" offset="1800000"/>
 		<rom name="mpr19621.8" size="4194304" crc="f92616b3" sha1="61a9dda92a86a02d027260e11b1bad3b0dda9f02" region="user1" offset="1c00000"/>
+		<rom name="vmahjong.nv" size="128" crc="4e6487f4" sha1="d6d930ab5f21b8c4f42812d08b3ee90f2bc94081" region="user3" offset="0"/>
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -208888,7 +209857,7 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="preliminary" graphic="good" palettesize="2048"/>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
 	</game>
 	<game name="winterht" sourcefile="stv.c" romof="stvbios">
 		<description>Winter Heat</description>
@@ -208906,7 +209875,7 @@
 		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
 		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
 		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
-		<rom name="fpr20108.13" size="1048576" crc="1ef9ced0" sha1="abc90ce341cd17bb77349d611d6879389611f0bf" region="user1" offset="0"/>
+		<rom name="fpr20108.13" size="1048576" crc="1ef9ced0" sha1="abc90ce341cd17bb77349d611d6879389611f0bf" region="user1" offset="1"/>
 		<rom name="mpr20110.2" size="4194304" crc="238ef832" sha1="20fade5730ff8e249a1450c41bfdff6e133f4768" region="user1" offset="400000"/>
 		<rom name="mpr20111.3" size="4194304" crc="b0a86f69" sha1="e66427f70413ad43fccc38423962c5eeda01094f" region="user1" offset="800000"/>
 		<rom name="mpr20112.4" size="4194304" crc="3ba2b49b" sha1="5ad154a8b774075479d791e29cbaf221d47557fc" region="user1" offset="c00000"/>
@@ -208918,7 +209887,7 @@
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -208985,7 +209954,7 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="good" color="good" sound="preliminary" graphic="imperfect" palettesize="2048"/>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
 	</game>
 	<game name="znpwfv" sourcefile="stv.c" romof="stvbios">
 		<description>Zen Nippon Pro-Wrestling Featuring Virtua</description>
@@ -209003,7 +209972,7 @@
 		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
 		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
 		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
-		<rom name="epr20398.13" size="1048576" crc="3fb56a0b" sha1="13c2fa2d94b106d39e46f71d15fbce3607a5965a" region="user1" offset="0"/>
+		<rom name="epr20398.13" size="1048576" crc="3fb56a0b" sha1="13c2fa2d94b106d39e46f71d15fbce3607a5965a" region="user1" offset="1"/>
 		<rom name="mpr20400.2" size="4194304" crc="1edfbe05" sha1="b0edd3f3d57408101ae6eb0aec742afbb4d289ca" region="user1" offset="400000"/>
 		<rom name="mpr20401.3" size="4194304" crc="99e98937" sha1="e1b4d12a0b4d0fe97a62fcc085e19cce77657c99" region="user1" offset="800000"/>
 		<rom name="mpr20402.4" size="4194304" crc="4572aa60" sha1="8b2d76ea8c6e2f472c6ee7c9b6ad6e80e6a1a85a" region="user1" offset="c00000"/>
@@ -209017,7 +209986,7 @@
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -209084,7 +210053,205 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="preliminary" graphic="good" palettesize="2048"/>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
+	</game>
+	<game name="znpwfvt" sourcefile="stv.c" cloneof="znpwfv" romof="znpwfv">
+		<description>All Japan Pro-Wrestling Featuring Virtua (Taiwan)</description>
+		<year>1997</year>
+		<manufacturer>Sega</manufacturer>
+		<biosset name="japan" description="Japan (bios epr19730)"/>
+		<biosset name="japana" description="Japan (bios mp17951a)"/>
+		<biosset name="us" description="USA (bios mp17952a)"/>
+		<biosset name="japanb" description="Japan (bios 20091)"/>
+		<biosset name="taiwan" description="Taiwan (bios mp17953a)" default="yes"/>
+		<biosset name="europe" description="Europe (bios mp17954a)"/>
+		<rom name="epr19730.ic8" merge="epr19730.ic8" bios="japan" size="524288" crc="d0e0889d" sha1="fae53107c894e0c41c49e191dbe706c9cd6e50bd" region="cpu1" offset="0"/>
+		<rom name="mp17951a.s" merge="mp17951a.s" bios="japana" size="524288" crc="2672f9d8" sha1="63cf4a6432f6c87952f9cf3ab0f977aed2367303" region="cpu1" offset="0"/>
+		<rom name="mp17952a.s" merge="mp17952a.s" bios="us" size="524288" crc="d1be2adf" sha1="eaf1c3e5d602e1139d2090a78d7e19f04f916794" region="cpu1" offset="0"/>
+		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
+		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
+		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
+		<rom name="epr20408.13" size="1048576" crc="1d62fcf6" sha1="3651261aa755da27b11462f2705311b7c639a687" region="user1" offset="1"/>
+		<rom name="mpr20400.2" merge="mpr20400.2" size="4194304" crc="1edfbe05" sha1="b0edd3f3d57408101ae6eb0aec742afbb4d289ca" region="user1" offset="400000"/>
+		<rom name="mpr20401.3" merge="mpr20401.3" size="4194304" crc="99e98937" sha1="e1b4d12a0b4d0fe97a62fcc085e19cce77657c99" region="user1" offset="800000"/>
+		<rom name="mpr20402.4" merge="mpr20402.4" size="4194304" crc="4572aa60" sha1="8b2d76ea8c6e2f472c6ee7c9b6ad6e80e6a1a85a" region="user1" offset="c00000"/>
+		<rom name="mpr20403.5" merge="mpr20403.5" size="4194304" crc="26a8e13e" sha1="07f5564b704598e3c3580d3d620ecc4f14549dbd" region="user1" offset="1000000"/>
+		<rom name="mpr20404.6" merge="mpr20404.6" size="4194304" crc="0b70275d" sha1="47b8672e19c698dc948760f7091f4c6280e728d0" region="user1" offset="1400000"/>
+		<rom name="mpr20399.1" merge="mpr20399.1" size="4194304" crc="c178a96e" sha1="65f4aa05187d48ba8ad4fe75ff6ffe1f8524831d" region="user1" offset="1800000"/>
+		<rom name="mpr20405.8" merge="mpr20405.8" size="4194304" crc="f53337b7" sha1="09a21f81016ee54f10554ae1f790415d7436afe0" region="user1" offset="1c00000"/>
+		<rom name="mpr20406.9" merge="mpr20406.9" size="4194304" crc="b677c175" sha1="d0de7b5a29928036df0bdfced5a8021c0999eb26" region="user1" offset="2000000"/>
+		<rom name="mpr20407.10" merge="mpr20407.10" size="4194304" crc="58356050" sha1="f8fb5a14f4ec516093c785891b05d55ae345754e" region="user1" offset="2400000"/>
+		<chip type="cpu" name="SH-2" clock="28000000"/>
+		<chip type="cpu" name="SH-2" clock="28000000"/>
+		<chip type="cpu" name="68000" clock="12000000"/>
+		<chip type="audio" name="YMF292-F SCSP"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="2"/>
+		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
+		<dipswitch name="PDR1">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="PDR2">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
+	</game>
+	<game name="znpwfve" sourcefile="stv.c" cloneof="znpwfv" romof="znpwfv">
+		<description>All Japan Pro-Wrestling Featuring Virtua (English translation)</description>
+		<year>1997</year>
+		<manufacturer>bootleg</manufacturer>
+		<biosset name="japan" description="Japan (bios epr19730)"/>
+		<biosset name="japana" description="Japan (bios mp17951a)"/>
+		<biosset name="us" description="USA (bios mp17952a)"/>
+		<biosset name="japanb" description="Japan (bios 20091)"/>
+		<biosset name="taiwan" description="Taiwan (bios mp17953a)" default="yes"/>
+		<biosset name="europe" description="Europe (bios mp17954a)"/>
+		<rom name="epr19730.ic8" merge="epr19730.ic8" bios="japan" size="524288" crc="d0e0889d" sha1="fae53107c894e0c41c49e191dbe706c9cd6e50bd" region="cpu1" offset="0"/>
+		<rom name="mp17951a.s" merge="mp17951a.s" bios="japana" size="524288" crc="2672f9d8" sha1="63cf4a6432f6c87952f9cf3ab0f977aed2367303" region="cpu1" offset="0"/>
+		<rom name="mp17952a.s" merge="mp17952a.s" bios="us" size="524288" crc="d1be2adf" sha1="eaf1c3e5d602e1139d2090a78d7e19f04f916794" region="cpu1" offset="0"/>
+		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
+		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
+		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
+		<rom name="epr20408.13" size="1048576" crc="1d62fcf6" sha1="3651261aa755da27b11462f2705311b7c639a687" region="user1" offset="1"/>
+		<rom name="mpr20400.2" merge="mpr20400.2" size="4194304" crc="1edfbe05" sha1="b0edd3f3d57408101ae6eb0aec742afbb4d289ca" region="user1" offset="400000"/>
+		<rom name="mpr20401.3" merge="mpr20401.3" size="4194304" crc="99e98937" sha1="e1b4d12a0b4d0fe97a62fcc085e19cce77657c99" region="user1" offset="800000"/>
+		<rom name="mpr20402.4" merge="mpr20402.4" size="4194304" crc="4572aa60" sha1="8b2d76ea8c6e2f472c6ee7c9b6ad6e80e6a1a85a" region="user1" offset="c00000"/>
+		<rom name="mpr20403.5" merge="mpr20403.5" size="4194304" crc="26a8e13e" sha1="07f5564b704598e3c3580d3d620ecc4f14549dbd" region="user1" offset="1000000"/>
+		<rom name="mpr20404.6" merge="mpr20404.6" size="4194304" crc="0b70275d" sha1="47b8672e19c698dc948760f7091f4c6280e728d0" region="user1" offset="1400000"/>
+		<rom name="mpr20399.1" merge="mpr20399.1" size="4194304" crc="c178a96e" sha1="65f4aa05187d48ba8ad4fe75ff6ffe1f8524831d" region="user1" offset="1800000"/>
+		<rom name="mpr20405.8" merge="mpr20405.8" size="4194304" crc="f53337b7" sha1="09a21f81016ee54f10554ae1f790415d7436afe0" region="user1" offset="1c00000"/>
+		<rom name="znpe20406.9" size="4194304" crc="b73ccd2c" sha1="75b6d5c568ed5baf594b186db782e7e9af55205b" region="user1" offset="2000000"/>
+		<rom name="znpe20407.10" size="4194304" crc="d15eb928" sha1="5217ec91daca0d9b5bc56a904ea09765567598d5" region="user1" offset="2400000"/>
+		<chip type="cpu" name="SH-2" clock="28000000"/>
+		<chip type="cpu" name="SH-2" clock="28000000"/>
+		<chip type="cpu" name="68000" clock="12000000"/>
+		<chip type="audio" name="YMF292-F SCSP"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="2"/>
+		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
+		<dipswitch name="PDR1">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="PDR2">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
 	</game>
 	<game name="danchih" sourcefile="stv.c" romof="stvbios">
 		<description>Danchi de Hanafuda</description>
@@ -209111,7 +210278,7 @@
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -209178,7 +210345,7 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="preliminary" graphic="good" palettesize="2048"/>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
 	</game>
 	<game name="mausuke" sourcefile="stv.c" romof="stvbios">
 		<description>Mausuke no Ojama the World</description>
@@ -209196,7 +210363,7 @@
 		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
 		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
 		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
-		<rom name="ic13.bin" size="1048576" crc="b456f4cd" sha1="91cbe703ec7c1dd45eb3b05bdfeb06e3570599d1" region="user1" offset="0"/>
+		<rom name="ic13.bin" size="1048576" crc="b456f4cd" sha1="91cbe703ec7c1dd45eb3b05bdfeb06e3570599d1" region="user1" offset="1"/>
 		<rom name="mcj-00.2" size="2097152" crc="4eeacd6f" sha1="104ca230f22cd11cc536b34abd482e54791b4d0f" region="user1" offset="400000"/>
 		<rom name="mcj-01.3" size="2097152" crc="365a494b" sha1="29713dfc83a9ade63ebcc7994d14cd785c4500b9" region="user1" offset="800000"/>
 		<rom name="mcj-02.4" size="2097152" crc="8b8e4931" sha1="0c94e2ccb72902d7786d1101a3958504f7151077" region="user1" offset="c00000"/>
@@ -209208,7 +210375,7 @@
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -209296,22 +210463,22 @@
 		<rom name="350-mpa1.u19" size="1048576" crc="2a5a8c3a" sha1="374ec55a39ea909cc672e4a629422681d1f2da05" region="user1" offset="0"/>
 		<rom name="350-mpa1.u16" size="1048576" crc="735e23ab" sha1="133e2284a07a611aed8ada2707248f392f4509aa" region="user1" offset="1"/>
 		<rom name="gfx0.u1" size="4194304" crc="a82d0b7e" sha1="37a7a177634d51620b1b43e58732987df166c7e6" region="user1" offset="400000"/>
-		<rom name="gfx1.u3" size="4194304" crc="a41e55d9" sha1="b896d3a6c36d325c3cece699da54f340a4512703" region="user1" offset="c00000"/>
-		<rom name="gfx2.u5" size="4194304" crc="4c1ebeb7" sha1="cdd139652d9484ae5837a39c2fd48d0a8d966d43" region="user1" offset="1800000"/>
-		<rom name="gfx3.u8" size="4194304" crc="f679a3e7" sha1="db11b033b8bbdd80b81e3bc098bd40ad3a8784f2" region="user1" offset="1c00000"/>
-		<rom name="gfx4.u12" size="4194304" crc="52d95242" sha1="b554a95933c2be4c72fb4226d3bc4775695da2c1" region="user1" offset="800000"/>
-		<rom name="gfx5.u15" size="4194304" crc="e201f830" sha1="5aa22fcc8f2e153d1abc3aa4050c594b3942ee67" region="user1" offset="2000000"/>
-		<rom name="gfx6.u18" size="4194304" crc="c6b381a3" sha1="46431f1e47c084a0bf85535d35af27471653b008" region="user1" offset="2c00000"/>
-		<rom name="350snda1.u52" size="524288" crc="9027e7a0" sha1="678df530838b078964a044ce734776f391654e6c" region="user2" offset="0"/>
-		<rom name="snd0.u48" size="2097152" crc="02b1927c" sha1="08b21d8b31b0f15c59fb5bb7eaf425e6fe04f7b5" region="user3" offset="0"/>
-		<rom name="snd1.u49" size="2097152" crc="58b18eda" sha1="7f3105fe04d9c0cdfd76e3323f623a4d0f7dad06" region="user3" offset="200000"/>
-		<rom name="snd2.u50" size="2097152" crc="51d626d6" sha1="0e68b79dcb653dcba48121ca2d4f692f90afa85e" region="user3" offset="400000"/>
-		<rom name="snd3.u51" size="2097152" crc="31af26ae" sha1="2c9f4c078afec55964b5c2a4d00f5c43f2661a04" region="user3" offset="600000"/>
+		<rom name="gfx1.u3" size="4194304" crc="a41e55d9" sha1="b896d3a6c36d325c3cece699da54f340a4512703" region="user1" offset="800000"/>
+		<rom name="gfx2.u5" size="4194304" crc="4c1ebeb7" sha1="cdd139652d9484ae5837a39c2fd48d0a8d966d43" region="user1" offset="c00000"/>
+		<rom name="gfx3.u8" size="4194304" crc="f679a3e7" sha1="db11b033b8bbdd80b81e3bc098bd40ad3a8784f2" region="user1" offset="1000000"/>
+		<rom name="gfx4.u12" size="4194304" crc="52d95242" sha1="b554a95933c2be4c72fb4226d3bc4775695da2c1" region="user1" offset="1400000"/>
+		<rom name="gfx5.u15" size="4194304" crc="e201f830" sha1="5aa22fcc8f2e153d1abc3aa4050c594b3942ee67" region="user1" offset="1800000"/>
+		<rom name="gfx6.u18" size="4194304" crc="c6b381a3" sha1="46431f1e47c084a0bf85535d35af27471653b008" region="user1" offset="1c00000"/>
+		<rom name="350snda1.u52" size="524288" crc="9027e7a0" sha1="678df530838b078964a044ce734776f391654e6c" region="user4" offset="0"/>
+		<rom name="snd0.u48" size="2097152" crc="02b1927c" sha1="08b21d8b31b0f15c59fb5bb7eaf425e6fe04f7b5" region="user4" offset="400000"/>
+		<rom name="snd1.u49" size="2097152" crc="58b18eda" sha1="7f3105fe04d9c0cdfd76e3323f623a4d0f7dad06" region="user4" offset="600000"/>
+		<rom name="snd2.u50" size="2097152" crc="51d626d6" sha1="0e68b79dcb653dcba48121ca2d4f692f90afa85e" region="user4" offset="800000"/>
+		<rom name="snd3.u51" size="2097152" crc="31af26ae" sha1="2c9f4c078afec55964b5c2a4d00f5c43f2661a04" region="user4" offset="a00000"/>
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -209378,7 +210545,7 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="preliminary" graphic="good" palettesize="2048"/>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
 	</game>
 	<game name="sfish2" sourcefile="stv.c">
 		<description>Sport Fishing 2</description>
@@ -209400,7 +210567,7 @@
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">
@@ -209488,7 +210655,7 @@
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
 		<chip type="audio" name="YMF292-F SCSP"/>
-		<video screen="raster" orientation="horizontal" width="704" height="480" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="2"/>
 		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
 		<dipswitch name="PDR1">

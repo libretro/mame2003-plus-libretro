@@ -872,6 +872,24 @@ ifeq ($(HAVE_ARMv6),1)
 	CFLAGS += -DHAVE_ARMv6
 endif
 
+# threads (libretro-common rthreads), as the other libretro cores do (beetle-psx):
+# on by default, off where there is no thread library, and on the MSVC builds
+# (the ST-V threaded video needs MSVC 2015's thread-local storage, the
+# buildbot's MSVC lanes are 2005 and 2010: nothing would use the threads)
+HAVE_THREADS ?= 1
+ifneq (,$(filter $(platform), emscripten linux-portable ngc wii wiiu ps2 ps3 psl1ght psp1 ctr vita))
+	HAVE_THREADS = 0
+endif
+ifneq (,$(findstring msvc,$(platform)))
+	HAVE_THREADS = 0
+endif
+ifeq ($(HAVE_THREADS),1)
+	# pthreads are in the C library on Darwin and Android, Windows uses its own threads
+	ifeq (,$(findstring msvc,$(platform))$(findstring android,$(platform))$(findstring ios,$(platform))$(findstring tvos,$(platform))$(filter osx win,$(platform)))
+		LIBS += -lpthread
+	endif
+endif
+
 # include the various .mak files
 ifneq (,$(filter $(INCLUDE_DRV),all))
 	include Makefile.common
