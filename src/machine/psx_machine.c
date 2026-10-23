@@ -122,6 +122,14 @@ static UINT32 m_n_dicr;
 #define DMA_SPU_TICKS ( 24000 )
 static double m_f_dma_spu_left;
 
+/* the end of a GPU linked list after 500 system clocks, as current MAME, */
+/* for the drivers that ask for it (the DrawSync callbacks of the System 10 */
+/* games come after the list, not inside the write that starts it) */
+#define DMA_GPU_PENDING ( 0xfffffffd )
+#define DMA_GPU_TICKS ( 500 )
+static int m_b_dma_gpu_delay;
+static double m_f_dma_gpu_left;
+
 /* the post-load functions run in the context of the CPU, whose local time
    (restored) can be past the timer system's time: the times left saved
    are from the timer system's time */
@@ -136,6 +144,10 @@ static void dma_timer( int n_channel, UINT32 n_scanline )
 	if( n_scanline == DMA_SPU_PENDING )
 	{
 		timer_adjust( m_p_timer_dma[ n_channel ], m_f_dma_spu_left, n_channel, 0 );
+	}
+	else if( n_scanline == DMA_GPU_PENDING )
+	{
+		timer_adjust( m_p_timer_dma[ n_channel ], m_f_dma_gpu_left, n_channel, 0 );
 	}
 	else if( n_scanline != 0xffffffff )
 	{
@@ -246,6 +258,14 @@ void psx_machine_cpu_speedups( void )
 	{
 		psxcpu_set_jit( 1 );
 	}
+}
+
+/* after psx_driver_init(): the GPU linked lists end after a delay */
+void psx_dma_set_gpu_delay( void )
+{
+	m_b_dma_gpu_delay = 1;
+	m_f_dma_gpu_left = 0;
+	state_save_register_double( "psx", 0, "m_f_dma_gpu_left", &m_f_dma_gpu_left, 1 );
 }
 
 void psx_dma_install_read_handler( int n_channel, psx_dma_read_handler p_fn_dma_read )
@@ -374,7 +394,15 @@ WRITE32_HANDLER( psx_dma_w )
 							break;
 						}
 					} while( n_address != 0xffffff );
-					dma_finished( n_channel );
+					if( m_b_dma_gpu_delay )
+					{
+						m_f_dma_gpu_left = TIME_IN_HZ( 33868800 ) * DMA_GPU_TICKS;
+						dma_timer( n_channel, DMA_GPU_PENDING );
+					}
+					else
+					{
+						dma_finished( n_channel );
+					}
 				}
 				else if( m_p_n_dmachannelcontrol[ n_channel ] == 0x11000002 &&
 					n_channel == 6 )
@@ -1433,6 +1461,10 @@ static void psx_dma_presave( void )
 	{
 		m_f_dma_spu_left = timer_timeleft( m_p_timer_dma[ 4 ] );
 	}
+	if( m_p_n_dma_lastscanline[ 2 ] == DMA_GPU_PENDING )
+	{
+		m_f_dma_gpu_left = timer_timeleft( m_p_timer_dma[ 2 ] );
+	}
 }
 
 static void psx_postload( void )
@@ -1445,6 +1477,10 @@ static void psx_postload( void )
 	{
 		m_f_dma_spu_left -= psx_postload_time();
 	}
+	if( m_p_n_dma_lastscanline[ 2 ] == DMA_GPU_PENDING )
+	{
+		m_f_dma_gpu_left -= psx_postload_time();
+	}
 	for( n = 0; n < 7; n++ )
 	{
 		dma_timer( n, m_p_n_dma_lastscanline[ n ] );
@@ -1456,6 +1492,8 @@ static void psx_postload( void )
 void psx_driver_init( void )
 {
 	int n;
+
+	m_b_dma_gpu_delay = 0;
 
 	for( n = 0; n < 7; n++ )
 	{

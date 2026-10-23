@@ -20,7 +20,9 @@ enum
 	FM_READSTATUS,
 	FM_WRITEPART1,		/* next write: the word to program */
 	FM_CLEARPART1,		/* next write: the erase confirm */
-	FM_SETMASTER		/* next write: the master lock confirm */
+	FM_SETMASTER,		/* next write: the master lock confirm */
+	FM_WRITEBUFFER1,	/* next write: the word count of a buffered program */
+	FM_WRITEBUFFER2		/* the words of a buffered program, then the confirm */
 };
 
 struct intelfsh_chip
@@ -35,6 +37,11 @@ struct intelfsh_chip
 	UINT8 master_lock;
 	mame_timer *timer;
 	double timer_left;	/* time left on the timer, for save states (-1: none) */
+	/* the write buffer of the StrataFlash (28F640J5), 16 words */
+	UINT16 buffer[ 16 ];
+	UINT32 buffer_start;
+	UINT8 buffer_count;
+	UINT8 buffer_used;
 };
 
 static struct intelfsh_chip chips[ INTELFSH_CHIPS_MAX ];
@@ -99,6 +106,12 @@ void intelfsh_init( int chip, int type, UINT16 *data )
 		c->device_id = 0x4471;
 		break;
 
+	case INTELFSH_INTEL_28F640J5:
+		bytes = 0x800000;
+		c->maker_id = 0x89;		/* Intel */
+		c->device_id = 0x15;
+		break;
+
 	default:
 	case INTELFSH_INTEL_TE28F160:
 		bytes = 0x200000;
@@ -119,6 +132,13 @@ void intelfsh_init( int chip, int type, UINT16 *data )
 	state_save_register_UINT8( "intelfsh", chip, "status", &c->status, 1 );
 	state_save_register_UINT8( "intelfsh", chip, "master_lock", &c->master_lock, 1 );
 	state_save_register_double( "intelfsh", chip, "timer_left", &c->timer_left, 1 );
+	if( type == INTELFSH_INTEL_28F640J5 )
+	{
+		state_save_register_UINT16( "intelfsh", chip, "buffer", c->buffer, 16 );
+		state_save_register_UINT32( "intelfsh", chip, "buffer_start", &c->buffer_start, 1 );
+		state_save_register_UINT8( "intelfsh", chip, "buffer_count", &c->buffer_count, 1 );
+		state_save_register_UINT8( "intelfsh", chip, "buffer_used", &c->buffer_used, 1 );
+	}
 	if( chip == 0 )
 	{
 		state_save_register_func_presave( intelfsh_presave );
@@ -157,7 +177,11 @@ UINT16 intelfsh_read( int chip, UINT32 offset )
 		return c->data[ offset % c->words ];
 
 	case FM_READSTATUS:
+	case FM_WRITEBUFFER2:
 		return c->status;
+
+	case FM_WRITEBUFFER1:
+		return 0x80;	/* the extended status: a write buffer is free */
 
 	case FM_READID:
 		switch( offset & 0xff )
@@ -251,6 +275,12 @@ void intelfsh_write( int chip, UINT32 offset, UINT16 data )
 		case 0x70:	/* read status */
 			c->mode = FM_READSTATUS;
 			break;
+		case 0xe8:	/* write to buffer (StrataFlash) */
+			if( c->type == INTELFSH_INTEL_28F640J5 )
+				c->mode = FM_WRITEBUFFER1;
+			else
+				logerror( "intelfsh %d: unknown command %02x\n", chip, data & 0xff );
+			break;
 		default:
 			logerror( "intelfsh %d: unknown command %02x\n", chip, data & 0xff );
 			break;
@@ -272,6 +302,44 @@ void intelfsh_write( int chip, UINT32 offset, UINT16 data )
 		}
 		else
 			logerror( "intelfsh %d: unexpected %02x in block erase\n", chip, data & 0xff );
+		break;
+
+	case FM_WRITEBUFFER1:
+		/* the number of words less one (MAME clamps it to the buffer) */
+		c->buffer_count = ( data > 0xf ? 0xf : data ) + 1;
+		c->buffer_used = 0;
+		c->status = 0x80;
+		c->mode = FM_WRITEBUFFER2;
+		break;
+
+	case FM_WRITEBUFFER2:
+		if( c->buffer_used < c->buffer_count )
+		{
+			if( c->buffer_used == 0 )
+				c->buffer_start = offset;
+			if( offset >= c->buffer_start + c->buffer_count )
+			{
+				/* outside the block of words: error, abort */
+				c->status = 0x30;
+				c->mode = FM_READSTATUS;
+			}
+			else
+				c->buffer[ c->buffer_used++ ] = data;
+		}
+		else
+		{
+			if( ( data & 0xff ) == 0xd0 )
+			{
+				/* the confirm: program the words, from the start address */
+				UINT32 i;
+				for( i = 0; i < c->buffer_count; i++ )
+					c->data[ ( c->buffer_start + i ) % c->words ] &= c->buffer[ i ];
+				c->status = 0x80;
+			}
+			else
+				c->status = 0x30;	/* invalid sequence */
+			c->mode = FM_READSTATUS;
+		}
 		break;
 
 	case FM_SETMASTER:

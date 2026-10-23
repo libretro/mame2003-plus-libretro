@@ -30,6 +30,7 @@ READ32_HANDLER( psx_irq_r );
 extern void psx_irq_set( UINT32 );
 extern void psx_dma_install_read_handler( int, psx_dma_read_handler );
 extern void psx_dma_install_write_handler( int, psx_dma_read_handler );
+extern void psx_dma_set_gpu_delay( void );
 WRITE32_HANDLER( psx_dma_w );
 READ32_HANDLER( psx_dma_r );
 WRITE32_HANDLER( psx_counter_w );

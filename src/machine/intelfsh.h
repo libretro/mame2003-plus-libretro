@@ -5,8 +5,8 @@
   Backported from current MAME src/devices/machine/intelfsh.cpp (R. Belmont
   and others), the parts the 16-bit Intel chips use: read array, read ID,
   read / clear status, word program, block erase (with its time), master
-  lock. The contents are host order 16-bit words, so a driver can point a
-  CPU or a sound chip straight at them.
+  lock, the write buffer of the StrataFlash. The contents are host order
+  16-bit words, so a driver can point a CPU or a sound chip straight at them.
 
 ***************************************************************************/
 
@@ -20,7 +20,8 @@
 enum
 {
 	INTELFSH_INTEL_E28F400B = 0,	/* 512KB, Intel 0x89 / 0x4471, bottom boot blocks */
-	INTELFSH_INTEL_TE28F160			/* 2MB, Sharp 0xb0 / 0xd0, 64KB blocks */
+	INTELFSH_INTEL_TE28F160,		/* 2MB, Sharp 0xb0 / 0xd0, 64KB blocks */
+	INTELFSH_INTEL_28F640J5			/* 8MB StrataFlash, Intel 0x89 / 0x15, 64KB blocks (as MAME), write buffer */
 };
 
 /* data: the contents (size bytes, host order words), NULL to allocate them; */
