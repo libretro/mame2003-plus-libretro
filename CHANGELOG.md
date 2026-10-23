@@ -283,6 +283,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 
 ## New Clones
 
+* Asura Buster - Eternal Warriors (USA), (Japan, set 2) and (Japan) (ARCADIA review build) - Romsets `asurabus`, `asurabusja`, `asurabusjr`; the Japan set 1 is now `asurabusj`, as in current MAME
 * Battle Shark (Japan, Joystick)
 * Botanic (French version)
 * Bubble Bobble (prototype on tokio hardware)
