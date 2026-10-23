@@ -121,12 +121,55 @@ static void jit_flush( void )
 	jit_flushes++;
 }
 
+/*
+	A CPU store over translated code (self-modifying code: some games
+	patch an instruction of a routine every frame). Only the blocks that
+	can contain the word are dropped: the ones starting at most
+	JIT_MAX_BLOCK - 1 words before it, at each address the word is seen
+	at (the RAM mirrors). The chains to a block go through the table, so
+	they see it gone; the store itself is done by the interpreter (the
+	recompiled stores leave the block when they hit translated code).
+	The word stays marked in the codemap: the next store there comes
+	back here.
+*/
+static INLINE UINT32 jit_table_index( UINT32 pc );
+
+static void jit_invalidate_host( const void *host )
+{
+	int i;
+	int k;
+
+	for( i = 0; i < fastram_count; i++ )
+	{
+		const struct psx_fastram *r = &fastram[ i ];
+		if( (const UINT8 *)host >= r->base && (const UINT8 *)host <= r->base + ( r->end - r->start ) )
+		{
+			UINT32 addr = ( r->start + (UINT32)( (const UINT8 *)host - r->base ) ) & ~3;
+			for( k = 0; k < JIT_MAX_BLOCK; k++ )
+			{
+				UINT32 pc = addr - k * 4;
+				struct jit_block *block = &jit_table[ jit_table_index( pc ) ];
+				if( block->valid && block->pc == pc )
+				{
+					if( block->code )
+					{
+						sljit_free_code( block->code, NULL );
+					}
+					block->code = NULL;
+					block->entry = NULL;
+					block->valid = 0;
+				}
+			}
+		}
+	}
+}
+
 /* called by the fast RAM write handlers */
 static INLINE void psx_jit_check_write( const void *host )
 {
 	if( jit_code_present && jit_codemap[ jit_codemap_index( host ) ] )
 	{
-		jit_flush();
+		jit_invalidate_host( host );
 	}
 }
 

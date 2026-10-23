@@ -1495,13 +1495,6 @@ ROM_START( pocketrc )
 	NAMCO_C76_BIOS
 ROM_END
 
-/* container for the Point Blank 2 sets (in current MAME the parent is the System 10 version) */
-ROM_START( ptblank2 )
-	ROM_REGION( 0x0400000, REGION_CPU1, 0 ) /* main ram */
-	ROM_REGION( 0x0000400, REGION_USER1, 0 ) /* scratchpad */
-	NAMCO_C76_BIOS
-ROM_END
-
 ROM_START( ptblank2a )
 	ROM_REGION( 0x0400000, REGION_CPU1, 0 ) /* main ram */
 	ROM_REGION( 0x0000400, REGION_USER1, 0 ) /* scratchpad */
@@ -2298,7 +2291,6 @@ GAMEX( 1997, starswep,   namcoc76, coh110_c76,      namcos11_c76, namcos11_c76, 
 GAMEX( 1997, starswepj,  starswep, coh110_c76,      namcos11_c76, namcos11_c76, ROT0, "Axela / Namco", "Star Sweep (Japan, STP1/VER.A)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1998, myangel3,   namcoc76, coh110_c76,      myangel3, namcos11_c76, ROT0, "MOSS / Namco", "Kosodate Quiz My Angel 3 (Japan, KQT1/VER.A)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1996, pocketrc,   namcoc76, coh110_c76,      pocketrc, namcos11_c76, ROT0, "Namco", "Pocket Racer (Japan, PKR1/VER.B)", GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1999, ptblank2,   namcoc76, coh110_c76,      ptblank2, ptblank2, ROT0, "Namco", "Point Blank 2 sets", NOT_A_DRIVER )
 GAMEX( 1999, ptblank2a,  ptblank2, coh110_c76,      ptblank2, ptblank2, ROT0, "Namco", "Point Blank 2 (World, GNB2/VER.A)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1999, ptblank2b,  ptblank2, coh110_c76,      ptblank2, ptblank2, ROT0, "Namco", "Point Blank 2 (World, GNB2/VER.A alt)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1999, ptblank2c,  ptblank2, coh110_c76,      ptblank2, ptblank2, ROT0, "Namco", "Point Blank 2 (World, unknown version)", GAME_IMPERFECT_GRAPHICS )
