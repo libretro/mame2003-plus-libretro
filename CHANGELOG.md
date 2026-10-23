@@ -589,6 +589,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Air Buster
 * Ashita no Joe
 * Asterix
+* Asura Blade, Asura Buster (no more repeated voices and sound effects)
 * Athena
 * Bandito
 * Big Event Golf
