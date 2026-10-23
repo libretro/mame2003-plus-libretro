@@ -902,7 +902,6 @@ void print_mame_xml()
 	PRINT_RESOURCE(taitofx1);
 	PRINT_RESOURCE(coh1000a);
 	PRINT_RESOURCE(namcoc76);
-	PRINT_RESOURCE(ptblank2);
 #endif
 	fprintf(xml_dat, "</" XML_ROOT ">\n");
     fclose(xml_dat);
