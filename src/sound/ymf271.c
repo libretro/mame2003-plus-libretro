@@ -1411,8 +1411,9 @@ int YMF271_sh_start( const struct MachineSound *msound )
 		sprintf(buf[1], "YMF271 %d R", i);
 		name[0] = buf[0];
 		name[1] = buf[1];
-		vol[0] = intf->mixing_level[i] >> 16;
-		vol[1] = intf->mixing_level[i] & 0xffff;
+		/* as YM3012_VOL: the left output (CH0) in the low 16 bits */
+		vol[0] = intf->mixing_level[i] & 0xffff;
+		vol[1] = intf->mixing_level[i] >> 16;
 		/* outputs CH0 / CH1 at the chip's sample rate, clock / 384 = 44.1 kHz */
 		chip->stream = stream_init_multi(2, name, vol, YMF271_CLOCK / 384, i, ymf271_update);
 
