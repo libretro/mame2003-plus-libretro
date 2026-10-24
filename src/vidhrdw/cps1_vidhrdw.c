@@ -178,6 +178,7 @@ The games seem to use them to mark platforms, kill zones and no-go areas.
 
 #include "driver.h"
 #include "vidhrdw/generic.h"
+#include "state.h"
 #include "cps1.h"
 
 #define VERBOSE 0
@@ -447,6 +448,7 @@ static int cps_version;
 int scanline1;
 int scanline2;
 int scancalls;
+int scancount;	/* CPS2 interrupt line counter, see cps2_interrupt() */
 
 void cps_setversion(int v)
 {
@@ -638,6 +640,7 @@ static data16_t *cps1_buffered_obj;
 static data16_t *cps1_palette;
 static data16_t *cps1_other;
 static data16_t *cps1_old_palette;
+static int cps1_palette_rebuild;	/* set after a state load: cps1_old_palette is stale */
 
 /* Working variables */
 static int cps1_last_sprite_offset;     /* Offset of the last sprite */
@@ -1153,6 +1156,14 @@ static void update_transmasks(void)
 	}
 }
 
+/* after a state load: the video RAM pointers come from the loaded output
+   ports, and the palette cache doesn't match the loaded palette */
+static void cps1_postload(void)
+{
+	cps1_get_video_base();
+	cps1_palette_rebuild = 1;
+}
+
 VIDEO_START( cps )
 {
 	int i;
@@ -1219,6 +1230,21 @@ VIDEO_START( cps )
 	cps1_get_video_base();   /* Calculate base pointers */
 	cps1_get_video_base();   /* Calculate old base pointers */
 
+	/* save states: the raster interrupt and object RAM state, and the
+	   sprite list latched at the end of the previous frame */
+	state_save_register_int("cps", 0, "scanline1", &scanline1);
+	state_save_register_int("cps", 0, "scanline2", &scanline2);
+	state_save_register_int("cps", 0, "scancalls", &scancalls);
+	state_save_register_int("cps", 0, "scancount", &scancount);
+	state_save_register_UINT16("cps", 0, "buffered obj", cps1_buffered_obj, cps1_obj_size/2);
+	if (cps_version == 2)
+	{
+		state_save_register_int("cps", 0, "objram bank", &cps2_objram_bank);
+		state_save_register_int("cps", 0, "sprite priorities", &pri_ctrl);
+		state_save_register_UINT16("cps", 0, "cps2 buffered obj", cps2_buffered_obj, cps2_obj_size/2);
+	}
+	state_save_register_func_postload(cps1_postload);
+
 	/* set palette banks */
 	palette_basecolor[0] = 0*32;	/* obj */
 	palette_basecolor[1] = 1*32;	/* scroll1 */
@@ -1271,7 +1297,7 @@ void cps1_build_palette(void)
 	{
 		int palette = cps1_palette[offset];
 
-		if (palette != cps1_old_palette[offset])
+		if (palette != cps1_old_palette[offset] || cps1_palette_rebuild)
 		{
 		   int red, green, blue, bright;
 
@@ -1297,6 +1323,7 @@ void cps1_build_palette(void)
 			cps1_old_palette[offset] = palette;
 		}
 	}
+	cps1_palette_rebuild = 0;
 }
 
 
