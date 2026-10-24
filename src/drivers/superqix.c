@@ -358,7 +358,7 @@ static READ_HANDLER(pbillian_ay_port_a_r)
 {
 /*  log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: ay_port_a_r\n",activecpu_get_pc()); */
 	 /* bits 76------  MCU status bits */
-	return (rand()&0xc0)|readinputport(3);
+	return (mame_rand_int()&0xc0)|readinputport(3);
 }
 
 

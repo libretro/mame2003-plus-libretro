@@ -205,7 +205,7 @@ static WRITE_HANDLER( razmataz_flipscreen_w )
 
 static READ_HANDLER( razmataz_unknown1_r )
 {
-	return rand() & 0xff;
+	return mame_rand_int() & 0xff;
 }
 
 static READ_HANDLER( razmataz_unknown2_r )

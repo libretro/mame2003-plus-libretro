@@ -190,10 +190,10 @@ static READ_HANDLER ( hitme_port_0_r )
 {
 	if ((timer_get_time() - timeout_time) > (timeout_counter * tock))
 	{
-		return input_port_0_r (offset) - ((rand()%2) << 2) - 0x80;
+		return input_port_0_r (offset) - ((mame_rand_int()%2) << 2) - 0x80;
 	}
 	else
-		return input_port_0_r (offset) - ((rand()%2) << 2);
+		return input_port_0_r (offset) - ((mame_rand_int()%2) << 2);
 }
 
 static READ_HANDLER ( hitme_port_1_r )
@@ -210,10 +210,10 @@ static READ_HANDLER ( hitme_port_2_r )
 {
 	if ((timer_get_time() - timeout_time) > (timeout_counter * tock))
 	{
-		return input_port_2_r (offset) - ((rand()%2) << 2) - 0x80;
+		return input_port_2_r (offset) - ((mame_rand_int()%2) << 2) - 0x80;
 	}
 	else
-		return input_port_2_r (offset) - ((rand()%2) << 2);
+		return input_port_2_r (offset) - ((mame_rand_int()%2) << 2);
 }
 
 static READ_HANDLER ( hitme_port_3_r )

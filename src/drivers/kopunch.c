@@ -37,9 +37,9 @@ static READ_HANDLER( kopunch_in_r )
 {
 	/* port 31 + low 3 bits of port 32 contain the punch strength */
 	if (offset == 0)
-		return rand();
+		return mame_rand_int();
 	else
-		return (rand() & 0x07) | input_port_1_r(0);
+		return (mame_rand_int() & 0x07) | input_port_1_r(0);
 }
 
 static WRITE_HANDLER( kopunch_lamp_w )
@@ -76,7 +76,7 @@ MEMORY_END
 
 static READ_HANDLER( pip_r )
 {
-	return rand();
+	return mame_rand_int();
 }
 
 static PORT_READ_START( readport )

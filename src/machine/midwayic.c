@@ -123,8 +123,8 @@ static void generate_serial_data(int upper)
 	serial_digit[7] = (serial_number / 10) % 10;
 	serial_digit[8] = (serial_number / 1) % 10;
 
-	serial.data[12] = rand() & 0xff;
-	serial.data[13] = rand() & 0xff;
+	serial.data[12] = mame_rand_int() & 0xff;
+	serial.data[13] = mame_rand_int() & 0xff;
 
 	serial.data[14] = 0; /* ??? */
 	serial.data[15] = 0; /* ??? */

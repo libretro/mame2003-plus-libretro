@@ -4614,7 +4614,7 @@ int i;
 	metro_vram_1 = RAM + (0x20000/2) * 1;
 	metro_vram_2 = RAM + (0x20000/2) * 2;
 for (i = 0;i < memory_region_length(REGION_USER1)/2;i++)
-	RAM[i] = rand();
+	RAM[i] = mame_rand_int();
 
 	init_metro();
 }

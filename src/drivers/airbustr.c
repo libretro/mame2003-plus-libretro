@@ -271,7 +271,7 @@ READ_HANDLER( devram_r )
 		   equal values */
 		case 0xff4:
 		{
-			return rand();
+			return mame_rand_int();
 		}	break;
 
 		default:	{ return devram[offset]; break;}

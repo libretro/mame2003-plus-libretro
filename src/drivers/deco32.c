@@ -263,7 +263,7 @@ static READ32_HANDLER( lockload_gun_mirror_r )
 /*logerror("%08x:Read gun %d\n",activecpu_get_pc(),offset);*/
 /*return ((rand()%0xffff)<<16) | rand()%0xffff;*/
 	if (offset) /* Mirror of player 1 and player 2 fire buttons */
-		return readinputport(5) | ((rand()%0xff)<<16);
+		return readinputport(5) | ((mame_rand_int()%0xff)<<16);
 	return readinputport(4) | readinputport(6) | (readinputport(6)<<16) | (readinputport(6)<<24); /*((rand()%0xff)<<16);*/
 }
 
@@ -731,7 +731,7 @@ MEMORY_END
 
 READ32_HANDLER( dragngun_unk_video_r)
 {
-	return rand();
+	return mame_rand_int();
 }
 
 READ32_HANDLER( dragngun_gfxrom_r ) /* trampoline */

@@ -86,7 +86,7 @@ extern WRITE_HANDLER( mrsdyna_io_w );
 
 READ_HANDLER( mrsdyna_rnd_r )
 {
-	return rand() % 4;
+	return mame_rand_int() % 4;
 }
 
 static MEMORY_READ_START( readmem )

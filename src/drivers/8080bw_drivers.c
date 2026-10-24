@@ -1873,7 +1873,7 @@ static READ_HANDLER( indianbt_r )
                 case 0x5ffc:    return 0;
         }
         logerror("unknown port 0 read @ %x\n",activecpu_get_pc());
-        return rand();
+        return mame_rand_int();
 }
 
 static PORT_READ_START( indianbt_readport )

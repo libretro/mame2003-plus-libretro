@@ -137,7 +137,7 @@ READ_HANDLER( PC3259_2_r )
 	}
 	if( grchamp_collision&2 )
 	{
-		result = rand()&0xff; /* OBJECT crash*/
+		result = mame_rand_int()&0xff; /* OBJECT crash*/
 	}
 	return result;
 }

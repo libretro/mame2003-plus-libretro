@@ -70,6 +70,7 @@
 #include "palette.h"
 #include "cpuintrf.h"
 #include "cpuexec.h"
+#include "machine/random.h"
 #include "cpuint.h"
 #include "sndintrf.h"
 #include "input.h"

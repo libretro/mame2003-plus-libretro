@@ -715,7 +715,7 @@ static void request_world_data(void)
 
 static void request_goalin_data(void)
 {
-	int n = rand() % 15;
+	int n = mame_rand_int() % 15;
 
 	CRAM[1][0x14B] = 0x00; /* x coordinates */
 	CRAM[1][0x14D] = 0x10;

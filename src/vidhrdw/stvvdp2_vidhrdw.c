@@ -2561,7 +2561,7 @@ READ32_HANDLER ( stv_vdp2_regs_r )
 		case 0x4/4:
 		/*Screen Status Register*/
 								   /*VBLANK              HBLANK            ODD         PAL    */
-			stv_vdp2_regs[offset] = (stv_vblank<<19) | ((rand()&1)<<18) | (1 << 17) | (0 << 16);
+			stv_vdp2_regs[offset] = (stv_vblank<<19) | ((mame_rand_int()&1)<<18) | (1 << 17) | (0 << 16);
 		break;
 		case 0x8/4:
 		/*H/V Counter Register*/
