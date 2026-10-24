@@ -455,7 +455,7 @@ static WRITE_HANDLER(cyclshtg_mcu_w)
 
 static READ_HANDLER(cyclshtg_mcu_status_r1)
 {
-  return rand();
+  return mame_rand_int();
 }
 
 static WRITE_HANDLER( cyclshtg_generic_control_w )
@@ -538,7 +538,7 @@ MEMORY_END
 
 static READ_HANDLER(unk_r)
 {
-  return rand();
+  return mame_rand_int();
 }
 
 static MEMORY_READ_START( bronx_readmem )

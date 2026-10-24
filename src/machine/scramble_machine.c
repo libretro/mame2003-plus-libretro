@@ -397,7 +397,7 @@ static READ_HANDLER( kingball_IN1_r )
 	   that it's working, doesn't actually use return value, so we can just use
 	   rand() */
 
-	return (readinputport(1) & ~0x20) | (rand() & 0x20);
+	return (readinputport(1) & ~0x20) | (mame_rand_int() & 0x20);
 }
 
 WRITE_HANDLER( kingball_speech_dip_w )

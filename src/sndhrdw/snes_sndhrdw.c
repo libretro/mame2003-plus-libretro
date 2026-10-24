@@ -537,7 +537,7 @@ READ_HANDLER( fakespc_port_r )
 					break;
 				case 9:
 				case 10:
-					retVal = rand() & 0xFF;
+					retVal = mame_rand_int() & 0xFF;
 					break;
 			}
 			portcount[0]++;
@@ -573,7 +573,7 @@ READ_HANDLER( fakespc_port_r )
 					break;
 				case 7:
 				case 8:
-					retVal = rand() & 0xFF;
+					retVal = mame_rand_int() & 0xFF;
 					break;
 			}
 			portcount[1]++;

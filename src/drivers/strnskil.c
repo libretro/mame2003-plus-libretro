@@ -53,7 +53,7 @@ static READ_HANDLER( protection_r )
 		case 0x6066:	res = 0xa5;	break;
 		case 0x60dc:	res = 0x20;	break;	/* bits 0-3 unknown */
 		case 0x615d:	res = 0x30;	break;	/* bits 0-3 unknown */
-		case 0x61b9:	res = 0x60|(rand()&0x0f);	break;	/* bits 0-3 unknown */
+		case 0x61b9:	res = 0x60|(mame_rand_int()&0x0f);	break;	/* bits 0-3 unknown */
 		case 0x6219:	res = 0x77;	break;
 		case 0x626c:	res = 0xb4;	break;
 		default:		res = 0xff; break;

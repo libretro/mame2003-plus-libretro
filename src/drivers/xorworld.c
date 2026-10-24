@@ -94,7 +94,7 @@ static DRIVER_INIT( xorworld )
 static READ16_HANDLER( xorworld_input_r )
 {
 	return readinputport(0) | ((EEPROM_read_bit() & 0x01) << 4);
-	return rand() & 0x10;
+	return mame_rand_int() & 0x10;
 }
 
 static WRITE16_HANDLER( eeprom_cs_w )

@@ -270,7 +270,7 @@ static READ32_HANDLER ( macrossp_soundstatus_r )
 
 	toggle ^= 1;
 
-	if (Machine->sample_rate == 0) return (rand()&2) | toggle;
+	if (Machine->sample_rate == 0) return (mame_rand_int()&2) | toggle;
 
 	return (sndpending << 1) | toggle;
 }

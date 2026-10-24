@@ -137,7 +137,7 @@ static WRITE_HANDLER( ace_characterram_w )
 
 static READ_HANDLER( unk_r )
 {
-	return rand()&0xff;
+	return mame_rand_int()&0xff;
 }
 
 
