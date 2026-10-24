@@ -488,7 +488,7 @@ static READ_HANDLER( alibaba_mystery_1_r )
 	/* The return value determines what the mystery item is.  Each bit corresponds*/
 	/* to a question mark*/
 
-	return rand() & 0x0f;
+	return mame_rand_int() & 0x0f;
 }
 
 

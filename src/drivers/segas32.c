@@ -811,7 +811,7 @@ static WRITE16_HANDLER( random_number_16_w )
 
 static READ16_HANDLER( random_number_16_r )
 {
-       return rand();
+       return mame_rand_int();
 }
 
 static READ16_HANDLER( shared_ram_16_r )

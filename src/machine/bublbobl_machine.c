@@ -236,7 +236,7 @@ log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: 68705 unknown write to address %04x\n",act
 	if ((ddrB & 0x20) && (~data & 0x20) && (portB_out & 0x20))
 	{
 		/* hack to get random EXTEND letters (who is supposed to do this? 68705? PAL?) */
-		bublbobl_sharedram2[0x7c] = rand()%6;
+		bublbobl_sharedram2[0x7c] = mame_rand_int()%6;
 
 		cpu_irq_line_vector_w(0,0,bublbobl_sharedram2[0]);
 		cpu_set_irq_line(0,0,HOLD_LINE);

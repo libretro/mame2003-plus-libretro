@@ -191,25 +191,25 @@ static READ16_HANDLER( mcu_r )
 
 		case (0x470/2):	/* read PC $110a, could be some sort of control word:
 				sometimes a bit is changed then it's poked back in... */
-			return (rand() &0xffff);
+			return (mame_rand_int() &0xffff);
 
 		case (0x582/2):	/* read PC $3594 */
-			return (rand() &0xffff);
+			return (mame_rand_int() &0xffff);
 
 		case (0x584/2):	/* read PC $3588 */
-			return (rand() &0xffff);
+			return (mame_rand_int() &0xffff);
 
 		case (0x586/2):	/* read PC $35a0 */
-			return (rand() &0xffff);
+			return (mame_rand_int() &0xffff);
 
 		case (0x588/2):	/* read PC $3580 */
-			return (rand() &0xffff);
+			return (mame_rand_int() &0xffff);
 
 		case (0x5b0/2):	/* bit 15 is branched on a few times in the $3300 area */
-			return (rand() &0xffff);
+			return (mame_rand_int() &0xffff);
 
 		case (0x5b4/2):	/* read and stored in ram before +0x5b0 bit 15 tested */
-			return (rand() &0xffff);
+			return (mame_rand_int() &0xffff);
 
 		/* Non-protection reads */
 
@@ -314,28 +314,28 @@ static READ16_HANDLER( cop2_mcu_r )
 		/* Protection is not understood */
 
 		case (0x580/2):	/* read PC $1a9e */
-			return (rand() &0xffff);
+			return (mame_rand_int() &0xffff);
 
 		case (0x582/2):	/* read PC $1ab2 */
-			return (rand() &0xffff);
+			return (mame_rand_int() &0xffff);
 
 		case (0x584/2):	/* read PC $1aa6 */
-			return (rand() &0xffff);
+			return (mame_rand_int() &0xffff);
 
 		case (0x590/2):	/* read PC $8622 */
-			return (rand() &0xffff);
+			return (mame_rand_int() &0xffff);
 
 		case (0x592/2):	/* read PC $85ee */
-			return (rand() &0xffff);
+			return (mame_rand_int() &0xffff);
 
 		case (0x594/2):	/* read PC $85be */
-			return (rand() &0xffff);
+			return (mame_rand_int() &0xffff);
 
 		case (0x5b0/2):	/* bit 15 is branched on a few times in the $1938 area */
-			return (rand() &0xffff);
+			return (mame_rand_int() &0xffff);
 
 		case (0x5b4/2):	/* read at $1932 and stored in ram before +0x5b0 bit 15 tested */
-			return (rand() &0xffff);
+			return (mame_rand_int() &0xffff);
 
 		/* Non-protection reads */
 

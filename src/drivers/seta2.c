@@ -516,7 +516,7 @@ READ16_HANDLER( pzlbowl_protection_r )
 
 READ16_HANDLER( pzlbowl_coins_r )
 {
-	return readinputport(4) | (rand() & 0x80 );
+	return readinputport(4) | (mame_rand_int() & 0x80 );
 }
 
 WRITE16_HANDLER( pzlbowl_coin_counter_w )

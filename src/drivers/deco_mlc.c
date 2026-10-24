@@ -121,7 +121,7 @@ static READ32_HANDLER( avengrs_control_r )
 
 static READ32_HANDLER(test2_r)
 {
-	return rand();
+	return mame_rand_int();
 }
 
 static READ32_HANDLER(test3_r)

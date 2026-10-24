@@ -350,6 +350,9 @@ static int init_machine(void)
 	/* now set up all the CPUs */
 	cpu_init();
 
+	/* the random number generator of the emulation, in the save states */
+	mame_rand_init();
+
 	/* load input ports settings (keys, dip switches, and so on) */
 	settingsloaded = load_input_port_settings();
 
