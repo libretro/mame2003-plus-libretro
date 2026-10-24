@@ -571,6 +571,13 @@ bool retro_unserialize(const void * data, size_t size)
 
 ******************************************************************************/
 
+/* a state saved with another sample rate */
+static void osd_audio_postload(void)
+{
+  if (samples_per_frame < orig_samples_per_frame || samples_per_frame > orig_samples_per_frame + 16)
+    samples_per_frame = orig_samples_per_frame;
+}
+
 int osd_start_audio_stream(int stereo)
 {
 
@@ -584,6 +591,12 @@ int osd_start_audio_stream(int stereo)
   orig_samples_per_frame = samples_per_frame;
 
   if (Machine->sample_rate == 0) return 0;
+
+  /* the frames alternate their number of samples when the frame rate
+     doesn't divide the sample rate: where they are in that is state */
+  state_save_register_float("osd_audio", 0, "delta_samples", &delta_samples, 1);
+  state_save_register_int("osd_audio", 0, "samples_per_frame", &samples_per_frame);
+  state_save_register_func_postload(osd_audio_postload);
 
   samples_buffer = (short *) calloc(samples_per_frame+16, 2 + usestereo * 2);
   if (!usestereo) conversion_buffer = (short *) calloc(samples_per_frame+16, 4);
