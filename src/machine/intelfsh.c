@@ -1,6 +1,6 @@
 /***************************************************************************
 
-  Intel / Sharp 16-bit flash memories, the Intel command set
+  Intel / Sharp 8-bit and 16-bit flash memories, the Intel command set
 
   Backported from current MAME src/devices/machine/intelfsh.cpp. A block
   erase takes the time of MAME (1 second for a 64KB block, 300 / 600 ms
@@ -29,7 +29,8 @@ struct intelfsh_chip
 {
 	int type;
 	UINT16 *data;
-	UINT32 words;
+	UINT32 words;	/* the size in units: words, bytes on an 8-bit chip */
+	UINT8 bits;
 	UINT8 maker_id;
 	UINT16 device_id;
 	UINT8 mode;
@@ -112,6 +113,12 @@ void intelfsh_init( int chip, int type, UINT16 *data )
 		c->device_id = 0x15;
 		break;
 
+	case INTELFSH_INTEL_E28F008SA:
+		bytes = 0x100000;
+		c->maker_id = 0x89;		/* Intel */
+		c->device_id = 0xa2;
+		break;
+
 	default:
 	case INTELFSH_INTEL_TE28F160:
 		bytes = 0x200000;
@@ -119,7 +126,8 @@ void intelfsh_init( int chip, int type, UINT16 *data )
 		c->device_id = 0xd0;
 		break;
 	}
-	c->words = bytes / 2;
+	c->bits = ( type == INTELFSH_INTEL_E28F008SA ) ? 8 : 16;
+	c->words = ( c->bits == 8 ) ? bytes : bytes / 2;
 	c->data = data != NULL ? data : auto_malloc( bytes );
 	memset( c->data, 0xff, bytes );
 	c->mode = FM_NORMAL;
@@ -127,7 +135,10 @@ void intelfsh_init( int chip, int type, UINT16 *data )
 	c->timer = timer_alloc( intelfsh_delay );
 	c->timer_left = -1;
 
-	state_save_register_UINT16( "intelfsh", chip, "data", c->data, c->words );
+	if( c->bits == 8 )
+		state_save_register_UINT8( "intelfsh", chip, "data", (UINT8 *)c->data, c->words );
+	else
+		state_save_register_UINT16( "intelfsh", chip, "data", c->data, c->words );
 	state_save_register_UINT8( "intelfsh", chip, "mode", &c->mode, 1 );
 	state_save_register_UINT8( "intelfsh", chip, "status", &c->status, 1 );
 	state_save_register_UINT8( "intelfsh", chip, "master_lock", &c->master_lock, 1 );
@@ -153,7 +164,7 @@ UINT16 *intelfsh_data( int chip )
 
 UINT32 intelfsh_size( int chip )
 {
-	return chips[ chip ].words * 2;
+	return chips[ chip ].bits == 8 ? chips[ chip ].words : chips[ chip ].words * 2;
 }
 
 void intelfsh_reset( int chip )
@@ -174,6 +185,8 @@ UINT16 intelfsh_read( int chip, UINT32 offset )
 	{
 	default:
 	case FM_NORMAL:
+		if( c->bits == 8 )
+			return ( (UINT8 *)c->data )[ offset % c->words ];
 		return c->data[ offset % c->words ];
 
 	case FM_READSTATUS:
@@ -232,11 +245,11 @@ static void intelfsh_erase( int chip, UINT32 offset )
 	}
 	else
 	{
-		base = ( ( offset % c->words ) * 2 ) & ~0xffff;
+		base = ( ( offset % c->words ) * ( c->bits / 8 ) ) & ~0xffff;
 		size = 0x10000;
 		duration = TIME_IN_SEC( 1 );
 	}
-	memset( c->data + base / 2, 0xff, size );
+	memset( (UINT8 *)c->data + base, 0xff, size );
 	timer_adjust( c->timer, duration, chip, 0 );
 }
 
@@ -288,7 +301,10 @@ void intelfsh_write( int chip, UINT32 offset, UINT16 data )
 		break;
 
 	case FM_WRITEPART1:
-		c->data[ offset % c->words ] &= data;
+		if( c->bits == 8 )
+			( (UINT8 *)c->data )[ offset % c->words ] &= data;
+		else
+			c->data[ offset % c->words ] &= data;
 		c->status = 0x80;
 		c->mode = FM_READSTATUS;
 		break;
@@ -366,6 +382,11 @@ void intelfsh_nvram_load( int chip, mame_file *file )
 	UINT8 buffer[ 0x1000 ];
 	UINT32 i, j;
 
+	if( c->bits == 8 )
+	{
+		mame_fread( file, c->data, c->words );
+		return;
+	}
 	for( i = 0; i < c->words; i += sizeof( buffer ) / 2 )
 	{
 		mame_fread( file, buffer, sizeof( buffer ) );
@@ -380,6 +401,11 @@ void intelfsh_nvram_save( int chip, mame_file *file )
 	UINT8 buffer[ 0x1000 ];
 	UINT32 i, j;
 
+	if( c->bits == 8 )
+	{
+		mame_fwrite( file, c->data, c->words );
+		return;
+	}
 	for( i = 0; i < c->words; i += sizeof( buffer ) / 2 )
 	{
 		for( j = 0; j < sizeof( buffer ) / 2; j++ )
