@@ -180,6 +180,9 @@ extern retro_log_printf_t log_cb;
 ******************************************************************************/
 extern void frontend_message_cb(const char *message_string, unsigned frames_to_display);
 
+/* set when the vector resolution option changes while the game runs */
+extern int vector_resize_pending;
+
 
 /******************************************************************************
 

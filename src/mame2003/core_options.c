@@ -14,6 +14,8 @@
 #include <libretro.h>
 #include <string/stdstring.h>
 
+int vector_resize_pending;
+
 static struct retro_core_option_v2_definition  default_options[OPT_end + 1];    /* need the plus one for the NULL entries at the end */
 static struct retro_core_option_v2_definition  effective_defaults[OPT_end + 1];
 
@@ -429,7 +431,7 @@ static struct retro_core_option_v2_definition option_def_vector_resolution = {
    APPNAME"_vector_resolution",
    "Vector Resolution",
    "Resolution",
-   "Restart core required.",
+   "Size of the screen the vector games are drawn on. Applied at once, also while the game runs.",
    NULL,
    "cat_key_vector",
    {
@@ -1189,12 +1191,22 @@ void update_variables(bool first_time)
 
         case OPT_VECTOR_RESOLUTION:
           {
-            int width = 0;
-            int height = 0;
-            sscanf(var.value, "%dx%d", &width, &height);
-            /* if they are still 0, mame will set from driver resolution set */
-            options.vector_width = width;
-            options.vector_height = height;
+            /* applied when the game starts, and again when it changes: the
+               display is resized while the game runs (retro_run) */
+            static char applied[32];
+            if (first_time || strcmp(applied, var.value) != 0)
+            {
+              int width = 0;
+              int height = 0;
+              sscanf(var.value, "%dx%d", &width, &height);
+              /* if they are still 0, mame will set from driver resolution set */
+              options.vector_width = width;
+              options.vector_height = height;
+              if (!first_time)
+                vector_resize_pending = 1;
+              strncpy(applied, var.value, sizeof(applied) - 1);
+              applied[sizeof(applied) - 1] = 0;
+            }
           }
           break;
 

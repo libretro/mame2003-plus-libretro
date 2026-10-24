@@ -45,6 +45,7 @@ extern unsigned char *vectorram;
 extern size_t vectorram_size;
 
 VIDEO_START( vector );
+void vector_bitmap_resized(void);
 VIDEO_UPDATE( vector );
 
 #define VCLEAN  0
