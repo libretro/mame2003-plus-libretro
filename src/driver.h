@@ -440,7 +440,7 @@ struct GameDriver
 #define GAME_NO_COCKTAIL            0x0100	/* screen flip support is missing */
 #define GAME_NO_SOUND               0x0200	/* sound is missing */
 #define GAME_IMPERFECT_SOUND        0x0400	/* sound is known to be wrong */
-#define GAME_DOESNT_SERIALIZE       0x0420	/* game can not be saved through serailization */
+#define GAME_DOESNT_SERIALIZE       0x0800	/* game can not be saved through serialization */
 #define NOT_A_DRIVER                0x4000	/* set by the fake "root" driver_0 and by "containers" */
                                             /* e.g. driver_neogeo. */
 
