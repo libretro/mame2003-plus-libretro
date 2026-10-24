@@ -377,6 +377,7 @@ struct artwork_piece
 	struct mame_bitmap *	yrgbbitmap;
 	UINT32 *				scanlinehint;
 	UINT8					blendflags;
+	const struct overlay_piece *overlay_data;	/* a driver's overlay: drawn again on a resize */
 
 	/* derived/dynamic data */
 	int						intersects_game;
@@ -408,6 +409,9 @@ static int gamescale;
 static struct mame_bitmap *uioverlay;
 static UINT32 *uioverlayhint;
 static struct rectangle uibounds, last_uibounds;
+static struct rectangle ui_changed_bounds;
+static int ui_changed;
+static int full_render_pending;	/* after a resize: draw the whole game, not the vector dirty pixels */
 
 static UINT32 *palette_lookup;
 
@@ -446,6 +450,7 @@ static void alpha_blend_intersecting_rect(struct mame_bitmap *dstbitmap, const s
 static void add_intersecting_rect(struct mame_bitmap *dstbitmap, const struct rectangle *dstbounds, struct mame_bitmap *srcbitmap, const struct rectangle *srcbounds);
 static void cmy_blend_intersecting_rect(struct mame_bitmap *dstbitmap, struct mame_bitmap *dstyrgbbitmap, const struct rectangle *dstbounds, struct mame_bitmap *srcbitmap, struct mame_bitmap *srcyrgbbitmap, const struct rectangle *srcbounds, UINT8 blendflags);
 static int generate_overlay(const struct overlay_piece *list, int width, int height);
+static int generate_overlay_bitmap(struct artwork_piece *piece, int width, int height);
 static void add_range_to_hint(UINT32 *hintbase, int scanline, int startx, int endx);
 
 
@@ -596,7 +601,89 @@ static INLINE UINT32 blend_over(UINT32 game, UINT32 pre, UINT32 yrgb)
 	to osd_create_display
 -------------------------------------------------*/
 
+static int artwork_setup_display(struct osd_create_params *params, UINT32 *rgb_components);
+
 int artwork_create_display(struct osd_create_params *params, UINT32 *rgb_components, const struct artwork_callbacks *callbacks)
+{
+	/* reset UI */
+	uioverlay = NULL;
+	uioverlayhint = NULL;
+	palette_lookup = NULL;
+
+	/* first load the artwork; if none, quit now */
+	artwork_list = NULL;
+	if (!artwork_load(Machine->gamedrv, params->width, params->height, callbacks))
+		return 1;
+	if (!artwork_list && (!callbacks->activate_artwork || !callbacks->activate_artwork(params)))
+		return osd_create_display(params, rgb_components);
+
+	return artwork_setup_display(params, rgb_components);
+}
+
+
+/*-------------------------------------------------
+	artwork_resize_display - the game's display
+	changes size while it runs (the vector
+	resolution): the loaded artwork is kept, the
+	bitmaps that depend on the size are made again
+-------------------------------------------------*/
+
+int artwork_resize_display(struct osd_create_params *params, UINT32 *rgb_components)
+{
+	struct artwork_piece *piece;
+
+	if (!artwork_list && !uioverlay)
+	{
+		osd_close_display();
+		return osd_create_display(params, rgb_components);
+	}
+
+	/* free what was made for the old size */
+	auto_bitmap_free(underlay);
+	auto_bitmap_free(overlay);
+	auto_bitmap_free(overlay_yrgb);
+	auto_bitmap_free(bezel);
+	auto_bitmap_free(final);
+	auto_bitmap_free(uioverlay);
+	auto_free_ptr(uioverlayhint);
+	underlay = overlay = overlay_yrgb = bezel = final = uioverlay = NULL;
+	uioverlayhint = NULL;
+	for (piece = artwork_list; piece; piece = piece->next)
+	{
+		auto_bitmap_free(piece->prebitmap);
+		auto_bitmap_free(piece->yrgbbitmap);
+		auto_free_ptr(piece->scanlinehint);
+		piece->prebitmap = piece->yrgbbitmap = NULL;
+		piece->scanlinehint = NULL;
+
+		/* a driver's overlay is drawn at the game's size: draw it again */
+		if (piece->overlay_data)
+		{
+			auto_bitmap_free(piece->rawbitmap);
+			piece->rawbitmap = NULL;
+			if (!generate_overlay_bitmap(piece, params->width, params->height))
+				return 1;
+		}
+	}
+
+	/* the UI areas were on the old size */
+	memset(&uibounds, 0, sizeof(uibounds));
+	memset(&last_uibounds, 0, sizeof(last_uibounds));
+	memset(&ui_changed_bounds, 0, sizeof(ui_changed_bounds));
+	ui_changed = 0;
+	full_render_pending = 1;
+
+	osd_close_display();
+	return artwork_setup_display(params, rgb_components);
+}
+
+
+/*-------------------------------------------------
+	artwork_setup_display - size the artwork
+	bitmaps for the display and create it
+-------------------------------------------------*/
+
+static int artwork_setup_display(struct osd_create_params *params, UINT32 *rgb_components)
 {
 	int original_width = params->width;
 	int original_height = params->height;
@@ -604,17 +691,6 @@ int artwork_create_display(struct osd_create_params *params, UINT32 *rgb_compone
 	double min_x, min_y, max_x, max_y;
 	UINT32 rgb32_components[3];
 	struct artwork_piece *piece;
-
-	/* reset UI */
-	uioverlay = NULL;
-	uioverlayhint = NULL;
-
-	/* first load the artwork; if none, quit now */
-	artwork_list = NULL;
-	if (!artwork_load(Machine->gamedrv, original_width, original_height, callbacks))
-		return 1;
-	if (!artwork_list && (!callbacks->activate_artwork || !callbacks->activate_artwork(params)))
-		return osd_create_display(params, rgb_components);
 
 	/* determine the game bitmap scale factor */
 	gamescale = options.artwork_res;
@@ -798,8 +874,6 @@ void artwork_update_visible_area(struct mame_display *display)
 
 void artwork_update_video_and_audio(struct mame_display *display)
 {
-	static struct rectangle ui_changed_bounds;
-	static int ui_changed;
 	int artwork_changed = 0, ui_visible = 0;
 
 	/* do nothing if no artwork */
@@ -824,6 +898,13 @@ void artwork_update_video_and_audio(struct mame_display *display)
 	/* process the artwork and UI only if we're not frameskipping */
 	if (display->changed_flags & GAME_BITMAP_CHANGED)
 	{
+		if (full_render_pending)
+		{
+			display->changed_flags &= ~VECTOR_PIXELS_CHANGED;
+			display->vector_dirty_pixels = NULL;
+			full_render_pending = 0;
+		}
+
 		/* see if there's any UI to display this frame */
 		ui_visible = (uibounds.max_x != 0);
 
@@ -3349,6 +3430,25 @@ static int generate_right_triangle_piece(struct artwork_piece *piece, const stru
 	the given pieces
 -------------------------------------------------*/
 
+static int generate_overlay_bitmap(struct artwork_piece *piece, int width, int height)
+{
+	const struct overlay_piece *list = piece->overlay_data;
+
+	/* switch off the type */
+	switch (list->type & ~OVERLAY_FLAG_MASK)
+	{
+		case OVERLAY_TYPE_RECTANGLE:
+			return generate_rect_piece(piece, list, width, height);
+
+		case OVERLAY_TYPE_DISK:
+			return generate_disk_piece(piece, list, width, height);
+
+		case OVERLAY_TYPE_RIGHT_TRIANGLE:
+			return generate_right_triangle_piece(piece, list, width, height);
+	}
+	return 1;
+}
+
 static int generate_overlay(const struct overlay_piece *list, int width, int height)
 {
 	struct artwork_piece *piece;
@@ -3368,24 +3468,10 @@ static int generate_overlay(const struct overlay_piece *list, int width, int hei
 		piece->priority = priority++;
 		piece->blendflags = list->type & OVERLAY_FLAG_MASK;
 		piece->tag = list->tag; /* Handle someone using a different tag, for example, cocktail mode */
+		piece->overlay_data = list;
 
-		/* switch off the type */
-		switch (list->type & ~OVERLAY_FLAG_MASK)
-		{
-			case OVERLAY_TYPE_RECTANGLE:
-				if (!generate_rect_piece(piece, list, width, height))
-					return 0;
-				break;
-
-			case OVERLAY_TYPE_DISK:
-				if (!generate_disk_piece(piece, list, width, height))
-					return 0;
-				break;
-			case OVERLAY_TYPE_RIGHT_TRIANGLE:
-				if (!generate_right_triangle_piece(piece, list, width, height))
-					return 0;
-				break;
-		}
+		if (!generate_overlay_bitmap(piece, width, height))
+			return 0;
 
 		/* next */
 		list++;
@@ -3582,8 +3668,9 @@ static int compute_rgb_components(int depth, UINT32 rgb_components[3], UINT32 rg
 	/* compute a transparent color; this is in the premultiplied space, so alpha is inverted */
 	transparent_color = ASSEMBLE_ARGB(0xff,0x00,0x00,0x00);
 
-	/* allocate a palette lookup */
-	palette_lookup = auto_malloc(65536 * sizeof(palette_lookup[0]));
+	/* allocate a palette lookup (once per game: a resize keeps it, as the depth and palette stay) */
+	if (!palette_lookup)
+		palette_lookup = auto_malloc(65536 * sizeof(palette_lookup[0]));
 	
 
 	/* switch off the depth */

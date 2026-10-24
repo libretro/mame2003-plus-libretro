@@ -452,6 +452,10 @@ static INLINE int get_resource_tag(void)
 
 /* automatically-freeing memory */
 void *auto_malloc(size_t size);
+
+/* free one auto_malloc block (or auto bitmap) before its tag ends */
+void auto_free_ptr(void *ptr);
+void auto_bitmap_free(struct mame_bitmap *bitmap);
 char *auto_strdup(const char *str);
 struct mame_bitmap *auto_bitmap_alloc(int width,int height);
 struct mame_bitmap *auto_bitmap_alloc_depth(int width,int height,int depth);

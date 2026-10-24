@@ -397,6 +397,21 @@ void retro_run (void)
   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE, &updated) && updated)
     update_variables(false);
 
+  /* the vector resolution changed: resize the display before this frame and
+     give the frontend the new size (it can grow past the old maximum) */
+  if (vector_resize_pending)
+  {
+    vector_resize_pending = 0;
+    if (vector_resize_display() == 0)
+    {
+      extern unsigned vis_width, vis_height;
+      struct retro_system_av_info av_info;
+      vis_width = vis_height = 0;	/* the whole new bitmap until the frame sets it */
+      retro_get_system_av_info(&av_info);
+      environ_cb(RETRO_ENVIRONMENT_SET_SYSTEM_AV_INFO, &av_info);
+    }
+  }
+
   if (options.cpu_clock_scale)
   {
     if (cpunum_get_clockscale(0) != options.cpu_clock_scale)

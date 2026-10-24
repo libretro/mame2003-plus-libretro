@@ -370,6 +370,9 @@ void set_display_aspect_ratio(int aspect_x, int aspect_y);
 /* force an erase and a complete redraw of the video next frame */
 void schedule_full_refresh(void);
 
+/* the vector resolution changed while the game runs: resize the display */
+int vector_resize_display(void);
+
 /* called by cpuexec.c to reset updates at the end of VBLANK */
 void reset_partial_updates(void);
 
