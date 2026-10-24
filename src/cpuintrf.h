@@ -262,6 +262,9 @@ enum
 #if (HAS_H83002)
 	CPU_H83002,
 #endif
+#if (HAS_I386)
+	CPU_I386,
+#endif
 #if (HAS_MN10200)
 	CPU_MN10200,
 #endif

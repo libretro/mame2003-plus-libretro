@@ -11,6 +11,7 @@ struct YMF271interface
 	read8_handler ext_read[MAX_YMF271];		/* external memory read */
 	write8_handler ext_write[MAX_YMF271];	/* external memory write */
 	void (*irq_callback[MAX_YMF271])(int state);	/* irq callback */
+	int clock[MAX_YMF271];			/* clock in Hz, 0 for the usual 16.9344 MHz */
 };
 
 int YMF271_sh_start( const struct MachineSound *msound );

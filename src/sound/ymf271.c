@@ -561,9 +561,11 @@ static void update_irq(YMF271Chip *chip)
 		chip->irq_callback(chip->irqstate ? 1 : 0);
 }
 
-static double clocks_to_time(UINT32 clocks)
+static int ymf271_clock[MAX_YMF271];
+
+static double clocks_to_time(int chipnum, UINT32 clocks)
 {
-	return (double)clocks / (double)YMF271_CLOCK;
+	return (double)clocks / (double)ymf271_clock[chipnum];
 }
 
 static void timer_a_expired(int chipnum)
@@ -575,7 +577,7 @@ static void timer_a_expired(int chipnum)
 		chip->irqstate |= 1;
 		update_irq(chip);
 	}
-	timer_adjust(chip->timA, clocks_to_time(384 * (1024 - chip->timerA)), chipnum, 0);
+	timer_adjust(chip->timA, clocks_to_time(chipnum, 384 * (1024 - chip->timerA)), chipnum, 0);
 }
 
 static void timer_b_expired(int chipnum)
@@ -588,7 +590,7 @@ static void timer_b_expired(int chipnum)
 		chip->irqstate |= 2;
 		update_irq(chip);
 	}
-	timer_adjust(chip->timB, clocks_to_time(384 * 16 * (256 - chip->timerB)), chipnum, 0);
+	timer_adjust(chip->timB, clocks_to_time(chipnum, 384 * 16 * (256 - chip->timerB)), chipnum, 0);
 }
 
 /* utility register write (bank 6): sync, timers, external memory access, test */
@@ -622,9 +624,9 @@ static void write_util(int chipnum, UINT8 address, UINT8 data)
 		/* bit0/1 load A/B, bit2/3 enable IRQ A/B, bit4/5 reset flag A/B.
 		   A timer is (re)loaded on the rising edge of its load bit */
 		if (~chip->timer_ctrl & data & 1)
-			timer_adjust(chip->timA, clocks_to_time(384 * (1024 - chip->timerA)), chipnum, 0);
+			timer_adjust(chip->timA, clocks_to_time(chipnum, 384 * (1024 - chip->timerA)), chipnum, 0);
 		if (~chip->timer_ctrl & data & 2)
-			timer_adjust(chip->timB, clocks_to_time(384 * 16 * (256 - chip->timerB)), chipnum, 0);
+			timer_adjust(chip->timB, clocks_to_time(chipnum, 384 * 16 * (256 - chip->timerB)), chipnum, 0);
 		if (data & 0x10)
 		{
 			chip->status &= ~0x01;
@@ -1415,7 +1417,8 @@ int YMF271_sh_start( const struct MachineSound *msound )
 		vol[0] = intf->mixing_level[i] & 0xffff;
 		vol[1] = intf->mixing_level[i] >> 16;
 		/* outputs CH0 / CH1 at the chip's sample rate, clock / 384 = 44.1 kHz */
-		chip->stream = stream_init_multi(2, name, vol, YMF271_CLOCK / 384, i, ymf271_update);
+		ymf271_clock[i] = intf->clock[i] ? intf->clock[i] : YMF271_CLOCK;
+		chip->stream = stream_init_multi(2, name, vol, ymf271_clock[i] / 384, i, ymf271_update);
 
 		ymf271_reset(chip);
 		ymf271_state_register(i);

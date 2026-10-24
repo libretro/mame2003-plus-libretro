@@ -5256,6 +5256,65 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( nzeroteamb )	/* New Zero Team (V33 SYSTEM TYPE_B hardware, Haoyunlai Trading Company license) */
 	DRIVER( zerotm2k )	/* Zero Team 2000 */
 
+	/* Seibu SPI / SYS386I games */
+	DRIVER( senkyu )	/* Senkyu (Japan, newer) */
+	DRIVER( senkyua )	/* Senkyu (Japan, earlier) */
+	DRIVER( batlball )	/* Battle Balls (Germany, newer) */
+	DRIVER( batlballo )	/* Battle Balls (Germany, earlier) */
+	DRIVER( batlballu )	/* Battle Balls (US) */
+	DRIVER( batlballa )	/* Battle Balls (Hong Kong) */
+	DRIVER( batlballe )	/* Battle Balls (Hong Kong, earlier) */
+	DRIVER( batlballpt )	/* Battle Balls (Portugal) */
+	DRIVER( viprp1 )	/* Viper Phase 1 (New Version, World) */
+	DRIVER( viprp1k )	/* Viper Phase 1 (New Version, Korea) */
+	DRIVER( viprp1u )	/* Viper Phase 1 (New Version, US set 1) */
+	DRIVER( viprp1ua )	/* Viper Phase 1 (New Version, US set 2) */
+	DRIVER( viprp1j )	/* Viper Phase 1 (New Version, Japan) */
+	DRIVER( viprp1s )	/* Viper Phase 1 (New Version, Switzerland) */
+	DRIVER( viprp1h )	/* Viper Phase 1 (New Version, Holland) */
+	DRIVER( viprp1t )	/* Viper Phase 1 (New Version, Germany) */
+	DRIVER( viprp1pt )	/* Viper Phase 1 (New Version, Portugal) */
+	DRIVER( viprp1ot )	/* Viper Phase 1 (Germany) */
+	DRIVER( viprp1oj )	/* Viper Phase 1 (Japan) */
+	DRIVER( viprp1hk )	/* Viper Phase 1 (Hong Kong) */
+	DRIVER( rdft )	/* Raiden Fighters (Germany) */
+	DRIVER( rdftj )	/* Raiden Fighters (Japan, earlier) */
+	DRIVER( rdftja )	/* Raiden Fighters (Japan, earliest) */
+	DRIVER( rdftu )	/* Raiden Fighters (US, earlier) */
+	DRIVER( rdftauge )	/* Raiden Fighters (Evaluation Software For Show, Germany) */
+	DRIVER( rdftua )	/* Raiden Fighters (US, newer) */
+	DRIVER( rdftjb )	/* Raiden Fighters (Japan, newer) */
+	DRIVER( rdftau )	/* Raiden Fighters (Australia) */
+	DRIVER( rdftam )	/* Raiden Fighters (Hong Kong) */
+	DRIVER( rdftadi )	/* Raiden Fighters (Korea, SUB4 cart) */
+	DRIVER( rdfta )	/* Raiden Fighters (Austria) */
+	DRIVER( rdftgb )	/* Raiden Fighters (Great Britain) */
+	DRIVER( rdftgr )	/* Raiden Fighters (Greece) */
+	DRIVER( rdftit )	/* Raiden Fighters (Italy) */
+	DRIVER( rdftadia )	/* Raiden Fighters (Korea, SUB2 cart) */
+	DRIVER( rdft2 )	/* Raiden Fighters 2 - Operation Hell Dive (Germany) */
+	DRIVER( rdft2j )	/* Raiden Fighters 2 - Operation Hell Dive (Japan set 1) */
+	DRIVER( rdft2a )	/* Raiden Fighters 2 - Operation Hell Dive (Hong Kong) */
+	DRIVER( rdft2s )	/* Raiden Fighters 2 - Operation Hell Dive (Switzerland) */
+	DRIVER( rdft2ja )	/* Raiden Fighters 2 - Operation Hell Dive (Japan set 2) */
+	DRIVER( rdft2aa )	/* Raiden Fighters 2 - Operation Hell Dive (Korea) */
+	DRIVER( rdft2it )	/* Raiden Fighters 2 - Operation Hell Dive (Italy) */
+	DRIVER( rdft2jb )	/* Raiden Fighters 2 - Operation Hell Dive (Japan set 3) */
+	DRIVER( rdft2jc )	/* Raiden Fighters 2 - Operation Hell Dive (Japan set 4) */
+	DRIVER( rdft2t )	/* Raiden Fighters 2 - Operation Hell Dive (Taiwan) */
+	DRIVER( rdft2u )	/* Raiden Fighters 2 - Operation Hell Dive (US) */
+	DRIVER( rfjet )	/* Raiden Fighters Jet (Germany) */
+	DRIVER( rfjetu )	/* Raiden Fighters Jet (US) */
+	DRIVER( rfjetj )	/* Raiden Fighters Jet (Japan) */
+	DRIVER( rfjeta )	/* Raiden Fighters Jet (Korea) */
+	DRIVER( rfjett )	/* Raiden Fighters Jet (Taiwan) */
+	DRIVER( rdfts )	/* Raiden Fighters (Taiwan, single board) */
+	DRIVER( rdft2us )	/* Raiden Fighters 2 - Operation Hell Dive (US, single board) */
+	DRIVER( rfjets )	/* Raiden Fighters Jet (US, single board) */
+	DRIVER( rfjetsa )	/* Raiden Fighters Jet (US, single board, test version?) */
+	DRIVER( rdft22kc )	/* Raiden Fighters 2 - Operation Hell Dive 2000 (China, SYS386I) */
+	DRIVER( rfjet2kc )	/* Raiden Fighters Jet 2000 (China, SYS386I) */
+
 /* Seibu STI System games:
 	Viper: Phase 1 					(c) 1995
 	Viper: Phase 1 (New version)	(c) 1996
