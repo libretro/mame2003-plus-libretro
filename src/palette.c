@@ -1582,6 +1582,18 @@ WRITE_HANDLER( paletteram_xxxxRRRRGGGGBBBB_swap_w )
 	changecolor_xxxxRRRRGGGGBBBB(offset / 2,paletteram[offset | 1] | (paletteram[offset & ~1] << 8));
 }
 
+WRITE_HANDLER( paletteram_xxxxRRRRGGGGBBBB_split1_w )
+{
+	paletteram[offset] = data;
+	changecolor_xxxxRRRRGGGGBBBB(offset,paletteram[offset] | (paletteram_2[offset] << 8));
+}
+
+WRITE_HANDLER( paletteram_xxxxRRRRGGGGBBBB_split2_w )
+{
+	paletteram_2[offset] = data;
+	changecolor_xxxxRRRRGGGGBBBB(offset,paletteram[offset] | (paletteram_2[offset] << 8));
+}
+
 WRITE16_HANDLER( paletteram16_xxxxRRRRGGGGBBBB_word_w )
 {
 	COMBINE_DATA(&paletteram16[offset]);
