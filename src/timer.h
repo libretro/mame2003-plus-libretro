@@ -34,6 +34,8 @@ typedef struct _mame_timer mame_timer;
 
 void timer_init(void);
 void timer_free(void);
+void timer_save_init(void);
+int timer_state_loaded(void);
 double timer_time_until_next_timer(void);
 void timer_adjust_global_time(double delta);
 mame_timer *timer_alloc(void (*callback)(int));

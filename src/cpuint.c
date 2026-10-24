@@ -77,7 +77,9 @@ static void cpuint_postload(void)
 	{
 		if (irq_event_index[cpunum] > MAX_IRQ_EVENTS)
 			irq_event_index[cpunum] = MAX_IRQ_EVENTS;
-		if (irq_event_index[cpunum] > 0)
+		/* the timer that empties the queue is in the state, when the
+		   timers are */
+		if (irq_event_index[cpunum] > 0 && !timer_state_loaded())
 			timer_set(TIME_NOW, cpunum, cpu_empty_event_queue);
 	}
 }
