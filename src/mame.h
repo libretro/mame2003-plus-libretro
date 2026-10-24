@@ -154,7 +154,6 @@ enum /* used to index content-specific flags */
 {
   CONTENT_NEOGEO = 0,
   CONTENT_STV,
-  CONTENT_DIEHARD,
   CONTENT_ALT_SOUND,
   CONTENT_VECTOR,
   CONTENT_DIAL,
@@ -179,6 +178,8 @@ enum /* used to index content-specific flags */
   CONTENT_CHEAT_INPUT_PORT,
   CONTENT_MIPS_DYNAREC,
   CONTENT_ADSP_DYNAREC,
+  CONTENT_SH2_DYNAREC,
+  CONTENT_STV_VIDEO_THREADS,
   CONTENT_end,
 };
 
@@ -222,6 +223,8 @@ struct GameOptions
   bool     use_samples;	         /* 1 to enable external .wav samples */
   bool     mips_dynarec;	       /* 1 to let drivers enable the MIPS recompiler */
   bool     adsp_dynarec;	       /* 1 to let drivers enable the ADSP-2100 recompiler */
+  bool     sh2_dynarec;	       /* 1 to let drivers enable the SH-2 recompiler */
+  int      stv_video_threads;    /* ST-V: threads drawing the VDP2 screen in bands (0 or 1 = the main thread only) */
   bool     use_alt_sound;	       /* 1 to enable alternate ost samples */
 
   float	   brightness;		       /* brightness of the display */

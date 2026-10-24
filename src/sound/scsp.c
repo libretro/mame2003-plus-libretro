@@ -162,6 +162,9 @@ struct _SLOT
 	} udata;
 	data8_t active;	/*this slot is currently playing*/
 	data8_t *base;		/*samples base address*/
+	data8_t *ram;		/*the sound RAM, the samples wrap in it*/
+	data32_t ram_mask;
+	data32_t sa;		/*samples start, in the RAM*/
 	data32_t cur_addr;	/*current play address (24.8)*/
 	data32_t step;		/*pitch step (24.8)*/
 	struct _EG EG;			/*Envelope*/
@@ -206,6 +209,7 @@ struct _SCSP
 	struct _SCSPDSP DSP;
 	int MvolSet;		/* MVOL written: the output follows it */
 	unsigned char *SCSPRAM;
+	data32_t SCSPRAM_mask;
 	char Master;
 	void (*Int68kCB)(int irq);
 	int stream;
@@ -373,6 +377,9 @@ static void SCSP_StartSlot(struct _SLOT *slot)
 {
 	slot->active=1;
 	slot->base=SCSP->SCSPRAM+SA(slot);
+	slot->ram=SCSP->SCSPRAM;
+	slot->ram_mask=SCSP->SCSPRAM_mask;
+	slot->sa=SA(slot);
 	slot->cur_addr=0;
 	slot->step=SCSP_Step(slot);
 	Compute_EG(slot);
@@ -401,7 +408,7 @@ static void SCSP_Init(int n, struct SCSPinterface *intf)
 	for (i = 0; i < n; i++)
 	{
 		SCSP = &SCSPs[i];
-		memset(SCSP,0,sizeof(SCSP));
+		memset(SCSP,0,sizeof(*SCSP));
 
 		if (!i)
 		{
@@ -413,6 +420,7 @@ static void SCSP_Init(int n, struct SCSPinterface *intf)
 		}
 
 		SCSPs[i].SCSPRAM = memory_region(intf->region[i]);
+		SCSPs[i].SCSPRAM_mask = memory_region_length(intf->region[i]) - 1;
 		SCSPDSP_Init(&SCSPs[i].DSP, (UINT16 *)SCSPs[i].SCSPRAM, memory_region_length(intf->region[i]));
 		SCSPs[i].MvolSet=0;
 	}
@@ -699,10 +707,14 @@ static void SCSP_w16(unsigned int addr,unsigned short val)
 	}
 	else if(addr<0x600)
 	{
-		*((unsigned short *) (SCSP->udata.datab+((addr&0xff)))) = val;
-		if (Machine->sample_rate > 0)
+		/* the common registers end at 0x42f (writing past them would hit the slots) */
+		if((addr&0xff)<sizeof(SCSP->udata.datab))
 		{
-			SCSP_UpdateReg(addr&0xff);
+			*((unsigned short *) (SCSP->udata.datab+((addr&0xff)))) = val;
+			if (Machine->sample_rate > 0)
+			{
+				SCSP_UpdateReg(addr&0xff);
+			}
 		}
 	}
 	else if(addr>=0x700 && addr<0xc00)
@@ -738,11 +750,14 @@ static unsigned short SCSP_r16(unsigned int addr)
 	}
 	else if(addr<0x600)
 	{
-		if (Machine->sample_rate > 0)
+		if((addr&0xff)<sizeof(SCSP->udata.datab))
 		{
-			SCSP_UpdateRegR(addr&0xff);
+			if (Machine->sample_rate > 0)
+			{
+				SCSP_UpdateRegR(addr&0xff);
+			}
+			v= *((unsigned short *) (SCSP->udata.datab+((addr&0xff))));
 		}
-		v= *((unsigned short *) (SCSP->udata.datab+((addr&0xff))));
 	}
 	else if(addr>=0x700)
 	{
@@ -835,18 +850,18 @@ SCSPNAME(_8bit,lfo,alfo,loop)\
 		}\
 		if(_8bit)\
 		{\
-			signed char *p=(signed char *) (slot->base+(slot->cur_addr>>SHIFT));\
+			/* the address wraps in the sound RAM (garbage slots must not read past it) */\
+			data32_t o=(slot->sa+(slot->cur_addr>>SHIFT))&slot->ram_mask;\
 			int s2;\
 			signed int fpart;\
 			fpart=slot->cur_addr&((1<<SHIFT)-1);\
-			s2=(int) p[0]*((1<<SHIFT)-fpart)+(int) p[1]*fpart;\
+			s2=(int) (signed char) slot->ram[o]*((1<<SHIFT)-fpart)+(int) (signed char) slot->ram[(o+1)&slot->ram_mask]*fpart;\
 			sample=(s2>>SHIFT)<<8;\
 		}\
 		else\
 		{\
-			signed short *p=(signed short *) (slot->base+((slot->cur_addr>>(SHIFT-1))&(~1)));\
-			signed int fpart;\
-			fpart=slot->cur_addr&((1<<SHIFT)-1);\
+			data32_t o=(slot->sa+((slot->cur_addr>>(SHIFT-1))&(~1)))&slot->ram_mask&(~1);\
+			signed short *p=(signed short *) (slot->ram+o);\
 			sample=p[0];\
 		}\
 		slot->cur_addr+=step;\
@@ -1031,7 +1046,7 @@ static void SCSP_DoMasterSamples(int chip, int nsamples)
 
 static void dma_scsp()
 {
-	static UINT16 tmp_dma[2], *scsp_regs;
+	static UINT16 tmp_dma[3], *scsp_regs;
 
 	scsp_regs = (UINT16 *)SCSP->udata.datab;
 
@@ -1048,11 +1063,13 @@ static void dma_scsp()
 		tmp_dma[2] = scsp_regs[0x416/2];
 	}
 
+	/* the sound RAM and the registers directly: the CPU that started it may be
+	   any of them (an SH-2 through the SCU), not the sound CPU */
 	if(scsp_ddir)
 	{
 		for(;scsp_dtlg > 0;scsp_dtlg-=2)
 		{
-			cpu_writemem24bedw_word(scsp_dmea, cpu_readmem24bedw_word(0x100000|scsp_drga));
+			*(UINT16 *)(SCSP->SCSPRAM + (scsp_dmea & SCSP->SCSPRAM_mask & ~1)) = SCSP_r16(scsp_drga & 0xffe);
 			scsp_dmea+=2;
 			scsp_drga+=2;
 		}
@@ -1061,7 +1078,7 @@ static void dma_scsp()
 	{
 		for(;scsp_dtlg > 0;scsp_dtlg-=2)
 		{
-  			cpu_writemem24bedw_word(0x100000|scsp_drga,cpu_readmem24bedw_word(scsp_dmea));
+			SCSP_w16(scsp_drga & 0xffe, *(UINT16 *)(SCSP->SCSPRAM + (scsp_dmea & SCSP->SCSPRAM_mask & ~1)));
 			scsp_dmea+=2;
 			scsp_drga+=2;
 		}

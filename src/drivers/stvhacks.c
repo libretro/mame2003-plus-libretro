@@ -9,58 +9,34 @@ to be honest i think some of these cause more problems than they're worth ...
 extern data32_t *stv_workram_h;
 DRIVER_INIT ( stv );
 
-/* Hack the boot vectors .. not right but allows several IC13 games (which fail the checksums before hacking) to boot */
+/* the IC13 carts: their program ROM is now loaded as MAME loads it (odd
+   bytes, mirrored), so they need no boot vector patch */
 DRIVER_INIT( ic13 )
 {
-	/* this is WRONG but works for some games */
-	data32_t *rom = (data32_t *)memory_region(REGION_USER1);
-	rom[0xf10/4] = (rom[0xf10/4] & 0xff000000)|((rom[0xf10/4]/2)&0x00ffffff);
-	rom[0xf20/4] = (rom[0xf20/4] & 0xff000000)|((rom[0xf20/4]/2)&0x00ffffff);
-	rom[0xf30/4] = (rom[0xf30/4] & 0xff000000)|((rom[0xf30/4]/2)&0x00ffffff);
-
 	init_stv();
 }
 
 /*
-
-06013AE8: MOV.L   @($D4,PC),R5
-06013AEA: MOV.L   @($D8,PC),R0
-06013AEC: MOV.W   @R5,R5
-06013AEE: MOV.L   @R0,R0
-06013AF0: AND     R10,R5
-06013AF2: TST     R0,R0
-06013AF4: BTS     $06013B00
-06013AF6: EXTS.W  R5,R5
-06013B00: EXTS.W  R5,R5
-06013B02: TST     R5,R5
-06013B04: BF      $06013B0A
-06013B06: TST     R4,R4
-06013B08: BT      $06013AE8
-
-   (loops for 375868 instructions)
-
+Super Major League / Final Arch: each frame the master queues a job for the slave
+(the depth sort of the polygons), waits for the slave to take it (the read pointer
+at 060ffc44) and then clears the "sort done" flag that the slave sets when the job
+is over. The slave is much slower than the master on the real hardware, but in
+coarse time slices it can take the job and finish it before the master looks at the
+pointer again, so the flag is lost and the game hangs. A tight interleave while the
+master polls keeps the order of the real hardware.
 */
-
-
-READ32_HANDLER( stv_speedup_r )
+static READ32_HANDLER( smleague_sync_r )
 {
-	if (activecpu_get_pc()==0x60154b4) cpu_spinuntil_int(); /* bios menus..*/
-
-	return stv_workram_h[0x0335d0/4];
+	/* a slice of 16 SH-2 cycles is enough (a perfect one costs half the speed);
+	   with 64 cycles Super Major League and Final Arch hang again */
+	cpu_boost_interleave(TIME_IN_HZ(57272720/32), TIME_IN_USEC(20));
+	return stv_workram_h[0x0ffc44/4];
 }
 
-READ32_HANDLER( stv_speedup2_r )
+DRIVER_INIT( smleague )
 {
-	if (activecpu_get_pc()==0x6013af0) cpu_spinuntil_int(); /* for use in japan*/
-
-	return stv_workram_h[0x0335bc/4];
-}
-
-void install_stvbios_speedups(void)
-{
-/* idle skip bios? .. not 100% sure this is safe .. we'll see */
-	install_mem_read32_handler(0, 0x60335d0, 0x60335d3, stv_speedup_r );
-	install_mem_read32_handler(0, 0x60335bc, 0x60335bf, stv_speedup2_r );
+	install_mem_read32_handler(0, 0x060ffc44, 0x060ffc47, smleague_sync_r);
+	init_stv();
 }
 
 static READ32_HANDLER( shienryu_slave_speedup_r )

@@ -69,6 +69,17 @@ struct sh2_config
   data32_t (*dma_read_hook)(UINT32 src, UINT32 dst, data32_t data, int size);
 };
 
+/* optional recompiler (sh2jit.c): a driver declares the RAM the CPUs run
+   from and read directly ('base': host memory of 'start', as the memory
+   system keeps it), then enables it; anything else stays with the
+   interpreter. Writes the driver makes there by other means than the
+   CPUs (DMA) must be reported with sh2_jit_ram_written. */
+int sh2_jit_available(void);
+void sh2_jit_add_fastram(offs_t start, offs_t end, int readonly, void *base);
+void sh2_jit_set(int enable);
+void sh2_jit_ram_written(UINT32 address, UINT32 bytes);
+extern int sh2_jit_code_present;
+
 extern void sh2_init(void);
 extern void sh2_reset (void *param);		  /* Reset registers to the initial values */
 extern void sh2_exit  (void);				  /* Shut down CPU core */
