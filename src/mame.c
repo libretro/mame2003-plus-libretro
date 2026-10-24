@@ -910,6 +910,71 @@ static void scale_vectorgames(int gfx_width, int gfx_height, int *width, int *he
 
 
 /*-------------------------------------------------
+	vector_resize_display - the vector resolution
+	option changed while the game runs: size the
+	display (and its artwork) and the screen
+	bitmap again, as vh_open() does at start.
+	Returns 0 on success.
+-------------------------------------------------*/
+
+int vector_resize_display(void)
+{
+	struct osd_create_params params;
+	struct mame_bitmap *bitmap;
+	int bmwidth = Machine->drv->screen_width;
+	int bmheight = Machine->drv->screen_height;
+
+	if (!(Machine->drv->video_attributes & VIDEO_TYPE_VECTOR) || !Machine->scrbitmap)
+		return 1;
+
+	/* "original" asks for the driver's size */
+	if (options.vector_width  == 0) options.vector_width  = Machine->drv->screen_width;
+	if (options.vector_height == 0) options.vector_height = Machine->drv->screen_height;
+
+	scale_vectorgames(options.vector_width, options.vector_height, &bmwidth, &bmheight);
+
+	/* the same display parameters as vh_open() */
+	params.width = bmwidth;
+	params.height = bmheight;
+	compute_aspect_ratio(Machine->drv, &params.aspect_x, &params.aspect_y);
+	params.depth = Machine->color_depth;
+	params.colors = palette_get_total_colors_with_ui();
+	params.fps = Machine->drv->frames_per_second;
+	params.video_attributes = Machine->drv->video_attributes;
+	params.orientation = Machine->orientation;
+
+	if (artwork_resize_display(&params, direct_rgb_components))
+		return 1;
+
+	/* the artwork may have changed the vector width/height, so recompute */
+	bmwidth = Machine->drv->screen_width;
+	bmheight = Machine->drv->screen_height;
+	scale_vectorgames(options.vector_width, options.vector_height, &bmwidth, &bmheight);
+
+	/* a new screen bitmap; the vector renderer forgets the old pixels */
+	bitmap = auto_bitmap_alloc_depth(bmwidth, bmheight, Machine->color_depth);
+	if (!bitmap)
+		return 1;
+	auto_bitmap_free(Machine->scrbitmap);
+	Machine->scrbitmap = bitmap;
+	vector_bitmap_resized();
+
+	/* recompute the visible area on the new bitmap, and redraw everything */
+	set_visible_area(0,1,0,1);
+	set_visible_area(
+			Machine->drv->default_visible_area.min_x,
+			Machine->drv->default_visible_area.max_x,
+			Machine->drv->default_visible_area.min_y,
+			Machine->drv->default_visible_area.max_y);
+	schedule_full_refresh();
+
+	log_cb(RETRO_LOG_INFO, LOGPRE "vector resolution now %dx%d\n", bmwidth, bmheight);
+	return 0;
+}
+
+
+
+/*-------------------------------------------------
 	init_buffered_spriteram - initialize the
 	double-buffered spriteram
 -------------------------------------------------*/

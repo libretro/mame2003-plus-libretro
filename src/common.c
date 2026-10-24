@@ -972,6 +972,47 @@ void auto_free(void)
 
 
 /*-------------------------------------------------
+	auto_free_ptr - free one auto_malloc block
+	before its tag ends, and stop tracking it
+	(for the buffers that are reallocated while
+	a game runs, as the vector bitmap)
+-------------------------------------------------*/
+
+void auto_free_ptr(void *ptr)
+{
+	int i;
+
+	if (!ptr)
+		return;
+
+	for (i = malloc_list_index - 1; i >= 0; i--)
+		if (malloc_list[i].ptr == ptr)
+		{
+			free(ptr);
+			memmove(&malloc_list[i], &malloc_list[i + 1], (malloc_list_index - i - 1) * sizeof(malloc_list[0]));
+			malloc_list_index--;
+			return;
+		}
+}
+
+
+/*-------------------------------------------------
+	auto_bitmap_free - free an auto_bitmap_alloc
+	bitmap before its tag ends
+-------------------------------------------------*/
+
+void auto_bitmap_free(struct mame_bitmap *bitmap)
+{
+	if (!bitmap)
+		return;
+
+	/* the line array was allocated before the safety rows were skipped */
+	auto_free_ptr(bitmap->line - BITMAP_SAFETY);
+	auto_free_ptr(bitmap);
+}
+
+
+/*-------------------------------------------------
 	bitmap_alloc - allocate a bitmap at the
 	current screen depth
 -------------------------------------------------*/
