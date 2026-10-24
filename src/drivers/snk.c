@@ -299,53 +299,47 @@ static int snk_rot8( int which ){
 }
 
 /* BritneysPAIRS*/
+/* The bootleg has no rotary joystick: the game reads the direction the
+   player faces (and fires to) in the upper nibble of the joystick port.
+   It follows the joystick, so the player fires where he walks. With the
+   "Aim with Right Stick" setting on, a pushed right stick sets it instead,
+   so the player can walk one way and fire another (dual stick); with the
+   right stick released, it follows the joystick again. */
+
+/* the direction (0 = up, clockwise) of an active low 4-bit joystick
+   nibble, or -1 when it is not pushed */
+static int ikarijpb_joy_direction( int joy )
+{
+	switch( joy & 0xf ){
+		case 14: return 0;	/* up */
+		case 6:  return 1;	/* up right */
+		case 7:  return 2;	/* right */
+		case 5:  return 3;	/* down right */
+		case 13: return 4;	/* down */
+		case 9:  return 5;	/* down left */
+		case 11: return 6;	/* left */
+		case 10: return 7;	/* up left */
+	}
+	return -1;
+}
+
 static int snk_rot8_ikarijpb( int which ){
 	const int dial_8[8]   = { 0xf0,0x30,0x10,0x50,0x40,0xc0,0x80,0xa0 };
 	int value = readinputport(which+1);
-	int joypos16 = value>>4;
-	if (which == 0)
-{
-	if ((value&0xf) == 14)
-		direction = 0;
-	if ((value&0xf) == 6)
-		direction = 1;
-	if ((value&0xf) == 7)
-		direction = 2;
-	if ((value&0xf) == 5)
-		direction = 3;
-	if ((value&0xf) == 13)
-		direction = 4;
-	if ((value&0xf) == 9)
-		direction = 5;
-	if ((value&0xf) == 11)
-		direction = 6;
-	if ((value&0xf) == 10)
-		direction = 7;
-	  directionset = direction;
-}
-	if (which == 1)
-{
-	if ((value&0xf) == 14)
-		directionb = 0;
-	if ((value&0xf) == 6)
-		directionb = 1;
-	if ((value&0xf) == 7)
-		directionb = 2;
-	if ((value&0xf) == 5)
-		directionb = 3;
-	if ((value&0xf) == 13)
-		directionb = 4;
-	if ((value&0xf) == 9)
-		directionb = 5;
-	if ((value&0xf) == 11)
-		directionb = 6;
-	if ((value&0xf) == 10)
-		directionb = 7;
-  directionset = directionb;
-}
+	int *facing = which ? &directionb : &direction;
+	int dir = -1;
+
+	/* port 6: right sticks, P1 in the low nibble, P2 in the high one;
+	   port 7: the setting */
+	if( readinputport(7) & 0x01 )
+		dir = ikarijpb_joy_direction( readinputport(6) >> (which * 4) );
+	if( dir < 0 )
+		dir = ikarijpb_joy_direction( value );
+	if( dir >= 0 )
+		*facing = dir;
+	directionset = *facing;
 
 	return (value&0xf) | dial_8[directionset];
-
 }
 
 
@@ -2907,6 +2901,80 @@ INPUT_PORTS_START( ikarijp )
 INPUT_PORTS_END
 
 
+/* ikarijp, plus the right sticks to aim and the setting to turn them on */
+INPUT_PORTS_START( ikarijpb )
+	PORT_START
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START2 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW,IPT_UNKNOWN ) /* sound CPU status */
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* tilt? */
+
+	SNK_JOY1_PORT
+
+	SNK_JOY2_PORT
+
+	SNK_BUTTON_PORT
+
+	PORT_START /* DSW 1 */
+	PORT_DIPNAME( 0x01, 0x01, "Allow killing each other" )
+	PORT_DIPSETTING(    0x01, DEF_STR( No ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Yes ) )
+	PORT_DIPNAME( 0x02, 0x02, "P1 & P2 Fire Buttons" )
+	PORT_DIPSETTING(    0x02, "Separate" )
+	PORT_DIPSETTING(    0x00, "Common" )
+	PORT_DIPNAME( 0x04, 0x04, "Bonus Occurrence" )
+	PORT_DIPSETTING(    0x04, "1st & every 2nd" )
+	PORT_DIPSETTING(    0x00, "1st & 2nd only" )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Lives ) )
+	PORT_DIPSETTING(    0x08, "3" )
+	PORT_DIPSETTING(    0x00, "5" )
+	SNK_COINAGE
+
+	PORT_START /* DSW 2 */
+	PORT_DIPNAME( 0x03, 0x02, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(    0x03, "Easy" )
+	PORT_DIPSETTING(    0x02, "Normal" )
+	PORT_DIPSETTING(    0x01, "Hard" )
+	PORT_DIPSETTING(    0x00, "Hardest" )
+	PORT_DIPNAME( 0x0c, 0x08, "Game Mode" )
+	PORT_DIPSETTING(    0x0c, "Demo Sounds Off" )
+	PORT_DIPSETTING(    0x08, "Demo Sounds On" )
+	PORT_DIPSETTING(    0x04, "Freeze" )
+	PORT_BITX( 0,       0x00, IPT_DIPSWITCH_SETTING | IPF_CHEAT, "Infinite Lives", IP_KEY_NONE, IP_JOY_NONE )
+	PORT_DIPNAME( 0x30, 0x30, DEF_STR( Bonus_Life ) )
+	PORT_DIPSETTING(    0x30, "50k 100k" )
+	PORT_DIPSETTING(    0x20, "60k 120k" )
+	PORT_DIPSETTING(    0x10, "100k 200k" )
+	PORT_DIPSETTING(    0x00, "None" )
+	PORT_DIPNAME( 0x40 ,0x40, DEF_STR( Unused ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+	PORT_START /* right sticks: read by snk_rot8_ikarijpb(), not by the game */
+	PORT_BITX( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICKRIGHT_UP    | IPF_8WAY | IPF_PLAYER1, "P1 Aim Up",    KEYCODE_I,   JOYCODE_1_RIGHT_UP )
+	PORT_BITX( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICKRIGHT_DOWN  | IPF_8WAY | IPF_PLAYER1, "P1 Aim Down",  KEYCODE_K,   JOYCODE_1_RIGHT_DOWN )
+	PORT_BITX( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICKRIGHT_LEFT  | IPF_8WAY | IPF_PLAYER1, "P1 Aim Left",  KEYCODE_J,   JOYCODE_1_RIGHT_LEFT )
+	PORT_BITX( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICKRIGHT_RIGHT | IPF_8WAY | IPF_PLAYER1, "P1 Aim Right", KEYCODE_L,   JOYCODE_1_RIGHT_RIGHT )
+	PORT_BITX( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICKRIGHT_UP    | IPF_8WAY | IPF_PLAYER2, "P2 Aim Up",    IP_KEY_NONE, JOYCODE_2_RIGHT_UP )
+	PORT_BITX( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICKRIGHT_DOWN  | IPF_8WAY | IPF_PLAYER2, "P2 Aim Down",  IP_KEY_NONE, JOYCODE_2_RIGHT_DOWN )
+	PORT_BITX( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICKRIGHT_LEFT  | IPF_8WAY | IPF_PLAYER2, "P2 Aim Left",  IP_KEY_NONE, JOYCODE_2_RIGHT_LEFT )
+	PORT_BITX( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICKRIGHT_RIGHT | IPF_8WAY | IPF_PLAYER2, "P2 Aim Right", IP_KEY_NONE, JOYCODE_2_RIGHT_RIGHT )
+
+	PORT_START /* not on the board: the dual stick setting */
+	PORT_DIPNAME( 0x01, 0x00, "Aim with Right Stick" )
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( On ) )
+	PORT_BIT( 0xfe, IP_ACTIVE_LOW, IPT_UNUSED )
+INPUT_PORTS_END
+
+
 INPUT_PORTS_START( victroad )
 	PORT_START
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN ) 	/* sound related ??? */
@@ -4324,7 +4392,7 @@ GAMEX( 1988, fitegol2, fitegolf, athena,   fitegolf, fitegolf, ROT0,   "SNK", "F
 GAMEX( 1988, countryc, fitegolf, athena,   countryc, fitegolf, ROT0,   "SNK", "Country Club", GAME_NO_COCKTAIL )
 GAMEX( 1986, ikari,    0,        ikari,    ikari,    ikari,    ROT270, "SNK", "Ikari Warriors (US)", GAME_NO_COCKTAIL )
 GAMEX( 1986, ikarijp,  ikari,    ikari,    ikarijp,  ikarijp,  ROT270, "SNK", "Ikari (Japan)", GAME_NO_COCKTAIL )
-GAMEX( 1986, ikarijpb, ikari,    ikari,    ikarijp,  ikarijpb, ROT270, "bootleg", "Ikari (joystick hack bootleg)", GAME_NO_COCKTAIL )
+GAMEX( 1986, ikarijpb, ikari,    ikari,    ikarijpb, ikarijpb, ROT270, "bootleg", "Ikari (joystick hack bootleg)", GAME_NO_COCKTAIL )
 GAMEX( 1986, victroad, 0,        victroad, victroad, victroad, ROT270, "SNK", "Victory Road", GAME_NO_COCKTAIL )
 GAMEX( 1986, dogosoke, victroad, victroad, victroad, dogosoke, ROT270, "SNK", "Dogou Souken", GAME_NO_COCKTAIL )
 GAMEX( 1986, dogosokj, victroad, victroad, dogosokj, dogosoke, ROT270, "bootleg", "Dogou Souken (joystick hack bootleg)", GAME_NO_COCKTAIL )
