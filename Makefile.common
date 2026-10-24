@@ -1063,6 +1063,7 @@ SOURCES_C += \
 	$(CORE_DIR)/sndhrdw/segadsb.c $(CORE_DIR)/sound/mpeg_audio.c \
 	$(CORE_DIR)/machine/sega315_5881.c $(CORE_DIR)/machine/sega315_5838.c \
 	$(CORE_DIR)/drivers/calorie.c \
+    $(CORE_DIR)/drivers/hvyunit.c \
 	$(CORE_DIR)/machine/mc8123.c \
 	$(CORE_DIR)/machine/namcoio_machine.c \
 	$(CORE_DIR)/drivers/tatsumi.c $(CORE_DIR)/vidhrdw/tatsumi.c $(CORE_DIR)/machine/tatsumi.c
