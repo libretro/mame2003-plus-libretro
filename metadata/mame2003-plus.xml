@@ -276386,7 +276386,7 @@
 		<chip type="audio" name="Samples"/>
 		<video screen="raster" orientation="vertical" width="216" height="288" aspectx="3" aspecty="4" refresh="60.000000"/>
 		<sound channels="2"/>
-		<input players="2" control="dial" buttons="2" coins="2"/>
+		<input players="2" control="doublejoy8way" buttons="2" coins="2"/>
 		<dipswitch name="Allow killing each other">
 			<dipvalue name="No" default="yes"/>
 			<dipvalue name="Yes"/>
@@ -276438,6 +276438,10 @@
 			<dipvalue name="On"/>
 		</dipswitch>
 		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Aim with Right Stick">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
