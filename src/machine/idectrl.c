@@ -149,6 +149,12 @@ struct ide_state
 	void *	last_status_timer;
 	void *	reset_timer;
 
+	/* the delayed events, on timers whose time left is in the save state:
+	   slot 0 the interrupts, slot 1 the sector reads and writes */
+	void *	event_timer[2];
+	UINT8	event_kind[2];
+	double	event_left[2];
+
 	int	master_password_enable;
 	int	user_password_enable;
 	UINT8 *	master_password;
@@ -174,6 +180,13 @@ static struct ide_state idestate[MAX_IDE_CONTROLLERS];
  *************************************/
 
 static void reset_callback(int param);
+
+enum { IDE_EVENT_NONE = 0, IDE_EVENT_INTERRUPT, IDE_EVENT_INTERRUPT_BUFFER_READY,
+	IDE_EVENT_READ_SECTOR, IDE_EVENT_WRITE_SECTOR, IDE_EVENT_SECURITY_ERROR };
+static void ide_event(struct ide_state *ide, int slot, double time, int kind);
+static void ide_event_fired(int param);
+static void ide_event_presave(void);
+static void ide_event_postload(void);
 
 static void ide_build_features(struct ide_state *ide);
 
@@ -247,10 +260,7 @@ static INLINE void signal_delayed_interrupt(struct ide_state *ide, double time, 
 	ide->status |= IDE_STATUS_BUSY;
 	
 	/* set a timer */
-	if (buffer_ready)
-		timer_set(time, ide - idestate, delayed_interrupt_buffer_ready);
-	else
-		timer_set(time, ide - idestate, delayed_interrupt);
+	ide_event(ide, 0, time, buffer_ready ? IDE_EVENT_INTERRUPT_BUFFER_READY : IDE_EVENT_INTERRUPT);
 }
 
 
@@ -261,7 +271,7 @@ static INLINE void signal_delayed_interrupt(struct ide_state *ide, double time, 
  *
  *************************************/
 
-int ide_controller_init_custom(int which, struct ide_interface *intf, struct chd_file *diskhandle)
+int ide_controller_init_custom(int which, struct ide_interface *intf, struct hard_disk_file *diskhandle)
 {
 	struct ide_state *ide = &idestate[which];
 	const struct hard_disk_info *hdinfo;
@@ -275,7 +285,7 @@ int ide_controller_init_custom(int which, struct ide_interface *intf, struct chd
 	ide->intf = intf;
 
 	/* set MAME harddisk handle */
-	ide->disk = hard_disk_open(diskhandle);
+	ide->disk = diskhandle;
 
 	/* get and copy the geometry */
 	if (ide->disk)
@@ -298,6 +308,8 @@ int ide_controller_init_custom(int which, struct ide_interface *intf, struct chd
 	/* create a timer for timing status */
 	ide->last_status_timer = timer_alloc(NULL);
 	ide->reset_timer = timer_alloc(reset_callback);
+	ide->event_timer[0] = timer_alloc(ide_event_fired);
+	ide->event_timer[1] = timer_alloc(ide_event_fired);
 
 	/* register ide status */
 	state_save_register_UINT8 ("ide", which, "adapter_control",        &ide->adapter_control,       1);
@@ -341,6 +353,14 @@ int ide_controller_init_custom(int which, struct ide_interface *intf, struct chd
 	state_save_register_UINT8 ("ide", which, "config_unknown",         &ide->config_unknown,        1);
 	state_save_register_UINT8 ("ide", which, "config_register",        ide->config_register,        IDE_CONFIG_REGISTERS);
 	state_save_register_UINT8 ("ide", which, "config_register_num",    &ide->config_register_num,   1);
+
+	state_save_register_UINT8 ("ide", which, "event_kind",             ide->event_kind,             2);
+	state_save_register_double("ide", which, "event_left",             ide->event_left,             2);
+	if (which == 0)
+	{
+		state_save_register_func_presave(ide_event_presave);
+		state_save_register_func_postload(ide_event_postload);
+	}
 
 	state_save_register_int   ("ide", which, "master_password_enable", &ide->master_password_enable);
 	state_save_register_int   ("ide", which, "user_password_enable",   &ide->user_password_enable);
@@ -716,7 +736,7 @@ static void security_error(struct ide_state *ide)
 	ide->status &= ~IDE_STATUS_DRIVE_READY;
 
 	/* just set a timer and mark ourselves error */
-	timer_set(TIME_SECURITY_ERROR, ide - idestate, security_error_done);
+	ide_event(ide, 1, TIME_SECURITY_ERROR, IDE_EVENT_SECURITY_ERROR);
 }
 
 
@@ -766,9 +786,11 @@ static void write_buffer_to_dma(struct ide_state *ide)
 
 /*	log_cb(RETRO_LOG_DEBUG, LOGPRE "Writing sector to %08X\n", ide->dma_address);*/
 
-	/* loop until we've consumed all bytes */
-	while (bytesleft--)
+	/* loop until we've consumed all bytes: a run at a time, up to the end of the descriptor */
+	while (bytesleft > 0)
 	{
+		UINT32 run;
+
 		/* if we're out of space, grab the next descriptor */
 		if (ide->dma_bytes_left == 0)
 		{
@@ -799,9 +821,14 @@ static void write_buffer_to_dma(struct ide_state *ide)
 /*			log_cb(RETRO_LOG_DEBUG, LOGPRE "New DMA descriptor: address = %08X  bytes = %04X  last = %d\n", ide->dma_address, ide->dma_bytes_left, ide->dma_last_buffer);*/
 		}
 
-		/* write the next byte */
-		cpunum_write_byte(ide->dma_cpu, ide->dma_address++, *data++);
-		ide->dma_bytes_left--;
+		/* write the bytes */
+		run = ide->dma_bytes_left < (UINT32)bytesleft ? ide->dma_bytes_left : (UINT32)bytesleft;
+		if (!ide->intf->dma_write || !(*ide->intf->dma_write)(ide->dma_address, data, run))
+			cpunum_write_bytes(ide->dma_cpu, ide->dma_address, data, run);
+		ide->dma_address += run;
+		data += run;
+		ide->dma_bytes_left -= run;
+		bytesleft -= run;
 	}
 }
 
@@ -872,17 +899,26 @@ static void read_first_sector(struct ide_state *ide)
 	/* just set a timer */
 	if (ide->command == IDE_COMMAND_READ_MULTIPLE_BLOCK)
 	{
-		double seek_time;
+		/* as current MAME: no seek on the cylinder of the previous access, */
+		/* else a full stroke (13 ms) scaled by the distance plus 1.3 ms */
+		UINT32 per_cylinder = ide->num_heads * ide->num_sectors;
+		UINT32 new_lba = lba_address(ide);
+		double seek_time = TIME_NO_SEEK_MULTISECTOR;
 
-		if (ide->cur_lba == lba_address(ide))
-			seek_time = TIME_NO_SEEK_MULTISECTOR;
-		else
-			seek_time = TIME_SEEK_MULTISECTOR;
+		if (per_cylinder && ide->num_cylinders)
+		{
+			INT32 diff = (INT32)(new_lba / per_cylinder) - (INT32)(ide->cur_lba / per_cylinder);
+			if (diff < 0)
+				diff = -diff;
+			if (diff)
+				seek_time = TIME_SEEK_MULTISECTOR * diff / ide->num_cylinders + TIME_IN_USEC(1300);
+		}
+		ide->cur_lba = new_lba;
 
-		timer_set(seek_time, ide - idestate, read_sector_done);
+		ide_event(ide, 1, seek_time, IDE_EVENT_READ_SECTOR);
 	}
 	else
-		timer_set(TIME_PER_SECTOR, ide - idestate, read_sector_done);
+		ide_event(ide, 1, ide->command == IDE_COMMAND_READ_DMA ? TIME_IN_NSEC(400) + TIME_IN_USEC(15) : TIME_PER_SECTOR, IDE_EVENT_READ_SECTOR);
 }
 
 
@@ -898,11 +934,11 @@ static void read_next_sector(struct ide_state *ide)
 			read_sector_done(ide - idestate);
 		else
 			/* just set a timer */
-			timer_set(TIME_IN_USEC(1), ide - idestate, read_sector_done);
+			ide_event(ide, 1, TIME_IN_USEC(1), IDE_EVENT_READ_SECTOR);
 	}
 	else
 		/* just set a timer */
-		timer_set(TIME_PER_SECTOR, ide - idestate, read_sector_done);
+		ide_event(ide, 1, ide->command == IDE_COMMAND_READ_DMA ? TIME_IN_NSEC(400) + TIME_IN_USEC(15) : TIME_PER_SECTOR, IDE_EVENT_READ_SECTOR);
 }
 
 
@@ -934,13 +970,13 @@ static void continue_write(struct ide_state *ide)
 		else
 		{
 			/* set a timer to do the write */
-			timer_set(TIME_PER_SECTOR, ide - idestate, write_sector_done);
+			ide_event(ide, 1, TIME_PER_SECTOR, IDE_EVENT_WRITE_SECTOR);
 		}
 	}
 	else
 	{
 		/* set a timer to do the write */
-		timer_set(TIME_PER_SECTOR, ide - idestate, write_sector_done);
+		ide_event(ide, 1, TIME_PER_SECTOR, IDE_EVENT_WRITE_SECTOR);
 	}
 }
 
@@ -952,9 +988,11 @@ static void read_buffer_from_dma(struct ide_state *ide)
 
 /*	log_cb(RETRO_LOG_DEBUG, LOGPRE "Reading sector from %08X\n", ide->dma_address);*/
 
-	/* loop until we've consumed all bytes */
-	while (bytesleft--)
+	/* loop until we've consumed all bytes: a run at a time, up to the end of the descriptor */
+	while (bytesleft > 0)
 	{
+		UINT32 run;
+
 		/* if we're out of space, grab the next descriptor */
 		if (ide->dma_bytes_left == 0)
 		{
@@ -985,9 +1023,13 @@ static void read_buffer_from_dma(struct ide_state *ide)
 /*			log_cb(RETRO_LOG_DEBUG, LOGPRE "New DMA descriptor: address = %08X  bytes = %04X  last = %d\n", ide->dma_address, ide->dma_bytes_left, ide->dma_last_buffer);*/
 		}
 
-		/* read the next byte */
-		*data++ = cpunum_read_byte(ide->dma_cpu, ide->dma_address++);
-		ide->dma_bytes_left--;
+		/* read the bytes */
+		run = ide->dma_bytes_left < (UINT32)bytesleft ? ide->dma_bytes_left : (UINT32)bytesleft;
+		cpunum_read_bytes(ide->dma_cpu, ide->dma_address, data, run);
+		ide->dma_address += run;
+		data += run;
+		ide->dma_bytes_left -= run;
+		bytesleft -= run;
 	}
 }
 
@@ -1668,4 +1710,61 @@ WRITE16_HANDLER( ide_controller16_0_w )
 	size = convert_to_offset_and_size16(&offset, mem_mask);
 
 	ide_controller_write(&idestate[0], offset, size, data >> ((offset & 1) * 8));
+}
+
+
+
+/*************************************
+ *
+ *	Delayed events
+ *
+ *************************************/
+
+static void write_sector_done(int which);
+static void security_error_done(int which);
+
+static void ide_event_fired(int param)
+{
+	int which = param >> 1, slot = param & 1;
+	struct ide_state *ide = &idestate[which];
+	int kind = ide->event_kind[slot];
+
+	ide->event_kind[slot] = IDE_EVENT_NONE;
+	switch (kind)
+	{
+		case IDE_EVENT_INTERRUPT:				delayed_interrupt(which); break;
+		case IDE_EVENT_INTERRUPT_BUFFER_READY:	delayed_interrupt_buffer_ready(which); break;
+		case IDE_EVENT_READ_SECTOR:				read_sector_done(which); break;
+		case IDE_EVENT_WRITE_SECTOR:			write_sector_done(which); break;
+		case IDE_EVENT_SECURITY_ERROR:			security_error_done(which); break;
+	}
+}
+
+static void ide_event(struct ide_state *ide, int slot, double time, int kind)
+{
+	ide->event_kind[slot] = kind;
+	timer_adjust(ide->event_timer[slot], time, (int)(ide - idestate) * 2 + slot, 0);
+}
+
+static void ide_event_presave(void)
+{
+	int which, slot;
+	for (which = 0; which < MAX_IDE_CONTROLLERS; which++)
+		for (slot = 0; slot < 2; slot++)
+			if (idestate[which].event_timer[slot] && idestate[which].event_kind[slot] != IDE_EVENT_NONE)
+				idestate[which].event_left[slot] = timer_timeleft(idestate[which].event_timer[slot]);
+}
+
+static void ide_event_postload(void)
+{
+	int which, slot;
+	for (which = 0; which < MAX_IDE_CONTROLLERS; which++)
+		for (slot = 0; slot < 2; slot++)
+			if (idestate[which].event_timer[slot])
+			{
+				if (idestate[which].event_kind[slot] != IDE_EVENT_NONE)
+					timer_adjust(idestate[which].event_timer[slot], idestate[which].event_left[slot], which * 2 + slot, 0);
+				else
+					timer_adjust(idestate[which].event_timer[slot], TIME_NEVER, which * 2 + slot, 0);
+			}
 }

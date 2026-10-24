@@ -136,6 +136,9 @@ struct MachineSound
 #if (HAS_C140)
 #include "sound/c140.h"
 #endif
+#if (HAS_C352)
+#include "sound/c352.h"
+#endif
 #if (HAS_QSOUND)
 #include "sound/qsound.h"
 #endif
@@ -334,6 +337,9 @@ enum
 #endif
 #if (HAS_C140)
 	SOUND_C140,
+#endif
+#if (HAS_C352)
+	SOUND_C352,
 #endif
 #if (HAS_QSOUND)
 	SOUND_QSOUND,

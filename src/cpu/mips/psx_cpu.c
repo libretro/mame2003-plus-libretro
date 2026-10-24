@@ -180,6 +180,189 @@ mips_cpu_context mipscpu;
 
 int mips_ICount = 0;
 
+
+/***************************************************************************
+    Fast RAM
+
+    Loads and stores to plain RAM regions registered by the driver
+    (psxcpu_add_fastram) use a direct pointer instead of the memory
+    system. Off unless a driver registers regions. Little-endian hosts
+    only (the regions are kept in host order).
+***************************************************************************/
+
+#define PSX_MAX_FASTRAM		8
+
+struct psx_fastram
+{
+	offs_t		start;
+	offs_t		end;
+	int			readonly;
+	UINT8 *		base;
+};
+
+static struct psx_fastram fastram[ PSX_MAX_FASTRAM ];
+static int fastram_count;
+static struct psx_fastram *fastram_last = &fastram[ 0 ];
+
+static INLINE void psx_jit_check_write( const void *host );
+
+/* set by any access outside fast RAM (see psxloop.c) */
+static int psx_slow_access;
+
+#ifdef PSXJIT_VERIFY
+/* debug: stores logged while the recompiler is checked against the interpreter */
+#define PSXJIT_VLOG		262144
+struct psx_vlog { UINT8 *p; int size; UINT32 old; };
+static struct psx_vlog jit_vlog[ PSXJIT_VLOG ], interp_vlog[ PSXJIT_VLOG ];
+static int jit_vlog_count, interp_vlog_count, jit_verify_logging;
+static void psx_verify_log( UINT8 *p, int size )
+{
+	if( jit_verify_logging && interp_vlog_count < PSXJIT_VLOG )
+	{
+		interp_vlog[ interp_vlog_count ].p = p;
+		interp_vlog[ interp_vlog_count ].size = size;
+		memcpy( &interp_vlog[ interp_vlog_count ].old, p, size );
+		interp_vlog_count++;
+	}
+}
+#define PSX_VERIFY_LOG( p, size )	psx_verify_log( p, size )
+#else
+#define PSX_VERIFY_LOG( p, size )
+#endif
+
+void psxcpu_add_fastram( offs_t start, offs_t end, int readonly, void *base )
+{
+#ifndef MSB_FIRST
+	int i;
+	for( i = 0; i < fastram_count; i++ )
+	{
+		if( fastram[ i ].start == start )
+		{
+			break;
+		}
+	}
+	if( i == PSX_MAX_FASTRAM )
+	{
+		return;
+	}
+	fastram[ i ].start = start;
+	fastram[ i ].end = end;
+	fastram[ i ].readonly = readonly;
+	fastram[ i ].base = (UINT8 *)base;
+	if( i == fastram_count )
+	{
+		fastram_count++;
+	}
+#endif
+}
+
+/* the region holding all 'size' bytes at 'address', or NULL */
+static INLINE struct psx_fastram *find_fastram( offs_t address, int size )
+{
+	struct psx_fastram *r = fastram_last;
+	int i;
+
+	if( fastram_count == 0 )
+	{
+		return NULL;
+	}
+	if( address - r->start <= r->end - r->start && address + size - 1 <= r->end )
+	{
+		return r;
+	}
+	for( i = 0; i < fastram_count; i++ )
+	{
+		r = &fastram[ i ];
+		if( address - r->start <= r->end - r->start && address + size - 1 <= r->end )
+		{
+			fastram_last = r;
+			return r;
+		}
+	}
+	return NULL;
+}
+
+static INLINE data8_t psx_read8( offs_t address )
+{
+	struct psx_fastram *r = find_fastram( address, 1 );
+	if( r ) return r->base[ address - r->start ];
+	psx_slow_access = 1;
+	return cpu_readmem32ledw( address );
+}
+
+static INLINE data16_t psx_read16( offs_t address )
+{
+	struct psx_fastram *r = find_fastram( address, 2 );
+	if( r ) return *(data16_t *)&r->base[ address - r->start ];
+	psx_slow_access = 1;
+	return cpu_readmem32ledw_word( address );
+}
+
+static INLINE data32_t psx_read32( offs_t address )
+{
+	struct psx_fastram *r = find_fastram( address, 4 );
+	if( r ) return *(data32_t *)&r->base[ address - r->start ];
+	psx_slow_access = 1;
+	return cpu_readmem32ledw_dword( address );
+}
+
+static INLINE void psx_write8( offs_t address, data8_t data )
+{
+	struct psx_fastram *r = find_fastram( address, 1 );
+	if( r && !r->readonly )
+	{
+		psx_jit_check_write( &r->base[ address - r->start ] );
+		PSX_VERIFY_LOG( &r->base[ address - r->start ], 1 );
+		r->base[ address - r->start ] = data;
+		return;
+	}
+	psx_slow_access = 1;
+	cpu_writemem32ledw( address, data );
+}
+
+static INLINE void psx_write16( offs_t address, data16_t data )
+{
+	struct psx_fastram *r = find_fastram( address, 2 );
+	if( r && !r->readonly )
+	{
+		psx_jit_check_write( &r->base[ address - r->start ] );
+		PSX_VERIFY_LOG( &r->base[ address - r->start ], 2 );
+		*(data16_t *)&r->base[ address - r->start ] = data;
+		return;
+	}
+	psx_slow_access = 1;
+	cpu_writemem32ledw_word( address, data );
+}
+
+static INLINE void psx_write32( offs_t address, data32_t data )
+{
+	struct psx_fastram *r = find_fastram( address, 4 );
+	if( r && !r->readonly )
+	{
+		psx_jit_check_write( &r->base[ address - r->start ] );
+		PSX_VERIFY_LOG( &r->base[ address - r->start ], 4 );
+		*(data32_t *)&r->base[ address - r->start ] = data;
+		return;
+	}
+	psx_slow_access = 1;
+	cpu_writemem32ledw_dword( address, data );
+}
+
+/* a driver hook called before the instruction at one address runs (the */
+/* hacks MAME does with a debugger breakpoint or a read tap on the code) */
+#define PC_HOOK_NONE	1	/* never an instruction address */
+static UINT32 pc_hook_pc = PC_HOOK_NONE;
+static void ( *pc_hook_fn )( void );
+
+static void loop_arrive( UINT32 l, UINT32 from );
+static int loop_kind( UINT32 l );
+static int loop_pure_armed;
+#define LOOP_NONE		0
+
+#include "psxjit.c"
+#include "psxloop.c"
+
+
 static UINT32 mips_mtc0_writemask[]=
 {
 	0xffffffff, /* INDEX */
@@ -215,6 +398,13 @@ static UINT32 mips_mtc0_writemask[]=
 	0x00000000,
 	0x00000000
 };
+
+/* GTE register and command trace (very verbose), off by default */
+#ifdef PSX_GTE_TRACE
+#define GTELOG( args )	log_cb args
+#else
+#define GTELOG( args )	do { } while( 0 )
+#endif
 
 static UINT32 getcp2dr( int n_reg );
 static void setcp2dr( int n_reg, UINT32 n_value );
@@ -352,6 +542,12 @@ void mips_init( void )
 {
 	int cpu = cpu_getactivecpu();
 
+	fastram_count = 0;
+	fastram_last = &fastram[ 0 ];
+	psxcpu_set_jit( 0 );
+	pc_hook_pc = PC_HOOK_NONE;
+	pc_hook_fn = NULL;
+
 	state_save_register_UINT32( "psxcpu", cpu, "op", &mipscpu.op, 1 );
 	state_save_register_UINT32( "psxcpu", cpu, "pc", &mipscpu.pc, 1 );
 	state_save_register_UINT32( "psxcpu", cpu, "delayv", &mipscpu.delayv, 1 );
@@ -366,6 +562,8 @@ void mips_init( void )
 
 void mips_reset( void *param )
 {
+	/* machine init may patch RAM directly (boot hacks) */
+	jit_reset_flush();
 	mips_set_cp0r( CP0_SR, ( mipscpu.cp0r[ CP0_SR ] & ~( SR_TS | SR_SWC | SR_KUC | SR_IEC ) ) | SR_BEV );
 	mips_set_cp0r( CP0_RANDOM, 63 ); /* todo: */
 	mips_set_cp0r( CP0_PRID, 0x00000200 ); /* todo: */
@@ -374,186 +572,184 @@ void mips_reset( void *param )
 
 void mips_exit( void )
 {
+	psxcpu_set_jit( 0 );
+	pc_hook_pc = PC_HOOK_NONE;
+	pc_hook_fn = NULL;
 }
 
-int mips_execute( int cycles )
+void psxcpu_set_pc_hook( UINT32 pc, void ( *fn )( void ) )
+{
+	pc_hook_pc = fn != NULL && ( pc & 3 ) == 0 ? pc : PC_HOOK_NONE;
+	pc_hook_fn = fn;
+	/* the recompiler leaves that instruction to the interpreter */
+	jit_reset_flush();
+}
+
+/* one instruction at mipscpu.pc (opcode in mipscpu.op), without the cycle */
+static INLINE void mips_step( void )
 {
 	UINT32 n_res;
 
-	mips_ICount = cycles;
-	do
+	switch( INS_OP( mipscpu.op ) )
 	{
-		CALL_MAME_DEBUG;
-
-		mipscpu.op = cpu_readop32( mipscpu.pc );
-		switch( INS_OP( mipscpu.op ) )
+	case OP_SPECIAL:
+		switch( INS_FUNCT( mipscpu.op ) )
 		{
-		case OP_SPECIAL:
-			switch( INS_FUNCT( mipscpu.op ) )
+		case FUNCT_SLL:
+			mips_load( INS_RD( mipscpu.op ), mipscpu.r[ INS_RT( mipscpu.op ) ] << INS_SHAMT( mipscpu.op ) );
+			break;
+		case FUNCT_SRL:
+			mips_load( INS_RD( mipscpu.op ), mipscpu.r[ INS_RT( mipscpu.op ) ] >> INS_SHAMT( mipscpu.op ) );
+			break;
+		case FUNCT_SRA:
+			mips_load( INS_RD( mipscpu.op ), (INT32)mipscpu.r[ INS_RT( mipscpu.op ) ] >> INS_SHAMT( mipscpu.op ) );
+			break;
+		case FUNCT_SLLV:
+			mips_load( INS_RD( mipscpu.op ), mipscpu.r[ INS_RT( mipscpu.op ) ] << ( mipscpu.r[ INS_RS( mipscpu.op ) ] & 31 ) );
+			break;
+		case FUNCT_SRLV:
+			mips_load( INS_RD( mipscpu.op ), mipscpu.r[ INS_RT( mipscpu.op ) ] >> ( mipscpu.r[ INS_RS( mipscpu.op ) ] & 31 ) );
+			break;
+		case FUNCT_SRAV:
+			mips_load( INS_RD( mipscpu.op ), (INT32)mipscpu.r[ INS_RT( mipscpu.op ) ] >> ( mipscpu.r[ INS_RS( mipscpu.op ) ] & 31 ) );
+			break;
+		case FUNCT_JR:
+			if( INS_RD( mipscpu.op ) != 0 )
 			{
-			case FUNCT_SLL:
-				mips_load( INS_RD( mipscpu.op ), mipscpu.r[ INS_RT( mipscpu.op ) ] << INS_SHAMT( mipscpu.op ) );
-				break;
-			case FUNCT_SRL:
-				mips_load( INS_RD( mipscpu.op ), mipscpu.r[ INS_RT( mipscpu.op ) ] >> INS_SHAMT( mipscpu.op ) );
-				break;
-			case FUNCT_SRA:
-				mips_load( INS_RD( mipscpu.op ), (INT32)mipscpu.r[ INS_RT( mipscpu.op ) ] >> INS_SHAMT( mipscpu.op ) );
-				break;
-			case FUNCT_SLLV:
-				mips_load( INS_RD( mipscpu.op ), mipscpu.r[ INS_RT( mipscpu.op ) ] << ( mipscpu.r[ INS_RS( mipscpu.op ) ] & 31 ) );
-				break;
-			case FUNCT_SRLV:
-				mips_load( INS_RD( mipscpu.op ), mipscpu.r[ INS_RT( mipscpu.op ) ] >> ( mipscpu.r[ INS_RS( mipscpu.op ) ] & 31 ) );
-				break;
-			case FUNCT_SRAV:
-				mips_load( INS_RD( mipscpu.op ), (INT32)mipscpu.r[ INS_RT( mipscpu.op ) ] >> ( mipscpu.r[ INS_RS( mipscpu.op ) ] & 31 ) );
-				break;
-			case FUNCT_JR:
-				if( INS_RD( mipscpu.op ) != 0 )
-				{
-					mips_exception( EXC_RI );
-				}
-				else
-				{
-					mips_delayed_branch( mipscpu.r[ INS_RS( mipscpu.op ) ] );
-				}
-				break;
-			case FUNCT_JALR:
-				n_res = mipscpu.pc + 8;
+				mips_exception( EXC_RI );
+			}
+			else
+			{
 				mips_delayed_branch( mipscpu.r[ INS_RS( mipscpu.op ) ] );
-				if( INS_RD( mipscpu.op ) != 0 )
+			}
+			break;
+		case FUNCT_JALR:
+			n_res = mipscpu.pc + 8;
+			mips_delayed_branch( mipscpu.r[ INS_RS( mipscpu.op ) ] );
+			if( INS_RD( mipscpu.op ) != 0 )
+			{
+				mipscpu.r[ INS_RD( mipscpu.op ) ] = n_res;
+			}
+			break;
+		case FUNCT_SYSCALL:
+			mips_exception( EXC_SYS );
+			break;
+		case FUNCT_BREAK:
+			mips_exception( EXC_BP );
+			break;
+		case FUNCT_MFHI:
+			mips_load( INS_RD( mipscpu.op ), mipscpu.hi );
+			break;
+		case FUNCT_MTHI:
+			if( INS_RD( mipscpu.op ) != 0 )
+			{
+				mips_exception( EXC_RI );
+			}
+			else
+			{
+				mips_advance_pc();
+				mipscpu.hi = mipscpu.r[ INS_RS( mipscpu.op ) ];
+			}
+			break;
+		case FUNCT_MFLO:
+			mips_load( INS_RD( mipscpu.op ),  mipscpu.lo );
+			break;
+		case FUNCT_MTLO:
+			if( INS_RD( mipscpu.op ) != 0 )
+			{
+				mips_exception( EXC_RI );
+			}
+			else
+			{
+				mips_advance_pc();
+				mipscpu.lo = mipscpu.r[ INS_RS( mipscpu.op ) ];
+			}
+			break;
+		case FUNCT_MULT:
+			if( INS_RD( mipscpu.op ) != 0 )
+			{
+				mips_exception( EXC_RI );
+			}
+			else
+			{
+				INT64 n_res64;
+				n_res64 = MUL_64_32_32( (INT32)mipscpu.r[ INS_RS( mipscpu.op ) ], (INT32)mipscpu.r[ INS_RT( mipscpu.op ) ] );
+				mips_advance_pc();
+				mipscpu.lo = LO32_32_64( n_res64 );
+				mipscpu.hi = HI32_32_64( n_res64 );
+			}
+			break;
+		case FUNCT_MULTU:
+			if( INS_RD( mipscpu.op ) != 0 )
+			{
+				mips_exception( EXC_RI );
+			}
+			else
+			{
+				UINT64 n_res64;
+				n_res64 = MUL_U64_U32_U32( mipscpu.r[ INS_RS( mipscpu.op ) ], mipscpu.r[ INS_RT( mipscpu.op ) ] );
+				mips_advance_pc();
+				mipscpu.lo = LO32_U32_U64( n_res64 );
+				mipscpu.hi = HI32_U32_U64( n_res64 );
+			}
+			break;
+		case FUNCT_DIV:
+			if( INS_RD( mipscpu.op ) != 0 )
+			{
+				mips_exception( EXC_RI );
+			}
+			else
+			{
+				UINT32 n_div;
+				UINT32 n_mod;
+				if( mipscpu.r[ INS_RS( mipscpu.op ) ] == 0x80000000 && mipscpu.r[ INS_RT( mipscpu.op ) ] == 0xffffffff )
 				{
-					mipscpu.r[ INS_RD( mipscpu.op ) ] = n_res;
+					/* overflows in C (trap on x86); the R3000A gives this */
+					mips_advance_pc();
+					mipscpu.lo = 0x80000000;
+					mipscpu.hi = 0;
 				}
-				break;
-			case FUNCT_SYSCALL:
-				mips_exception( EXC_SYS );
-				break;
-			case FUNCT_BREAK:
-				mips_exception( EXC_BP );
-				break;
-			case FUNCT_MFHI:
-				mips_load( INS_RD( mipscpu.op ), mipscpu.hi );
-				break;
-			case FUNCT_MTHI:
-				if( INS_RD( mipscpu.op ) != 0 )
+				else if( mipscpu.r[ INS_RT( mipscpu.op ) ] != 0 )
 				{
-					mips_exception( EXC_RI );
+					n_div = (INT32)mipscpu.r[ INS_RS( mipscpu.op ) ] / (INT32)mipscpu.r[ INS_RT( mipscpu.op ) ];
+					n_mod = (INT32)mipscpu.r[ INS_RS( mipscpu.op ) ] % (INT32)mipscpu.r[ INS_RT( mipscpu.op ) ];
+					mips_advance_pc();
+					mipscpu.lo = n_div;
+					mipscpu.hi = n_mod;
 				}
 				else
 				{
 					mips_advance_pc();
-					mipscpu.hi = mipscpu.r[ INS_RS( mipscpu.op ) ];
 				}
-				break;
-			case FUNCT_MFLO:
-				mips_load( INS_RD( mipscpu.op ),  mipscpu.lo );
-				break;
-			case FUNCT_MTLO:
-				if( INS_RD( mipscpu.op ) != 0 )
+			}
+			break;
+		case FUNCT_DIVU:
+			if( INS_RD( mipscpu.op ) != 0 )
+			{
+				mips_exception( EXC_RI );
+			}
+			else
+			{
+				UINT32 n_div;
+				UINT32 n_mod;
+				if( mipscpu.r[ INS_RT( mipscpu.op ) ] != 0 )
 				{
-					mips_exception( EXC_RI );
+					n_div = mipscpu.r[ INS_RS( mipscpu.op ) ] / mipscpu.r[ INS_RT( mipscpu.op ) ];
+					n_mod = mipscpu.r[ INS_RS( mipscpu.op ) ] % mipscpu.r[ INS_RT( mipscpu.op ) ];
+					mips_advance_pc();
+					mipscpu.lo = n_div;
+					mipscpu.hi = n_mod;
 				}
 				else
 				{
 					mips_advance_pc();
-					mipscpu.lo = mipscpu.r[ INS_RS( mipscpu.op ) ];
 				}
-				break;
-			case FUNCT_MULT:
-				if( INS_RD( mipscpu.op ) != 0 )
-				{
-					mips_exception( EXC_RI );
-				}
-				else
-				{
-					INT64 n_res64;
-					n_res64 = MUL_64_32_32( (INT32)mipscpu.r[ INS_RS( mipscpu.op ) ], (INT32)mipscpu.r[ INS_RT( mipscpu.op ) ] );
-					mips_advance_pc();
-					mipscpu.lo = LO32_32_64( n_res64 );
-					mipscpu.hi = HI32_32_64( n_res64 );
-				}
-				break;
-			case FUNCT_MULTU:
-				if( INS_RD( mipscpu.op ) != 0 )
-				{
-					mips_exception( EXC_RI );
-				}
-				else
-				{
-					UINT64 n_res64;
-					n_res64 = MUL_U64_U32_U32( mipscpu.r[ INS_RS( mipscpu.op ) ], mipscpu.r[ INS_RT( mipscpu.op ) ] );
-					mips_advance_pc();
-					mipscpu.lo = LO32_U32_U64( n_res64 );
-					mipscpu.hi = HI32_U32_U64( n_res64 );
-				}
-				break;
-			case FUNCT_DIV:
-				if( INS_RD( mipscpu.op ) != 0 )
-				{
-					mips_exception( EXC_RI );
-				}
-				else
-				{
-					UINT32 n_div;
-					UINT32 n_mod;
-					if( mipscpu.r[ INS_RT( mipscpu.op ) ] != 0 )
-					{
-						n_div = (INT32)mipscpu.r[ INS_RS( mipscpu.op ) ] / (INT32)mipscpu.r[ INS_RT( mipscpu.op ) ];
-						n_mod = (INT32)mipscpu.r[ INS_RS( mipscpu.op ) ] % (INT32)mipscpu.r[ INS_RT( mipscpu.op ) ];
-						mips_advance_pc();
-						mipscpu.lo = n_div;
-						mipscpu.hi = n_mod;
-					}
-					else
-					{
-						mips_advance_pc();
-					}
-				}
-				break;
-			case FUNCT_DIVU:
-				if( INS_RD( mipscpu.op ) != 0 )
-				{
-					mips_exception( EXC_RI );
-				}
-				else
-				{
-					UINT32 n_div;
-					UINT32 n_mod;
-					if( mipscpu.r[ INS_RT( mipscpu.op ) ] != 0 )
-					{
-						n_div = mipscpu.r[ INS_RS( mipscpu.op ) ] / mipscpu.r[ INS_RT( mipscpu.op ) ];
-						n_mod = mipscpu.r[ INS_RS( mipscpu.op ) ] % mipscpu.r[ INS_RT( mipscpu.op ) ];
-						mips_advance_pc();
-						mipscpu.lo = n_div;
-						mipscpu.hi = n_mod;
-					}
-					else
-					{
-						mips_advance_pc();
-					}
-				}
-				break;
-			case FUNCT_ADD:
-				{
-					n_res = mipscpu.r[ INS_RS( mipscpu.op ) ] + mipscpu.r[ INS_RT( mipscpu.op ) ];
-					if( (INT32)( ~( mipscpu.r[ INS_RS( mipscpu.op ) ] ^ mipscpu.r[ INS_RT( mipscpu.op ) ] ) & ( mipscpu.r[ INS_RS( mipscpu.op ) ] ^ n_res ) ) < 0 )
-					{
-						mips_exception( EXC_OVF );
-					}
-					else
-					{
-						mips_load( INS_RD( mipscpu.op ), n_res );
-					}
-				}
-				break;
-			case FUNCT_ADDU:
-				mips_load( INS_RD( mipscpu.op ), mipscpu.r[ INS_RS( mipscpu.op ) ] + mipscpu.r[ INS_RT( mipscpu.op ) ] );
-				break;
-			case FUNCT_SUB:
-				n_res = mipscpu.r[ INS_RS( mipscpu.op ) ] - mipscpu.r[ INS_RT( mipscpu.op ) ];
-				if( (INT32)( ( mipscpu.r[ INS_RS( mipscpu.op ) ] ^ mipscpu.r[ INS_RT( mipscpu.op ) ] ) & ( mipscpu.r[ INS_RS( mipscpu.op ) ] ^ n_res ) ) < 0 )
+			}
+			break;
+		case FUNCT_ADD:
+			{
+				n_res = mipscpu.r[ INS_RS( mipscpu.op ) ] + mipscpu.r[ INS_RT( mipscpu.op ) ];
+				if( (INT32)( ~( mipscpu.r[ INS_RS( mipscpu.op ) ] ^ mipscpu.r[ INS_RT( mipscpu.op ) ] ) & ( mipscpu.r[ INS_RS( mipscpu.op ) ] ^ n_res ) ) < 0 )
 				{
 					mips_exception( EXC_OVF );
 				}
@@ -561,92 +757,86 @@ int mips_execute( int cycles )
 				{
 					mips_load( INS_RD( mipscpu.op ), n_res );
 				}
-				break;
-			case FUNCT_SUBU:
-				mips_load( INS_RD( mipscpu.op ), mipscpu.r[ INS_RS( mipscpu.op ) ] - mipscpu.r[ INS_RT( mipscpu.op ) ] );
-				break;
-			case FUNCT_AND:
-				mips_load( INS_RD( mipscpu.op ), mipscpu.r[ INS_RS( mipscpu.op ) ] & mipscpu.r[ INS_RT( mipscpu.op ) ] );
-				break;
-			case FUNCT_OR:
-				mips_load( INS_RD( mipscpu.op ), mipscpu.r[ INS_RS( mipscpu.op ) ] | mipscpu.r[ INS_RT( mipscpu.op ) ] );
-				break;
-			case FUNCT_XOR:
-				mips_load( INS_RD( mipscpu.op ), mipscpu.r[ INS_RS( mipscpu.op ) ] ^ mipscpu.r[ INS_RT( mipscpu.op ) ] );
-				break;
-			case FUNCT_NOR:
-				mips_load( INS_RD( mipscpu.op ), ~( mipscpu.r[ INS_RS( mipscpu.op ) ] | mipscpu.r[ INS_RT( mipscpu.op ) ] ) );
-				break;
-			case FUNCT_SLT:
-				mips_load( INS_RD( mipscpu.op ), (INT32)mipscpu.r[ INS_RS( mipscpu.op ) ] < (INT32)mipscpu.r[ INS_RT( mipscpu.op ) ] );
-				break;
-			case FUNCT_SLTU:
-				mips_load( INS_RD( mipscpu.op ), mipscpu.r[ INS_RS( mipscpu.op ) ] < mipscpu.r[ INS_RT( mipscpu.op ) ] );
-				break;
-			default:
-				mips_exception( EXC_RI );
-				break;
 			}
 			break;
-		case OP_REGIMM:
-			switch( INS_RT( mipscpu.op ) )
+		case FUNCT_ADDU:
+			mips_load( INS_RD( mipscpu.op ), mipscpu.r[ INS_RS( mipscpu.op ) ] + mipscpu.r[ INS_RT( mipscpu.op ) ] );
+			break;
+		case FUNCT_SUB:
+			n_res = mipscpu.r[ INS_RS( mipscpu.op ) ] - mipscpu.r[ INS_RT( mipscpu.op ) ];
+			if( (INT32)( ( mipscpu.r[ INS_RS( mipscpu.op ) ] ^ mipscpu.r[ INS_RT( mipscpu.op ) ] ) & ( mipscpu.r[ INS_RS( mipscpu.op ) ] ^ n_res ) ) < 0 )
 			{
-			case RT_BLTZ:
-				if( (INT32)mipscpu.r[ INS_RS( mipscpu.op ) ] < 0 )
-				{
-					mips_delayed_branch( mipscpu.pc + 4 + ( MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) ) << 2 ) );
-				}
-				else
-				{
-					mips_advance_pc();
-				}
-				break;
-			case RT_BGEZ:
-				if( (INT32)mipscpu.r[ INS_RS( mipscpu.op ) ] >= 0 )
-				{
-					mips_delayed_branch( mipscpu.pc + 4 + ( MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) ) << 2 ) );
-				}
-				else
-				{
-					mips_advance_pc();
-				}
-				break;
-			case RT_BLTZAL:
-				n_res = mipscpu.pc + 8;
-				if( (INT32)mipscpu.r[ INS_RS( mipscpu.op ) ] < 0 )
-				{
-					mips_delayed_branch( mipscpu.pc + 4 + ( MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) ) << 2 ) );
-				}
-				else
-				{
-					mips_advance_pc();
-				}
-				mipscpu.r[ 31 ] = n_res;
-				break;
-			case RT_BGEZAL:
-				n_res = mipscpu.pc + 8;
-				if( (INT32)mipscpu.r[ INS_RS( mipscpu.op ) ] >= 0 )
-				{
-					mips_delayed_branch( mipscpu.pc + 4 + ( MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) ) << 2 ) );
-				}
-				else
-				{
-					mips_advance_pc();
-				}
-				mipscpu.r[ 31 ] = n_res;
-				break;
+				mips_exception( EXC_OVF );
+			}
+			else
+			{
+				mips_load( INS_RD( mipscpu.op ), n_res );
 			}
 			break;
-		case OP_J:
-			mips_delayed_branch( ( ( mipscpu.pc + 4 ) & 0xf0000000 ) + ( INS_TARGET( mipscpu.op ) << 2 ) );
+		case FUNCT_SUBU:
+			mips_load( INS_RD( mipscpu.op ), mipscpu.r[ INS_RS( mipscpu.op ) ] - mipscpu.r[ INS_RT( mipscpu.op ) ] );
 			break;
-		case OP_JAL:
+		case FUNCT_AND:
+			mips_load( INS_RD( mipscpu.op ), mipscpu.r[ INS_RS( mipscpu.op ) ] & mipscpu.r[ INS_RT( mipscpu.op ) ] );
+			break;
+		case FUNCT_OR:
+			mips_load( INS_RD( mipscpu.op ), mipscpu.r[ INS_RS( mipscpu.op ) ] | mipscpu.r[ INS_RT( mipscpu.op ) ] );
+			break;
+		case FUNCT_XOR:
+			mips_load( INS_RD( mipscpu.op ), mipscpu.r[ INS_RS( mipscpu.op ) ] ^ mipscpu.r[ INS_RT( mipscpu.op ) ] );
+			break;
+		case FUNCT_NOR:
+			mips_load( INS_RD( mipscpu.op ), ~( mipscpu.r[ INS_RS( mipscpu.op ) ] | mipscpu.r[ INS_RT( mipscpu.op ) ] ) );
+			break;
+		case FUNCT_SLT:
+			mips_load( INS_RD( mipscpu.op ), (INT32)mipscpu.r[ INS_RS( mipscpu.op ) ] < (INT32)mipscpu.r[ INS_RT( mipscpu.op ) ] );
+			break;
+		case FUNCT_SLTU:
+			mips_load( INS_RD( mipscpu.op ), mipscpu.r[ INS_RS( mipscpu.op ) ] < mipscpu.r[ INS_RT( mipscpu.op ) ] );
+			break;
+		default:
+			mips_exception( EXC_RI );
+			break;
+		}
+		break;
+	case OP_REGIMM:
+		switch( INS_RT( mipscpu.op ) )
+		{
+		case RT_BLTZ:
+			if( (INT32)mipscpu.r[ INS_RS( mipscpu.op ) ] < 0 )
+			{
+				mips_delayed_branch( mipscpu.pc + 4 + ( MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) ) << 2 ) );
+			}
+			else
+			{
+				mips_advance_pc();
+			}
+			break;
+		case RT_BGEZ:
+			if( (INT32)mipscpu.r[ INS_RS( mipscpu.op ) ] >= 0 )
+			{
+				mips_delayed_branch( mipscpu.pc + 4 + ( MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) ) << 2 ) );
+			}
+			else
+			{
+				mips_advance_pc();
+			}
+			break;
+		case RT_BLTZAL:
 			n_res = mipscpu.pc + 8;
-			mips_delayed_branch( ( ( mipscpu.pc + 4 ) & 0xf0000000 ) + ( INS_TARGET( mipscpu.op ) << 2 ) );
+			if( (INT32)mipscpu.r[ INS_RS( mipscpu.op ) ] < 0 )
+			{
+				mips_delayed_branch( mipscpu.pc + 4 + ( MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) ) << 2 ) );
+			}
+			else
+			{
+				mips_advance_pc();
+			}
 			mipscpu.r[ 31 ] = n_res;
 			break;
-		case OP_BEQ:
-			if( mipscpu.r[ INS_RS( mipscpu.op ) ] == mipscpu.r[ INS_RT( mipscpu.op ) ] )
+		case RT_BGEZAL:
+			n_res = mipscpu.pc + 8;
+			if( (INT32)mipscpu.r[ INS_RS( mipscpu.op ) ] >= 0 )
 			{
 				mips_delayed_branch( mipscpu.pc + 4 + ( MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) ) << 2 ) );
 			}
@@ -654,126 +844,165 @@ int mips_execute( int cycles )
 			{
 				mips_advance_pc();
 			}
+			mipscpu.r[ 31 ] = n_res;
 			break;
-		case OP_BNE:
-			if( mipscpu.r[ INS_RS( mipscpu.op ) ] != mipscpu.r[ INS_RT( mipscpu.op ) ] )
+		}
+		break;
+	case OP_J:
+		mips_delayed_branch( ( ( mipscpu.pc + 4 ) & 0xf0000000 ) + ( INS_TARGET( mipscpu.op ) << 2 ) );
+		break;
+	case OP_JAL:
+		n_res = mipscpu.pc + 8;
+		mips_delayed_branch( ( ( mipscpu.pc + 4 ) & 0xf0000000 ) + ( INS_TARGET( mipscpu.op ) << 2 ) );
+		mipscpu.r[ 31 ] = n_res;
+		break;
+	case OP_BEQ:
+		if( mipscpu.r[ INS_RS( mipscpu.op ) ] == mipscpu.r[ INS_RT( mipscpu.op ) ] )
+		{
+			mips_delayed_branch( mipscpu.pc + 4 + ( MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) ) << 2 ) );
+		}
+		else
+		{
+			mips_advance_pc();
+		}
+		break;
+	case OP_BNE:
+		if( mipscpu.r[ INS_RS( mipscpu.op ) ] != mipscpu.r[ INS_RT( mipscpu.op ) ] )
+		{
+			mips_delayed_branch( mipscpu.pc + 4 + ( MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) ) << 2 ) );
+		}
+		else
+		{
+			mips_advance_pc();
+		}
+		break;
+	case OP_BLEZ:
+		if( INS_RT( mipscpu.op ) != 0 )
+		{
+			mips_exception( EXC_RI );
+		}
+		else if( (INT32)mipscpu.r[ INS_RS( mipscpu.op ) ] <= 0 )
+		{
+			mips_delayed_branch( mipscpu.pc + 4 + ( MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) ) << 2 ) );
+		}
+		else
+		{
+			mips_advance_pc();
+		}
+		break;
+	case OP_BGTZ:
+		if( INS_RT( mipscpu.op ) != 0 )
+		{
+			mips_exception( EXC_RI );
+		}
+		else if( (INT32)mipscpu.r[ INS_RS( mipscpu.op ) ] > 0 )
+		{
+			mips_delayed_branch( mipscpu.pc + 4 + ( MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) ) << 2 ) );
+		}
+		else
+		{
+			mips_advance_pc();
+		}
+		break;
+	case OP_ADDI:
+		{
+			UINT32 n_imm;
+			n_imm = MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
+			n_res = mipscpu.r[ INS_RS( mipscpu.op ) ] + n_imm;
+			if( (INT32)( ~( mipscpu.r[ INS_RS( mipscpu.op ) ] ^ n_imm ) & ( mipscpu.r[ INS_RS( mipscpu.op ) ] ^ n_res ) ) < 0 )
 			{
-				mips_delayed_branch( mipscpu.pc + 4 + ( MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) ) << 2 ) );
+				mips_exception( EXC_OVF );
 			}
 			else
 			{
+				mips_load( INS_RT( mipscpu.op ), n_res );
+			}
+		}
+		break;
+	case OP_ADDIU:
+		mips_load( INS_RT( mipscpu.op ), mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) ) );
+		break;
+	case OP_SLTI:
+		mips_load( INS_RT( mipscpu.op ), (INT32)mipscpu.r[ INS_RS( mipscpu.op ) ] < MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) ) );
+		break;
+	case OP_SLTIU:
+		mips_load( INS_RT( mipscpu.op ), mipscpu.r[ INS_RS( mipscpu.op ) ] < (UINT32)MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) ) );
+		break;
+	case OP_ANDI:
+		mips_load( INS_RT( mipscpu.op ), mipscpu.r[ INS_RS( mipscpu.op ) ] & INS_IMMEDIATE( mipscpu.op ) );
+		break;
+	case OP_ORI:
+		mips_load( INS_RT( mipscpu.op ), mipscpu.r[ INS_RS( mipscpu.op ) ] | INS_IMMEDIATE( mipscpu.op ) );
+		break;
+	case OP_XORI:
+		mips_load( INS_RT( mipscpu.op ), mipscpu.r[ INS_RS( mipscpu.op ) ] ^ INS_IMMEDIATE( mipscpu.op ) );
+		break;
+	case OP_LUI:
+		mips_load( INS_RT( mipscpu.op ), INS_IMMEDIATE( mipscpu.op ) << 16 );
+		break;
+	case OP_COP0:
+		if( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) != 0 && ( mipscpu.cp0r[ CP0_SR ] & SR_CU0 ) == 0 )
+		{
+			mips_exception( EXC_CPU );
+			mips_set_cp0r( CP0_CAUSE, ( mipscpu.cp0r[ CP0_CAUSE ] & ~CAUSE_CE ) | CAUSE_CE0 );
+		}
+		else
+		{
+			switch( INS_RS( mipscpu.op ) )
+			{
+			case RS_MFC:
+				mips_delayed_load( INS_RT( mipscpu.op ), mipscpu.cp0r[ INS_RD( mipscpu.op ) ] );
+				break;
+			case RS_CFC:
+				/* todo: */
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP0 CFC not supported\n", mipscpu.pc );
+				mips_stop();
 				mips_advance_pc();
-			}
-			break;
-		case OP_BLEZ:
-			if( INS_RT( mipscpu.op ) != 0 )
-			{
-				mips_exception( EXC_RI );
-			}
-			else if( (INT32)mipscpu.r[ INS_RS( mipscpu.op ) ] <= 0 )
-			{
-				mips_delayed_branch( mipscpu.pc + 4 + ( MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) ) << 2 ) );
-			}
-			else
-			{
+				break;
+			case RS_MTC:
+				n_res = ( mipscpu.cp0r[ INS_RD( mipscpu.op ) ] & ~mips_mtc0_writemask[ INS_RD( mipscpu.op ) ] ) |
+					( mipscpu.r[ INS_RT( mipscpu.op ) ] & mips_mtc0_writemask[ INS_RD( mipscpu.op ) ] );
 				mips_advance_pc();
-			}
-			break;
-		case OP_BGTZ:
-			if( INS_RT( mipscpu.op ) != 0 )
-			{
-				mips_exception( EXC_RI );
-			}
-			else if( (INT32)mipscpu.r[ INS_RS( mipscpu.op ) ] > 0 )
-			{
-				mips_delayed_branch( mipscpu.pc + 4 + ( MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) ) << 2 ) );
-			}
-			else
-			{
+				mips_set_cp0r( INS_RD( mipscpu.op ), n_res );
+				break;
+			case RS_CTC:
+				/* todo: */
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP0 CTC not supported\n", mipscpu.pc );
+				mips_stop();
 				mips_advance_pc();
-			}
-			break;
-		case OP_ADDI:
-			{
-				UINT32 n_imm;
-				n_imm = MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
-				n_res = mipscpu.r[ INS_RS( mipscpu.op ) ] + n_imm;
-				if( (INT32)( ~( mipscpu.r[ INS_RS( mipscpu.op ) ] ^ n_imm ) & ( mipscpu.r[ INS_RS( mipscpu.op ) ] ^ n_res ) ) < 0 )
+				break;
+			case RS_BC:
+				switch( INS_RT( mipscpu.op ) )
 				{
-					mips_exception( EXC_OVF );
-				}
-				else
-				{
-					mips_load( INS_RT( mipscpu.op ), n_res );
-				}
-			}
-			break;
-		case OP_ADDIU:
-			mips_load( INS_RT( mipscpu.op ), mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) ) );
-			break;
-		case OP_SLTI:
-			mips_load( INS_RT( mipscpu.op ), (INT32)mipscpu.r[ INS_RS( mipscpu.op ) ] < MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) ) );
-			break;
-		case OP_SLTIU:
-			mips_load( INS_RT( mipscpu.op ), mipscpu.r[ INS_RS( mipscpu.op ) ] < (UINT32)MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) ) );
-			break;
-		case OP_ANDI:
-			mips_load( INS_RT( mipscpu.op ), mipscpu.r[ INS_RS( mipscpu.op ) ] & INS_IMMEDIATE( mipscpu.op ) );
-			break;
-		case OP_ORI:
-			mips_load( INS_RT( mipscpu.op ), mipscpu.r[ INS_RS( mipscpu.op ) ] | INS_IMMEDIATE( mipscpu.op ) );
-			break;
-		case OP_XORI:
-			mips_load( INS_RT( mipscpu.op ), mipscpu.r[ INS_RS( mipscpu.op ) ] ^ INS_IMMEDIATE( mipscpu.op ) );
-			break;
-		case OP_LUI:
-			mips_load( INS_RT( mipscpu.op ), INS_IMMEDIATE( mipscpu.op ) << 16 );
-			break;
-		case OP_COP0:
-			if( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) != 0 && ( mipscpu.cp0r[ CP0_SR ] & SR_CU0 ) == 0 )
-			{
-				mips_exception( EXC_CPU );
-				mips_set_cp0r( CP0_CAUSE, ( mipscpu.cp0r[ CP0_CAUSE ] & ~CAUSE_CE ) | CAUSE_CE0 );
-			}
-			else
-			{
-				switch( INS_RS( mipscpu.op ) )
-				{
-				case RS_MFC:
-					mips_delayed_load( INS_RT( mipscpu.op ), mipscpu.cp0r[ INS_RD( mipscpu.op ) ] );
-					break;
-				case RS_CFC:
+				case RT_BCF:
 					/* todo: */
-					log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP0 CFC not supported\n", mipscpu.pc );
+					log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP0 BCF not supported\n", mipscpu.pc );
 					mips_stop();
 					mips_advance_pc();
 					break;
-				case RS_MTC:
-					n_res = ( mipscpu.cp0r[ INS_RD( mipscpu.op ) ] & ~mips_mtc0_writemask[ INS_RD( mipscpu.op ) ] ) |
-						( mipscpu.r[ INS_RT( mipscpu.op ) ] & mips_mtc0_writemask[ INS_RD( mipscpu.op ) ] );
-					mips_advance_pc();
-					mips_set_cp0r( INS_RD( mipscpu.op ), n_res );
-					break;
-				case RS_CTC:
+				case RT_BCT:
 					/* todo: */
-					log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP0 CTC not supported\n", mipscpu.pc );
+					log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP0 BCT not supported\n", mipscpu.pc );
 					mips_stop();
 					mips_advance_pc();
 					break;
-				case RS_BC:
-					switch( INS_RT( mipscpu.op ) )
+				default:
+					/* todo: */
+					log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP0 unknown command %08x\n", mipscpu.pc, mipscpu.op );
+					mips_stop();
+					mips_advance_pc();
+					break;
+				}
+				break;
+			default:
+				switch( INS_CO( mipscpu.op ) )
+				{
+				case 1:
+					switch( INS_CF( mipscpu.op ) )
 					{
-					case RT_BCF:
-						/* todo: */
-						log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP0 BCF not supported\n", mipscpu.pc );
-						mips_stop();
+					case CF_RFE:
 						mips_advance_pc();
-						break;
-					case RT_BCT:
-						/* todo: */
-						log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP0 BCT not supported\n", mipscpu.pc );
-						mips_stop();
-						mips_advance_pc();
+						mips_set_cp0r( CP0_SR, ( mipscpu.cp0r[ CP0_SR ] & ~0xf ) | ( ( mipscpu.cp0r[ CP0_SR ] >> 2 ) & 0xf ) );
 						break;
 					default:
 						/* todo: */
@@ -784,801 +1013,813 @@ int mips_execute( int cycles )
 					}
 					break;
 				default:
-					switch( INS_CO( mipscpu.op ) )
-					{
-					case 1:
-						switch( INS_CF( mipscpu.op ) )
-						{
-						case CF_RFE:
-							mips_advance_pc();
-							mips_set_cp0r( CP0_SR, ( mipscpu.cp0r[ CP0_SR ] & ~0xf ) | ( ( mipscpu.cp0r[ CP0_SR ] >> 2 ) & 0xf ) );
-							break;
-						default:
-							/* todo: */
-							log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP0 unknown command %08x\n", mipscpu.pc, mipscpu.op );
-							mips_stop();
-							mips_advance_pc();
-							break;
-						}
-						break;
-					default:
-						/* todo: */
-						log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP0 unknown command %08x\n", mipscpu.pc, mipscpu.op );
-						mips_stop();
-						mips_advance_pc();
-						break;
-					}
+					/* todo: */
+					log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP0 unknown command %08x\n", mipscpu.pc, mipscpu.op );
+					mips_stop();
+					mips_advance_pc();
 					break;
 				}
+				break;
 			}
-			break;
-		case OP_COP1:
-			if( ( mipscpu.cp0r[ CP0_SR ] & SR_CU1 ) == 0 )
+		}
+		break;
+	case OP_COP1:
+		if( ( mipscpu.cp0r[ CP0_SR ] & SR_CU1 ) == 0 )
+		{
+			mips_exception( EXC_CPU );
+			mips_set_cp0r( CP0_CAUSE, ( mipscpu.cp0r[ CP0_CAUSE ] & ~CAUSE_CE ) | CAUSE_CE1 );
+		}
+		else
+		{
+			switch( INS_RS( mipscpu.op ) )
 			{
-				mips_exception( EXC_CPU );
-				mips_set_cp0r( CP0_CAUSE, ( mipscpu.cp0r[ CP0_CAUSE ] & ~CAUSE_CE ) | CAUSE_CE1 );
-			}
-			else
-			{
-				switch( INS_RS( mipscpu.op ) )
+			case RS_MFC:
+				/* todo: */
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP1 BCT not supported\n", mipscpu.pc );
+				mips_stop();
+				mips_advance_pc();
+				break;
+			case RS_CFC:
+				/* todo: */
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP1 CFC not supported\n", mipscpu.pc );
+				mips_stop();
+				mips_advance_pc();
+				break;
+			case RS_MTC:
+				/* todo: */
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP1 MTC not supported\n", mipscpu.pc );
+				mips_stop();
+				mips_advance_pc();
+				break;
+			case RS_CTC:
+				/* todo: */
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP1 CTC not supported\n", mipscpu.pc );
+				mips_stop();
+				mips_advance_pc();
+				break;
+			case RS_BC:
+				switch( INS_RT( mipscpu.op ) )
 				{
-				case RS_MFC:
+				case RT_BCF:
+					/* todo: */
+					log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP1 BCF not supported\n", mipscpu.pc );
+					mips_stop();
+					mips_advance_pc();
+					break;
+				case RT_BCT:
 					/* todo: */
 					log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP1 BCT not supported\n", mipscpu.pc );
 					mips_stop();
 					mips_advance_pc();
 					break;
-				case RS_CFC:
+				default:
 					/* todo: */
-					log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP1 CFC not supported\n", mipscpu.pc );
+					log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP1 unknown command %08x\n", mipscpu.pc, mipscpu.op );
 					mips_stop();
 					mips_advance_pc();
 					break;
-				case RS_MTC:
+				}
+				break;
+			default:
+				switch( INS_CO( mipscpu.op ) )
+				{
+				case 1:
 					/* todo: */
-					log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP1 MTC not supported\n", mipscpu.pc );
+					log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP1 unknown command %08x\n", mipscpu.pc, mipscpu.op );
 					mips_stop();
 					mips_advance_pc();
-					break;
-				case RS_CTC:
-					/* todo: */
-					log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP1 CTC not supported\n", mipscpu.pc );
-					mips_stop();
-					mips_advance_pc();
-					break;
-				case RS_BC:
-					switch( INS_RT( mipscpu.op ) )
-					{
-					case RT_BCF:
-						/* todo: */
-						log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP1 BCF not supported\n", mipscpu.pc );
-						mips_stop();
-						mips_advance_pc();
-						break;
-					case RT_BCT:
-						/* todo: */
-						log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP1 BCT not supported\n", mipscpu.pc );
-						mips_stop();
-						mips_advance_pc();
-						break;
-					default:
-						/* todo: */
-						log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP1 unknown command %08x\n", mipscpu.pc, mipscpu.op );
-						mips_stop();
-						mips_advance_pc();
-						break;
-					}
 					break;
 				default:
-					switch( INS_CO( mipscpu.op ) )
-					{
-					case 1:
-						/* todo: */
-						log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP1 unknown command %08x\n", mipscpu.pc, mipscpu.op );
-						mips_stop();
-						mips_advance_pc();
-						break;
-					default:
-						/* todo: */
-						log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP1 unknown command %08x\n", mipscpu.pc, mipscpu.op );
-						mips_stop();
-						mips_advance_pc();
-						break;
-					}
-					break;
-				}
-			}
-			break;
-		case OP_COP2:
-			if( ( mipscpu.cp0r[ CP0_SR ] & SR_CU2 ) == 0 )
-			{
-				mips_exception( EXC_CPU );
-				mips_set_cp0r( CP0_CAUSE, ( mipscpu.cp0r[ CP0_CAUSE ] & ~CAUSE_CE ) | CAUSE_CE2 );
-			}
-			else
-			{
-				switch( INS_RS( mipscpu.op ) )
-				{
-				case RS_MFC:
-					mips_delayed_load( INS_RT( mipscpu.op ), getcp2dr( INS_RD( mipscpu.op ) ) );
-					break;
-				case RS_CFC:
-					mips_delayed_load( INS_RT( mipscpu.op ), getcp2cr( INS_RD( mipscpu.op ) ) );
-					break;
-				case RS_MTC:
-					setcp2dr( INS_RD( mipscpu.op ), mipscpu.r[ INS_RT( mipscpu.op ) ] );
+					/* todo: */
+					log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP1 unknown command %08x\n", mipscpu.pc, mipscpu.op );
+					mips_stop();
 					mips_advance_pc();
 					break;
-				case RS_CTC:
-					setcp2cr( INS_RD( mipscpu.op ), mipscpu.r[ INS_RT( mipscpu.op ) ] );
-					mips_advance_pc();
-					break;
-				case RS_BC:
-					switch( INS_RT( mipscpu.op ) )
-					{
-					case RT_BCF:
-						/* todo: */
-						log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP2 BCF not supported\n", mipscpu.pc );
-						mips_stop();
-						mips_advance_pc();
-						break;
-					case RT_BCT:
-						/* todo: */
-						log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP2 BCT not supported\n", mipscpu.pc );
-						mips_stop();
-						mips_advance_pc();
-						break;
-					default:
-						/* todo: */
-						log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP2 unknown command %08x\n", mipscpu.pc, mipscpu.op );
-						mips_stop();
-						mips_advance_pc();
-						break;
-					}
-					break;
-				default:
-					switch( INS_CO( mipscpu.op ) )
-					{
-					case 1:
-						docop2( INS_COFUN( mipscpu.op ) );
-						mips_advance_pc();
-						break;
-					default:
-						/* todo: */
-						log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP2 unknown command %08x\n", mipscpu.pc, mipscpu.op );
-						mips_stop();
-						mips_advance_pc();
-						break;
-					}
-					break;
 				}
+				break;
 			}
-			break;
-		case OP_LB:
-			if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
-			{
-				/* todo: */
-				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: LB SR_ISC not supported\n", mipscpu.pc );
-				mips_stop();
-				mips_advance_pc();
-			}
-			else if( ( mipscpu.cp0r[ CP0_SR ] & ( SR_RE | SR_KUC ) ) == ( SR_RE | SR_KUC ) )
-			{
-				UINT32 n_adr;
-				n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
-				if( ( n_adr & ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) ) != 0 )
-				{
-					mips_exception( EXC_ADEL );
-					mips_set_cp0r( CP0_BADVADDR, n_adr );
-				}
-				else
-				{
-					mips_delayed_load( INS_RT( mipscpu.op ), MIPS_BYTE_EXTEND( cpu_readmem32ledw( n_adr ^ 3 ) ) );
-				}
-			}
-			else
-			{
-				UINT32 n_adr;
-				n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
-				if( ( n_adr & ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) ) != 0 )
-				{
-					mips_exception( EXC_ADEL );
-					mips_set_cp0r( CP0_BADVADDR, n_adr );
-				}
-				else
-				{
-					mips_delayed_load( INS_RT( mipscpu.op ), MIPS_BYTE_EXTEND( cpu_readmem32ledw( n_adr ) ) );
-				}
-			}
-			break;
-		case OP_LH:
-			if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
-			{
-				/* todo: */
-				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: LH SR_ISC not supported\n", mipscpu.pc );
-				mips_stop();
-				mips_advance_pc();
-			}
-			else if( ( mipscpu.cp0r[ CP0_SR ] & ( SR_RE | SR_KUC ) ) == ( SR_RE | SR_KUC ) )
-			{
-				UINT32 n_adr;
-				n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
-				if( ( n_adr & ( ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) | 1 ) ) != 0 )
-				{
-					mips_exception( EXC_ADEL );
-					mips_set_cp0r( CP0_BADVADDR, n_adr );
-				}
-				else
-				{
-					mips_delayed_load( INS_RT( mipscpu.op ), MIPS_WORD_EXTEND( cpu_readmem32ledw_word( n_adr ^ 2 ) ) );
-				}
-			}
-			else
-			{
-				UINT32 n_adr;
-				n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
-				if( ( n_adr & ( ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) | 1 ) ) != 0 )
-				{
-					mips_exception( EXC_ADEL );
-					mips_set_cp0r( CP0_BADVADDR, n_adr );
-				}
-				else
-				{
-					mips_delayed_load( INS_RT( mipscpu.op ), MIPS_WORD_EXTEND( cpu_readmem32ledw_word( n_adr ) ) );
-				}
-			}
-			break;
-		case OP_LWL:
-			if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
-			{
-				/* todo: */
-				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: LWL SR_ISC not supported\n", mipscpu.pc );
-				mips_stop();
-				mips_advance_pc();
-			}
-			else if( ( mipscpu.cp0r[ CP0_SR ] & ( SR_RE | SR_KUC ) ) == ( SR_RE | SR_KUC ) )
-			{
-				UINT32 n_adr;
-				n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
-				if( ( n_adr & ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) ) != 0 )
-				{
-					mips_exception( EXC_ADEL );
-					mips_set_cp0r( CP0_BADVADDR, n_adr );
-				}
-				else
-				{
-					switch( n_adr & 3 )
-					{
-					case 0:
-						n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0x00ffffff ) | ( (UINT32)cpu_readmem32ledw( n_adr + 3 ) << 24 );
-						break;
-					case 1:
-						n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0x0000ffff ) | ( (UINT32)cpu_readmem32ledw_word( n_adr + 1 ) << 16 );
-						break;
-					case 2:
-						n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0x000000ff ) | ( (UINT32)cpu_readmem32ledw( n_adr - 1 ) << 8 ) | ( (UINT32)cpu_readmem32ledw_word( n_adr ) << 16 );
-						break;
-					default:
-						n_res = cpu_readmem32ledw_dword( n_adr - 3 );
-						break;
-					}
-					mips_delayed_load( INS_RT( mipscpu.op ), n_res );
-				}
-			}
-			else
-			{
-				UINT32 n_adr;
-				n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
-				if( ( n_adr & ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) ) != 0 )
-				{
-					mips_exception( EXC_ADEL );
-					mips_set_cp0r( CP0_BADVADDR, n_adr );
-				}
-				else
-				{
-					switch( n_adr & 3 )
-					{
-					case 0:
-						n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0x00ffffff ) | ( (UINT32)cpu_readmem32ledw( n_adr ) << 24 );
-						break;
-					case 1:
-						n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0x0000ffff ) | ( (UINT32)cpu_readmem32ledw_word( n_adr - 1 ) << 16 );
-						break;
-					case 2:
-						n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0x000000ff ) | ( (UINT32)cpu_readmem32ledw_word( n_adr - 2 ) << 8 ) | ( (UINT32)cpu_readmem32ledw( n_adr ) << 24 );
-						break;
-					default:
-						n_res = cpu_readmem32ledw_dword( n_adr - 3 );
-						break;
-					}
-					mips_delayed_load( INS_RT( mipscpu.op ), n_res );
-				}
-			}
-			break;
-		case OP_LW:
-			if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
-			{
-				/* todo: */
-				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: LW SR_ISC not supported\n", mipscpu.pc );
-				mips_stop();
-				mips_advance_pc();
-			}
-			else
-			{
-				UINT32 n_adr;
-				n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
-				if( ( n_adr & ( ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) | 3 ) ) != 0 )
-				{
-					mips_exception( EXC_ADEL );
-					mips_set_cp0r( CP0_BADVADDR, n_adr );
-				}
-				else
-				{
-					mips_delayed_load( INS_RT( mipscpu.op ), cpu_readmem32ledw_dword( n_adr ) );
-				}
-			}
-			break;
-		case OP_LBU:
-			if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
-			{
-				/* todo: */
-				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: LBU SR_ISC not supported\n", mipscpu.pc );
-				mips_stop();
-				mips_advance_pc();
-			}
-			else if( ( mipscpu.cp0r[ CP0_SR ] & ( SR_RE | SR_KUC ) ) == ( SR_RE | SR_KUC ) )
-			{
-				UINT32 n_adr;
-				n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
-				if( ( n_adr & ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) ) != 0 )
-				{
-					mips_exception( EXC_ADEL );
-					mips_set_cp0r( CP0_BADVADDR, n_adr );
-				}
-				else
-				{
-					mips_delayed_load( INS_RT( mipscpu.op ), cpu_readmem32ledw( n_adr ^ 3 ) );
-				}
-			}
-			else
-			{
-				UINT32 n_adr;
-				n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
-				if( ( n_adr & ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) ) != 0 )
-				{
-					mips_exception( EXC_ADEL );
-					mips_set_cp0r( CP0_BADVADDR, n_adr );
-				}
-				else
-				{
-					mips_delayed_load( INS_RT( mipscpu.op ), cpu_readmem32ledw( n_adr ) );
-				}
-			}
-			break;
-		case OP_LHU:
-			if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
-			{
-				/* todo: */
-				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: LHU SR_ISC not supported\n", mipscpu.pc );
-				mips_stop();
-				mips_advance_pc();
-			}
-			else if( ( mipscpu.cp0r[ CP0_SR ] & ( SR_RE | SR_KUC ) ) == ( SR_RE | SR_KUC ) )
-			{
-				UINT32 n_adr;
-				n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
-				if( ( n_adr & ( ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) | 1 ) ) != 0 )
-				{
-					mips_exception( EXC_ADEL );
-					mips_set_cp0r( CP0_BADVADDR, n_adr );
-				}
-				else
-				{
-					mips_delayed_load( INS_RT( mipscpu.op ), cpu_readmem32ledw_word( n_adr ^ 2 ) );
-				}
-			}
-			else
-			{
-				UINT32 n_adr;
-				n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
-				if( ( n_adr & ( ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) | 1 ) ) != 0 )
-				{
-					mips_exception( EXC_ADEL );
-					mips_set_cp0r( CP0_BADVADDR, n_adr );
-				}
-				else
-				{
-					mips_delayed_load( INS_RT( mipscpu.op ), cpu_readmem32ledw_word( n_adr ) );
-				}
-			}
-			break;
-		case OP_LWR:
-			if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
-			{
-				/* todo: */
-				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: LWR SR_ISC not supported\n", mipscpu.pc );
-				mips_stop();
-				mips_advance_pc();
-			}
-			else if( ( mipscpu.cp0r[ CP0_SR ] & ( SR_RE | SR_KUC ) ) == ( SR_RE | SR_KUC ) )
-			{
-				UINT32 n_adr;
-				n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
-				if( ( n_adr & ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) ) != 0 )
-				{
-					mips_exception( EXC_ADEL );
-					mips_set_cp0r( CP0_BADVADDR, n_adr );
-				}
-				else
-				{
-					switch( n_adr & 3 )
-					{
-					case 3:
-						n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0xffffff00 ) | cpu_readmem32ledw( n_adr - 3 );
-						break;
-					case 2:
-						n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0xffff0000 ) | cpu_readmem32ledw_word( n_adr - 2 );
-						break;
-					case 1:
-						n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0xff000000 ) | cpu_readmem32ledw_word( n_adr - 1 ) | ( (UINT32)cpu_readmem32ledw( n_adr + 1 ) << 16 );
-						break;
-					default:
-						n_res = cpu_readmem32ledw_dword( n_adr );
-						break;
-					}
-					mips_delayed_load( INS_RT( mipscpu.op ), n_res );
-				}
-			}
-			else
-			{
-				UINT32 n_adr;
-				n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
-				if( ( n_adr & ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) ) != 0 )
-				{
-					mips_exception( EXC_ADEL );
-					mips_set_cp0r( CP0_BADVADDR, n_adr );
-				}
-				else
-				{
-					switch( n_adr & 3 )
-					{
-					case 3:
-						n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0xffffff00 ) | cpu_readmem32ledw( n_adr );
-						break;
-					case 2:
-						n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0xffff0000 ) | cpu_readmem32ledw_word( n_adr );
-						break;
-					case 1:
-						n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0xff000000 ) | cpu_readmem32ledw( n_adr ) | ( (UINT32)cpu_readmem32ledw_word( n_adr + 1 ) << 8 );
-						break;
-					default:
-						n_res = cpu_readmem32ledw_dword( n_adr );
-						break;
-					}
-					mips_delayed_load( INS_RT( mipscpu.op ), n_res );
-				}
-			}
-			break;
-		case OP_SB:
-			if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
-			{
-				/* todo: */
-				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: SB SR_ISC not supported\n", mipscpu.pc );
-				mips_stop();
-				mips_advance_pc();
-			}
-			else if( ( mipscpu.cp0r[ CP0_SR ] & ( SR_RE | SR_KUC ) ) == ( SR_RE | SR_KUC ) )
-			{
-				UINT32 n_adr;
-				n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
-				if( ( n_adr & ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) ) != 0 )
-				{
-					mips_exception( EXC_ADES );
-					mips_set_cp0r( CP0_BADVADDR, n_adr );
-				}
-				else
-				{
-					cpu_writemem32ledw( n_adr ^ 3, mipscpu.r[ INS_RT( mipscpu.op ) ] );
-					mips_advance_pc();
-				}
-			}
-			else
-			{
-				UINT32 n_adr;
-				n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
-				if( ( n_adr & ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) ) != 0 )
-				{
-					mips_exception( EXC_ADES );
-					mips_set_cp0r( CP0_BADVADDR, n_adr );
-				}
-				else
-				{
-					cpu_writemem32ledw( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] );
-					mips_advance_pc();
-				}
-			}
-			break;
-		case OP_SH:
-			if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
-			{
-				/* todo: */
-				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: SH SR_ISC not supported\n", mipscpu.pc );
-				mips_stop();
-				mips_advance_pc();
-			}
-			else if( ( mipscpu.cp0r[ CP0_SR ] & ( SR_RE | SR_KUC ) ) == ( SR_RE | SR_KUC ) )
-			{
-				UINT32 n_adr;
-				n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
-				if( ( n_adr & ( ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) | 1 ) ) != 0 )
-				{
-					mips_exception( EXC_ADES );
-					mips_set_cp0r( CP0_BADVADDR, n_adr );
-				}
-				else
-				{
-					cpu_writemem32ledw_word( n_adr ^ 2, mipscpu.r[ INS_RT( mipscpu.op ) ] );
-					mips_advance_pc();
-				}
-			}
-			else
-			{
-				UINT32 n_adr;
-				n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
-				if( ( n_adr & ( ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) | 1 ) ) != 0 )
-				{
-					mips_exception( EXC_ADES );
-					mips_set_cp0r( CP0_BADVADDR, n_adr );
-				}
-				else
-				{
-					cpu_writemem32ledw_word( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] );
-					mips_advance_pc();
-				}
-			}
-			break;
-		case OP_SWL:
-			if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
-			{
-				/* todo: */
-				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: SWL SR_ISC not supported\n", mipscpu.pc );
-				mips_stop();
-				mips_advance_pc();
-			}
-			else if( ( mipscpu.cp0r[ CP0_SR ] & ( SR_RE | SR_KUC ) ) == ( SR_RE | SR_KUC ) )
-			{
-				UINT32 n_adr;
-				n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
-				if( ( n_adr & ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) ) != 0 )
-				{
-					mips_exception( EXC_ADES );
-					mips_set_cp0r( CP0_BADVADDR, n_adr );
-				}
-				else
-				{
-					switch( n_adr & 3 )
-					{
-					case 0:
-						cpu_writemem32ledw( n_adr + 3, mipscpu.r[ INS_RT( mipscpu.op ) ] >> 24 );
-						break;
-					case 1:
-						cpu_writemem32ledw_word( n_adr + 1, mipscpu.r[ INS_RT( mipscpu.op ) ] >> 16 );
-						break;
-					case 2:
-						cpu_writemem32ledw( n_adr - 1, mipscpu.r[ INS_RT( mipscpu.op ) ] >> 8 );
-						cpu_writemem32ledw_word( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] >> 16 );
-						break;
-					case 3:
-						cpu_writemem32ledw_dword( n_adr - 3, mipscpu.r[ INS_RT( mipscpu.op ) ] );
-						break;
-					}
-					mips_advance_pc();
-				}
-			}
-			else
-			{
-				UINT32 n_adr;
-				n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
-				if( ( n_adr & ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) ) != 0 )
-				{
-					mips_exception( EXC_ADES );
-					mips_set_cp0r( CP0_BADVADDR, n_adr );
-				}
-				else
-				{
-					switch( n_adr & 3 )
-					{
-					case 0:
-						cpu_writemem32ledw( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] >> 24 );
-						break;
-					case 1:
-						cpu_writemem32ledw_word( n_adr - 1, mipscpu.r[ INS_RT( mipscpu.op ) ] >> 16 );
-						break;
-					case 2:
-						cpu_writemem32ledw_word( n_adr - 2, mipscpu.r[ INS_RT( mipscpu.op ) ] >> 8 );
-						cpu_writemem32ledw( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] >> 24 );
-						break;
-					case 3:
-						cpu_writemem32ledw_dword( n_adr - 3, mipscpu.r[ INS_RT( mipscpu.op ) ] );
-						break;
-					}
-					mips_advance_pc();
-				}
-			}
-			break;
-		case OP_SW:
-			if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
-			{
-				/* todo: */
-/* used by bootstrap
-				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: SW SR_ISC not supported\n", mipscpu.pc );
-				mips_stop();
-*/
-				mips_advance_pc();
-			}
-			else
-			{
-				UINT32 n_adr;
-				n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
-				if( ( n_adr & ( ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) | 3 ) ) != 0 )
-				{
-					mips_exception( EXC_ADES );
-					mips_set_cp0r( CP0_BADVADDR, n_adr );
-				}
-				else
-				{
-					cpu_writemem32ledw_dword( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] );
-					mips_advance_pc();
-				}
-			}
-			break;
-		case OP_SWR:
-			if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
-			{
-				/* todo: */
-				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: SWR SR_ISC not supported\n", mipscpu.pc );
-				mips_stop();
-				mips_advance_pc();
-			}
-			else if( ( mipscpu.cp0r[ CP0_SR ] & ( SR_RE | SR_KUC ) ) == ( SR_RE | SR_KUC ) )
-			{
-				UINT32 n_adr;
-				n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
-				if( ( n_adr & ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) ) != 0 )
-				{
-					mips_exception( EXC_ADES );
-					mips_set_cp0r( CP0_BADVADDR, n_adr );
-				}
-				else
-				{
-					switch( n_adr & 3 )
-					{
-					case 0:
-						cpu_writemem32ledw_dword( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] );
-						break;
-					case 1:
-						cpu_writemem32ledw_word( n_adr - 1, mipscpu.r[ INS_RT( mipscpu.op ) ] );
-						cpu_writemem32ledw( n_adr + 1, mipscpu.r[ INS_RT( mipscpu.op ) ] >> 16 );
-						break;
-					case 2:
-						cpu_writemem32ledw_word( n_adr - 2, mipscpu.r[ INS_RT( mipscpu.op ) ] );
-						break;
-					case 3:
-						cpu_writemem32ledw( n_adr - 3, mipscpu.r[ INS_RT( mipscpu.op ) ] );
-						break;
-					}
-					mips_advance_pc();
-				}
-			}
-			else
-			{
-				UINT32 n_adr;
-				n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
-				if( ( n_adr & ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) ) != 0 )
-				{
-					mips_exception( EXC_ADES );
-					mips_set_cp0r( CP0_BADVADDR, n_adr );
-				}
-				else
-				{
-					switch( n_adr & 3 )
-					{
-					case 0:
-						cpu_writemem32ledw_dword( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] );
-						break;
-					case 1:
-						cpu_writemem32ledw( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] );
-						cpu_writemem32ledw_word( n_adr + 1, mipscpu.r[ INS_RT( mipscpu.op ) ] >> 8 );
-						break;
-					case 2:
-						cpu_writemem32ledw_word( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] );
-						break;
-					case 3:
-						cpu_writemem32ledw( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] );
-						break;
-					}
-					mips_advance_pc();
-				}
-			}
-			break;
-		case OP_LWC1:
-			/* todo: */
-			log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP1 LWC not supported\n", mipscpu.pc );
-			mips_stop();
-			mips_advance_pc();
-			break;
-		case OP_LWC2:
-			if( ( mipscpu.cp0r[ CP0_SR ] & SR_CU2 ) == 0 )
-			{
-				mips_exception( EXC_CPU );
-				mips_set_cp0r( CP0_CAUSE, ( mipscpu.cp0r[ CP0_CAUSE ] & ~CAUSE_CE ) | CAUSE_CE2 );
-			}
-			else if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
-			{
-				/* todo: */
-				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: LWC2 SR_ISC not supported\n", mipscpu.pc );
-				mips_stop();
-				mips_advance_pc();
-			}
-			else
-			{
-				UINT32 n_adr;
-				n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
-				if( ( n_adr & ( ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) | 3 ) ) != 0 )
-				{
-					mips_exception( EXC_ADEL );
-					mips_set_cp0r( CP0_BADVADDR, n_adr );
-				}
-				else
-				{
-					/* todo: delay? */
-					setcp2dr( INS_RT( mipscpu.op ), cpu_readmem32ledw_dword( n_adr ) );
-					mips_advance_pc();
-				}
-			}
-			break;
-		case OP_SWC1:
-			/* todo: */
-			log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP1 SWC not supported\n", mipscpu.pc );
-			mips_stop();
-			mips_advance_pc();
-			break;
-		case OP_SWC2:
-			if( ( mipscpu.cp0r[ CP0_SR ] & SR_CU2 ) == 0 )
-			{
-				mips_exception( EXC_CPU );
-				mips_set_cp0r( CP0_CAUSE, ( mipscpu.cp0r[ CP0_CAUSE ] & ~CAUSE_CE ) | CAUSE_CE2 );
-			}
-			else if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
-			{
-				/* todo: */
-				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: SWC2 SR_ISC not supported\n", mipscpu.pc );
-				mips_stop();
-				mips_advance_pc();
-			}
-			else
-			{
-				UINT32 n_adr;
-				n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
-				if( ( n_adr & ( ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) | 3 ) ) != 0 )
-				{
-					mips_exception( EXC_ADES );
-					mips_set_cp0r( CP0_BADVADDR, n_adr );
-				}
-				else
-				{
-					cpu_writemem32ledw_dword( n_adr, getcp2dr( INS_RT( mipscpu.op ) ) );
-					mips_advance_pc();
-				}
-			}
-			break;
-		default:
-			log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: unknown opcode %08x\n", mipscpu.pc, mipscpu.op );
-			mips_stop();
-			mips_exception( EXC_RI );
-			break;
 		}
-		mips_ICount--;
+		break;
+	case OP_COP2:
+		if( ( mipscpu.cp0r[ CP0_SR ] & SR_CU2 ) == 0 )
+		{
+			mips_exception( EXC_CPU );
+			mips_set_cp0r( CP0_CAUSE, ( mipscpu.cp0r[ CP0_CAUSE ] & ~CAUSE_CE ) | CAUSE_CE2 );
+		}
+		else
+		{
+			switch( INS_RS( mipscpu.op ) )
+			{
+			case RS_MFC:
+				mips_delayed_load( INS_RT( mipscpu.op ), getcp2dr( INS_RD( mipscpu.op ) ) );
+				break;
+			case RS_CFC:
+				mips_delayed_load( INS_RT( mipscpu.op ), getcp2cr( INS_RD( mipscpu.op ) ) );
+				break;
+			case RS_MTC:
+				setcp2dr( INS_RD( mipscpu.op ), mipscpu.r[ INS_RT( mipscpu.op ) ] );
+				mips_advance_pc();
+				break;
+			case RS_CTC:
+				setcp2cr( INS_RD( mipscpu.op ), mipscpu.r[ INS_RT( mipscpu.op ) ] );
+				mips_advance_pc();
+				break;
+			case RS_BC:
+				switch( INS_RT( mipscpu.op ) )
+				{
+				case RT_BCF:
+					/* todo: */
+					log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP2 BCF not supported\n", mipscpu.pc );
+					mips_stop();
+					mips_advance_pc();
+					break;
+				case RT_BCT:
+					/* todo: */
+					log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP2 BCT not supported\n", mipscpu.pc );
+					mips_stop();
+					mips_advance_pc();
+					break;
+				default:
+					/* todo: */
+					log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP2 unknown command %08x\n", mipscpu.pc, mipscpu.op );
+					mips_stop();
+					mips_advance_pc();
+					break;
+				}
+				break;
+			default:
+				switch( INS_CO( mipscpu.op ) )
+				{
+				case 1:
+					docop2( INS_COFUN( mipscpu.op ) );
+					mips_advance_pc();
+					break;
+				default:
+					/* todo: */
+					log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP2 unknown command %08x\n", mipscpu.pc, mipscpu.op );
+					mips_stop();
+					mips_advance_pc();
+					break;
+				}
+				break;
+			}
+		}
+		break;
+	case OP_LB:
+		if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
+		{
+			/* todo: */
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: LB SR_ISC not supported\n", mipscpu.pc );
+			mips_stop();
+			mips_advance_pc();
+		}
+		else if( ( mipscpu.cp0r[ CP0_SR ] & ( SR_RE | SR_KUC ) ) == ( SR_RE | SR_KUC ) )
+		{
+			UINT32 n_adr;
+			n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
+			if( ( n_adr & ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) ) != 0 )
+			{
+				mips_exception( EXC_ADEL );
+				mips_set_cp0r( CP0_BADVADDR, n_adr );
+			}
+			else
+			{
+				mips_delayed_load( INS_RT( mipscpu.op ), MIPS_BYTE_EXTEND( psx_read8( n_adr ^ 3 ) ) );
+			}
+		}
+		else
+		{
+			UINT32 n_adr;
+			n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
+			if( ( n_adr & ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) ) != 0 )
+			{
+				mips_exception( EXC_ADEL );
+				mips_set_cp0r( CP0_BADVADDR, n_adr );
+			}
+			else
+			{
+				mips_delayed_load( INS_RT( mipscpu.op ), MIPS_BYTE_EXTEND( psx_read8( n_adr ) ) );
+			}
+		}
+		break;
+	case OP_LH:
+		if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
+		{
+			/* todo: */
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: LH SR_ISC not supported\n", mipscpu.pc );
+			mips_stop();
+			mips_advance_pc();
+		}
+		else if( ( mipscpu.cp0r[ CP0_SR ] & ( SR_RE | SR_KUC ) ) == ( SR_RE | SR_KUC ) )
+		{
+			UINT32 n_adr;
+			n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
+			if( ( n_adr & ( ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) | 1 ) ) != 0 )
+			{
+				mips_exception( EXC_ADEL );
+				mips_set_cp0r( CP0_BADVADDR, n_adr );
+			}
+			else
+			{
+				mips_delayed_load( INS_RT( mipscpu.op ), MIPS_WORD_EXTEND( psx_read16( n_adr ^ 2 ) ) );
+			}
+		}
+		else
+		{
+			UINT32 n_adr;
+			n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
+			if( ( n_adr & ( ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) | 1 ) ) != 0 )
+			{
+				mips_exception( EXC_ADEL );
+				mips_set_cp0r( CP0_BADVADDR, n_adr );
+			}
+			else
+			{
+				mips_delayed_load( INS_RT( mipscpu.op ), MIPS_WORD_EXTEND( psx_read16( n_adr ) ) );
+			}
+		}
+		break;
+	case OP_LWL:
+		if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
+		{
+			/* todo: */
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: LWL SR_ISC not supported\n", mipscpu.pc );
+			mips_stop();
+			mips_advance_pc();
+		}
+		else if( ( mipscpu.cp0r[ CP0_SR ] & ( SR_RE | SR_KUC ) ) == ( SR_RE | SR_KUC ) )
+		{
+			UINT32 n_adr;
+			n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
+			if( ( n_adr & ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) ) != 0 )
+			{
+				mips_exception( EXC_ADEL );
+				mips_set_cp0r( CP0_BADVADDR, n_adr );
+			}
+			else
+			{
+				switch( n_adr & 3 )
+				{
+				case 0:
+					n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0x00ffffff ) | ( (UINT32)psx_read8( n_adr + 3 ) << 24 );
+					break;
+				case 1:
+					n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0x0000ffff ) | ( (UINT32)psx_read16( n_adr + 1 ) << 16 );
+					break;
+				case 2:
+					n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0x000000ff ) | ( (UINT32)psx_read8( n_adr - 1 ) << 8 ) | ( (UINT32)psx_read16( n_adr ) << 16 );
+					break;
+				default:
+					n_res = psx_read32( n_adr - 3 );
+					break;
+				}
+				mips_delayed_load( INS_RT( mipscpu.op ), n_res );
+			}
+		}
+		else
+		{
+			UINT32 n_adr;
+			n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
+			if( ( n_adr & ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) ) != 0 )
+			{
+				mips_exception( EXC_ADEL );
+				mips_set_cp0r( CP0_BADVADDR, n_adr );
+			}
+			else
+			{
+				switch( n_adr & 3 )
+				{
+				case 0:
+					n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0x00ffffff ) | ( (UINT32)psx_read8( n_adr ) << 24 );
+					break;
+				case 1:
+					n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0x0000ffff ) | ( (UINT32)psx_read16( n_adr - 1 ) << 16 );
+					break;
+				case 2:
+					n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0x000000ff ) | ( (UINT32)psx_read16( n_adr - 2 ) << 8 ) | ( (UINT32)psx_read8( n_adr ) << 24 );
+					break;
+				default:
+					n_res = psx_read32( n_adr - 3 );
+					break;
+				}
+				mips_delayed_load( INS_RT( mipscpu.op ), n_res );
+			}
+		}
+		break;
+	case OP_LW:
+		if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
+		{
+			/* todo: */
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: LW SR_ISC not supported\n", mipscpu.pc );
+			mips_stop();
+			mips_advance_pc();
+		}
+		else
+		{
+			UINT32 n_adr;
+			n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
+			if( ( n_adr & ( ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) | 3 ) ) != 0 )
+			{
+				mips_exception( EXC_ADEL );
+				mips_set_cp0r( CP0_BADVADDR, n_adr );
+			}
+			else
+			{
+				mips_delayed_load( INS_RT( mipscpu.op ), psx_read32( n_adr ) );
+			}
+		}
+		break;
+	case OP_LBU:
+		if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
+		{
+			/* todo: */
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: LBU SR_ISC not supported\n", mipscpu.pc );
+			mips_stop();
+			mips_advance_pc();
+		}
+		else if( ( mipscpu.cp0r[ CP0_SR ] & ( SR_RE | SR_KUC ) ) == ( SR_RE | SR_KUC ) )
+		{
+			UINT32 n_adr;
+			n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
+			if( ( n_adr & ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) ) != 0 )
+			{
+				mips_exception( EXC_ADEL );
+				mips_set_cp0r( CP0_BADVADDR, n_adr );
+			}
+			else
+			{
+				mips_delayed_load( INS_RT( mipscpu.op ), psx_read8( n_adr ^ 3 ) );
+			}
+		}
+		else
+		{
+			UINT32 n_adr;
+			n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
+			if( ( n_adr & ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) ) != 0 )
+			{
+				mips_exception( EXC_ADEL );
+				mips_set_cp0r( CP0_BADVADDR, n_adr );
+			}
+			else
+			{
+				mips_delayed_load( INS_RT( mipscpu.op ), psx_read8( n_adr ) );
+			}
+		}
+		break;
+	case OP_LHU:
+		if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
+		{
+			/* todo: */
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: LHU SR_ISC not supported\n", mipscpu.pc );
+			mips_stop();
+			mips_advance_pc();
+		}
+		else if( ( mipscpu.cp0r[ CP0_SR ] & ( SR_RE | SR_KUC ) ) == ( SR_RE | SR_KUC ) )
+		{
+			UINT32 n_adr;
+			n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
+			if( ( n_adr & ( ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) | 1 ) ) != 0 )
+			{
+				mips_exception( EXC_ADEL );
+				mips_set_cp0r( CP0_BADVADDR, n_adr );
+			}
+			else
+			{
+				mips_delayed_load( INS_RT( mipscpu.op ), psx_read16( n_adr ^ 2 ) );
+			}
+		}
+		else
+		{
+			UINT32 n_adr;
+			n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
+			if( ( n_adr & ( ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) | 1 ) ) != 0 )
+			{
+				mips_exception( EXC_ADEL );
+				mips_set_cp0r( CP0_BADVADDR, n_adr );
+			}
+			else
+			{
+				mips_delayed_load( INS_RT( mipscpu.op ), psx_read16( n_adr ) );
+			}
+		}
+		break;
+	case OP_LWR:
+		if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
+		{
+			/* todo: */
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: LWR SR_ISC not supported\n", mipscpu.pc );
+			mips_stop();
+			mips_advance_pc();
+		}
+		else if( ( mipscpu.cp0r[ CP0_SR ] & ( SR_RE | SR_KUC ) ) == ( SR_RE | SR_KUC ) )
+		{
+			UINT32 n_adr;
+			n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
+			if( ( n_adr & ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) ) != 0 )
+			{
+				mips_exception( EXC_ADEL );
+				mips_set_cp0r( CP0_BADVADDR, n_adr );
+			}
+			else
+			{
+				switch( n_adr & 3 )
+				{
+				case 3:
+					n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0xffffff00 ) | psx_read8( n_adr - 3 );
+					break;
+				case 2:
+					n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0xffff0000 ) | psx_read16( n_adr - 2 );
+					break;
+				case 1:
+					n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0xff000000 ) | psx_read16( n_adr - 1 ) | ( (UINT32)psx_read8( n_adr + 1 ) << 16 );
+					break;
+				default:
+					n_res = psx_read32( n_adr );
+					break;
+				}
+				mips_delayed_load( INS_RT( mipscpu.op ), n_res );
+			}
+		}
+		else
+		{
+			UINT32 n_adr;
+			n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
+			if( ( n_adr & ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) ) != 0 )
+			{
+				mips_exception( EXC_ADEL );
+				mips_set_cp0r( CP0_BADVADDR, n_adr );
+			}
+			else
+			{
+				switch( n_adr & 3 )
+				{
+				case 3:
+					n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0xffffff00 ) | psx_read8( n_adr );
+					break;
+				case 2:
+					n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0xffff0000 ) | psx_read16( n_adr );
+					break;
+				case 1:
+					n_res = ( mipscpu.r[ INS_RT( mipscpu.op ) ] & 0xff000000 ) | psx_read8( n_adr ) | ( (UINT32)psx_read16( n_adr + 1 ) << 8 );
+					break;
+				default:
+					n_res = psx_read32( n_adr );
+					break;
+				}
+				mips_delayed_load( INS_RT( mipscpu.op ), n_res );
+			}
+		}
+		break;
+	case OP_SB:
+		if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
+		{
+			/* todo: */
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: SB SR_ISC not supported\n", mipscpu.pc );
+			mips_stop();
+			mips_advance_pc();
+		}
+		else if( ( mipscpu.cp0r[ CP0_SR ] & ( SR_RE | SR_KUC ) ) == ( SR_RE | SR_KUC ) )
+		{
+			UINT32 n_adr;
+			n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
+			if( ( n_adr & ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) ) != 0 )
+			{
+				mips_exception( EXC_ADES );
+				mips_set_cp0r( CP0_BADVADDR, n_adr );
+			}
+			else
+			{
+				psx_write8( n_adr ^ 3, mipscpu.r[ INS_RT( mipscpu.op ) ] );
+				mips_advance_pc();
+			}
+		}
+		else
+		{
+			UINT32 n_adr;
+			n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
+			if( ( n_adr & ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) ) != 0 )
+			{
+				mips_exception( EXC_ADES );
+				mips_set_cp0r( CP0_BADVADDR, n_adr );
+			}
+			else
+			{
+				psx_write8( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] );
+				mips_advance_pc();
+			}
+		}
+		break;
+	case OP_SH:
+		if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
+		{
+			/* todo: */
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: SH SR_ISC not supported\n", mipscpu.pc );
+			mips_stop();
+			mips_advance_pc();
+		}
+		else if( ( mipscpu.cp0r[ CP0_SR ] & ( SR_RE | SR_KUC ) ) == ( SR_RE | SR_KUC ) )
+		{
+			UINT32 n_adr;
+			n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
+			if( ( n_adr & ( ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) | 1 ) ) != 0 )
+			{
+				mips_exception( EXC_ADES );
+				mips_set_cp0r( CP0_BADVADDR, n_adr );
+			}
+			else
+			{
+				psx_write16( n_adr ^ 2, mipscpu.r[ INS_RT( mipscpu.op ) ] );
+				mips_advance_pc();
+			}
+		}
+		else
+		{
+			UINT32 n_adr;
+			n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
+			if( ( n_adr & ( ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) | 1 ) ) != 0 )
+			{
+				mips_exception( EXC_ADES );
+				mips_set_cp0r( CP0_BADVADDR, n_adr );
+			}
+			else
+			{
+				psx_write16( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] );
+				mips_advance_pc();
+			}
+		}
+		break;
+	case OP_SWL:
+		if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
+		{
+			/* todo: */
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: SWL SR_ISC not supported\n", mipscpu.pc );
+			mips_stop();
+			mips_advance_pc();
+		}
+		else if( ( mipscpu.cp0r[ CP0_SR ] & ( SR_RE | SR_KUC ) ) == ( SR_RE | SR_KUC ) )
+		{
+			UINT32 n_adr;
+			n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
+			if( ( n_adr & ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) ) != 0 )
+			{
+				mips_exception( EXC_ADES );
+				mips_set_cp0r( CP0_BADVADDR, n_adr );
+			}
+			else
+			{
+				switch( n_adr & 3 )
+				{
+				case 0:
+					psx_write8( n_adr + 3, mipscpu.r[ INS_RT( mipscpu.op ) ] >> 24 );
+					break;
+				case 1:
+					psx_write16( n_adr + 1, mipscpu.r[ INS_RT( mipscpu.op ) ] >> 16 );
+					break;
+				case 2:
+					psx_write8( n_adr - 1, mipscpu.r[ INS_RT( mipscpu.op ) ] >> 8 );
+					psx_write16( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] >> 16 );
+					break;
+				case 3:
+					psx_write32( n_adr - 3, mipscpu.r[ INS_RT( mipscpu.op ) ] );
+					break;
+				}
+				mips_advance_pc();
+			}
+		}
+		else
+		{
+			UINT32 n_adr;
+			n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
+			if( ( n_adr & ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) ) != 0 )
+			{
+				mips_exception( EXC_ADES );
+				mips_set_cp0r( CP0_BADVADDR, n_adr );
+			}
+			else
+			{
+				switch( n_adr & 3 )
+				{
+				case 0:
+					psx_write8( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] >> 24 );
+					break;
+				case 1:
+					psx_write16( n_adr - 1, mipscpu.r[ INS_RT( mipscpu.op ) ] >> 16 );
+					break;
+				case 2:
+					psx_write16( n_adr - 2, mipscpu.r[ INS_RT( mipscpu.op ) ] >> 8 );
+					psx_write8( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] >> 24 );
+					break;
+				case 3:
+					psx_write32( n_adr - 3, mipscpu.r[ INS_RT( mipscpu.op ) ] );
+					break;
+				}
+				mips_advance_pc();
+			}
+		}
+		break;
+	case OP_SW:
+		if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
+		{
+			/* todo: */
+/* used by bootstrap
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: SW SR_ISC not supported\n", mipscpu.pc );
+			mips_stop();
+*/
+			mips_advance_pc();
+		}
+		else
+		{
+			UINT32 n_adr;
+			n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
+			if( ( n_adr & ( ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) | 3 ) ) != 0 )
+			{
+				mips_exception( EXC_ADES );
+				mips_set_cp0r( CP0_BADVADDR, n_adr );
+			}
+			else
+			{
+				psx_write32( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] );
+				mips_advance_pc();
+			}
+		}
+		break;
+	case OP_SWR:
+		if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
+		{
+			/* todo: */
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: SWR SR_ISC not supported\n", mipscpu.pc );
+			mips_stop();
+			mips_advance_pc();
+		}
+		else if( ( mipscpu.cp0r[ CP0_SR ] & ( SR_RE | SR_KUC ) ) == ( SR_RE | SR_KUC ) )
+		{
+			UINT32 n_adr;
+			n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
+			if( ( n_adr & ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) ) != 0 )
+			{
+				mips_exception( EXC_ADES );
+				mips_set_cp0r( CP0_BADVADDR, n_adr );
+			}
+			else
+			{
+				switch( n_adr & 3 )
+				{
+				case 0:
+					psx_write32( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] );
+					break;
+				case 1:
+					psx_write16( n_adr - 1, mipscpu.r[ INS_RT( mipscpu.op ) ] );
+					psx_write8( n_adr + 1, mipscpu.r[ INS_RT( mipscpu.op ) ] >> 16 );
+					break;
+				case 2:
+					psx_write16( n_adr - 2, mipscpu.r[ INS_RT( mipscpu.op ) ] );
+					break;
+				case 3:
+					psx_write8( n_adr - 3, mipscpu.r[ INS_RT( mipscpu.op ) ] );
+					break;
+				}
+				mips_advance_pc();
+			}
+		}
+		else
+		{
+			UINT32 n_adr;
+			n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
+			if( ( n_adr & ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) ) != 0 )
+			{
+				mips_exception( EXC_ADES );
+				mips_set_cp0r( CP0_BADVADDR, n_adr );
+			}
+			else
+			{
+				switch( n_adr & 3 )
+				{
+				case 0:
+					psx_write32( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] );
+					break;
+				case 1:
+					psx_write8( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] );
+					psx_write16( n_adr + 1, mipscpu.r[ INS_RT( mipscpu.op ) ] >> 8 );
+					break;
+				case 2:
+					psx_write16( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] );
+					break;
+				case 3:
+					psx_write8( n_adr, mipscpu.r[ INS_RT( mipscpu.op ) ] );
+					break;
+				}
+				mips_advance_pc();
+			}
+		}
+		break;
+	case OP_LWC1:
+		/* todo: */
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP1 LWC not supported\n", mipscpu.pc );
+		mips_stop();
+		mips_advance_pc();
+		break;
+	case OP_LWC2:
+		if( ( mipscpu.cp0r[ CP0_SR ] & SR_CU2 ) == 0 )
+		{
+			mips_exception( EXC_CPU );
+			mips_set_cp0r( CP0_CAUSE, ( mipscpu.cp0r[ CP0_CAUSE ] & ~CAUSE_CE ) | CAUSE_CE2 );
+		}
+		else if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
+		{
+			/* todo: */
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: LWC2 SR_ISC not supported\n", mipscpu.pc );
+			mips_stop();
+			mips_advance_pc();
+		}
+		else
+		{
+			UINT32 n_adr;
+			n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
+			if( ( n_adr & ( ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) | 3 ) ) != 0 )
+			{
+				mips_exception( EXC_ADEL );
+				mips_set_cp0r( CP0_BADVADDR, n_adr );
+			}
+			else
+			{
+				/* todo: delay? */
+				setcp2dr( INS_RT( mipscpu.op ), psx_read32( n_adr ) );
+				mips_advance_pc();
+			}
+		}
+		break;
+	case OP_SWC1:
+		/* todo: */
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP1 SWC not supported\n", mipscpu.pc );
+		mips_stop();
+		mips_advance_pc();
+		break;
+	case OP_SWC2:
+		if( ( mipscpu.cp0r[ CP0_SR ] & SR_CU2 ) == 0 )
+		{
+			mips_exception( EXC_CPU );
+			mips_set_cp0r( CP0_CAUSE, ( mipscpu.cp0r[ CP0_CAUSE ] & ~CAUSE_CE ) | CAUSE_CE2 );
+		}
+		else if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
+		{
+			/* todo: */
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: SWC2 SR_ISC not supported\n", mipscpu.pc );
+			mips_stop();
+			mips_advance_pc();
+		}
+		else
+		{
+			UINT32 n_adr;
+			n_adr = mipscpu.r[ INS_RS( mipscpu.op ) ] + MIPS_WORD_EXTEND( INS_IMMEDIATE( mipscpu.op ) );
+			if( ( n_adr & ( ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) | 3 ) ) != 0 )
+			{
+				mips_exception( EXC_ADES );
+				mips_set_cp0r( CP0_BADVADDR, n_adr );
+			}
+			else
+			{
+				psx_write32( n_adr, getcp2dr( INS_RT( mipscpu.op ) ) );
+				mips_advance_pc();
+			}
+		}
+		break;
+	default:
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: unknown opcode %08x\n", mipscpu.pc, mipscpu.op );
+		mips_stop();
+		mips_exception( EXC_RI );
+		break;
+	}
+}
+
+int mips_execute( int cycles )
+{
+	mips_ICount = cycles;
+	/* a polling loop's pass is only trusted within one timeslice (psxloop.c): */
+	/* RAM may change between timeslices, and after a state load or a reset */
+	loop_pure_armed = 0;
+	do
+	{
+		CALL_MAME_DEBUG;
+
+		if( jit_enabled && jit_run() )
+		{
+			continue;
+		}
+		{
+			UINT32 from = mipscpu.pc;
+			if( from == pc_hook_pc )
+			{
+				pc_hook_fn();
+			}
+			mipscpu.op = cpu_readop32( from );
+			mips_step();
+			mips_ICount--;
+			/* back to an earlier address: maybe a wait loop to skip (psxloop.c) */
+			if( mipscpu.pc < from && mipscpu.delayr == 0 )
+			{
+				loop_arrive( mipscpu.pc, from );
+			}
+		}
 	} while( mips_ICount > 0 );
 
 	return cycles - mips_ICount;
@@ -2131,826 +2372,15 @@ unsigned mips_dasm( char *buffer, UINT32 pc )
 	return ret;
 }
 
-/* preliminary gte code */
-
-#define VXY0 ( mipscpu.cp2dr[ 0 ].d )
-#define VX0  ( mipscpu.cp2dr[ 0 ].w.l )
-#define VY0  ( mipscpu.cp2dr[ 0 ].w.h )
-#define VZ0  ( mipscpu.cp2dr[ 1 ].w.l )
-#define VXY1 ( mipscpu.cp2dr[ 2 ].d )
-#define VX1  ( mipscpu.cp2dr[ 2 ].w.l )
-#define VY1  ( mipscpu.cp2dr[ 2 ].w.h )
-#define VZ1  ( mipscpu.cp2dr[ 3 ].w.l )
-#define VXY2 ( mipscpu.cp2dr[ 4 ].d )
-#define VX2  ( mipscpu.cp2dr[ 4 ].w.l )
-#define VY2  ( mipscpu.cp2dr[ 4 ].w.h )
-#define VZ2  ( mipscpu.cp2dr[ 5 ].w.l )
-#define RGB  ( mipscpu.cp2dr[ 6 ].d )
-#define R    ( mipscpu.cp2dr[ 6 ].b.l )
-#define G    ( mipscpu.cp2dr[ 6 ].b.h )
-#define B    ( mipscpu.cp2dr[ 6 ].b.h2 )
-#define CODE ( mipscpu.cp2dr[ 6 ].b.h3 )
-#define OTZ  ( mipscpu.cp2dr[ 7 ].w.l )
-#define IR0  ( mipscpu.cp2dr[ 8 ].d )
-#define IR1  ( mipscpu.cp2dr[ 9 ].d )
-#define IR2  ( mipscpu.cp2dr[ 10 ].d )
-#define IR3  ( mipscpu.cp2dr[ 11 ].d )
-#define SXY0 ( mipscpu.cp2dr[ 12 ].d )
-#define SX0  ( mipscpu.cp2dr[ 12 ].w.l )
-#define SY0  ( mipscpu.cp2dr[ 12 ].w.h )
-#define SXY1 ( mipscpu.cp2dr[ 13 ].d )
-#define SX1  ( mipscpu.cp2dr[ 13 ].w.l )
-#define SY1  ( mipscpu.cp2dr[ 13 ].w.h )
-#define SXY2 ( mipscpu.cp2dr[ 14 ].d )
-#define SX2  ( mipscpu.cp2dr[ 14 ].w.l )
-#define SY2  ( mipscpu.cp2dr[ 14 ].w.h )
-#define SXYP ( mipscpu.cp2dr[ 15 ].d )
-#define SXP  ( mipscpu.cp2dr[ 15 ].w.l )
-#define SYP  ( mipscpu.cp2dr[ 15 ].w.h )
-#define SZ0  ( mipscpu.cp2dr[ 16 ].w.l )
-#define SZ1  ( mipscpu.cp2dr[ 17 ].w.l )
-#define SZ2  ( mipscpu.cp2dr[ 18 ].w.l )
-#define SZ3  ( mipscpu.cp2dr[ 19 ].w.l )
-#define RGB0 ( mipscpu.cp2dr[ 20 ].d )
-#define R0   ( mipscpu.cp2dr[ 20 ].b.l )
-#define G0   ( mipscpu.cp2dr[ 20 ].b.h )
-#define B0   ( mipscpu.cp2dr[ 20 ].b.h2 )
-#define CD0  ( mipscpu.cp2dr[ 20 ].b.h3 )
-#define RGB1 ( mipscpu.cp2dr[ 21 ].d )
-#define R1   ( mipscpu.cp2dr[ 21 ].b.l )
-#define G1   ( mipscpu.cp2dr[ 21 ].b.h )
-#define B1   ( mipscpu.cp2dr[ 21 ].b.h2 )
-#define CD1  ( mipscpu.cp2dr[ 21 ].b.h3 )
-#define RGB2 ( mipscpu.cp2dr[ 22 ].d )
-#define R2   ( mipscpu.cp2dr[ 22 ].b.l )
-#define G2   ( mipscpu.cp2dr[ 22 ].b.h )
-#define B2   ( mipscpu.cp2dr[ 22 ].b.h2 )
-#define CD2  ( mipscpu.cp2dr[ 22 ].b.h3 )
-#define RES1 ( mipscpu.cp2dr[ 23 ].d )
-#define MAC0 ( mipscpu.cp2dr[ 24 ].d )
-#define MAC1 ( mipscpu.cp2dr[ 25 ].d )
-#define MAC2 ( mipscpu.cp2dr[ 26 ].d )
-#define MAC3 ( mipscpu.cp2dr[ 27 ].d )
-#define IRGB ( mipscpu.cp2dr[ 28 ].d )
-#define ORGB ( mipscpu.cp2dr[ 29 ].d )
-#define LZCS ( mipscpu.cp2dr[ 30 ].d )
-#define LZCR ( mipscpu.cp2dr[ 31 ].d )
-
-#define D1  ( mipscpu.cp2cr[ 0 ].d )
-#define R11 ( mipscpu.cp2cr[ 0 ].w.l )
-#define R12 ( mipscpu.cp2cr[ 0 ].w.h )
-#define R13 ( mipscpu.cp2cr[ 1 ].w.l )
-#define R21 ( mipscpu.cp2cr[ 1 ].w.h )
-#define D2  ( mipscpu.cp2cr[ 2 ].d )
-#define R22 ( mipscpu.cp2cr[ 2 ].w.l )
-#define R23 ( mipscpu.cp2cr[ 2 ].w.h )
-#define R31 ( mipscpu.cp2cr[ 3 ].w.l )
-#define R32 ( mipscpu.cp2cr[ 3 ].w.h )
-#define D3  ( mipscpu.cp2cr[ 4 ].d )
-#define R33 ( mipscpu.cp2cr[ 4 ].w.l )
-#define TRX ( mipscpu.cp2cr[ 5 ].d )
-#define TRY ( mipscpu.cp2cr[ 6 ].d )
-#define TRZ ( mipscpu.cp2cr[ 7 ].d )
-#define L11 ( mipscpu.cp2cr[ 8 ].w.l )
-#define L12 ( mipscpu.cp2cr[ 8 ].w.h )
-#define L13 ( mipscpu.cp2cr[ 9 ].w.l )
-#define L21 ( mipscpu.cp2cr[ 9 ].w.h )
-#define L22 ( mipscpu.cp2cr[ 10 ].w.l )
-#define L23 ( mipscpu.cp2cr[ 10 ].w.h )
-#define L31 ( mipscpu.cp2cr[ 11 ].w.l )
-#define L32 ( mipscpu.cp2cr[ 11 ].w.h )
-#define L33 ( mipscpu.cp2cr[ 12 ].w.l )
-#define RBK ( mipscpu.cp2cr[ 13 ].d )
-#define GBK ( mipscpu.cp2cr[ 14 ].d )
-#define BBK ( mipscpu.cp2cr[ 15 ].d )
-#define LR1 ( mipscpu.cp2cr[ 16 ].w.l )
-#define LR2 ( mipscpu.cp2cr[ 16 ].w.h )
-#define LR3 ( mipscpu.cp2cr[ 17 ].w.l )
-#define LG1 ( mipscpu.cp2cr[ 17 ].w.h )
-#define LG2 ( mipscpu.cp2cr[ 18 ].w.l )
-#define LG3 ( mipscpu.cp2cr[ 18 ].w.h )
-#define LB1 ( mipscpu.cp2cr[ 19 ].w.l )
-#define LB2 ( mipscpu.cp2cr[ 19 ].w.h )
-#define LB3 ( mipscpu.cp2cr[ 20 ].w.l )
-#define RFC ( mipscpu.cp2cr[ 21 ].d )
-#define GFC ( mipscpu.cp2cr[ 22 ].d )
-#define BFC ( mipscpu.cp2cr[ 23 ].d )
-#define OFX ( mipscpu.cp2cr[ 24 ].d )
-#define OFY ( mipscpu.cp2cr[ 25 ].d )
-#define H   ( mipscpu.cp2cr[ 26 ].w.l )
-#define DQA ( mipscpu.cp2cr[ 27 ].w.l )
-#define DQB ( mipscpu.cp2cr[ 28 ].d )
-#define ZSF3 ( mipscpu.cp2cr[ 29 ].w.l )
-#define ZSF4 ( mipscpu.cp2cr[ 30 ].w.l )
-#define FLAG ( mipscpu.cp2cr[ 31 ].d )
-
-static UINT32 getcp2dr( int n_reg )
-{
-	if( n_reg == 1 || n_reg == 3 || n_reg == 5 || n_reg == 8 || n_reg == 9 || n_reg == 10 || n_reg == 11 )
-	{
-		mipscpu.cp2dr[ n_reg ].d = (INT32)(INT16)mipscpu.cp2dr[ n_reg ].d;
-	}
-	else if( n_reg == 17 || n_reg == 18 || n_reg == 19 )
-	{
-		mipscpu.cp2dr[ n_reg ].d = (UINT32)(UINT16)mipscpu.cp2dr[ n_reg ].d;
-	}
-	else if( n_reg == 29 )
-	{
-		ORGB = ( ( IR1 >> 7 ) & 0x1f ) | ( ( IR2 >> 2 ) & 0x3e0 ) | ( ( IR3 << 3 ) & 0x7c00 );
-	}
-	log_cb(RETRO_LOG_DEBUG, LOGPRE "get CP2DR%u=%08x", n_reg, mipscpu.cp2dr[ n_reg ].d );
-	return mipscpu.cp2dr[ n_reg ].d;
-}
-
-static void setcp2dr( int n_reg, UINT32 n_value )
-{
-	log_cb(RETRO_LOG_DEBUG, LOGPRE "set CP2DR%u=%08x", n_reg, n_value );
-	mipscpu.cp2dr[ n_reg ].d = n_value;
-
-	if( n_reg == 15 )
-	{
-		SXY0 = SXY1;
-		SXY1 = SXY2;
-		SXY2 = SXYP;
-	}
-	else if( n_reg == 28 )
-	{
-		IR1 = ( IRGB & 0x1f ) << 4;
-		IR2 = ( IRGB & 0x3e0 ) >> 1;
-		IR3 = ( IRGB & 0x7c00 ) >> 6;
-	}
-	else if( n_reg == 30 )
-	{
-		UINT32 n_lzcs = LZCS;
-		UINT32 n_lzcr = 0;
-
-		if( ( n_lzcs & 0x80000000 ) == 0 )
-		{
-			n_lzcs = ~n_lzcs;
-		}
-		while( ( n_lzcs & 0x80000000 ) != 0 )
-		{
-			n_lzcr++;
-			n_lzcs <<= 1;
-		}
-		LZCR = n_lzcr;
-	}
-}
-
-static UINT32 getcp2cr( int n_reg )
-{
-	log_cb(RETRO_LOG_DEBUG, LOGPRE "get CP2CR%u=%08x", n_reg, mipscpu.cp2cr[ n_reg ].d );
-	return mipscpu.cp2cr[ n_reg ].d;
-}
-
-static void setcp2cr( int n_reg, UINT32 n_value )
-{
-	log_cb(RETRO_LOG_DEBUG, LOGPRE "set CP2CR%u=%08x", n_reg, n_value );
-	mipscpu.cp2cr[ n_reg ].d = n_value;
-}
-
-static INLINE INT32 LIM( INT32 n_value, INT32 n_max, INT32 n_min, UINT32 n_flag )
-{
-	if( n_value > n_max )
-	{
-		FLAG |= n_flag;
-		return n_max;
-	}
-	else if( n_value < n_min )
-	{
-		FLAG |= n_flag;
-		return n_min;
-	}
-	return n_value;
-}
-
-static INLINE INT64 BOUNDS( INT64 n_value, INT64 n_max, int n_maxflag, INT64 n_min, int n_minflag )
-{
-	if( n_value > n_max )
-	{
-		FLAG |= n_maxflag;
-	}
-	else if( n_value < n_min )
-	{
-		FLAG |= n_minflag;
-	}
-	return n_value;
-}
-
-#define A1( a ) BOUNDS( ( a ), 0x7fffffff, 30, -(INT64)0x80000000, ( 1 << 27 ) )
-#define A2( a ) BOUNDS( ( a ), 0x7fffffff, 29, -(INT64)0x80000000, ( 1 << 26 ) )
-#define A3( a ) BOUNDS( ( a ), 0x7fffffff, 28, -(INT64)0x80000000, ( 1 << 25 ) )
-#define Lm_B1( a, l ) LIM( ( a ), 0x7fff, -0x8000 * !l, ( 1 << 31 ) | ( 1 << 24 ) )
-#define Lm_B2( a, l ) LIM( ( a ), 0x7fff, -0x8000 * !l, ( 1 << 31 ) | ( 1 << 23 ) )
-#define Lm_B3( a, l ) LIM( ( a ), 0x7fff, -0x8000 * !l, ( 1 << 22 ) )
-#define Lm_C1( a ) LIM( ( a ), 0x00ff, 0x0000, ( 1 << 21 ) )
-#define Lm_C2( a ) LIM( ( a ), 0x00ff, 0x0000, ( 1 << 20 ) )
-#define Lm_C3( a ) LIM( ( a ), 0x00ff, 0x0000, ( 1 << 19 ) )
-#define Lm_D( a ) LIM( ( a ), 0xffff, 0x0000, ( 1 << 31 ) | ( 1 << 18 ) )
-
-static INLINE UINT32 Lm_E( UINT32 n_z )
-{
-	if( n_z <= H / 2 )
-	{
-		n_z = H / 2;
-		FLAG |= ( 1 << 31 ) | ( 1 << 17 );
-	}
-	if( n_z == 0 )
-	{
-		n_z = 1;
-	}
-	return n_z;
-}
-
-#define F( a ) BOUNDS( ( a ), 0x7fffffff, ( 1 << 31 ) | ( 1 << 16 ), -(INT64)0x80000000, ( 1 << 31 ) | ( 1 << 15 ) )
-#define Lm_G1( a ) LIM( ( a ), 0x3ff, -0x400, ( 1 << 31 ) | ( 1 << 14 ) )
-#define Lm_G2( a ) LIM( ( a ), 0x3ff, -0x400, ( 1 << 31 ) | ( 1 << 13 ) )
-#define Lm_H( a ) LIM( ( a ), 0xfff, 0x000, ( 1 << 12 ) )
+/* the GTE (current MAME) */
+#include "psx_gte.c"
 
 static void docop2( int gteop )
 {
-	int n_sf;
-	int n_v;
-	int n_lm;
-	int n_pass;
-	UINT16 n_v1;
-	UINT16 n_v2;
-	UINT16 n_v3;
-	const UINT16 **p_n_mx;
-	const UINT32 **p_n_cv;
-	static const UINT16 n_zm = 0;
-	static const UINT32 n_zc = 0;
-	static const UINT16 *p_n_vx[] = { &VX0, &VX1, &VX2 };
-	static const UINT16 *p_n_vy[] = { &VY0, &VY1, &VY2 };
-	static const UINT16 *p_n_vz[] = { &VZ0, &VZ1, &VZ2 };
-	static const UINT16 *p_n_rm[] = { &R11, &R12, &R13, &R21, &R22, &R23, &R31, &R32, &R33 };
-	static const UINT16 *p_n_lm[] = { &L11, &L12, &L13, &L21, &L22, &L23, &L31, &L32, &L33 };
-	static const UINT16 *p_n_cm[] = { &LR1, &LR2, &LR3, &LG1, &LG2, &LG3, &LB1, &LB2, &LB3 };
-	static const UINT16 *p_n_zm[] = { &n_zm, &n_zm, &n_zm, &n_zm, &n_zm, &n_zm, &n_zm, &n_zm, &n_zm };
-	static const UINT16 **p_p_n_mx[] = { p_n_rm, p_n_lm, p_n_cm, p_n_zm };
-	static const UINT32 *p_n_tr[] = { &TRX, &TRY, &TRZ };
-	static const UINT32 *p_n_bk[] = { &RBK, &GBK, &BBK };
-	static const UINT32 *p_n_fc[] = { &RFC, &GFC, &BFC };
-	static const UINT32 *p_n_zc[] = { &n_zc, &n_zc, &n_zc };
-	static const UINT32 **p_p_n_cv[] = { p_n_tr, p_n_bk, p_n_fc, p_n_zc };
-
-	switch( GTE_OP( gteop ) )
+	if( !gte_docop2( gteop ) )
 	{
-	case 0x01:
-		if( gteop == 0x0180001 )
-		{
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "RTPS" );
-			FLAG = 0;
-
-			MAC1 = A1( ( ( (INT64)(INT32)TRX << 12 ) + ( (INT16)R11 * (INT16)VX0 ) + ( (INT16)R12 * (INT16)VY0 ) + ( (INT16)R13 * (INT16)VZ0 ) ) >> 12 );
-			MAC2 = A2( ( ( (INT64)(INT32)TRY << 12 ) + ( (INT16)R21 * (INT16)VX0 ) + ( (INT16)R22 * (INT16)VY0 ) + ( (INT16)R23 * (INT16)VZ0 ) ) >> 12 );
-			MAC3 = A3( ( ( (INT64)(INT32)TRZ << 12 ) + ( (INT16)R31 * (INT16)VX0 ) + ( (INT16)R32 * (INT16)VY0 ) + ( (INT16)R33 * (INT16)VZ0 ) ) >> 12 );
-			IR1 = Lm_B1( (INT32)MAC1, 0 );
-			IR2 = Lm_B2( (INT32)MAC2, 0 );
-			IR3 = Lm_B3( (INT32)MAC3, 0 );
-			SZ0 = SZ1;
-			SZ1 = SZ2;
-			SZ2 = SZ3;
-			SZ3 = Lm_D( (INT32)MAC3 );
-			SXY0 = SXY1;
-			SXY1 = SXY2;
-			SX2 = Lm_G1( F( (INT64)(INT32)OFX + ( (INT64)(INT16)IR1 * ( ( (UINT32)H << 16 ) / Lm_E( SZ3 ) ) ) ) >> 16 );
-			SY2 = Lm_G2( F( (INT64)(INT32)OFY + ( (INT64)(INT16)IR2 * ( ( (UINT32)H << 16 ) / Lm_E( SZ3 ) ) ) ) >> 16 );
-			MAC0 = F( (INT64)(INT32)DQB + ( (INT64)(INT16)DQA * ( ( (UINT32)H << 16 ) / Lm_E( SZ3 ) ) ) );
-			IR0 = Lm_H( (INT32)MAC0 >> 12 );
-			return;
-		}
-		break;
-	case 0x02:
-		if( gteop == 0x0280030 )
-		{
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "RTPT" );
-			FLAG = 0;
-
-			for( n_v = 0; n_v < 3; n_v++ )
-			{
-				MAC1 = A1( ( ( (INT64)(INT32)TRX << 12 ) + ( (INT16)R11 * (INT16)*p_n_vx[ n_v ] ) + ( (INT16)R12 * (INT16)*p_n_vy[ n_v ] ) + ( (INT16)R13 * (INT16)*p_n_vz[ n_v ] ) ) >> 12 );
-				MAC2 = A2( ( ( (INT64)(INT32)TRY << 12 ) + ( (INT16)R21 * (INT16)*p_n_vx[ n_v ] ) + ( (INT16)R22 * (INT16)*p_n_vy[ n_v ] ) + ( (INT16)R23 * (INT16)*p_n_vz[ n_v ] ) ) >> 12 );
-				MAC3 = A3( ( ( (INT64)(INT32)TRZ << 12 ) + ( (INT16)R31 * (INT16)*p_n_vx[ n_v ] ) + ( (INT16)R32 * (INT16)*p_n_vy[ n_v ] ) + ( (INT16)R33 * (INT16)*p_n_vz[ n_v ] ) ) >> 12 );
-				IR1 = Lm_B1( (INT32)MAC1, 0 );
-				IR2 = Lm_B2( (INT32)MAC2, 0 );
-				IR3 = Lm_B3( (INT32)MAC3, 0 );
-				SZ0 = SZ1;
-				SZ1 = SZ2;
-				SZ2 = SZ3;
-				SZ3 = Lm_D( (INT32)MAC3 );
-				SXY0 = SXY1;
-				SXY1 = SXY2;
-				SX2 = Lm_G1( F( ( (INT64)(INT32)OFX + ( (INT64)(INT16)IR1 * ( ( (UINT32)H << 16 ) / Lm_E( SZ3 ) ) ) ) >> 16 ) );
-				SY2 = Lm_G2( F( ( (INT64)(INT32)OFY + ( (INT64)(INT16)IR2 * ( ( (UINT32)H << 16 ) / Lm_E( SZ3 ) ) ) ) >> 16 ) );
-				MAC0 = F( (INT64)(INT32)DQB + ( (INT64)(INT16)DQA * ( ( (UINT32)H << 16 ) / Lm_E( SZ3 ) ) ) );
-				IR0 = Lm_H( (INT32)MAC0 >> 12 );
-			}
-			return;
-		}
-		break;
-	case 0x04:
-		if( GTE_CT( gteop ) == 0x012 ||
-			GTE_CT( gteop ) == 0x412 )
-		{
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "MVMVA" );
-			n_sf = 12 * GTE_SF( gteop );
-			p_n_mx = p_p_n_mx[ GTE_MX( gteop ) ];
-			n_v = GTE_V( gteop );
-			if( n_v < 3 )
-			{
-				n_v1 = *p_n_vx[ n_v ];
-				n_v2 = *p_n_vy[ n_v ];
-				n_v3 = *p_n_vz[ n_v ];
-			}
-			else
-			{
-				n_v1 = IR1;
-				n_v2 = IR2;
-				n_v3 = IR3;
-			}
-			p_n_cv = p_p_n_cv[ GTE_CV( gteop ) ];
-			n_lm = GTE_LM( gteop );
-			FLAG = 0;
-
-			MAC1 = A1( ( ( (INT64)(INT32)*p_n_cv[ 0 ] << 12 ) + ( (INT16)*p_n_mx[ 0 ] * (INT16)n_v1 ) + ( (INT16)*p_n_mx[ 1 ] * (INT16)n_v2 ) + ( (INT16)*p_n_mx[ 2 ] * (INT16)n_v3 ) ) >> n_sf );
-			MAC2 = A2( ( ( (INT64)(INT32)*p_n_cv[ 1 ] << 12 ) + ( (INT16)*p_n_mx[ 3 ] * (INT16)n_v1 ) + ( (INT16)*p_n_mx[ 4 ] * (INT16)n_v2 ) + ( (INT16)*p_n_mx[ 5 ] * (INT16)n_v3 ) ) >> n_sf );
-			MAC3 = A3( ( ( (INT64)(INT32)*p_n_cv[ 2 ] << 12 ) + ( (INT16)*p_n_mx[ 6 ] * (INT16)n_v1 ) + ( (INT16)*p_n_mx[ 7 ] * (INT16)n_v2 ) + ( (INT16)*p_n_mx[ 8 ] * (INT16)n_v3 ) ) >> n_sf );
-
-			IR1 = Lm_B1( (INT32)MAC1, n_lm );
-			IR2 = Lm_B2( (INT32)MAC2, n_lm );
-			IR3 = Lm_B3( (INT32)MAC3, n_lm );
-			return;
-		}
-		break;
-	case 0x07:
-		if( gteop == 0x0780010 )
-		{
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "DPCS" );
-			FLAG = 0;
-
-			MAC1 = A1( ( ( (INT64)R << 16 ) + ( (INT64)(INT16)IR0 * ( Lm_B1( (INT32)RFC - ( R << 4 ), 0 ) ) ) ) >> 12 );
-			MAC2 = A2( ( ( (INT64)G << 16 ) + ( (INT64)(INT16)IR0 * ( Lm_B1( (INT32)GFC - ( G << 4 ), 0 ) ) ) ) >> 12 );
-			MAC3 = A3( ( ( (INT64)B << 16 ) + ( (INT64)(INT16)IR0 * ( Lm_B1( (INT32)BFC - ( B << 4 ), 0 ) ) ) ) >> 12 );
-			IR1 = Lm_B1( (INT32)MAC1, 0 );
-			IR2 = Lm_B2( (INT32)MAC2, 0 );
-			IR3 = Lm_B3( (INT32)MAC3, 0 );
-			CD0 = CD1;
-			CD1 = CD2;
-			CD2 = CODE;
-			R0 = R1;
-			R1 = R2;
-			R2 = Lm_C1( (INT32)MAC1 >> 4 );
-			G0 = G1;
-			G1 = G2;
-			G2 = Lm_C2( (INT32)MAC2 >> 4 );
-			B0 = B1;
-			B1 = B2;
-			B2 = Lm_C3( (INT32)MAC3 >> 4 );
-			return;
-		}
-		break;
-	case 0x09:
-		if( gteop == 0x0980011 )
-		{
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "INTPL" );
-			FLAG = 0;
-
-			MAC1 = A1( ( ( (INT64)(INT16)IR1 << 12 ) + ( (INT64)(INT16)IR0 * ( Lm_B1( (INT32)RFC - (INT16)IR1, 0 ) ) ) ) >> 12 );
-			MAC2 = A2( ( ( (INT64)(INT16)IR2 << 12 ) + ( (INT64)(INT16)IR0 * ( Lm_B1( (INT32)GFC - (INT16)IR2, 0 ) ) ) ) >> 12 );
-			MAC3 = A3( ( ( (INT64)(INT16)IR3 << 12 ) + ( (INT64)(INT16)IR0 * ( Lm_B1( (INT32)BFC - (INT16)IR3, 0 ) ) ) ) >> 12 );
-			IR1 = Lm_B1( (INT32)MAC1, 0 );
-			IR2 = Lm_B2( (INT32)MAC2, 0 );
-			IR3 = Lm_B3( (INT32)MAC3, 0 );
-			CD0 = CD1;
-			CD1 = CD2;
-			CD2 = CODE;
-			R0 = R1;
-			R1 = R2;
-			R2 = Lm_C1( (INT32)MAC1 );
-			G0 = G1;
-			G1 = G2;
-			G2 = Lm_C2( (INT32)MAC2 );
-			B0 = B1;
-			B1 = B2;
-			B2 = Lm_C3( (INT32)MAC3 );
-			return;
-		}
-		break;
-	case 0x0a:
-		if( GTE_CT( gteop ) == 0x428 )
-		{
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "SQR" );
-			n_sf = 12 * GTE_SF( gteop );
-			FLAG = 0;
-
-			MAC1 = A1( ( (INT64)(INT16)IR1 * (INT16)IR1 ) >> n_sf );
-			MAC2 = A2( ( (INT64)(INT16)IR2 * (INT16)IR2 ) >> n_sf );
-			MAC3 = A3( ( (INT64)(INT16)IR3 * (INT16)IR3 ) >> n_sf );
-			IR1 = Lm_B1( MAC1, 1 );
-			IR2 = Lm_B2( MAC2, 1 );
-			IR3 = Lm_B3( MAC3, 1 );
-			return;
-		}
-		break;
-	case 0x0c:
-		if( gteop == 0x0c8041e )
-		{
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "NCS" );
-			FLAG = 0;
-
-			MAC1 = A1( ( ( (INT64)(INT16)L11 * (INT16)VX0 ) + ( (INT16)L12 * (INT16)VY0 ) + ( (INT16)L13 * (INT16)VZ0 ) ) >> 12 );
-			MAC2 = A2( ( ( (INT64)(INT16)L21 * (INT16)VX0 ) + ( (INT16)L22 * (INT16)VY0 ) + ( (INT16)L23 * (INT16)VZ0 ) ) >> 12 );
-			MAC3 = A3( ( ( (INT64)(INT16)L31 * (INT16)VX0 ) + ( (INT16)L32 * (INT16)VY0 ) + ( (INT16)L33 * (INT16)VZ0 ) ) >> 12 );
-			IR1 = Lm_B1( (INT32)MAC1, 1 );
-			IR2 = Lm_B2( (INT32)MAC2, 1 );
-			IR3 = Lm_B3( (INT32)MAC3, 1 );
-			MAC1 = A1( ( ( (INT64)RBK << 12 ) + ( (INT16)LR1 * (INT16)IR1 ) + ( (INT16)LR2 * (INT16)IR2 ) + ( (INT16)LR3 * (INT16)IR3 ) ) >> 12 );
-			MAC2 = A2( ( ( (INT64)GBK << 12 ) + ( (INT16)LG1 * (INT16)IR1 ) + ( (INT16)LG2 * (INT16)IR2 ) + ( (INT16)LG3 * (INT16)IR3 ) ) >> 12 );
-			MAC3 = A3( ( ( (INT64)BBK << 12 ) + ( (INT16)LB1 * (INT16)IR1 ) + ( (INT16)LB2 * (INT16)IR2 ) + ( (INT16)LB3 * (INT16)IR3 ) ) >> 12 );
-			IR1 = Lm_B1( (INT32)MAC1, 1 );
-			IR2 = Lm_B2( (INT32)MAC2, 1 );
-			IR3 = Lm_B3( (INT32)MAC3, 1 );
-			CD0 = CD1;
-			CD1 = CD2;
-			CD2 = CODE;
-			R0 = R1;
-			R1 = R2;
-			R2 = Lm_C1( (INT32)MAC1 >> 4 );
-			G0 = G1;
-			G1 = G2;
-			G2 = Lm_C2( (INT32)MAC2 >> 4 );
-			B0 = B1;
-			B1 = B2;
-			B2 = Lm_C3( (INT32)MAC3 >> 4 );
-			return;
-		}
-		break;
-	case 0x0d:
-		if( gteop == 0x0d80420 )
-		{
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "NCT" );
-			FLAG = 0;
-
-			for( n_v = 0; n_v < 3; n_v++ )
-			{
-				MAC1 = A1( ( ( (INT64)(INT16)L11 * (INT16)*p_n_vx[ n_v ] ) + ( (INT16)L12 * (INT16)*p_n_vy[ n_v ] ) + ( (INT16)L13 * (INT16)*p_n_vz[ n_v ] ) ) >> 12 );
-				MAC2 = A2( ( ( (INT64)(INT16)L21 * (INT16)*p_n_vx[ n_v ] ) + ( (INT16)L22 * (INT16)*p_n_vy[ n_v ] ) + ( (INT16)L23 * (INT16)*p_n_vz[ n_v ] ) ) >> 12 );
-				MAC3 = A3( ( ( (INT64)(INT16)L31 * (INT16)*p_n_vx[ n_v ] ) + ( (INT16)L32 * (INT16)*p_n_vy[ n_v ] ) + ( (INT16)L33 * (INT16)*p_n_vz[ n_v ] ) ) >> 12 );
-				IR1 = Lm_B1( (INT32)MAC1, 1 );
-				IR2 = Lm_B2( (INT32)MAC2, 1 );
-				IR3 = Lm_B3( (INT32)MAC3, 1 );
-				MAC1 = A1( ( ( (INT64)RBK << 12 ) + ( (INT16)LR1 * (INT16)IR1 ) + ( (INT16)LR2 * (INT16)IR2 ) + ( (INT16)LR3 * (INT16)IR3 ) ) >> 12 );
-				MAC2 = A2( ( ( (INT64)GBK << 12 ) + ( (INT16)LG1 * (INT16)IR1 ) + ( (INT16)LG2 * (INT16)IR2 ) + ( (INT16)LG3 * (INT16)IR3 ) ) >> 12 );
-				MAC3 = A3( ( ( (INT64)BBK << 12 ) + ( (INT16)LB1 * (INT16)IR1 ) + ( (INT16)LB2 * (INT16)IR2 ) + ( (INT16)LB3 * (INT16)IR3 ) ) >> 12 );
-				IR1 = Lm_B1( (INT32)MAC1, 1 );
-				IR2 = Lm_B2( (INT32)MAC2, 1 );
-				IR3 = Lm_B3( (INT32)MAC3, 1 );
-				CD0 = CD1;
-				CD1 = CD2;
-				CD2 = CODE;
-				R0 = R1;
-				R1 = R2;
-				R2 = Lm_C1( (INT32)MAC1 >> 4 );
-				G0 = G1;
-				G1 = G2;
-				G2 = Lm_C2( (INT32)MAC2 >> 4 );
-				B0 = B1;
-				B1 = B2;
-				B2 = Lm_C3( (INT32)MAC3 >> 4 );
-			}
-			return;
-		}
-		break;
-	case 0x0e:
-		if( gteop == 0x0e80413 )
-		{
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "NCDS" );
-			FLAG = 0;
-
-			MAC1 = A1( ( ( (INT64)(INT16)L11 * (INT16)VX0 ) + ( (INT16)L12 * (INT16)VY0 ) + ( (INT16)L13 * (INT16)VZ0 ) ) >> 12 );
-			MAC2 = A2( ( ( (INT64)(INT16)L21 * (INT16)VX0 ) + ( (INT16)L22 * (INT16)VY0 ) + ( (INT16)L23 * (INT16)VZ0 ) ) >> 12 );
-			MAC3 = A3( ( ( (INT64)(INT16)L31 * (INT16)VX0 ) + ( (INT16)L32 * (INT16)VY0 ) + ( (INT16)L33 * (INT16)VZ0 ) ) >> 12 );
-			IR1 = Lm_B1( (INT32)MAC1, 1 );
-			IR2 = Lm_B2( (INT32)MAC2, 1 );
-			IR3 = Lm_B3( (INT32)MAC3, 1 );
-			MAC1 = A1( ( ( (INT64)RBK << 12 ) + ( (INT16)LR1 * (INT16)IR1 ) + ( (INT16)LR2 * (INT16)IR2 ) + ( (INT16)LR3 * (INT16)IR3 ) ) >> 12 );
-			MAC2 = A2( ( ( (INT64)GBK << 12 ) + ( (INT16)LG1 * (INT16)IR1 ) + ( (INT16)LG2 * (INT16)IR2 ) + ( (INT16)LG3 * (INT16)IR3 ) ) >> 12 );
-			MAC3 = A3( ( ( (INT64)BBK << 12 ) + ( (INT16)LB1 * (INT16)IR1 ) + ( (INT16)LB2 * (INT16)IR2 ) + ( (INT16)LB3 * (INT16)IR3 ) ) >> 12 );
-			IR1 = Lm_B1( (INT32)MAC1, 1 );
-			IR2 = Lm_B2( (INT32)MAC2, 1 );
-			IR3 = Lm_B3( (INT32)MAC3, 1 );
-			MAC1 = A1( ( ( ( (INT64)R << 4 ) * (INT16)IR1 ) + ( (INT16)IR0 * Lm_B1( (INT32)RFC - ( ( R * (INT16)IR1 ) >> 8 ), 0 ) ) ) >> 12 );
-			MAC2 = A2( ( ( ( (INT64)G << 4 ) * (INT16)IR2 ) + ( (INT16)IR0 * Lm_B2( (INT32)GFC - ( ( G * (INT16)IR2 ) >> 8 ), 0 ) ) ) >> 12 );
-			MAC3 = A3( ( ( ( (INT64)B << 4 ) * (INT16)IR3 ) + ( (INT16)IR0 * Lm_B3( (INT32)BFC - ( ( B * (INT16)IR3 ) >> 8 ), 0 ) ) ) >> 12 );
-			IR1 = Lm_B1( (INT32)MAC1, 1 );
-			IR2 = Lm_B2( (INT32)MAC2, 1 );
-			IR3 = Lm_B3( (INT32)MAC3, 1 );
-			CD0 = CD1;
-			CD1 = CD2;
-			CD2 = CODE;
-			R0 = R1;
-			R1 = R2;
-			R2 = Lm_C1( (INT32)MAC1 >> 4 );
-			G0 = G1;
-			G1 = G2;
-			G2 = Lm_C2( (INT32)MAC2 >> 4 );
-			B0 = B1;
-			B1 = B2;
-			B2 = Lm_C3( (INT32)MAC3 >> 4 );
-			return;
-		}
-		break;
-	case 0x0f:
-		if( gteop == 0x0f8002a )
-		{
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "DPCT" );
-			FLAG = 0;
-
-			for( n_pass = 0; n_pass < 3; n_pass++ )
-			{
-				MAC1 = A1( ( ( (INT64)R0 << 16 ) + ( (INT64)(INT16)IR0 * ( Lm_B1( (INT32)RFC - ( R0 << 4 ), 0 ) ) ) ) >> 12 );
-				MAC2 = A2( ( ( (INT64)G0 << 16 ) + ( (INT64)(INT16)IR0 * ( Lm_B1( (INT32)GFC - ( G0 << 4 ), 0 ) ) ) ) >> 12 );
-				MAC3 = A3( ( ( (INT64)B0 << 16 ) + ( (INT64)(INT16)IR0 * ( Lm_B1( (INT32)BFC - ( B0 << 4 ), 0 ) ) ) ) >> 12 );
-				IR1 = Lm_B1( (INT32)MAC1, 0 );
-				IR2 = Lm_B2( (INT32)MAC2, 0 );
-				IR3 = Lm_B3( (INT32)MAC3, 0 );
-				CD0 = CD1;
-				CD1 = CD2;
-				CD2 = CODE;
-				R0 = R1;
-				R1 = R2;
-				R2 = Lm_C1( (INT32)MAC1 >> 4 );
-				G0 = G1;
-				G1 = G2;
-				G2 = Lm_C2( (INT32)MAC2 >> 4 );
-				B0 = B1;
-				B1 = B2;
-				B2 = Lm_C3( (INT32)MAC3 >> 4 );
-			}
-			return;
-		}
-		else if( gteop == 0x0f80416 )
-		{
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "NCDT" );
-			FLAG = 0;
-
-			for( n_v = 0; n_v < 3; n_v++ )
-			{
-				MAC1 = A1( ( ( (INT64)(INT16)L11 * (INT16)*p_n_vx[ n_v ] ) + ( (INT16)L12 * (INT16)*p_n_vy[ n_v ] ) + ( (INT16)L13 * (INT16)*p_n_vz[ n_v ] ) ) >> 12 );
-				MAC2 = A2( ( ( (INT64)(INT16)L21 * (INT16)*p_n_vx[ n_v ] ) + ( (INT16)L22 * (INT16)*p_n_vy[ n_v ] ) + ( (INT16)L23 * (INT16)*p_n_vz[ n_v ] ) ) >> 12 );
-				MAC3 = A3( ( ( (INT64)(INT16)L31 * (INT16)*p_n_vx[ n_v ] ) + ( (INT16)L32 * (INT16)*p_n_vy[ n_v ] ) + ( (INT16)L33 * (INT16)*p_n_vz[ n_v ] ) ) >> 12 );
-				IR1 = Lm_B1( (INT32)MAC1, 1 );
-				IR2 = Lm_B2( (INT32)MAC2, 1 );
-				IR3 = Lm_B3( (INT32)MAC3, 1 );
-				MAC1 = A1( ( ( (INT64)RBK << 12 ) + ( (INT16)LR1 * (INT16)IR1 ) + ( (INT16)LR2 * (INT16)IR2 ) + ( (INT16)LR3 * (INT16)IR3 ) ) >> 12 );
-				MAC2 = A2( ( ( (INT64)GBK << 12 ) + ( (INT16)LG1 * (INT16)IR1 ) + ( (INT16)LG2 * (INT16)IR2 ) + ( (INT16)LG3 * (INT16)IR3 ) ) >> 12 );
-				MAC3 = A3( ( ( (INT64)BBK << 12 ) + ( (INT16)LB1 * (INT16)IR1 ) + ( (INT16)LB2 * (INT16)IR2 ) + ( (INT16)LB3 * (INT16)IR3 ) ) >> 12 );
-				IR1 = Lm_B1( (INT32)MAC1, 1 );
-				IR2 = Lm_B2( (INT32)MAC2, 1 );
-				IR3 = Lm_B3( (INT32)MAC3, 1 );
-				MAC1 = A1( ( ( ( (INT64)R << 4 ) * (INT16)IR1 ) + ( (INT16)IR0 * Lm_B1( (INT32)RFC - ( ( R * (INT16)IR1 ) >> 8 ), 0 ) ) ) >> 12 );
-				MAC2 = A2( ( ( ( (INT64)G << 4 ) * (INT16)IR2 ) + ( (INT16)IR0 * Lm_B2( (INT32)GFC - ( ( G * (INT16)IR2 ) >> 8 ), 0 ) ) ) >> 12 );
-				MAC3 = A3( ( ( ( (INT64)B << 4 ) * (INT16)IR3 ) + ( (INT16)IR0 * Lm_B3( (INT32)BFC - ( ( B * (INT16)IR3 ) >> 8 ), 0 ) ) ) >> 12 );
-				IR1 = Lm_B1( (INT32)MAC1, 1 );
-				IR2 = Lm_B2( (INT32)MAC2, 1 );
-				IR3 = Lm_B3( (INT32)MAC3, 1 );
-				CD0 = CD1;
-				CD1 = CD2;
-				CD2 = CODE;
-				R0 = R1;
-				R1 = R2;
-				R2 = Lm_C1( (INT32)MAC1 >> 4 );
-				G0 = G1;
-				G1 = G2;
-				G2 = Lm_C2( (INT32)MAC2 >> 4 );
-				B0 = B1;
-				B1 = B2;
-				B2 = Lm_C3( (INT32)MAC3 >> 4 );
-			}
-			return;
-		}
-		break;
-	case 0x10:
-		if( gteop == 0x108041b )
-		{
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "NCCS" );
-			FLAG = 0;
-
-			MAC1 = A1( ( ( (INT64)(INT16)L11 * (INT16)VX0 ) + ( (INT16)L12 * (INT16)VY0 ) + ( (INT16)L13 * (INT16)VZ0 ) ) >> 12 );
-			MAC2 = A2( ( ( (INT64)(INT16)L21 * (INT16)VX0 ) + ( (INT16)L22 * (INT16)VY0 ) + ( (INT16)L23 * (INT16)VZ0 ) ) >> 12 );
-			MAC3 = A3( ( ( (INT64)(INT16)L31 * (INT16)VX0 ) + ( (INT16)L32 * (INT16)VY0 ) + ( (INT16)L33 * (INT16)VZ0 ) ) >> 12 );
-			IR1 = Lm_B1( (INT32)MAC1, 1 );
-			IR2 = Lm_B2( (INT32)MAC2, 1 );
-			IR3 = Lm_B3( (INT32)MAC3, 1 );
-			MAC1 = A1( ( ( (INT64)RBK << 12 ) + ( (INT16)LR1 * (INT16)IR1 ) + ( (INT16)LR2 * (INT16)IR2 ) + ( (INT16)LR3 * (INT16)IR3 ) ) >> 12 );
-			MAC2 = A2( ( ( (INT64)GBK << 12 ) + ( (INT16)LG1 * (INT16)IR1 ) + ( (INT16)LG2 * (INT16)IR2 ) + ( (INT16)LG3 * (INT16)IR3 ) ) >> 12 );
-			MAC3 = A3( ( ( (INT64)BBK << 12 ) + ( (INT16)LB1 * (INT16)IR1 ) + ( (INT16)LB2 * (INT16)IR2 ) + ( (INT16)LB3 * (INT16)IR3 ) ) >> 12 );
-			IR1 = Lm_B1( (INT32)MAC1, 1 );
-			IR2 = Lm_B2( (INT32)MAC2, 1 );
-			IR3 = Lm_B3( (INT32)MAC3, 1 );
-			MAC1 = A1( ( (INT64)R * (INT16)IR1 ) >> 8 );
-			MAC2 = A2( ( (INT64)G * (INT16)IR2 ) >> 8 );
-			MAC3 = A3( ( (INT64)B * (INT16)IR3 ) >> 8 );
-			IR1 = Lm_B1( (INT32)MAC1, 1 );
-			IR2 = Lm_B2( (INT32)MAC2, 1 );
-			IR3 = Lm_B3( (INT32)MAC3, 1 );
-			CD0 = CD1;
-			CD1 = CD2;
-			CD2 = CODE;
-			R0 = R1;
-			R1 = R2;
-			R2 = Lm_C1( (INT32)MAC1 >> 4 );
-			G0 = G1;
-			G1 = G2;
-			G2 = Lm_C2( (INT32)MAC2 >> 4 );
-			B0 = B1;
-			B1 = B2;
-			B2 = Lm_C3( (INT32)MAC3 >> 4 );
-			return;
-		}
-		break;
-	case 0x11:
-		if( gteop == 0x118043f )
-		{
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "NCCT" );
-			FLAG = 0;
-
-			for( n_v = 0; n_v < 3; n_v++ )
-			{
-				MAC1 = A1( ( ( (INT64)(INT16)L11 * (INT16)*p_n_vx[ n_v ] ) + ( (INT16)L12 * (INT16)*p_n_vy[ n_v ] ) + ( (INT16)L13 * (INT16)*p_n_vz[ n_v ] ) ) >> 12 );
-				MAC2 = A2( ( ( (INT64)(INT16)L21 * (INT16)*p_n_vx[ n_v ] ) + ( (INT16)L22 * (INT16)*p_n_vy[ n_v ] ) + ( (INT16)L23 * (INT16)*p_n_vz[ n_v ] ) ) >> 12 );
-				MAC3 = A3( ( ( (INT64)(INT16)L31 * (INT16)*p_n_vx[ n_v ] ) + ( (INT16)L32 * (INT16)*p_n_vy[ n_v ] ) + ( (INT16)L33 * (INT16)*p_n_vz[ n_v ] ) ) >> 12 );
-				IR1 = Lm_B1( (INT32)MAC1, 1 );
-				IR2 = Lm_B2( (INT32)MAC2, 1 );
-				IR3 = Lm_B3( (INT32)MAC3, 1 );
-				MAC1 = A1( ( ( (INT64)RBK << 12 ) + ( (INT16)LR1 * (INT16)IR1 ) + ( (INT16)LR2 * (INT16)IR2 ) + ( (INT16)LR3 * (INT16)IR3 ) ) >> 12 );
-				MAC2 = A2( ( ( (INT64)GBK << 12 ) + ( (INT16)LG1 * (INT16)IR1 ) + ( (INT16)LG2 * (INT16)IR2 ) + ( (INT16)LG3 * (INT16)IR3 ) ) >> 12 );
-				MAC3 = A3( ( ( (INT64)BBK << 12 ) + ( (INT16)LB1 * (INT16)IR1 ) + ( (INT16)LB2 * (INT16)IR2 ) + ( (INT16)LB3 * (INT16)IR3 ) ) >> 12 );
-				IR1 = Lm_B1( (INT32)MAC1, 1 );
-				IR2 = Lm_B2( (INT32)MAC2, 1 );
-				IR3 = Lm_B3( (INT32)MAC3, 1 );
-				MAC1 = A1( ( (INT64)R * (INT16)IR1 ) >> 8 );
-				MAC2 = A2( ( (INT64)G * (INT16)IR2 ) >> 8 );
-				MAC3 = A3( ( (INT64)B * (INT16)IR3 ) >> 8 );
-				IR1 = Lm_B1( (INT32)MAC1, 1 );
-				IR2 = Lm_B2( (INT32)MAC2, 1 );
-				IR3 = Lm_B3( (INT32)MAC3, 1 );
-				CD0 = CD1;
-				CD1 = CD2;
-				CD2 = CODE;
-				R0 = R1;
-				R1 = R2;
-				R2 = Lm_C1( (INT32)MAC1 >> 4 );
-				G0 = G1;
-				G1 = G2;
-				G2 = Lm_C2( (INT32)MAC2 >> 4 );
-				B0 = B1;
-				B1 = B2;
-				B2 = Lm_C3( (INT32)MAC3 >> 4 );
-			}
-			return;
-		}
-		break;
-	case 0x13:
-		if( gteop == 0x138041c )
-		{
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "CC" );
-			FLAG = 0;
-
-			MAC1 = A1( ( ( (INT64)RBK << 12 ) + ( (INT16)LR1 * (INT16)IR1 ) + ( (INT16)LR2 * (INT16)IR2 ) + ( (INT16)LR3 * (INT16)IR3 ) ) >> 12 );
-			MAC2 = A2( ( ( (INT64)GBK << 12 ) + ( (INT16)LG1 * (INT16)IR1 ) + ( (INT16)LG2 * (INT16)IR2 ) + ( (INT16)LG3 * (INT16)IR3 ) ) >> 12 );
-			MAC3 = A3( ( ( (INT64)BBK << 12 ) + ( (INT16)LB1 * (INT16)IR1 ) + ( (INT16)LB2 * (INT16)IR2 ) + ( (INT16)LB3 * (INT16)IR3 ) ) >> 12 );
-			IR1 = Lm_B1( MAC1, 1 );
-			IR2 = Lm_B2( MAC2, 1 );
-			IR3 = Lm_B3( MAC3, 1 );
-			MAC1 = A1( ( (INT64)R * (INT16)IR1 ) >> 8 );
-			MAC2 = A2( ( (INT64)G * (INT16)IR2 ) >> 8 );
-			MAC3 = A3( ( (INT64)B * (INT16)IR3 ) >> 8 );
-			IR1 = Lm_B1( MAC1, 1 );
-			IR2 = Lm_B2( MAC2, 1 );
-			IR3 = Lm_B3( MAC3, 1 );
-			CD0 = CD1;
-			CD1 = CD2;
-			CD2 = CODE;
-			R0 = R1;
-			R1 = R2;
-			R2 = Lm_C1( (INT32)MAC1 >> 4 );
-			G0 = G1;
-			G1 = G2;
-			G2 = Lm_C2( (INT32)MAC2 >> 4 );
-			B0 = B1;
-			B1 = B2;
-			B2 = Lm_C3( (INT32)MAC3 >> 4 );
-			return;
-		}
-		break;
-	case 0x14:
-		if( gteop == 0x1400006 )
-		{
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "NCLIP" );
-			FLAG = 0;
-
-			MAC0 = F( ( (INT64)(INT16)SX0 * (INT16)SY1 ) + ( (INT16)SX1 * (INT16)SY2 ) + ( (INT16)SX2 * (INT16)SY0 ) - ( (INT16)SX0 * (INT16)SY2 ) - ( (INT16)SX1 * (INT16)SY0 ) - ( (INT16)SX2 * (INT16)SY1 ) );
-			return;
-		}
-		break;
-	case 0x15:
-		if( gteop == 0x158002d )
-		{
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "AVSZ3" );
-			FLAG = 0;
-
-			MAC0 = F( ( (INT64)(INT16)ZSF3 * SZ1 ) + ( (INT16)ZSF3 * SZ2 ) + ( (INT16)ZSF3 * SZ3 ) );
-			OTZ = Lm_D( (INT32)MAC0 >> 12 );
-			return;
-		}
-		break;
-	case 0x16:
-		if( gteop == 0x168002e )
-		{
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "AVSZ4" );
-			FLAG = 0;
-
-			MAC0 = F( ( (INT64)(INT16)ZSF4 * SZ0 ) + ( (INT16)ZSF4 * SZ1 ) + ( (INT16)ZSF4 * SZ2 ) + ( (INT16)ZSF4 * SZ3 ) );
-			OTZ = Lm_D( (INT32)MAC0 >> 12 );
-			return;
-		}
-		break;
-	case 0x17:
-		if( GTE_CT( gteop ) == 0x00c )
-		{
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "OP" );
-			n_sf = 12 * GTE_SF( gteop );
-			FLAG = 0;
-
-			MAC1 = A1( ( ( (INT64)(INT32)D2 * (INT16)IR3 ) - ( (INT64)(INT32)D3 * (INT16)IR2 ) ) >> n_sf );
-			MAC2 = A2( ( ( (INT64)(INT32)D3 * (INT16)IR1 ) - ( (INT64)(INT32)D1 * (INT16)IR3 ) ) >> n_sf );
-			MAC3 = A3( ( ( (INT64)(INT32)D1 * (INT16)IR2 ) - ( (INT64)(INT32)D2 * (INT16)IR1 ) ) >> n_sf );
-			IR1 = Lm_B1( (INT32)MAC1, 0 );
-			IR2 = Lm_B2( (INT32)MAC2, 0 );
-			IR3 = Lm_B3( (INT32)MAC3, 0 );
-			return;
-		}
-		break;
-	case 0x19:
-		if( GTE_CT( gteop ) == 0x03d )
-		{
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "GPF" );
-			n_sf = 12 * GTE_SF( gteop );
-			FLAG = 0;
-
-			MAC1 = A1( ( (INT64)(INT16)IR0 * (INT16)IR1 ) >> n_sf );
-			MAC2 = A2( ( (INT64)(INT16)IR0 * (INT16)IR2 ) >> n_sf );
-			MAC3 = A3( ( (INT64)(INT16)IR0 * (INT16)IR3 ) >> n_sf );
-			IR1 = Lm_B1( (INT32)MAC1, 0 );
-			IR2 = Lm_B2( (INT32)MAC2, 0 );
-			IR3 = Lm_B3( (INT32)MAC3, 0 );
-			CD0 = CD1;
-			CD1 = CD2;
-			CD2 = CODE;
-			R0 = R1;
-			R1 = R2;
-			R2 = Lm_C1( (INT32)MAC1 >> 4 );
-			G0 = G1;
-			G1 = G2;
-			G2 = Lm_C2( (INT32)MAC2 >> 4 );
-			B0 = B1;
-			B1 = B2;
-			B2 = Lm_C3( (INT32)MAC3 >> 4 );
-			return;
-		}
-		break;
-	case 0x1a:
-		if( GTE_CT( gteop ) == 0x03e )
-		{
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "GPL" );
-			n_sf = 12 * GTE_SF( gteop );
-			FLAG = 0;
-
-			MAC1 = A1( ( ( (INT64)(INT32)MAC1 << 12 ) + ( (INT16)IR0 * (INT16)IR1 ) ) >> n_sf );
-			MAC2 = A2( ( ( (INT64)(INT32)MAC2 << 12 ) + ( (INT16)IR0 * (INT16)IR2 ) ) >> n_sf );
-			MAC3 = A3( ( ( (INT64)(INT32)MAC3 << 12 ) + ( (INT16)IR0 * (INT16)IR3 ) ) >> n_sf );
-			IR1 = Lm_B1( (INT32)MAC1, 0 );
-			IR2 = Lm_B2( (INT32)MAC2, 0 );
-			IR3 = Lm_B3( (INT32)MAC3, 0 );
-			CD0 = CD1;
-			CD1 = CD2;
-			CD2 = CODE;
-			R0 = R1;
-			R1 = R2;
-			R2 = Lm_C1( (INT32)MAC1 >> 4 );
-			G0 = G1;
-			G1 = G2;
-			G2 = Lm_C2( (INT32)MAC2 >> 4 );
-			B0 = B1;
-			B1 = B2;
-			B2 = Lm_C3( (INT32)MAC3 >> 4 );
-			return;
-		}
-		break;
+		usrintf_showmessage_secs( 1, "unknown GTE op %08x", gteop );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: unknown GTE op %08x\n", mipscpu.pc, gteop );
+		mips_stop();
 	}
-	usrintf_showmessage_secs( 1, "unknown GTE op %08x", gteop );
-	log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: unknown GTE op %08x\n", mipscpu.pc, gteop );
-	mips_stop();
 }

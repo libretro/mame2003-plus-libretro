@@ -181,6 +181,7 @@ Dave Widel
 #include "vidhrdw/generic.h"
 #include "pacman.h"
 #include "cpu/s2650/s2650.h"
+#include "state.h"
 
 
 static UINT8 speedcheat = 0;	/* a well known hack allows to make Pac Man run at four times */
@@ -491,15 +492,37 @@ static READ_HANDLER( alibaba_mystery_1_r )
 }
 
 
+/* The mystery item clock (from current MAME): a write to 0x5080 starts or
+   stops it (d0) and shows it (d1). Running, it advances every 64 frames,
+   and the mystery item lights up when it reaches 24. */
+int alibaba_mystery_control, alibaba_mystery_clock;
+static int alibaba_mystery_prescaler;
+
 static READ_HANDLER( alibaba_mystery_2_r )
 {
-	static int mystery = 0;
+	/* The single bit return value determines when the mystery is lit up. */
+	return (alibaba_mystery_clock >= 24) ? 1 : 0;
+}
 
-	/* The single bit return value determines when the mystery is lit up.*/
-	/* This is certainly wrong*/
+static WRITE_HANDLER( alibaba_mystery_w )
+{
+	/* d0: start/stop clock */
+	if ((alibaba_mystery_control ^ data) & 1)
+		alibaba_mystery_prescaler = alibaba_mystery_clock = 0;
 
-	mystery++;
-	return (mystery >> 10) & 1;
+	/* d1: show clock */
+	alibaba_mystery_control = data;
+}
+
+static INTERRUPT_GEN( alibaba_interrupt )
+{
+	/* increment the clock every 64 frames (about 1.05 s) */
+	alibaba_mystery_prescaler = (alibaba_mystery_prescaler + 1) & 0x3f;
+
+	if (alibaba_mystery_prescaler == 0 && (alibaba_mystery_control & 1))
+		alibaba_mystery_clock = (alibaba_mystery_clock + 1) & 0x1f;
+
+	irq0_line_hold();
 }
 
 
@@ -845,6 +868,7 @@ static MEMORY_WRITE_START( alibaba_writemem )
  	{ 0x5007, 0x5007, pacman_coin_counter_w },
 	{ 0x5040, 0x506f, alibaba_sound_w, &pengo_soundregs },  /* the sound region is not contiguous */
 	{ 0x5060, 0x506f, MWA_RAM, &spriteram_2 }, /* actually at 5050-505f, here to point to free RAM */
+	{ 0x5080, 0x50bf, alibaba_mystery_w },
 	{ 0x50c0, 0x50c0, pengo_sound_enable_w },
 	{ 0x50c1, 0x50c1, pacman_flipscreen_w },
 	{ 0x50c2, 0x50c2, interrupt_enable_w },
@@ -2624,6 +2648,33 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 };
 
 
+static struct GfxLayout alibaba_clocklayout =
+{
+	24,16,	/* 24*16 characters */
+	RGN_FRAC(1,2),
+	2,
+	{ RGN_FRAC(1,2), RGN_FRAC(0,2) },
+	{
+		16*8+7, 16*8+6, 16*8+5, 16*8+4, 16*8+3, 16*8+2, 16*8+1, 16*8+0,
+		8*8+7,  8*8+6,  8*8+5,  8*8+4,  8*8+3,  8*8+2,  8*8+1,  8*8+0,
+		0*8+7,  0*8+6,  0*8+5,  0*8+4,  0*8+3,  0*8+2,  0*8+1,  0*8+0
+	},
+	{
+		256+0*8, 256+1*8, 256+2*8, 256+3*8, 256+4*8, 256+5*8, 256+6*8, 256+7*8,
+		0*8,     1*8,     2*8,     3*8,     4*8,     5*8,     6*8,     7*8
+	},
+	32*16	/* every char takes 64 bytes */
+};
+
+static struct GfxDecodeInfo alibaba_gfxdecodeinfo[] =
+{
+   { REGION_GFX1, 0x0000, &tilelayout,          0, 128 },
+   { REGION_GFX1, 0x1000, &spritelayout,        0, 128 },
+   { REGION_GFX2, 0x0000, &alibaba_clocklayout, 0, 128 },
+   { -1 } /* end of array */
+};
+
+
 static struct GfxDecodeInfo s2650games_gfxdecodeinfo[] =
 {
     { REGION_GFX1, 0x0000, &tilelayout,   0, 128 },
@@ -2830,9 +2881,13 @@ static MACHINE_DRIVER_START( alibaba )
 
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(alibaba_readmem,alibaba_writemem)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+	MDRV_CPU_VBLANK_INT(alibaba_interrupt,1)
 
 	MDRV_MACHINE_INIT(NULL)
+
+	/* video hardware */
+	MDRV_GFXDECODE(alibaba_gfxdecodeinfo)
+	MDRV_VIDEO_UPDATE(alibaba)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( piranha )
@@ -3900,7 +3955,7 @@ ROM_START( theglobp )
 ROM_END
 
 
-ROM_START( beastf )
+ROM_START( beastfp )
 	ROM_REGION( 0x20000, REGION_CPU1, 0 )	/* 64k for code */
 	ROM_LOAD( "bf-u2.bin",    0x0000, 0x2000, CRC(3afc517b) SHA1(5b74bca9e9cd4d8bcf94a340f8f0e53fe1dcfc1d) )
 	ROM_LOAD( "bf-u3.bin",    0x2000, 0x2000, CRC(8dbd76d0) SHA1(058c01e87ad583eb99d5043a821e6c68f1b30267) )
@@ -3996,9 +4051,9 @@ ROM_START( alibaba )
 	ROM_LOAD( "82s126.1m",    0x0000, 0x0100, CRC(a9cc86bf) SHA1(bbcec0570aeceb582ff8238a4bc8546a23430081) )
 	ROM_LOAD( "82s126.3m",    0x0100, 0x0100, CRC(77245b66) SHA1(0c4d0bee858b97632411c440bea6948a74759746) )	/* timing - not used */
 
-	/* unknown, used for the mystery items ? */
-	ROM_REGION( 0x1000, REGION_USER1, 0 )
-	ROM_LOAD( "ab7.bin",      0x0000, 0x0800, CRC(52294ef5) SHA1(1d76e16c95cb2873d898a4151a902113fccafe1c) )
+	ROM_REGION( 0x1000, REGION_GFX2, 0 )	/* mystery item clock */
+	ROM_LOAD( "ab7.bin",      0x0000, 0x0800, CRC(52294ef5) SHA1(1d76e16c95cb2873d898a4151a902113fccafe1c) )	/* 7.p6 dumped as 0x1000 - 1st and 2nd half identical */
+	ROM_RELOAD(               0x0800, 0x0800 )
 ROM_END
 
 ROM_START( alibabab )
@@ -4024,9 +4079,9 @@ ROM_START( alibabab )
 	ROM_LOAD( "82s126.1m",    0x0000, 0x0100, CRC(a9cc86bf) SHA1(bbcec0570aeceb582ff8238a4bc8546a23430081) )
 	ROM_LOAD( "82s126.3m",    0x0100, 0x0100, CRC(77245b66) SHA1(0c4d0bee858b97632411c440bea6948a74759746) )    /* timing - not used */
 
-	/* unknown, used for the mystery items ? */
-	ROM_REGION( 0x1000, REGION_USER1, 0 )
-	ROM_LOAD( "ab7.bin",      0x0000, 0x0800, CRC(52294ef5) SHA1(1d76e16c95cb2873d898a4151a902113fccafe1c) )
+	ROM_REGION( 0x1000, REGION_GFX2, 0 )	/* mystery item clock */
+	ROM_LOAD( "ab7.bin",      0x0000, 0x0800, CRC(52294ef5) SHA1(1d76e16c95cb2873d898a4151a902113fccafe1c) )	/* 7.p6 dumped as 0x1000 - 1st and 2nd half identical */
+	ROM_RELOAD(               0x0800, 0x0800 )
 ROM_END
 
 ROM_START( jumpshot )
@@ -4490,6 +4545,28 @@ static void eyes_decode(unsigned char *data)
 	}
 }
 
+static DRIVER_INIT( alibaba )
+{
+	data8_t *rom = memory_region(REGION_GFX2);
+	int len = memory_region_length(REGION_GFX2);
+	int i;
+
+	/* reorder the clock graphics a bit to make them work with gfxdecode */
+	for (i = 0; i < len; i++)
+	{
+		if ((i & 0x3f) < 0x18)
+		{
+			rom[i] = rom[i + 8];
+			rom[i + 8] = 0;
+		}
+	}
+
+	alibaba_mystery_control = alibaba_mystery_clock = alibaba_mystery_prescaler = 0;
+	state_save_register_int("alibaba", 0, "mystery_control",   &alibaba_mystery_control);
+	state_save_register_int("alibaba", 0, "mystery_clock",     &alibaba_mystery_clock);
+	state_save_register_int("alibaba", 0, "mystery_prescaler", &alibaba_mystery_prescaler);
+}
+
 static DRIVER_INIT( eyes )
 {
 	int i;
@@ -4617,14 +4694,14 @@ GAME( 1983, gorkans,   mrtnt,    pacman,    mrtnt,     0,        ROT90,  "Techst
 GAMEX(1983, eggor,     0,        pacman,    mrtnt,     eyes,     ROT90,  "Telko", "Eggor", GAME_WRONG_COLORS | GAME_IMPERFECT_SOUND  )
 GAME( 1985, lizwiz,    0,        pacman,    lizwiz,    0,        ROT90,  "Techstar (Sunn license)", "Lizard Wizard" )
 GAME( 1983, theglobp,  suprglob, theglobp,  theglobp,  0,        ROT90,  "Epos Corporation", "The Glob (Pac-Man hardware)" )
-GAME( 1984, beastf,    suprglob, theglobp,  theglobp,  0,        ROT90,  "Epos Corporation", "Beastie Feastie" )
+GAME( 1984, beastfp,   suprglob, theglobp,  theglobp,  0,        ROT90,  "Epos Corporation", "Beastie Feastie (Pac-Man conversion)" )
 GAME( 1983, bwcasino,  0,        acitya,    bwcasino,  0,        ROT90,  "Epos Corporation", "Boardwalk Casino" )
 GAME( 1982, dremshpr,  0,        dremshpr,  dremshpr,  0,        ROT270, "Sanritsu", "Dream Shopper" )
 GAME( 1983, acitya,    bwcasino, acitya,    acitya,    0,        ROT90,  "Epos Corporation", "Atlantic City Action" )
 GAME( 1983, vanvan,    0,        vanvan,    vanvan,    0,        ROT270, "Sanritsu", "Van-Van Car" )
 GAME( 1983, vanvank,   vanvan,   vanvan,    vanvank,   0,        ROT270, "Karateco", "Van-Van Car (Karateco)" )
-GAMEX(1982, alibaba,   0,        alibaba,   alibaba,   0,        ROT90,  "Sega", "Ali Baba and 40 Thieves", GAME_UNEMULATED_PROTECTION )
-GAMEX(1982, alibabab,  alibaba,  alibaba,   alibaba,   0,        ROT90,  "bootleg", "Mustafa and 40 Thieves (bootleg)", GAME_UNEMULATED_PROTECTION )
+GAME( 1982, alibaba,   0,        alibaba,   alibaba,   alibaba,  ROT90,  "Sega", "Ali Baba and 40 Thieves" )
+GAME( 1982, alibabab,  alibaba,  alibaba,   alibaba,   alibaba,  ROT90,  "bootleg", "Mustafa and 40 Thieves (bootleg)" )
 GAME( 1985, jumpshot,  0,        pacman,    jumpshot,  jumpshot, ROT90,  "Bally Midway", "Jump Shot" )
 GAME( 1985, shootbul,  0,        pacman,    shootbul,  jumpshot, ROT90,  "Bally Midway", "Shoot the Bull" )
 GAME( 1986, bigbucks,  0,        bigbucks,  bigbucks,  0,        ROT90,  "Dynasoft Inc.", "Big Bucks" )

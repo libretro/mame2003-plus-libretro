@@ -9,6 +9,7 @@
 **************************************************************************/
 
 #include "driver.h"
+#include "state.h"
 #include "cpu/tms34010/tms34010.h"
 #include "cpu/m6809/m6809.h"
 #include "sndhrdw/dcs.h"
@@ -374,6 +375,17 @@ WRITE16_HANDLER( midxunit_uart_w )
  *
  *************************************/
 
+static void wunit_register_state(void)
+{
+	state_save_register_UINT8 ("midwunit", 0, "cmos_write_enable", &cmos_write_enable, 1);
+	state_save_register_UINT16("midwunit", 0, "iodata",            iodata, 8);
+	state_save_register_UINT8 ("midwunit", 0, "ioshuffle",         ioshuffle, 16);
+	state_save_register_UINT8 ("midwunit", 0, "analog_port",       &midxunit_analog_port, 1);
+	state_save_register_UINT8 ("midwunit", 0, "uart",              uart, 8);
+	state_save_register_UINT8 ("midwunit", 0, "security_bits",     &security_bits, 1);
+}
+
+
 static void init_wunit_generic(void)
 {
 	UINT8 *base;
@@ -398,6 +410,9 @@ static void init_wunit_generic(void)
 
 	/* init sound */
 	dcs_init();
+
+	/* save state */
+	wunit_register_state();
 }
 
 
@@ -471,21 +486,21 @@ DRIVER_INIT( umk3 )
 {
 	init_mk3_common();
 	INSTALL_SPEEDUP_3(0x106a0e0, 0xff9696a0, 0x105dc10, 0x105dc30, 0x105dc50);
-	umk3_palette = install_mem_write16_handler(0, 0x0106a060, 0x0106a09f, umk3_palette_hack_w);
+	umk3_palette = install_mem_write16_handler(0, TOBYTE(0x0106a060), TOBYTE(0x0106a09f), umk3_palette_hack_w);
 }
 
 DRIVER_INIT( umk3r11 )
 {
 	init_mk3_common();
 	INSTALL_SPEEDUP_3(0x106a0e0, 0xff969680, 0x105dc10, 0x105dc30, 0x105dc50);
-	umk3_palette = install_mem_write16_handler(0, 0x0106a060, 0x0106a09f, umk3_palette_hack_w);
+	umk3_palette = install_mem_write16_handler(0, TOBYTE(0x0106a060), TOBYTE(0x0106a09f), umk3_palette_hack_w);
 }
 
 DRIVER_INIT( umk3p )
 {
 	init_mk3_common();
 	INSTALL_SPEEDUP_3(0x106a0e0, 0xff9696a0, 0x105dc10, 0x105dc30, 0x105dc50);
-	umk3_palette = install_mem_write16_handler(0, 0x0106a060, 0x0106a09f, umk3_palette_hack_w);
+	umk3_palette = install_mem_write16_handler(0, TOBYTE(0x0106a060), TOBYTE(0x0106a09f), umk3_palette_hack_w);
 }
 
 /********************** 2 On 2 Open Ice Challenge **********************/
@@ -634,6 +649,9 @@ DRIVER_INIT( revx )
 
 	/* init sound */
 	dcs_init();
+
+	/* save state */
+	wunit_register_state();
 
 	/* serial prefixes 419, 420 */
 	midway_serial_pic_init(419);

@@ -5,6 +5,7 @@
 **************************************************************************/
 
 #include "driver.h"
+#include "state.h"
 #include "cpu/tms34010/tms34010.h"
 #include "cpu/tms34010/34010ops.h"
 #include "midtunit.h"
@@ -79,6 +80,16 @@ static struct
 
 
 
+/* save state helpers: DMA completion uses anonymous timers, which the */
+/* core does not save; track the latest one so it can be re-armed      */
+static int		dma_generation;
+static double	dma_end_time;
+static double	dma_time_left;
+
+static void dma_state_presave(void);
+static void dma_state_postload(void);
+
+
 /* macros */
 #define TMS_SET_IRQ_LINE(x)				\
 	if (midtunit_using_34020) 			\
@@ -111,6 +122,19 @@ VIDEO_START( midtunit )
 	memset(&dma_state, 0, sizeof(dma_state));
 
 	midtunit_using_34020 = 0;
+
+	/* register for save states */
+	dma_generation = 0;
+	dma_end_time = 0;
+	dma_time_left = TIME_NEVER;
+	state_save_register_UINT16("midtunit", 0, "control",        &midtunit_control, 1);
+	state_save_register_UINT32("midtunit", 0, "gfxbank_offset", gfxbank_offset, 2);
+	state_save_register_UINT16("midtunit", 0, "local_videoram", local_videoram, 0x100000 / sizeof(UINT16));
+	state_save_register_UINT8 ("midtunit", 0, "videobank_select", &videobank_select, 1);
+	state_save_register_UINT16("midtunit", 0, "dma_register",   dma_register, 18);
+	state_save_register_double("midtunit", 0, "dma_time_left",  &dma_time_left, 1);
+	state_save_register_func_presave(dma_state_presave);
+	state_save_register_func_postload(dma_state_postload);
 	return 0;
 }
 
@@ -624,6 +648,45 @@ static void dma_callback(int is_in_34010_context)
 }
 
 
+static void dma_timer_callback(int generation)
+{
+	/* ignore completions scheduled before a state load */
+	if (generation != dma_generation)
+		return;
+	dma_callback(0);
+}
+
+
+static void dma_schedule(double duration)
+{
+	dma_end_time = timer_get_time() + duration;
+	timer_set(duration, dma_generation, dma_timer_callback);
+}
+
+
+static void dma_state_presave(void)
+{
+	double left = dma_end_time - timer_get_time();
+
+	/* only a DMA still in flight needs to be re-armed */
+	if ((dma_register[DMA_COMMAND] & 0x8000) && left >= 0)
+		dma_time_left = left;
+	else if (dma_register[DMA_COMMAND] & 0x8000)
+		dma_time_left = 0;
+	else
+		dma_time_left = TIME_NEVER;
+}
+
+
+static void dma_state_postload(void)
+{
+	/* drop completions pending in this session, re-arm the saved one */
+	dma_generation++;
+	if (dma_time_left < TIME_NEVER / 2)
+		dma_schedule(dma_time_left);
+}
+
+
 
 /*************************************
  *
@@ -839,13 +902,13 @@ skipdma:
 		else
 		{
 			TMS_SET_IRQ_LINE(CLEAR_LINE);
-			timer_set(TIME_IN_NSEC((41+mk_delay) * pixels), 0, dma_callback);
+			dma_schedule(TIME_IN_NSEC((41+mk_delay) * pixels));
 		}
 	}
 	else
 	{
 		TMS_SET_IRQ_LINE(CLEAR_LINE);
-		timer_set(TIME_IN_NSEC((41+mk_delay) * pixels), 0, dma_callback);
+		dma_schedule(TIME_IN_NSEC((41+mk_delay) * pixels));
 	}
 
 	profiler_mark(PROFILER_END);

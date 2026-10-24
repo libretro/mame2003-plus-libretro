@@ -182,6 +182,7 @@ int YM2610Init(int num, int baseclock, int rate,
                FM_TIMERHANDLER TimerHandler,FM_IRQHANDLER IRQHandler);
 void YM2610Shutdown(void);
 void YM2610ResetChip(int num);
+void YM2610_ext_state_register(int chips);
 void YM2610UpdateOne(int num, INT16 **buffer, int length);
 #if BUILD_YM2610B
 void YM2610BUpdateOne(int num, INT16 **buffer, int length);

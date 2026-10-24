@@ -363,9 +363,9 @@ static void sys24_tile_draw_rect(struct mame_bitmap *bm, struct mame_bitmap *tm,
 
 
 /*
-   The rgb version is used by model 1 & 2 which do not need to care
-   about sprite priority hence the lack of support for the
-   priority_bitmap
+   The rgb version is used by model 1 & 2. Like the palette version it
+   sets lpri in the priority_bitmap where it draws: model 2 uses it to
+   find the topmost tile layer of each pixel.
 */
 
 static void sys24_tile_draw_rect_rgb(struct mame_bitmap *bm, struct mame_bitmap *tm, struct mame_bitmap *dm, const UINT16 *mask,
@@ -375,11 +375,13 @@ static void sys24_tile_draw_rect_rgb(struct mame_bitmap *bm, struct mame_bitmap 
 	const UINT16 *source  = ((UINT16 *)bm->base) + sx + sy*bm->rowpixels;
 	const UINT8  *trans = ((UINT8 *) tm->base) + sx + sy*tm->rowpixels;
 	UINT16       *dest = dm->base;
+	UINT8        *prib = priority_bitmap->base;
 	pen_t        *pens   = Machine->pens;
 
 	tpri |= TILE_FLAG_FG_OPAQUE;
 
 	dest += yy1*dm->rowpixels + xx1;
+	prib += yy1*priority_bitmap->rowpixels + xx1;
 	mask += yy1*4;
 	yy2 -= yy1;
 
@@ -393,6 +395,7 @@ static void sys24_tile_draw_rect_rgb(struct mame_bitmap *bm, struct mame_bitmap 
 		const UINT16 *src   = source;
 		const UINT8  *srct  = trans;
 		UINT16 *dst         = dest;
+		UINT8 *pr           = prib;
 		const UINT16 *mask1 = mask;
 		int llx = xx2;
 		int cur_x = xx1;
@@ -411,9 +414,10 @@ static void sys24_tile_draw_rect_rgb(struct mame_bitmap *bm, struct mame_bitmap 
 					int x;
 					for(x=0; x<128; x++) {
 						if(*srct++ == tpri)
-							*dst = pens[*src];
+							{ *dst = pens[*src]; *pr |= lpri; }
 						src++;
 						dst++;
+						pr++;
 					}
 
 				} else if(m == 0xffff) {
@@ -421,6 +425,7 @@ static void sys24_tile_draw_rect_rgb(struct mame_bitmap *bm, struct mame_bitmap 
 					src += 128;
 					srct += 128;
 					dst += 128;
+					pr += 128;
 
 				} else {
 					/* 3- 128 pixels from both layers */
@@ -430,11 +435,12 @@ static void sys24_tile_draw_rect_rgb(struct mame_bitmap *bm, struct mame_bitmap 
 							int xx;
 							for(xx=0; xx<8; xx++)
 								if(srct[xx] == tpri)
-								   dst[xx] = pens[src[xx]];
+								   { dst[xx] = pens[src[xx]]; pr[xx] |= lpri; }
 						}
 						src += 8;
 						srct += 8;
 						dst += 8;
+						pr += 8;
 						m <<= 1;
 					}
 				}
@@ -447,9 +453,10 @@ static void sys24_tile_draw_rect_rgb(struct mame_bitmap *bm, struct mame_bitmap 
 					int x;
 					for(x = cur_x; x<llx1; x++) {
 						if(*srct++ == tpri)
-						   *dst = pens[*src];
+						   { *dst = pens[*src]; *pr |= lpri; }
 						src++;
 						dst++;
+						pr++;
 					}
 
 				} else if(m == 0xffff) {
@@ -457,16 +464,18 @@ static void sys24_tile_draw_rect_rgb(struct mame_bitmap *bm, struct mame_bitmap 
 					src += 128 - cur_x;
 					srct += 128 - cur_x;
 					dst += 128 - cur_x;
+					pr += 128 - cur_x;
 
 				} else {
 					/* 3- 128 pixels from both layers */
 					int x;
 					for(x=cur_x; x<llx1; x++) {
 						if(*srct++ == tpri && !(m & (0x8000 >> (x >> 3))))
-						   *dst = pens[*src];
+						   { *dst = pens[*src]; *pr |= lpri; }
 
 						src++;
 						dst++;
+						pr++;
 					}
 				}
 			}
@@ -476,6 +485,7 @@ static void sys24_tile_draw_rect_rgb(struct mame_bitmap *bm, struct mame_bitmap 
 		source += bm->rowpixels;
 		trans  += tm->rowpixels;
 		dest   += dm->rowpixels;
+		prib   += priority_bitmap->rowpixels;
 		mask   += 4;
 	}
 }
@@ -504,11 +514,59 @@ void sys24_tile_draw(struct mame_bitmap *bitmap, const struct rectangle *cliprec
 		tilemap_set_scrolly(sys24_tile_layer[layer|1], 0, +(vscr & 0x1ff));
 
 		if(hscr & 0x8000) {
-			usrintf_showmessage("Linescroll with special mode %04x", ctrl);
-		} else {
-			tilemap_set_scrollx(sys24_tile_layer[layer],   0, -(hscr & 0x1ff));
-			tilemap_set_scrollx(sys24_tile_layer[layer|1], 0, -(hscr & 0x1ff));
+			/* line scroll in the window modes (current MAME) */
+			UINT16 *hscrtb = sys24_tile_ram + 0x4000 + 0x200*layer;
+			int y;
+
+			switch((ctrl & 0x6000) >> 13) {
+			case 1: {
+				UINT16 v = (-vscr) & 0x1ff;
+				if(!((-vscr) & 0x200))
+					layer ^= 1;
+				for(y=cliprect->min_y; y<=cliprect->max_y; y++) {
+					struct rectangle c = *cliprect;
+					int l1 = layer;
+					if(y >= v)
+						l1 ^= 1;
+					c.min_y = c.max_y = y;
+					tilemap_set_scrollx(sys24_tile_layer[l1], 0, -(hscrtb[y] & 0x1ff));
+					tilemap_draw(bitmap, &c, sys24_tile_layer[l1], tpri, lpri);
+				}
+				break;
+			}
+			case 2: case 3:
+				for(y=cliprect->min_y; y<=cliprect->max_y; y++) {
+					struct rectangle c1 = *cliprect;
+					struct rectangle c2 = *cliprect;
+					int l1 = layer;
+					UINT16 h;
+
+					hscr = hscrtb[y];
+					h = hscr & 0x1ff;
+					tilemap_set_scrollx(sys24_tile_layer[layer],   0, -h);
+					tilemap_set_scrollx(sys24_tile_layer[layer|1], 0, -h);
+
+					if(c1.max_x >= h)
+						c1.max_x = h-1;
+					if(c2.min_x < h)
+						c2.min_x = h;
+					if(!(hscr & 0x200))
+						l1 ^= 1;
+					c1.min_y = c1.max_y = y;
+					c2.min_y = c2.max_y = y;
+
+					if(c1.min_x <= c1.max_x)
+						tilemap_draw(bitmap, &c1, sys24_tile_layer[l1],   tpri, lpri);
+					if(c2.min_x <= c2.max_x)
+						tilemap_draw(bitmap, &c2, sys24_tile_layer[l1^1], tpri, lpri);
+				}
+				break;
+			}
+			return;
 		}
+
+		tilemap_set_scrollx(sys24_tile_layer[layer],   0, -(hscr & 0x1ff));
+		tilemap_set_scrollx(sys24_tile_layer[layer|1], 0, -(hscr & 0x1ff));
 
 		switch((ctrl & 0x6000) >> 13) {
 		case 1: {
@@ -527,7 +585,7 @@ void sys24_tile_draw(struct mame_bitmap *bitmap, const struct rectangle *cliprec
 			tilemap_draw(bitmap, &c2, sys24_tile_layer[layer^1], tpri, lpri);
 			break;
 		}
-		case 2: {
+		case 2: case 3: {
 			struct rectangle c1 = *cliprect;
 			struct rectangle c2 = *cliprect;
 			UINT16 h;
@@ -543,9 +601,6 @@ void sys24_tile_draw(struct mame_bitmap *bitmap, const struct rectangle *cliprec
 			tilemap_draw(bitmap, &c2, sys24_tile_layer[layer^1], tpri, lpri);
 			break;
 		}
-		case 3:
-			usrintf_showmessage("Mode 3, please scream");
-			break;
 		};
 
 	} else {

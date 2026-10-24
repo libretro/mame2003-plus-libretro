@@ -9,6 +9,7 @@
 **************************************************************************/
 
 #include "driver.h"
+#include "state.h"
 #include "cpu/tms34010/tms34010.h"
 #include "cpu/m6809/m6809.h"
 #include "sndhrdw/williams.h"
@@ -323,8 +324,32 @@ static const UINT8 jdredd_prot_values_80020[] =
 };
 
 static const UINT8 *jdredd_prot_table;
+static UINT8 jdredd_prot_table_id;
 static UINT8 jdredd_prot_index;
 static UINT8 jdredd_prot_max;
+
+static void jdredd_prot_select(int id)
+{
+	jdredd_prot_table_id = id;
+	jdredd_prot_index = 0;
+	switch (id)
+	{
+		case 1:	jdredd_prot_table = jdredd_prot_values_10740; jdredd_prot_max = sizeof(jdredd_prot_values_10740); break;
+		case 2:	jdredd_prot_table = jdredd_prot_values_13240; jdredd_prot_max = sizeof(jdredd_prot_values_13240); break;
+		case 3:	jdredd_prot_table = jdredd_prot_values_76540; jdredd_prot_max = sizeof(jdredd_prot_values_76540); break;
+		case 4:	jdredd_prot_table = jdredd_prot_values_77760; jdredd_prot_max = sizeof(jdredd_prot_values_77760); break;
+		case 5:	jdredd_prot_table = jdredd_prot_values_80020; jdredd_prot_max = sizeof(jdredd_prot_values_80020); break;
+		default: jdredd_prot_table = NULL; jdredd_prot_max = 0; break;
+	}
+}
+
+static void jdredd_prot_postload(void)
+{
+	/* rebuild the table pointer from its id, keeping the saved position */
+	UINT8 index = jdredd_prot_index;
+	jdredd_prot_select(jdredd_prot_table_id);
+	jdredd_prot_index = index;
+}
 
 static WRITE16_HANDLER( jdredd_prot_w )
 {
@@ -333,37 +358,27 @@ static WRITE16_HANDLER( jdredd_prot_w )
 	switch (offset)
 	{
 		case TOWORD(0x10740):
-			jdredd_prot_index = 0;
-			jdredd_prot_table = jdredd_prot_values_10740;
-			jdredd_prot_max = sizeof(jdredd_prot_values_10740);
+			jdredd_prot_select(1);
 			/*logerror("-- reset prot table 10740\n");*/
 			break;
 
 		case TOWORD(0x13240):
-			jdredd_prot_index = 0;
-			jdredd_prot_table = jdredd_prot_values_13240;
-			jdredd_prot_max = sizeof(jdredd_prot_values_13240);
+			jdredd_prot_select(2);
 			/*logerror("-- reset prot table 13240\n");*/
 			break;
 
 		case TOWORD(0x76540):
-			jdredd_prot_index = 0;
-			jdredd_prot_table = jdredd_prot_values_76540;
-			jdredd_prot_max = sizeof(jdredd_prot_values_76540);
+			jdredd_prot_select(3);
 			/*logerror("-- reset prot table 76540\n");*/
 			break;
 
 		case TOWORD(0x77760):
-			jdredd_prot_index = 0;
-			jdredd_prot_table = jdredd_prot_values_77760;
-			jdredd_prot_max = sizeof(jdredd_prot_values_77760);
+			jdredd_prot_select(4);
 			/*logerror("-- reset prot table 77760\n");*/
 			break;
 
 		case TOWORD(0x80020):
-			jdredd_prot_index = 0;
-			jdredd_prot_table = jdredd_prot_values_80020;
-			jdredd_prot_max = sizeof(jdredd_prot_values_80020);
+			jdredd_prot_select(5);
 			/*logerror("-- reset prot table 80020\n");*/
 			break;
 	}
@@ -431,6 +446,7 @@ static void init_tunit_generic(int sound)
 			memcpy(base + 0xa0000, base + 0x20000, 0x20000);
 			memcpy(base + 0x80000, base + 0x60000, 0x20000);
 			memcpy(base + 0x60000, base + 0x20000, 0x20000);
+			williams_adpcm_register_state();
 			break;
 
 		case SOUND_ADPCM_LARGE:
@@ -450,6 +466,7 @@ static void init_tunit_generic(int sound)
 			memcpy(base + 0x0e0000, base + 0x1a0000, 0x20000);
 			memcpy(base + 0x0a0000, base + 0x1a0000, 0x20000);
 			memcpy(base + 0x020000, base + 0x1a0000, 0x20000);
+			williams_adpcm_register_state();
 			break;
 
 		case SOUND_DCS:
@@ -459,6 +476,18 @@ static void init_tunit_generic(int sound)
 
 	/* default graphics functionality */
 	midtunit_gfx_rom_large = 0;
+
+	/* register for save states */
+	state_save_register_UINT8 ("midtunit", 0, "cmos_write_enable", &cmos_write_enable, 1);
+	state_save_register_UINT8 ("midtunit", 0, "fake_sound_state",  &fake_sound_state, 1);
+	state_save_register_UINT8 ("midtunit", 0, "mk_prot_index",     &mk_prot_index, 1);
+	state_save_register_UINT16("midtunit", 0, "mk2_prot_data",     &mk2_prot_data, 1);
+	state_save_register_UINT16("midtunit", 0, "nbajam_prot_queue", nbajam_prot_queue, 5);
+	state_save_register_UINT8 ("midtunit", 0, "nbajam_prot_index", &nbajam_prot_index, 1);
+	state_save_register_UINT8 ("midtunit", 0, "jdredd_prot_table", &jdredd_prot_table_id, 1);
+	state_save_register_UINT8 ("midtunit", 0, "jdredd_prot_index", &jdredd_prot_index, 1);
+	state_save_register_UINT8 ("midtunit", 0, "jdredd_prot_max",   &jdredd_prot_max, 1);
+	state_save_register_func_postload(jdredd_prot_postload);
 }
 
 

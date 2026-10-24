@@ -1688,6 +1688,7 @@ batriderhk:
 
 mrdrillrj:
 mrdrillr:
+mrdrillrja2:
 0:201038:288:76:76
 
 sfiii3:
@@ -2776,7 +2777,9 @@ chinhero3:
 0:e12a:1:03:03
 
 asurabus:
-asurabusa:
+asurabusj:
+asurabusja:
+asurabusjr:
 0:40326d:132:05:14
 
 dynabomb:
@@ -3271,7 +3274,7 @@ theglob2:
 0:7c4b:1:01:01
 0:7c51:1:80:80
 
-beastf:
+beastfp:
 0:4c46:3c:4d:00
 0:4c8a:1:01:01
 0:4cb0:1:15:15

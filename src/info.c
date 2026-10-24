@@ -895,11 +895,18 @@ void print_mame_xml()
 	PRINT_RESOURCE(nss);
 	PRINT_RESOURCE(megatech);
 	PRINT_RESOURCE(megaplay);
-	PRINT_RESOURCE(cpzn1);
-	PRINT_RESOURCE(cpzn2);
-	PRINT_RESOURCE(tps);
-	PRINT_RESOURCE(taitofx1);
-	PRINT_RESOURCE(acpsx);
+	PRINT_RESOURCE(coh1000c);
+	PRINT_RESOURCE(coh3002c);
+	PRINT_RESOURCE(coh1002m);
+	PRINT_RESOURCE(coh1000t);
+	PRINT_RESOURCE(coh3002t);
+	PRINT_RESOURCE(coh1002t);
+	PRINT_RESOURCE(coh1000a);
+	PRINT_RESOURCE(coh1000w);
+	PRINT_RESOURCE(coh1001l);
+	PRINT_RESOURCE(coh1002e);
+	PRINT_RESOURCE(coh1002v);
+	PRINT_RESOURCE(namcoc76);
 #endif
 	fprintf(xml_dat, "</" XML_ROOT ">\n");
     fclose(xml_dat);

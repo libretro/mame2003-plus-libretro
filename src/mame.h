@@ -177,6 +177,8 @@ enum /* used to index content-specific flags */
   CONTENT_JOYSTICK_DIRECTIONS,
   CONTENT_NVRAM_BOOTSTRAP,
   CONTENT_CHEAT_INPUT_PORT,
+  CONTENT_MIPS_DYNAREC,
+  CONTENT_ADSP_DYNAREC,
   CONTENT_end,
 };
 
@@ -218,6 +220,8 @@ struct GameOptions
 
   int      samplerate;		       /* sound sample playback rate, in KHz */
   bool     use_samples;	         /* 1 to enable external .wav samples */
+  bool     mips_dynarec;	       /* 1 to let drivers enable the MIPS recompiler */
+  bool     adsp_dynarec;	       /* 1 to let drivers enable the ADSP-2100 recompiler */
   bool     use_alt_sound;	       /* 1 to enable alternate ost samples */
 
   float	   brightness;		       /* brightness of the display */
@@ -358,6 +362,10 @@ void expand_machine_driver(void (*constructor)(struct InternalMachineDriver *), 
 
 /* set the current visible area of the screen bitmap */
 void set_visible_area(int min_x, int max_x, int min_y, int max_y);
+
+/* change the display aspect ratio while the game runs (the geometry is sent
+   again to the frontend with the next display update) */
+void set_display_aspect_ratio(int aspect_x, int aspect_y);
 
 /* force an erase and a complete redraw of the video next frame */
 void schedule_full_refresh(void);

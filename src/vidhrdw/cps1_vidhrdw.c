@@ -691,6 +691,7 @@ static data16_t *cps2_buffered_obj;
 static int pri_ctrl;				/* Sprite layer priorities */
 static int cps2_objram_bank;
 static int cps2_last_sprite_offset;     /* Offset of the last sprite */
+static int cps2_turbo;					/* CPS2Turbo hack hardware (sfz3mix) */
 
 #define CPS2_OBJ_BASE	0x00	/* Unknown (not base address of objects). Could be bass address of bank used when object swap bit set? */
 #define CPS2_OBJ_UK1	0x02	/* Unknown (nearly always 0x807d, or 0x808e when screen flipped) */
@@ -1241,6 +1242,16 @@ VIDEO_START( cps2 )
     {
         cps_version=2;
     }
+    cps2_turbo = 0;
+    return video_start_cps();
+}
+
+/* CPS2Turbo, the extended CPS2 of Street Fighter Zero 3 Mix (Zero800):
+   bigger sprite ROM, see cps2_render_sprites() */
+VIDEO_START( cps2turbo )
+{
+    cps_version = 2;
+    cps2_turbo = 1;
     return video_start_cps();
 }
 
@@ -1627,6 +1638,11 @@ void cps2_render_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 		int code  = base[i+2]+((y & 0x6000) <<3);
 		int colour= base[i+3];
 		int col=colour&0x1f;
+
+		/* CPS2Turbo: the unused bit 12 of Y selects the upper half of
+		   the 64MB sprite ROM (bit 15 can't be used, it is the end marker) */
+		if (cps2_turbo)
+			code += (y & 0x1000) << 6;
 
 		if(colour & 0x80)
 		{

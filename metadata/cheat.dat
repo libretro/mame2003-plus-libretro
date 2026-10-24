@@ -1654,100 +1654,100 @@
 40love:0:8546:03:001:"Game" Score = 30 Now! CPU
 
 ; [ Idol Janshi Su-Chi-Pie 2 (v1.1) ]
-47pie2:0:FEE00118:63:000:Infinite Credits
-:47pie2:00000020:FEE00B01:00000005:FFFFFFFF:Infinite Time
-:47pie2:00010020:FEE00B97:00000000:FFFFFFFF:Infinite Time (2/2)
-:47pie2:00000000:FEE01788:00000009:FFFFFFFF:Infinite Bonus Game Left
-:47pie2:00000101:FEE01784:00000020:FFFFFFFF:Select Change Point
-:47pie2:60000000:00000000:00000000:00000000:[ The winning hand cheat must be activated when  ]
-:47pie2:60000000:00000000:00000000:00000000:[ there are 14 tiles in your hand, then press    ]
-:47pie2:60000000:00000000:00000000:00000000:[ the RON key ('Z' by default). The tiles do not ]
-:47pie2:60000000:00000000:00000000:00000000:[ visually change until you make a move.         ]
-:47pie2:00300001:FEE00868:34000000:FFFFFFFF:Get winning hand Now!
-:47pie2:00310001:FEE0086C:34000000:FFFFFFFF:Get winning hand Now! (02/14)
-:47pie2:00310001:FEE00870:34000000:FFFFFFFF:Get winning hand Now! (03/14)
-:47pie2:00310001:FEE00874:34000001:FFFFFFFF:Get winning hand Now! (04/14)
-:47pie2:00310001:FEE00878:34000001:FFFFFFFF:Get winning hand Now! (05/14)
-:47pie2:00310001:FEE0087C:34000001:FFFFFFFF:Get winning hand Now! (06/14)
-:47pie2:00310001:FEE00880:34000002:FFFFFFFF:Get winning hand Now! (07/14)
-:47pie2:00310001:FEE00884:34000002:FFFFFFFF:Get winning hand Now! (08/14)
-:47pie2:00310001:FEE00888:34000002:FFFFFFFF:Get winning hand Now! (09/14)
-:47pie2:00310001:FEE0088C:34000003:FFFFFFFF:Get winning hand Now! (10/14)
-:47pie2:00310001:FEE00890:34000003:FFFFFFFF:Get winning hand Now! (11/14)
-:47pie2:00310001:FEE00894:34000003:FFFFFFFF:Get winning hand Now! (12/14)
-:47pie2:00310001:FEE00898:34000004:FFFFFFFF:Get winning hand Now! (13/14)
-:47pie2:00310001:FEE0089C:34000004:FFFFFFFF:Get winning hand Now! (14/14)
-:47pie2:00300000:FEE00868:34000000:FFFFFFFF:Always winning hand
-:47pie2:00310000:FEE0086C:34000000:FFFFFFFF:Always winning hand (02/14)
-:47pie2:00310000:FEE00870:34000000:FFFFFFFF:Always winning hand (03/14)
-:47pie2:00310000:FEE00874:34000001:FFFFFFFF:Always winning hand (04/14)
-:47pie2:00310000:FEE00878:34000001:FFFFFFFF:Always winning hand (05/14)
-:47pie2:00310000:FEE0087C:34000001:FFFFFFFF:Always winning hand (06/14)
-:47pie2:00310000:FEE00880:34000002:FFFFFFFF:Always winning hand (07/14)
-:47pie2:00310000:FEE00884:34000002:FFFFFFFF:Always winning hand (08/14)
-:47pie2:00310000:FEE00888:34000002:FFFFFFFF:Always winning hand (09/14)
-:47pie2:00310000:FEE0088C:34000003:FFFFFFFF:Always winning hand (10/14)
-:47pie2:00310000:FEE00890:34000003:FFFFFFFF:Always winning hand (11/14)
-:47pie2:00310000:FEE00894:34000003:FFFFFFFF:Always winning hand (12/14)
-:47pie2:00310000:FEE00898:34000004:FFFFFFFF:Always winning hand (13/14)
-:47pie2:00310000:FEE0089C:34000004:FFFFFFFF:Always winning hand (14/14)
-:47pie2:00000000:FEE00F48:00000009:FFFFFFFF:Infinite "Sue-Chi Stick"
-:47pie2:00000000:FEE00F4C:00000009:FFFFFFFF:Infinite "Fire Sekkan"
-:47pie2:00000000:FEE00F50:00000009:FFFFFFFF:Infinite "Special Syoukan"
-:47pie2:00000000:FEE00F54:00000009:FFFFFFFF:Infinite "Helper"
-:47pie2:00000000:FEE00F58:00000009:FFFFFFFF:Infinite "Hyper Eye"
-:47pie2:00000000:FEE00B08:0000001F:FFFFFFFF:Always Join All Associates:If you don't join associates who Peach Pie, Lemon Pie, Cherry Pie and Milky Pie the game's end is the bad one.
-:47pie2:00000000:FEE00AF8:00000004:FFFFFFFF:Start on Shiho Katagiri:Turn this cheat OFF after you've started the game
-:47pie2:00000000:FEE00AF8:00000005:FFFFFFFF:Start on Sesir.D:Turn this cheat OFF after you've started the game
-:47pie2:00000000:FEE00AF8:00000006:FFFFFFFF:Start on Sesir.D (Final):Turn this cheat OFF after you've started the game
+suchie2:0:FEE00118:63:000:Infinite Credits
+:suchie2:00000020:FEE00B01:00000005:FFFFFFFF:Infinite Time
+:suchie2:00010020:FEE00B97:00000000:FFFFFFFF:Infinite Time (2/2)
+:suchie2:00000000:FEE01788:00000009:FFFFFFFF:Infinite Bonus Game Left
+:suchie2:00000101:FEE01784:00000020:FFFFFFFF:Select Change Point
+:suchie2:60000000:00000000:00000000:00000000:[ The winning hand cheat must be activated when  ]
+:suchie2:60000000:00000000:00000000:00000000:[ there are 14 tiles in your hand, then press    ]
+:suchie2:60000000:00000000:00000000:00000000:[ the RON key ('Z' by default). The tiles do not ]
+:suchie2:60000000:00000000:00000000:00000000:[ visually change until you make a move.         ]
+:suchie2:00300001:FEE00868:34000000:FFFFFFFF:Get winning hand Now!
+:suchie2:00310001:FEE0086C:34000000:FFFFFFFF:Get winning hand Now! (02/14)
+:suchie2:00310001:FEE00870:34000000:FFFFFFFF:Get winning hand Now! (03/14)
+:suchie2:00310001:FEE00874:34000001:FFFFFFFF:Get winning hand Now! (04/14)
+:suchie2:00310001:FEE00878:34000001:FFFFFFFF:Get winning hand Now! (05/14)
+:suchie2:00310001:FEE0087C:34000001:FFFFFFFF:Get winning hand Now! (06/14)
+:suchie2:00310001:FEE00880:34000002:FFFFFFFF:Get winning hand Now! (07/14)
+:suchie2:00310001:FEE00884:34000002:FFFFFFFF:Get winning hand Now! (08/14)
+:suchie2:00310001:FEE00888:34000002:FFFFFFFF:Get winning hand Now! (09/14)
+:suchie2:00310001:FEE0088C:34000003:FFFFFFFF:Get winning hand Now! (10/14)
+:suchie2:00310001:FEE00890:34000003:FFFFFFFF:Get winning hand Now! (11/14)
+:suchie2:00310001:FEE00894:34000003:FFFFFFFF:Get winning hand Now! (12/14)
+:suchie2:00310001:FEE00898:34000004:FFFFFFFF:Get winning hand Now! (13/14)
+:suchie2:00310001:FEE0089C:34000004:FFFFFFFF:Get winning hand Now! (14/14)
+:suchie2:00300000:FEE00868:34000000:FFFFFFFF:Always winning hand
+:suchie2:00310000:FEE0086C:34000000:FFFFFFFF:Always winning hand (02/14)
+:suchie2:00310000:FEE00870:34000000:FFFFFFFF:Always winning hand (03/14)
+:suchie2:00310000:FEE00874:34000001:FFFFFFFF:Always winning hand (04/14)
+:suchie2:00310000:FEE00878:34000001:FFFFFFFF:Always winning hand (05/14)
+:suchie2:00310000:FEE0087C:34000001:FFFFFFFF:Always winning hand (06/14)
+:suchie2:00310000:FEE00880:34000002:FFFFFFFF:Always winning hand (07/14)
+:suchie2:00310000:FEE00884:34000002:FFFFFFFF:Always winning hand (08/14)
+:suchie2:00310000:FEE00888:34000002:FFFFFFFF:Always winning hand (09/14)
+:suchie2:00310000:FEE0088C:34000003:FFFFFFFF:Always winning hand (10/14)
+:suchie2:00310000:FEE00890:34000003:FFFFFFFF:Always winning hand (11/14)
+:suchie2:00310000:FEE00894:34000003:FFFFFFFF:Always winning hand (12/14)
+:suchie2:00310000:FEE00898:34000004:FFFFFFFF:Always winning hand (13/14)
+:suchie2:00310000:FEE0089C:34000004:FFFFFFFF:Always winning hand (14/14)
+:suchie2:00000000:FEE00F48:00000009:FFFFFFFF:Infinite "Sue-Chi Stick"
+:suchie2:00000000:FEE00F4C:00000009:FFFFFFFF:Infinite "Fire Sekkan"
+:suchie2:00000000:FEE00F50:00000009:FFFFFFFF:Infinite "Special Syoukan"
+:suchie2:00000000:FEE00F54:00000009:FFFFFFFF:Infinite "Helper"
+:suchie2:00000000:FEE00F58:00000009:FFFFFFFF:Infinite "Hyper Eye"
+:suchie2:00000000:FEE00B08:0000001F:FFFFFFFF:Always Join All Associates:If you don't join associates who Peach Pie, Lemon Pie, Cherry Pie and Milky Pie the game's end is the bad one.
+:suchie2:00000000:FEE00AF8:00000004:FFFFFFFF:Start on Shiho Katagiri:Turn this cheat OFF after you've started the game
+:suchie2:00000000:FEE00AF8:00000005:FFFFFFFF:Start on Sesir.D:Turn this cheat OFF after you've started the game
+:suchie2:00000000:FEE00AF8:00000006:FFFFFFFF:Start on Sesir.D (Final):Turn this cheat OFF after you've started the game
 
 ; [ Idol Janshi Su-Chi-Pie 2 (v1.0) ]
-47pie2o:0:FEE00118:63:000:Infinite Credits
-:47pie2o:00000020:FEE00B01:00000005:FFFFFFFF:Infinite Time
-:47pie2o:00010020:FEE00B97:00000000:FFFFFFFF:Infinite Time (2/2)
-:47pie2o:00000000:FEE01788:00000009:FFFFFFFF:Infinite Bonus Game Left
-:47pie2o:00000101:FEE01784:00000020:FFFFFFFF:Select Change Point
-:47pie2o:60000000:00000000:00000000:00000000:[ The winning hand cheat must be activated when  ]
-:47pie2o:60000000:00000000:00000000:00000000:[ there are 14 tiles in your hand, then press    ]
-:47pie2o:60000000:00000000:00000000:00000000:[ the RON key ('Z' by default). The tiles do not ]
-:47pie2o:60000000:00000000:00000000:00000000:[ visually change until you make a move.         ]
-:47pie2o:00300001:FEE00868:34000000:FFFFFFFF:Get winning hand Now!
-:47pie2o:00310001:FEE0086C:34000000:FFFFFFFF:Get winning hand Now! (02/14)
-:47pie2o:00310001:FEE00870:34000000:FFFFFFFF:Get winning hand Now! (03/14)
-:47pie2o:00310001:FEE00874:34000001:FFFFFFFF:Get winning hand Now! (04/14)
-:47pie2o:00310001:FEE00878:34000001:FFFFFFFF:Get winning hand Now! (05/14)
-:47pie2o:00310001:FEE0087C:34000001:FFFFFFFF:Get winning hand Now! (06/14)
-:47pie2o:00310001:FEE00880:34000002:FFFFFFFF:Get winning hand Now! (07/14)
-:47pie2o:00310001:FEE00884:34000002:FFFFFFFF:Get winning hand Now! (08/14)
-:47pie2o:00310001:FEE00888:34000002:FFFFFFFF:Get winning hand Now! (09/14)
-:47pie2o:00310001:FEE0088C:34000003:FFFFFFFF:Get winning hand Now! (10/14)
-:47pie2o:00310001:FEE00890:34000003:FFFFFFFF:Get winning hand Now! (11/14)
-:47pie2o:00310001:FEE00894:34000003:FFFFFFFF:Get winning hand Now! (12/14)
-:47pie2o:00310001:FEE00898:34000004:FFFFFFFF:Get winning hand Now! (13/14)
-:47pie2o:00310001:FEE0089C:34000004:FFFFFFFF:Get winning hand Now! (14/14)
-:47pie2o:00300000:FEE00868:34000000:FFFFFFFF:Always winning hand
-:47pie2o:00310000:FEE0086C:34000000:FFFFFFFF:Always winning hand (02/14)
-:47pie2o:00310000:FEE00870:34000000:FFFFFFFF:Always winning hand (03/14)
-:47pie2o:00310000:FEE00874:34000001:FFFFFFFF:Always winning hand (04/14)
-:47pie2o:00310000:FEE00878:34000001:FFFFFFFF:Always winning hand (05/14)
-:47pie2o:00310000:FEE0087C:34000001:FFFFFFFF:Always winning hand (06/14)
-:47pie2o:00310000:FEE00880:34000002:FFFFFFFF:Always winning hand (07/14)
-:47pie2o:00310000:FEE00884:34000002:FFFFFFFF:Always winning hand (08/14)
-:47pie2o:00310000:FEE00888:34000002:FFFFFFFF:Always winning hand (09/14)
-:47pie2o:00310000:FEE0088C:34000003:FFFFFFFF:Always winning hand (10/14)
-:47pie2o:00310000:FEE00890:34000003:FFFFFFFF:Always winning hand (11/14)
-:47pie2o:00310000:FEE00894:34000003:FFFFFFFF:Always winning hand (12/14)
-:47pie2o:00310000:FEE00898:34000004:FFFFFFFF:Always winning hand (13/14)
-:47pie2o:00310000:FEE0089C:34000004:FFFFFFFF:Always winning hand (14/14)
-:47pie2o:00000000:FEE00F48:00000009:FFFFFFFF:Infinite "Sue-Chi Stick"
-:47pie2o:00000000:FEE00F4C:00000009:FFFFFFFF:Infinite "Fire Sekkan"
-:47pie2o:00000000:FEE00F50:00000009:FFFFFFFF:Infinite "Special Syoukan"
-:47pie2o:00000000:FEE00F54:00000009:FFFFFFFF:Infinite "Helper"
-:47pie2o:00000000:FEE00F58:00000009:FFFFFFFF:Infinite "Hyper Eye"
-:47pie2o:00000000:FEE00B08:0000001F:FFFFFFFF:Always Join All Associates:If you don't join associates who Peach Pie, Lemon Pie, Cherry Pie and Milky Pie the game's end is the bad one.
-:47pie2o:00000000:FEE00AF8:00000004:FFFFFFFF:Start on Shiho Katagiri:Turn this cheat OFF after you've started the game
-:47pie2o:00000000:FEE00AF8:00000005:FFFFFFFF:Start on Sesir.D:Turn this cheat OFF after you've started the game
-:47pie2o:00000000:FEE00AF8:00000006:FFFFFFFF:Start on Sesir.D (Final):Turn this cheat OFF after you've started the game
+suchie2o:0:FEE00118:63:000:Infinite Credits
+:suchie2o:00000020:FEE00B01:00000005:FFFFFFFF:Infinite Time
+:suchie2o:00010020:FEE00B97:00000000:FFFFFFFF:Infinite Time (2/2)
+:suchie2o:00000000:FEE01788:00000009:FFFFFFFF:Infinite Bonus Game Left
+:suchie2o:00000101:FEE01784:00000020:FFFFFFFF:Select Change Point
+:suchie2o:60000000:00000000:00000000:00000000:[ The winning hand cheat must be activated when  ]
+:suchie2o:60000000:00000000:00000000:00000000:[ there are 14 tiles in your hand, then press    ]
+:suchie2o:60000000:00000000:00000000:00000000:[ the RON key ('Z' by default). The tiles do not ]
+:suchie2o:60000000:00000000:00000000:00000000:[ visually change until you make a move.         ]
+:suchie2o:00300001:FEE00868:34000000:FFFFFFFF:Get winning hand Now!
+:suchie2o:00310001:FEE0086C:34000000:FFFFFFFF:Get winning hand Now! (02/14)
+:suchie2o:00310001:FEE00870:34000000:FFFFFFFF:Get winning hand Now! (03/14)
+:suchie2o:00310001:FEE00874:34000001:FFFFFFFF:Get winning hand Now! (04/14)
+:suchie2o:00310001:FEE00878:34000001:FFFFFFFF:Get winning hand Now! (05/14)
+:suchie2o:00310001:FEE0087C:34000001:FFFFFFFF:Get winning hand Now! (06/14)
+:suchie2o:00310001:FEE00880:34000002:FFFFFFFF:Get winning hand Now! (07/14)
+:suchie2o:00310001:FEE00884:34000002:FFFFFFFF:Get winning hand Now! (08/14)
+:suchie2o:00310001:FEE00888:34000002:FFFFFFFF:Get winning hand Now! (09/14)
+:suchie2o:00310001:FEE0088C:34000003:FFFFFFFF:Get winning hand Now! (10/14)
+:suchie2o:00310001:FEE00890:34000003:FFFFFFFF:Get winning hand Now! (11/14)
+:suchie2o:00310001:FEE00894:34000003:FFFFFFFF:Get winning hand Now! (12/14)
+:suchie2o:00310001:FEE00898:34000004:FFFFFFFF:Get winning hand Now! (13/14)
+:suchie2o:00310001:FEE0089C:34000004:FFFFFFFF:Get winning hand Now! (14/14)
+:suchie2o:00300000:FEE00868:34000000:FFFFFFFF:Always winning hand
+:suchie2o:00310000:FEE0086C:34000000:FFFFFFFF:Always winning hand (02/14)
+:suchie2o:00310000:FEE00870:34000000:FFFFFFFF:Always winning hand (03/14)
+:suchie2o:00310000:FEE00874:34000001:FFFFFFFF:Always winning hand (04/14)
+:suchie2o:00310000:FEE00878:34000001:FFFFFFFF:Always winning hand (05/14)
+:suchie2o:00310000:FEE0087C:34000001:FFFFFFFF:Always winning hand (06/14)
+:suchie2o:00310000:FEE00880:34000002:FFFFFFFF:Always winning hand (07/14)
+:suchie2o:00310000:FEE00884:34000002:FFFFFFFF:Always winning hand (08/14)
+:suchie2o:00310000:FEE00888:34000002:FFFFFFFF:Always winning hand (09/14)
+:suchie2o:00310000:FEE0088C:34000003:FFFFFFFF:Always winning hand (10/14)
+:suchie2o:00310000:FEE00890:34000003:FFFFFFFF:Always winning hand (11/14)
+:suchie2o:00310000:FEE00894:34000003:FFFFFFFF:Always winning hand (12/14)
+:suchie2o:00310000:FEE00898:34000004:FFFFFFFF:Always winning hand (13/14)
+:suchie2o:00310000:FEE0089C:34000004:FFFFFFFF:Always winning hand (14/14)
+:suchie2o:00000000:FEE00F48:00000009:FFFFFFFF:Infinite "Sue-Chi Stick"
+:suchie2o:00000000:FEE00F4C:00000009:FFFFFFFF:Infinite "Fire Sekkan"
+:suchie2o:00000000:FEE00F50:00000009:FFFFFFFF:Infinite "Special Syoukan"
+:suchie2o:00000000:FEE00F54:00000009:FFFFFFFF:Infinite "Helper"
+:suchie2o:00000000:FEE00F58:00000009:FFFFFFFF:Infinite "Hyper Eye"
+:suchie2o:00000000:FEE00B08:0000001F:FFFFFFFF:Always Join All Associates:If you don't join associates who Peach Pie, Lemon Pie, Cherry Pie and Milky Pie the game's end is the bad one.
+:suchie2o:00000000:FEE00AF8:00000004:FFFFFFFF:Start on Shiho Katagiri:Turn this cheat OFF after you've started the game
+:suchie2o:00000000:FEE00AF8:00000005:FFFFFFFF:Start on Sesir.D:Turn this cheat OFF after you've started the game
+:suchie2o:00000000:FEE00AF8:00000006:FFFFFFFF:Start on Sesir.D (Final):Turn this cheat OFF after you've started the game
 
 ; [ 4-D Warriors ]
 4dwarrio:0:C028:09:000:Infinite Credits
@@ -8368,9 +8368,9 @@ bcstry:0:0000:00:999:[ forums.               ]:REASON 1
 beaminv:0:1847:08:000:Infinite Lives
 
 ; [ Beastie Feastie ]
-beastf:0:4C96:05:000:Infinite Lives PL1
-beastf:0:4C98:05:000:Infinite Lives PL2
-beastf:0:4C9D:A8:000:Infinite Energy
+beastfp:0:4C96:05:000:Infinite Lives PL1
+beastfp:0:4C98:05:000:Infinite Lives PL2
+beastfp:0:4C9D:A8:000:Infinite Energy
 
 ; [ Beastorizer (bootleg) ]
 beastrzb:0:0000:00:999:[ There are no cheats   ]:REASON 1
@@ -14897,34 +14897,34 @@ chopperb:0:E409:AA:000:Infinite Circle Bombs PL2
 chopperb:0:E409:FF:000:Infinite Atomic Bombs PL2
 
 ; [ Choplifter ]
-chplft:0:C02D:95:000:Infinite Lives
-chplft:0:E118:C8:000:Infinite Fuel
-chplft:0:C303:41:000:Invincibility
-chplft:0:C084:01:000:Always Have Prisoners
-chplft:0:C085:20:001:Finish Level Level Now!
-chplft:0:C083:00:001:No dead hostages
-chplft:0:C084:08:001:Max. load hostages = 08
-chplft:0:C084:20:001:Max. load hostages = 20
+choplift:0:C02D:95:000:Infinite Lives
+choplift:0:E118:C8:000:Infinite Fuel
+choplift:0:C303:41:000:Invincibility
+choplift:0:C084:01:000:Always Have Prisoners
+choplift:0:C085:20:001:Finish Level Level Now!
+choplift:0:C083:00:001:No dead hostages
+choplift:0:C084:08:001:Max. load hostages = 08
+choplift:0:C084:20:001:Max. load hostages = 20
 
 ; [ Choplifter (alternate) ]
-chplftb:0:C02D:95:000:Infinite Lives
-chplftb:0:E118:C8:000:Infinite Fuel
-chplftb:0:C303:41:000:Invincibility
-chplftb:0:C084:01:000:Always Have Prisoners
-chplftb:0:C085:20:001:Finish Level Level Now!
-chplftb:0:C083:00:001:No dead hostages
-chplftb:0:C084:08:001:Max. load hostages = 08
-chplftb:0:C084:20:001:Max. load hostages = 20
+chopliftu:0:C02D:95:000:Infinite Lives
+chopliftu:0:E118:C8:000:Infinite Fuel
+chopliftu:0:C303:41:000:Invincibility
+chopliftu:0:C084:01:000:Always Have Prisoners
+chopliftu:0:C085:20:001:Finish Level Level Now!
+chopliftu:0:C083:00:001:No dead hostages
+chopliftu:0:C084:08:001:Max. load hostages = 08
+chopliftu:0:C084:20:001:Max. load hostages = 20
 
 ; [ Choplifter (bootleg) ]
-chplftbl:0:C02D:95:000:Infinite Lives PL1
-chplftbl:0:E118:C8:000:Infinite Fuel
-chplftbl:0:C303:41:000:Invincibility
-chplftbl:0:C084:01:000:Always Have Prisoners
-chplftbl:0:C085:20:001:Finish Level Level Now!
-chplftbl:0:C083:00:001:No dead hostages
-chplftbl:0:C084:08:001:Max. load hostages = 08
-chplftbl:0:C084:20:001:Max. load hostages = 20
+chopliftbl:0:C02D:95:000:Infinite Lives PL1
+chopliftbl:0:E118:C8:000:Infinite Fuel
+chopliftbl:0:C303:41:000:Invincibility
+chopliftbl:0:C084:01:000:Always Have Prisoners
+chopliftbl:0:C085:20:001:Finish Level Level Now!
+chopliftbl:0:C083:00:001:No dead hostages
+chopliftbl:0:C084:08:001:Max. load hostages = 08
+chopliftbl:0:C084:20:001:Max. load hostages = 20
 
 ; [ Chequered Flag ]
 chqflag:0:05C6:63:000:Infinite Credits
@@ -19027,9 +19027,9 @@ dakkochn:0:0000:00:999:[ for it on the cheat   ]:REASON 1
 dakkochn:0:0000:00:999:[ forums.               ]:REASON 1
 
 ; [ Dancing Eyes (DC1/VER.A) ]
-danceyes:0:002B51DC:09:000:Infinite Credits
-danceyes:0:002B51A0:01:000:Always See Through Mode
-:danceyes:00000500:0021F064:0000000E:FFFFFFFF:Select Stage
+danceyesj:0:002B51DC:09:000:Infinite Credits
+danceyesj:0:002B51A0:01:000:Always See Through Mode
+:danceyesj:00000500:0021F064:0000000E:FFFFFFFF:Select Stage
 
 ; [ Danchi de Hanafuoda ]
 danchih:0:0000:00:999:[ This game hasn't even ]:REASON 11
@@ -31430,24 +31430,24 @@ dungeonm:0:0FFFFF:02:100:Region Switch = US:Dungeon Magic
 dungeonm:0:0FFFFF:03:100:Region Switch = World:Dungeon Magic
 
 ; [ Dunk Mania (DM1/VER.C) ]
-dunkmnia:0:001DD096:FF:000:Infinite Time
-dunkmnia:0:001DD095:FF:500:Infinite Time (2/3)
-dunkmnia:0:001DD094:FF:500:Infinite Time (3/3)
-dunkmnia:0:001DD096:00:001:Finish this Period Now!
-dunkmnia:0:001DD095:00:501:Finish this Period Now! (2/3)
-dunkmnia:0:001DD094:01:501:Finish this Period Now! (3/3)
-:dunkmnia:00300060:001DD098:00012875:FFFFFFFF:Infinite Shot Time
-:dunkmnia:00300001:001DD098:00000001:FFFFFFFF:No Shot Time Left Now!:For the best effect assign this cheat an activation key and use it whenever the other side has the ball!
-dunkmnia:0:001DD4E8:00:000:Score always = 0 PL1
-dunkmnia:0:001DD4E8:7F:000:Score always = 127 PL1
-dunkmnia:0:001DD4E8:00:001:Set score = 0 Now! PL1
-dunkmnia:0:001DD4E8:32:001:Set score = 50 Now! PL1
-dunkmnia:0:001DD4E8:7F:070:Select score Now! PL1
-dunkmnia:0:001DD4F4:00:000:Score always = 0 PL2
-dunkmnia:0:001DD4F4:7F:000:Score always = 127 PL2
-dunkmnia:0:001DD4F4:00:001:Set score = 0 Now! PL2
-dunkmnia:0:001DD4F4:32:001:Set score = 50 Now! PL2
-dunkmnia:0:001DD4F4:7F:070:Select score Now! PL2
+dunkmniajc:0:001DD096:FF:000:Infinite Time
+dunkmniajc:0:001DD095:FF:500:Infinite Time (2/3)
+dunkmniajc:0:001DD094:FF:500:Infinite Time (3/3)
+dunkmniajc:0:001DD096:00:001:Finish this Period Now!
+dunkmniajc:0:001DD095:00:501:Finish this Period Now! (2/3)
+dunkmniajc:0:001DD094:01:501:Finish this Period Now! (3/3)
+:dunkmniajc:00300060:001DD098:00012875:FFFFFFFF:Infinite Shot Time
+:dunkmniajc:00300001:001DD098:00000001:FFFFFFFF:No Shot Time Left Now!:For the best effect assign this cheat an activation key and use it whenever the other side has the ball!
+dunkmniajc:0:001DD4E8:00:000:Score always = 0 PL1
+dunkmniajc:0:001DD4E8:7F:000:Score always = 127 PL1
+dunkmniajc:0:001DD4E8:00:001:Set score = 0 Now! PL1
+dunkmniajc:0:001DD4E8:32:001:Set score = 50 Now! PL1
+dunkmniajc:0:001DD4E8:7F:070:Select score Now! PL1
+dunkmniajc:0:001DD4F4:00:000:Score always = 0 PL2
+dunkmniajc:0:001DD4F4:7F:000:Score always = 127 PL2
+dunkmniajc:0:001DD4F4:00:001:Set score = 0 Now! PL2
+dunkmniajc:0:001DD4F4:32:001:Set score = 50 Now! PL2
+dunkmniajc:0:001DD4F4:7F:070:Select score Now! PL2
 
 ; [ Dunk Shot ]
 dunkshot:0:0000:00:999:[ There are no cheats   ]:REASON 1
@@ -31844,19 +31844,19 @@ eggvntdx:0:000680C8:05:000:Infinite Lives PL2
 eggvntdx:0:000680BA:63:000:Always have 99 hits PL2
 
 ; [ Ehrgeiz (EG3/VER.A) ]
-ehrgeiz:0:0000:00:999:[ This game hasn't even ]:REASON 11
-ehrgeiz:0:0000:00:999:[ been looked at due to ]:REASON 11
-ehrgeiz:0:0000:00:999:[ time constraints - Too]:REASON 11
-ehrgeiz:0:0000:00:999:[ many games and so     ]:REASON 11
-ehrgeiz:0:0000:00:999:[ little time. It is    ]:REASON 11
-ehrgeiz:0:0000:00:999:[ even possible that    ]:REASON 11
-ehrgeiz:0:0000:00:999:[ this game may be a    ]:REASON 11
-ehrgeiz:0:0000:00:999:[ clone of an existing  ]:REASON 11
-ehrgeiz:0:0000:00:999:[ game which may have   ]:REASON 11
-ehrgeiz:0:0000:00:999:[ cheats. Please search ]:REASON 11
-ehrgeiz:0:0000:00:999:[ the cheat forums      ]:REASON 11
-ehrgeiz:0:0000:00:999:[ before posting cheat  ]:REASON 11
-ehrgeiz:0:0000:00:999:[ requests/cheat finding]:REASON 11
+ehrgeizua:0:0000:00:999:[ This game hasn't even ]:REASON 11
+ehrgeizua:0:0000:00:999:[ been looked at due to ]:REASON 11
+ehrgeizua:0:0000:00:999:[ time constraints - Too]:REASON 11
+ehrgeizua:0:0000:00:999:[ many games and so     ]:REASON 11
+ehrgeizua:0:0000:00:999:[ little time. It is    ]:REASON 11
+ehrgeizua:0:0000:00:999:[ even possible that    ]:REASON 11
+ehrgeizua:0:0000:00:999:[ this game may be a    ]:REASON 11
+ehrgeizua:0:0000:00:999:[ clone of an existing  ]:REASON 11
+ehrgeizua:0:0000:00:999:[ game which may have   ]:REASON 11
+ehrgeizua:0:0000:00:999:[ cheats. Please search ]:REASON 11
+ehrgeizua:0:0000:00:999:[ the cheat forums      ]:REASON 11
+ehrgeizua:0:0000:00:999:[ before posting cheat  ]:REASON 11
+ehrgeizua:0:0000:00:999:[ requests/cheat finding]:REASON 11
 
 ; [ Eight Forces ]
 eightfrc:0:201D50:07:000:Infinite Lives PL1
@@ -33676,19 +33676,19 @@ fghthstw:0:001005DD:00:001:Drain All Energy Now! PL2
 fghthstw:0:00100B00:00:501:Drain All Energy Now! PL2 (2/2)
 
 ; [ Fighting Layer (FTL0/VER.A) ]
-fgtlayer:0:0000:00:999:[ This game hasn't even ]:REASON 11
-fgtlayer:0:0000:00:999:[ been looked at due to ]:REASON 11
-fgtlayer:0:0000:00:999:[ time constraints - Too]:REASON 11
-fgtlayer:0:0000:00:999:[ many games and so     ]:REASON 11
-fgtlayer:0:0000:00:999:[ little time. It is    ]:REASON 11
-fgtlayer:0:0000:00:999:[ even possible that    ]:REASON 11
-fgtlayer:0:0000:00:999:[ this game may be a    ]:REASON 11
-fgtlayer:0:0000:00:999:[ clone of an existing  ]:REASON 11
-fgtlayer:0:0000:00:999:[ game which may have   ]:REASON 11
-fgtlayer:0:0000:00:999:[ cheats. Please search ]:REASON 11
-fgtlayer:0:0000:00:999:[ the cheat forums      ]:REASON 11
-fgtlayer:0:0000:00:999:[ before posting cheat  ]:REASON 11
-fgtlayer:0:0000:00:999:[ requests/cheat finding]:REASON 11
+fgtlayerja:0:0000:00:999:[ This game hasn't even ]:REASON 11
+fgtlayerja:0:0000:00:999:[ been looked at due to ]:REASON 11
+fgtlayerja:0:0000:00:999:[ time constraints - Too]:REASON 11
+fgtlayerja:0:0000:00:999:[ many games and so     ]:REASON 11
+fgtlayerja:0:0000:00:999:[ little time. It is    ]:REASON 11
+fgtlayerja:0:0000:00:999:[ even possible that    ]:REASON 11
+fgtlayerja:0:0000:00:999:[ this game may be a    ]:REASON 11
+fgtlayerja:0:0000:00:999:[ clone of an existing  ]:REASON 11
+fgtlayerja:0:0000:00:999:[ game which may have   ]:REASON 11
+fgtlayerja:0:0000:00:999:[ cheats. Please search ]:REASON 11
+fgtlayerja:0:0000:00:999:[ the cheat forums      ]:REASON 11
+fgtlayerja:0:0000:00:999:[ before posting cheat  ]:REASON 11
+fgtlayerja:0:0000:00:999:[ requests/cheat finding]:REASON 11
 
 ; [ Fighting Hawk (World) ]
 fhawk:0:9012:09:000:Infinite Bombs
@@ -42660,25 +42660,25 @@ hattrick:0:015F:99:073:Select Score RED TEAM
 hattrick:0:013A:99:073:Select Score BLUE TEAM
 
 ; [ Hayaoshi Quiz Ouza Ketteisen ]
-hayaosi1:0:0000:00:999:[ This game should be   ]:REASON 10
-hayaosi1:0:0000:00:999:[ quite straighforward  ]:REASON 10
-hayaosi1:0:0000:00:999:[ enough to find cheats ]:REASON 10
-hayaosi1:0:0000:00:999:[ for. But no cheats    ]:REASON 10
-hayaosi1:0:0000:00:999:[ have been submitted   ]:REASON 10
-hayaosi1:0:0000:00:999:[ at the time this cheat]:REASON 10
-hayaosi1:0:0000:00:999:[ file was compiled     ]:REASON 10
-hayaosi1:0:0000:00:999:[ due to the game       ]:REASON 10
-hayaosi1:0:0000:00:999:[ generating zero       ]:REASON 10
-hayaosi1:0:0000:00:999:[ interest from cheat   ]:REASON 10
-hayaosi1:0:0000:00:999:[ finders. If you have  ]:REASON 10
-hayaosi1:0:0000:00:999:[ made some cheats for  ]:REASON 10
-hayaosi1:0:0000:00:999:[ this game please post ]:REASON 10
-hayaosi1:0:0000:00:999:[ them on the cheat     ]:REASON 10
-hayaosi1:0:0000:00:999:[ forums. Don't forget  ]:REASON 10
-hayaosi1:0:0000:00:999:[ to search the cheat   ]:REASON 10
-hayaosi1:0:0000:00:999:[ forums first though as]:REASON 10
-hayaosi1:0:0000:00:999:[ cheats may have been  ]:REASON 10
-hayaosi1:0:0000:00:999:[ found in the meanwhile]:REASON 10
+hayaosi2:0:0000:00:999:[ This game should be   ]:REASON 10
+hayaosi2:0:0000:00:999:[ quite straighforward  ]:REASON 10
+hayaosi2:0:0000:00:999:[ enough to find cheats ]:REASON 10
+hayaosi2:0:0000:00:999:[ for. But no cheats    ]:REASON 10
+hayaosi2:0:0000:00:999:[ have been submitted   ]:REASON 10
+hayaosi2:0:0000:00:999:[ at the time this cheat]:REASON 10
+hayaosi2:0:0000:00:999:[ file was compiled     ]:REASON 10
+hayaosi2:0:0000:00:999:[ due to the game       ]:REASON 10
+hayaosi2:0:0000:00:999:[ generating zero       ]:REASON 10
+hayaosi2:0:0000:00:999:[ interest from cheat   ]:REASON 10
+hayaosi2:0:0000:00:999:[ finders. If you have  ]:REASON 10
+hayaosi2:0:0000:00:999:[ made some cheats for  ]:REASON 10
+hayaosi2:0:0000:00:999:[ this game please post ]:REASON 10
+hayaosi2:0:0000:00:999:[ them on the cheat     ]:REASON 10
+hayaosi2:0:0000:00:999:[ forums. Don't forget  ]:REASON 10
+hayaosi2:0:0000:00:999:[ to search the cheat   ]:REASON 10
+hayaosi2:0:0000:00:999:[ forums first though as]:REASON 10
+hayaosi2:0:0000:00:999:[ cheats may have been  ]:REASON 10
+hayaosi2:0:0000:00:999:[ found in the meanwhile]:REASON 10
 
 ; [ Heavy Barrel (US) ]
 hbarrel:0:FF8032:80:000:Invincibility PL1
@@ -67783,9 +67783,9 @@ mrdoy:0:E0F3:01:000:One red monster PL2
 mrdoy:0:E0F3:00:000:NO red monsters PL2
 
 ; [ Mr Driller (DRI1/VER.A2) ]
-mrdrillr:0:002C4560:09:000:Infinite Credits
-mrdrillr:0:0021D5F8:0A:000:Infinite Lives
-mrdrillr:0:0029EBF9:4A:000:Infinite Air
+mrdrillrja2:0:002C4560:09:000:Infinite Credits
+mrdrillrja2:0:0021D5F8:0A:000:Infinite Lives
+mrdrillrja2:0:0029EBF9:4A:000:Infinite Air
 
 ; [ Mr Driller 2 ]
 mrdrilr2:0:0000:00:999:[ There are no cheats   ]:REASON 1
@@ -117379,38 +117379,38 @@ soulclba:0:0000:00:999:[ for it on the cheat   ]:REASON 1
 soulclba:0:0000:00:999:[ forums.               ]:REASON 1
 
 ; [ Soul Calibur (SOC14/VER.C) ]
-soulclbr:0:0000:00:999:[ There are no cheats   ]:REASON 1
-soulclbr:0:0000:00:999:[ for this game as it   ]:REASON 1
-soulclbr:0:0000:00:999:[ didn't work the last  ]:REASON 1
-soulclbr:0:0000:00:999:[ time it was tested.   ]:REASON 1
-soulclbr:0:0000:00:999:[ If the game now works ]:REASON 1
-soulclbr:0:0000:00:999:[ please request cheats ]:REASON 1
-soulclbr:0:0000:00:999:[ for it on the cheat   ]:REASON 1
-soulclbr:0:0000:00:999:[ forums.               ]:REASON 1
+soulclbrja2:0:0000:00:999:[ There are no cheats   ]:REASON 1
+soulclbrja2:0:0000:00:999:[ for this game as it   ]:REASON 1
+soulclbrja2:0:0000:00:999:[ didn't work the last  ]:REASON 1
+soulclbrja2:0:0000:00:999:[ time it was tested.   ]:REASON 1
+soulclbrja2:0:0000:00:999:[ If the game now works ]:REASON 1
+soulclbrja2:0:0000:00:999:[ please request cheats ]:REASON 1
+soulclbrja2:0:0000:00:999:[ for it on the cheat   ]:REASON 1
+soulclbrja2:0:0000:00:999:[ forums.               ]:REASON 1
 
 ; [ Soul Edge (SO3/VER.A) ]
-souledga:0:000EFFD4:63:000:Infinite Time
-souledga:0:000EFFD4:00:001:Finish this Round Now!
-souledga:0:002D602E:F0:000:Infinite Energy PL1
-souledga:0:002D602E:00:001:Drain All Energy Now! PL1
-souledga:0:002D6160:60:000:Always have Maximum Power PL1
-souledga:0:002D6160:00:001:Drain All Power Now! PL1
-souledga:0:002D9D72:F0:000:Infinite Energy PL2
-souledga:0:002D9D72:00:001:Drain All Energy Now! PL2
-souledga:0:002D9EA4:60:000:Always have Maximum Power PL2
-souledga:0:002D9EA4:00:001:Drain All Power Now! PL2
+souledgeua:0:000EFFD4:63:000:Infinite Time
+souledgeua:0:000EFFD4:00:001:Finish this Round Now!
+souledgeua:0:002D602E:F0:000:Infinite Energy PL1
+souledgeua:0:002D602E:00:001:Drain All Energy Now! PL1
+souledgeua:0:002D6160:60:000:Always have Maximum Power PL1
+souledgeua:0:002D6160:00:001:Drain All Power Now! PL1
+souledgeua:0:002D9D72:F0:000:Infinite Energy PL2
+souledgeua:0:002D9D72:00:001:Drain All Energy Now! PL2
+souledgeua:0:002D9EA4:60:000:Always have Maximum Power PL2
+souledgeua:0:002D9EA4:00:001:Drain All Power Now! PL2
 
 ; [ Soul Edge (SO1/VER.A) ]
-souledgb:0:000EFFD4:63:000:Infinite Time
-souledgb:0:000EFFD4:00:001:Finish this Round Now!
-souledgb:0:002D602E:F0:000:Infinite Energy PL1
-souledgb:0:002D602E:00:001:Drain All Energy Now! PL1
-souledgb:0:002D6160:60:000:Always have Maximum Power PL1
-souledgb:0:002D6160:00:001:Drain All Power Now! PL1
-souledgb:0:002D9D72:F0:000:Infinite Energy PL2
-souledgb:0:002D9D72:00:001:Drain All Energy Now! PL2
-souledgb:0:002D9EA4:60:000:Always have Maximum Power PL2
-souledgb:0:002D9EA4:00:001:Drain All Power Now! PL2
+souledgeja:0:000EFFD4:63:000:Infinite Time
+souledgeja:0:000EFFD4:00:001:Finish this Round Now!
+souledgeja:0:002D602E:F0:000:Infinite Energy PL1
+souledgeja:0:002D602E:00:001:Drain All Energy Now! PL1
+souledgeja:0:002D6160:60:000:Always have Maximum Power PL1
+souledgeja:0:002D6160:00:001:Drain All Power Now! PL1
+souledgeja:0:002D9D72:F0:000:Infinite Energy PL2
+souledgeja:0:002D9D72:00:001:Drain All Energy Now! PL2
+souledgeja:0:002D9EA4:60:000:Always have Maximum Power PL2
+souledgeja:0:002D9EA4:00:001:Drain All Power Now! PL2
 
 ; [ Soul Edge Ver. II (SO4/VER.C) ]
 souledge:0:00121F44:63:000:Infinite Time
@@ -124535,19 +124535,19 @@ starshpp:0:0083:99:000:Infinite Fuel
 starshpp:0:00A0:0A:000:Infinite Torpedos
 
 ; [ Star Sweep (STP1/VER.A) ]
-starswep:0:0000:00:999:[ This game hasn't even ]:REASON 11
-starswep:0:0000:00:999:[ been looked at due to ]:REASON 11
-starswep:0:0000:00:999:[ time constraints - Too]:REASON 11
-starswep:0:0000:00:999:[ many games and so     ]:REASON 11
-starswep:0:0000:00:999:[ little time. It is    ]:REASON 11
-starswep:0:0000:00:999:[ even possible that    ]:REASON 11
-starswep:0:0000:00:999:[ this game may be a    ]:REASON 11
-starswep:0:0000:00:999:[ clone of an existing  ]:REASON 11
-starswep:0:0000:00:999:[ game which may have   ]:REASON 11
-starswep:0:0000:00:999:[ cheats. Please search ]:REASON 11
-starswep:0:0000:00:999:[ the cheat forums      ]:REASON 11
-starswep:0:0000:00:999:[ before posting cheat  ]:REASON 11
-starswep:0:0000:00:999:[ requests/cheat finding]:REASON 11
+starswepj:0:0000:00:999:[ This game hasn't even ]:REASON 11
+starswepj:0:0000:00:999:[ been looked at due to ]:REASON 11
+starswepj:0:0000:00:999:[ time constraints - Too]:REASON 11
+starswepj:0:0000:00:999:[ many games and so     ]:REASON 11
+starswepj:0:0000:00:999:[ little time. It is    ]:REASON 11
+starswepj:0:0000:00:999:[ even possible that    ]:REASON 11
+starswepj:0:0000:00:999:[ this game may be a    ]:REASON 11
+starswepj:0:0000:00:999:[ clone of an existing  ]:REASON 11
+starswepj:0:0000:00:999:[ game which may have   ]:REASON 11
+starswepj:0:0000:00:999:[ cheats. Please search ]:REASON 11
+starswepj:0:0000:00:999:[ the cheat forums      ]:REASON 11
+starswepj:0:0000:00:999:[ before posting cheat  ]:REASON 11
+starswepj:0:0000:00:999:[ requests/cheat finding]:REASON 11
 
 ; [ Star Trek ]
 startrek:0:CE17:04:000:Infinite Shield
@@ -126978,61 +126978,52 @@ tekipaki:0:080C07:FF:070:Select current level PL1
 tekipaki:0:081C07:FF:070:Select current level PL2
 
 ; [ Tekken (TE4/VER.C) ]
-tekken:0:00267038:09:000:Infinite Credits
-:tekken:00100000:002648BC:00001730:FFFFFFFF:Infinite Time
-:tekken:00100001:002648BC:00000001:FFFFFFFF:Finish this Round Now!
-:tekken:00000000:00264AF6:0000007D:FFFFFFFF:Infinite Energy PL1
-:tekken:00000001:00264AF6:00000000:FFFFFFFF:Drain all Energy Now! PL1
-:tekken:00000000:00265B2E:0000007D:FFFFFFFF:Infinite Energy PL2
-:tekken:00000001:00265B2E:00000000:FFFFFFFF:Drain all Energy Now! PL2
+tekkenac:0:00267038:09:000:Infinite Credits
+:tekkenac:00100000:002648BC:00001730:FFFFFFFF:Infinite Time
+:tekkenac:00100001:002648BC:00000001:FFFFFFFF:Finish this Round Now!
+:tekkenac:00000000:00264AF6:0000007D:FFFFFFFF:Infinite Energy PL1
+:tekkenac:00000001:00264AF6:00000000:FFFFFFFF:Drain all Energy Now! PL1
+:tekkenac:00000000:00265B2E:0000007D:FFFFFFFF:Infinite Energy PL2
+:tekkenac:00000001:00265B2E:00000000:FFFFFFFF:Drain all Energy Now! PL2
 
 ; [ Tekken 2 Ver.B (TES3/VER.B) ]
-tekken2:0:00301CEC:09:000:Infinite Credits
-:tekken2:00100000:0030F174:00001732:FFFFFFFF:Infinite Time
-:tekken2:00100001:0030F174:00000001:FFFFFFFF:Finish this Round Now!
-tekken2:0:0030CA6A:7E:000:Infinite Energy PL1
-tekken2:0:0030CA6A:00:001:Drain All Energy Now! PL1
-tekken2:0:0030DEEA:7E:000:Infinite Energy PL2
-tekken2:0:0030DEEA:00:001:Drain All Energy Now! PL2
+tekken2ub:0:00301CEC:09:000:Infinite Credits
+:tekken2ub:00100000:0030F174:00001732:FFFFFFFF:Infinite Time
+:tekken2ub:00100001:0030F174:00000001:FFFFFFFF:Finish this Round Now!
+tekken2ub:0:0030CA6A:7E:000:Infinite Energy PL1
+tekken2ub:0:0030CA6A:00:001:Drain All Energy Now! PL1
+tekken2ub:0:0030DEEA:7E:000:Infinite Energy PL2
+tekken2ub:0:0030DEEA:00:001:Drain All Energy Now! PL2
 
 ; [ Tekken 2 Ver.B (TES2/VER.B) ]
-tekken2a:0:00301CEC:09:000:Infinite Credits
-:tekken2a:00100000:0030F174:00001732:FFFFFFFF:Infinite Time
-:tekken2a:00100001:0030F174:00000001:FFFFFFFF:Finish this Round Now!
-tekken2a:0:0030CA6A:7E:000:Infinite Energy PL1
-tekken2a:0:0030CA6A:00:001:Drain All Energy Now! PL1
-tekken2a:0:0030DEEA:7E:000:Infinite Energy PL2
-tekken2a:0:0030DEEA:00:001:Drain All Energy Now! PL2
+tekken2b:0:00301CEC:09:000:Infinite Credits
+:tekken2b:00100000:0030F174:00001732:FFFFFFFF:Infinite Time
+:tekken2b:00100001:0030F174:00000001:FFFFFFFF:Finish this Round Now!
+tekken2b:0:0030CA6A:7E:000:Infinite Energy PL1
+tekken2b:0:0030CA6A:00:001:Drain All Energy Now! PL1
+tekken2b:0:0030DEEA:7E:000:Infinite Energy PL2
+tekken2b:0:0030DEEA:00:001:Drain All Energy Now! PL2
 
 ; [ Tekken 2 (TES2/VER.A) ]
-tekken2b:0:002FA4A0:09:000:Infinite Credits
-:tekken2b:00100000:00307928:00001732:FFFFFFFF:Infinite Time
-:tekken2b:00100001:00307928:00000001:FFFFFFFF:Finish this Round Now!
-tekken2b:0:0030521E:7E:000:Infinite Energy PL1
-tekken2b:0:0030521E:00:001:Drain All Energy Now! PL1
-tekken2b:0:0030669E:7E:000:Infinite Energy PL2
-tekken2b:0:0030669E:00:001:Drain All Energy Now! PL2
+tekken2a:0:002FA4A0:09:000:Infinite Credits
+:tekken2a:00100000:00307928:00001732:FFFFFFFF:Infinite Time
+:tekken2a:00100001:00307928:00000001:FFFFFFFF:Finish this Round Now!
+tekken2a:0:0030521E:7E:000:Infinite Energy PL1
+tekken2a:0:0030521E:00:001:Drain All Energy Now! PL1
+tekken2a:0:0030669E:7E:000:Infinite Energy PL2
+tekken2a:0:0030669E:00:001:Drain All Energy Now! PL2
 
 ; [ Tekken 3 (TET1/VER.E1) ]
-tekken3:0:0021FB8C:32:000:Infinite Time
-tekken3:0:0021FB8D:17:500:Infinite Time (2/2)
-tekken3:0:0021FB8C:01:001:Finish this Round Now!
-tekken3:0:0021FB8D:00:501:Finish this Round Now! (2/2)
-tekken3:0:0031E492:82:000:Infinite Energy PL1
-tekken3:0:0031E492:00:001:Drain All Energy Now! PL1
-tekken3:0:0031FF76:82:000:Infinite Energy PL2
-tekken3:0:0031FF76:00:001:Drain All Energy Now! PL2
+tekken3je1:0:0021FB8C:32:000:Infinite Time
+tekken3je1:0:0021FB8D:17:500:Infinite Time (2/2)
+tekken3je1:0:0021FB8C:01:001:Finish this Round Now!
+tekken3je1:0:0021FB8D:00:501:Finish this Round Now! (2/2)
+tekken3je1:0:0031E492:82:000:Infinite Energy PL1
+tekken3je1:0:0031E492:00:001:Drain All Energy Now! PL1
+tekken3je1:0:0031FF76:82:000:Infinite Energy PL2
+tekken3je1:0:0031FF76:00:001:Drain All Energy Now! PL2
 
 ; [ Tekken (TE2/VER.B) ]
-tekkena:0:00266CE0:09:000:Infinite Credits
-:tekkena:00100000:00264564:00001730:FFFFFFFF:Infinite Time
-:tekkena:00100001:00264564:00000001:FFFFFFFF:Finish this Round Now!
-:tekkena:00000000:0026479E:0000007D:FFFFFFFF:Infinite Energy PL1
-:tekkena:00000001:0026479E:00000000:FFFFFFFF:Drain all Energy Now! PL1
-:tekkena:00000000:002657D6:0000007D:FFFFFFFF:Infinite Energy PL2
-:tekkena:00000001:002657D6:00000000:FFFFFFFF:Drain all Energy Now! PL2
-
-; [ Tekken (TE1/VER.B) ]
 tekkenb:0:00266CE0:09:000:Infinite Credits
 :tekkenb:00100000:00264564:00001730:FFFFFFFF:Infinite Time
 :tekkenb:00100001:00264564:00000001:FFFFFFFF:Finish this Round Now!
@@ -127041,15 +127032,24 @@ tekkenb:0:00266CE0:09:000:Infinite Credits
 :tekkenb:00000000:002657D6:0000007D:FFFFFFFF:Infinite Energy PL2
 :tekkenb:00000001:002657D6:00000000:FFFFFFFF:Drain all Energy Now! PL2
 
+; [ Tekken (TE1/VER.B) ]
+tekkenjb:0:00266CE0:09:000:Infinite Credits
+:tekkenjb:00100000:00264564:00001730:FFFFFFFF:Infinite Time
+:tekkenjb:00100001:00264564:00000001:FFFFFFFF:Finish this Round Now!
+:tekkenjb:00000000:0026479E:0000007D:FFFFFFFF:Infinite Energy PL1
+:tekkenjb:00000001:0026479E:00000000:FFFFFFFF:Drain all Energy Now! PL1
+:tekkenjb:00000000:002657D6:0000007D:FFFFFFFF:Infinite Energy PL2
+:tekkenjb:00000001:002657D6:00000000:FFFFFFFF:Drain all Energy Now! PL2
+
 ; [ Tekken Tag Tournament (TEG3/VER.B) ]
-tekkentt:0:0000:00:999:[ There are no cheats   ]:REASON 1
-tekkentt:0:0000:00:999:[ for this game as it   ]:REASON 1
-tekkentt:0:0000:00:999:[ didn't work the last  ]:REASON 1
-tekkentt:0:0000:00:999:[ time it was tested.   ]:REASON 1
-tekkentt:0:0000:00:999:[ If the game now works ]:REASON 1
-tekkentt:0:0000:00:999:[ please request cheats ]:REASON 1
-tekkentt:0:0000:00:999:[ for it on the cheat   ]:REASON 1
-tekkentt:0:0000:00:999:[ forums.               ]:REASON 1
+tektagtub:0:0000:00:999:[ There are no cheats   ]:REASON 1
+tektagtub:0:0000:00:999:[ for this game as it   ]:REASON 1
+tektagtub:0:0000:00:999:[ didn't work the last  ]:REASON 1
+tektagtub:0:0000:00:999:[ time it was tested.   ]:REASON 1
+tektagtub:0:0000:00:999:[ If the game now works ]:REASON 1
+tektagtub:0:0000:00:999:[ please request cheats ]:REASON 1
+tektagtub:0:0000:00:999:[ for it on the cheat   ]:REASON 1
+tektagtub:0:0000:00:999:[ forums.               ]:REASON 1
 
 ; [ Tel Jan ]
 teljan:0:06002FD7:09:000:Infinite Credits
@@ -138936,17 +138936,17 @@ xenophob:0:0607ED:FF:000:Infinite Health PL2
 xenophob:0:0608AD:FF:000:Infinite Health PL3
 
 ; [ Xevious 3D/G (XV31/VER.A) ]
-xevi3dg:0:000EE8C0:09:000:Infinite Credits
-xevi3dg:0:00150DC8:06:000:Infinite Lives PL1
-xevi3dg:0:00126358:01:000:Invincibility PL1
-xevi3dg:0:00150DB0:01:000:Always have Laser Gun PL1
-xevi3dg:0:00150DB0:02:000:Always have Homing Weapon PL1
-xevi3dg:0:00115BDC:02:000:Maximum Fire Power PL1
-xevi3dg:0:00150DCC:06:000:Infinite Lives PL2
-xevi3dg:0:00126204:01:000:Invincibility PL2
-xevi3dg:0:00150DB4:01:000:Always have Laser Gun PL2
-xevi3dg:0:00150DB4:02:000:Always have Homing Weapon PL2
-xevi3dg:0:001171B0:02:000:Maximum Fire Power PL2
+xevi3dgj:0:000EE8C0:09:000:Infinite Credits
+xevi3dgj:0:00150DC8:06:000:Infinite Lives PL1
+xevi3dgj:0:00126358:01:000:Invincibility PL1
+xevi3dgj:0:00150DB0:01:000:Always have Laser Gun PL1
+xevi3dgj:0:00150DB0:02:000:Always have Homing Weapon PL1
+xevi3dgj:0:00115BDC:02:000:Maximum Fire Power PL1
+xevi3dgj:0:00150DCC:06:000:Infinite Lives PL2
+xevi3dgj:0:00126204:01:000:Invincibility PL2
+xevi3dgj:0:00150DB4:01:000:Always have Laser Gun PL2
+xevi3dgj:0:00150DB4:02:000:Always have Homing Weapon PL2
+xevi3dgj:0:001171B0:02:000:Maximum Fire Power PL2
 
 ; [ Xevios ]
 xevios:0:8183:09:000:Infinite Lives

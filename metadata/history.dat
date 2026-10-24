@@ -20586,7 +20586,7 @@ Commodore Amiga (1990)
 $end
 
 
-$info=beastf,
+$info=beastf,beastfp,
 $bio
 
 Beastie Feastie (c) 1984 Epos Corporation.
@@ -39674,7 +39674,7 @@ Graphic : Kim Eun Ae, Hong Young Joo, Whang O-Sik, Hong Dae Hyun
 $end
 
 
-$info=chplft,chplftb,chplftbl,
+$info=choplift,chopliftu,chopliftbl,
 $bio
 
 Choplifter (c) 1985 Sega.
@@ -49927,7 +49927,7 @@ The title of this game translates from Japanese as 'Hanafuda at the Apartments'.
 $end
 
 
-$info=danceyes,
+$info=danceyes,danceyesu,danceyesj,
 $bio
 
 Dancing Eyes (c) 08/1996 Namco.
@@ -63256,7 +63256,7 @@ This game is also known as "Dataeast's Hoops".
 $end
 
 
-$info=dunkmnia,dunkmnic,
+$info=dunkmnia,dunkmniajc,
 $bio
 
 Dunk Mania (c) 1995 Namco.
@@ -68525,7 +68525,7 @@ Designed by : Luis Sanchez
 $end
 
 
-$info=ehrgeiz,ehrgeiza,
+$info=ehrgeiz,ehrgeizua,ehrgeizja,
 $bio
 
 EZ : Ehrgeiz - God Bless The Ring (c) 1998 Square / Namco.
@@ -71900,7 +71900,7 @@ Buttons : 2
 $end
 
 
-$info=fgtlayer,
+$info=fgtlayer,fgtlayerja,
 $bio
 
 Fighting Layer (c) 12/1998 Arika.
@@ -95537,7 +95537,7 @@ King Records released a limited-edition soundtrack album for this game (Konami G
 $end
 
 
-$info=hayaosi1,
+$info=hayaosi2,
 $bio
 
 Hayaoshi Quiz Ouza Ketteisen (c) 1994 Jaleco.
@@ -100624,7 +100624,7 @@ Sega Saturn (1996, "Sega Ages : Rouka ni Ichidant-R")
 $end
 
 
-$info=47pie2,47pie2o,
+$info=suchie2,suchie2o,
 $bio
 
 Idol Janshi Suchi-Pai II (c) 1994 Jaleco.
@@ -146695,7 +146695,7 @@ MSX (1985)
 $end
 
 
-$info=mrdrillr,
+$info=mrdrillr,mrdrillrja2,
 $bio
 
 Mr. Driller (c) 1999 Namco.
@@ -153222,7 +153222,7 @@ PC [MS Windows] (2005, "Taito Legends")
 $end
 
 
-$info=nzerotea,
+$info=nzeroteam,nzeroteama,nzeroteamb,zerotm2k,
 $bio
 
 New Zero Team (c) 1993 Seibu Kaihatsu.
@@ -168550,7 +168550,7 @@ Sony PlayStation 2 (2002, "Gunvari Collection + Time Crisis")
 $end
 
 
-$info=ptblank2,
+$info=ptblank2,ptblank2a,ptblank2b,ptblank2c,ptblank2ua,gunbarla,
 $bio
 
 Point Blank 2 (c) 1999 Namco.
@@ -182610,7 +182610,7 @@ PC [MS-DOS, CD-ROM]
 $end
 
 
-$info=raidndx,raidndxa,raidndxb,raidndxj,raidndxm,
+$info=raidendx,raidendxg,raidendxpt,raidendxa1,raidendxa2,raidendxk,raidendxu,raidendxnl,raidendxj,raidendxja,raidendxch,r2dx_v33,r2dx_v33_r2,
 $bio
 
 Raiden DX (c) 1994 Seibu Kaihatsu.
@@ -183143,7 +183143,7 @@ Level 15 : Before the boss appears, do not shoot any small tanks. Two small tank
 $end
 
 
-$info=raiden2,raiden2a,raiden2b,raiden2c,raiden2e,
+$info=raiden2,raiden2g,raiden2gb,raiden2hk,raiden2j,raiden2sw,raiden2u,raiden2f,raiden2nl,raiden2es,raiden2i,raiden2au,raiden2e,raiden2eub,raiden2eua,raiden2eg,raiden2eup,raiden2ea,raiden2eu,raiden2k,raiden2dx,
 $bio
 
 Raiden II (c) 1993 Seibu Kaihatsu.
@@ -187724,7 +187724,7 @@ Total planner / Total cordinator : The Alive
 $end
 
 
-$info=revenger,
+$info=revenger,revngr84,
 $bio
 
 Revenger (c) 1984 Epos.
@@ -210976,7 +210976,7 @@ Sega Saturn (1997)
 $end
 
 
-$info=soulclbr,soulclba,soulclbb,
+$info=soulclbr,soulclbrab,soulclbrac,soulclbrub,soulclbruc,soulclbrja2,soulclbrjb,soulclbrjc,
 $bio
 
 Soul Calibur (c) 07/1998 Namco.
@@ -211061,7 +211061,7 @@ Sega Dreamcast (1999) : The new Weapon Master mode made it's debut in this versi
 $end
 
 
-$info=souledga,souledgb,souledgc,
+$info=souledgea,souledgeua,souledgeja,
 $bio
 
 Soul Edge (c) 1995 Namco.
@@ -211188,7 +211188,7 @@ Sony PlayStation (1996)
 $end
 
 
-$info=souledge,
+$info=souledge,souledgeuc,
 $bio
 
 Soul Edge Ver. II (c) 1996 Namco.
@@ -219296,7 +219296,7 @@ Sega Saturn (1997, "Sega Memorial Selection Vol.2")
 $end
 
 
-$info=starswep,
+$info=starswep,starswepj,
 $bio
 
 Star Sweep (c) 07/1997 Axela.
@@ -243474,7 +243474,7 @@ Music composed by : Tomoaki Takanohashi
 $end
 
 
-$info=tekken,tekkena,tekkenb,tekkenc,
+$info=tekken,tekkenac,tekkenb,tekkenjb,
 $bio
 
 Tekken (c) 12/1994 Namco.
@@ -243635,7 +243635,7 @@ Sony PlayStation 2 (2005, "NamCollection") : Japan release only.
 $end
 
 
-$info=tekken2,tekken2a,tekken2b,
+$info=tekken2,tekken2b,tekken2ud,tekken2ub,tekken2jc,tekken2jb,tekken2a,tekken2ua,
 $bio
 
 Tekken 2 (c) 08/1995 Namco.
@@ -243867,7 +243867,7 @@ Sony PlayStation 2 (2005, "Tekken 5 Ultimate Collectors Edition")
 $end
 
 
-$info=tekken3,tekken3a,
+$info=tekken3,tekken3je1,
 $bio
 
 Tekken 3 (c) 1996 Namco.
@@ -244067,7 +244067,7 @@ Sony PlayStation 2 (2005, "Tekken 5 Ultimate Collectors Edition")
 $end
 
 
-$info=tektagt,tektagta,
+$info=tektagt,tektagtub,tektagtuc1,tektagtjc1,
 $bio
 
 Tekken Tag Tournament (c) 1999 Namco.
@@ -275757,7 +275757,7 @@ F.A.Q. by Kevin Butler A.K.A. War Doc
 $end
 
 
-$info=xevi3dg,
+$info=xevi3dg,xevi3dga,xevi3dgj,
 $bio
 
 Xevious 3D/G (c) 04/1995 Namco.
@@ -278372,7 +278372,7 @@ This game is known in Japan as "Gekitsui Oh".
 $end
 
 
-$info=zeroteam,zeroteaa,zeroteab,
+$info=zeroteam,zeroteama,zeroteamb,zeroteamc,zeroteamd,zeroteame,zeroteams,zeroteamsr,
 $bio
 
 Zero Team (c) 1993 Seibu Kaihatsu.

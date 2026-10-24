@@ -9,6 +9,7 @@
 PALETTE_INIT( pacman );
 VIDEO_START( pacman );
 VIDEO_UPDATE( pacman );
+VIDEO_UPDATE( alibaba );
 
 WRITE_HANDLER( pacman_videoram_w );
 WRITE_HANDLER( pacman_colorram_w );

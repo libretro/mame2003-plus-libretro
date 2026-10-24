@@ -25,6 +25,8 @@
 	  between the two palettes.  This effect is not emulated, but since both
 	  halfs of the palette are identical, this is not an issue.  See $039c.
 	  The other games have a different color test, not using the busy loop.
+	- dealer/beastf/revngr84: "PSG registers not OK" in service mode thru
+	  sound menu, internal ay8910 not right? (same in current MAME)
 
 ***************************************************************************/
 
@@ -32,41 +34,7 @@
 #include "vidhrdw/generic.h"
 #include "machine/8255ppi.h"
 #include "epos.h"
-
-
-static int counter = 0;
-
-MACHINE_INIT( dealer );
-
-WRITE_HANDLER( dealer_decrypt_rom )
-{
-	unsigned char *RAM = memory_region(REGION_CPU1);
-
-	if (offset & 0x04)
-	{
-		counter = counter + 1;
-		if (counter < 0)
-			counter = 0x0F;
-	}
-	else
-	{
-		counter = (counter - 1) & 0x0F;
-	}
-
-/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %08x: ctr=%04x\n",activecpu_get_pc(),counter);*/
-
-	switch(counter)
-	{
-
-		case 0x00:	cpu_setbank(1, &RAM[0x10000]);		break;
-		case 0x01:	cpu_setbank(1, &RAM[0x20000]);		break;
-		case 0x02:	cpu_setbank(1, &RAM[0x30000]);		break;
-		case 0x03:	cpu_setbank(1, &RAM[0x40000]);		break;
-		default:
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "Invalid counter = %02X\n",counter);
-			break;
-	}
-}
+#include "state.h"
 
 
 /*************************************
@@ -87,17 +55,6 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x8000, 0xffff, epos_videoram_w, &videoram, &videoram_size },
 MEMORY_END
 
-
-static MEMORY_READ_START( dealer_readmem )
-	{ 0x0000, 0x6fff, MRA_BANK1 },
-	{ 0x7000, 0xffff, MRA_RAM },
-MEMORY_END
-
-static MEMORY_WRITE_START( dealer_writemem )
-	{ 0x0000, 0x6fff, MWA_ROM },
-	{ 0x7000, 0x7fff, MWA_RAM },
-	{ 0x8000, 0xffff, epos_videoram_w, &videoram, &videoram_size },
-MEMORY_END
 
 /*************************************
  *
@@ -120,28 +77,6 @@ static PORT_WRITE_START( writeport )
 	{ 0x06, 0x06, AY8910_control_port_0_w },
 PORT_END
 
-
-static PORT_READ_START( dealer_readport )
-	{ 0x10, 0x13, ppi8255_0_r },
-	{ 0x38, 0x38, input_port_0_r },
-PORT_END
-
-static PORT_WRITE_START( dealer_writeport )
-	{ 0x10, 0x13, ppi8255_0_w },
-	{ 0x20, 0x24, dealer_decrypt_rom },
-/*	{ 0x40, 0x40, watchdog_reset_w },*/
-PORT_END
-
-static ppi8255_interface ppi8255_intf =
-{
-	1, 					/* 1 chip */
-	{ input_port_2_r },	/* Port A read */
-	{ NULL },			/* Port B read */
-	{ NULL },			/* Port C read */
-	{ NULL },			/* Port A write */
-	{ NULL },			/* Port B write */
-	{ NULL },			/* Port C write */
-};
 
 /*************************************
  *
@@ -352,55 +287,6 @@ INPUT_PORTS_START( igmo )
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( dealer )
-	PORT_START      /* IN0 */
-	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Demo_Sounds ) )
-	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Free_Play ) )
-	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unused ) )
-	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unused ) )
-	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unused ) )
-	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unused ) )
-	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Cabinet ) )
-	PORT_DIPSETTING(    0x40, DEF_STR( Upright ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )
-	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Flip_Screen ) )
-	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-
-	PORT_START      /* IN1 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW,  IPT_UNKNOWN )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_UNKNOWN )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_UNKNOWN )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_UNKNOWN )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW,  IPT_UNKNOWN )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW,  IPT_UNKNOWN )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW,  IPT_UNKNOWN )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_UNKNOWN )
-
-	PORT_START      /* IN2 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 ) /*cancel*/
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 ) /*draw*/
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON3 ) /*stand*/
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON4 )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON5 ) /*play*/
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON6 )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON7 ) /*coin in*/
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON8 )
-INPUT_PORTS_END
-
-
 /*************************************
  *
  *	Sound interfaces
@@ -444,34 +330,8 @@ static MACHINE_DRIVER_START( epos )
 	MDRV_PALETTE_LENGTH(32)
 
 	MDRV_PALETTE_INIT(epos)
-	MDRV_VIDEO_START(generic_bitmapped)
+	MDRV_VIDEO_START(epos)
 	MDRV_VIDEO_UPDATE(epos)
-
-	/* sound hardware */
-	MDRV_SOUND_ADD(AY8910, ay8912_interface)
-MACHINE_DRIVER_END
-
-
-static MACHINE_DRIVER_START( dealer )
-	/* basic machine hardware */
-	MDRV_CPU_ADD(Z80, 11000000/4)	/* 2.75 MHz (see notes) */
-	MDRV_CPU_MEMORY(dealer_readmem,dealer_writemem)
-	MDRV_CPU_PORTS(dealer_readport,dealer_writeport)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
-
-	MDRV_FRAMES_PER_SECOND(60)
-	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)
-
-	/* video hardware */
-	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
-	MDRV_SCREEN_SIZE(272, 241)
-	MDRV_VISIBLE_AREA(0, 271, 0, 235)
-	MDRV_PALETTE_LENGTH(32)
-
-	MDRV_PALETTE_INIT(epos)
-	MDRV_VIDEO_START(generic_bitmapped)
-	MDRV_VIDEO_UPDATE(epos)
-	MDRV_MACHINE_INIT(dealer)
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(AY8910, ay8912_interface)
@@ -612,179 +472,399 @@ ROM_START( igmo )
 ROM_END
 
 
-ROM_START( dealer )
-	ROM_REGION( 0x50000, REGION_CPU1, 0 )
-	ROM_LOAD( "u1.bin",			0x0000, 0x2000, CRC(e06f3563) SHA1(0d58cd1f2e1ca89adb9c64d7dd520bb1f2d50f1a) )
-	ROM_LOAD( "u2.bin",			0x2000, 0x2000, CRC(726bbbd6) SHA1(3538f3d655899c2a0f984c43fb7545ea4be1b231) )
-	ROM_LOAD( "u3.bin",			0x4000, 0x2000, CRC(ab721455) SHA1(a477da0590e0431172baae972e765473e19dcbff) )
-	ROM_LOAD( "u4.bin",			0x6000, 0x2000, BAD_DUMP CRC(ddb903e4) SHA1(4c06a2048b1c6989c363b110a17c33180025b9c8) )
+/*************************************
+ *
+ *	Epos Tristar 9000 (from current MAME)
+ *
+ *	- the program ROMs are encrypted: a counter changed by writes to
+ *	  ports 0x20-0x24 selects one of four decryption keys for 0x0000-0x5fff
+ *	- 0x6000-0x6fff is one half of U04, selected by the PPI port C (bit 0);
+ *	  U04 is kept at 0x16000 in the region, as 0x7000-0x7fff is RAM here
+ *	- the palette is in RAM (ports 0x00-0x0f), there is no color PROM
+ *	- 0x7000-0x7fff is battery backed, with a default image per game
+ *	- the inputs are two groups selected by the PPI port C (bits 5-6),
+ *	  read on the PPI port A; the DIP switches are read on the AY8910 port A
+ *	- the AY8910 port B selects the DIP switches (bit 6) and flips the
+ *	  screen (bit 7)
+ *
+ *************************************/
 
-	ROM_REGION( 0x0020, REGION_PROMS, 0 )
-	ROM_LOAD( "82s123.u66",		0x0000, 0x0020, NO_DUMP )	/* missing */
+static int tristar9000_counter;
+static int tristar9000_rombank;
+static int tristar9000_input_mux;
+static int tristar9000_ay_porta_mux;
+static int tristar9000_flip;
+static int tristar9000_portc;	/* last value written to the PPI port C */
+
+static void tristar9000_set_banks(void)
+{
+	data8_t *rom = memory_region(REGION_CPU1);
+
+	cpu_setbank(1, &rom[0x10000 * tristar9000_counter]);
+	cpu_setbank(2, &rom[0x16000 + 0x1000 * tristar9000_rombank]);
+}
+
+static WRITE_HANDLER( tristar9000_decrypt_rom_w )
+{
+	if (offset & 0x04)
+		tristar9000_counter = (tristar9000_counter + 1) & 0x03;
+	else
+		tristar9000_counter = (tristar9000_counter - 1) & 0x03;
+
+	tristar9000_set_banks();
+}
+
+static READ_HANDLER( tristar9000_ppi_porta_r )
+{
+	data8_t data = 0xff;
+
+	if (!(tristar9000_input_mux & 1))
+		data &= readinputport(2);
+
+	if (!(tristar9000_input_mux & 2))
+		data &= readinputport(3);
+
+	return data;
+}
+
+/*
+   ROMs U01-U03 are checked with the same code in a loop.
+   There's a separate ROM check for banked U04 at 30F3.
+*/
+static WRITE_HANDLER( tristar9000_ppi_portc_w )
+{
+	tristar9000_portc = data;
+	tristar9000_rombank = data & 0x01;
+	tristar9000_input_mux = (data >> 5) & 3;
+	tristar9000_set_banks();
+}
+
+static READ_HANDLER( tristar9000_ay_porta_r )
+{
+	return tristar9000_ay_porta_mux ? 0xff : readinputport(0);
+}
+
+static WRITE_HANDLER( tristar9000_ay_portb_w )
+{
+	/* bit 7: flip screen */
+	tristar9000_flip = (data >> 7) & 1;
+	epos_set_flipscreen(tristar9000_flip);
+
+	/* bit 6: AY8910 port A multiplexer */
+	tristar9000_ay_porta_mux = (data >> 6) & 1;
+}
+
+static ppi8255_interface tristar9000_ppi8255_intf =
+{
+	1,								/* 1 chip */
+	{ tristar9000_ppi_porta_r },	/* Port A read */
+	{ NULL },						/* Port B read */
+	{ NULL },						/* Port C read */
+	{ NULL },						/* Port A write */
+	{ NULL },						/* Port B write */
+	{ tristar9000_ppi_portc_w },	/* Port C write */
+};
+
+static MEMORY_READ_START( tristar9000_readmem )
+	{ 0x0000, 0x5fff, MRA_BANK1 },
+	{ 0x6000, 0x6fff, MRA_BANK2 },
+	{ 0x7000, 0xffff, MRA_RAM },
+MEMORY_END
+
+static MEMORY_WRITE_START( tristar9000_writemem )
+	{ 0x0000, 0x6fff, MWA_ROM },
+	{ 0x7000, 0x7fff, MWA_RAM, &generic_nvram, &generic_nvram_size },
+	{ 0x8000, 0xffff, epos_videoram_w, &videoram, &videoram_size },
+MEMORY_END
+
+static PORT_READ_START( tristar9000_readport )
+	{ 0x10, 0x13, ppi8255_0_r },
+	{ 0x38, 0x38, AY8910_read_port_0_r },
+PORT_END
+
+static PORT_WRITE_START( tristar9000_writeport )
+	{ 0x00, 0x0f, epos_palette_w },
+	{ 0x10, 0x13, ppi8255_0_w },
+	{ 0x20, 0x24, tristar9000_decrypt_rom_w },
+	{ 0x34, 0x34, AY8910_write_port_0_w },
+	{ 0x3c, 0x3c, AY8910_control_port_0_w },
+	{ 0x40, 0x40, watchdog_reset_w },
+PORT_END
+
+
+INPUT_PORTS_START( dealer )
+	PORT_START      /* DSW, read on the AY8910 port A */
+	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Free_Play ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unused ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unused ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unused ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unused ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Cabinet ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Upright ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Flip_Screen ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+	PORT_START      /* SYSTEM (not connected) */
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START      /* INPUTS, PPI port A, group 1 */
+	PORT_BITX(0x01, IP_ACTIVE_LOW, IPT_BUTTON1, "Hold 1", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
+	PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_BUTTON2, "Hold 2", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
+	PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_BUTTON3, "Hold 3", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
+	PORT_BITX(0x08, IP_ACTIVE_LOW, IPT_BUTTON4, "Hold 4", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
+	PORT_BITX(0x10, IP_ACTIVE_LOW, IPT_BUTTON5, "Hold 5", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
+	PORT_BIT( 0xe0, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START      /* INPUTS2, PPI port A, group 2 */
+	PORT_BITX(0x01, IP_ACTIVE_LOW, IPT_BUTTON6, "Cancel", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
+	PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_BUTTON7, "Draw", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
+	PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_BUTTON8, "Stand", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BITX(0x10, IP_ACTIVE_LOW, IPT_START1, "Play", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BITX(0x80, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
+INPUT_PORTS_END
+
+
+INPUT_PORTS_START( beastf )
+	PORT_START      /* DSW, read on the AY8910 port A */
+	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Free_Play ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unused ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unused ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unused ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unused ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Cabinet ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Upright ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Flip_Screen ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+	PORT_START      /* SYSTEM (not connected) */
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START      /* INPUTS, PPI port A, group 1 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_4WAY )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_4WAY )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_4WAY )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_4WAY )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON2 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON1 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START2 )
+
+	PORT_START      /* INPUTS2, PPI port A, group 2 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_4WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_4WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_4WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_4WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BITX(0x80, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
+INPUT_PORTS_END
+
+
+static struct AY8910interface tristar9000_ay8910_interface =
+{
+	1,	/* 1 chip */
+	22118400/32,	/* 0.6912 MHz (measured) */
+	{ 50 },
+	{ tristar9000_ay_porta_r },
+	{ 0 },
+	{ 0 },
+	{ tristar9000_ay_portb_w }
+};
+
+
+/* the battery backed RAM starts with the game's default image */
+static NVRAM_HANDLER( tristar9000 )
+{
+	if (read_or_write)
+		mame_fwrite(file, generic_nvram, generic_nvram_size);
+	else if (file)
+		mame_fread(file, generic_nvram, generic_nvram_size);
+	else if (memory_region(REGION_USER1))
+		memcpy(generic_nvram, memory_region(REGION_USER1), generic_nvram_size);
+	else
+		memset(generic_nvram, 0, generic_nvram_size);
+}
+
+static MACHINE_INIT( tristar9000 )
+{
+	ppi8255_init(&tristar9000_ppi8255_intf);
+
+	tristar9000_counter = 0;
+	tristar9000_rombank = 0;
+	tristar9000_input_mux = 3;
+	tristar9000_ay_porta_mux = 0;
+	tristar9000_flip = 0;
+	tristar9000_portc = 0;
+	epos_set_flipscreen(0);
+	tristar9000_set_banks();
+}
+
+static void tristar9000_postload(void)
+{
+	/* the PPI is not in the save states: restore its port C latch (all the
+	   port C bits are outputs on this board), which also sets the banks */
+	ppi8255_w(0, 2, tristar9000_portc);
+	tristar9000_set_banks();
+	epos_set_flipscreen(tristar9000_flip);
+}
+
+static MACHINE_DRIVER_START( tristar9000 )
+
+	/* basic machine hardware */
+	MDRV_CPU_ADD(Z80, 22118400/8)	/* 2.7648 MHz (measured) */
+	MDRV_CPU_MEMORY(tristar9000_readmem,tristar9000_writemem)
+	MDRV_CPU_PORTS(tristar9000_readport,tristar9000_writeport)
+	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+
+	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)
+
+	MDRV_MACHINE_INIT(tristar9000)
+	MDRV_NVRAM_HANDLER(tristar9000)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
+	MDRV_SCREEN_SIZE(272, 241)
+	MDRV_VISIBLE_AREA(0, 271, 0, 235)
+	MDRV_PALETTE_LENGTH(32)	/* RAM based palette, no PROM */
+
+	MDRV_VIDEO_START(epos)
+	MDRV_VIDEO_UPDATE(epos)
+
+	/* sound hardware */
+	MDRV_SOUND_ADD(AY8910, tristar9000_ay8910_interface)
+MACHINE_DRIVER_END
+
+
+ROM_START( dealer )
+	ROM_REGION( 0x40000, REGION_CPU1, 0 )
+	ROM_LOAD( "u1.bin",         0x0000, 0x2000, CRC(e06f3563) SHA1(0d58cd1f2e1ca89adb9c64d7dd520bb1f2d50f1a) )
+	ROM_LOAD( "u2.bin",         0x2000, 0x2000, CRC(726bbbd6) SHA1(3538f3d655899c2a0f984c43fb7545ea4be1b231) )
+	ROM_LOAD( "u3.bin",         0x4000, 0x2000, CRC(ab721455) SHA1(a477da0590e0431172baae972e765473e19dcbff) )
+	ROM_LOAD( "u4.bin",         0x6000, 0x2000, CRC(ddb903e4) SHA1(4c06a2048b1c6989c363b110a17c33180025b9c8) )
+
+	ROM_REGION( 0x1000, REGION_USER1, 0 )	/* default NVRAM */
+	ROM_LOAD( "dealer.nv", 0, 0x1000, CRC(a6f88459) SHA1(1deda2a71433c97fe3e5cb39defc285f4fa9c9b8) )
 ROM_END
 
-MACHINE_INIT( dealer )
-{
-	cpu_setbank(1, memory_region(REGION_CPU1) + 0x10000);
+/*
+   Revenger '84 (newer) - EPOS TRISTAR 9000
+*/
+ROM_START( revngr84 )
+	ROM_REGION( 0x40000, REGION_CPU1, 0 )
+	ROM_LOAD( "u_1__revenger__r06254__=c=_epos_corp.m5l2764k.u1",  0x0000, 0x2000, CRC(308f231f) SHA1(cf06695601bd0387e4fcb64d9b34143323e98b07) ) /* labeled as "U 1 // REVENGER // R06254 // (C) EPOS CORP" (hand written R06254 over R06124) */
+	ROM_LOAD( "u_2__revenger__r06254__=c=_epos_corp.m5l2764k.u2",  0x2000, 0x2000, CRC(e80bbfb4) SHA1(9302beaef8bbb7376b6a20e9ee5adbcf60d66dd8) ) /* labeled as "U 2 // REVENGER // R06254 // (C) EPOS CORP" (hand written R06254 over R06124) */
+	ROM_LOAD( "u_3__revenger__r06254__=c=_epos_corp.m5l2764k.u3",  0x4000, 0x2000, CRC(d9270929) SHA1(a95034b5387a40e02f04bdfa79e1d8e65dad30fe) ) /* labeled as "U 3 // REVENGER // R06254 // (C) EPOS CORP" (hand written R06254 over R06124) */
+	ROM_LOAD( "u_4__revenger__r06254__=c=_epos_corp.m5l2764k.u4",  0x6000, 0x2000, CRC(d6e6cfa8) SHA1(f10131bb2e9d088c7b6d6a5d5520073d78ad69cc) ) /* labeled as "U 4 // REVENGER // R06254 // (C) EPOS CORP" (hand written R06254 over R06124) */
 
-	ppi8255_init(&ppi8255_intf);
-}
+	ROM_REGION( 0x0020, REGION_PROMS, 0 )
+	ROM_LOAD( "dm74s288n.u60", 0x0000, 0x0020, CRC(be2b0641) SHA1(26982903b6d942af8e0a526412d8e01978d76420) ) /* unknown purpose */
 
-DRIVER_INIT( dealer )
+	ROM_REGION( 0x1000, REGION_USER1, 0 )	/* default NVRAM */
+	ROM_LOAD( "revngr84.nv", 0, 0x1000, CRC(a4417770) SHA1(92eded82db0810e7818d2f52a0497032f390fcc1) )
+ROM_END
+
+/*
+   Revenger '84 (older) - EPOS TRISTAR 9000
+*/
+ROM_START( revenger )
+	ROM_REGION( 0x40000, REGION_CPU1, 0 )
+	ROM_LOAD( "r06124.u1",    0x0000, 0x2000, BAD_DUMP CRC(fad1a2a5) SHA1(a31052c91fe67e2e90441abc40b6483f921ecfe3) )
+	ROM_LOAD( "r06124.u2",    0x2000, 0x2000, BAD_DUMP CRC(a8e0ee7b) SHA1(f6f78e8ce40eab07de461b364876c1eb4a78d96e) )
+	ROM_LOAD( "r06124.u3",    0x4000, 0x2000, BAD_DUMP CRC(cca414a5) SHA1(1c9dd3ff63d57e9452e63083cdbd7f5d693bb686) )
+	ROM_LOAD( "r06124.u4",    0x6000, 0x2000, BAD_DUMP CRC(0b81c303) SHA1(9022d18dec11312eb4bb471c22b563f5f897b4f7) )
+
+	ROM_REGION( 0x0020, REGION_PROMS, 0 )
+	ROM_LOAD( "dm74s288n.u60", 0x0000, 0x0020, CRC(be2b0641) SHA1(26982903b6d942af8e0a526412d8e01978d76420) ) /* unknown purpose */
+
+	ROM_REGION( 0x1000, REGION_USER1, 0 )	/* default NVRAM */
+	ROM_LOAD( "revngr84.nv", 0, 0x1000, CRC(a4417770) SHA1(92eded82db0810e7818d2f52a0497032f390fcc1) )
+ROM_END
+
+/*
+   Beastie Feastie - EPOS TRISTAR 9000
+*/
+ROM_START( beastf )
+	ROM_REGION( 0x40000, REGION_CPU1, 0 )
+	ROM_LOAD( "u_1__beastie__feastie__b09084.m5l2764k.u1",  0x0000, 0x2000, CRC(820d4019) SHA1(e953aaeeb626776dd86c521066b553d054ae4422) ) /* labeled as "U 1 // BEASTIE // FEASTIE // B09084" */
+	ROM_LOAD( "u_2__beastie__feastie__b09084.m5l2764k.u2",  0x2000, 0x2000, CRC(967405d8) SHA1(dd763be909e6966521b01ee878df9cef865c3b30) ) /* labeled as "U 2 // BEASTIE // FEASTIE // B09084" */
+	ROM_LOAD( "u_3__beastie__feastie__b09084.m5l2764k.u3",  0x4000, 0x2000, CRC(3edb5381) SHA1(14c236045e6df7a475c32222652860689d4f68ce) ) /* labeled as "U 3 // BEASTIE // FEASTIE // B09084" */
+	ROM_LOAD( "u_4__beastie__feastie__b09084.m5l2764k.u4",  0x6000, 0x2000, CRC(c8cd9640) SHA1(72da881b903ead873cc3f4df27646d1ffdd63c1c) ) /* labeled as "U 4 // BEASTIE // FEASTIE // B09084" */
+
+	ROM_REGION( 0x1000, REGION_USER1, 0 )	/* default NVRAM */
+	ROM_LOAD( "beastf.nv", 0, 0x1000, CRC(98017b09) SHA1(0e2b2071bb47fc179d5bc36ef9431a9d2727d36a) )
+ROM_END
+
+
+static DRIVER_INIT( tristar9000 )
 {
-	unsigned char *ROM = memory_region(REGION_CPU1);
+	data8_t *rom = memory_region(REGION_CPU1);
 	int A;
-	int oldbyte,newbyte;
+
+	/* Key 0 */
+	for (A = 0; A < 0x8000; A++)
+		rom[A] = BITSWAP8(rom[A] ^ 0xbd, 2,6,4,0,5,7,1,3);
 
 	/* Key 1 */
-	for (A = 0;A < 0x7000;A++)
-	{
-		oldbyte = ROM[A];
-
-		newbyte = 0;
-		newbyte += ((oldbyte & 0x01 ) ^ 0x01) * 0x10;
-		newbyte += ((oldbyte & 0x02 ) ^ 0x00) * 0x01;
-		newbyte += ((oldbyte & 0x04 ) ^ 0x04) * 0x20;
-		newbyte += ((oldbyte & 0x08 ) ^ 0x08) / 0x08;
-		newbyte += ((oldbyte & 0x10 ) ^ 0x10) * 0x02;
-		newbyte += ((oldbyte & 0x20 ) ^ 0x20) / 0x04;
-		newbyte += ((oldbyte & 0x40 ) ^ 0x00) * 0x01;
-		newbyte += ((oldbyte & 0x80 ) ^ 0x80) / 0x20;
-
-		ROM[A + 0x10000] = newbyte;
-	}
+	for (A = 0; A < 0x8000; A++)
+		rom[A + 0x10000] = BITSWAP8(rom[A], 7,5,4,6,3,2,1,0);
 
 	/* Key 2 */
-	for (A = 0;A < 0x7000;A++)
-	{
-		oldbyte = ROM[A+0x10000];
-
-		newbyte = 0;
-		newbyte += ((oldbyte & 0x01 ) ^ 0x00) * 0x01;
-		newbyte += ((oldbyte & 0x02 ) ^ 0x00) * 0x01;
-		newbyte += ((oldbyte & 0x04 ) ^ 0x00) * 0x01;
-		newbyte += ((oldbyte & 0x08 ) ^ 0x00) * 0x01;
-		newbyte += ((oldbyte & 0x10 ) ^ 0x00) * 0x02;
-		newbyte += ((oldbyte & 0x20 ) ^ 0x00) * 0x02;
-		newbyte += ((oldbyte & 0x40 ) ^ 0x00) / 0x04;
-		newbyte += ((oldbyte & 0x80 ) ^ 0x00) * 0x01;
-
-		ROM[A + 0x20000 ] = newbyte;
-	}
+	for (A = 0; A < 0x8000; A++)
+		rom[A + 0x20000] = BITSWAP8(rom[A] ^ 1, 7,6,5,4,3,0,2,1);
 
 	/* Key 3 */
-	for (A = 0;A < 0x7000;A++)
-	{
-		oldbyte = ROM[A+0x10000];
+	for (A = 0; A < 0x8000; A++)
+		rom[A + 0x30000] = BITSWAP8(rom[A] ^ 1, 7,5,4,6,3,0,2,1);
 
-		newbyte = 0;
-		newbyte += ((oldbyte & 0x01 ) ^ 0x01) * 0x04;
-		newbyte += ((oldbyte & 0x02 ) ^ 0x00) / 0x02;
-		newbyte += ((oldbyte & 0x04 ) ^ 0x00) / 0x02;
-		newbyte += ((oldbyte & 0x08 ) ^ 0x00) * 0x01;
-		newbyte += ((oldbyte & 0x10 ) ^ 0x00) * 0x01;
-		newbyte += ((oldbyte & 0x20 ) ^ 0x00) * 0x01;
-		newbyte += ((oldbyte & 0x40 ) ^ 0x00) * 0x01;
-		newbyte += ((oldbyte & 0x80 ) ^ 0x00) * 0x01;
+	/* U04 (key 0) for the 0x6000-0x6fff bank. 0x7000-0x7fff is RAM, which
+	   uses the region at that address, so its 2nd half can't stay there.
+	   Only 0x0000-0x5fff of the key 1-3 copies is used. */
+	memcpy(&rom[0x16000], &rom[0x6000], 0x2000);
 
-		ROM[A + 0x30000 ] = newbyte;
-	}
-
-	/* Key 4 */
-	for (A = 0;A < 0x7000;A++)
-	{
-
-/* there is not enough data to determine the last key.
-   the code in question is this:
-
-     55  =   32 		ld (793e),a
-2f59 5c   	  3e
-2f5a 79      78
-
-2f5b 55   32     		ld (79xx),a
-2f5c f7   53 or  D2 or  F3
-2f5d 79   78
-
-2f5e 55    32      		ld (79xx),a
-2f5f cd	1B 56 77 9A BB F6
-     79    78
-It writes data to be read later.
-I don't know the lsb of the writes.  I do know:
-if 2f5c = 53 then 2f5f = 9A or BB or F6
-          d2             1B 77 BB
-          f3             1B 56 9A
-
-Someone will have to check the code to see what it's looking for.
-As usual I've had to make some assumptions so I can't guarantee 100% accuracy
-Dave
-*/
-
-		oldbyte = ROM[A+0x10000];
-
-		newbyte = 0;
-#if 1
-/*53:9a*/
-		newbyte += ((oldbyte & 0x01 ) ^ 0x01) * 0x04;
-		newbyte += ((oldbyte & 0x02 ) ^ 0x00) / 0x02;
-		newbyte += ((oldbyte & 0x04 ) ^ 0x00) / 0x02;
-		newbyte += ((oldbyte & 0x08 ) ^ 0x00) * 0x01;
-		newbyte += ((oldbyte & 0x10 ) ^ 0x10) * 0x08;
-		newbyte += ((oldbyte & 0x20 ) ^ 0x00) * 0x02;
-		newbyte += ((oldbyte & 0x40 ) ^ 0x00) / 0x04;
-		newbyte += ((oldbyte & 0x80 ) ^ 0x80) / 0x04;
-#endif
-
-#if 0
-/*53:bb*/
-		newbyte += ((oldbyte & 0x01 ) ^ 0x01) * 0x04;
-		newbyte += ((oldbyte & 0x02 ) ^ 0x02) * 0x10;
-		newbyte += ((oldbyte & 0x04 ) ^ 0x00) / 0x02;
-		newbyte += ((oldbyte & 0x08 ) ^ 0x00) * 0x01;
-		newbyte += ((oldbyte & 0x10 ) ^ 0x10) * 0x08;
-		newbyte += ((oldbyte & 0x20 ) ^ 0x00) * 0x02;
-		newbyte += ((oldbyte & 0x40 ) ^ 0x00) / 0x04;
-		newbyte += ((oldbyte & 0x80 ) ^ 0x00) / 0x80;
-#endif
-
-#if 0
-/*f3:9a*/
-		newbyte += ((oldbyte & 0x01 ) ^ 0x01) * 0x04;
-		newbyte += ((oldbyte & 0x02 ) ^ 0x00) / 0x02;
-		newbyte += ((oldbyte & 0x04 ) ^ 0x00) / 0x02;
-		newbyte += ((oldbyte & 0x08 ) ^ 0x00) * 0x01;
-		newbyte += ((oldbyte & 0x10 ) ^ 0x00) * 0x02;
-		newbyte += ((oldbyte & 0x20 ) ^ 0x00) * 0x02;
-		newbyte += ((oldbyte & 0x40 ) ^ 0x00) / 0x04;
-		newbyte += ((oldbyte & 0x80 ) ^ 0x00) * 0x01;
-#endif
-
-#if 0
-/*f3:1b*/
-		newbyte += ((oldbyte & 0x01 ) ^ 0x01) * 0x04;
-		newbyte += ((oldbyte & 0x02 ) ^ 0x00) * 0x40;
-		newbyte += ((oldbyte & 0x04 ) ^ 0x00) / 0x02;
-		newbyte += ((oldbyte & 0x08 ) ^ 0x00) * 0x01;
-		newbyte += ((oldbyte & 0x10 ) ^ 0x00) * 0x02;
-		newbyte += ((oldbyte & 0x20 ) ^ 0x00) * 0x02;
-		newbyte += ((oldbyte & 0x40 ) ^ 0x00) / 0x04;
-		newbyte += ((oldbyte & 0x80 ) ^ 0x00) / 0x80;
-#endif
-
-#if 0
-/*d2:1b*/
-		newbyte += ((oldbyte & 0x01 ) ^ 0x01) * 0x04;
-		newbyte += ((oldbyte & 0x02 ) ^ 0x00) * 0x40;
-		newbyte += ((oldbyte & 0x04 ) ^ 0x00) / 0x02;
-		newbyte += ((oldbyte & 0x08 ) ^ 0x00) * 0x01;
-		newbyte += ((oldbyte & 0x10 ) ^ 0x10) / 0x10;
-		newbyte += ((oldbyte & 0x20 ) ^ 0x00) * 0x02;
-		newbyte += ((oldbyte & 0x40 ) ^ 0x00) / 0x04;
-		newbyte += ((oldbyte & 0x80 ) ^ 0x80) / 0x04;
-#endif
-
-		ROM[A + 0x40000 ] = newbyte;
-	}
+	state_save_register_int("tristar9000", 0, "counter",        &tristar9000_counter);
+	state_save_register_int("tristar9000", 0, "rombank",        &tristar9000_rombank);
+	state_save_register_int("tristar9000", 0, "input_mux",      &tristar9000_input_mux);
+	state_save_register_int("tristar9000", 0, "ay_porta_mux",   &tristar9000_ay_porta_mux);
+	state_save_register_int("tristar9000", 0, "flip",           &tristar9000_flip);
+	state_save_register_int("tristar9000", 0, "portc",          &tristar9000_portc);
+	state_save_register_func_postload(tristar9000_postload);
 }
+
 
 /*************************************
  *
@@ -803,6 +883,9 @@ GAME ( 1983, theglob2, suprglob, epos,  suprglob, 0,	  ROT270, "Epos Corporation
 GAME ( 1983, theglob3, suprglob, epos,  suprglob, 0,	  ROT270, "Epos Corporation", "The Glob (set 3)" )
 GAME ( 1984, igmo,     0,        epos,  igmo,     0,	  ROT270, "Epos Corporation", "IGMO" )
 
-/* Epos Tristar 9000 */ 
+/* Epos Tristar 9000 */
 
-GAMEX( 19??, dealer,   0,        dealer, dealer,  dealer, ROT270, "Epos Corporation", "The Dealer", GAME_NOT_WORKING)
+GAME ( 1984, dealer,   0,        tristar9000, dealer, tristar9000, ROT270, "Epos Corporation", "The Dealer" )
+GAME ( 1984, revngr84, 0,        tristar9000, beastf, tristar9000, ROT270, "Epos Corporation", "Revenger '84 (newer)" )
+GAMEX( 1984, revenger, revngr84, tristar9000, beastf, tristar9000, ROT270, "Epos Corporation", "Revenger '84 (older)", GAME_NOT_WORKING ) /* bad dump */
+GAME ( 1984, beastf,   suprglob, tristar9000, beastf, tristar9000, ROT270, "Epos Corporation", "Beastie Feastie" )

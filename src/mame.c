@@ -175,20 +175,6 @@ static int game_loaded;
 
 ***************************************************************************/
 
-static struct chd_interface_file *mame_chd_open(const char *filename, const char *mode);
-static void mame_chd_close(struct chd_interface_file *file);
-static UINT32 mame_chd_read(struct chd_interface_file *file, UINT64 offset, UINT32 count, void *buffer);
-static UINT32 mame_chd_write(struct chd_interface_file *file, UINT64 offset, UINT32 count, const void *buffer);
-static UINT64 mame_chd_length(struct chd_interface_file *file);
-
-static struct chd_interface mame_chd_interface =
-{
-	mame_chd_open,
-	mame_chd_close,
-	mame_chd_read,
-	mame_chd_write,
-	mame_chd_length
-};
 
 
 
@@ -348,9 +334,6 @@ static int init_machine(void)
 			goto cant_allocate_input_ports_default;
 		}
 	}
-
-	/* init the hard drive interface now, before attempting to load */
-	chd_set_interface(&mame_chd_interface);
 
 	/* load the ROMs if we have some */
 	if (gamedrv->rom && rom_load(gamedrv->rom) != 0)
@@ -549,7 +532,7 @@ static void shutdown_machine(void)
 		free_memory_region(i);
 
 	/* close all hard drives */
-	chd_close_all();
+	hard_disk_close_all();
 
 	/* reset the CPU system */
 	cpu_exit();
@@ -1016,6 +999,38 @@ void set_visible_area(int min_x, int max_x, int min_y, int max_y)
 }
 
 
+/*-------------------------------------------------
+	set_display_aspect_ratio - changes the aspect
+	ratio of the display while the game runs, for
+	the drivers whose display shape is chosen at
+	run time (DIP switches, monitor setups, wide
+	video modes)
+
+	The new aspect ratio reaches the frontend with
+	the next display update, together with the
+	geometry, like a change of the visible area.
+	Calling it again with the same ratio does
+	nothing, so drivers can call it every frame.
+-------------------------------------------------*/
+
+void set_display_aspect_ratio(int aspect_x, int aspect_y)
+{
+	extern struct osd_create_params video_config;
+
+	if (aspect_x <= 0 || aspect_y <= 0)
+		return;
+
+	if (video_config.aspect_x == aspect_x && video_config.aspect_y == aspect_y)
+		return;
+
+	video_config.aspect_x = aspect_x;
+	video_config.aspect_y = aspect_y;
+
+	/* the frontend gets the new geometry with the next display update */
+	visible_area_changed = 1;
+}
+
+
 
 /*-------------------------------------------------
 	schedule_full_refresh - force a full erase
@@ -1392,85 +1407,6 @@ void machine_remove_sound(struct InternalMachineDriver *machine, const char *tag
 		}
 
 	log_cb(RETRO_LOG_ERROR, LOGPRE "Can't find sound '%s'!\n", tag);
-}
-
-
-
-/*-------------------------------------------------
-	mame_chd_open - interface for opening
-	a hard disk image
--------------------------------------------------*/
-
-struct chd_interface_file *mame_chd_open(const char *filename, const char *mode)
-{
-	/* look for read-only drives first in the ROM path */
-	if (mode[0] == 'r' && !strchr(mode, '+'))
-	{
-		const struct GameDriver *drv;
-
-		/* attempt reading up the chain through the parents */
-		for (drv = Machine->gamedrv; drv != NULL; drv = drv->clone_of)
-		{
-			void* file = mame_fopen(drv->name, filename, FILETYPE_IMAGE, 0);
-
-			if (file != NULL)
-				return file;
-		}
-
-		return NULL;
-	}
-
-	/* look for read/write drives in the diff area */
-	return (struct chd_interface_file *)mame_fopen(NULL, filename, FILETYPE_IMAGE_DIFF, 1);
-}
-
-
-
-/*-------------------------------------------------
-	mame_chd_close - interface for closing
-	a hard disk image
--------------------------------------------------*/
-
-void mame_chd_close(struct chd_interface_file *file)
-{
-	mame_fclose((mame_file *)file);
-}
-
-
-
-/*-------------------------------------------------
-	mame_chd_read - interface for reading
-	from a hard disk image
--------------------------------------------------*/
-
-UINT32 mame_chd_read(struct chd_interface_file *file, UINT64 offset, UINT32 count, void *buffer)
-{
-	mame_fseek((mame_file *)file, offset, SEEK_SET);
-	return mame_fread((mame_file *)file, buffer, count);
-}
-
-
-
-/*-------------------------------------------------
-	mame_chd_write - interface for writing
-	to a hard disk image
--------------------------------------------------*/
-
-UINT32 mame_chd_write(struct chd_interface_file *file, UINT64 offset, UINT32 count, const void *buffer)
-{
-	mame_fseek((mame_file *)file, offset, SEEK_SET);
-	return mame_fwrite((mame_file *)file, buffer, count);
-}
-
-
-/*-------------------------------------------------
-	mame_chd_length - interface for getting
-	the length a hard disk image
--------------------------------------------------*/
-
-UINT64 mame_chd_length(struct chd_interface_file *file)
-{
-	return mame_fsize((mame_file *)file);
 }
 
 

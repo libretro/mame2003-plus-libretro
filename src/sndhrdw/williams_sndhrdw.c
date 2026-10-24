@@ -14,6 +14,7 @@
 ****************************************************************************/
 
 #include "driver.h"
+#include "state.h"
 #include "machine/6821pia.h"
 #include "cpu/m6809/m6809.h"
 #include "williams.h"
@@ -33,6 +34,14 @@ static INT8 soundalt_cpunum;
 static UINT8 williams_pianum;
 
 static UINT8 adpcm_bank_count;
+
+/* ADPCM board save state: the core saves the contents of bank 6 into */
+/* whatever ROM bank is mapped when the state is loaded, so keep a    */
+/* pristine copy of the banked ROM to undo that, then remap the bank  */
+#define ADPCM_BANKED_SIZE	(8 * 0x8000)
+static UINT8 adpcm_bank_select;
+static UINT8 *adpcm_bank_backup;
+static UINT8 *adpcm_bank_region;
 
 
 
@@ -493,7 +502,45 @@ static WRITE_HANDLER( cvsd_bank_select_w )
 
 static WRITE_HANDLER( adpcm_bank_select_w )
 {
+	adpcm_bank_select = data;
 	cpu_setbank(6, get_adpcm_bank_base(data));
+}
+
+
+static void adpcm_state_postload(void)
+{
+	UINT8 *mapped = cpu_bankbase[6];
+	UINT8 *wanted = get_adpcm_bank_base(adpcm_bank_select);
+
+	/* the load wrote the saved bank into the bank mapped at that time */
+	if (adpcm_bank_backup && mapped != wanted &&
+		mapped >= adpcm_bank_region && mapped + 0x8000 <= adpcm_bank_region + ADPCM_BANKED_SIZE)
+		memcpy(mapped, adpcm_bank_backup + (mapped - adpcm_bank_region), 0x8000);
+
+	cpu_setbank(6, wanted);
+}
+
+
+void williams_adpcm_register_state(void)
+{
+	int cpunum = mame_find_cpu_index("adpcm");
+
+	/* called once from the driver init, before any bank is selected */
+	adpcm_bank_select = 0;
+	adpcm_bank_backup = NULL;
+	adpcm_bank_region = NULL;
+	if (cpunum < 0 || memory_region_length(REGION_CPU1 + cpunum) < 0x10000 + ADPCM_BANKED_SIZE)
+		return;
+
+	adpcm_bank_region = memory_region(REGION_CPU1 + cpunum) + 0x10000;
+	adpcm_bank_backup = auto_malloc(ADPCM_BANKED_SIZE);
+	if (!adpcm_bank_backup)
+		return;
+	memcpy(adpcm_bank_backup, adpcm_bank_region, ADPCM_BANKED_SIZE);
+
+	state_save_register_UINT8("williams_adpcm", 0, "bank_select", &adpcm_bank_select, 1);
+	state_save_register_UINT8("williams_adpcm", 0, "int_state",   &williams_sound_int_state, 1);
+	state_save_register_func_postload(adpcm_state_postload);
 }
 
 

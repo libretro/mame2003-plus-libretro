@@ -29,6 +29,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Bare Knuckle II (chinese bootleg of Megadrive version)
 * Bare Knuckle III (bootleg of Megadrive version)
 * Baryon: Future Assault
+* Beastie Feastie (Epos Tristar 9000) - Romset `beastf`; the Pac-Man conversion is now `beastfp`, as in current MAME
 * Big Fight - Big Trouble In The Atlantic Ocean
 * Bomb Kick
 * Boogie Wings
@@ -155,6 +156,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Ms. Pacman Twin
 * Mrs. Dynamite
 * Multi Champ Deluxe * Mature *
+* New Zero Team
 * Ninja Kazan
 * Oo Parts (Japan, Prototype)
 * Opa Opa (Rev A Unprotected)
@@ -186,7 +188,11 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Racing Beat
 * Racing Hero
 * Rage Of The Dragons
+* Raiden II
+* Raiden DX
+* Raiden II / Raiden DX New
 * Recalhorn (prototype)
+* Revenger '84 (newer) - Romset `revngr84`; the older set `revenger` is a bad dump and stays not working
 * Riot
 * Rolling Crush
 * Round Up 5 - Super Delta Force
@@ -218,8 +224,11 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Space Raider
 * Spectrum 2000 (Euro)
 * Squash
+* Stadium Cross (World, linkable) and (US) - Romsets `scrossa`, `scrossu`; `scross` now uses the ROM names of current MAME
 * Star Fire 2
 * Steel Worker
+* Street Fighter III 3rd Strike: Fight for the Future (Widescreen 20220908, Bank Bank hack) - Romset `sfiii3ws`
+* Street Fighter Zero 3 Mix v0.32 (Zero800 hack, CPS2Turbo) - Romset `sfz3mix`, optional music samples `sfz3mix.zip`
 * Success Joe
 * Super Bishi Bashi Championship (ver JAA, 2 Players)
 * Super Bubble Bobble (Sun Mixing, Megadrive clone hardware)
@@ -268,11 +277,13 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Woodpecker
 * World Cup Volley 95
 * Xeno Crisis
+* Zero Team 2000
 * Zintrick
 * Zupapa
 
 ## New Clones
 
+* Asura Buster - Eternal Warriors (USA), (Japan, set 2) and (Japan) (ARCADIA review build) - Romsets `asurabus`, `asurabusja`, `asurabusjr`; the Japan set 1 is now `asurabusj`, as in current MAME
 * Battle Shark (Japan, Joystick)
 * Botanic (French version)
 * Bubble Bobble (prototype on tokio hardware)
@@ -452,11 +463,13 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Phantasm - Romset `phantasm`
 * Photo Y2k - Romset `photoy2k`
 * Pigskin 621AD - Romset `pigskin`
+* Princess Clara Daisakusen - Romset `prikura`
 * Power Drive - Romset `powerdrv`
 * Prebillian - `pbillian`
 * Pro Baseball Skill Tryout - `tryout`
 * Puzzle King (PacMan 2 with Tetris & HyperMan 2 & Snow Bros - `4in1boot`
 * Rabbit - Romset `rabbit` - no sound
+* Raiden II - Romset `raiden2`
 * Rampage - Romsets `rampage` and `rampage2`
 * Risky Challenge - Romset `riskchal`
 * Rohga Armor Force - Romsets `rohga`, `rohgah`, `rohgau`
@@ -487,6 +500,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Tapper - Romset `tapper`
 * Target Ball (Nude) - Romset `tgtball`
 * Task Force Harrier - Romsets `tharrier` and `tharierj`
+* The Dealer - Romset `dealer` - Epos Tristar 9000 board from current MAME
 * Thunder Blade - Romsets `thndrbld` and `thndrbld1`
 * Thunder Dragon - Romset `tdragon` - Minor sound issues remaining
 * Thunder Strike - Romset `tstrike`
@@ -575,6 +589,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Air Buster
 * Ashita no Joe
 * Asterix
+* Asura Blade, Asura Buster (no more repeated voices and sound effects)
 * Athena
 * Bandito
 * Big Event Golf
@@ -1159,6 +1174,15 @@ could crash on the score calc between levels is sorted [amadvance, arcadez]
 * Ported across from FBL dink's fix for the broken text gfx layer in the Japanese version Of Cameltry [dink, arcadez]
 * Added support for Jammin a rare Atari prototype music game to the Donkey Kong driver [arcadez]
 * Added Saurian Front a super rare Williams prototype of Midway's Strike Force to the midyunit driver [arcadez]
-* Added Adventure Canoe to the taitosj driver [arcadez,  jackphilippi, dink]
+* Added Adventure Canoe to the taitosj driver [arcadez, jackphilippi, dink]
 * Added support for Ketsui: Kizuna Jigoku Tachi - IKD 2007 Special Version to pgm.c [arcadez]
+* Fixed a protection related problem with powerups in Burning Force [MAMEDev, arcadez]
+* Extended IREM Drum sample support to Lode Runner 3 and 4 [dink, arcadez]
+* Improved the dip switch options for Data East's Break Thru [arcadez]
+* Fixed BG GFX colours for Crater Raider [MAMEDev, arcadez]
+* Fixed multiple sound sample issues in TAD CORP's Toki [MAMEDev, arcadez]
+* Fixed sound sample playing for SEGA's Zaxxon [MAMEDev, arcadez]
+* Fixed Palette banking problems for Pleiads [MAMEDev, arcadez]
+* Added fixes from later MAME so that Princess Clara Daisakusen now works [MAMEDev, arcadez]
+* Ported a new raiden2.c driver Raiden II Raiden DX and Zero Team etc etc now playable [Salvia, MAMEDev, FBN, vanni and claude, arcadez]
 

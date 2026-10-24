@@ -5,6 +5,7 @@
 ****************************************************************************/
 
 #include "driver.h"
+#include "state.h"
 #include "cpu/adsp2100/adsp2100.h"
 #include "dcs.h"
 
@@ -128,6 +129,11 @@ static data16_t *dcs_sram_bank1;
 static data16_t *dcs_expanded_rom;
 
 static data16_t *dcs_polling_base;
+
+/* save state helpers: the autobuffer timer is not saved by the core */
+static double dcs_reg_timer_period;
+static double dcs_reg_timer_left;
+static INT32 dcs_wait_trigger;
 
 #if (LOG_DCS_TRANSFERS)
 static data16_t *transfer_dest;
@@ -405,6 +411,85 @@ static void dcs_reset(void)
 }
 
 
+static void dcs_state_presave(void)
+{
+	dcs_reg_timer_left = dcs.reg_timer ? timer_timeleft(dcs.reg_timer) : TIME_NEVER;
+
+	/* the speedups park the ADSP past its sync loop until the next */
+	/* interrupt; it must still be parked after a load              */
+	dcs_wait_trigger = cpunum_get_suspend_trigger(dcs_cpunum);
+}
+
+
+static void dcs_cpu_postload(void)
+{
+	/* runs with the CPU states, after the core restored suspensions */
+	if (dcs_wait_trigger)
+		cpunum_suspend_until_trigger(dcs_cpunum, dcs_wait_trigger, 1);
+}
+
+
+static void dcs_state_postload(void)
+{
+	/* the autobuffer source is always the DCS CPU region */
+	dcs.mem = dcs.enabled ? memory_region(REGION_CPU1 + dcs_cpunum) : 0;
+
+	/* restore the DCS2 banking */
+	if (dcs_sram_bank0)
+	{
+		cpu_setbank(21, (dcs.srambank & 0x1000) ? dcs_sram_bank1 : dcs_sram_bank0);
+		cpu_setbank(20, memory_region(REGION_CPU1 + dcs_cpunum) + ADSP2100_SIZE + 0x8000 + (dcs.drambank & 0x7ff) * 0x400*2);
+		if (((dcs.srambank >> 7) & 7) == dcs.drambank)
+			cpu_setbank(20, dcs_expanded_rom + ((dcs.srambank >> 7) & 7) * 0x400);
+	}
+
+	/* re-arm the autobuffer timer where it was */
+	if (dcs.reg_timer)
+	{
+		if (dcs.enabled && dcs_reg_timer_left < TIME_NEVER / 2 && dcs_reg_timer_period > 0)
+			timer_adjust(dcs.reg_timer, (dcs_reg_timer_left > 0) ? dcs_reg_timer_left : 0, 0, dcs_reg_timer_period);
+		else
+			timer_adjust(dcs.reg_timer, TIME_NEVER, 0, 0);
+	}
+}
+
+
+static void dcs_register_state(void)
+{
+	state_save_register_UINT8 ("dcs", 0, "auto_ack",         &dcs.auto_ack, 1);
+	state_save_register_UINT16("dcs", 0, "size",             &dcs.size, 1);
+	state_save_register_UINT16("dcs", 0, "incs",             &dcs.incs, 1);
+	state_save_register_int   ("dcs", 0, "ireg",             &dcs.ireg);
+	state_save_register_UINT16("dcs", 0, "ireg_base",        &dcs.ireg_base, 1);
+	state_save_register_UINT16("dcs", 0, "control_regs",     dcs.control_regs, 32);
+	state_save_register_UINT16("dcs", 0, "rombank",          &dcs.rombank, 1);
+	state_save_register_UINT16("dcs", 0, "srambank",         &dcs.srambank, 1);
+	state_save_register_UINT16("dcs", 0, "drambank",         &dcs.drambank, 1);
+	state_save_register_UINT8 ("dcs", 0, "enabled",          &dcs.enabled, 1);
+	state_save_register_UINT32("dcs", 0, "buffer_in",        &dcs.buffer_in, 1);
+	state_save_register_UINT32("dcs", 0, "sample_step",      &dcs.sample_step, 1);
+	state_save_register_UINT32("dcs", 0, "sample_position",  &dcs.sample_position, 1);
+	state_save_register_INT16 ("dcs", 0, "current_sample",   &dcs.current_sample, 1);
+	state_save_register_UINT16("dcs", 0, "latch_control",    &dcs.latch_control, 1);
+	state_save_register_UINT16("dcs", 0, "input_data",       &dcs.input_data, 1);
+	state_save_register_UINT16("dcs", 0, "output_data",      &dcs.output_data, 1);
+	state_save_register_UINT16("dcs", 0, "output_control",   &dcs.output_control, 1);
+	state_save_register_UINT32("dcs", 0, "output_control_cycles", &dcs.output_control_cycles, 1);
+	state_save_register_UINT8 ("dcs", 0, "last_output_full", &dcs.last_output_full, 1);
+	state_save_register_UINT8 ("dcs", 0, "last_input_empty", &dcs.last_input_empty, 1);
+	state_save_register_double("dcs", 0, "timer_period",     &dcs_reg_timer_period, 1);
+	state_save_register_double("dcs", 0, "timer_left",       &dcs_reg_timer_left, 1);
+	state_save_register_INT32 ("dcs", 0, "wait_trigger",     &dcs_wait_trigger, 1);
+	state_save_register_func_presave(dcs_state_presave);
+	state_save_register_func_postload(dcs_state_postload);
+
+	/* the trigger wait is restored with the DCS CPU, after tag 0 */
+	state_save_set_current_tag(dcs_cpunum + 1);
+	state_save_register_func_postload(dcs_cpu_postload);
+	state_save_set_current_tag(0);
+}
+
+
 void dcs_init(void)
 {
 	/* find the DCS CPU */
@@ -433,6 +518,10 @@ void dcs_init(void)
 	
 	/* non-RAM based automatically acks */
 	dcs.auto_ack = 1;
+
+	/* save state */
+	dcs_reg_timer_period = 0;
+	dcs_register_state();
 
 	/* reset the system */
 	dcs_reset();
@@ -481,6 +570,10 @@ void dcs2_init(offs_t polling_offset)
 	if (polling_offset)
 		dcs_polling_base = install_mem_read16_handler(dcs_cpunum, ADSP_DATA_ADDR_RANGE(polling_offset, polling_offset), dcs_polling_r);
 
+	/* save state */
+	dcs_reg_timer_period = 0;
+	dcs_register_state();
+
 	/* reset the system */
 	dcs_reset();
 }
@@ -507,6 +600,8 @@ static int dcs_custom_start(const struct MachineSound *msound)
 	dcs.buffer2 = NULL;
 	if (!dcs.buffer)
 		return 1;
+	memset(dcs.buffer, 0, DCS_BUFFER_SIZE * sizeof(INT16));
+	state_save_register_INT16("dcs", 0, "buffer", dcs.buffer, DCS_BUFFER_SIZE);
 
 	return 0;
 }
@@ -525,6 +620,10 @@ static int dcs2_custom_start(const struct MachineSound *msound)
 	dcs.buffer2 = auto_malloc(DCS_BUFFER_SIZE * sizeof(INT16));
 	if (!dcs.buffer || !dcs.buffer2)
 		return 1;
+	memset(dcs.buffer, 0, DCS_BUFFER_SIZE * sizeof(INT16));
+	memset(dcs.buffer2, 0, DCS_BUFFER_SIZE * sizeof(INT16));
+	state_save_register_INT16("dcs", 0, "buffer", dcs.buffer, DCS_BUFFER_SIZE);
+	state_save_register_INT16("dcs", 0, "buffer2", dcs.buffer2, DCS_BUFFER_SIZE);
 
 	return 0;
 }
@@ -578,6 +677,22 @@ static WRITE16_HANDLER( dcs_rombank_select_w )
    }
 }
 
+
+static UINT8 *dcs_rombank_base;	/* dcs_fast_rombank_init */
+
+static READ16_HANDLER( dcs_rombank_data_fast_r )
+{
+	offset += (dcs.rombank & 0x7ff) << 12;
+	return dcs_rombank_base[BYTE_XOR_LE(offset)];
+}
+
+/* optional, for the drivers that ask for it (Killer Instinct): read the banked */
+/* sound ROMs through a pointer kept here instead of a region lookup per read */
+void dcs_fast_rombank_init(void)
+{
+	dcs_rombank_base = memory_region(REGION_CPU1 + dcs_cpunum) + ADSP2100_SIZE;
+	install_mem_read16_handler(dcs_cpunum, ADSP_DATA_ADDR_RANGE(0x2000, 0x2fff), dcs_rombank_data_fast_r);
+}
 
 static READ16_HANDLER( dcs_rombank_data_r )
 {
@@ -1157,9 +1272,10 @@ static void sound_tx_callback(int port, INT32 data)
 
 			/* fire off a timer wich will hit every half-buffer */
 			if (!dcs.buffer2)
-				timer_adjust(dcs.reg_timer, TIME_IN_HZ(sample_rate) * (dcs.size / (2 * dcs.incs)), 0, TIME_IN_HZ(sample_rate) * (dcs.size / (2 * dcs.incs)));
+				dcs_reg_timer_period = TIME_IN_HZ(sample_rate) * (dcs.size / (2 * dcs.incs));
 			else
-				timer_adjust(dcs.reg_timer, TIME_IN_HZ(sample_rate) * (dcs.size / (4 * dcs.incs)), 0, TIME_IN_HZ(sample_rate) * (dcs.size / (4 * dcs.incs)));
+				dcs_reg_timer_period = TIME_IN_HZ(sample_rate) * (dcs.size / (4 * dcs.incs));
+			timer_adjust(dcs.reg_timer, dcs_reg_timer_period, 0, dcs_reg_timer_period);
 
 			/* configure the DAC generator */
 			dcs.sample_step = (int)(sample_rate * 65536.0 / (double)Machine->sample_rate);

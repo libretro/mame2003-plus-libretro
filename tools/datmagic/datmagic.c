@@ -63,7 +63,7 @@ int main()
 
 	/***************** Allocate memory to use *****************/
 	char *romname          = malloc(sizeof(char) * 30);
-	char *description      = malloc(sizeof(char) * 150);
+	char *description      = malloc(sizeof(char) * 200);
 	char *driverstatus     = malloc(sizeof(char) * 22);
 	char *emulationstatus  = malloc(sizeof(char) * 20);
 	char *colorstatus      = malloc(sizeof(char) * 20);

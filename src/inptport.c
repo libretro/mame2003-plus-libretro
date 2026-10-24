@@ -1001,10 +1001,13 @@ void update_analog_port(int port)
 
 		else if ((delta == 0) && (in->type & IPF_CENTER))
 		{
+			/* return to center at the key speed, as newer MAME does (centerdelta
+			   defaults to keydelta); stop exactly on the center, don't overshoot */
+			int centerdelta = keydelta ? keydelta : 100 / sensitivity;
 			if (current > default_value)
-			delta = -100 / sensitivity;
+				delta = ( current - default_value > centerdelta ) ? -centerdelta : default_value - current;
 			if (current < default_value)
-			delta = 100 / sensitivity;
+				delta = ( default_value - current > centerdelta ) ? centerdelta : default_value - current;
 		}
 
 		/* An analog joystick which is not at zero position (or has just */
@@ -1036,32 +1039,17 @@ void update_analog_port(int port)
 				prev = -prev;
 			}
 
-			/* apply sensitivity using a logarithmic scale */
-			if (in->mask > 0xff)
+			/* OSD analog axes are normalized to -128..128 regardless of
+			 * the emulated input port width. Apply sensitivity in that range. */
+			if (new > 0)
 			{
-				if (new > 0)
-				{
-					current = (pow(new / 32768.0, 100.0 / sensitivity) * (max-in->default_value)
-							+ in->default_value) * 100 / sensitivity;
-				}
-				else
-				{
-					current = (pow(-new / 32768.0, 100.0 / sensitivity) * (min-in->default_value)
-							+ in->default_value) * 100 / sensitivity;
-				}
+				current = (pow(new / 128.0, 100.0 / sensitivity) * (max-in->default_value)
+						+ in->default_value) * 100 / sensitivity;
 			}
 			else
 			{
-				if (new > 0)
-				{
-					current = (pow(new / 128.0, 100.0 / sensitivity) * (max-in->default_value)
-							+ in->default_value) * 100 / sensitivity;
-				}
-				else
-				{
-					current = (pow(-new / 128.0, 100.0 / sensitivity) * (min-in->default_value)
-							+ in->default_value) * 100 / sensitivity;
-				}
+				current = (pow(-new / 128.0, 100.0 / sensitivity) * (min-in->default_value)
+						+ in->default_value) * 100 / sensitivity;
 			}
 		}
 	}

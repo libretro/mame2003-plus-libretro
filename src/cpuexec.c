@@ -848,6 +848,30 @@ int cpunum_is_suspended(int cpunum, int reason)
 
 /*************************************
  *
+ *	Trigger suspension helpers for
+ *	save states
+ *
+ *************************************/
+
+int cpunum_get_suspend_trigger(int cpunum)
+{
+	VERIFY_CPUNUM(0, cpunum_get_suspend_trigger);
+	if (!(cpu[cpunum].nextsuspend & SUSPEND_REASON_TRIGGER))
+		return 0;
+	return cpu[cpunum].trigger;
+}
+
+void cpunum_suspend_until_trigger(int cpunum, int trigger, int eatcycles)
+{
+	VERIFY_CPUNUM_VOID(cpunum_suspend_until_trigger);
+	cpunum_suspend(cpunum, SUSPEND_REASON_TRIGGER, eatcycles);
+	cpu[cpunum].trigger = trigger;
+}
+
+
+
+/*************************************
+ *
  *	Returns the current scaling factor
  *	for a CPU's clock speed
  *

@@ -7,9 +7,11 @@
 #include "driver.h"
 #include "vidhrdw/generic.h"
 #include "epos.h"
+#include "state.h"
 
 
 static int current_palette;
+static int flipscreen;
 
 
 /***************************************************************************
@@ -29,33 +31,55 @@ static int current_palette;
 
 ***************************************************************************/
 
+static void epos_set_pal_color(int offset, int data)
+{
+	int bit0,bit1,bit2,r,g,b;
+
+	/* red component */
+	bit0 = (data >> 7) & 0x01;
+	bit1 = (data >> 6) & 0x01;
+	bit2 = (data >> 5) & 0x01;
+	r = 0x92 * bit0 + 0x4a * bit1 + 0x23 * bit2;
+	/* green component */
+	bit0 = (data >> 4) & 0x01;
+	bit1 = (data >> 3) & 0x01;
+	bit2 = (data >> 2) & 0x01;
+	g = 0x92 * bit0 + 0x4a * bit1 + 0x23 * bit2;
+	/* blue component */
+	bit0 = (data >> 1) & 0x01;
+	bit1 = (data >> 0) & 0x01;
+	b = 0xad * bit0 + 0x52 * bit1;
+
+	palette_set_color(offset,r,g,b);
+}
+
 PALETTE_INIT( epos )
 {
 	int i;
 
 	for (i = 0; i < Machine->drv->total_colors; i++)
+		epos_set_pal_color(i, color_prom[i]);
+}
+
+/* Tristar 9000: the palette is in RAM, written through ports 0x00-0x0f */
+WRITE_HANDLER( epos_palette_w )
+{
+	epos_set_pal_color(offset, data);
+}
+
+/* Tristar 9000: flip screen, from the AY8910 port B (bit 7) */
+void epos_set_flipscreen(int flip)
+{
+	if (flipscreen != flip)
 	{
-		int bit0,bit1,bit2,r,g,b;
-
-		/* red component */
-		bit0 = (*color_prom >> 7) & 0x01;
-		bit1 = (*color_prom >> 6) & 0x01;
-		bit2 = (*color_prom >> 5) & 0x01;
-		r = 0x92 * bit0 + 0x4a * bit1 + 0x23 * bit2;
-		/* green component */
-		bit0 = (*color_prom >> 4) & 0x01;
-		bit1 = (*color_prom >> 3) & 0x01;
-		bit2 = (*color_prom >> 2) & 0x01;
-		g = 0x92 * bit0 + 0x4a * bit1 + 0x23 * bit2;
-		/* blue component */
-		bit0 = (*color_prom >> 1) & 0x01;
-		bit1 = (*color_prom >> 0) & 0x01;
-		b = 0xad * bit0 + 0x52 * bit1;
-
-		palette_set_color(i,r,g,b);
-
-		color_prom++;
+		flipscreen = flip;
+		set_vh_global_attribute(NULL,0);
 	}
+}
+
+int epos_get_flipscreen(void)
+{
+	return flipscreen;
 }
 
 
@@ -68,8 +92,16 @@ WRITE_HANDLER( epos_videoram_w )
 	x = (offset % 136) * 2;
 	y = (offset / 136);
 
-	plot_pixel(tmpbitmap, x,     y, Machine->pens[current_palette | (data & 0x0f)]);
-	plot_pixel(tmpbitmap, x + 1, y, Machine->pens[current_palette | (data >> 4)]);
+	if (flipscreen)
+	{
+		plot_pixel(tmpbitmap, 270 - x + 1, 240 - y, Machine->pens[current_palette | (data & 0x0f)]);
+		plot_pixel(tmpbitmap, 270 - x,     240 - y, Machine->pens[current_palette | (data >> 4)]);
+	}
+	else
+	{
+		plot_pixel(tmpbitmap, x,     y, Machine->pens[current_palette | (data & 0x0f)]);
+		plot_pixel(tmpbitmap, x + 1, y, Machine->pens[current_palette | (data >> 4)]);
+	}
 }
 
 
@@ -93,6 +125,24 @@ WRITE_HANDLER( epos_port_1_w )
 
 		set_vh_global_attribute(NULL,0);
 	}
+}
+
+
+/* the screen bitmap is drawn when the video RAM is written, and it is not
+   in the save states: redraw it after a state is loaded */
+static void epos_postload(void)
+{
+	set_vh_global_attribute(NULL, 0);
+}
+
+VIDEO_START( epos )
+{
+	if (video_start_generic_bitmapped())
+		return 1;
+
+	state_save_register_int("epos", 0, "current_palette", &current_palette);
+	state_save_register_func_postload(epos_postload);
+	return 0;
 }
 
 

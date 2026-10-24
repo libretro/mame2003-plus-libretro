@@ -79,6 +79,8 @@ SOURCES_C += \
 	$(CORE_DIR)/machine/8255ppi.c \
 	$(CORE_DIR)/machine/eeprom.c \
 	$(CORE_DIR)/machine/idectrl.c \
+	$(CORE_DIR)/machine/intelfsh.c \
+	$(CORE_DIR)/machine/ataflash.c \
 	$(CORE_DIR)/machine/mathbox.c \
 	$(CORE_DIR)/machine/mb87078.c \
 	$(CORE_DIR)/machine/random.c \
@@ -134,6 +136,7 @@ CPUS+=I8039@
 CPUS+=I8048@
 CPUS+=N7751@
 CPUS+=I8X41@
+CPUS+=I8051@
 CPUS+=M6800@
 CPUS+=M6801@
 CPUS+=M6802@
@@ -167,17 +170,26 @@ CPUS+=Z8000@
 CPUS+=TMS32010@
 CPUS+=TMS32025@
 CPUS+=TMS32031@
+CPUS+=I960@
+CPUS+=MB86233@
+CPUS+=MB86235@
+CPUS+=ADSP21062@
 CPUS+=CCPU@
 CPUS+=ADSP2100@
 CPUS+=ADSP2101@
 CPUS+=ADSP2104@
 CPUS+=ADSP2105@
 CPUS+=ADSP2115@
+CPUS+=ADSP2181@
 CPUS+=PSXCPU@
+CPUS+=H83002@
+CPUS+=MN10200@
+CPUS+=M37702@
 CPUS+=ASAP@
 CPUS+=UPD7810@
 CPUS+=UPD7807@
 CPUS+=ARM@
+CPUS+=ARM7@
 CPUS+=JAGUAR@
 CPUS+=R3000@
 CPUS+=R4600@
@@ -243,6 +255,7 @@ SOUNDS+=SEGAPCM@
 SOUNDS+=RF5C68@
 SOUNDS+=CEM3394@
 SOUNDS+=C140@
+SOUNDS+=C352@
 SOUNDS+=QSOUND@
 SOUNDS+=SAA1099@
 SOUNDS+=IREMGA20@
@@ -367,7 +380,7 @@ SOURCES_C += \
 	$(CORE_DIR)/vidhrdw/gridlee_vidhrdw.c $(CORE_DIR)/sndhrdw/gridlee_sndhrdw.c $(CORE_DIR)/drivers/gridlee.c \
 	$(CORE_DIR)/drivers/seattle.c $(CORE_DIR)/vidhrdw/voodoo_vidhrdw.c \
 	$(CORE_DIR)/vidhrdw/exterm_vidhrdw.c $(CORE_DIR)/drivers/exterm.c \
-	$(CORE_DIR)/machine/midwayic.c $(CORE_DIR)/sndhrdw/dcs.c \
+	$(CORE_DIR)/machine/midwayic.c $(CORE_DIR)/machine/smc91c9x.c $(CORE_DIR)/sndhrdw/dcs.c \
 	$(CORE_DIR)/machine/midyunit_machine.c $(CORE_DIR)/vidhrdw/midyunit_vidhrdw.c $(CORE_DIR)/drivers/midyunit.c \
 	$(CORE_DIR)/drivers/midxunit.c \
 	$(CORE_DIR)/machine/midwunit_machine.c $(CORE_DIR)/drivers/midwunit.c \
@@ -481,7 +494,8 @@ SOURCES_C += \
 	$(CORE_DIR)/vidhrdw/mitchell_vidhrdw.c $(CORE_DIR)/drivers/mitchell.c \
 	$(CORE_DIR)/vidhrdw/cbasebal_vidhrdw.c $(CORE_DIR)/drivers/cbasebal.c \
 	$(CORE_DIR)/vidhrdw/cps1_vidhrdw.c $(CORE_DIR)/drivers/cps1.c $(CORE_DIR)/drivers/cps2.c $(CORE_DIR)/machine/cps2crypt.c\
-	$(CORE_DIR)/drivers/zn.c \
+	$(CORE_DIR)/drivers/zn.c $(CORE_DIR)/sndhrdw/taitozoom.c $(CORE_DIR)/sound/zsg2.c $(CORE_DIR)/cpu/tms57002/tms57002.c \
+	$(CORE_DIR)/drivers/cps3.c $(CORE_DIR)/sndhrdw/cps3_sndhrdw.c \
 	$(CORE_DIR)/vidhrdw/tms34061_vidhrdw.c \
 	$(CORE_DIR)/machine/capbowl_machine.c $(CORE_DIR)/vidhrdw/capbowl_vidhrdw.c $(CORE_DIR)/drivers/capbowl.c \
 	$(CORE_DIR)/vidhrdw/itech8_vidhrdw.c $(CORE_DIR)/drivers/itech8.c \
@@ -1042,6 +1056,9 @@ SOURCES_C += \
 	$(CORE_DIR)/drivers/n8080.c \
 	$(CORE_DIR)/drivers/mirax.c \
 	$(CORE_DIR)/machine/model1_machine.c $(CORE_DIR)/vidhrdw/model1_vidhrdw.c $(CORE_DIR)/drivers/model1.c \
+	$(CORE_DIR)/machine/model2_machine.c $(CORE_DIR)/vidhrdw/model2_vidhrdw.c $(CORE_DIR)/drivers/model2.c \
+	$(CORE_DIR)/sndhrdw/segadsb.c $(CORE_DIR)/sound/mpeg_audio.c \
+	$(CORE_DIR)/machine/sega315_5881.c $(CORE_DIR)/machine/sega315_5838.c \
 	$(CORE_DIR)/drivers/calorie.c \
 	$(CORE_DIR)/machine/mc8123.c \
 	$(CORE_DIR)/machine/namcoio_machine.c \
@@ -1090,6 +1107,14 @@ CPUDEFS += -DHAS_ADSP2115=1
 HAS_ADSP2100 = 1
 else
 CPUDEFS += -DHAS_ADSP2115=0
+endif
+
+CPU=$(strip $(findstring ADSP2181@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_ADSP2181=1
+HAS_ADSP2100 = 1
+else
+CPUDEFS += -DHAS_ADSP2181=0
 endif
 
 CPU=$(strip $(findstring Z80@,$(CPUS)))
@@ -1430,6 +1455,15 @@ SOURCES_C += $(CORE_DIR)/cpu/i8x41/8x41dasm.c
 endif
 else
 CPUDEFS += -DHAS_I8X41=0
+endif
+
+CPU=$(strip $(findstring I8051@,$(CPUS)))
+ifneq ($(CPU),)
+OBJDIRS += $(CORE_DIR)/cpu/i8051
+CPUDEFS += -DHAS_I8051=1
+SOURCES_C += $(CORE_DIR)/cpu/i8051/i8051.c
+else
+CPUDEFS += -DHAS_I8051=0
 endif
 
 CPU=$(strip $(findstring M6800@,$(CPUS)))
@@ -1825,6 +1859,42 @@ else
 CPUDEFS += -DHAS_TMS32025=0
 endif
 
+CPU=$(strip $(findstring MB86233@,$(CPUS)))
+ifneq ($(CPU),)
+OBJDIRS += $(CORE_DIR)/cpu/mb86233
+CPUDEFS += -DHAS_MB86233=1
+SOURCES_C += $(CORE_DIR)/cpu/mb86233/mb86233.c
+else
+CPUDEFS += -DHAS_MB86233=0
+endif
+
+CPU=$(strip $(findstring MB86235@,$(CPUS)))
+ifneq ($(CPU),)
+OBJDIRS += $(CORE_DIR)/cpu/mb86235
+CPUDEFS += -DHAS_MB86235=1
+SOURCES_C += $(CORE_DIR)/cpu/mb86235/mb86235.c
+else
+CPUDEFS += -DHAS_MB86235=0
+endif
+
+CPU=$(strip $(findstring ADSP21062@,$(CPUS)))
+ifneq ($(CPU),)
+OBJDIRS += $(CORE_DIR)/cpu/sharc
+CPUDEFS += -DHAS_ADSP21062=1
+SOURCES_C += $(CORE_DIR)/cpu/sharc/sharc.c
+else
+CPUDEFS += -DHAS_ADSP21062=0
+endif
+
+CPU=$(strip $(findstring I960@,$(CPUS)))
+ifneq ($(CPU),)
+OBJDIRS += $(CORE_DIR)/cpu/i960
+CPUDEFS += -DHAS_I960=1
+SOURCES_C += $(CORE_DIR)/cpu/i960/i960.c
+else
+CPUDEFS += -DHAS_I960=0
+endif
+
 CPU=$(strip $(findstring TMS32031@,$(CPUS)))
 ifneq ($(CPU),)
 OBJDIRS += $(CORE_DIR)/cpu/tms32031
@@ -1860,6 +1930,33 @@ SOURCES_C += $(CORE_DIR)/cpu/mips/mipsdasm.c
 endif
 else
 CPUDEFS += -DHAS_PSXCPU=0
+endif
+
+CPU=$(strip $(findstring H83002@,$(CPUS)))
+ifneq ($(CPU),)
+OBJDIRS += $(CORE_DIR)/cpu/h83002
+CPUDEFS += -DHAS_H83002=1
+SOURCES_C += $(CORE_DIR)/cpu/h83002/h83002.c
+else
+CPUDEFS += -DHAS_H83002=0
+endif
+
+CPU=$(strip $(findstring MN10200@,$(CPUS)))
+ifneq ($(CPU),)
+OBJDIRS += $(CORE_DIR)/cpu/mn10200
+CPUDEFS += -DHAS_MN10200=1
+SOURCES_C += $(CORE_DIR)/cpu/mn10200/mn10200.c
+else
+CPUDEFS += -DHAS_MN10200=0
+endif
+
+CPU=$(strip $(findstring M37702@,$(CPUS)))
+ifneq ($(CPU),)
+OBJDIRS += $(CORE_DIR)/cpu/m37710
+CPUDEFS += -DHAS_M37702=1
+SOURCES_C += $(CORE_DIR)/cpu/m37710/m37710.c $(CORE_DIR)/cpu/m37710/m37710o0.c $(CORE_DIR)/cpu/m37710/m37710o1.c $(CORE_DIR)/cpu/m37710/m37710o2.c $(CORE_DIR)/cpu/m37710/m37710o3.c
+else
+CPUDEFS += -DHAS_M37702=0
 endif
 
 CPU=$(strip $(findstring ASAP@,$(CPUS)))
@@ -1909,6 +2006,15 @@ SOURCES_C += $(CORE_DIR)/cpu/arm/armdasm.c
 endif
 else
 CPUDEFS += -DHAS_ARM=0
+endif
+
+CPU=$(strip $(findstring ARM7@,$(CPUS)))
+ifneq ($(CPU),)
+OBJDIRS += $(CORE_DIR)/cpu/arm7
+CPUDEFS += -DHAS_ARM7=1
+SOURCES_C += $(CORE_DIR)/cpu/arm7/arm7.c
+else
+CPUDEFS += -DHAS_ARM7=0
 endif
 
 CPU=$(strip $(findstring JAGUAR@,$(CPUS)))
@@ -2507,6 +2613,14 @@ else
 SOUNDDEFS += -DHAS_C140=0
 endif
 
+SOUND=$(strip $(findstring C352@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_C352=1
+SOURCES_C += $(CORE_DIR)/sound/c352.c
+else
+SOUNDDEFS += -DHAS_C352=0
+endif
+
 SOUND=$(strip $(findstring QSOUND@,$(SOUNDS)))
 ifneq ($(SOUND),)
 SOUNDDEFS += -DHAS_QSOUND=1
@@ -2660,8 +2774,18 @@ SOUNDDEFS += -DHAS_ICS2115=0
 endif
 
 SOURCES_C += \
-	$(CORE_DIR)/lib/mame-chd/chd.c \
 	$(CORE_DIR)/lib/mame-chd/mame_sha1.c
+
+# libchdr: reads the hard disk CHDs (every version, zlib/LZMA/Huffman/FLAC)
+SOURCES_C += \
+	$(CORE_DIR)/lib/libchdr/src/libchdr_bitstream.c \
+	$(CORE_DIR)/lib/libchdr/src/libchdr_cdrom.c \
+	$(CORE_DIR)/lib/libchdr/src/libchdr_chd.c \
+	$(CORE_DIR)/lib/libchdr/src/libchdr_flac.c \
+	$(CORE_DIR)/lib/libchdr/src/libchdr_huffman.c \
+	$(CORE_DIR)/lib/libchdr/deps/lzma/LzFind.c \
+	$(CORE_DIR)/lib/libchdr/deps/lzma/LzmaDec.c \
+	$(CORE_DIR)/lib/libchdr/deps/lzma/LzmaEnc.c
 
 SOURCES_C += \
 	$(CORE_DIR)/libretro-deps/libFLAC/bitreader.c \
@@ -2688,6 +2812,9 @@ SOURCES_C += \
 	$(CORE_DIR)/lib/zlib/uncompr.c \
 	$(CORE_DIR)/lib/zlib/unzip.c \
 	$(CORE_DIR)/lib/zlib/zutil.c
+
+# sljit: run-time code generator of the MIPS recompilers (empty where they are not supported)
+SOURCES_C += $(CORE_DIR)/lib/sljit/sljit_mame.c
 
 ifeq ($(STATIC_LINKING),1)
 else

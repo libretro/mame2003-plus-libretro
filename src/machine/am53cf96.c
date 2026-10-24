@@ -201,7 +201,7 @@ void am53cf96_init( struct AM53CF96interface *interface )
 	/* try to open the disk*/
 	if (interface->device == AM53CF96_DEVICE_HDD)
 	{
-		disk = hard_disk_open(get_disk_handle(0));
+		disk = get_disk_handle(0);
 		if (!disk)
 		{
 			log_cb(RETRO_LOG_DEBUG, LOGPRE "53cf96: no disk found!\n");

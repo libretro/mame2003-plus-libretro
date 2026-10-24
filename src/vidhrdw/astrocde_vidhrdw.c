@@ -181,8 +181,9 @@ static void interrupt_common(void)
 {
 	int i,next;
 
-	if (!osd_skip_this_frame())
-		wow_update_line(Machine->scrbitmap,CurrentScan);
+	/* The lines are drawn by VIDEO_UPDATE( astrocde ), which redraws the
+	   whole screen at the end of the frame with the state saved per line
+	   below. Drawing each line here as well was always overwritten. */
 
 	next = (CurrentScan + 1) % MAX_INT_PER_FRAME;
 	for (i = 0;i < 8;i++)
@@ -727,7 +728,11 @@ void wow_update_line(struct mame_bitmap *bitmap,int line)
 	int memloc;
 	int i,x;
 	int data,color;
-	int rngoffs;
+	int rngoffs,rngline;
+	int split,show_ram;
+	const int *line_colors;
+	const int *line_sparkle;
+	const int *line_star;
 	UINT8 scanline[80*4+3];
 
 	if (line >= MAX_LINES) return;
@@ -735,46 +740,65 @@ void wow_update_line(struct mame_bitmap *bitmap,int line)
 	rngoffs = MOD_U32_U64_U32( MUL_U64_U32_U32(
 			cpu_getcurrentframe() % RNG_PERIOD, CLOCKS_PER_FRAME), RNG_PERIOD);
 
+	/* rng index of x = 0 on this line, i.e.
+	   (rngoffs + CLOCKS_PER_LINE*line) % RNG_PERIOD. Both terms are below
+	   RNG_PERIOD, so one subtraction is enough, and the same holds when x
+	   is added below: the modulo is no longer needed for each pixel. */
+	rngline = rngoffs + CLOCKS_PER_LINE*line;
+	if (rngline >= RNG_PERIOD) rngline -= RNG_PERIOD;
+
+	/* these only change from one line to the next */
+	line_colors = colors[line];
+	line_sparkle = sparkle[line];
+	line_star = star + SCREEN_WIDTH*line;
+	split = colorsplit[line];
+	show_ram = (line < VerticalBlank);
+
 	memloc = line * 80;
 
 	for (i = 0; i < 80; i++, memloc++)
 	{
-		if (line < VerticalBlank)
+		int bank = (i < split) ? 4 : 0;
+
+		if (show_ram)
 			data = wow_videoram[memloc];
 		else
 			data = BackgroundData;
 
 		for (x = i*4+3; x >= i*4; x--)
 		{
-			int pen,scol;
+			int pen,scol,rngidx;
 
-			color = data & 0x03;
-			if (i < colorsplit[line]) color += 4;
+			color = (data & 0x03) + bank;
 
 			if ((data & 0x03) == 0)
 			{
-				if (sparkle[line][0])
+				if (line_sparkle[0])
 				{
-					if (star[x+SCREEN_WIDTH*line])
+					if (line_star[x])
 					{
-						scol = rng[(rngoffs + x+CLOCKS_PER_LINE*line) % RNG_PERIOD];
-						pen = (colors[line][color]&~7) + scol/2;
+						rngidx = rngline + x;
+						if (rngidx >= RNG_PERIOD) rngidx -= RNG_PERIOD;
+						scol = rng[rngidx];
+						pen = (line_colors[color]&~7) + scol/2;
 					}
 					else
 						pen = 0;
 				}
 				else
-					pen = colors[line][color];
+					pen = line_colors[color];
 			}
 			else
 			{
-				if (sparkle[line][data & 0x03])
+				if (line_sparkle[data & 0x03])
 				{
-					scol = rng[(rngoffs + x+CLOCKS_PER_LINE*line) % RNG_PERIOD];
-					pen = (colors[line][color]&~7) + scol/2;
+					rngidx = rngline + x;
+					if (rngidx >= RNG_PERIOD) rngidx -= RNG_PERIOD;
+					scol = rng[rngidx];
+					pen = (line_colors[color]&~7) + scol/2;
 				}
 				else
-					pen = colors[line][color];
+					pen = line_colors[color];
 			}
 
 			scanline[x] = pen;

@@ -86,5 +86,6 @@ void AY8910_sh_reset(void);
 extern int ay8910_index_ym;
 
 void AY8910_sh_stop_ym(void);
+void AY8910_ym_ext_state_register(int ym_chips);
 int AY8910_sh_start_ym(const struct MachineSound *msound);
 #endif

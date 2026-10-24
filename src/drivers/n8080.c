@@ -1154,6 +1154,9 @@ static MACHINE_DRIVER_START( helifire )
 	MDRV_CPU_PORTS(helifire_sound_io_readport, helifire_sound_io_writeport)
 
 	/* video hardware */
+	/* the sky and sea gradients use 8 bits per gun: with RGB565 output
+	   they would show as 32 color bands */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_NEEDS_6BITS_PER_GUN)
 	MDRV_PALETTE_LENGTH(0x400 + 8)
 	MDRV_PALETTE_INIT(helifire)
 	MDRV_VIDEO_START(helifire)

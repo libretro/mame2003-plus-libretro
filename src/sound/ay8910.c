@@ -12,6 +12,7 @@
 
 #include "driver.h"
 #include "ay8910.h"
+#include "state.h"
 
 #define MAX_OUTPUT 0x7fff
 
@@ -793,6 +794,68 @@ int AY8910_sh_start_ym(const struct MachineSound *msound)
 		build_mixer_table(chip+num);
 	}
 	return 0;
+}
+
+/* optional: the internal counters of the SSG of a YM chip in save states.
+   The YM postload rewrites the SSG registers, which restarts the envelope,
+   so the counters are kept in a copy and put back after it. */
+#define AY_EXT_INT 12
+#define AY_EXT_U8 13
+static INT32 ay_ext_int[MAX_8910][AY_EXT_INT];
+static UINT8 ay_ext_u8[MAX_8910][AY_EXT_U8];
+static int ay_ext_first, ay_ext_count;
+
+static void AY8910_ext_presave(void)
+{
+	int c;
+	for (c = ay_ext_first; c < ay_ext_first + ay_ext_count; c++)
+	{
+		struct AY8910 *PSG = &AYPSG[c];
+		INT32 *i = ay_ext_int[c];
+		UINT8 *u = ay_ext_u8[c];
+		i[0] = PSG->CountA; i[1] = PSG->CountB; i[2] = PSG->CountC;
+		i[3] = PSG->CountN; i[4] = PSG->CountE; i[5] = PSG->RNG;
+		i[6] = PSG->VolA; i[7] = PSG->VolB; i[8] = PSG->VolC; i[9] = PSG->VolE;
+		i[10] = PSG->lastEnable; i[11] = PSG->register_latch;
+		u[0] = PSG->EnvelopeA; u[1] = PSG->EnvelopeB; u[2] = PSG->EnvelopeC;
+		u[3] = PSG->OutputA; u[4] = PSG->OutputB; u[5] = PSG->OutputC; u[6] = PSG->OutputN;
+		u[7] = (UINT8)PSG->CountEnv; u[8] = PSG->Hold; u[9] = PSG->Alternate;
+		u[10] = PSG->Attack; u[11] = PSG->Holding; u[12] = 0;
+	}
+}
+
+static void AY8910_ext_postload(void)
+{
+	int c;
+	for (c = ay_ext_first; c < ay_ext_first + ay_ext_count; c++)
+	{
+		struct AY8910 *PSG = &AYPSG[c];
+		const INT32 *i = ay_ext_int[c];
+		const UINT8 *u = ay_ext_u8[c];
+		PSG->CountA = i[0]; PSG->CountB = i[1]; PSG->CountC = i[2];
+		PSG->CountN = i[3]; PSG->CountE = i[4]; PSG->RNG = i[5];
+		PSG->VolA = i[6]; PSG->VolB = i[7]; PSG->VolC = i[8]; PSG->VolE = i[9];
+		PSG->lastEnable = i[10]; PSG->register_latch = i[11];
+		PSG->EnvelopeA = u[0]; PSG->EnvelopeB = u[1]; PSG->EnvelopeC = u[2];
+		PSG->OutputA = u[3]; PSG->OutputB = u[4]; PSG->OutputC = u[5]; PSG->OutputN = u[6];
+		PSG->CountEnv = (signed char)u[7]; PSG->Hold = u[8]; PSG->Alternate = u[9];
+		PSG->Attack = u[10]; PSG->Holding = u[11];
+	}
+}
+
+/* call before the YM init registers its own postload (they run last first) */
+void AY8910_ym_ext_state_register(int ym_chips)
+{
+	int c;
+	ay_ext_first = ay8910_index_ym;
+	ay_ext_count = ym_chips;
+	for (c = ay_ext_first; c < ay_ext_first + ay_ext_count; c++)
+	{
+		state_save_register_INT32("AY8910ext", c, "int", ay_ext_int[c], AY_EXT_INT);
+		state_save_register_UINT8("AY8910ext", c, "u8", ay_ext_u8[c], AY_EXT_U8);
+	}
+	state_save_register_func_presave(AY8910_ext_presave);
+	state_save_register_func_postload(AY8910_ext_postload);
 }
 
 void AY8910_sh_stop_ym(void)
