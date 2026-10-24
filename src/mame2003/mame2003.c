@@ -38,6 +38,7 @@ int            orig_samples_per_frame = 0;
 short*         samples_buffer;
 short*         conversion_buffer;
 int            usestereo = 1;
+static double  applied_cpu_clock_scale = 0; /* last cpu_clock_scale core option value applied to CPU 0 */
 
 
 /* MAME data structures to store and translate keyboard state */
@@ -397,13 +398,14 @@ void retro_run (void)
   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE, &updated) && updated)
     update_variables(false);
 
-  if (options.cpu_clock_scale)
+  /* only apply the core option when its value changes, so that other changes to
+     CPU 0's clock scale (for example cheats or the MAME overclock UI) are not
+     overwritten every frame */
+  if (options.cpu_clock_scale && options.cpu_clock_scale != applied_cpu_clock_scale)
   {
-    if (cpunum_get_clockscale(0) != options.cpu_clock_scale)
-    {
-      log_cb(RETRO_LOG_DEBUG, LOGPRE "changing cpu clock scale from %lf to %lf\n",cpunum_get_clockscale(0),options.cpu_clock_scale);
-      cpunum_set_clockscale(0, options.cpu_clock_scale);
-    }
+    log_cb(RETRO_LOG_DEBUG, LOGPRE "changing cpu clock scale from %lf to %lf\n",cpunum_get_clockscale(0),options.cpu_clock_scale);
+    cpunum_set_clockscale(0, options.cpu_clock_scale);
+    applied_cpu_clock_scale = options.cpu_clock_scale;
   }
   mame_frame();
   if(frameskip_counter <= 11)
