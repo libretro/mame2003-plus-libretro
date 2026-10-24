@@ -65,6 +65,23 @@ extern bool save_protection;
 static unsigned short input_port_value[MAX_INPUT_PORTS];
 static unsigned short input_vblank[MAX_INPUT_PORTS];
 
+/* joystick states of the 4-way restrictors: the direction kept for a
+   joystick depends on the previous frames, so they are in the save states */
+#define MAX_JOYSTICKS 3
+#define MAX_PLAYERS 8
+static int mJoyCurrent[MAX_JOYSTICKS*MAX_PLAYERS];
+static int mJoyPrevious[MAX_JOYSTICKS*MAX_PLAYERS];
+static int mJoy4Way[MAX_JOYSTICKS*MAX_PLAYERS];
+
+/* the states of the impulse, toggle and reset inputs, and of the digital
+   controls of analog inputs: they depend on the previous frames too */
+#define MAX_INPUT_BITS 1024
+static UINT8 impulsecount[MAX_INPUT_BITS];
+static UINT8 waspressed[MAX_INPUT_BITS];
+static UINT8 pbwaspressed[MAX_INPUT_BITS];
+static int last_frame_inc = 0, last_frame_dec = 0;
+
+
 
 /***************************************************************************
 
@@ -708,6 +725,16 @@ getout:
 	   until the next one, so a loaded state must bring them back */
 	state_save_register_UINT16("input", 0, "port values", input_port_value, MAX_INPUT_PORTS);
 	state_save_register_UINT16("input", 0, "vblank",      input_vblank,     MAX_INPUT_PORTS);
+	state_save_register_INT32 ("input", 0, "joy current",  (INT32 *)mJoyCurrent,  MAX_JOYSTICKS*MAX_PLAYERS);
+	state_save_register_INT32 ("input", 0, "joy 4-way",    (INT32 *)mJoy4Way,     MAX_JOYSTICKS*MAX_PLAYERS);
+	state_save_register_UINT8 ("input", 0, "impulse count", impulsecount, MAX_INPUT_BITS);
+	state_save_register_UINT8 ("input", 0, "was pressed",   waspressed,   MAX_INPUT_BITS);
+	state_save_register_UINT8 ("input", 0, "pb was pressed", pbwaspressed, MAX_INPUT_BITS);
+	state_save_register_INT32 ("input", 0, "analog key frames", (INT32 *)&last_frame_inc, 1);
+	state_save_register_INT32 ("input", 0, "analog key frames dec", (INT32 *)&last_frame_dec, 1);
+	state_save_register_INT32 ("input", 0, "analog current",  (INT32 *)input_analog_current_value,  MAX_INPUT_PORTS);
+	state_save_register_INT32 ("input", 0, "analog previous", (INT32 *)input_analog_previous_value, MAX_INPUT_PORTS);
+	state_save_register_INT32 ("input", 0, "analog init",     (INT32 *)input_analog_init,           MAX_INPUT_PORTS);
 
 	update_input_ports();
 
@@ -834,7 +861,6 @@ void update_analog_port(int port)
 	int player;
   int xwayjoy;
   int last_frame;
-  static int last_frame_inc = 0, last_frame_dec = 0;
 
 	/* get input definition */
 	in = input_analog[port];
@@ -1121,13 +1147,8 @@ profiler_mark(PROFILER_INPUT);
 	profiler_mark(PROFILER_END);
 }
 
-#define MAX_JOYSTICKS 3
-#define MAX_PLAYERS 8
-static int mJoyCurrent[MAX_JOYSTICKS*MAX_PLAYERS];
-static int mJoyPrevious[MAX_JOYSTICKS*MAX_PLAYERS];
-static int mJoy4Way[MAX_JOYSTICKS*MAX_PLAYERS];
 /*
-The above "Joy" states contain packed bits:
+The "Joy" states (declared at the top of the file) contain packed bits:
 	0001	up
 	0010	down
 	0100	left
@@ -1265,10 +1286,6 @@ void update_input_ports(void)
 	int port,ib;
 	struct InputPort *in;
 
-#define MAX_INPUT_BITS 1024
-	static int impulsecount[MAX_INPUT_BITS];
-	static int waspressed[MAX_INPUT_BITS];
-	static int pbwaspressed[MAX_INPUT_BITS];
 
 profiler_mark(PROFILER_INPUT);
 

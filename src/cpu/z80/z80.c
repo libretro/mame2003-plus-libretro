@@ -4117,6 +4117,8 @@ void z80_init(void)
 	state_save_register_UINT8("z80", cpu, "int_state", Z80.int_state, 4);
 	state_save_register_UINT8("z80", cpu, "nmi_state", &Z80.nmi_state, 1);
 	state_save_register_UINT8("z80", cpu, "irq_state", &Z80.irq_state, 1);
+	/* the cycles of an interrupt taken outside of z80_execute, counted at the next one */
+	state_save_register_INT32("z80", cpu, "extra_cycles", (INT32 *)&Z80.extra_cycles, 1);
 	/* daisy chain needs to be saved by z80ctc.c somehow */
 }
 

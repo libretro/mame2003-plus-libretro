@@ -746,6 +746,39 @@ static int AY8910_init(const char *chip_name,int chip,
 
 	AY8910_set_clock(chip,clock);
 
+	/* the chip state, so that a loaded state plays the same sound again;
+	   the steps and volume table come from the clock and sample rate */
+	state_save_register_INT32("AY8910", chip, "register_latch", (INT32 *)&PSG->register_latch, 1);
+	state_save_register_UINT8("AY8910", chip, "Regs",           PSG->Regs, 16);
+	state_save_register_INT32("AY8910", chip, "lastEnable",     (INT32 *)&PSG->lastEnable, 1);
+	state_save_register_INT32("AY8910", chip, "PeriodA",        (INT32 *)&PSG->PeriodA, 1);
+	state_save_register_INT32("AY8910", chip, "PeriodB",        (INT32 *)&PSG->PeriodB, 1);
+	state_save_register_INT32("AY8910", chip, "PeriodC",        (INT32 *)&PSG->PeriodC, 1);
+	state_save_register_INT32("AY8910", chip, "PeriodN",        (INT32 *)&PSG->PeriodN, 1);
+	state_save_register_INT32("AY8910", chip, "PeriodE",        (INT32 *)&PSG->PeriodE, 1);
+	state_save_register_INT32("AY8910", chip, "CountA",         (INT32 *)&PSG->CountA, 1);
+	state_save_register_INT32("AY8910", chip, "CountB",         (INT32 *)&PSG->CountB, 1);
+	state_save_register_INT32("AY8910", chip, "CountC",         (INT32 *)&PSG->CountC, 1);
+	state_save_register_INT32("AY8910", chip, "CountN",         (INT32 *)&PSG->CountN, 1);
+	state_save_register_INT32("AY8910", chip, "CountE",         (INT32 *)&PSG->CountE, 1);
+	state_save_register_UINT32("AY8910", chip, "VolA",          (UINT32 *)&PSG->VolA, 1);
+	state_save_register_UINT32("AY8910", chip, "VolB",          (UINT32 *)&PSG->VolB, 1);
+	state_save_register_UINT32("AY8910", chip, "VolC",          (UINT32 *)&PSG->VolC, 1);
+	state_save_register_UINT32("AY8910", chip, "VolE",          (UINT32 *)&PSG->VolE, 1);
+	state_save_register_UINT8("AY8910", chip, "EnvelopeA",      &PSG->EnvelopeA, 1);
+	state_save_register_UINT8("AY8910", chip, "EnvelopeB",      &PSG->EnvelopeB, 1);
+	state_save_register_UINT8("AY8910", chip, "EnvelopeC",      &PSG->EnvelopeC, 1);
+	state_save_register_UINT8("AY8910", chip, "OutputA",        &PSG->OutputA, 1);
+	state_save_register_UINT8("AY8910", chip, "OutputB",        &PSG->OutputB, 1);
+	state_save_register_UINT8("AY8910", chip, "OutputC",        &PSG->OutputC, 1);
+	state_save_register_UINT8("AY8910", chip, "OutputN",        &PSG->OutputN, 1);
+	state_save_register_INT8("AY8910", chip, "CountEnv",        &PSG->CountEnv, 1);
+	state_save_register_UINT8("AY8910", chip, "Hold",           &PSG->Hold, 1);
+	state_save_register_UINT8("AY8910", chip, "Alternate",      &PSG->Alternate, 1);
+	state_save_register_UINT8("AY8910", chip, "Attack",         &PSG->Attack, 1);
+	state_save_register_UINT8("AY8910", chip, "Holding",        &PSG->Holding, 1);
+	state_save_register_INT32("AY8910", chip, "RNG",            (INT32 *)&PSG->RNG, 1);
+
 	return 0;
 }
 

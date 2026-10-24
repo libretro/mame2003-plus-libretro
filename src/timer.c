@@ -30,9 +30,12 @@
 
 ***************************************************************************/
 
+#include <stddef.h>
+#include <string.h>
 #include "cpuintrf.h"
 #include "driver.h"
 #include "timer.h"
+#include "state.h"
 
 
 #define MAX_TIMERS 256
@@ -79,8 +82,10 @@ double sec_to_cycles[MAX_CPU];
 /* list of active timers */
 static mame_timer timers[MAX_TIMERS];
 static mame_timer *timer_head;
-static mame_timer *timer_free_head;
-static mame_timer *timer_free_tail;
+/* free entries have tag -1; a new timer takes the free entry with the lowest
+   index, so that the timers allocated again after a reset (in the same
+   order) get the same entries, and the pointers that drivers keep stay
+   valid with a save state from before the reset */
 
 /* other internal states */
 static double global_offset;
@@ -122,15 +127,15 @@ static INLINE mame_timer *timer_new(void)
 {
 	mame_timer *timer;
 
-	/* remove an empty entry */
-	if (!timer_free_head)
-		return NULL;
-	timer = timer_free_head;
-	timer_free_head = timer->next;
-	if (!timer_free_head)
-		timer_free_tail = NULL;
+	/* take the free entry with the lowest index */
+	for (timer = timers; timer < &timers[MAX_TIMERS]; timer++)
+		if (timer->tag == -1)
+		{
+			timer->next = timer->prev = NULL;
+			return timer;
+		}
 
-	return timer;
+	return NULL;
 }
 
 
@@ -243,14 +248,8 @@ void timer_init(void)
 
 	/* initialize the lists */
 	timer_head = NULL;
-	timer_free_head = &timers[0];
-	for (i = 0; i < MAX_TIMERS-1; i++)
-	{
+	for (i = 0; i < MAX_TIMERS; i++)
 		timers[i].tag = -1;
-		timers[i].next = &timers[i+1];
-	}
-	timers[MAX_TIMERS-1].next = NULL;
-	timer_free_tail = &timers[MAX_TIMERS-1];
 }
 
 
@@ -503,13 +502,7 @@ void timer_remove(mame_timer *which)
 	/* mark it as dead */
 	which->tag = -1;
 
-	/* free it up by adding it back to the free list */
-	if (timer_free_tail)
-		timer_free_tail->next = which;
-	else
-		timer_free_head = which;
-	which->next = NULL;
-	timer_free_tail = which;
+	which->next = which->prev = NULL;
 }
 
 
@@ -592,4 +585,213 @@ double timer_starttime(mame_timer *which)
 double timer_firetime(mame_timer *which)
 {
 	return global_offset + which->expire;
+}
+
+
+
+/*-------------------------------------------------
+	save states
+
+	The timer system is in the save states: its
+	global time and every timer of the pool (times,
+	period, parameter, callback and the order of
+	the lists). Without it a loaded state keeps the
+	timers of the run that loads it, and the frames
+	that follow differ from the ones that followed
+	the save (RunAhead, netplay rollback, replays).
+
+	Pointers are saved as pool indexes. A callback
+	is saved as its distance from timer_init(), so
+	it is valid in another process of the same core
+	build. A state from another build could hold
+	callbacks that are not functions there: the
+	distances of functions from other source files
+	are saved as a fingerprint of the build, and a
+	state with another fingerprint keeps the timers
+	of the running emulation, as before.
+-------------------------------------------------*/
+
+#define SS_NONE		(-1)
+
+static INT32 ss_next[MAX_TIMERS];
+static INT32 ss_prev[MAX_TIMERS];
+static INT32 ss_callback[MAX_TIMERS];
+static INT32 ss_param[MAX_TIMERS];
+static INT32 ss_tag[MAX_TIMERS];
+static INT32 ss_flags[MAX_TIMERS];
+static double ss_period[MAX_TIMERS];
+static double ss_start[MAX_TIMERS];
+static double ss_expire[MAX_TIMERS];
+static INT32 ss_heads[1];
+static double ss_global_offset;
+#define SS_FINGERPRINT 8
+static INT32 ss_fingerprint[SS_FINGERPRINT];
+static int ss_timers_loaded;
+
+#define SS_FLAG_ENABLED		0x01
+#define SS_FLAG_TEMPORARY	0x02
+#define SS_FLAG_CALLBACK	0x04
+
+static INT32 timer_to_index(mame_timer *timer)
+{
+	return timer ? (INT32)(timer - timers) : SS_NONE;
+}
+
+static mame_timer *index_to_timer(INT32 index)
+{
+	return (index >= 0 && index < MAX_TIMERS) ? &timers[index] : NULL;
+}
+
+static INT32 function_distance(size_t function)
+{
+	return (INT32)(function - (size_t)timer_init);
+}
+
+#ifndef GIT_VERSION
+#define GIT_VERSION ""
+#endif
+
+static void timer_fingerprint(INT32 *fingerprint)
+{
+	const char *version = GIT_VERSION;
+	UINT32 hash = 5381;
+
+	/* functions of the core in other source files, and of the game's driver */
+	fingerprint[0] = function_distance((size_t)cpu_init);
+	fingerprint[1] = function_distance((size_t)memory_init);
+	fingerprint[2] = function_distance((size_t)state_save_register_func_postload);
+	fingerprint[3] = Machine->gamedrv->driver_init ? function_distance((size_t)Machine->gamedrv->driver_init) : 0;
+	fingerprint[4] = Machine->drv->machine_init ? function_distance((size_t)Machine->drv->machine_init) : 0;
+	fingerprint[5] = Machine->drv->video_start ? function_distance((size_t)Machine->drv->video_start) : 0;
+	fingerprint[6] = Machine->drv->video_update ? function_distance((size_t)Machine->drv->video_update) : 0;
+
+	/* and the version of the build */
+	while (*version)
+		hash = hash * 33 + (UINT8)*version++;
+	fingerprint[7] = (INT32)hash;
+}
+
+static void timer_presave(void)
+{
+	int i;
+
+	for (i = 0; i < MAX_TIMERS; i++)
+	{
+		mame_timer *timer = &timers[i];
+
+		ss_next[i] = timer_to_index(timer->next);
+		ss_prev[i] = timer_to_index(timer->prev);
+		ss_callback[i] = timer->callback ? function_distance((size_t)timer->callback) : 0;
+		ss_param[i] = timer->callback_param;
+		ss_tag[i] = timer->tag;
+		ss_flags[i] = (timer->enabled ? SS_FLAG_ENABLED : 0)
+		            | (timer->temporary ? SS_FLAG_TEMPORARY : 0)
+		            | (timer->callback ? SS_FLAG_CALLBACK : 0);
+		ss_period[i] = timer->period;
+		ss_start[i] = timer->start;
+		ss_expire[i] = timer->expire;
+	}
+	ss_heads[0] = timer_to_index(timer_head);
+	ss_global_offset = global_offset;
+	timer_fingerprint(ss_fingerprint);
+}
+
+static void timer_postload(void)
+{
+	UINT8 live_permanent[MAX_TIMERS];
+	int live_tag[MAX_TIMERS];
+	void (*live_callback[MAX_TIMERS])(int);
+	UINT8 saved_active[MAX_TIMERS];
+	INT32 fingerprint[SS_FINGERPRINT];
+	mame_timer *timer;
+	int i;
+
+	timer_fingerprint(fingerprint);
+	if (memcmp(fingerprint, ss_fingerprint, sizeof(fingerprint)) != 0)
+	{
+		log_cb(RETRO_LOG_WARN, LOGPRE "timer: the save state is from another build, the timers are not loaded\n");
+		ss_timers_loaded = 0;
+		return;
+	}
+
+	/* the permanent timers of the running emulation: a driver holds them */
+	memset(live_permanent, 0, sizeof(live_permanent));
+	for (timer = timer_head; timer; timer = timer->next)
+		if (!timer->temporary)
+		{
+			live_permanent[timer - timers] = 1;
+			live_tag[timer - timers] = timer->tag;
+			live_callback[timer - timers] = timer->callback;
+		}
+
+	/* the timers active in the save */
+	memset(saved_active, 0, sizeof(saved_active));
+	for (i = ss_heads[0]; i >= 0 && i < MAX_TIMERS && !saved_active[i]; i = ss_next[i])
+		saved_active[i] = 1;
+
+	/* load the pool and the lists */
+	for (i = 0; i < MAX_TIMERS; i++)
+	{
+		timer = &timers[i];
+		timer->next = index_to_timer(ss_next[i]);
+		timer->prev = index_to_timer(ss_prev[i]);
+		timer->callback = (ss_flags[i] & SS_FLAG_CALLBACK) ? (void (*)(int))((size_t)timer_init + (size_t)(ptrdiff_t)ss_callback[i]) : NULL;
+		timer->callback_param = ss_param[i];
+		timer->tag = ss_tag[i];
+		timer->enabled = (ss_flags[i] & SS_FLAG_ENABLED) ? 1 : 0;
+		timer->temporary = (ss_flags[i] & SS_FLAG_TEMPORARY) ? 1 : 0;
+		timer->period = ss_period[i];
+		timer->start = ss_start[i];
+		timer->expire = ss_expire[i];
+	}
+	timer_head = index_to_timer(ss_heads[0]);
+	global_offset = ss_global_offset;
+	callback_timer = NULL;
+	callback_timer_modified = 0;
+	ss_timers_loaded = 1;
+
+	/* a permanent timer allocated after the save is still held by its driver:
+	   it stays allocated and disabled */
+	for (i = 0; i < MAX_TIMERS; i++)
+	{
+		if (!live_permanent[i] || saved_active[i])
+			continue;
+
+		timers[i].tag = live_tag[i];
+		timers[i].callback = live_callback[i];
+		timers[i].callback_param = 0;
+		timers[i].period = 0;
+		timers[i].start = 0;
+		timers[i].enabled = 0;
+		timers[i].temporary = 0;
+		timers[i].expire = TIME_NEVER;
+		timer_list_insert(&timers[i]);
+	}
+}
+
+/* true when the last loaded state brought back the timers: the postload
+   functions registered before timer_save_init() run after it, and must not
+   start timers that the state already has */
+int timer_state_loaded(void)
+{
+	return ss_timers_loaded;
+}
+
+void timer_save_init(void)
+{
+	ss_timers_loaded = 0;
+	state_save_register_INT32 ("timer", 0, "next",          ss_next,     MAX_TIMERS);
+	state_save_register_INT32 ("timer", 0, "prev",          ss_prev,     MAX_TIMERS);
+	state_save_register_INT32 ("timer", 0, "callback",      ss_callback, MAX_TIMERS);
+	state_save_register_INT32 ("timer", 0, "param",         ss_param,    MAX_TIMERS);
+	state_save_register_INT32 ("timer", 0, "tag",           ss_tag,      MAX_TIMERS);
+	state_save_register_INT32 ("timer", 0, "flags",         ss_flags,    MAX_TIMERS);
+	state_save_register_double("timer", 0, "period",        ss_period,   MAX_TIMERS);
+	state_save_register_double("timer", 0, "start",         ss_start,    MAX_TIMERS);
+	state_save_register_double("timer", 0, "expire",        ss_expire,   MAX_TIMERS);
+	state_save_register_INT32 ("timer", 0, "head",          ss_heads,    1);
+	state_save_register_double("timer", 0, "global offset", &ss_global_offset, 1);
+	state_save_register_INT32 ("timer", 0, "fingerprint",   ss_fingerprint, SS_FINGERPRINT);
+	state_save_register_func_presave(timer_presave);
+	state_save_register_func_postload(timer_postload);
 }

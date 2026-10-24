@@ -31,6 +31,9 @@
 const struct GameDriver  *game_driver;
 
 int            retro_running = 0;
+/* a frame has run since the game was loaded: a reset sets the frame number
+   to 0 again, so the frame number can't tell */
+static int     frame_run_since_load = 0;
 int            gotFrame;
 static float   delta_samples;
 int            samples_per_frame = 0;
@@ -242,6 +245,8 @@ bool retro_load_game(const struct retro_game_info *game)
   int   port_index;
   char  *driver_lookup = NULL;
 
+  frame_run_since_load = 0;
+
   if(string_is_empty(game->path))
   {
     log_cb(RETRO_LOG_ERROR, LOGPRE "Content path is not set. Exiting!\n");
@@ -421,6 +426,7 @@ void retro_run (void)
     }
   }
   mame_frame();
+  frame_run_since_load = 1;
   if(frameskip_counter <= 11)
     frameskip_counter++;
 
@@ -500,7 +506,7 @@ bool retro_unserialize(const void * data, size_t size)
 	int cpunum;
 
 	/* disable automatic savestate loading */
-	if (cpu_getcurrentframe() == 0) 
+	if (!frame_run_since_load)
 	{
         log_cb(RETRO_LOG_WARN, LOGPRE "Core is incompatible with automatic savestate loading.\n");
         return false;

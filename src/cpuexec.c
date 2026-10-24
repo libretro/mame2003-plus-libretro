@@ -180,9 +180,36 @@ static INT32 saved_suspend[MAX_CPU];
 static double saved_localtime[MAX_CPU];
 static UINT32 saved_cycles[MAX_CPU * 2];
 
+/* With the timer system in the save state (timer_state_loaded()), the
+   rest of the scheduling is loaded exactly too: all the suspend reasons
+   and the triggers they wait for, the interrupts left in the frame, the
+   VBLANK countdowns and the frame number. The timers they depend on (spin,
+   trigger time, VBLANK) are then the ones of the save. */
+#define EXACT_PER_CPU	7
+static INT32 saved_exact[MAX_CPU * EXACT_PER_CPU];
+static INT32 saved_exact_globals[3];
+static int vblank;
+static int current_frame;
+static int vblank_countdown;
+
 static void cpu_suspend_presave(void)
 {
 	int cpunum;
+
+	for (cpunum = 0; cpunum < cpu_gettotalcpu(); cpunum++)
+	{
+		INT32 *e = &saved_exact[cpunum * EXACT_PER_CPU];
+		e[0] = cpu[cpunum].suspend;
+		e[1] = cpu[cpunum].nextsuspend;
+		e[2] = cpu[cpunum].eatcycles;
+		e[3] = cpu[cpunum].nexteatcycles;
+		e[4] = cpu[cpunum].trigger;
+		e[5] = cpu[cpunum].iloops;
+		e[6] = cpu[cpunum].vblankint_countdown;
+	}
+	saved_exact_globals[0] = vblank;
+	saved_exact_globals[1] = current_frame;
+	saved_exact_globals[2] = vblank_countdown;
 
 	for (cpunum = 0; cpunum < cpu_gettotalcpu(); cpunum++)
 	{
@@ -204,14 +231,31 @@ static void cpu_suspend_postload(void)
 			cpu[cpunum].eatcycles = cpu[cpunum].nexteatcycles = 1;
 		cpu[cpunum].localtime = saved_localtime[cpunum];
 		cpu[cpunum].totalcycles = ((UINT64)saved_cycles[cpunum * 2 + 1] << 32) | saved_cycles[cpunum * 2];
+
+		if (timer_state_loaded())
+		{
+			INT32 *e = &saved_exact[cpunum * EXACT_PER_CPU];
+			cpu[cpunum].suspend = e[0];
+			cpu[cpunum].nextsuspend = e[1];
+			cpu[cpunum].eatcycles = e[2];
+			cpu[cpunum].nexteatcycles = e[3];
+			cpu[cpunum].trigger = e[4];
+			cpu[cpunum].iloops = e[5];
+			cpu[cpunum].vblankint_countdown = e[6];
+		}
+	}
+
+	if (timer_state_loaded())
+	{
+		vblank = saved_exact_globals[0];
+		current_frame = saved_exact_globals[1];
+		vblank_countdown = saved_exact_globals[2];
 	}
 }
 
 static int time_to_reset;
 static int time_to_quit;
 
-static int vblank;
-static int current_frame;
 static INT32 watchdog_counter;
 
 static int cycles_running;
@@ -226,7 +270,6 @@ static int cycles_stolen;
  *************************************/
 
 static void *vblank_timer;
-static int vblank_countdown;
 static int vblank_multiplier;
 static double vblank_period;
 
@@ -316,12 +359,18 @@ int cpu_init(void)
 	state_save_register_INT32("cpu", 0, "suspend", saved_suspend, cpu_gettotalcpu());
 	state_save_register_double("cpu", 0, "localtime", saved_localtime, cpu_gettotalcpu());
 	state_save_register_UINT32("cpu", 0, "totalcycles", saved_cycles, cpu_gettotalcpu() * 2);
+	state_save_register_INT32("cpu", 0, "exact", saved_exact, cpu_gettotalcpu() * EXACT_PER_CPU);
+	state_save_register_INT32("cpu", 0, "exact globals", saved_exact_globals, 3);
 	state_save_register_func_presave(cpu_suspend_presave);
 	state_save_register_func_postload(cpu_suspend_postload);
 
 	/* reset the IRQ lines and save those */
 	if (cpuint_init())
 		return 1;
+
+	/* the timer system, in the save states: registered after the CPU and
+	   interrupt state, so its postload runs before theirs */
+	timer_save_init();
 
 	return 0;
 }
