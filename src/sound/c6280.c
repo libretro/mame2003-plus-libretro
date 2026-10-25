@@ -249,7 +249,7 @@ void c6280_update(int num, INT16 **buffer, int length)
                     p->channel[ch].noise_counter += step;
                     if(p->channel[ch].noise_counter >= 0x800)
                     {
-                        data = (rand() & 1) ? 0x1F : 0;
+                        data = (mame_rand_int() & 1) ? 0x1F : 0;
                     }
                     p->channel[ch].noise_counter &= 0x7FF;
                     buffer[0][i] += (INT16)(vll * (data - 16));

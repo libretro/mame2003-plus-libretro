@@ -81,7 +81,7 @@ static void astrocade_update(int num, int newpos)
 	{
 		if (current_count_N[i] == 0)
 		{
-			randbyte = rand() & 0xff;
+			randbyte = mame_rand_int() & 0xff;
 		}
 
 		current_size_V[num] = 32768*vibrato_speed[num]/div_by_N_factor;
@@ -111,7 +111,7 @@ static void astrocade_update(int num, int newpos)
 
 		if (noise_am[num])
 		{
-			randbit = rand() & 1;
+			randbit = mame_rand_int() & 1;
 			data = data + randbit*vol_noise4[num];
 		}
 

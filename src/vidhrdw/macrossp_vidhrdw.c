@@ -44,7 +44,7 @@ static void get_macrossp_scra_tile_info(int tile_index)
 			break;
 
 		default:
-			color = rand() & 7;
+			color = mame_rand_video() & 7;
 			break;
 	}
 
@@ -79,7 +79,7 @@ static void get_macrossp_scrb_tile_info(int tile_index)
 			break;
 
 		default:
-			color = rand() & 7;
+			color = mame_rand_video() & 7;
 			break;
 	}
 
@@ -114,7 +114,7 @@ static void get_macrossp_scrc_tile_info(int tile_index)
 			break;
 
 		default:
-			color = rand() & 7;
+			color = mame_rand_video() & 7;
 			break;
 	}
 
@@ -240,7 +240,7 @@ static void macrossp_drawsprites( struct mame_bitmap *bitmap, const struct recta
 					break;
 
 				default:
-					col = rand();
+					col = mame_rand_video();
 					break;
 			}
 

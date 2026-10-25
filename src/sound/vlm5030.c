@@ -364,7 +364,7 @@ static void vlm5030_update_callback(int num,INT16 *buffer, int length)
 			}
 			else if (old_pitch <= 1)
 			{	/* generate unvoiced samples here */
-				current_val = (rand()&1) ? current_energy : -current_energy;
+				current_val = (mame_rand_int()&1) ? current_energy : -current_energy;
 			}
 			else
 			{

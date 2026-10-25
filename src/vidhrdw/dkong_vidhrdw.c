@@ -612,7 +612,7 @@ void radarscp_step(int line_cnt)
 	{
 		sig30Hz = (1-sig30Hz);
 		if (sig30Hz)
-			lfsr_5I = (mame_rand() > RAND_MAX/2);
+			lfsr_5I = mame_rand_video() & 1;
 	}
 
 	/* sound2 mixes in a 30Hz noise signal.
@@ -797,7 +797,7 @@ static void draw_grid(struct mame_bitmap *bitmap)
 		{
 			if (table[counter] & 0x80)	/* star */
 			{
-				if (rand() & 1)	/* noise coming from sound board */
+				if (mame_rand_video() & 1)	/* noise coming from sound board */
 					plot_pixel(bitmap,x,y,Machine->pens[RADARSCP_STAR_COL]);
 
 			}

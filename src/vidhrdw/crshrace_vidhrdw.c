@@ -140,7 +140,7 @@ static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 		zoomx = 16 - zoomtable[zoomx]/8;
 		zoomy = 16 - zoomtable[zoomy]/8;
 
-		if (buffered_spriteram16[attr_start + 2] & 0x20ff) color = rand();
+		if (buffered_spriteram16[attr_start + 2] & 0x20ff) color = mame_rand_video();
 
 		for (y = 0;y <= ysize;y++)
 		{

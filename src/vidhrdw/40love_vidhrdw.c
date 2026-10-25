@@ -288,7 +288,7 @@ static void draw_sprites( struct mame_bitmap *bitmap, const struct rectangle *cl
 		color = (spriteram[offs+2] & 0x07) + 0x08;
 
 		if (spriteram[offs+2] & 0xe0)
-			color = rand()&0xf;
+			color = mame_rand_video()&0xf;
 
 		drawgfx(bitmap,Machine->gfx[1],
 				code,
@@ -317,7 +317,7 @@ static void draw_sprites( struct mame_bitmap *bitmap, const struct rectangle *cl
 		color = (spriteram_2[offs+2] & 0x07) + 0x08;
 
 		if (spriteram_2[offs+2] & 0xe0)
-			color = rand()&0xf;
+			color = mame_rand_video()&0xf;
 
 		drawgfx(bitmap,Machine->gfx[1],
 				code,

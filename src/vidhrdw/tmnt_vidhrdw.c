@@ -173,9 +173,9 @@ static void lgtnfght_sprite_callback(int *code,int *color,int *priority_mask)
 static void detatwin_sprite_callback(int *code,int *color,int *priority_mask)
 {
 #if 0
-if (keyboard_pressed(KEYCODE_Q) && (*color & 0x20)) *color = rand();
-if (keyboard_pressed(KEYCODE_W) && (*color & 0x40)) *color = rand();
-if (keyboard_pressed(KEYCODE_E) && (*color & 0x80)) *color = rand();
+if (keyboard_pressed(KEYCODE_Q) && (*color & 0x20)) *color = mame_rand_video();
+if (keyboard_pressed(KEYCODE_W) && (*color & 0x40)) *color = mame_rand_video();
+if (keyboard_pressed(KEYCODE_E) && (*color & 0x80)) *color = mame_rand_video();
 #endif
 	int pri = 0x20 | ((*color & 0x60) >> 2);
 	if (pri <= layerpri[2])								*priority_mask = 0;

@@ -1153,5 +1153,5 @@ WRITE16_HANDLER( quantum_colorram_w )
 
 static rgb_t sparkle_callback(void)
 {
-	return colorram[16 + ((rand() >> 8) & 15)];
+	return colorram[16 + ((mame_rand_video() >> 8) & 15)];
 }
