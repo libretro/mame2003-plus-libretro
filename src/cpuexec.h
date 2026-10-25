@@ -179,6 +179,12 @@ double cpunum_get_clockscale(int cpunum);
 /* Sets the current scaling factor for a CPU's clock speed */
 void cpunum_set_clockscale(int cpunum, double clockscale);
 
+/* Returns the user overclock factor for a CPU's clock speed */
+double cpunum_get_overclock(int cpunum);
+
+/* Sets the user overclock factor, which multiplies the clock scale */
+void cpunum_set_overclock(int cpunum, double overclock);
+
 /* Temporarily boosts the interleave factor */
 void cpu_boost_interleave(double timeslice_time, double boost_duration);
 
@@ -186,8 +192,8 @@ void cpu_boost_interleave(double timeslice_time, double boost_duration);
 #define timer_suspendcpu(cpunum, suspend, reason)	do { if (suspend) cpunum_suspend(cpunum, reason, 1); else cpunum_resume(cpunum, reason); } while (0)
 #define timer_holdcpu(cpunum, suspend, reason)		do { if (suspend) cpunum_suspend(cpunum, reason, 0); else cpunum_resume(cpunum, reason); } while (0)
 #define cpu_getstatus(cpunum)						(!cpunum_is_suspended(cpunum, SUSPEND_REASON_HALT | SUSPEND_REASON_RESET | SUSPEND_REASON_DISABLE))
-#define timer_get_overclock(cpunum)					cpunum_get_clockscale(cpunum)
-#define timer_set_overclock(cpunum, overclock)		cpunum_set_clockscale(cpunum, overclock)
+#define timer_get_overclock(cpunum)					cpunum_get_overclock(cpunum)
+#define timer_set_overclock(cpunum, overclock)		cpunum_set_overclock(cpunum, overclock)
 
 
 
