@@ -354,6 +354,84 @@ READ_HANDLER(tekipaki_cmdavailable_r);
 ***************************************************************************/
 
 
+/***************************************************************************
+  Save states: the state of the driver which is not in the memory maps
+***************************************************************************/
+
+static int toaplan2_z80_bank_address;	/* Battle Garegga, Batrider: bank 1 of the Z80, in its region */
+static int raizing_oki_bank[2][4];		/* Batrider, Battle Bakraid: base of each OKI bank */
+static int fixeighb_oki_bank;			/* FixEight bootleg: OKI bank copied at 0x30000 */
+
+static void raizing_oki6295_set_bankbase( int chip, int channel, int base );
+static void fixeighb_oki_set_bank(int bank);
+
+static void toaplan2_postload(void)
+{
+	int chip, channel;
+
+	if (toaplan2_z80_bank_address >= 0)
+		cpu_setbank(1, memory_region(REGION_CPU2) + toaplan2_z80_bank_address);
+
+	for (chip = 0; chip < 2; chip++)
+		for (channel = 0; channel < 4; channel++)
+			if (raizing_oki_bank[chip][channel] >= 0)
+				raizing_oki6295_set_bankbase(chip, channel, raizing_oki_bank[chip][channel]);
+
+	if (fixeighb_oki_bank >= 0)
+		fixeighb_oki_set_bank(fixeighb_oki_bank);
+}
+
+/* whether the memory map of the 68000 sets this pointer (the pointers of the */
+/* maps keep their value of the previous game) */
+static int toaplan2_map_sets(void *base)
+{
+	const struct Memory_WriteAddress16 *mwa = (const struct Memory_WriteAddress16 *)Machine->drv->cpu[0].memory_write;
+
+	for ( ; mwa && !IS_MEMPORT_END(mwa); mwa++)
+		if (!IS_MEMPORT_MARKER(mwa) && (void *)mwa->base == base)
+			return 1;
+	return 0;
+}
+
+/* from the DRIVER_INIT of every game */
+static void toaplan2_state_register(void)
+{
+	int chip, channel;
+
+	/* 68000 side of the 8-bit RAM shared with the Z80 (Dogyuun location test) */
+	toaplan2_shared_ram16 = auto_malloc(0x1000);
+	memset(toaplan2_shared_ram16, 0, 0x1000);
+	state_save_register_UINT16("toaplan2", 0, "shared_ram16", toaplan2_shared_ram16, 0x800);
+
+	toaplan2_z80_bank_address = -1;
+	fixeighb_oki_bank = -1;
+	for (chip = 0; chip < 2; chip++)
+		for (channel = 0; channel < 4; channel++)
+			raizing_oki_bank[chip][channel] = -1;
+
+	state_save_register_int("toaplan2", 0, "current_scanline", &current_scanline);
+	state_save_register_int("toaplan2", 0, "vblank_irq", &vblank_irq);
+	state_save_register_int("toaplan2", 0, "prev_scanline", &prev_scanline);
+	state_save_register_double("toaplan2", 0, "scanline_start", &scanline_start_time, 1);
+	state_save_register_int("toaplan2", 0, "mcu_data", &mcu_data);
+	state_save_register_UINT8("toaplan2", 0, "cmdavailable", &m_cmdavailable, 1);
+	state_save_register_INT8("toaplan2", 0, "p1_paddle_h", &old_p1_paddle_h, 1);
+	state_save_register_INT8("toaplan2", 0, "p1_paddle_v", &old_p1_paddle_v, 1);
+	state_save_register_INT8("toaplan2", 0, "p2_paddle_h", &old_p2_paddle_h, 1);
+	state_save_register_INT8("toaplan2", 0, "p2_paddle_v", &old_p2_paddle_v, 1);
+	state_save_register_int("toaplan2", 0, "current_bank", &current_bank);
+	state_save_register_int("toaplan2", 0, "z80_bank_address", &toaplan2_z80_bank_address);
+	state_save_register_int("toaplan2", 0, "z80_busreq", &raizing_Z80_busreq);
+	state_save_register_UINT8("toaplan2", 0, "cpu_reply", raizing_cpu_reply, 2);
+	state_save_register_INT32("toaplan2", 0, "oki_bank", &raizing_oki_bank[0][0], 8);
+	state_save_register_int("toaplan2", 0, "fixeighb_oki_bank", &fixeighb_oki_bank);
+	if (toaplan2_map_sets(&battleg_commram16))
+		state_save_register_UINT16("toaplan2", 0, "commram", battleg_commram16, 0x800);
+	if (toaplan2_map_sets(&raizing_cpu_comm16))
+		state_save_register_UINT16("toaplan2", 0, "cpu_comm", raizing_cpu_comm16, 2);
+	state_save_register_func_postload(toaplan2_postload);
+}
+
 static MACHINE_INIT( toaplan2 )		/* machine_init_toaplan2(); */
 {
 	mcu_data = 0;
@@ -361,7 +439,6 @@ static MACHINE_INIT( toaplan2 )		/* machine_init_toaplan2(); */
 
 static MACHINE_INIT( ghox )
 {
-	toaplan2_shared_ram16 = auto_malloc(0xFFF);
 	old_p1_paddle_h = 0;
 	old_p1_paddle_v = 0;
 	old_p2_paddle_h = 0;
@@ -379,28 +456,32 @@ static MACHINE_INIT( batrider )
 
 static MACHINE_INIT( dogyuun )
 {
-	toaplan2_shared_ram16 = auto_malloc(0xFFF);
 	mcu_data = 0xffaa;
 }
 
 static DRIVER_INIT( T2_Z80 )		/* init_t2_Z80(); */
 {
+	toaplan2_state_register();
 	toaplan2_sub_cpu = CPU_2_Z80;
 }
 
 static DRIVER_INIT( T2_Z180 )
 {
+	toaplan2_state_register();
 	toaplan2_sub_cpu = CPU_2_HD647180;
 }
 
 static DRIVER_INIT( T2_noZ80 )
 {
+	toaplan2_state_register();
 	toaplan2_sub_cpu = CPU_2_NONE;
 }
 
 static DRIVER_INIT( fixeighb )
 {
 	data16_t *bgdata = (data16_t *)memory_region(REGION_CPU1);
+
+	toaplan2_state_register();
 	cpu_setbank(1, &bgdata[0x40000]); /* $80000 - $fffff */
 }
 
@@ -410,6 +491,8 @@ static DRIVER_INIT( pipibibi )
 	int oldword, newword;
 
 	data16_t *pipibibi_68k_rom = (data16_t *)(memory_region(REGION_CPU1));
+
+	toaplan2_state_register();
 
 	/* unscramble the 68K ROM data. */
 
@@ -489,20 +572,25 @@ static DRIVER_INIT( battleg )
 {
 	data8_t *Z80 = (data8_t *)memory_region(REGION_CPU2);
 
+	toaplan2_state_register();
+
 	/* Set Z80 bank switch */
 	cpu_setbank(1, &Z80[0x10000]);		/* Default bank is 2 */
+	toaplan2_z80_bank_address = 0x10000;
 
 	toaplan2_sub_cpu = CPU_2_Z80;
 }
 
 static DRIVER_INIT( bbakraid )
 {
+	toaplan2_state_register();
 	bbakraid_unlimited_ver = 1;
 	toaplan2_sub_cpu = CPU_2_Z80;
 }
 
 static DRIVER_INIT( bbakrada )
 {
+	toaplan2_state_register();
 	bbakraid_unlimited_ver = 0;
 	toaplan2_sub_cpu = CPU_2_Z80;
 }
@@ -764,10 +852,7 @@ static void v25_driver_init(int reset_bit, const UINT8 *table)
 	v25_sound_reset_bit = reset_bit;
 	v25_set_decryption_table(1, table);
 	state_save_register_UINT8("v25_shared", 0, "ram", v25_shared_ram, 0x8000);
-	state_save_register_int("toaplan2", 0, "current_scanline", &current_scanline);
-	state_save_register_int("toaplan2", 0, "vblank_irq", &vblank_irq);
-	state_save_register_int("toaplan2", 0, "prev_scanline", &prev_scanline);
-	state_save_register_double("toaplan2", 0, "scanline_start", &scanline_start_time, 1);
+	toaplan2_state_register();
 	toaplan2_sub_cpu = CPU_2_V25;
 }
 
@@ -1074,16 +1159,21 @@ static WRITE16_HANDLER( oki_bankswitch_w )
 	}
 }
 
+static void fixeighb_oki_set_bank(int bank)
+{
+	data8_t *fixeighb_oki = memory_region(REGION_SOUND1);
+
+	fixeighb_oki_bank = bank;
+	memcpy(&fixeighb_oki[0x30000], &fixeighb_oki[(bank * 0x10000) + 0x40000], 0x10000);
+}
+
 static WRITE16_HANDLER( fixeighb_oki_bankswitch_w )
 {
 	if (ACCESSING_LSB)
 	{
 		data &= 7;
 		if (data <= 4)
-		{
-			data8_t *fixeighb_oki = memory_region(REGION_SOUND1);
-			memcpy(&fixeighb_oki[0x30000], &fixeighb_oki[(data * 0x10000) + 0x40000], 0x10000);
-		}
+			fixeighb_oki_set_bank(data);
 	}
 }
 
@@ -1151,6 +1241,7 @@ static WRITE_HANDLER( battleg_bankswitch_w )
 		current_bank = bank;
 		bankaddress = 0x10000 + 0x4000 * current_bank;
 		cpu_setbank(1, &RAM[bankaddress]);
+		toaplan2_z80_bank_address = bankaddress;
 	}
 }
 
@@ -1161,6 +1252,8 @@ static void raizing_oki6295_set_bankbase( int chip, int channel, int base )
 	/* is divided in four pages as well, banked together with the sample data */
 
 	data8_t *rom = (data8_t *)memory_region(REGION_SOUND1 + chip);
+
+	raizing_oki_bank[chip][channel] = base;
 
 	/* copy the samples */
 	memcpy(rom + channel * 0x10000, rom + 0x40000 + base, 0x10000);
@@ -1212,6 +1305,7 @@ static WRITE_HANDLER( batrider_bankswitch_w )
 		else
 			bankaddress = 0x4000 * current_bank;
 		cpu_setbank(1, &RAM[bankaddress]);
+		toaplan2_z80_bank_address = bankaddress;
 	}
 }
 

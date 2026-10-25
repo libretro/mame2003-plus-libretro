@@ -993,11 +993,14 @@ void v25_init(void)
 }
 
 /* After a state load (with the context of this CPU active): the clock */
-/* divider and the timers are set again from the loaded registers. The timers */
-/* restart from the beginning of their period. */
+/* divider is set again from the loaded registers. The timers are in the */
+/* state; with a state without them (another build), they are set again from */
+/* the registers and restart from the beginning of their period. */
 static void v25_postload(void)
 {
 	v25_update_clock();
+	if (timer_state_loaded())
+		return;
 	timebase_start();
 	tmc0_w(V.TMC0);
 	if (V.TMC1 & 0x80)
