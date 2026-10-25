@@ -86,12 +86,10 @@ int pandora_clear_bitmap;
 int pandora_xoffset, pandora_yoffset;
 
  
-	/* Mermaid */
-static UINT8 data_to_mermaid;
-static UINT8 data_to_z80;
-static UINT8 mermaid_to_z80_full;
-static UINT8 z80_to_mermaid_full;
-static UINT8 mermaid_int0_l;
+	/* Mermaid: two 8-bit latches between the slave Z80 and the MCU, as in
+	   current MAME (generic_latch_8): reading a latch clears its pending flag */
+static UINT8 mermaid_latch, mermaid_latch_pending;	/* slave Z80 -> MCU, pending drives the MCU INT0 */
+static UINT8 slave_latch, slave_latch_pending;		/* MCU -> slave Z80 */
 static UINT8 mermaid_p[4];
 
 static UINT8 *sharedram;
@@ -115,9 +113,9 @@ static WRITE_HANDLER( sharedram_w )
  
 static MACHINE_INIT( hvyunit )
 {
-	mermaid_int0_l = 1;
-	mermaid_to_z80_full = 0;
-	z80_to_mermaid_full = 0;
+	mermaid_latch = slave_latch = 0;
+	mermaid_latch_pending = slave_latch_pending = 0;
+	memset(mermaid_p, 0xff, sizeof(mermaid_p));
 }
  
 /*************************************
@@ -370,21 +368,20 @@ static WRITE_HANDLER( master_bankswitch_w )
  
 static WRITE_HANDLER( mermaid_data_w )
 {
-	data_to_mermaid = data;
-	z80_to_mermaid_full = 1;
-	mermaid_int0_l = 0;
-	cpu_set_irq_line(3, 0, ASSERT_LINE);
+	mermaid_latch = data;
+	mermaid_latch_pending = 1;
+	cpu_set_irq_line(3, I8051_INT0_LINE, ASSERT_LINE);
 }
  
 static READ_HANDLER( mermaid_data_r )
 {
-	mermaid_to_z80_full = 0;
-	return data_to_z80;
+	slave_latch_pending = 0;
+	return slave_latch;
 }
  
 static READ_HANDLER( mermaid_status_r )
 {
-	return (!mermaid_to_z80_full << 2) | (z80_to_mermaid_full << 3);
+	return (!slave_latch_pending << 2) | (mermaid_latch_pending << 3);
 }
  
  
@@ -436,10 +433,9 @@ WRITE_HANDLER( hvyunit_scrolly_w)
 }
 
 
-static WRITE_HANDLER( coin_count_w )
+static WRITE_HANDLER( slave_ack_w )
 {
-	coin_counter_w(0, data & 1);
-	coin_counter_w(1, data & 2);
+	cpu_set_irq_line(1, 0, CLEAR_LINE);
 }
  
  
@@ -470,34 +466,43 @@ static READ_HANDLER( mermaid_p0_r )
  
 static WRITE_HANDLER( mermaid_p0_w )
 {
+	/* rising edge of bit 1: P1 to the slave Z80 */
 	if (!BIT(mermaid_p[0], 1) && BIT(data, 1))
 	{
-		mermaid_to_z80_full = 1;
-		data_to_z80 = mermaid_p[1];
+		slave_latch = mermaid_p[1];
+		slave_latch_pending = 1;
 	}
- 
-	if (BIT(data, 0) == 1)
-		z80_to_mermaid_full = 0;
- 
+
+	/* bit 0 low: the slave Z80's byte on P1 (reading it acknowledges INT0) */
+	if (BIT(data, 0) == 0)
+	{
+		mermaid_p[1] = mermaid_latch;
+		if (mermaid_latch_pending)
+		{
+			mermaid_latch_pending = 0;
+			cpu_set_irq_line(3, I8051_INT0_LINE, CLEAR_LINE);
+		}
+	}
+
+	/* rising edge of bit 4: coin counters and lockouts from P2 */
+	if (!BIT(mermaid_p[0], 4) && BIT(data, 4))
+	{
+		coin_counter_w(0, BIT(mermaid_p[2], 0));
+		coin_counter_w(1, BIT(mermaid_p[2], 1));
+		coin_lockout_w(0, !BIT(mermaid_p[2], 2));
+		coin_lockout_w(1, !BIT(mermaid_p[2], 3));
+	}
+
 	mermaid_p[0] = data;
 }
  
 static READ_HANDLER( mermaid_p1_r )
 {
-	if (BIT(mermaid_p[0], 0) == 0)
-		return data_to_mermaid;
-	else
-		return 0; // ?
+	return mermaid_p[1];
 }
  
 static WRITE_HANDLER( mermaid_p1_w )
 {
-	if (data == 0xff)
-	{
-		mermaid_int0_l = 1;
-		cpu_set_irq_line(3, 0, CLEAR_LINE);
-	}
- 
 	mermaid_p[1] = data;
 }
  
@@ -532,7 +537,7 @@ static READ_HANDLER( mermaid_p3_r )
 		case 3: dsw = (BIT(dsw2, 7) << 3) | (BIT(dsw2, 3) << 2) | (BIT(dsw1, 7) << 1) | BIT(dsw1, 3); break;
 	}
  
-	return (dsw << 4) | (mermaid_int0_l << 2) | (mermaid_to_z80_full << 3);
+	return (dsw << 4) | (slave_latch_pending << 3) | (!mermaid_latch_pending << 2);
 }
  
 static WRITE_HANDLER( mermaid_p3_w )
@@ -659,7 +664,7 @@ static PORT_WRITE_START( slave_io_writeport )
 	{ 0x04, 0x04, mermaid_data_w },
 	{ 0x06, 0x06, hvyunit_scrolly_w },
 	{ 0x08, 0x08, hvyunit_scrollx_w },
-	{ 0x0e, 0x0e, coin_count_w },
+	{ 0x0e, 0x0e, slave_ack_w },
 PORT_END
 
 static MEMORY_READ_START( sound_readmem )
@@ -950,12 +955,27 @@ static struct GfxDecodeInfo hvyunit_gfxdecodeinfo[] =
  *
  *************************************/
 
+/* as in current MAME: vblank-out at line 240 (vector 0xfd) and the Pandora
+   "sprite end dma" at line 64 (vector 0xff), on 256 lines a frame */
 static INTERRUPT_GEN( hvyunit_interrupt )
 {
-	static int addr = 0xff;
-	addr ^= 0x02;
-	cpu_set_irq_line_and_vector(0, 0, HOLD_LINE, addr);
+	int scanline = 255 - cpu_getiloops();
 
+	if (scanline == 240)
+		cpu_set_irq_line_and_vector(0, 0, HOLD_LINE, 0xfd);
+	if (scanline == 64)
+		cpu_set_irq_line_and_vector(0, 0, HOLD_LINE, 0xff);
+}
+
+/* the slave's vblank interrupt is held until it acknowledges it (port 0x0e) */
+static INTERRUPT_GEN( hvyunit_slave_interrupt )
+{
+	cpu_set_irq_line(1, 0, ASSERT_LINE);
+}
+
+static void hvyunit_ym_irq(int state)
+{
+	cpu_set_irq_line(2, 0, state ? ASSERT_LINE : CLEAR_LINE);
 }
  
 static struct YM2203interface ym2203_interface =
@@ -967,7 +987,7 @@ static struct YM2203interface ym2203_interface =
 	{ 0 }, /* port B read */
 	{ 0 }, /* port A write */
 	{ 0 }, /* port B write */
-	{ 0 } /* IRQ handler for YM2203 */
+	{ hvyunit_ym_irq } /* IRQ handler for YM2203 */
 };
  
 /*************************************
@@ -981,20 +1001,19 @@ static MACHINE_DRIVER_START( hvyunit )
 	MDRV_CPU_ADD(Z80,6000000)
     MDRV_CPU_MEMORY(master_readmem, master_writemem)
 	MDRV_CPU_PORTS(0, master_io_writeport)
-	MDRV_CPU_VBLANK_INT(hvyunit_interrupt, 2)
+	MDRV_CPU_VBLANK_INT(hvyunit_interrupt, 256)
  
 	MDRV_CPU_ADD(Z80,6000000)
     MDRV_CPU_MEMORY(slave_readmem, slave_writemem)
 	MDRV_CPU_PORTS(slave_io_readport, slave_io_writeport)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold, 1)
+	MDRV_CPU_VBLANK_INT(hvyunit_slave_interrupt, 1)
  
 	MDRV_CPU_ADD(Z80,6000000)
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
     MDRV_CPU_MEMORY(sound_readmem,sound_writemem)
 	MDRV_CPU_PORTS(sound_io_readport,sound_io_writeport)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold, 1)
 
-	MDRV_CPU_ADD(I8051,6000000)
+	MDRV_CPU_ADD(I8051,6000000/I8051_CLOCK_DIVIDER)	/* 6MHz, 12 clocks a machine cycle */
     MDRV_CPU_MEMORY(mcu_readmem, mcu_writemem)
 	MDRV_CPU_PORTS(mcu_readport, mcu_writeport)
 
