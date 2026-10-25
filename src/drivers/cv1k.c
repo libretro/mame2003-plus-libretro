@@ -1390,6 +1390,35 @@ ROM_START( dfkbl )
 	ROM_LOAD16_WORD_SWAP( "u24", 0x400000, 0x400000, CRC(31f9eb0a) SHA1(322158779e969bb321241065dd49c1167b91ff6c) )
 ROM_END
 
+ROM_START( akatana )
+	ROM_REGION( 0x400000, REGION_CPU1, ROMREGION_ERASEFF)
+	ROM_LOAD16_WORD_SWAP( "u4", 0x000000, 0x400000, CRC(613fd380) SHA1(6e28480eef3b483d00b42d811a9d2c7fa1097924) ) // (2010/ 8/13 MASTER VER.)
+
+	ROM_REGION( 0x8400000, REGION_USER1, ROMREGION_ERASEFF)
+	ROM_LOAD( "u2", 0x000000, 0x8400000, CRC(89a2e1a5) SHA1(e6f4ec974406283665697fdd52bd606d0337dd11) )
+
+	ROM_REGION( 0x800000, REGION_SOUND1, ROMREGION_ERASEFF)
+	ROM_LOAD16_WORD_SWAP( "u23", 0x000000, 0x400000, CRC(34a67e24) SHA1(78a7e82123b86311f1116a80c39f147b8b695549) )
+	ROM_LOAD16_WORD_SWAP( "u24", 0x400000, 0x400000, CRC(10760fed) SHA1(b70f4506c00f3901ff38f5efd4b897af1afc7a0c) )
+ROM_END
+
+ROM_START( ddpsdoj )
+	ROM_REGION( 0x400000, REGION_CPU1, ROMREGION_ERASEFF)
+	ROM_LOAD16_WORD_SWAP("u4", 0x000000, 0x400000, CRC(e2a4411c) SHA1(f8b2b6326dd8eeae99b8b1ab2bd5a3f0b9c7f027) )
+	ROM_IGNORE( 0x100 )
+
+	ROM_REGION( 0x8400000, REGION_USER1, ROMREGION_ERASEFF)
+	ROM_LOAD("u2", 0x000000, 0x8400000, CRC(668e4cd6) SHA1(da0b10865df3a3e46cf8a109ca88a551faba4483) )
+
+	ROM_REGION( 0x800000, REGION_SOUND1, ROMREGION_ERASEFF)
+	ROM_LOAD16_WORD_SWAP("u23", 0x000000, 0x400000, CRC(ac94801c) SHA1(cbcc6d5d89860bc961967e1d3b7c329adaf200c5) )
+	ROM_IGNORE( 0x100 )
+	ROM_LOAD16_WORD_SWAP("u24", 0x400000, 0x400000, CRC(f593045b) SHA1(91b92870d0dd2a7817cb0059cc750e2393686f4c) )
+	ROM_IGNORE( 0x100 )
+ROM_END
+
+
+
 
 /***************************************************************************
 	driver init: the idle loop speedups of current MAME
@@ -1470,3 +1499,5 @@ GAME( 2008, dsmbl,     0,        cv1k_d, cv1k,  ddpdfk,   ROT0, "Cave (AMI licen
 GAME( 2008, ddpdfk,    0,        cv1k_d, cv1k,  ddpdfk,   ROT270, "Cave (AMI license)", "DoDonPachi Dai-Fukkatsu Ver 1.5 (Japan, 2008/06/23 MASTER VER 1.5)" )
 GAME( 2008, ddpdfk10,  ddpdfk,   cv1k_d, cv1k,  ddpdfk,   ROT270, "Cave (AMI license)", "DoDonPachi Dai-Fukkatsu Ver 1.0 (Japan, 2008/05/16 MASTER VER)" )
 GAME( 2010, dfkbl,     0,        cv1k_d, cv1k,  ddpdfk,   ROT270, "Cave", "DoDonPachi Dai-Fukkatsu Black Label (Japan, 2010/1/18 BLACK LABEL)" )
+GAME( 2010, akatana,   0,        cv1k_d, cv1k,  ddpdfk,   ROT0,   "Cave", "Akai Katana (2010/ 8/13 MASTER VER.)" )
+GAME( 2012, ddpsdoj,   0,        cv1k_d, cv1k,  ddpdfk,   ROT270, "Cave", "DoDonPachi SaiDaiOuJou (2012/ 4/20)" )
