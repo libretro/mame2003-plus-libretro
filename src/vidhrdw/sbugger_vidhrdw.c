@@ -52,9 +52,9 @@ PALETTE_INIT(sbugger)
 
 	for (i = 0;i < 256;i++)
 	{
-		int r = rand()|0x80;
-		int g = rand()|0x80;
-		int b = rand()|0x80;
+		int r = mame_rand_video()|0x80;
+		int g = mame_rand_video()|0x80;
+		int b = mame_rand_video()|0x80;
 		if (i == 0) r = g = b = 0;
 
 		palette_set_color(i*2+1,r,g,b);

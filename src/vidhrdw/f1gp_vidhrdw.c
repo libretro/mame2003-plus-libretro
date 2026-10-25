@@ -358,7 +358,7 @@ static void f1gp2_drawsprites(struct mame_bitmap *bitmap,const struct rectangle 
 		zoomx = 32 - zoomx;
 		zoomy = 32 - zoomy;
 
-		if (f1gp2_spritelist[attr_start + 2] & 0x20ff) color = rand();
+		if (f1gp2_spritelist[attr_start + 2] & 0x20ff) color = mame_rand_video();
 
 		for (y = 0;y <= ysize;y++)
 		{

@@ -551,7 +551,7 @@ tryagain:
         else if (old_pitch == 0)
         {
             /* generate unvoiced samples here */
-            randbit = (rand() % 2) * 2 - 1;
+            randbit = (mame_rand_int() % 2) * 2 - 1;
             current_val = (randbit * current_energy) / 4;
         }
         else

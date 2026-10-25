@@ -250,7 +250,7 @@ void balsente_noise_gen(int chip, int count, short *buffer)
 		else
 		{
 			while (count--)
-				*buffer++ = rand() & 0x1000;
+				*buffer++ = mame_rand_int() & 0x1000;
 		}
 
 		/* remember the noise position */

@@ -292,7 +292,7 @@ static INLINE void drawpixel(UINT16 *dest, int patterndata, int offsetcnt)
 			transmask = 0x7fff;
 			break;
 		default: /* other settings illegal*/
-			pix = rand();
+			pix = mame_rand_video();
 			mode = 0;
 			transmask = 0xff;
 	}

@@ -396,7 +396,7 @@ void dss_noise_step(struct node_description *node)
 		/* Only sample noise on rollover to next cycle */
 		if(context->phase>(2.0*PI))
 		{
-			int newval=rand() & 0x7fff;
+			int newval=mame_rand_int() & 0x7fff;
 			node->output=node->input[2]*(1-(newval/16384.0));
 
 			/* Add DC Bias component */

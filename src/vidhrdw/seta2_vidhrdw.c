@@ -192,7 +192,7 @@ static void seta2_draw_sprites(struct mame_bitmap *bitmap,const struct rectangle
 		{
 			default:
 				usrintf_showmessage("unknown gfxset %x",(num & 0x0700)>>8);
-				gfx = rand()&3; break;
+				gfx = mame_rand_video()&3; break;
 			case 0x0700: 	/* 8bpp tiles (76543210)*/
 				gfx = 3; break;
 			case 0x0600:	/* 6bpp tiles (--543210) (myangel sliding blocks test)*/

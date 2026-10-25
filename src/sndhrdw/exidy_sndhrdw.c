@@ -235,7 +235,7 @@ static INLINE int sh6840_update_noise(int clocks)
 	for (i = 0; i < clocks * 2; i++)
 	{
 		/* keep a history of the last few noise samples */
-		history = (history << 1) | (rand() & 1);
+		history = (history << 1) | (mame_rand_int() & 1);
 
 		/* if we clocked 0->1, that will serve as an external clock */
 		if ((history & 0x03) == 0x01)

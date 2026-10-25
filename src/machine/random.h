@@ -24,6 +24,11 @@ unsigned long mame_rand(void);
    whose numbers are not in the save states and differ between hosts */
 int mame_rand_int(void);
 
+/* the same, from a generator of its own (also in the save states), for the
+   code that only changes the picture: the screen updates don't run on the
+   frames skipped by the frameskip */
+int mame_rand_video(void);
+
 /* seeds the generator and adds its state to the save states; called once
    at machine init */
 void mame_rand_init(void);

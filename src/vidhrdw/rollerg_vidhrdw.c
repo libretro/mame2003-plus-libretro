@@ -16,10 +16,10 @@ static int bg_colorbase,sprite_colorbase,zoom_colorbase;
 static void sprite_callback(int *code,int *color,int *priority_mask)
 {
 #if 0
-if (keyboard_pressed(KEYCODE_Q) && (*color & 0x80)) *color = rand();
-if (keyboard_pressed(KEYCODE_W) && (*color & 0x40)) *color = rand();
-if (keyboard_pressed(KEYCODE_E) && (*color & 0x20)) *color = rand();
-if (keyboard_pressed(KEYCODE_R) && (*color & 0x10)) *color = rand();
+if (keyboard_pressed(KEYCODE_Q) && (*color & 0x80)) *color = mame_rand_video();
+if (keyboard_pressed(KEYCODE_W) && (*color & 0x40)) *color = mame_rand_video();
+if (keyboard_pressed(KEYCODE_E) && (*color & 0x20)) *color = mame_rand_video();
+if (keyboard_pressed(KEYCODE_R) && (*color & 0x10)) *color = mame_rand_video();
 #endif
 	*priority_mask = (*color & 0x10) ? 0 : 0x02;
 	*color = sprite_colorbase + (*color & 0x0f);

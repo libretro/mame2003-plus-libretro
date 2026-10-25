@@ -424,9 +424,11 @@ static int run_machine(void)
 					{
 						int i;
 
-						/* invalidate contents to avoid subtle bugs */
+						/* invalidate contents to avoid subtle bugs; not with the
+						   emulation's random numbers, which would then depend on
+						   the size of the regions freed */
 						for (i = 0; i < memory_region_length(region); i++)
-							memory_region(region)[i] = rand();
+							memory_region(region)[i] = mame_rand_video();
 						free(Machine->memory_region[region].base);
 						Machine->memory_region[region].base = 0;
 					}

@@ -491,7 +491,7 @@ void vector_add_point (int x, int y, rgb_t color, int intensity)
 
 	if (options.vector_flicker && (intensity > 0))
 	{
-		intensity += (intensity * (0x80-(rand()&0xff)) * options.vector_flicker)>>16;
+		intensity += (intensity * (0x80-(mame_rand_video()&0xff)) * options.vector_flicker)>>16;
 		if (intensity < 0)
 			intensity = 0;
 		if (intensity > 0xff)
@@ -523,7 +523,7 @@ void vector_add_point_callback (int x, int y, rgb_t (*color_callback)(void), int
 
 	if (options.vector_flicker && (intensity > 0))
 	{
-		intensity += (intensity * (0x80-(rand()&0xff)) * options.vector_flicker)>>16;
+		intensity += (intensity * (0x80-(mame_rand_video()&0xff)) * options.vector_flicker)>>16;
 		if (intensity < 0)
 			intensity = 0;
 		if (intensity > 0xff)
