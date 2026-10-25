@@ -197,6 +197,7 @@ CPUS+=R3000@
 CPUS+=R4600@
 CPUS+=R5000@
 CPUS+=SH2@
+CPUS+=SH3@
 CPUS+=DSP32C@
 #CPUS+=PIC16C54@
 CPUS+=PIC16C55@
@@ -1061,6 +1062,7 @@ SOURCES_C += \
 	$(CORE_DIR)/machine/model1_machine.c $(CORE_DIR)/vidhrdw/model1_vidhrdw.c $(CORE_DIR)/drivers/model1.c \
 	$(CORE_DIR)/machine/model2_machine.c $(CORE_DIR)/vidhrdw/model2_vidhrdw.c $(CORE_DIR)/drivers/model2.c \
 	$(CORE_DIR)/sndhrdw/segadsb.c $(CORE_DIR)/sound/mpeg_audio.c \
+	$(CORE_DIR)/drivers/cv1k.c $(CORE_DIR)/vidhrdw/cv1k_vidhrdw.c $(CORE_DIR)/sound/ymz770.c \
 	$(CORE_DIR)/machine/sega315_5881.c $(CORE_DIR)/machine/sega315_5838.c \
 	$(CORE_DIR)/drivers/calorie.c \
     $(CORE_DIR)/drivers/hvyunit.c \
@@ -2092,6 +2094,15 @@ SOURCES_C += $(CORE_DIR)/cpu/sh2/sh2dasm.c
 endif
 else
 CPUDEFS += -DHAS_SH2=0
+endif
+
+CPU=$(strip $(findstring SH3@,$(CPUS)))
+ifneq ($(CPU),)
+OBJDIRS += $(CORE_DIR)/cpu/sh3
+CPUDEFS += -DHAS_SH3=1
+SOURCES_C += $(CORE_DIR)/cpu/sh3/sh3.c
+else
+CPUDEFS += -DHAS_SH3=0
 endif
 
 CPU=$(strip $(findstring DSP32C@,$(CPUS)))

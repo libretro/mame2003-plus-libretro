@@ -181,6 +181,9 @@
 #if (HAS_SH2)
 #include "cpu/sh2/sh2.h"
 #endif
+#if (HAS_SH3)
+#include "cpu/sh3/sh3.h"
+#endif
 #if (HAS_DSP32C)
 #include "cpu/dsp32/dsp32.h"
 #endif
@@ -650,6 +653,9 @@ const struct cpu_interface cpuintrf[] =
 #endif
 #if (HAS_SH2)
 	CPU4(SH2,	   sh2, 	16,  0,1.00,32,32bedw,   0,32,BE,2, 2  ),
+#endif
+#if (HAS_SH3)
+	CPU0(SH3,	   sh3, 	 4,  0,1.00,32,32bedw,   0,32,BE,2, 2  ),
 #endif
 #if (HAS_DSP32C)
 	#define dsp32c_ICount dsp32_icount

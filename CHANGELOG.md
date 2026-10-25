@@ -63,6 +63,8 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Cycle Warriors
 * Daikaiju no Gyakushu
 * Danger Express (prototype)
+* Deathsmiles - Romset `deathsml`
+* Deathsmiles MegaBlack Label - Romset `dsmbl`
 * Deluxe 5
 * Denjin Makai 
 * Deer Hunting
@@ -70,6 +72,8 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Dice - The Dice Game
 * Diet Go Go
 * Digger (CVS)
+* DoDonPachi Dai-Fukkatsu (Ver 1.5 and 1.0) - Romsets `ddpdfk`, `ddpdfk10`
+* DoDonPachi Dai-Fukkatsu Black Label - Romset `dfkbl`
 * Dolmen
 * Dodge Man
 * DoDonPachi Dai-Ou-Jou
@@ -81,6 +85,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Dyna Gear
 * Eeekk!
 * ESPGaluda
+* Espgaluda II (all sets) - Romsets `espgal2`, `espgal2a`, `espgal2b`
 * F1 Super Lap (World)
 * Fantasy Zone II - The Tears of Opa-Opa (System 16C version)
 * Fever SOS
@@ -114,6 +119,8 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Hypernoid
 * Hyper Crash
 * Hyper Street Fighter II (All Sets)
+* Ibara (all sets) - Romsets `ibara`, `ibarao`
+* Ibara Kuro Black Label (all sets) - Romsets `ibarablk`, `ibarablka`
 * In Your Face
 * Inca * Mature *
 * Indian Battle
@@ -155,7 +162,11 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Mouse Shooter GoGo
 * Ms. Pacman Twin
 * Mrs. Dynamite
+* Muchi Muchi Pork! - Romset `mmpork`
 * Multi Champ Deluxe * Mature *
+* Mushihime-Sama (all sets) - Romsets `mushisam`, `mushisama`, `mushisamb`
+* Mushihime-Sama Futari Black Label (all sets) - Romsets `futaribl`, `futariblj`
+* Mushihime-Sama Futari Ver 1.5 and 1.0 (all sets) - Romsets `futari15`, `futari15a`, `futari10`
 * New Zero Team
 * Ninja Kazan
 * Oo Parts (Japan, Prototype)
@@ -170,6 +181,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Passing Shot (Japan 2 players) 
 * Penky
 * Photo Y2K 2
+* Pink Sweets: Ibara Sorekara (all sets) - Romsets `pinkswts`, `pinkswtsa`, `pinkswtsb`, `pinkswtsx`
 * Pirate Treasure
 * Planet Probe
 * Pochi & Nyaa
@@ -182,6 +194,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Puzz Loop 2 (All Sets)
 * Puzzle Break
 * Puzzle Star
+* Puzzle! Mushihime-Tama (all sets) - Romsets `mushitam`, `mushitama`
 * Puzzli 2
 * Puzzli 2 Super
 * Quick Shots (Clone Of Target Hits)
@@ -375,6 +388,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Metal Slug 2 - Turbo (Trap15, Hack)
 * Midnight Resistance (joystick hack bootleg)
 * Mortal Kombat 2 Plus Beta 2
+* Pink Sweets: Suicide Club (2017 hack of Pink Sweets) - Romset `pinkswtssc`
 * TANK III (joystick hack bootleg)
 * The Eye Of The Typhoon (Beta 7)
 * Tron freeplay custom rom
@@ -1187,4 +1201,5 @@ could crash on the score calc between levels is sorted [amadvance, arcadez]
 * Fixed Palette banking problems for Pleiads [MAMEDev, arcadez]
 * Added fixes from later MAME so that Princess Clara Daisakusen now works [MAMEDev, arcadez]
 * Ported a new raiden2.c driver Raiden II Raiden DX and Zero Team etc etc now playable [Salvia, MAMEDev, FBN, vanni and claude, arcadez]
+* Ported the Cave CV1000 driver from current MAME: SH-3 CPU (interpreter and a recompiler with the same results), the blitter, the YMZ770 sound chip, the NAND flash and the RTC9701 [MAMEDev, vanni and claude]
 

@@ -2,7 +2,7 @@
 
     MPEG audio layer I and II decoder, from current MAME
     (src/devices/sound/mpeg_audio.cpp; copyright Olivier Galibert,
-    BSD-3-Clause), in C89. The layer III and AMM variants of MAME are
+    BSD-3-Clause), in C89. The layer III and II.5 variants of MAME are
     left out (no user here). Reading past the limit unwinds with longjmp,
     as MAME's exception does.
 
@@ -418,6 +418,42 @@ static void read_header_mpeg2( struct mpeg_audio *m )
 		m->joint_bands = m->total_bands;
 }
 
+static void read_header_amm( struct mpeg_audio *m, int layer25 )
+{
+	int ammsl = gb( m, 1 );	/* 1 = older AMM variant, CBR and constant frame size */
+	int full_packets_count = gb( m, 4 );	/* max 12 */
+	int srate_index = gb( m, 2 );	/* max 2 */
+	int last_packet_frame_id, stereo_mode, stereo_mode_ext;
+	m->sampling_rate = srate_index + 4 * layer25;
+	last_packet_frame_id = gb( m, 2 );	/* max 2 */
+	stereo_mode = gb( m, 2 );
+	stereo_mode_ext = gb( m, 2 );
+	if( ammsl )
+	{
+		m->last_frame_number = 36;
+		m->param_index = m->cbr_param_index;	/* CBR: from the top bits of the sample pointer */
+		gb( m, 3 );
+	}
+	else
+	{
+		m->last_frame_number = 3 * full_packets_count + last_packet_frame_id;
+		m->param_index = gb( m, 3 );
+	}
+	gb( m, 1 );	/* must be zero */
+
+	if( m->param_index > 4 )
+		longjmp( m->limit_hit, 1 );	/* no such table (MAME reads past it) */
+
+	m->channel_count = stereo_mode != 3 ? 2 : 1;
+
+	m->total_bands = s_total_band_counts[ m->param_index ];
+	m->joint_bands = m->total_bands;
+	if( stereo_mode == 1 )	/* joint stereo */
+		m->joint_bands = s_joint_band_counts[ stereo_mode_ext ];
+	if( m->joint_bands > m->total_bands )
+		m->joint_bands = m->total_bands;
+}
+
 static void read_header_layer1( struct mpeg_audio *m )
 {
 	int stereo_mode, stereo_mode_ext;
@@ -752,6 +788,12 @@ static void decode_mpeg2( struct mpeg_audio *m, short *output, int *output_sampl
 int mpeg_audio_decode_buffer( struct mpeg_audio *m, int *pos, int limit, short *output,
 		int *output_samples, int *sample_rate, int *channels )
 {
+	return mpeg_audio_decode_buffer_atbl( m, pos, limit, output, output_samples, sample_rate, channels, 0 );
+}
+
+int mpeg_audio_decode_buffer_atbl( struct mpeg_audio *m, int *pos, int limit, short *output,
+		int *output_samples, int *sample_rate, int *channels, int atbl )
+{
 	unsigned short sync;
 	int layer, variant;
 
@@ -761,6 +803,7 @@ int mpeg_audio_decode_buffer( struct mpeg_audio *m, int *pos, int limit, short *
 	/* scan for the sync mark */
 	m->current_pos = *pos;
 	m->current_limit = limit;
+	m->cbr_param_index = atbl;
 	sync = (unsigned short)gb_raw( m, 12 );
 
 	for( ;; )
@@ -773,8 +816,12 @@ int mpeg_audio_decode_buffer( struct mpeg_audio *m, int *pos, int limit, short *
 
 		layer = 0;
 		variant = gb_raw( m, 3 );
+		if( variant == 2 && ( m->accepted & MPEG_AUDIO_AMM ) )
+			layer = 4;
 		if( variant == 6 && ( m->accepted & MPEG_AUDIO_L2 ) )
 			layer = 2;
+		else if( variant == 6 && ( m->accepted & MPEG_AUDIO_AMM ) )
+			layer = 4;
 		if( variant == 7 && ( m->accepted & MPEG_AUDIO_L1 ) )
 			layer = 1;
 		if( layer )
@@ -793,13 +840,22 @@ int mpeg_audio_decode_buffer( struct mpeg_audio *m, int *pos, int limit, short *
 		read_data_layer1( m );
 		decode_layer1( m, output, output_samples );
 	}
-	else
+	else if( layer == 2 )
 	{
 		read_header_mpeg2( m );
 		read_band_params( m );
 		read_scfci( m );
 		read_band_amplitude_params( m );
 		decode_mpeg2( m, output, output_samples );
+	}
+	else
+	{
+		read_header_amm( m, variant == 2 );
+		read_band_params( m );
+		read_scfci( m );
+		read_band_amplitude_params( m );
+		if( m->last_frame_number )
+			decode_mpeg2( m, output, output_samples );
 	}
 
 	*pos = m->current_pos;
