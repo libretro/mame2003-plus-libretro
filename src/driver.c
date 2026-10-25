@@ -2027,6 +2027,8 @@ V-V                           TP-027
 	DRIVER( ddpdfk )	/* DoDonPachi Dai-Fukkatsu Ver 1.5 (Japan, 2008/06/23 MASTER VER 1.5) */
 	DRIVER( ddpdfk10 )	/* DoDonPachi Dai-Fukkatsu Ver 1.0 (Japan, 2008/05/16 MASTER VER) */
 	DRIVER( dfkbl )	/* DoDonPachi Dai-Fukkatsu Black Label (Japan, 2010/1/18 BLACK LABEL) */
+  DRIVER( akatana ) /* Akai Katana (2010/ 8/13 MASTER VER.) */
+  DRIVER( ddpsdoj ) /* DoDonPachi SaiDaiOuJou (2012/ 4/20) */
 
 	/* Kyugo games */
 	/* Kyugo only made four games: Repulse, Flash Gal, SRD Mission and Air Wolf. */
