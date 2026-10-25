@@ -19,6 +19,7 @@
 #include <math.h>
 
 #include "driver.h"
+#include "state.h"
 #include "cpu/z80/z80.h"
 
 
@@ -196,7 +197,38 @@ int astrocade_sh_start(const struct MachineSound *msound)
 		current_state_B[i] = 1;
 		current_state_C[i] = 1;
 		current_state_V[i] = 1;
+
+		state_save_register_INT32("astrocade", i, "sample_pos", (INT32 *)&sample_pos[i], 1);
+		state_save_register_INT32("astrocade", i, "count_A", (INT32 *)&current_count_A[i], 1);
+		state_save_register_INT32("astrocade", i, "count_B", (INT32 *)&current_count_B[i], 1);
+		state_save_register_INT32("astrocade", i, "count_C", (INT32 *)&current_count_C[i], 1);
+		state_save_register_INT32("astrocade", i, "count_V", (INT32 *)&current_count_V[i], 1);
+		state_save_register_INT32("astrocade", i, "count_N", (INT32 *)&current_count_N[i], 1);
+		state_save_register_INT32("astrocade", i, "state_A", (INT32 *)&current_state_A[i], 1);
+		state_save_register_INT32("astrocade", i, "state_B", (INT32 *)&current_state_B[i], 1);
+		state_save_register_INT32("astrocade", i, "state_C", (INT32 *)&current_state_C[i], 1);
+		state_save_register_INT32("astrocade", i, "state_V", (INT32 *)&current_state_V[i], 1);
+		state_save_register_INT32("astrocade", i, "size_A", (INT32 *)&current_size_A[i], 1);
+		state_save_register_INT32("astrocade", i, "size_B", (INT32 *)&current_size_B[i], 1);
+		state_save_register_INT32("astrocade", i, "size_C", (INT32 *)&current_size_C[i], 1);
+		state_save_register_INT32("astrocade", i, "size_V", (INT32 *)&current_size_V[i], 1);
+		state_save_register_INT32("astrocade", i, "size_N", (INT32 *)&current_size_N[i], 1);
+		state_save_register_INT32("astrocade", i, "master_osc", (INT32 *)&master_osc[i], 1);
+		state_save_register_INT32("astrocade", i, "freq_A", (INT32 *)&freq_A[i], 1);
+		state_save_register_INT32("astrocade", i, "freq_B", (INT32 *)&freq_B[i], 1);
+		state_save_register_INT32("astrocade", i, "freq_C", (INT32 *)&freq_C[i], 1);
+		state_save_register_INT32("astrocade", i, "vol_A", (INT32 *)&vol_A[i], 1);
+		state_save_register_INT32("astrocade", i, "vol_B", (INT32 *)&vol_B[i], 1);
+		state_save_register_INT32("astrocade", i, "vol_C", (INT32 *)&vol_C[i], 1);
+		state_save_register_INT32("astrocade", i, "vibrato", (INT32 *)&vibrato[i], 1);
+		state_save_register_INT32("astrocade", i, "vibrato_speed", (INT32 *)&vibrato_speed[i], 1);
+		state_save_register_INT32("astrocade", i, "mux", (INT32 *)&mux[i], 1);
+		state_save_register_INT32("astrocade", i, "noise_am", (INT32 *)&noise_am[i], 1);
+		state_save_register_INT32("astrocade", i, "vol_noise4", (INT32 *)&vol_noise4[i], 1);
+		state_save_register_INT32("astrocade", i, "vol_noise8", (INT32 *)&vol_noise8[i], 1);
 	}
+	state_save_register_INT32("astrocade", 0, "randbyte", (INT32 *)&randbyte, 1);
+	state_save_register_INT32("astrocade", 0, "randbit", (INT32 *)&randbit, 1);
 
 	return 0;
 }

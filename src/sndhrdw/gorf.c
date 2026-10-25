@@ -22,6 +22,7 @@ the variable GorfBaseFrequency, this is defaulted to 8000
 **************************************************************************/
 
 #include "driver.h"
+#include "state.h"
 #include "cpu/z80/z80.h"
 
 
@@ -122,11 +123,19 @@ char totalword[256], *totalword_ptr;
 char oldword[256];
 int plural = 0;
 
+void astrocde_speech_state_register(void)
+{
+	state_save_register_UINT8("astrocde_speech", 0, "totalword", (UINT8 *)totalword, sizeof(totalword));
+	state_save_register_UINT8("astrocde_speech", 0, "oldword", (UINT8 *)oldword, sizeof(oldword));
+	state_save_register_INT32("astrocde_speech", 0, "plural", (INT32 *)&plural, 1);
+}
+
 int gorf_sh_start(const struct MachineSound *msound)
 {
     GorfBaseFrequency = 11025;
     GorfBaseVolume = 230;
     GorfChannel = 0;
+    astrocde_speech_state_register();
     return 0;
 }
 

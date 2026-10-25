@@ -7,11 +7,20 @@
 **************************************************************************/
 
 #include "driver.h"
+#include "state.h"
 
+
+static int Skip=0;
+static int ebases_trackball_select = 0;
+
+void astrocde_machine_state_register(void)
+{
+	state_save_register_INT32("astrocde", 0, "gorf_timer_skip", (INT32 *)&Skip, 1);
+	state_save_register_INT32("astrocde", 0, "ebases_trackball_select", (INT32 *)&ebases_trackball_select, 1);
+}
 
 READ_HANDLER( gorf_timer_r )
 {
-	static int Skip=0;
 	unsigned char *RAM = memory_region(REGION_CPU1);
 
 
@@ -69,8 +78,6 @@ READ_HANDLER( seawolf2_controller2_r )
 	return (input_port_1_r(0) & 0xc0) + ControllerTable[input_port_1_r(0) & 0x3f];
 }
 
-
-static int ebases_trackball_select = 0;
 
 WRITE_HANDLER( ebases_trackball_select_w )
 {
