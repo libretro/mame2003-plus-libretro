@@ -63,6 +63,7 @@ OUT:
 ****************************************************************************/
 
 #include "driver.h"
+#include "state.h"
 #include "vidhrdw/generic.h"
 
 extern unsigned char *wow_videoram;
@@ -980,6 +981,9 @@ ROM_END
 
 static DRIVER_INIT( seawolf2 )
 {
+	state_save_register_UINT8("seawolf2", 0, "port_1_last", &port_1_last, 1);
+	state_save_register_UINT8("seawolf2", 0, "port_2_last", &port_2_last, 1);
+
 	install_port_read_handler(0, 0x10, 0x10, seawolf2_controller2_r);
 	install_port_read_handler(0, 0x11, 0x11, seawolf2_controller1_r);
 }

@@ -114,12 +114,14 @@ const char *wow_sample_names[] =
 extern char totalword[256], *totalword_ptr;
 extern char oldword[256];
 extern int plural;
+void astrocde_speech_state_register(void);
 
 int wow_sh_start(const struct MachineSound *msound)
 {
 	wowBaseFrequency = 11025;
 	wowBaseVolume = 230;
 	wowChannel = 0;
+	astrocde_speech_state_register();
 	return 0;
 }
 
