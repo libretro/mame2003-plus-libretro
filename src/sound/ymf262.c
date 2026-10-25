@@ -44,6 +44,7 @@ differences between OPL2 and OPL3 shown in datasheets:
 #include <math.h>
 
 #include "driver.h"		/* use M.A.M.E. */
+#include "state.h"
 #include "ymf262.h"
 
 #ifndef PI
@@ -2458,6 +2459,142 @@ static int OPL3TimerOver(OPL3 *chip,int c)
 static OPL3 *YMF262[MAX_OPL3_CHIPS];	/* array of pointers to the YMF262's */
 static int YMF262NumChips = 0;				/* number of chips */
 
+/* save states: the slot outputs (connect) point to the shared channel
+   outputs or phase modulation inputs; they are saved as an index:
+   0-17 chanout[], 18 phase_modulation, 19 phase_modulation2, -1 none */
+static INT8 ss_connect[MAX_OPL3_CHIPS][18][2];
+static int ss_registered;
+
+static INT8 OPL3_connect_index(INT32 *connect)
+{
+	int i;
+	if (connect == &phase_modulation)
+		return 18;
+	if (connect == &phase_modulation2)
+		return 19;
+	for (i = 0; i < 18; i++)
+		if (connect == &chanout[i])
+			return i;
+	return -1;
+}
+
+static INT32 *OPL3_connect_pointer(INT8 index)
+{
+	if (index == 18)
+		return &phase_modulation;
+	if (index == 19)
+		return &phase_modulation2;
+	if (index >= 0 && index < 18)
+		return &chanout[index];
+	return NULL;
+}
+
+static void OPL3_presave(void)
+{
+	int c, ch, sl;
+	for (c = 0; c < YMF262NumChips; c++)
+		for (ch = 0; ch < 18; ch++)
+			for (sl = 0; sl < 2; sl++)
+				ss_connect[c][ch][sl] = OPL3_connect_index(YMF262[c]->P_CH[ch].SLOT[sl].connect);
+}
+
+static void OPL3_postload(void)
+{
+	int c, ch, sl;
+	for (c = 0; c < YMF262NumChips; c++)
+		for (ch = 0; ch < 18; ch++)
+			for (sl = 0; sl < 2; sl++)
+				YMF262[c]->P_CH[ch].SLOT[sl].connect = OPL3_connect_pointer(ss_connect[c][ch][sl]);
+	/* the rhythm slot pointers are taken again at the next update */
+	cur_chip = NULL;
+}
+
+static void OPL3_state_save_register(OPL3 *chip, int index)
+{
+	char name[32];
+	int ch, sl;
+
+	for (ch = 0; ch < 18; ch++)
+	{
+		OPL3_CH *CH = &chip->P_CH[ch];
+#define CH_NAME(f)		(sprintf(name, "ch%02d.%s", ch, f), name)
+
+		state_save_register_UINT32("ymf262", index, CH_NAME("block_fnum"), &CH->block_fnum, 1);
+		state_save_register_UINT32("ymf262", index, CH_NAME("fc"), &CH->fc, 1);
+		state_save_register_UINT32("ymf262", index, CH_NAME("ksl_base"), &CH->ksl_base, 1);
+		state_save_register_UINT8("ymf262", index, CH_NAME("kcode"), &CH->kcode, 1);
+		state_save_register_UINT8("ymf262", index, CH_NAME("extended"), &CH->extended, 1);
+
+		for (sl = 0; sl < 2; sl++)
+		{
+			OPL3_SLOT *SL = &CH->SLOT[sl];
+#define SLOT_NAME(f)	(sprintf(name, "ch%02d.slot%d.%s", ch, sl, f), name)
+
+			state_save_register_UINT32("ymf262", index, SLOT_NAME("ar"), &SL->ar, 1);
+			state_save_register_UINT32("ymf262", index, SLOT_NAME("dr"), &SL->dr, 1);
+			state_save_register_UINT32("ymf262", index, SLOT_NAME("rr"), &SL->rr, 1);
+			state_save_register_UINT8("ymf262", index, SLOT_NAME("KSR"), &SL->KSR, 1);
+			state_save_register_UINT8("ymf262", index, SLOT_NAME("ksl"), &SL->ksl, 1);
+			state_save_register_UINT8("ymf262", index, SLOT_NAME("ksr"), &SL->ksr, 1);
+			state_save_register_UINT8("ymf262", index, SLOT_NAME("mul"), &SL->mul, 1);
+			state_save_register_UINT32("ymf262", index, SLOT_NAME("Cnt"), &SL->Cnt, 1);
+			state_save_register_UINT32("ymf262", index, SLOT_NAME("Incr"), &SL->Incr, 1);
+			state_save_register_UINT8("ymf262", index, SLOT_NAME("FB"), &SL->FB, 1);
+			state_save_register_INT32("ymf262", index, SLOT_NAME("op1_out"), SL->op1_out, 2);
+			state_save_register_UINT8("ymf262", index, SLOT_NAME("CON"), &SL->CON, 1);
+			state_save_register_UINT8("ymf262", index, SLOT_NAME("eg_type"), &SL->eg_type, 1);
+			state_save_register_UINT8("ymf262", index, SLOT_NAME("state"), &SL->state, 1);
+			state_save_register_UINT32("ymf262", index, SLOT_NAME("TL"), &SL->TL, 1);
+			state_save_register_INT32("ymf262", index, SLOT_NAME("TLL"), &SL->TLL, 1);
+			state_save_register_INT32("ymf262", index, SLOT_NAME("volume"), &SL->volume, 1);
+			state_save_register_UINT32("ymf262", index, SLOT_NAME("sl"), &SL->sl, 1);
+			state_save_register_UINT32("ymf262", index, SLOT_NAME("eg_m_ar"), &SL->eg_m_ar, 1);
+			state_save_register_UINT8("ymf262", index, SLOT_NAME("eg_sh_ar"), &SL->eg_sh_ar, 1);
+			state_save_register_UINT8("ymf262", index, SLOT_NAME("eg_sel_ar"), &SL->eg_sel_ar, 1);
+			state_save_register_UINT32("ymf262", index, SLOT_NAME("eg_m_dr"), &SL->eg_m_dr, 1);
+			state_save_register_UINT8("ymf262", index, SLOT_NAME("eg_sh_dr"), &SL->eg_sh_dr, 1);
+			state_save_register_UINT8("ymf262", index, SLOT_NAME("eg_sel_dr"), &SL->eg_sel_dr, 1);
+			state_save_register_UINT32("ymf262", index, SLOT_NAME("eg_m_rr"), &SL->eg_m_rr, 1);
+			state_save_register_UINT8("ymf262", index, SLOT_NAME("eg_sh_rr"), &SL->eg_sh_rr, 1);
+			state_save_register_UINT8("ymf262", index, SLOT_NAME("eg_sel_rr"), &SL->eg_sel_rr, 1);
+			state_save_register_UINT32("ymf262", index, SLOT_NAME("key"), &SL->key, 1);
+			state_save_register_UINT32("ymf262", index, SLOT_NAME("AMmask"), &SL->AMmask, 1);
+			state_save_register_UINT8("ymf262", index, SLOT_NAME("vib"), &SL->vib, 1);
+			state_save_register_UINT8("ymf262", index, SLOT_NAME("waveform_number"), &SL->waveform_number, 1);
+			state_save_register_UINT32("ymf262", index, SLOT_NAME("wavetable"), (UINT32 *)&SL->wavetable, 1);
+		}
+#undef SLOT_NAME
+		state_save_register_INT8("ymf262", index, CH_NAME("connect"), ss_connect[index][ch], 2);
+#undef CH_NAME
+	}
+
+	state_save_register_UINT32("ymf262", index, "pan",                chip->pan, 18 * 4);
+	state_save_register_UINT32("ymf262", index, "pan_ctrl_value",     chip->pan_ctrl_value, 18);
+	state_save_register_UINT32("ymf262", index, "eg_cnt",             &chip->eg_cnt, 1);
+	state_save_register_UINT32("ymf262", index, "eg_timer",           &chip->eg_timer, 1);
+	state_save_register_UINT8 ("ymf262", index, "lfo_am_depth",       &chip->lfo_am_depth, 1);
+	state_save_register_UINT8 ("ymf262", index, "lfo_pm_depth_range", &chip->lfo_pm_depth_range, 1);
+	state_save_register_UINT32("ymf262", index, "lfo_am_cnt",         &chip->lfo_am_cnt, 1);
+	state_save_register_UINT32("ymf262", index, "lfo_pm_cnt",         &chip->lfo_pm_cnt, 1);
+	state_save_register_UINT32("ymf262", index, "noise_rng",          &chip->noise_rng, 1);
+	state_save_register_UINT32("ymf262", index, "noise_p",            &chip->noise_p, 1);
+	state_save_register_UINT8 ("ymf262", index, "OPL3_mode",          &chip->OPL3_mode, 1);
+	state_save_register_UINT8 ("ymf262", index, "rhythm",             &chip->rhythm, 1);
+	state_save_register_INT32 ("ymf262", index, "T",                  (INT32 *)chip->T, 2);
+	state_save_register_UINT8 ("ymf262", index, "st",                 chip->st, 2);
+	state_save_register_UINT32("ymf262", index, "address",            &chip->address, 1);
+	state_save_register_UINT8 ("ymf262", index, "status",             &chip->status, 1);
+	state_save_register_UINT8 ("ymf262", index, "statusmask",         &chip->statusmask, 1);
+	state_save_register_UINT8 ("ymf262", index, "nts",                &chip->nts, 1);
+
+	if (!ss_registered)
+	{
+		state_save_register_func_presave(OPL3_presave);
+		state_save_register_func_postload(OPL3_postload);
+		ss_registered = 1;
+	}
+}
+
 int YMF262Init(int num, int clock, int rate)
 {
 	int i;
@@ -2477,6 +2614,7 @@ int YMF262Init(int num, int clock, int rate)
 			YMF262NumChips = 0;
 			return -1;
 		}
+		OPL3_state_save_register(YMF262[i], i);
 	}
 
 	return 0;
@@ -2493,6 +2631,8 @@ void YMF262Shutdown(void)
 		YMF262[i] = NULL;
 	}
 	YMF262NumChips = 0;
+	/* the next machine registers its save state functions again */
+	ss_registered = 0;
 }
 void YMF262ResetChip(int which)
 {
