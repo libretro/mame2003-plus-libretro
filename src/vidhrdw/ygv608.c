@@ -472,14 +472,14 @@ static void get_tile_info_B_16( int offset )
 		SET_TILE_INFO( set, j, attr, f );
 	}
 }
-
+/*
 static void ygv608_exit()
 {
 	if( work_bitmap )
 		bitmap_free( work_bitmap );
 	work_bitmap = NULL;
 }
-
+*/
 
 VIDEO_START( ygv608 )
 {
@@ -510,7 +510,7 @@ VIDEO_START( ygv608 )
 	tilemap_A = NULL;
 	tilemap_B = NULL;
 
-	ygv608_exit(1);
+/*	ygv608_exit(1); */
 
 	return 0;
 }
