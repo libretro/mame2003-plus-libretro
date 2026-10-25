@@ -146,6 +146,7 @@ Pipi & Bibis	 | Fix Eight		| V-Five		   | Snow Bros. 2	  |
 
 #include "driver.h"
 #include "tilemap.h"
+#include "state.h"
 #include "cpu/m68000/m68000.h"
 
 
@@ -182,6 +183,7 @@ data16_t *toaplan2_txvideoram16_offs;	/* Text layer tile flip and positon ? */
 data16_t *toaplan2_txscrollram16;		/* Text layer scroll ? */
 data16_t *toaplan2_tx_gfxram16;			/* Text Layer RAM based tiles */
 data16_t *raizing_tx_gfxram16;			/* Text Layer RAM based tiles (Batrider) */
+static data16_t *raizing_tx_gfxram16_decoded;	/* the same, when its tiles were decoded */
 static int toaplan2_overflow_vram;		/* Teki Paki VRAM test is bugged. It goes out of range */
 
 static int toaplan2_scroll_reg[2];
@@ -524,10 +526,164 @@ static int toaplan2_vh_start(int controller)
 	return error_level;
 }
 
+
+/***************************************************************************
+
+  Save states: the RAM of the GP9001 video controllers and of the text
+  layer, the registers, and the tilemap settings made from them.
+
+***************************************************************************/
+
+VIDEO_START( batrider_0 );
+
+static int toaplan2_vh_controllers;		/* number of GP9001 of the game */
+static data16_t *toaplan2_vh_tx_gfxram;	/* text layer tiles decoded from RAM */
+static UINT8 *toaplan2_vh_tx_decoded;	/* the bytes each tile was decoded from (not saved) */
+static UINT8 toaplan2_vh_tx_valid[1024];	/* tile decoded since the start */
+
+/* decode a text tile from RAM, remembering its bytes */
+static void toaplan2_tx_decodechar(int code)
+{
+	int size = Machine->drv->gfxdecodeinfo[2].gfxlayout->charincrement / 8;
+	UINT8 *src = (UINT8 *)toaplan2_vh_tx_gfxram;
+
+	decodechar(Machine->gfx[2], code, src, Machine->drv->gfxdecodeinfo[2].gfxlayout);
+	if (toaplan2_vh_tx_decoded)
+	{
+		memcpy(toaplan2_vh_tx_decoded + code * size, src + code * size, size);
+		toaplan2_vh_tx_valid[code] = 1;
+	}
+}
+
+/* the entry of the 68000 memory map setting this pointer, if any */
+/* (the pointers keep their value of the previous game) */
+static const struct Memory_WriteAddress16 *toaplan2_map_entry(void *base)
+{
+	const struct Memory_WriteAddress16 *mwa = (const struct Memory_WriteAddress16 *)Machine->drv->cpu[0].memory_write;
+
+	for ( ; mwa && !IS_MEMPORT_END(mwa); mwa++)
+		if (!IS_MEMPORT_MARKER(mwa) && (void *)mwa->base == base)
+			return mwa;
+	return NULL;
+}
+
+static void toaplan2_vh_postload(void)
+{
+	int controller, line, code;
+
+	for (controller = 0; controller < toaplan2_vh_controllers; controller++)
+	{
+		tilemap_set_flip(bg_tilemap[controller], bg_flip[controller]);
+		tilemap_set_scrollx(bg_tilemap[controller], 0, bg_scrollx[controller] + xoffset[0]);
+		tilemap_set_scrolly(bg_tilemap[controller], 0, bg_scrolly[controller] + yoffset[0]);
+		tilemap_set_flip(fg_tilemap[controller], fg_flip[controller]);
+		tilemap_set_scrollx(fg_tilemap[controller], 0, fg_scrollx[controller] + xoffset[1]);
+		tilemap_set_scrolly(fg_tilemap[controller], 0, fg_scrolly[controller] + yoffset[1]);
+		tilemap_set_flip(top_tilemap[controller], top_flip[controller]);
+		tilemap_set_scrollx(top_tilemap[controller], 0, top_scrollx[controller] + xoffset[2]);
+		tilemap_set_scrolly(top_tilemap[controller], 0, top_scrolly[controller] + yoffset[2]);
+	}
+
+	if (toaplan2_map_entry(&toaplan2_txvideoram16))
+	{
+		tilemap_set_flip(tx_tilemap, tx_flip);
+		tilemap_set_scrolly(tx_tilemap, 0, tx_flip ? -16 : 0);
+		for (line = 0; line < (int)(toaplan2_tx_scroll_vram_size / 2); line++)
+			tilemap_set_scrollx(tx_tilemap, line, toaplan2_txscrollram16[line]);
+	}
+
+	/* the text tiles decoded from RAM (Truxton 2, FixEight, Batrider, Battle */
+	/* Bakraid): only the ones whose bytes changed, as RunAhead and netplay */
+	/* load a state at every frame */
+	if (toaplan2_vh_tx_gfxram)
+	{
+		int size = Machine->drv->gfxdecodeinfo[2].gfxlayout->charincrement / 8;
+		UINT8 *src = (UINT8 *)toaplan2_vh_tx_gfxram;
+
+		for (code = 0; code < 1024; code++)
+			if (!toaplan2_vh_tx_valid[code] || memcmp(toaplan2_vh_tx_decoded + code * size, src + code * size, size))
+				toaplan2_tx_decodechar(code);
+	}
+
+	/* the tilemaps are all redrawn after a load (tilemap.c) */
+	objectbank_dirty = 1;
+}
+
+/* from VIDEO_START, after the tilemaps are created */
+static void toaplan2_vh_register_state(int controllers)
+{
+	static void *const tx_ram[3] = { &toaplan2_txvideoram16, &toaplan2_txvideoram16_offs, &toaplan2_txscrollram16 };
+	static const char *const tx_name[3] = { "tx_vram", "tx_offs", "tx_scroll" };
+	const struct Memory_WriteAddress16 *mwa;
+	int controller, i;
+
+	toaplan2_vh_controllers = controllers;
+	for (controller = 0; controller < controllers; controller++)
+	{
+		state_save_register_UINT16("toaplan2_vid", controller, "bg_vram",  bgvideoram16[controller],    TOAPLAN2_BG_VRAM_SIZE/2);
+		state_save_register_UINT16("toaplan2_vid", controller, "fg_vram",  fgvideoram16[controller],    TOAPLAN2_FG_VRAM_SIZE/2);
+		state_save_register_UINT16("toaplan2_vid", controller, "top_vram", topvideoram16[controller],   TOAPLAN2_TOP_VRAM_SIZE/2);
+		state_save_register_UINT16("toaplan2_vid", controller, "spr_new",  spriteram16_new[controller], TOAPLAN2_SPRITERAM_SIZE/2);
+		state_save_register_UINT16("toaplan2_vid", controller, "spr_now",  spriteram16_now[controller], TOAPLAN2_SPRITERAM_SIZE/2);
+		state_save_register_int   ("toaplan2_vid", controller, "scroll_reg",  &toaplan2_scroll_reg[controller]);
+		state_save_register_int   ("toaplan2_vid", controller, "voffs",       &toaplan2_voffs[controller]);
+		state_save_register_int   ("toaplan2_vid", controller, "bg_scrollx",  &bg_scrollx[controller]);
+		state_save_register_int   ("toaplan2_vid", controller, "bg_scrolly",  &bg_scrolly[controller]);
+		state_save_register_int   ("toaplan2_vid", controller, "fg_scrollx",  &fg_scrollx[controller]);
+		state_save_register_int   ("toaplan2_vid", controller, "fg_scrolly",  &fg_scrolly[controller]);
+		state_save_register_int   ("toaplan2_vid", controller, "top_scrollx", &top_scrollx[controller]);
+		state_save_register_int   ("toaplan2_vid", controller, "top_scrolly", &top_scrolly[controller]);
+		state_save_register_int   ("toaplan2_vid", controller, "spr_scrollx", &sprite_scrollx[controller]);
+		state_save_register_int   ("toaplan2_vid", controller, "spr_scrolly", &sprite_scrolly[controller]);
+		state_save_register_int   ("toaplan2_vid", controller, "bg_flip",     &bg_flip[controller]);
+		state_save_register_int   ("toaplan2_vid", controller, "fg_flip",     &fg_flip[controller]);
+		state_save_register_int   ("toaplan2_vid", controller, "top_flip",    &top_flip[controller]);
+		state_save_register_int   ("toaplan2_vid", controller, "spr_flip",    &sprite_flip[controller]);
+	}
+	state_save_register_int  ("toaplan2_vid", 0, "overflow_vram", &toaplan2_overflow_vram);
+	state_save_register_int  ("toaplan2_vid", 0, "tx_flip",       &tx_flip);
+	state_save_register_INT32("toaplan2_vid", 0, "object_bank",   batrider_object_bank, 8);
+
+	/* the RAM of the 68000 memory map with a handler (not saved by the memory system) */
+	if ((mwa = toaplan2_map_entry(&paletteram16)) != NULL)
+		state_save_register_UINT16("toaplan2_vid", 0, "palette", paletteram16, (mwa->end - mwa->start + 1) / 2);
+	for (i = 0; i < 3; i++)
+		if ((mwa = toaplan2_map_entry(tx_ram[i])) != NULL)
+			state_save_register_UINT16("toaplan2_vid", 0, tx_name[i], *(data16_t **)tx_ram[i], (mwa->end - mwa->start + 1) / 2);
+
+	/* the text tiles in RAM */
+	toaplan2_vh_tx_gfxram = NULL;
+	toaplan2_vh_tx_decoded = NULL;
+	memset(toaplan2_vh_tx_valid, 0, sizeof(toaplan2_vh_tx_valid));
+	if ((mwa = toaplan2_map_entry(&toaplan2_tx_gfxram16)) != NULL)
+	{
+		toaplan2_vh_tx_gfxram = toaplan2_tx_gfxram16;
+		state_save_register_UINT16("toaplan2_vid", 0, "tx_gfxram", toaplan2_tx_gfxram16, (mwa->end - mwa->start + 1) / 2);
+	}
+	else if (Machine->drv->video_start == video_start_batrider_0)
+	{
+		/* the tiles are decoded from this RAM only at start-up: from a copy */
+		toaplan2_vh_tx_gfxram = raizing_tx_gfxram16_decoded;
+		state_save_register_UINT16("toaplan2_vid", 0, "tx_gfxram", raizing_tx_gfxram16, RAIZING_TX_GFXRAM_SIZE/2);
+		state_save_register_UINT16("toaplan2_vid", 0, "tx_gfxram_decoded", raizing_tx_gfxram16_decoded, RAIZING_TX_GFXRAM_SIZE/2);
+	}
+	if (toaplan2_vh_tx_gfxram)
+	{
+		toaplan2_vh_tx_decoded = auto_malloc(1024 * Machine->drv->gfxdecodeinfo[2].gfxlayout->charincrement / 8);
+		if (!toaplan2_vh_tx_decoded)
+			toaplan2_vh_tx_gfxram = NULL;
+	}
+
+	state_save_register_func_postload(toaplan2_vh_postload);
+}
+
 VIDEO_START( toaplan2_0 )
 {
 	defaultOffsets();
-	return toaplan2_vh_start(0);
+	if (toaplan2_vh_start(0))
+		return 1;
+	toaplan2_vh_register_state(1);
+	return 0;
 }
 
 VIDEO_START( toaplan2_1 )
@@ -536,7 +692,10 @@ VIDEO_START( toaplan2_1 )
 	error_level |= toaplan2_vh_start(0);
 	error_level |= toaplan2_vh_start(1);
 	defaultOffsets();
-	return error_level;
+	if (error_level)
+		return error_level;
+	toaplan2_vh_register_state(2);
+	return 0;
 }
 
 VIDEO_START( truxton2_0 )
@@ -567,6 +726,7 @@ VIDEO_START( truxton2_0 )
 		defaultOffsets();
 		tilemap_set_scrolldx(tx_tilemap, 0x1d4 +1, 0x2a);
 	}
+	toaplan2_vh_register_state(1);
 	return 0;
 }
 
@@ -582,6 +742,7 @@ VIDEO_START( battleg_0 )
 	}
 	tilemap_set_scrolldx(tx_tilemap, 0x1d4, 0x2a);
 	defaultOffsets();
+	toaplan2_vh_register_state(1);
 	return 0;
 }
 
@@ -590,6 +751,9 @@ VIDEO_START( batrider_0 )
 	if ((raizing_tx_gfxram16 = (data16_t *)auto_malloc(RAIZING_TX_GFXRAM_SIZE)) == 0)
 		return 1;
 	memset(raizing_tx_gfxram16,0,RAIZING_TX_GFXRAM_SIZE);
+	if ((raizing_tx_gfxram16_decoded = (data16_t *)auto_malloc(RAIZING_TX_GFXRAM_SIZE)) == 0)
+		return 1;
+	memset(raizing_tx_gfxram16_decoded,0,RAIZING_TX_GFXRAM_SIZE);
 
 	if (toaplan2_vram_alloc(0))
 		return 1;
@@ -600,6 +764,7 @@ VIDEO_START( batrider_0 )
 
 	tilemap_set_scrolldx(tx_tilemap, 0x1d4, 0x2a);
 	defaultOffsets();
+	toaplan2_vh_register_state(1);
 	return 0;
 }
 
@@ -711,8 +876,11 @@ WRITE16_HANDLER( toaplan2_tx_gfxram16_w )
 	{
 		int code = offset/32;
 		COMBINE_DATA(&toaplan2_tx_gfxram16[offset]);
-		decodechar(Machine->gfx[2], code, toaplan2_tx_gfxram,
-					Machine->drv->gfxdecodeinfo[2].gfxlayout);
+		if (toaplan2_vh_tx_gfxram)
+			toaplan2_tx_decodechar(code);
+		else
+			decodechar(Machine->gfx[2], code, toaplan2_tx_gfxram,
+						Machine->drv->gfxdecodeinfo[2].gfxlayout);
 
 		tilemap_mark_all_tiles_dirty(tx_tilemap);
 	}
@@ -752,10 +920,16 @@ WRITE16_HANDLER( batrider_textdata_decode )
 	memcpy(dest, toaplan2_txvideoram16_offs, toaplan2_tx_offs_vram_size);
 	dest += (toaplan2_tx_offs_vram_size/2);
 	memcpy(dest, toaplan2_txscrollram16, toaplan2_tx_scroll_vram_size);
+	memcpy(raizing_tx_gfxram16_decoded, raizing_tx_gfxram16, RAIZING_TX_GFXRAM_SIZE);
 
 	/* Decode text characters */
 	for (code = 0; code < 1024; code++)
-		decodechar (Machine->gfx[2], code, raizing_tx_gfxram, Machine->drv->gfxdecodeinfo[2].gfxlayout);
+	{
+		if (toaplan2_vh_tx_gfxram)
+			toaplan2_tx_decodechar(code);
+		else
+			decodechar (Machine->gfx[2], code, raizing_tx_gfxram, Machine->drv->gfxdecodeinfo[2].gfxlayout);
+	}
 	tilemap_mark_all_tiles_dirty(tx_tilemap);
 }
 
