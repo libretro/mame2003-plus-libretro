@@ -1872,20 +1872,41 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( ghox )		/* TP-021 (c) 1991 Toaplan */
 	DRIVER( ghoxj )		/* TP-021 (c) 1991 Toaplan */
 	DRIVER( dogyuun )	/* TP-022 (c) 1992 Toaplan */
+	DRIVER( dogyuuna )	/* TP-022 (c) 1992 Toaplan */
+	DRIVER( dogyuunb )	/* TP-022 (c) 1992 Toaplan */
+	DRIVER( dogyuunt )	/* TP-022 (c) 1992 Toaplan */
 	DRIVER( dogyuunto )	/* TP-022 (c) 1992 Toaplan */
 	DRIVER( kbash )		/* TP-023 (c) 1993 Toaplan */
+	DRIVER( kbashk )	/* TP-023 (c) 1993 Toaplan */
+	DRIVER( kbashp )	/* TP-023 (c) 1993 Toaplan */
 	DRIVER( kbash2 )	/* TP-023 */
 	DRIVER( truxton2 )	/* TP-024 (c) 1992 Toaplan */
 	DRIVER( pipibibs )	/* TP-025 */
 	DRIVER( whoopee )	/* TP-025 */
 	DRIVER( pipibibi )	/* (c) 1991 Ryouta Kikaku (bootleg?) */
-	DRIVER( fixeight )	/* TP-026 (c) 1992 + Taito license */
-	DRIVER( fixeighb )	/* TP-026 */
+	DRIVER( fixeight )	/* TP-026 (c) 1992 Toaplan */
+	DRIVER( fixeightk )	/* TP-026 (c) 1992 Toaplan */
+	DRIVER( fixeighth )	/* TP-026 (c) 1992 Toaplan */
+	DRIVER( fixeighttw )	/* TP-026 (c) 1992 Toaplan */
+	DRIVER( fixeighta )	/* TP-026 (c) 1992 Toaplan */
+	DRIVER( fixeightu )	/* TP-026 (c) 1992 Toaplan */
+	DRIVER( fixeightj )	/* TP-026 (c) 1992 Toaplan */
+	DRIVER( fixeightt )	/* TP-026 (c) 1992 Toaplan + Taito license */
+	DRIVER( fixeightkt )	/* TP-026 (c) 1992 Toaplan + Taito license */
+	DRIVER( fixeightht )	/* TP-026 (c) 1992 Toaplan + Taito license */
+	DRIVER( fixeighttwt )	/* TP-026 (c) 1992 Toaplan + Taito license */
+	DRIVER( fixeightat )	/* TP-026 (c) 1992 Toaplan + Taito license */
+	DRIVER( fixeightut )	/* TP-026 (c) 1992 Toaplan + Taito license */
+	DRIVER( fixeightjt )	/* TP-026 (c) 1992 Toaplan + Taito license */
+	DRIVER( fixeightbl )	/* bootleg */
+	DRIVER( grindstm )	/* TP-027 (c) 1992 Toaplan */
+	DRIVER( grindstma )	/* TP-027 (c) 1992 Toaplan */
 	DRIVER( vfive )		/* TP-027 (c) 1993 Toaplan (Japan) */
-	DRIVER( grindstm )	/* TP-027 (c) 1993 Toaplan + Unite Trading license (Korea) */
-	DRIVER( grindsta )	/* TP-027 (c) 1993 Toaplan + Unite Trading license (Korea) */
 	DRIVER( batsugun )	/* TP-030 (c) 1993 Toaplan */
-	DRIVER( batugnsp )	/* TP-??? (c) 1993 Toaplan */
+	DRIVER( batsuguna )	/* TP-030 (c) 1993 Toaplan */
+	DRIVER( batsugunc )	/* TP-030 (c) 1993 Toaplan */
+	DRIVER( batsugunb )	/* TP-030 (c) 1993 Toaplan */
+	DRIVER( batsugunsp )	/* TP-030 (c) 1993 Toaplan */
 	DRIVER( snowbro2 )	/* TP-??? (c) 1994 Hanafram */
 	/* see http://www.vsa-ag.ch/r8zing/ for a list of Raizing/8ing games */
 	DRIVER( sstriker )	/* (c) 1993 Raizing */

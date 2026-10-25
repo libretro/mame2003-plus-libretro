@@ -549,7 +549,7 @@ VIDEO_START( truxton2_0 )
 	{
 		return 1;
 	}
-	if(!strcmp(Machine->gamedrv->name,"fixeighb"))
+	if(!strcmp(Machine->gamedrv->name,"fixeightbl"))
 	{
 		xoffset[0]=-26;
 		xoffset[1]=-22;

@@ -103,6 +103,9 @@ enum
 #if (HAS_V30)
 	CPU_V30,
 #endif
+#if (HAS_V25)
+	CPU_V25,
+#endif
 #if (HAS_V33)
 	CPU_V33,
 #endif

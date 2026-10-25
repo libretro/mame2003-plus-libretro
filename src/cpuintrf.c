@@ -67,6 +67,9 @@
 #if (HAS_V20 || HAS_V30 || HAS_V33)
 #include "cpu/nec/necintrf.h"
 #endif
+#if (HAS_V25)
+#include "cpu/nec/v25.h"
+#endif
 #if (HAS_V60 || HAS_V70)
 #include "cpu/v60/v60.h"
 #endif
@@ -437,6 +440,9 @@ const struct cpu_interface cpuintrf[] =
 #endif
 #if (HAS_V30)
 	CPU0(V30,	   v30, 	 1,255,1.00, 8, 20,	  0,20,LE,1, 5	),
+#endif
+#if (HAS_V25)
+	CPU0(V25,	   v25, 	 1,255,1.00, 8, 20,	  0,20,LE,1, 5	),
 #endif
 #if (HAS_V33)
 	CPU0(V33,	   v33, 	 1,255,1.00, 8, 20,	  0,20,LE,1, 5	),
