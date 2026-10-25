@@ -828,6 +828,14 @@ ifeq (,$(findstring msvc,$(platform)))
 	CFLAGS += -Werror=vla -Werror=declaration-after-statement
 endif
 
+# no fused multiply-add: a*b+c rounded once (FMA) on AArch64, ARMv7 VFPv4
+# and PowerPC gives other results than x86, where it is rounded twice;
+# with it off the floating point results are the same on every host
+# (netplay between them, save states and RunAhead)
+ifeq (,$(findstring msvc,$(platform)))
+	CFLAGS += -ffp-contract=off
+endif
+
 # Required for RZIP support in cheat.c
 CFLAGS += -DHAVE_ZLIB
 
