@@ -265,6 +265,10 @@ static INLINE int CullVertex( int a, int b )
 	}
 
 #define COORD_X( a ) ( (INT16)a.w.l )
+/* rectangles, sprites, lines and dots take 11-bit signed coordinates, as the
+   polygons (current MAME, S11_COORD_X / S11_COORD_Y) */
+#define S11_COORD_X( a ) S11( a.w.l )
+#define S11_COORD_Y( a ) S11( a.w.h )
 #define COORD_Y( a ) ( (INT16)a.w.h )
 #define SIZE_W( a ) ( a.w.l )
 #define SIZE_H( a ) ( a.w.h )
@@ -2998,10 +3002,10 @@ static void MonochromeLine( void )
 	n_cmd = BGR_C( m_packet.MonochromeLine.n_bgr );
 	SOLIDSETUP( m_n_drawmode )
 
-	n_xstart = COORD_X( m_packet.MonochromeLine.vertex[ 0 ].n_coord ) + m_n_drawoffset_x;
-	n_xend = COORD_X( m_packet.MonochromeLine.vertex[ 1 ].n_coord ) + m_n_drawoffset_x;
-	n_ystart = COORD_Y( m_packet.MonochromeLine.vertex[ 0 ].n_coord ) + m_n_drawoffset_y;
-	n_yend = COORD_Y( m_packet.MonochromeLine.vertex[ 1 ].n_coord ) + m_n_drawoffset_y;
+	n_xstart = S11_COORD_X( m_packet.MonochromeLine.vertex[ 0 ].n_coord ) + m_n_drawoffset_x;
+	n_xend = S11_COORD_X( m_packet.MonochromeLine.vertex[ 1 ].n_coord ) + m_n_drawoffset_x;
+	n_ystart = S11_COORD_Y( m_packet.MonochromeLine.vertex[ 0 ].n_coord ) + m_n_drawoffset_y;
+	n_yend = S11_COORD_Y( m_packet.MonochromeLine.vertex[ 1 ].n_coord ) + m_n_drawoffset_y;
 
 	n_r = BGR_R( m_packet.MonochromeLine.n_bgr );
 	n_g = BGR_G( m_packet.MonochromeLine.n_bgr );
@@ -3125,14 +3129,14 @@ static void GouraudLine( void )
 	n_cmd = BGR_C( m_packet.GouraudLine.vertex[ 0 ].n_bgr );
 	SOLIDSETUP( m_n_drawmode )
 
-	n_xstart = COORD_X( m_packet.GouraudLine.vertex[ 0 ].n_coord ) + m_n_drawoffset_x;
-	n_ystart = COORD_Y( m_packet.GouraudLine.vertex[ 0 ].n_coord ) + m_n_drawoffset_y;
+	n_xstart = S11_COORD_X( m_packet.GouraudLine.vertex[ 0 ].n_coord ) + m_n_drawoffset_x;
+	n_ystart = S11_COORD_Y( m_packet.GouraudLine.vertex[ 0 ].n_coord ) + m_n_drawoffset_y;
 	n_cr1.w.h = BGR_R( m_packet.GouraudLine.vertex[ 0 ].n_bgr ); n_cr1.w.l = 0;
 	n_cg1.w.h = BGR_G( m_packet.GouraudLine.vertex[ 0 ].n_bgr ); n_cg1.w.l = 0;
 	n_cb1.w.h = BGR_B( m_packet.GouraudLine.vertex[ 0 ].n_bgr ); n_cb1.w.l = 0;
 
-	n_xend = COORD_X( m_packet.GouraudLine.vertex[ 1 ].n_coord ) + m_n_drawoffset_x;
-	n_yend = COORD_Y( m_packet.GouraudLine.vertex[ 1 ].n_coord ) + m_n_drawoffset_y;
+	n_xend = S11_COORD_X( m_packet.GouraudLine.vertex[ 1 ].n_coord ) + m_n_drawoffset_x;
+	n_yend = S11_COORD_Y( m_packet.GouraudLine.vertex[ 1 ].n_coord ) + m_n_drawoffset_y;
 	n_cr2.w.h = BGR_R( m_packet.GouraudLine.vertex[ 1 ].n_bgr ); n_cr1.w.l = 0;
 	n_cg2.w.h = BGR_G( m_packet.GouraudLine.vertex[ 1 ].n_bgr ); n_cg1.w.l = 0;
 	n_cb2.w.h = BGR_B( m_packet.GouraudLine.vertex[ 1 ].n_bgr ); n_cb1.w.l = 0;
@@ -3304,12 +3308,12 @@ static void FlatRectangle( void )
 	n_g.w.h = BGR_G( m_packet.FlatRectangle.n_bgr ); n_g.w.l = 0;
 	n_b.w.h = BGR_B( m_packet.FlatRectangle.n_bgr ); n_b.w.l = 0;
 
-	n_y = COORD_Y( m_packet.FlatRectangle.n_coord ) + m_n_drawoffset_y;
+	n_y = S11_COORD_Y( m_packet.FlatRectangle.n_coord ) + m_n_drawoffset_y;
 	n_h = SIZE_H( m_packet.FlatRectangle.n_size );
 
 	while( n_h > 0 )
 	{
-		n_x = COORD_X( m_packet.FlatRectangle.n_coord ) + m_n_drawoffset_x;
+		n_x = S11_COORD_X( m_packet.FlatRectangle.n_coord ) + m_n_drawoffset_x;
 
 		n_distance = SIZE_W( m_packet.FlatRectangle.n_size );
 		if( n_distance > 0 && n_y >= (INT32)m_n_drawarea_y1 && n_y <= (INT32)m_n_drawarea_y2 )
@@ -3400,12 +3404,12 @@ static void FlatTexturedRectangle( void )
 	}
 
 	n_v = TEXTURE_V( m_packet.FlatTexturedRectangle.n_texture );
-	n_y = COORD_Y( m_packet.FlatTexturedRectangle.n_coord ) + m_n_drawoffset_y;
+	n_y = S11_COORD_Y( m_packet.FlatTexturedRectangle.n_coord ) + m_n_drawoffset_y;
 	n_h = SIZE_H( m_packet.FlatTexturedRectangle.n_size );
 
 	while( n_h > 0 )
 	{
-		n_x = COORD_X( m_packet.FlatTexturedRectangle.n_coord ) + m_n_drawoffset_x;
+		n_x = S11_COORD_X( m_packet.FlatTexturedRectangle.n_coord ) + m_n_drawoffset_x;
 		n_u = TEXTURE_U( m_packet.FlatTexturedRectangle.n_texture );
 
 		n_distance = SIZE_W( m_packet.FlatTexturedRectangle.n_size );
@@ -3507,12 +3511,12 @@ static void Sprite8x8( void )
 	}
 
 	n_v = TEXTURE_V( m_packet.Sprite8x8.n_texture );
-	n_y = COORD_Y( m_packet.Sprite8x8.n_coord ) + m_n_drawoffset_y;
+	n_y = S11_COORD_Y( m_packet.Sprite8x8.n_coord ) + m_n_drawoffset_y;
 	n_h = 8;
 
 	while( n_h > 0 )
 	{
-		n_x = COORD_X( m_packet.Sprite8x8.n_coord ) + m_n_drawoffset_x;
+		n_x = S11_COORD_X( m_packet.Sprite8x8.n_coord ) + m_n_drawoffset_x;
 		n_u = TEXTURE_U( m_packet.Sprite8x8.n_texture );
 
 		n_distance = 8;
@@ -3614,12 +3618,12 @@ static void Sprite16x16( void )
 	}
 
 	n_v = TEXTURE_V( m_packet.Sprite16x16.n_texture );
-	n_y = COORD_Y( m_packet.Sprite16x16.n_coord ) + m_n_drawoffset_y;
+	n_y = S11_COORD_Y( m_packet.Sprite16x16.n_coord ) + m_n_drawoffset_y;
 	n_h = 16;
 
 	while( n_h > 0 )
 	{
-		n_x = COORD_X( m_packet.Sprite16x16.n_coord ) + m_n_drawoffset_x;
+		n_x = S11_COORD_X( m_packet.Sprite16x16.n_coord ) + m_n_drawoffset_x;
 		n_u = TEXTURE_U( m_packet.Sprite16x16.n_texture );
 
 		n_distance = 16;
@@ -3681,8 +3685,8 @@ static void Dot( void )
 	n_r = BGR_R( m_packet.Dot.n_bgr );
 	n_g = BGR_G( m_packet.Dot.n_bgr );
 	n_b = BGR_B( m_packet.Dot.n_bgr );
-	n_x = COORD_X( m_packet.Dot.vertex.n_coord ) + m_n_drawoffset_x;
-	n_y = COORD_Y( m_packet.Dot.vertex.n_coord ) + m_n_drawoffset_y;
+	n_x = S11_COORD_X( m_packet.Dot.vertex.n_coord ) + m_n_drawoffset_x;
+	n_y = S11_COORD_Y( m_packet.Dot.vertex.n_coord ) + m_n_drawoffset_y;
 
 	if( (INT16)n_x >= (INT32)m_n_drawarea_x1 &&
 		(INT16)n_y >= (INT32)m_n_drawarea_y1 &&
