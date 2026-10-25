@@ -2,7 +2,8 @@
 
 * Current repository maintainers: arcadez, mahoneyt944, markwkidd, twinaphex
 * Past repository maintiners: arnoldsecret, grant2258
-* Significant code contributors to this project: AMadvanceMAME, BritneysPAIRS, dink, FBN Dev, grant2258, iq_132, MAME Dev, Mistydreams, ShmupMAME
+* Significant code contributors to this project: AMadvanceMAME, BritneysPAIRS, dink,
+* FBN Dev, grant2258, iq_132, MAME Dev, Mistydreams, ShmupMAME, Zanac, AI agent claude
 
 The list of direct contributors to the MAME 2003-Plus github repository can be found at https://github.com/libretro/mame2003-plus-libretro/graphs/contributors. Additional contributor credits can be found in LICENSE.md, CHANGELOG.old, and in the individual driver source files.
 
@@ -116,6 +117,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Hard Times
 * Head On Channel (Japan, Prototype)
 * Heavy Smash
+* Heavy Unit
 * Hoops '96
 * Hypernoid
 * Hyper Crash
@@ -1207,4 +1209,5 @@ could crash on the score calc between levels is sorted [amadvance, arcadez]
 * Added fixes from later MAME so that Princess Clara Daisakusen now works [MAMEDev, arcadez]
 * Ported a new raiden2.c driver Raiden II Raiden DX and Zero Team etc etc now playable [Salvia, MAMEDev, FBN, vanni and claude, arcadez]
 * Ported the Cave CV1000 driver from current MAME: SH-3 CPU (interpreter and a recompiler with the same results), the blitter, the YMZ770 sound chip, the NAND flash and the RTC9701 [MAMEDev, vanni and claude]
+* Added support for the hvyunit.c driver ported across from my xbox project [arcadez, mistydreams, vanni and claude]
 
