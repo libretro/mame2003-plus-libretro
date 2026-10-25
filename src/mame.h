@@ -180,6 +180,7 @@ enum /* used to index content-specific flags */
   CONTENT_MIPS_DYNAREC,
   CONTENT_ADSP_DYNAREC,
   CONTENT_SH3_DYNAREC,
+  CONTENT_TX1_SCREENS,
   CONTENT_end,
 };
 
@@ -224,6 +225,7 @@ struct GameOptions
   bool     mips_dynarec;	       /* 1 to let drivers enable the MIPS recompiler */
   bool     adsp_dynarec;	       /* 1 to let drivers enable the ADSP-2100 recompiler */
   bool     sh3_dynarec;	       /* 1 to let drivers enable the SH-3 recompiler */
+  int      tx1_screens;	       /* TX-1 / Buggy Boy: 3 screens side by side, or 1 (the middle one) */
   bool     use_alt_sound;	       /* 1 to enable alternate ost samples */
 
   float	   brightness;		       /* brightness of the display */

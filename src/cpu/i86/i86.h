@@ -71,20 +71,24 @@ typedef enum { AL,AH,CL,CH,DL,DH,BL,BH,SPL,SPH,BPL,BPH,SIL,SIH,DIL,DIH } BREGS;
 
 /************************************************************************/
 
+/* the 16-bit data bus of the 8086 (see i86intf.h): off unless a driver turns it on */
+unsigned i86_read_word16(unsigned ea);
+void i86_write_word16(unsigned ea, unsigned val);
+
 #define SegBase(Seg) 			(I.sregs[Seg] << 4)
 
 #define DefaultBase(Seg) 		((seg_prefix && (Seg == DS || Seg == SS)) ? prefix_base : I.base[Seg])
 
 #define GetMemB(Seg,Off)		(cpu_readmem20((DefaultBase(Seg) + (Off)) & AMASK))
-#define GetMemW(Seg,Off)		((WORD)GetMemB(Seg, Off) + (WORD)(GetMemB(Seg, (Off) + 1) << 8))
+#define GetMemW(Seg,Off)		(i86_bus16 ? i86_read_word16((DefaultBase(Seg) + (Off)) & AMASK) : ((WORD)GetMemB(Seg, Off) + (WORD)(GetMemB(Seg, (Off) + 1) << 8)))
 #define PutMemB(Seg,Off,x)		cpu_writemem20((DefaultBase(Seg) + (Off)) & AMASK, (x))
-#define PutMemW(Seg,Off,x)		{ PutMemB(Seg, Off, (x) & 0xff); PutMemB(Seg, (Off) + 1, ((x) >> 8) & 0xff); }
+#define PutMemW(Seg,Off,x)		{ if (i86_bus16) i86_write_word16((DefaultBase(Seg) + (Off)) & AMASK, (x)); else { PutMemB(Seg, Off, (x) & 0xff); PutMemB(Seg, (Off) + 1, ((x) >> 8) & 0xff); } }
 
 #define PEEKBYTE(ea) 			(cpu_readmem20((ea) & AMASK))
 #define ReadByte(ea) 			(cpu_readmem20((ea) & AMASK))
-#define ReadWord(ea)			(cpu_readmem20((ea) & AMASK) + (cpu_readmem20(((ea) + 1) & AMASK) << 8))
+#define ReadWord(ea)			(i86_bus16 ? i86_read_word16((ea) & AMASK) : (cpu_readmem20((ea) & AMASK) + (cpu_readmem20(((ea) + 1) & AMASK) << 8)))
 #define WriteByte(ea,val)		cpu_writemem20((ea) & AMASK, val);
-#define WriteWord(ea,val)		{ cpu_writemem20((ea) & AMASK, (val) & 0xff); cpu_writemem20(((ea) + 1) & AMASK, ((val) >> 8) & 0xff); }
+#define WriteWord(ea,val)		{ if (i86_bus16) i86_write_word16((ea) & AMASK, (val)); else { cpu_writemem20((ea) & AMASK, (val) & 0xff); cpu_writemem20(((ea) + 1) & AMASK, ((val) >> 8) & 0xff); } }
 
 #define read_port(port) 		cpu_readport16(port)
 #define write_port(port,val) 	cpu_writeport16(port,val)

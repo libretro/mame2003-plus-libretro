@@ -11,8 +11,22 @@ enum {
 	I86_VECTOR, I86_PENDING, I86_NMI_STATE, I86_IRQ_STATE
 };
 
+/* the TEST input (WAIT instruction): a CPU waits at a WAIT instruction
+   while it is cleared; it is asserted at reset, so WAIT goes on unless a
+   driver clears it */
+#define I86_TEST_LINE	1
+
 /* Public variables */
 extern int i86_ICount;
+
+/* The 8086 has a 16-bit data bus, but the core accesses memory a byte at a
+   time. A driver whose hardware needs an aligned word access to be one bus
+   cycle sets i86_bus16 (all the i86 CPUs of the machine): the core then
+   accesses an aligned word as its low byte then its high byte, with
+   i86_bus16_word set during the two accesses, so the handlers can make
+   them one 16-bit access. Off by default: nothing changes for the others. */
+extern int i86_bus16;
+extern int i86_bus16_word;
 
 /* Public functions */
 

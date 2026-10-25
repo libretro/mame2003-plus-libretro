@@ -6754,4 +6754,12 @@ Other Sun games
 	DRIVER( roundup5 )
 	DRIVER( bigfight )
 	DRIVER( cyclwarr )
+
+  /* Tatsumi TX-1 / Buggy Boy */
+	DRIVER( tx1 )		/* (c) 1983 Tatsumi (Atari/Namco/Taito license) */
+	DRIVER( tx1jb )		/* (c) 1983 Tatsumi */
+	DRIVER( tx1jc )		/* (c) 1983 Tatsumi */
+	DRIVER( buggyboy )	/* (c) 1985 Tatsumi */
+	DRIVER( buggyboyb )	/* (c) 1986 Tatsumi */
+	DRIVER( buggyboyjr )	/* (c) 1986 Tatsumi */
 #endif	/* DRIVER_RECURSIVE */
