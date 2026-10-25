@@ -63,6 +63,61 @@ static UINT8 colrtable_add[0x20][0x20];
 
 
 /***************************************************************************
+	SIMD: 8 pixels at a time with SSE2 (x86) or NEON (ARM), the same
+	results as the tables: T(a, b) = (a * b) / 31 is mulhi(a * b, 2115)
+	for every a * b up to 31 * 63, TR(a, b) = T(a ^ 31, b) and
+	A(a, b) = min(a + b, 31).
+***************************************************************************/
+
+#if defined(__SSE2__) || defined(_M_X64) || (defined(_M_IX86_FP) && _M_IX86_FP >= 2)
+#include <emmintrin.h>
+#define CV1K_SIMD			1
+typedef __m128i v16;
+#define V_LOAD(p)			_mm_loadu_si128((const __m128i *)(p))
+#define V_STORE(p, v)		_mm_storeu_si128((__m128i *)(p), (v))
+#define V_SET(x)			_mm_set1_epi16((short)(x))
+#define V_AND(a, b)			_mm_and_si128((a), (b))
+#define V_OR(a, b)			_mm_or_si128((a), (b))
+#define V_XOR(a, b)			_mm_xor_si128((a), (b))
+#define V_ANDNOT(m, b)		_mm_andnot_si128((m), (b))		/* b & ~m */
+#define V_ADD(a, b)			_mm_add_epi16((a), (b))
+#define V_MUL(a, b)			_mm_mullo_epi16((a), (b))
+#define V_MULHI(a, b)		_mm_mulhi_epu16((a), (b))
+#define V_MIN(a, b)			_mm_min_epi16((a), (b))			/* the values are below 0x8000 */
+#define V_SRL(a, n)			_mm_srli_epi16((a), (n))
+#define V_SLL(a, n)			_mm_slli_epi16((a), (n))
+#define V_SRA(a, n)			_mm_srai_epi16((a), (n))
+#elif (defined(__ARM_NEON) || defined(__ARM_NEON__)) && !defined(MSB_FIRST)
+#include <arm_neon.h>
+#define CV1K_SIMD			1
+typedef uint16x8_t v16;
+#define V_LOAD(p)			vld1q_u16((const uint16_t *)(p))
+#define V_STORE(p, v)		vst1q_u16((uint16_t *)(p), (v))
+#define V_SET(x)			vdupq_n_u16((uint16_t)(x))
+#define V_AND(a, b)			vandq_u16((a), (b))
+#define V_OR(a, b)			vorrq_u16((a), (b))
+#define V_XOR(a, b)			veorq_u16((a), (b))
+#define V_ANDNOT(m, b)		vbicq_u16((b), (m))				/* b & ~m */
+#define V_ADD(a, b)			vaddq_u16((a), (b))
+#define V_MUL(a, b)			vmulq_u16((a), (b))
+#define V_MULHI(a, b)		vcombine_u16(vshrn_n_u32(vmull_u16(vget_low_u16(a), vget_low_u16(b)), 16), \
+								vshrn_n_u32(vmull_u16(vget_high_u16(a), vget_high_u16(b)), 16))
+#define V_MIN(a, b)			vminq_u16((a), (b))
+#define V_SRL(a, n)			vshrq_n_u16((a), (n))
+#define V_SLL(a, n)			vshlq_n_u16((a), (n))
+#define V_SRA(a, n)			vreinterpretq_u16_s16(vshrq_n_s16(vreinterpretq_s16_u16(a), (n)))
+#else
+#define CV1K_SIMD			0
+#endif
+
+#if CV1K_SIMD
+#define VT(a, b)			V_MIN(V_MULHI(V_MUL((a), (b)), v_div31), v_1f)
+#define VTR(a, b)			VT(V_XOR((a), v_1f), (b))
+#define VA(a, b)			V_MIN(V_ADD((a), (b)), v_1f)
+#endif
+
+
+/***************************************************************************
 	blit functions (cv1k_v_in.ipp, cv1k_v_pixel.ipp)
 ***************************************************************************/
 
@@ -78,45 +133,45 @@ typedef void (*blitfunction)(BLIT_PARAMS);
 
 /* s = source, d = destination, c = clr0 of MAME; the modes are constants,
    the compiler keeps only the code of one */
-#define BLEND(SMODE, DMODE)																			\
+#define BLEND_G(SMODE, DMODE, T, TR, A, SA, DA)																			\
 	if (SMODE == 0)																					\
 	{																								\
 		if (DMODE == 0)																				\
 		{																							\
-			sr = A(T(s_alpha, sr), T(d_alpha, dr));												\
-			sg = A(T(s_alpha, sg), T(d_alpha, dg));												\
-			sb = A(T(s_alpha, sb), T(d_alpha, db));												\
+			sr = A(T(SA, sr), T(DA, dr));												\
+			sg = A(T(SA, sg), T(DA, dg));												\
+			sb = A(T(SA, sb), T(DA, db));												\
 		}																							\
 		else if (DMODE == 1)																		\
 		{																							\
-			sr = A(T(s_alpha, sr), T(sr, dr));														\
-			sg = A(T(s_alpha, sg), T(sg, dg));														\
-			sb = A(T(s_alpha, sb), T(sb, db));														\
+			sr = A(T(SA, sr), T(sr, dr));														\
+			sg = A(T(SA, sg), T(sg, dg));														\
+			sb = A(T(SA, sb), T(sb, db));														\
 		}																							\
 		else if (DMODE == 5)																		\
 		{																							\
-			sr = A(T(s_alpha, sr), TR(sr, dr));														\
-			sg = A(T(s_alpha, sg), TR(sg, dg));														\
-			sb = A(T(s_alpha, sb), TR(sb, db));														\
+			sr = A(T(SA, sr), TR(sr, dr));														\
+			sg = A(T(SA, sg), TR(sg, dg));														\
+			sb = A(T(SA, sb), TR(sb, db));														\
 		}																							\
 		else																						\
 		{																							\
-			cr = T(s_alpha, sr); cg = T(s_alpha, sg); cb = T(s_alpha, sb);							\
-			BLEND_DEST(DMODE)																		\
+			cr = T(SA, sr); cg = T(SA, sg); cb = T(SA, sb);							\
+			BLEND_DEST_G(DMODE, T, TR, A, DA)																		\
 		}																							\
 	}																								\
 	else if (SMODE == 2)																			\
 	{																								\
 		if (DMODE == 0)																				\
 		{																							\
-			sr = A(T(dr, sr), T(d_alpha, dr));														\
-			sg = A(T(dg, sg), T(d_alpha, dg));														\
-			sb = A(T(db, sb), T(d_alpha, db));														\
+			sr = A(T(dr, sr), T(DA, dr));														\
+			sg = A(T(dg, sg), T(DA, dg));														\
+			sb = A(T(db, sb), T(DA, db));														\
 		}																							\
 		else																						\
 		{																							\
 			cr = T(dr, sr); cg = T(dg, sg); cb = T(db, sb);										\
-			BLEND_DEST(DMODE)																		\
+			BLEND_DEST_G(DMODE, T, TR, A, DA)																		\
 		}																							\
 	}																								\
 	else																							\
@@ -126,24 +181,24 @@ typedef void (*blitfunction)(BLIT_PARAMS);
 		else if (SMODE == 3 || SMODE == 7)															\
 			{ cr = sr; cg = sg; cb = sb; }															\
 		else if (SMODE == 4)																		\
-			{ cr = TR(s_alpha, sr); cg = TR(s_alpha, sg); cb = TR(s_alpha, sb); }					\
+			{ cr = TR(SA, sr); cg = TR(SA, sg); cb = TR(SA, sb); }					\
 		else if (SMODE == 5)																		\
 			{ cr = TR(sr, sr); cg = TR(sg, sg); cb = TR(sb, sb); }									\
 		else																						\
 			{ cr = TR(dr, sr); cg = TR(dg, sg); cb = TR(db, sb); }									\
 		if (DMODE == 0)																				\
 		{																							\
-			sr = A(cr, T(dr, d_alpha));																\
-			sg = A(cg, T(dg, d_alpha));																\
-			sb = A(cb, T(db, d_alpha));																\
+			sr = A(cr, T(dr, DA));																\
+			sg = A(cg, T(dg, DA));																\
+			sb = A(cb, T(db, DA));																\
 		}																							\
 		else																						\
-			BLEND_DEST(DMODE)																		\
+			BLEND_DEST_G(DMODE, T, TR, A, DA)																		\
 	}
 
 /* the destination part shared by the modes with a clr0; mode 2 uses the
    red of clr0 for the three guns, as MAME does */
-#define BLEND_DEST(DMODE)																			\
+#define BLEND_DEST_G(DMODE, T, TR, A, DA)																			\
 	if (DMODE == 1)																					\
 	{																								\
 		sr = A(cr, T(sr, dr));																		\
@@ -164,9 +219,9 @@ typedef void (*blitfunction)(BLIT_PARAMS);
 	}																								\
 	else if (DMODE == 4)																			\
 	{																								\
-		sr = A(cr, TR(d_alpha, dr));																\
-		sg = A(cg, TR(d_alpha, dg));																\
-		sb = A(cb, TR(d_alpha, db));																\
+		sr = A(cr, TR(DA, dr));																\
+		sg = A(cg, TR(DA, dg));																\
+		sb = A(cb, TR(DA, db));																\
 	}																								\
 	else if (DMODE == 5)																			\
 	{																								\
@@ -181,6 +236,70 @@ typedef void (*blitfunction)(BLIT_PARAMS);
 		sb = A(cb, TR(db, db));																		\
 	}
 
+#define BLEND(SMODE, DMODE)		BLEND_G(SMODE, DMODE, T, TR, A, s_alpha, d_alpha)
+#if CV1K_SIMD
+#define VBLEND(SMODE, DMODE)	BLEND_G(SMODE, DMODE, VT, VTR, VA, v_s_alpha, v_d_alpha)
+#endif
+
+#if CV1K_SIMD
+/* 8 pixels of a row, as the pixel loop of DEFINE_BLIT does them one by one;
+   s_alpha, d_alpha and the tints are vectors here */
+#define VPIXELS(TINT, TRANSPARENT, BLENDED, SMODE, DMODE, SIMPLE)										\
+	{																								\
+		const v16 pen = V_LOAD(gfx2);																\
+		v16 out;																					\
+		if (SIMPLE)																					\
+			out = pen;																				\
+		else																						\
+		{																							\
+			v16 sr = V_AND(V_SRL(pen, 10), v_1f), sg = V_AND(V_SRL(pen, 5), v_1f), sb = V_AND(pen, v_1f);	\
+			if (TINT)																				\
+			{																						\
+				sr = VT(sr, v_tint_r);																\
+				sg = VT(sg, v_tint_g);																\
+				sb = VT(sb, v_tint_b);																\
+			}																						\
+			if (BLENDED)																			\
+			{																						\
+				const v16 dst = V_LOAD(bmp);														\
+				const v16 dr = V_AND(V_SRL(dst, 10), v_1f), dg = V_AND(V_SRL(dst, 5), v_1f), db = V_AND(dst, v_1f);	\
+				v16 cr, cg, cb;																		\
+				VBLEND(SMODE, DMODE)																\
+				(void)cr; (void)cg; (void)cb; (void)dr; (void)dg; (void)db;							\
+			}																						\
+			out = V_OR(V_OR(V_SLL(sr, 10), V_SLL(sg, 5)), V_OR(sb, V_AND(pen, v_8000)));		\
+		}																							\
+		if (TRANSPARENT)																			\
+		{																							\
+			const v16 m = V_SRA(pen, 15);															\
+			out = V_OR(V_AND(m, out), V_ANDNOT(m, V_LOAD(bmp)));									\
+		}																							\
+		V_STORE(bmp, out);																			\
+	}
+
+/* the vector loop of a row: not with flip x, nor when the destination is
+   1 to 7 pixels after the source on the same row (a pixel written would be
+   read again as source in the same 8) */
+#define VROW(FLIPX, TINT, TRANSPARENT, BLENDED, SMODE, DMODE, SIMPLE)									\
+	if (!FLIPX && use_simd && count >= 8)															\
+	{																								\
+		const v16 v_1f = V_SET(0x1f), v_div31 = V_SET(2115), v_8000 = V_SET(0x8000);				\
+		const v16 v_s_alpha = V_SET(s_alpha), v_d_alpha = V_SET(d_alpha);							\
+		const v16 v_tint_r = V_SET(tint_r), v_tint_g = V_SET(tint_g), v_tint_b = V_SET(tint_b);	\
+		(void)v_s_alpha; (void)v_d_alpha; (void)v_tint_r; (void)v_tint_g; (void)v_tint_b;			\
+		(void)v_div31; (void)v_8000;																\
+		do																							\
+		{																							\
+			VPIXELS(TINT, TRANSPARENT, BLENDED, SMODE, DMODE, SIMPLE)								\
+			bmp += 8;																				\
+			gfx2 += 8;																				\
+			count -= 8;																				\
+		} while (count >= 8);																		\
+	}
+#else
+#define VROW(FLIPX, TINT, TRANSPARENT, BLENDED, SMODE, DMODE, SIMPLE)
+#endif
+
 /* SIMPLE: copy the pixels (REALLY_SIMPLE of MAME) */
 #define DEFINE_BLIT(NAME, FLIPX, TINT, TRANSPARENT, BLENDED, SMODE, DMODE, SIMPLE)					\
 static void NAME(BLIT_PARAMS)																		\
@@ -188,7 +307,9 @@ static void NAME(BLIT_PARAMS)																		\
 	int yf, y, starty = 0, startx = 0;																\
 	const int dst_y_end = dst_y_start + dimy;														\
 	int dst_x_end;																					\
+	const int use_simd = (dst_x_start - src_x < 1 || dst_x_start - src_x > 7);						\
 																									\
+	(void)use_simd;																					\
 	if (FLIPX)																						\
 		src_x += (dimx - 1);																		\
 	if (flipy)	{ yf = -1; src_y += (dimy - 1); }													\
@@ -224,6 +345,7 @@ static void NAME(BLIT_PARAMS)																		\
 										+ (FLIPX ? (src_x - startx) : (src_x + startx))];			\
 		int count = dimx - startx;																	\
 																									\
+		VROW(FLIPX, TINT, TRANSPARENT, BLENDED, SMODE, DMODE, SIMPLE)								\
 		while (count-- > 0)																			\
 		{																							\
 			const UINT16 pen = *gfx2;																\
@@ -417,7 +539,7 @@ static void gfx_upload_timing(UINT32 *addr)
 
 static void gfx_upload(UINT32 *addr)
 {
-	UINT32 dst_x_start, dst_y_start, dimx, dimy, x, y;
+	UINT32 dst_x_start, dst_y_start, dimx, dimy, x, y, cols;
 
 	*addr += 8;
 	dst_x_start = read_next_word(addr) & 0x1fff;
@@ -425,16 +547,33 @@ static void gfx_upload(UINT32 *addr)
 	dimx = (read_next_word(addr) & 0x1fff) + 1;
 	dimy = (read_next_word(addr) & 0x0fff) + 1;
 
+	/* the columns inside the VRAM; the others are read and dropped */
+	cols = (dst_x_start < VRAM_W) ? VRAM_W - dst_x_start : 0;
+	if (cols > dimx)
+		cols = dimx;
+
 	for (y = 0; y < dimy; y++)
 	{
-		UINT32 row = (dst_y_start + y) & (VRAM_H - 1);
-		for (x = 0; x < dimx; x++)
+		UINT16 *dst = &cv1k_vram[((dst_y_start + y) & (VRAM_H - 1)) * VRAM_W + dst_x_start];
+		UINT32 a = *addr & (cv1k_ram_size - 1);
+
+		/* VRAM is 1555 like the uploaded data */
+		if (a + dimx * 2 <= cv1k_ram_size)
 		{
-			const UINT16 pendat = read_next_word(addr);
-			UINT32 col = dst_x_start + x;
-			/* VRAM is 1555 like the uploaded data */
-			if (col < VRAM_W)
-				cv1k_vram[row * VRAM_W + col] = pendat;
+			/* the row doesn't wrap around the end of the RAM */
+			const UINT16 *ram = (const UINT16 *)cv1k_ram;
+			for (x = 0; x < cols; x++, a += 2)
+				dst[x] = ram[WORD_XOR_BE(a) >> 1];
+			*addr += dimx * 2;
+		}
+		else
+		{
+			for (x = 0; x < dimx; x++)
+			{
+				const UINT16 pendat = read_next_word(addr);
+				if (x < cols)
+					dst[x] = pendat;
+			}
 		}
 	}
 }
