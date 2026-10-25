@@ -11782,6 +11782,14 @@ void m68k_op_cmpi_32_d(void)
 	FLAG_Z = MASK_OUT_ABOVE_32(res);
 	FLAG_V = VFLAG_SUB_32(src, dst, res);
 	FLAG_C = CFLAG_SUB_32(src, dst, res);
+
+	if (m68k_cmpild_callback)
+	{
+		m68k_cmpild_callback(src, REG_IR & 7);
+#if M68K_EMULATE_PREFETCH
+		CPU_PREF_ADDR = 1;	/* the next words are fetched again (FD1094 state change) */
+#endif
+	}
 }
 
 

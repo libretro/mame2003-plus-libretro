@@ -67333,25 +67333,125 @@ mooncrsu:0:823C:00:001:Finish this Round Now!:Use this with an activation key fo
 ; [ Moon Quasar ]
 moonqsr:0:8087:F8:000:Infinite Fuel
 
-; [ Michael Jackson's Moonwalker (Set 1) ]
-moonwalk:0:FFDA58:03:000:Infinite Lives PL1
-moonwalk:0:FFC01C:40:000:Infinite Energy PL1
-moonwalk:0:FFDA79:01:000:Infinite Magic PL1
-moonwalk:0:FFDA7D:45:000:Invincibility PL1
-moonwalk:0:FFC04C:04:000:Always Robot PL1:Best enabled on title screen
-moonwalk:0:FFC04C:04:001:Become Robot Now! PL1:Buggy
-moonwalk:0:FFDA98:03:000:Infinite Lives PL2
-moonwalk:0:FFC0DC:40:000:Infinite Energy PL2
-moonwalk:0:FFDAB9:01:000:Infinite Magic PL2
-moonwalk:0:FFDABD:45:000:Invincibility PL2
-moonwalk:0:FFC10C:04:000:Always Robot PL2:Best enabled on title screen
-moonwalk:0:FFC10C:04:001:Become Robot Now! PL2:Buggy
-moonwalk:0:FFDAD8:03:000:Infinite Lives PL3
-moonwalk:0:FFC19C:28:000:Infinite Energy PL3
-moonwalk:0:FFDAF9:01:000:Infinite Magic PL3
-moonwalk:0:FFDAFD:45:000:Invincibility PL3
-moonwalk:0:FFC1CC:04:000:Always Robot PL3:Best enabled on title screen
-moonwalk:0:FFC1CC:04:001:Become Robot Now! PL3:Buggy
+; [ Michael Jackson's Moonwalker (World) ]
+mwalk:0:FFDA58:03:000:Infinite Lives PL1
+mwalk:0:FFC01C:40:000:Infinite Energy PL1
+mwalk:0:FFDA79:01:000:Infinite Magic PL1
+mwalk:0:FFDA7D:45:000:Invincibility PL1
+mwalk:0:FFC04C:04:000:Always Robot PL1:Best enabled on title screen
+mwalk:0:FFC04C:04:001:Become Robot Now! PL1:Buggy
+mwalk:0:FFDA98:03:000:Infinite Lives PL2
+mwalk:0:FFC0DC:40:000:Infinite Energy PL2
+mwalk:0:FFDAB9:01:000:Infinite Magic PL2
+mwalk:0:FFDABD:45:000:Invincibility PL2
+mwalk:0:FFC10C:04:000:Always Robot PL2:Best enabled on title screen
+mwalk:0:FFC10C:04:001:Become Robot Now! PL2:Buggy
+mwalk:0:FFDAD8:03:000:Infinite Lives PL3
+mwalk:0:FFC19C:28:000:Infinite Energy PL3
+mwalk:0:FFDAF9:01:000:Infinite Magic PL3
+mwalk:0:FFDAFD:45:000:Invincibility PL3
+mwalk:0:FFC1CC:04:000:Always Robot PL3:Best enabled on title screen
+mwalk:0:FFC1CC:04:001:Become Robot Now! PL3:Buggy
+
+; [ Michael Jackson's Moonwalker (US) ]
+mwalku:0:FFDA58:03:000:Infinite Lives PL1
+mwalku:0:FFC01C:40:000:Infinite Energy PL1
+mwalku:0:FFDA79:01:000:Infinite Magic PL1
+mwalku:0:FFDA7D:45:000:Invincibility PL1
+mwalku:0:FFC04C:04:000:Always Robot PL1:Best enabled on title screen
+mwalku:0:FFC04C:04:001:Become Robot Now! PL1:Buggy
+mwalku:0:FFDA98:03:000:Infinite Lives PL2
+mwalku:0:FFC0DC:40:000:Infinite Energy PL2
+mwalku:0:FFDAB9:01:000:Infinite Magic PL2
+mwalku:0:FFDABD:45:000:Invincibility PL2
+mwalku:0:FFC10C:04:000:Always Robot PL2:Best enabled on title screen
+mwalku:0:FFC10C:04:001:Become Robot Now! PL2:Buggy
+mwalku:0:FFDAD8:03:000:Infinite Lives PL3
+mwalku:0:FFC19C:28:000:Infinite Energy PL3
+mwalku:0:FFDAF9:01:000:Infinite Magic PL3
+mwalku:0:FFDAFD:45:000:Invincibility PL3
+mwalku:0:FFC1CC:04:000:Always Robot PL3:Best enabled on title screen
+mwalku:0:FFC1CC:04:001:Become Robot Now! PL3:Buggy
+
+; [ Michael Jackson's Moonwalker (Japan) ]
+mwalkj:0:FFDA58:03:000:Infinite Lives PL1
+mwalkj:0:FFC01C:40:000:Infinite Energy PL1
+mwalkj:0:FFDA79:01:000:Infinite Magic PL1
+mwalkj:0:FFDA7D:45:000:Invincibility PL1
+mwalkj:0:FFC04C:04:000:Always Robot PL1:Best enabled on title screen
+mwalkj:0:FFC04C:04:001:Become Robot Now! PL1:Buggy
+mwalkj:0:FFDA98:03:000:Infinite Lives PL2
+mwalkj:0:FFC0DC:40:000:Infinite Energy PL2
+mwalkj:0:FFDAB9:01:000:Infinite Magic PL2
+mwalkj:0:FFDABD:45:000:Invincibility PL2
+mwalkj:0:FFC10C:04:000:Always Robot PL2:Best enabled on title screen
+mwalkj:0:FFC10C:04:001:Become Robot Now! PL2:Buggy
+mwalkj:0:FFDAD8:03:000:Infinite Lives PL3
+mwalkj:0:FFC19C:28:000:Infinite Energy PL3
+mwalkj:0:FFDAF9:01:000:Infinite Magic PL3
+mwalkj:0:FFDAFD:45:000:Invincibility PL3
+mwalkj:0:FFC1CC:04:000:Always Robot PL3:Best enabled on title screen
+mwalkj:0:FFC1CC:04:001:Become Robot Now! PL3:Buggy
+
+; [ Michael Jackson's Moonwalker (World, bootleg of FD1094/8751 317-0159 set) ]
+mwalkd:0:FFDA58:03:000:Infinite Lives PL1
+mwalkd:0:FFC01C:40:000:Infinite Energy PL1
+mwalkd:0:FFDA79:01:000:Infinite Magic PL1
+mwalkd:0:FFDA7D:45:000:Invincibility PL1
+mwalkd:0:FFC04C:04:000:Always Robot PL1:Best enabled on title screen
+mwalkd:0:FFC04C:04:001:Become Robot Now! PL1:Buggy
+mwalkd:0:FFDA98:03:000:Infinite Lives PL2
+mwalkd:0:FFC0DC:40:000:Infinite Energy PL2
+mwalkd:0:FFDAB9:01:000:Infinite Magic PL2
+mwalkd:0:FFDABD:45:000:Invincibility PL2
+mwalkd:0:FFC10C:04:000:Always Robot PL2:Best enabled on title screen
+mwalkd:0:FFC10C:04:001:Become Robot Now! PL2:Buggy
+mwalkd:0:FFDAD8:03:000:Infinite Lives PL3
+mwalkd:0:FFC19C:28:000:Infinite Energy PL3
+mwalkd:0:FFDAF9:01:000:Infinite Magic PL3
+mwalkd:0:FFDAFD:45:000:Invincibility PL3
+mwalkd:0:FFC1CC:04:000:Always Robot PL3:Best enabled on title screen
+mwalkd:0:FFC1CC:04:001:Become Robot Now! PL3:Buggy
+
+; [ Michael Jackson's Moonwalker (US, bootleg of FD1094/8751 317-0158 set) ]
+mwalkud:0:FFDA58:03:000:Infinite Lives PL1
+mwalkud:0:FFC01C:40:000:Infinite Energy PL1
+mwalkud:0:FFDA79:01:000:Infinite Magic PL1
+mwalkud:0:FFDA7D:45:000:Invincibility PL1
+mwalkud:0:FFC04C:04:000:Always Robot PL1:Best enabled on title screen
+mwalkud:0:FFC04C:04:001:Become Robot Now! PL1:Buggy
+mwalkud:0:FFDA98:03:000:Infinite Lives PL2
+mwalkud:0:FFC0DC:40:000:Infinite Energy PL2
+mwalkud:0:FFDAB9:01:000:Infinite Magic PL2
+mwalkud:0:FFDABD:45:000:Invincibility PL2
+mwalkud:0:FFC10C:04:000:Always Robot PL2:Best enabled on title screen
+mwalkud:0:FFC10C:04:001:Become Robot Now! PL2:Buggy
+mwalkud:0:FFDAD8:03:000:Infinite Lives PL3
+mwalkud:0:FFC19C:28:000:Infinite Energy PL3
+mwalkud:0:FFDAF9:01:000:Infinite Magic PL3
+mwalkud:0:FFDAFD:45:000:Invincibility PL3
+mwalkud:0:FFC1CC:04:000:Always Robot PL3:Best enabled on title screen
+mwalkud:0:FFC1CC:04:001:Become Robot Now! PL3:Buggy
+
+; [ Michael Jackson's Moonwalker (Japan, bootleg of FD1094/8751 317-0157 set) ]
+mwalkjd:0:FFDA58:03:000:Infinite Lives PL1
+mwalkjd:0:FFC01C:40:000:Infinite Energy PL1
+mwalkjd:0:FFDA79:01:000:Infinite Magic PL1
+mwalkjd:0:FFDA7D:45:000:Invincibility PL1
+mwalkjd:0:FFC04C:04:000:Always Robot PL1:Best enabled on title screen
+mwalkjd:0:FFC04C:04:001:Become Robot Now! PL1:Buggy
+mwalkjd:0:FFDA98:03:000:Infinite Lives PL2
+mwalkjd:0:FFC0DC:40:000:Infinite Energy PL2
+mwalkjd:0:FFDAB9:01:000:Infinite Magic PL2
+mwalkjd:0:FFDABD:45:000:Invincibility PL2
+mwalkjd:0:FFC10C:04:000:Always Robot PL2:Best enabled on title screen
+mwalkjd:0:FFC10C:04:001:Become Robot Now! PL2:Buggy
+mwalkjd:0:FFDAD8:03:000:Infinite Lives PL3
+mwalkjd:0:FFC19C:28:000:Infinite Energy PL3
+mwalkjd:0:FFDAF9:01:000:Infinite Magic PL3
+mwalkjd:0:FFDAFD:45:000:Invincibility PL3
+mwalkjd:0:FFC1CC:04:000:Always Robot PL3:Best enabled on title screen
+mwalkjd:0:FFC1CC:04:001:Become Robot Now! PL3:Buggy
 
 ; [ Moonwar ]
 moonwar:0:8744:09:000:Infinite Lives
@@ -67362,26 +67462,6 @@ moonwar:0:875A:99:000:Infinite Shields
 moonwara:0:8744:09:000:Infinite Lives
 moonwara:0:8758:99:000:Infinite Fuel
 moonwara:0:875A:99:000:Infinite Shields
-
-; [ Michael Jackson's Moonwalker (Set 2) ]
-moonwlka:0:FFDA58:03:000:Infinite Lives PL1
-moonwlka:0:FFC01C:40:000:Infinite Energy PL1
-moonwlka:0:FFDA79:01:000:Infinite Magic PL1
-moonwlka:0:FFDA7D:45:000:Invincibility PL1
-moonwlka:0:FFC04C:04:000:Always Robot PL1:Best enabled on title screen
-moonwlka:0:FFC04C:04:001:Become Robot Now! PL1:Buggy
-moonwlka:0:FFDA98:03:000:Infinite Lives PL2
-moonwlka:0:FFC0DC:40:000:Infinite Energy PL2
-moonwlka:0:FFDAB9:01:000:Infinite Magic PL2
-moonwlka:0:FFDABD:45:000:Invincibility PL2
-moonwlka:0:FFC10C:04:000:Always Robot PL2:Best enabled on title screen
-moonwlka:0:FFC10C:04:001:Become Robot Now! PL2:Buggy
-moonwlka:0:FFDAD8:03:000:Infinite Lives PL3
-moonwlka:0:FFC19C:28:000:Infinite Energy PL3
-moonwlka:0:FFDAF9:01:000:Infinite Magic PL3
-moonwlka:0:FFDAFD:45:000:Invincibility PL3
-moonwlka:0:FFC1CC:04:000:Always Robot PL3:Best enabled on title screen
-moonwlka:0:FFC1CC:04:001:Become Robot Now! PL3:Buggy
 
 ; [ Michael Jackson's Moonwalker (bootleg) ]
 moonwlkb:0:FFDA58:03:000:Infinite Lives PL1

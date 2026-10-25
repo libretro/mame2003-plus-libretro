@@ -68,6 +68,10 @@ char* m68ki_cpu_names[9] =
 /* The CPU core */
 m68ki_cpu_core m68ki_cpu = {0};
 
+/* FD1094 hooks, shared by all the 68000 CPUs (see m68k.h) */
+void (*m68k_cmpild_callback)(unsigned int val, int reg) = NULL;
+void (*m68k_rte_callback)(void) = NULL;
+
 #if M68K_EMULATE_ADDRESS_ERROR
 jmp_buf m68ki_aerr_trap;
 #endif /* M68K_EMULATE_ADDRESS_ERROR */
@@ -755,6 +759,8 @@ void m68k_init(void)
 	m68k_set_pc_changed_callback(NULL);
 	m68k_set_fc_callback(NULL);
 	m68k_set_instr_hook_callback(NULL);
+	m68k_cmpild_callback = NULL;
+	m68k_rte_callback = NULL;
 }
 
 /* Pulse the RESET line on the CPU */

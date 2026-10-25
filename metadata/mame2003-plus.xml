@@ -183260,35 +183260,29 @@
 		</dipswitch>
 		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="4096"/>
 	</game>
-	<game name="moonwalk" sourcefile="system18.c">
-		<description>Michael Jackson's Moonwalker (Set 1)</description>
+	<game name="mwalk" sourcefile="system18.c" sampleof="moonwalk">
+		<description>Michael Jackson's Moonwalker (World) (FD1094/8751 317-0159)</description>
 		<year>1990</year>
 		<manufacturer>Sega</manufacturer>
-		<rom name="epr13235.a6" size="262144" crc="6983e129" sha1="a8dd430620ab8ce11df46aa208d762d47f510464" region="cpu1" offset="0"/>
-		<rom name="epr13234.a5" size="262144" crc="c9fd20f2" sha1="9476e6481e6d8f223acd52f543fa04f408d48dc3" region="cpu1" offset="1"/>
-		<rom name="mpr13216.b1" size="262144" crc="862d2c03" sha1="3c5446d702a639b62a602c6d687f9875d8450218" region="gfx1" dispose="yes" offset="0"/>
-		<rom name="mpr13217.b2" size="262144" crc="7d1ac3ec" sha1="8495357304f1df135bba77ef3b96e79a883b8ff0" region="gfx1" dispose="yes" offset="40000"/>
-		<rom name="mpr13218.b3" size="262144" crc="56d3393c" sha1="50a2d065060692c9ecaa56046a781cb21d93e554" region="gfx1" dispose="yes" offset="80000"/>
-		<rom name="mpr13224.b11" size="262144" crc="c59f107b" sha1="10fa60fca6e34eda277c483bb1c0e81bb88c8a47" region="gfx2" offset="1"/>
-		<rom name="mpr13231.a11" size="262144" crc="a5e96346" sha1="a854f4dd5dc16975373255110fdb8ab3d121b1af" region="gfx2" offset="0"/>
-		<rom name="mpr13223.b10" size="262144" crc="364f60ff" sha1="9ac887ec0b2e32b504b7c6a5f3bb1ce3fe41a15a" region="gfx2" offset="80001"/>
-		<rom name="mpr13230.a10" size="262144" crc="9550091f" sha1="bb6e898f7b540e130fd338c10f74609a7604cef4" region="gfx2" offset="80000"/>
-		<rom name="mpr13222.b9" size="262144" crc="523df3ed" sha1="2e496125e75decd674c3a08404fbdb53791a965d" region="gfx2" offset="100001"/>
-		<rom name="mpr13229.a9" size="262144" crc="f40dc45d" sha1="e9468cef428f52ecdf6837c6d9a9fea934e7676c" region="gfx2" offset="100000"/>
-		<rom name="epr13221.b8" size="262144" crc="9ae7546a" sha1="5413b0131881b0b32bac8de51da9a299835014bb" region="gfx2" offset="180001"/>
-		<rom name="epr13228.a8" size="262144" crc="de3786be" sha1="2279bb390aa3efab9aeee0a643e5cb6a4f5933b6" region="gfx2" offset="180000"/>
-		<rom name="mpr13224.b11" size="262144" crc="c59f107b" sha1="10fa60fca6e34eda277c483bb1c0e81bb88c8a47" region="gfx2" offset="1"/>
-		<rom name="mpr13231.a11" size="262144" crc="a5e96346" sha1="a854f4dd5dc16975373255110fdb8ab3d121b1af" region="gfx2" offset="0"/>
-		<rom name="mpr13223.b10" size="262144" crc="364f60ff" sha1="9ac887ec0b2e32b504b7c6a5f3bb1ce3fe41a15a" region="gfx2" offset="80001"/>
-		<rom name="mpr13230.a10" size="262144" crc="9550091f" sha1="bb6e898f7b540e130fd338c10f74609a7604cef4" region="gfx2" offset="80000"/>
-		<rom name="mpr13222.b9" size="262144" crc="523df3ed" sha1="2e496125e75decd674c3a08404fbdb53791a965d" region="gfx2" offset="100001"/>
-		<rom name="mpr13229.a9" size="262144" crc="f40dc45d" sha1="e9468cef428f52ecdf6837c6d9a9fea934e7676c" region="gfx2" offset="100000"/>
-		<rom name="epr13221.b8" size="262144" crc="9ae7546a" sha1="5413b0131881b0b32bac8de51da9a299835014bb" region="gfx2" offset="180001"/>
-		<rom name="epr13228.a8" size="262144" crc="de3786be" sha1="2279bb390aa3efab9aeee0a643e5cb6a4f5933b6" region="gfx2" offset="180000"/>
-		<rom name="epr13225.a4" size="131072" crc="56c2e82b" sha1="d5755a1bb6e889d274dc60e883d4d65f12fdc877" region="cpu2" offset="0"/>
-		<rom name="mpr13219.b4" size="262144" crc="19e2061f" sha1="2dcf1718a43dab4da53b4f67722664e70ddd2169" region="cpu2" offset="80000"/>
-		<rom name="mpr13220.b5" size="262144" crc="58d4d9ce" sha1="725e73a656845b02702ef131b4c0aa2a73cdd02e" region="cpu2" offset="100000"/>
-		<rom name="mpr13249.b6" size="262144" crc="623edc5d" sha1="c32d9f818d40f311877fbe6532d9e95b6045c3c4" region="cpu2" offset="180000"/>
+		<rom name="epr-13235.a6" size="262144" crc="6983e129" sha1="a8dd430620ab8ce11df46aa208d762d47f510464" region="cpu1" offset="0"/>
+		<rom name="epr-13234.a5" size="262144" crc="c9fd20f2" sha1="9476e6481e6d8f223acd52f543fa04f408d48dc3" region="cpu1" offset="1"/>
+		<rom name="317-0159.key" size="8192" crc="507838f0" sha1="0c92d313da40b5dec7398c05b57698de6153b4b0" region="user1" offset="0"/>
+		<rom name="mpr-13216.b1" size="262144" crc="862d2c03" sha1="3c5446d702a639b62a602c6d687f9875d8450218" region="gfx1" offset="0"/>
+		<rom name="mpr-13217.b2" size="262144" crc="7d1ac3ec" sha1="8495357304f1df135bba77ef3b96e79a883b8ff0" region="gfx1" offset="40000"/>
+		<rom name="mpr-13218.b3" size="262144" crc="56d3393c" sha1="50a2d065060692c9ecaa56046a781cb21d93e554" region="gfx1" offset="80000"/>
+		<rom name="mpr-13224.b11" size="262144" crc="c59f107b" sha1="10fa60fca6e34eda277c483bb1c0e81bb88c8a47" region="gfx2" offset="1"/>
+		<rom name="mpr-13231.a11" size="262144" crc="a5e96346" sha1="a854f4dd5dc16975373255110fdb8ab3d121b1af" region="gfx2" offset="0"/>
+		<rom name="mpr-13223.b10" size="262144" crc="364f60ff" sha1="9ac887ec0b2e32b504b7c6a5f3bb1ce3fe41a15a" region="gfx2" offset="80001"/>
+		<rom name="mpr-13230.a10" size="262144" crc="9550091f" sha1="bb6e898f7b540e130fd338c10f74609a7604cef4" region="gfx2" offset="80000"/>
+		<rom name="mpr-13222.b9" size="262144" crc="523df3ed" sha1="2e496125e75decd674c3a08404fbdb53791a965d" region="gfx2" offset="100001"/>
+		<rom name="mpr-13229.a9" size="262144" crc="f40dc45d" sha1="e9468cef428f52ecdf6837c6d9a9fea934e7676c" region="gfx2" offset="100000"/>
+		<rom name="epr-13221.b8" size="262144" crc="9ae7546a" sha1="5413b0131881b0b32bac8de51da9a299835014bb" region="gfx2" offset="180001"/>
+		<rom name="epr-13228.a8" size="262144" crc="de3786be" sha1="2279bb390aa3efab9aeee0a643e5cb6a4f5933b6" region="gfx2" offset="180000"/>
+		<rom name="epr-13225.a4" size="131072" crc="56c2e82b" sha1="d5755a1bb6e889d274dc60e883d4d65f12fdc877" region="cpu2" offset="0"/>
+		<rom name="mpr-13219.b4" size="262144" crc="19e2061f" sha1="2dcf1718a43dab4da53b4f67722664e70ddd2169" region="cpu2" offset="80000"/>
+		<rom name="mpr-13220.b5" size="262144" crc="58d4d9ce" sha1="725e73a656845b02702ef131b4c0aa2a73cdd02e" region="cpu2" offset="100000"/>
+		<rom name="mpr-13249.b6" size="262144" crc="623edc5d" sha1="c32d9f818d40f311877fbe6532d9e95b6045c3c4" region="cpu2" offset="180000"/>
+		<rom name="315-5437.ic4" size="4096" crc="4bf63bc1" sha1="2766ab30b466b079febb30c488adad9ea56813f7" region="cpu3" offset="0"/>
 		<sample name="bad-01"/>
 		<sample name="bad-02"/>
 		<sample name="smoothcriminal-01"/>
@@ -183303,13 +183297,14 @@
 		<sample name="title-02"/>
 		<chip type="cpu" name="68000" clock="10000000"/>
 		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
+		<chip type="cpu" name="I8051" clock="666666"/>
 		<chip type="audio" name="YM3438" clock="8000000"/>
 		<chip type="audio" name="YM3438" clock="8000000"/>
 		<chip type="audio" name="RF5C68"/>
 		<chip type="audio" name="Samples"/>
 		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="57.230000"/>
 		<sound channels="2"/>
-		<input players="3" control="joy8way" buttons="3" coins="2" service="yes" tilt="yes"/>
+		<input players="3" control="joy8way" buttons="3" coins="2" service="yes"/>
 		<dipswitch name="Coin A">
 			<dipvalue name="4 Coins/1 Credit"/>
 			<dipvalue name="3 Coins/1 Credit"/>
@@ -183363,10 +183358,10 @@
 			<dipvalue name="High"/>
 		</dipswitch>
 		<dipswitch name="Play Mode">
-			<dipvalue name="2 Players"/>
-			<dipvalue name="3 Players" default="yes"/>
+			<dipvalue name="2 Players" default="yes"/>
+			<dipvalue name="3 Players"/>
 		</dipswitch>
-		<dipswitch name="Coin Mode">
+		<dipswitch name="Coin Chute">
 			<dipvalue name="Common" default="yes"/>
 			<dipvalue name="Individual"/>
 		</dipswitch>
@@ -183376,29 +183371,31 @@
 			<dipvalue name="Hard"/>
 			<dipvalue name="Hardest"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="4096"/>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="8192"/>
 	</game>
-	<game name="moonwlka" sourcefile="system18.c" cloneof="moonwalk" romof="moonwalk" sampleof="moonwalk">
-		<description>Michael Jackson's Moonwalker (Set 2)</description>
+	<game name="mwalku" sourcefile="system18.c" cloneof="mwalk" romof="mwalk" sampleof="moonwalk">
+		<description>Michael Jackson's Moonwalker (US) (FD1094/8751 317-0158)</description>
 		<year>1990</year>
 		<manufacturer>Sega</manufacturer>
-		<rom name="epr13233" size="262144" crc="f3dac671" sha1="cd9d372c7e272d2371bc1f9fb0167831c804423f" region="cpu1" offset="0"/>
-		<rom name="epr13232" size="262144" crc="541d8bdf" sha1="6a99153fddca246ba070e93c4bacd145f15f76bf" region="cpu1" offset="1"/>
-		<rom name="mpr13216.b1" merge="mpr13216.b1" size="262144" crc="862d2c03" sha1="3c5446d702a639b62a602c6d687f9875d8450218" region="gfx1" dispose="yes" offset="0"/>
-		<rom name="mpr13217.b2" merge="mpr13217.b2" size="262144" crc="7d1ac3ec" sha1="8495357304f1df135bba77ef3b96e79a883b8ff0" region="gfx1" dispose="yes" offset="40000"/>
-		<rom name="mpr13218.b3" merge="mpr13218.b3" size="262144" crc="56d3393c" sha1="50a2d065060692c9ecaa56046a781cb21d93e554" region="gfx1" dispose="yes" offset="80000"/>
-		<rom name="mpr13224.b11" merge="mpr13224.b11" size="262144" crc="c59f107b" sha1="10fa60fca6e34eda277c483bb1c0e81bb88c8a47" region="gfx2" offset="1"/>
-		<rom name="mpr13231.a11" merge="mpr13231.a11" size="262144" crc="a5e96346" sha1="a854f4dd5dc16975373255110fdb8ab3d121b1af" region="gfx2" offset="0"/>
-		<rom name="mpr13223.b10" merge="mpr13223.b10" size="262144" crc="364f60ff" sha1="9ac887ec0b2e32b504b7c6a5f3bb1ce3fe41a15a" region="gfx2" offset="80001"/>
-		<rom name="mpr13230.a10" merge="mpr13230.a10" size="262144" crc="9550091f" sha1="bb6e898f7b540e130fd338c10f74609a7604cef4" region="gfx2" offset="80000"/>
-		<rom name="mpr13222.b9" merge="mpr13222.b9" size="262144" crc="523df3ed" sha1="2e496125e75decd674c3a08404fbdb53791a965d" region="gfx2" offset="100001"/>
-		<rom name="mpr13229.a9" merge="mpr13229.a9" size="262144" crc="f40dc45d" sha1="e9468cef428f52ecdf6837c6d9a9fea934e7676c" region="gfx2" offset="100000"/>
-		<rom name="epr13221.b8" merge="epr13221.b8" size="262144" crc="9ae7546a" sha1="5413b0131881b0b32bac8de51da9a299835014bb" region="gfx2" offset="180001"/>
-		<rom name="epr13228.a8" merge="epr13228.a8" size="262144" crc="de3786be" sha1="2279bb390aa3efab9aeee0a643e5cb6a4f5933b6" region="gfx2" offset="180000"/>
-		<rom name="epr13225.a4" merge="epr13225.a4" size="131072" crc="56c2e82b" sha1="d5755a1bb6e889d274dc60e883d4d65f12fdc877" region="cpu2" offset="0"/>
-		<rom name="mpr13219.b4" merge="mpr13219.b4" size="262144" crc="19e2061f" sha1="2dcf1718a43dab4da53b4f67722664e70ddd2169" region="cpu2" offset="80000"/>
-		<rom name="mpr13220.b5" merge="mpr13220.b5" size="262144" crc="58d4d9ce" sha1="725e73a656845b02702ef131b4c0aa2a73cdd02e" region="cpu2" offset="100000"/>
-		<rom name="mpr13249.b6" merge="mpr13249.b6" size="262144" crc="623edc5d" sha1="c32d9f818d40f311877fbe6532d9e95b6045c3c4" region="cpu2" offset="180000"/>
+		<rom name="epr-13233.a6" size="262144" crc="f3dac671" sha1="cd9d372c7e272d2371bc1f9fb0167831c804423f" region="cpu1" offset="0"/>
+		<rom name="epr-13232.a5" size="262144" crc="541d8bdf" sha1="6a99153fddca246ba070e93c4bacd145f15f76bf" region="cpu1" offset="1"/>
+		<rom name="317-0158.key" size="8192" crc="a8a50e8c" sha1="6e05a40dbf31b4007df1bb27eee85a78da3d8417" region="user1" offset="0"/>
+		<rom name="mpr-13216.b1" merge="mpr-13216.b1" size="262144" crc="862d2c03" sha1="3c5446d702a639b62a602c6d687f9875d8450218" region="gfx1" offset="0"/>
+		<rom name="mpr-13217.b2" merge="mpr-13217.b2" size="262144" crc="7d1ac3ec" sha1="8495357304f1df135bba77ef3b96e79a883b8ff0" region="gfx1" offset="40000"/>
+		<rom name="mpr-13218.b3" merge="mpr-13218.b3" size="262144" crc="56d3393c" sha1="50a2d065060692c9ecaa56046a781cb21d93e554" region="gfx1" offset="80000"/>
+		<rom name="mpr-13224.b11" merge="mpr-13224.b11" size="262144" crc="c59f107b" sha1="10fa60fca6e34eda277c483bb1c0e81bb88c8a47" region="gfx2" offset="1"/>
+		<rom name="mpr-13231.a11" merge="mpr-13231.a11" size="262144" crc="a5e96346" sha1="a854f4dd5dc16975373255110fdb8ab3d121b1af" region="gfx2" offset="0"/>
+		<rom name="mpr-13223.b10" merge="mpr-13223.b10" size="262144" crc="364f60ff" sha1="9ac887ec0b2e32b504b7c6a5f3bb1ce3fe41a15a" region="gfx2" offset="80001"/>
+		<rom name="mpr-13230.a10" merge="mpr-13230.a10" size="262144" crc="9550091f" sha1="bb6e898f7b540e130fd338c10f74609a7604cef4" region="gfx2" offset="80000"/>
+		<rom name="mpr-13222.b9" merge="mpr-13222.b9" size="262144" crc="523df3ed" sha1="2e496125e75decd674c3a08404fbdb53791a965d" region="gfx2" offset="100001"/>
+		<rom name="mpr-13229.a9" merge="mpr-13229.a9" size="262144" crc="f40dc45d" sha1="e9468cef428f52ecdf6837c6d9a9fea934e7676c" region="gfx2" offset="100000"/>
+		<rom name="epr-13221.b8" merge="epr-13221.b8" size="262144" crc="9ae7546a" sha1="5413b0131881b0b32bac8de51da9a299835014bb" region="gfx2" offset="180001"/>
+		<rom name="epr-13228.a8" merge="epr-13228.a8" size="262144" crc="de3786be" sha1="2279bb390aa3efab9aeee0a643e5cb6a4f5933b6" region="gfx2" offset="180000"/>
+		<rom name="epr-13225.a4" merge="epr-13225.a4" size="131072" crc="56c2e82b" sha1="d5755a1bb6e889d274dc60e883d4d65f12fdc877" region="cpu2" offset="0"/>
+		<rom name="mpr-13219.b4" merge="mpr-13219.b4" size="262144" crc="19e2061f" sha1="2dcf1718a43dab4da53b4f67722664e70ddd2169" region="cpu2" offset="80000"/>
+		<rom name="mpr-13220.b5" merge="mpr-13220.b5" size="262144" crc="58d4d9ce" sha1="725e73a656845b02702ef131b4c0aa2a73cdd02e" region="cpu2" offset="100000"/>
+		<rom name="mpr-13249.b6" merge="mpr-13249.b6" size="262144" crc="623edc5d" sha1="c32d9f818d40f311877fbe6532d9e95b6045c3c4" region="cpu2" offset="180000"/>
+		<rom name="315-5437.ic4" merge="315-5437.ic4" size="4096" crc="4bf63bc1" sha1="2766ab30b466b079febb30c488adad9ea56813f7" region="cpu3" offset="0"/>
 		<sample name="bad-01"/>
 		<sample name="bad-02"/>
 		<sample name="smoothcriminal-01"/>
@@ -183413,13 +183410,14 @@
 		<sample name="title-02"/>
 		<chip type="cpu" name="68000" clock="10000000"/>
 		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
+		<chip type="cpu" name="I8051" clock="666666"/>
 		<chip type="audio" name="YM3438" clock="8000000"/>
 		<chip type="audio" name="YM3438" clock="8000000"/>
 		<chip type="audio" name="RF5C68"/>
 		<chip type="audio" name="Samples"/>
 		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="57.230000"/>
 		<sound channels="2"/>
-		<input players="3" control="joy8way" buttons="3" coins="2" service="yes" tilt="yes"/>
+		<input players="3" control="joy8way" buttons="3" coins="3" service="yes"/>
 		<dipswitch name="Coin A">
 			<dipvalue name="4 Coins/1 Credit"/>
 			<dipvalue name="3 Coins/1 Credit"/>
@@ -183476,7 +183474,120 @@
 			<dipvalue name="2 Players"/>
 			<dipvalue name="3 Players" default="yes"/>
 		</dipswitch>
-		<dipswitch name="Coin Mode">
+		<dipswitch name="Coin Chute">
+			<dipvalue name="Common"/>
+			<dipvalue name="Individual" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Difficulty">
+			<dipvalue name="Easy"/>
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Hardest"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="8192"/>
+	</game>
+	<game name="mwalkj" sourcefile="system18.c" cloneof="mwalk" romof="mwalk" sampleof="moonwalk">
+		<description>Michael Jackson's Moonwalker (Japan) (FD1094/8751 317-0157)</description>
+		<year>1990</year>
+		<manufacturer>Sega</manufacturer>
+		<rom name="epr-13227.a6" size="262144" crc="6c0534b3" sha1="23f35d1a15275cbc4b6d2f81f5634abac3832282" region="cpu1" offset="0"/>
+		<rom name="epr-13226.a5" size="262144" crc="99765854" sha1="c00776c676b77fed4e94bb02f52f905c845ee73c" region="cpu1" offset="1"/>
+		<rom name="317-0157.key" size="8192" crc="324d6931" sha1="f8f4530a75aeeace1c8456da37118975c5c43316" region="user1" offset="0"/>
+		<rom name="mpr-13216.b1" merge="mpr-13216.b1" size="262144" crc="862d2c03" sha1="3c5446d702a639b62a602c6d687f9875d8450218" region="gfx1" offset="0"/>
+		<rom name="mpr-13217.b2" merge="mpr-13217.b2" size="262144" crc="7d1ac3ec" sha1="8495357304f1df135bba77ef3b96e79a883b8ff0" region="gfx1" offset="40000"/>
+		<rom name="mpr-13218.b3" merge="mpr-13218.b3" size="262144" crc="56d3393c" sha1="50a2d065060692c9ecaa56046a781cb21d93e554" region="gfx1" offset="80000"/>
+		<rom name="mpr-13224.b11" merge="mpr-13224.b11" size="262144" crc="c59f107b" sha1="10fa60fca6e34eda277c483bb1c0e81bb88c8a47" region="gfx2" offset="1"/>
+		<rom name="mpr-13231.a11" merge="mpr-13231.a11" size="262144" crc="a5e96346" sha1="a854f4dd5dc16975373255110fdb8ab3d121b1af" region="gfx2" offset="0"/>
+		<rom name="mpr-13223.b10" merge="mpr-13223.b10" size="262144" crc="364f60ff" sha1="9ac887ec0b2e32b504b7c6a5f3bb1ce3fe41a15a" region="gfx2" offset="80001"/>
+		<rom name="mpr-13230.a10" merge="mpr-13230.a10" size="262144" crc="9550091f" sha1="bb6e898f7b540e130fd338c10f74609a7604cef4" region="gfx2" offset="80000"/>
+		<rom name="mpr-13222.b9" merge="mpr-13222.b9" size="262144" crc="523df3ed" sha1="2e496125e75decd674c3a08404fbdb53791a965d" region="gfx2" offset="100001"/>
+		<rom name="mpr-13229.a9" merge="mpr-13229.a9" size="262144" crc="f40dc45d" sha1="e9468cef428f52ecdf6837c6d9a9fea934e7676c" region="gfx2" offset="100000"/>
+		<rom name="epr-13221.b8" merge="epr-13221.b8" size="262144" crc="9ae7546a" sha1="5413b0131881b0b32bac8de51da9a299835014bb" region="gfx2" offset="180001"/>
+		<rom name="epr-13228.a8" merge="epr-13228.a8" size="262144" crc="de3786be" sha1="2279bb390aa3efab9aeee0a643e5cb6a4f5933b6" region="gfx2" offset="180000"/>
+		<rom name="epr-13225.a4" merge="epr-13225.a4" size="131072" crc="56c2e82b" sha1="d5755a1bb6e889d274dc60e883d4d65f12fdc877" region="cpu2" offset="0"/>
+		<rom name="mpr-13219.b4" merge="mpr-13219.b4" size="262144" crc="19e2061f" sha1="2dcf1718a43dab4da53b4f67722664e70ddd2169" region="cpu2" offset="80000"/>
+		<rom name="mpr-13220.b5" merge="mpr-13220.b5" size="262144" crc="58d4d9ce" sha1="725e73a656845b02702ef131b4c0aa2a73cdd02e" region="cpu2" offset="100000"/>
+		<rom name="mpr-13249.b6" merge="mpr-13249.b6" size="262144" crc="623edc5d" sha1="c32d9f818d40f311877fbe6532d9e95b6045c3c4" region="cpu2" offset="180000"/>
+		<rom name="315-5437.ic4" merge="315-5437.ic4" size="4096" crc="4bf63bc1" sha1="2766ab30b466b079febb30c488adad9ea56813f7" region="cpu3" offset="0"/>
+		<sample name="bad-01"/>
+		<sample name="bad-02"/>
+		<sample name="smoothcriminal-01"/>
+		<sample name="smoothcriminal-02"/>
+		<sample name="beatit-01"/>
+		<sample name="beatit-02"/>
+		<sample name="thriller-01"/>
+		<sample name="thriller-02"/>
+		<sample name="billiejean-01"/>
+		<sample name="billiejean-02"/>
+		<sample name="title-01"/>
+		<sample name="title-02"/>
+		<chip type="cpu" name="68000" clock="10000000"/>
+		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
+		<chip type="cpu" name="I8051" clock="666666"/>
+		<chip type="audio" name="YM3438" clock="8000000"/>
+		<chip type="audio" name="YM3438" clock="8000000"/>
+		<chip type="audio" name="RF5C68"/>
+		<chip type="audio" name="Samples"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="57.230000"/>
+		<sound channels="2"/>
+		<input players="3" control="joy8way" buttons="3" coins="2" service="yes"/>
+		<dipswitch name="Coin A">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit 2/3"/>
+			<dipvalue name="1 Coin/1 Credit 4/5"/>
+			<dipvalue name="1 Coin/1 Credit 5/6"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="Free Play (if Coin B too) or 1/1"/>
+		</dipswitch>
+		<dipswitch name="Coin B">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit 2/3"/>
+			<dipvalue name="1 Coin/1 Credit 4/5"/>
+			<dipvalue name="1 Coin/1 Credit 5/6"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="Free Play (if Coin A too) or 1/1"/>
+		</dipswitch>
+		<dipswitch name="2 Credits to Start">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Lives">
+			<dipvalue name="2" default="yes"/>
+			<dipvalue name="3"/>
+		</dipswitch>
+		<dipswitch name="Player Vitality">
+			<dipvalue name="Low" default="yes"/>
+			<dipvalue name="High"/>
+		</dipswitch>
+		<dipswitch name="Play Mode">
+			<dipvalue name="2 Players" default="yes"/>
+			<dipvalue name="3 Players"/>
+		</dipswitch>
+		<dipswitch name="Coin Chute">
 			<dipvalue name="Common" default="yes"/>
 			<dipvalue name="Individual"/>
 		</dipswitch>
@@ -183486,7 +183597,343 @@
 			<dipvalue name="Hard"/>
 			<dipvalue name="Hardest"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="4096"/>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="8192"/>
+	</game>
+	<game name="mwalkd" sourcefile="system18.c" cloneof="mwalk" romof="mwalk" sampleof="moonwalk">
+		<description>Michael Jackson's Moonwalker (World) (bootleg of FD1094/8751 317-0159 set)</description>
+		<year>1990</year>
+		<manufacturer>bootleg</manufacturer>
+		<rom name="bootleg_epr-13235.a6" size="262144" crc="9973f6c3" sha1="e6267361e808499fcd1c49af6243596b7ebe434d" region="cpu1" offset="0"/>
+		<rom name="bootleg_epr-13234.a5" size="262144" crc="ef5098e9" sha1="2bd17e07477d0f31bddc7e0f53e3447065913072" region="cpu1" offset="1"/>
+		<rom name="mpr-13216.b1" merge="mpr-13216.b1" size="262144" crc="862d2c03" sha1="3c5446d702a639b62a602c6d687f9875d8450218" region="gfx1" offset="0"/>
+		<rom name="mpr-13217.b2" merge="mpr-13217.b2" size="262144" crc="7d1ac3ec" sha1="8495357304f1df135bba77ef3b96e79a883b8ff0" region="gfx1" offset="40000"/>
+		<rom name="mpr-13218.b3" merge="mpr-13218.b3" size="262144" crc="56d3393c" sha1="50a2d065060692c9ecaa56046a781cb21d93e554" region="gfx1" offset="80000"/>
+		<rom name="mpr-13224.b11" merge="mpr-13224.b11" size="262144" crc="c59f107b" sha1="10fa60fca6e34eda277c483bb1c0e81bb88c8a47" region="gfx2" offset="1"/>
+		<rom name="mpr-13231.a11" merge="mpr-13231.a11" size="262144" crc="a5e96346" sha1="a854f4dd5dc16975373255110fdb8ab3d121b1af" region="gfx2" offset="0"/>
+		<rom name="mpr-13223.b10" merge="mpr-13223.b10" size="262144" crc="364f60ff" sha1="9ac887ec0b2e32b504b7c6a5f3bb1ce3fe41a15a" region="gfx2" offset="80001"/>
+		<rom name="mpr-13230.a10" merge="mpr-13230.a10" size="262144" crc="9550091f" sha1="bb6e898f7b540e130fd338c10f74609a7604cef4" region="gfx2" offset="80000"/>
+		<rom name="mpr-13222.b9" merge="mpr-13222.b9" size="262144" crc="523df3ed" sha1="2e496125e75decd674c3a08404fbdb53791a965d" region="gfx2" offset="100001"/>
+		<rom name="mpr-13229.a9" merge="mpr-13229.a9" size="262144" crc="f40dc45d" sha1="e9468cef428f52ecdf6837c6d9a9fea934e7676c" region="gfx2" offset="100000"/>
+		<rom name="epr-13221.b8" merge="epr-13221.b8" size="262144" crc="9ae7546a" sha1="5413b0131881b0b32bac8de51da9a299835014bb" region="gfx2" offset="180001"/>
+		<rom name="epr-13228.a8" merge="epr-13228.a8" size="262144" crc="de3786be" sha1="2279bb390aa3efab9aeee0a643e5cb6a4f5933b6" region="gfx2" offset="180000"/>
+		<rom name="epr-13225.a4" merge="epr-13225.a4" size="131072" crc="56c2e82b" sha1="d5755a1bb6e889d274dc60e883d4d65f12fdc877" region="cpu2" offset="0"/>
+		<rom name="mpr-13219.b4" merge="mpr-13219.b4" size="262144" crc="19e2061f" sha1="2dcf1718a43dab4da53b4f67722664e70ddd2169" region="cpu2" offset="80000"/>
+		<rom name="mpr-13220.b5" merge="mpr-13220.b5" size="262144" crc="58d4d9ce" sha1="725e73a656845b02702ef131b4c0aa2a73cdd02e" region="cpu2" offset="100000"/>
+		<rom name="mpr-13249.b6" merge="mpr-13249.b6" size="262144" crc="623edc5d" sha1="c32d9f818d40f311877fbe6532d9e95b6045c3c4" region="cpu2" offset="180000"/>
+		<rom name="315-5437.ic4" merge="315-5437.ic4" size="4096" crc="4bf63bc1" sha1="2766ab30b466b079febb30c488adad9ea56813f7" region="cpu3" offset="0"/>
+		<sample name="bad-01"/>
+		<sample name="bad-02"/>
+		<sample name="smoothcriminal-01"/>
+		<sample name="smoothcriminal-02"/>
+		<sample name="beatit-01"/>
+		<sample name="beatit-02"/>
+		<sample name="thriller-01"/>
+		<sample name="thriller-02"/>
+		<sample name="billiejean-01"/>
+		<sample name="billiejean-02"/>
+		<sample name="title-01"/>
+		<sample name="title-02"/>
+		<chip type="cpu" name="68000" clock="10000000"/>
+		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
+		<chip type="cpu" name="I8051" clock="666666"/>
+		<chip type="audio" name="YM3438" clock="8000000"/>
+		<chip type="audio" name="YM3438" clock="8000000"/>
+		<chip type="audio" name="RF5C68"/>
+		<chip type="audio" name="Samples"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="57.230000"/>
+		<sound channels="2"/>
+		<input players="3" control="joy8way" buttons="3" coins="2" service="yes"/>
+		<dipswitch name="Coin A">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit 2/3"/>
+			<dipvalue name="1 Coin/1 Credit 4/5"/>
+			<dipvalue name="1 Coin/1 Credit 5/6"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="Free Play (if Coin B too) or 1/1"/>
+		</dipswitch>
+		<dipswitch name="Coin B">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit 2/3"/>
+			<dipvalue name="1 Coin/1 Credit 4/5"/>
+			<dipvalue name="1 Coin/1 Credit 5/6"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="Free Play (if Coin A too) or 1/1"/>
+		</dipswitch>
+		<dipswitch name="2 Credits to Start">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Lives">
+			<dipvalue name="2" default="yes"/>
+			<dipvalue name="3"/>
+		</dipswitch>
+		<dipswitch name="Player Vitality">
+			<dipvalue name="Low" default="yes"/>
+			<dipvalue name="High"/>
+		</dipswitch>
+		<dipswitch name="Play Mode">
+			<dipvalue name="2 Players" default="yes"/>
+			<dipvalue name="3 Players"/>
+		</dipswitch>
+		<dipswitch name="Coin Chute">
+			<dipvalue name="Common" default="yes"/>
+			<dipvalue name="Individual"/>
+		</dipswitch>
+		<dipswitch name="Difficulty">
+			<dipvalue name="Easy"/>
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Hardest"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="8192"/>
+	</game>
+	<game name="mwalkud" sourcefile="system18.c" cloneof="mwalk" romof="mwalk" sampleof="moonwalk">
+		<description>Michael Jackson's Moonwalker (US) (bootleg of FD1094/8751 317-0158 set)</description>
+		<year>1990</year>
+		<manufacturer>bootleg</manufacturer>
+		<rom name="bootleg_epr-13233.a6" size="262144" crc="b34fe725" sha1="9d656b68ba758fba9739413cf404ee9b1471fd68" region="cpu1" offset="0"/>
+		<rom name="bootleg_epr-13232.a5" size="262144" crc="0d100fd4" sha1="8c09c00dcb11fac2c7226e4fcc36b25458ccccff" region="cpu1" offset="1"/>
+		<rom name="mpr-13216.b1" merge="mpr-13216.b1" size="262144" crc="862d2c03" sha1="3c5446d702a639b62a602c6d687f9875d8450218" region="gfx1" offset="0"/>
+		<rom name="mpr-13217.b2" merge="mpr-13217.b2" size="262144" crc="7d1ac3ec" sha1="8495357304f1df135bba77ef3b96e79a883b8ff0" region="gfx1" offset="40000"/>
+		<rom name="mpr-13218.b3" merge="mpr-13218.b3" size="262144" crc="56d3393c" sha1="50a2d065060692c9ecaa56046a781cb21d93e554" region="gfx1" offset="80000"/>
+		<rom name="mpr-13224.b11" merge="mpr-13224.b11" size="262144" crc="c59f107b" sha1="10fa60fca6e34eda277c483bb1c0e81bb88c8a47" region="gfx2" offset="1"/>
+		<rom name="mpr-13231.a11" merge="mpr-13231.a11" size="262144" crc="a5e96346" sha1="a854f4dd5dc16975373255110fdb8ab3d121b1af" region="gfx2" offset="0"/>
+		<rom name="mpr-13223.b10" merge="mpr-13223.b10" size="262144" crc="364f60ff" sha1="9ac887ec0b2e32b504b7c6a5f3bb1ce3fe41a15a" region="gfx2" offset="80001"/>
+		<rom name="mpr-13230.a10" merge="mpr-13230.a10" size="262144" crc="9550091f" sha1="bb6e898f7b540e130fd338c10f74609a7604cef4" region="gfx2" offset="80000"/>
+		<rom name="mpr-13222.b9" merge="mpr-13222.b9" size="262144" crc="523df3ed" sha1="2e496125e75decd674c3a08404fbdb53791a965d" region="gfx2" offset="100001"/>
+		<rom name="mpr-13229.a9" merge="mpr-13229.a9" size="262144" crc="f40dc45d" sha1="e9468cef428f52ecdf6837c6d9a9fea934e7676c" region="gfx2" offset="100000"/>
+		<rom name="epr-13221.b8" merge="epr-13221.b8" size="262144" crc="9ae7546a" sha1="5413b0131881b0b32bac8de51da9a299835014bb" region="gfx2" offset="180001"/>
+		<rom name="epr-13228.a8" merge="epr-13228.a8" size="262144" crc="de3786be" sha1="2279bb390aa3efab9aeee0a643e5cb6a4f5933b6" region="gfx2" offset="180000"/>
+		<rom name="epr-13225.a4" merge="epr-13225.a4" size="131072" crc="56c2e82b" sha1="d5755a1bb6e889d274dc60e883d4d65f12fdc877" region="cpu2" offset="0"/>
+		<rom name="mpr-13219.b4" merge="mpr-13219.b4" size="262144" crc="19e2061f" sha1="2dcf1718a43dab4da53b4f67722664e70ddd2169" region="cpu2" offset="80000"/>
+		<rom name="mpr-13220.b5" merge="mpr-13220.b5" size="262144" crc="58d4d9ce" sha1="725e73a656845b02702ef131b4c0aa2a73cdd02e" region="cpu2" offset="100000"/>
+		<rom name="mpr-13249.b6" merge="mpr-13249.b6" size="262144" crc="623edc5d" sha1="c32d9f818d40f311877fbe6532d9e95b6045c3c4" region="cpu2" offset="180000"/>
+		<rom name="315-5437.ic4" merge="315-5437.ic4" size="4096" crc="4bf63bc1" sha1="2766ab30b466b079febb30c488adad9ea56813f7" region="cpu3" offset="0"/>
+		<sample name="bad-01"/>
+		<sample name="bad-02"/>
+		<sample name="smoothcriminal-01"/>
+		<sample name="smoothcriminal-02"/>
+		<sample name="beatit-01"/>
+		<sample name="beatit-02"/>
+		<sample name="thriller-01"/>
+		<sample name="thriller-02"/>
+		<sample name="billiejean-01"/>
+		<sample name="billiejean-02"/>
+		<sample name="title-01"/>
+		<sample name="title-02"/>
+		<chip type="cpu" name="68000" clock="10000000"/>
+		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
+		<chip type="cpu" name="I8051" clock="666666"/>
+		<chip type="audio" name="YM3438" clock="8000000"/>
+		<chip type="audio" name="YM3438" clock="8000000"/>
+		<chip type="audio" name="RF5C68"/>
+		<chip type="audio" name="Samples"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="57.230000"/>
+		<sound channels="2"/>
+		<input players="3" control="joy8way" buttons="3" coins="3" service="yes"/>
+		<dipswitch name="Coin A">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit 2/3"/>
+			<dipvalue name="1 Coin/1 Credit 4/5"/>
+			<dipvalue name="1 Coin/1 Credit 5/6"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="Free Play (if Coin B too) or 1/1"/>
+		</dipswitch>
+		<dipswitch name="Coin B">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit 2/3"/>
+			<dipvalue name="1 Coin/1 Credit 4/5"/>
+			<dipvalue name="1 Coin/1 Credit 5/6"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="Free Play (if Coin A too) or 1/1"/>
+		</dipswitch>
+		<dipswitch name="2 Credits to Start">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Lives">
+			<dipvalue name="2" default="yes"/>
+			<dipvalue name="3"/>
+		</dipswitch>
+		<dipswitch name="Player Vitality">
+			<dipvalue name="Low" default="yes"/>
+			<dipvalue name="High"/>
+		</dipswitch>
+		<dipswitch name="Play Mode">
+			<dipvalue name="2 Players"/>
+			<dipvalue name="3 Players" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Coin Chute">
+			<dipvalue name="Common"/>
+			<dipvalue name="Individual" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Difficulty">
+			<dipvalue name="Easy"/>
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Hardest"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="8192"/>
+	</game>
+	<game name="mwalkjd" sourcefile="system18.c" cloneof="mwalk" romof="mwalk" sampleof="moonwalk">
+		<description>Michael Jackson's Moonwalker (Japan) (bootleg of FD1094/8751 317-0157 set)</description>
+		<year>1990</year>
+		<manufacturer>bootleg</manufacturer>
+		<rom name="bootleg_epr-13227.a6" size="262144" crc="d8e00521" sha1="a53cdf7e359b25527f4a39ae1a5d0a461ac73242" region="cpu1" offset="0"/>
+		<rom name="bootleg_epr-13226.a5" size="262144" crc="cb0ba822" sha1="c2db762525e7cc65a7272e7a732ba9e3cee29c5d" region="cpu1" offset="1"/>
+		<rom name="mpr-13216.b1" merge="mpr-13216.b1" size="262144" crc="862d2c03" sha1="3c5446d702a639b62a602c6d687f9875d8450218" region="gfx1" offset="0"/>
+		<rom name="mpr-13217.b2" merge="mpr-13217.b2" size="262144" crc="7d1ac3ec" sha1="8495357304f1df135bba77ef3b96e79a883b8ff0" region="gfx1" offset="40000"/>
+		<rom name="mpr-13218.b3" merge="mpr-13218.b3" size="262144" crc="56d3393c" sha1="50a2d065060692c9ecaa56046a781cb21d93e554" region="gfx1" offset="80000"/>
+		<rom name="mpr-13224.b11" merge="mpr-13224.b11" size="262144" crc="c59f107b" sha1="10fa60fca6e34eda277c483bb1c0e81bb88c8a47" region="gfx2" offset="1"/>
+		<rom name="mpr-13231.a11" merge="mpr-13231.a11" size="262144" crc="a5e96346" sha1="a854f4dd5dc16975373255110fdb8ab3d121b1af" region="gfx2" offset="0"/>
+		<rom name="mpr-13223.b10" merge="mpr-13223.b10" size="262144" crc="364f60ff" sha1="9ac887ec0b2e32b504b7c6a5f3bb1ce3fe41a15a" region="gfx2" offset="80001"/>
+		<rom name="mpr-13230.a10" merge="mpr-13230.a10" size="262144" crc="9550091f" sha1="bb6e898f7b540e130fd338c10f74609a7604cef4" region="gfx2" offset="80000"/>
+		<rom name="mpr-13222.b9" merge="mpr-13222.b9" size="262144" crc="523df3ed" sha1="2e496125e75decd674c3a08404fbdb53791a965d" region="gfx2" offset="100001"/>
+		<rom name="mpr-13229.a9" merge="mpr-13229.a9" size="262144" crc="f40dc45d" sha1="e9468cef428f52ecdf6837c6d9a9fea934e7676c" region="gfx2" offset="100000"/>
+		<rom name="epr-13221.b8" merge="epr-13221.b8" size="262144" crc="9ae7546a" sha1="5413b0131881b0b32bac8de51da9a299835014bb" region="gfx2" offset="180001"/>
+		<rom name="epr-13228.a8" merge="epr-13228.a8" size="262144" crc="de3786be" sha1="2279bb390aa3efab9aeee0a643e5cb6a4f5933b6" region="gfx2" offset="180000"/>
+		<rom name="epr-13225.a4" merge="epr-13225.a4" size="131072" crc="56c2e82b" sha1="d5755a1bb6e889d274dc60e883d4d65f12fdc877" region="cpu2" offset="0"/>
+		<rom name="mpr-13219.b4" merge="mpr-13219.b4" size="262144" crc="19e2061f" sha1="2dcf1718a43dab4da53b4f67722664e70ddd2169" region="cpu2" offset="80000"/>
+		<rom name="mpr-13220.b5" merge="mpr-13220.b5" size="262144" crc="58d4d9ce" sha1="725e73a656845b02702ef131b4c0aa2a73cdd02e" region="cpu2" offset="100000"/>
+		<rom name="mpr-13249.b6" merge="mpr-13249.b6" size="262144" crc="623edc5d" sha1="c32d9f818d40f311877fbe6532d9e95b6045c3c4" region="cpu2" offset="180000"/>
+		<rom name="315-5437.ic4" merge="315-5437.ic4" size="4096" crc="4bf63bc1" sha1="2766ab30b466b079febb30c488adad9ea56813f7" region="cpu3" status="baddump" offset="0"/>
+		<sample name="bad-01"/>
+		<sample name="bad-02"/>
+		<sample name="smoothcriminal-01"/>
+		<sample name="smoothcriminal-02"/>
+		<sample name="beatit-01"/>
+		<sample name="beatit-02"/>
+		<sample name="thriller-01"/>
+		<sample name="thriller-02"/>
+		<sample name="billiejean-01"/>
+		<sample name="billiejean-02"/>
+		<sample name="title-01"/>
+		<sample name="title-02"/>
+		<chip type="cpu" name="68000" clock="10000000"/>
+		<chip type="cpu" soundonly="yes" name="Z80" clock="8000000"/>
+		<chip type="cpu" name="I8051" clock="666666"/>
+		<chip type="audio" name="YM3438" clock="8000000"/>
+		<chip type="audio" name="YM3438" clock="8000000"/>
+		<chip type="audio" name="RF5C68"/>
+		<chip type="audio" name="Samples"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="57.230000"/>
+		<sound channels="2"/>
+		<input players="3" control="joy8way" buttons="3" coins="2" service="yes"/>
+		<dipswitch name="Coin A">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit 2/3"/>
+			<dipvalue name="1 Coin/1 Credit 4/5"/>
+			<dipvalue name="1 Coin/1 Credit 5/6"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="Free Play (if Coin B too) or 1/1"/>
+		</dipswitch>
+		<dipswitch name="Coin B">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit 2/3"/>
+			<dipvalue name="1 Coin/1 Credit 4/5"/>
+			<dipvalue name="1 Coin/1 Credit 5/6"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="Free Play (if Coin A too) or 1/1"/>
+		</dipswitch>
+		<dipswitch name="2 Credits to Start">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Lives">
+			<dipvalue name="2" default="yes"/>
+			<dipvalue name="3"/>
+		</dipswitch>
+		<dipswitch name="Player Vitality">
+			<dipvalue name="Low" default="yes"/>
+			<dipvalue name="High"/>
+		</dipswitch>
+		<dipswitch name="Play Mode">
+			<dipvalue name="2 Players" default="yes"/>
+			<dipvalue name="3 Players"/>
+		</dipswitch>
+		<dipswitch name="Coin Chute">
+			<dipvalue name="Common" default="yes"/>
+			<dipvalue name="Individual"/>
+		</dipswitch>
+		<dipswitch name="Difficulty">
+			<dipvalue name="Easy"/>
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Hardest"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="8192"/>
 	</game>
 	<game name="passsht" sourcefile="system16.c">
 		<description>Passing Shot (2 Players)</description>
@@ -189465,7 +189912,7 @@
 		</dipswitch>
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="4096"/>
 	</game>
-	<game name="moonwlkb" sourcefile="system18.c" cloneof="moonwalk" romof="moonwalk" sampleof="moonwalk">
+	<game name="moonwlkb" sourcefile="system18.c" cloneof="mwalk" romof="mwalk" sampleof="moonwalk">
 		<description>Michael Jackson's Moonwalker (bootleg)</description>
 		<year>1990</year>
 		<manufacturer>bootleg</manufacturer>
@@ -189477,21 +189924,21 @@
 		<rom name="moonwlkb.07" size="65536" crc="9e600704" sha1="efd3d450b26f81dc2b74f44b4aaf906fa017e437" region="cpu1" offset="40001"/>
 		<rom name="moonwlkb.04" size="65536" crc="64692f79" sha1="ad7f32997b78863e3aa3214018cdd24e3ec9c5cb" region="cpu1" offset="60000"/>
 		<rom name="moonwlkb.08" size="65536" crc="546ca530" sha1="51f74878fdc221fee026e2e6a7ca96f290c8947f" region="cpu1" offset="60001"/>
-		<rom name="mpr13216.b1" merge="mpr13216.b1" size="262144" crc="862d2c03" sha1="3c5446d702a639b62a602c6d687f9875d8450218" region="gfx1" dispose="yes" offset="0"/>
-		<rom name="mpr13217.b2" merge="mpr13217.b2" size="262144" crc="7d1ac3ec" sha1="8495357304f1df135bba77ef3b96e79a883b8ff0" region="gfx1" dispose="yes" offset="40000"/>
-		<rom name="mpr13218.b3" merge="mpr13218.b3" size="262144" crc="56d3393c" sha1="50a2d065060692c9ecaa56046a781cb21d93e554" region="gfx1" dispose="yes" offset="80000"/>
-		<rom name="mpr13224.b11" merge="mpr13224.b11" size="262144" crc="c59f107b" sha1="10fa60fca6e34eda277c483bb1c0e81bb88c8a47" region="gfx2" offset="1"/>
-		<rom name="mpr13231.a11" merge="mpr13231.a11" size="262144" crc="a5e96346" sha1="a854f4dd5dc16975373255110fdb8ab3d121b1af" region="gfx2" offset="0"/>
-		<rom name="mpr13223.b10" merge="mpr13223.b10" size="262144" crc="364f60ff" sha1="9ac887ec0b2e32b504b7c6a5f3bb1ce3fe41a15a" region="gfx2" offset="80001"/>
-		<rom name="mpr13230.a10" merge="mpr13230.a10" size="262144" crc="9550091f" sha1="bb6e898f7b540e130fd338c10f74609a7604cef4" region="gfx2" offset="80000"/>
-		<rom name="mpr13222.b9" merge="mpr13222.b9" size="262144" crc="523df3ed" sha1="2e496125e75decd674c3a08404fbdb53791a965d" region="gfx2" offset="100001"/>
-		<rom name="mpr13229.a9" merge="mpr13229.a9" size="262144" crc="f40dc45d" sha1="e9468cef428f52ecdf6837c6d9a9fea934e7676c" region="gfx2" offset="100000"/>
-		<rom name="epr13221.b8" merge="epr13221.b8" size="262144" crc="9ae7546a" sha1="5413b0131881b0b32bac8de51da9a299835014bb" region="gfx2" offset="180001"/>
-		<rom name="epr13228.a8" merge="epr13228.a8" size="262144" crc="de3786be" sha1="2279bb390aa3efab9aeee0a643e5cb6a4f5933b6" region="gfx2" offset="180000"/>
-		<rom name="epr13225.a4" merge="epr13225.a4" size="131072" crc="56c2e82b" sha1="d5755a1bb6e889d274dc60e883d4d65f12fdc877" region="cpu2" offset="0"/>
-		<rom name="mpr13219.b4" merge="mpr13219.b4" size="262144" crc="19e2061f" sha1="2dcf1718a43dab4da53b4f67722664e70ddd2169" region="cpu2" offset="80000"/>
-		<rom name="mpr13220.b5" merge="mpr13220.b5" size="262144" crc="58d4d9ce" sha1="725e73a656845b02702ef131b4c0aa2a73cdd02e" region="cpu2" offset="100000"/>
-		<rom name="mpr13249.b6" merge="mpr13249.b6" size="262144" crc="623edc5d" sha1="c32d9f818d40f311877fbe6532d9e95b6045c3c4" region="cpu2" offset="180000"/>
+		<rom name="mpr13216.b1" merge="mpr-13216.b1" size="262144" crc="862d2c03" sha1="3c5446d702a639b62a602c6d687f9875d8450218" region="gfx1" dispose="yes" offset="0"/>
+		<rom name="mpr13217.b2" merge="mpr-13217.b2" size="262144" crc="7d1ac3ec" sha1="8495357304f1df135bba77ef3b96e79a883b8ff0" region="gfx1" dispose="yes" offset="40000"/>
+		<rom name="mpr13218.b3" merge="mpr-13218.b3" size="262144" crc="56d3393c" sha1="50a2d065060692c9ecaa56046a781cb21d93e554" region="gfx1" dispose="yes" offset="80000"/>
+		<rom name="mpr13224.b11" merge="mpr-13224.b11" size="262144" crc="c59f107b" sha1="10fa60fca6e34eda277c483bb1c0e81bb88c8a47" region="gfx2" offset="1"/>
+		<rom name="mpr13231.a11" merge="mpr-13231.a11" size="262144" crc="a5e96346" sha1="a854f4dd5dc16975373255110fdb8ab3d121b1af" region="gfx2" offset="0"/>
+		<rom name="mpr13223.b10" merge="mpr-13223.b10" size="262144" crc="364f60ff" sha1="9ac887ec0b2e32b504b7c6a5f3bb1ce3fe41a15a" region="gfx2" offset="80001"/>
+		<rom name="mpr13230.a10" merge="mpr-13230.a10" size="262144" crc="9550091f" sha1="bb6e898f7b540e130fd338c10f74609a7604cef4" region="gfx2" offset="80000"/>
+		<rom name="mpr13222.b9" merge="mpr-13222.b9" size="262144" crc="523df3ed" sha1="2e496125e75decd674c3a08404fbdb53791a965d" region="gfx2" offset="100001"/>
+		<rom name="mpr13229.a9" merge="mpr-13229.a9" size="262144" crc="f40dc45d" sha1="e9468cef428f52ecdf6837c6d9a9fea934e7676c" region="gfx2" offset="100000"/>
+		<rom name="epr13221.b8" merge="epr-13221.b8" size="262144" crc="9ae7546a" sha1="5413b0131881b0b32bac8de51da9a299835014bb" region="gfx2" offset="180001"/>
+		<rom name="epr13228.a8" merge="epr-13228.a8" size="262144" crc="de3786be" sha1="2279bb390aa3efab9aeee0a643e5cb6a4f5933b6" region="gfx2" offset="180000"/>
+		<rom name="epr13225.a4" merge="epr-13225.a4" size="131072" crc="56c2e82b" sha1="d5755a1bb6e889d274dc60e883d4d65f12fdc877" region="cpu2" offset="0"/>
+		<rom name="mpr13219.b4" merge="mpr-13219.b4" size="262144" crc="19e2061f" sha1="2dcf1718a43dab4da53b4f67722664e70ddd2169" region="cpu2" offset="80000"/>
+		<rom name="mpr13220.b5" merge="mpr-13220.b5" size="262144" crc="58d4d9ce" sha1="725e73a656845b02702ef131b4c0aa2a73cdd02e" region="cpu2" offset="100000"/>
+		<rom name="mpr13249.b6" merge="mpr-13249.b6" size="262144" crc="623edc5d" sha1="c32d9f818d40f311877fbe6532d9e95b6045c3c4" region="cpu2" offset="180000"/>
 		<sample name="bad-01"/>
 		<sample name="bad-02"/>
 		<sample name="smoothcriminal-01"/>

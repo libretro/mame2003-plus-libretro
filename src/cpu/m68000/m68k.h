@@ -260,6 +260,14 @@ void m68k_set_fc_callback(void  (*callback)(unsigned int new_fc));
  */
 void m68k_set_instr_hook_callback(void  (*callback)(void));
 
+/* Called after CMPI.L #imm,Dn with the immediate value and the register
+ * number, and when an RTE is executed in supervisor mode. The FD1094 changes
+ * its decryption state on these. Shared by all the 68000 CPUs; m68k_init()
+ * clears them.
+ */
+extern void (*m68k_cmpild_callback)(unsigned int val, int reg);
+extern void (*m68k_rte_callback)(void);
+
 
 
 /* ======================================================================== */
