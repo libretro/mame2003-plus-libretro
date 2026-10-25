@@ -786,6 +786,21 @@ static struct retro_core_option_v2_definition option_def_adsp_dynarec = {
    "enabled"
 };
 
+static struct retro_core_option_v2_definition option_def_sh3_dynarec = {
+   APPNAME"_sh3_dynarec",
+   "SH-3 Dynarec",
+   NULL,
+   "Restart core required. Recompile the SH-3 code of the Cave CV1000 games (on x86 and ARM hosts, 32 and 64-bit, that allow it), with the same results as the interpreter; turn it off to use the interpreter.",
+   NULL,
+   NULL,
+   {
+      { "enabled",  NULL },
+      { "disabled", NULL },
+      { NULL, NULL },
+   },
+   "enabled"
+};
+
 static struct retro_core_option_v2_definition option_def_cyclone_mode = {
    APPNAME"_cyclone_mode",
    "Cyclone Mode",
@@ -922,6 +937,7 @@ void init_core_options(void)
   default_options[OPT_CPU_CLOCK_SCALE]           = option_def_cpu_clock_scale;
   default_options[OPT_MIPS_DYNAREC]              = option_def_mips_dynarec;
   default_options[OPT_ADSP_DYNAREC]              = option_def_adsp_dynarec;
+  default_options[OPT_SH3_DYNAREC]               = option_def_sh3_dynarec;
   default_options[OPT_OVERRIDE_AD_STICK]         = option_def_override_ad_stick;
   default_options[OPT_INPUT_TOGGLE]              = option_def_input_toggle;
 #if (HAS_CYCLONE || HAS_DRZ80)
@@ -960,6 +976,10 @@ static void set_variables(void)
          break;
       case OPT_ADSP_DYNAREC:
          if(!options.content_flags[CONTENT_ADSP_DYNAREC])
+           continue; /* only offered for the games that use the recompiler */
+         break;
+      case OPT_SH3_DYNAREC:
+         if(!options.content_flags[CONTENT_SH3_DYNAREC])
            continue; /* only offered for the games that use the recompiler */
          break;
       case OPT_NEOGEO_BIOS:
@@ -1284,6 +1304,13 @@ void update_variables(bool first_time)
             options.adsp_dynarec = false;
           break;
 
+        case OPT_SH3_DYNAREC:
+          if(strcmp(var.value, "enabled") == 0)
+            options.sh3_dynarec = true;
+          else
+            options.sh3_dynarec = false;
+          break;
+
         case OPT_CPU_CLOCK_SCALE:
           if(strcmp(var.value, "default") == 0)
             options.cpu_clock_scale = 1;
@@ -1408,6 +1435,16 @@ void set_content_flags(void)
     extern int adsp2100_jit_available(void);
     if (game_driver->source_file && strstr(game_driver->source_file, "kinst.c") && adsp2100_jit_available())
       options.content_flags[CONTENT_ADSP_DYNAREC] = true;
+  }
+#endif
+
+  /************ CAVE CV1000: SH-3 RECOMPILER ************/
+  /* the option means nothing where it is compiled out */
+#if (HAS_SH3)
+  {
+    extern int sh3_jit_available(void);
+    if (game_driver->source_file && strstr(game_driver->source_file, "cv1k.c") && sh3_jit_available())
+      options.content_flags[CONTENT_SH3_DYNAREC] = true;
   }
 #endif
 

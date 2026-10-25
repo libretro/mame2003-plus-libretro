@@ -305,6 +305,9 @@ enum
 #if (HAS_SH2)
 	CPU_SH2,
 #endif
+#if (HAS_SH3)
+	CPU_SH3,
+#endif
 #if (HAS_DSP32C)
 	CPU_DSP32C,
 #endif

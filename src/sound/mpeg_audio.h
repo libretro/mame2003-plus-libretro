@@ -2,7 +2,8 @@
 
     MPEG audio layer I and II decoder, from current MAME
     (src/devices/sound/mpeg_audio.cpp; copyright Olivier Galibert,
-    BSD-3-Clause), in C89. Used by the Sega Digital Sound Boards.
+    BSD-3-Clause), in C89. Used by the Sega Digital Sound Boards, and with
+    the AMM variant by the Yamaha YMZ770 (Cave CV1000).
 
 ***************************************************************************/
 
@@ -13,13 +14,14 @@
 
 #define MPEG_AUDIO_L1	1
 #define MPEG_AUDIO_L2	2
+#define MPEG_AUDIO_AMM	16	/* Yamaha AMM: incompatible with L2 and L2.5 */
 
 struct mpeg_audio
 {
 	const unsigned char *base;
 	int accepted;
 	int sampling_rate, last_frame_number;
-	int param_index;
+	int param_index, cbr_param_index;
 	int channel_count, total_bands, joint_bands;
 	int band_param[2][32];
 	int scfsi[2][32];
@@ -41,5 +43,10 @@ void mpeg_audio_clear( struct mpeg_audio *m );
    up to limit (in bits); returns 1 and moves *pos on success, 0 otherwise */
 int mpeg_audio_decode_buffer( struct mpeg_audio *m, int *pos, int limit, short *output,
 		int *output_samples, int *sample_rate, int *channels );
+
+/* the same, with atbl: the parameter index of the older AMMSL constant
+   bitrate samples (in the top bits of the sample pointer) */
+int mpeg_audio_decode_buffer_atbl( struct mpeg_audio *m, int *pos, int limit, short *output,
+		int *output_samples, int *sample_rate, int *channels, int atbl );
 
 #endif

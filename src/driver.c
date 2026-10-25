@@ -1973,6 +1973,36 @@ V-V                           TP-027
 	DRIVER( gaia )		/* (c) 1999 Noise Factory */
 	DRIVER( theroes )	/* (c) 2001 Primetek Investmants */
 
+	/* Cave CV1000 games */
+	DRIVER( mushisam )	/* Mushihime-Sama (Japan, 2004/10/12.MASTER VER.) */
+	DRIVER( mushisama )	/* Mushihime-Sama (Japan, 2004/10/12 MASTER VER.) */
+	DRIVER( mushisamb )	/* Mushihime-Sama (Japan, 2004/10/12 MASTER VER) */
+	DRIVER( ibara )	/* Ibara (Japan, 2005/03/22 MASTER VER.., '06. 3. 7 ver.) */
+	DRIVER( ibarao )	/* Ibara (Japan, 2005/03/22 MASTER VER..) */
+	DRIVER( ibarablk )	/* Ibara Kuro Black Label (Japan, 2006/02/06. MASTER VER.) */
+	DRIVER( ibarablka )	/* Ibara Kuro Black Label (Japan, 2006/02/06 MASTER VER.) */
+	DRIVER( espgal2 )	/* Espgaluda II (Japan, 2005/11/14.MASTER VER.) */
+	DRIVER( espgal2a )	/* Espgaluda II (Japan, 2005/11/14 MASTER VER, newer CV1000-B PCB) */
+	DRIVER( espgal2b )	/* Espgaluda II (Japan, 2005/11/14 MASTER VER, original CV1000-B PCB) */
+	DRIVER( mushitam )	/* Puzzle! Mushihime-Tama (Japan, 2005/09/09.MASTER VER) */
+	DRIVER( mushitama )	/* Puzzle! Mushihime-Tama (Japan, 2005/09/09 MASTER VER) */
+	DRIVER( pinkswts )	/* Pink Sweets: Ibara Sorekara (Japan, 2006/04/06 MASTER VER....) */
+	DRIVER( pinkswtsa )	/* Pink Sweets: Ibara Sorekara (Japan, 2006/04/06 MASTER VER...) */
+	DRIVER( pinkswtsb )	/* Pink Sweets: Ibara Sorekara (Japan, 2006/04/06 MASTER VER.) */
+	DRIVER( pinkswtsx )	/* Pink Sweets: Ibara Sorekara (Japan, 2006/xx/xx MASTER VER.) */
+	DRIVER( pinkswtssc )	/* Pink Sweets: Suicide Club (2017/10/31 SUICIDECLUB VER., bootleg) */
+	DRIVER( futari15 )	/* Mushihime-Sama Futari Ver 1.5 (Japan, 2006/12/8.MASTER VER. 1.54.) */
+	DRIVER( futari15a )	/* Mushihime-Sama Futari Ver 1.5 (Japan, 2006/12/8 MASTER VER 1.54) */
+	DRIVER( futari10 )	/* Mushihime-Sama Futari Ver 1.0 (Japan, 2006/10/23 MASTER VER.) */
+	DRIVER( futaribl )	/* Mushihime-Sama Futari Black Label - Another Ver (World, 2009/11/27 INTERNATIONAL BL) */
+	DRIVER( futariblj )	/* Mushihime-Sama Futari Black Label (Japan, 2007/12/11 BLACK LABEL VER) */
+	DRIVER( mmpork )	/* Muchi Muchi Pork! (Japan, 2007/ 4/17 MASTER VER.) */
+	DRIVER( deathsml )	/* Deathsmiles (Japan, 2007/10/09 MASTER VER) */
+	DRIVER( dsmbl )	/* Deathsmiles MegaBlack Label (Japan, 2008/10/06 MEGABLACK LABEL VER) */
+	DRIVER( ddpdfk )	/* DoDonPachi Dai-Fukkatsu Ver 1.5 (Japan, 2008/06/23 MASTER VER 1.5) */
+	DRIVER( ddpdfk10 )	/* DoDonPachi Dai-Fukkatsu Ver 1.0 (Japan, 2008/05/16 MASTER VER) */
+	DRIVER( dfkbl )	/* DoDonPachi Dai-Fukkatsu Black Label (Japan, 2010/1/18 BLACK LABEL) */
+
 	/* Kyugo games */
 	/* Kyugo only made four games: Repulse, Flash Gal, SRD Mission and Air Wolf. */
 	/* Gyrodine was made by Crux. Crux was antecedent of Toa Plan, and spin-off from Orca. */
