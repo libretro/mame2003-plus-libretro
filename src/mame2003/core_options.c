@@ -22,6 +22,15 @@ static struct retro_core_option_v2_definition  effective_defaults[OPT_end + 1];
 /* prevent saving corrupt cfgs when the save type does not match the type initialized */
 bool save_protection;
 
+/* one core option per discrete sound adjuster. The labels, sublabels and defaults come */
+/* from the loaded game's PORT_ADJUSTER ports (set_content_flags).                       */
+static const char *discrete_adjuster_keys[DISCRETE_ADJUSTER_SLOTS] = {
+   APPNAME"_discrete_adjuster", APPNAME"_discrete_adjuster_2", APPNAME"_discrete_adjuster_3", APPNAME"_discrete_adjuster_4"
+};
+static char discrete_adjuster_labels[DISCRETE_ADJUSTER_SLOTS][64];
+static char discrete_adjuster_info[DISCRETE_ADJUSTER_SLOTS][64];
+static char discrete_adjuster_defaults[DISCRETE_ADJUSTER_SLOTS][4];
+
 /******************************************************************************
 
   private function prototypes
@@ -584,6 +593,40 @@ static struct retro_core_option_v2_definition option_def_sample_rate = {
    "48000"
 };
 
+static struct retro_core_option_v2_definition option_def_discrete_adjuster = {
+   NULL,   /* key, label, sublabel and default are set for each adjuster of the loaded game */
+   NULL,
+   NULL,
+   NULL,
+   NULL,
+   "cat_key_audio",
+   {
+      { "0", "0%" }, { "1", "1%" }, { "2", "2%" }, { "3", "3%" }, { "4", "4%" },
+      { "5", "5%" }, { "6", "6%" }, { "7", "7%" }, { "8", "8%" }, { "9", "9%" },
+      { "10", "10%" }, { "11", "11%" }, { "12", "12%" }, { "13", "13%" }, { "14", "14%" },
+      { "15", "15%" }, { "16", "16%" }, { "17", "17%" }, { "18", "18%" }, { "19", "19%" },
+      { "20", "20%" }, { "21", "21%" }, { "22", "22%" }, { "23", "23%" }, { "24", "24%" },
+      { "25", "25%" }, { "26", "26%" }, { "27", "27%" }, { "28", "28%" }, { "29", "29%" },
+      { "30", "30%" }, { "31", "31%" }, { "32", "32%" }, { "33", "33%" }, { "34", "34%" },
+      { "35", "35%" }, { "36", "36%" }, { "37", "37%" }, { "38", "38%" }, { "39", "39%" },
+      { "40", "40%" }, { "41", "41%" }, { "42", "42%" }, { "43", "43%" }, { "44", "44%" },
+      { "45", "45%" }, { "46", "46%" }, { "47", "47%" }, { "48", "48%" }, { "49", "49%" },
+      { "50", "50%" }, { "51", "51%" }, { "52", "52%" }, { "53", "53%" }, { "54", "54%" },
+      { "55", "55%" }, { "56", "56%" }, { "57", "57%" }, { "58", "58%" }, { "59", "59%" },
+      { "60", "60%" }, { "61", "61%" }, { "62", "62%" }, { "63", "63%" }, { "64", "64%" },
+      { "65", "65%" }, { "66", "66%" }, { "67", "67%" }, { "68", "68%" }, { "69", "69%" },
+      { "70", "70%" }, { "71", "71%" }, { "72", "72%" }, { "73", "73%" }, { "74", "74%" },
+      { "75", "75%" }, { "76", "76%" }, { "77", "77%" }, { "78", "78%" }, { "79", "79%" },
+      { "80", "80%" }, { "81", "81%" }, { "82", "82%" }, { "83", "83%" }, { "84", "84%" },
+      { "85", "85%" }, { "86", "86%" }, { "87", "87%" }, { "88", "88%" }, { "89", "89%" },
+      { "90", "90%" }, { "91", "91%" }, { "92", "92%" }, { "93", "93%" }, { "94", "94%" },
+      { "95", "95%" }, { "96", "96%" }, { "97", "97%" }, { "98", "98%" }, { "99", "99%" },
+      { "100", "100%" },
+      { NULL, NULL },
+   },
+   NULL
+};
+
 static struct retro_core_option_v2_definition option_def_input_interface = {
    APPNAME"_input_interface",
    "Input Interface",
@@ -914,7 +957,9 @@ struct retro_core_options_v2 options_us = {
 
 void init_core_options(void)
 {
-  default_options[OPT_4WAY]                      = option_def_four_way_emulation;
+  int adjuster;
+
+  default_options[OPT_4WAY]                     = option_def_four_way_emulation;
   default_options[OPT_XY_DEVICE]                 = option_def_xy_device;
   default_options[OPT_CROSSHAIR_ENABLED]         = option_def_crosshair_enabled;
   default_options[OPT_CROSSHAIR_APPEARANCE]      = option_def_crosshair_appearance;
@@ -941,7 +986,15 @@ void init_core_options(void)
   default_options[OPT_VECTOR_INTENSITY]          = option_def_vector_intensity;
   default_options[OPT_NVRAM_BOOTSTRAP]           = option_def_nvram_bootstraps;
   default_options[OPT_SAMPLE_RATE]               = option_def_sample_rate;
-  default_options[OPT_INPUT_INTERFACE]           = option_def_input_interface;
+  for(adjuster = 0; adjuster < DISCRETE_ADJUSTER_SLOTS; adjuster++)
+  {
+    default_options[OPT_DISCRETE_ADJUSTER + adjuster]               = option_def_discrete_adjuster;
+    default_options[OPT_DISCRETE_ADJUSTER + adjuster].key           = discrete_adjuster_keys[adjuster];
+    default_options[OPT_DISCRETE_ADJUSTER + adjuster].desc          = discrete_adjuster_labels[adjuster];
+    default_options[OPT_DISCRETE_ADJUSTER + adjuster].info          = discrete_adjuster_info[adjuster];
+    default_options[OPT_DISCRETE_ADJUSTER + adjuster].default_value = discrete_adjuster_defaults[adjuster];
+  }
+  default_options[OPT_INPUT_INTERFACE]          = option_def_input_interface;
   default_options[OPT_MAME_REMAPPING]            = option_def_mame_remapping;
   default_options[OPT_FRAMESKIP]                 = option_def_frameskip;
   default_options[OPT_CORE_SYS_SUBFOLDER]        = option_def_core_sys_subfolder;
@@ -1009,6 +1062,13 @@ static void set_variables(void)
       case OPT_USE_ALT_SOUND:
          if(!options.content_flags[CONTENT_ALT_SOUND])
            continue;
+         break;
+      case OPT_DISCRETE_ADJUSTER:
+      case OPT_DISCRETE_ADJUSTER_2:
+      case OPT_DISCRETE_ADJUSTER_3:
+      case OPT_DISCRETE_ADJUSTER_4:
+         if(option_index - OPT_DISCRETE_ADJUSTER >= options.content_flags[CONTENT_ADJUSTER_COUNT])
+           continue; /* one option for each adjuster the game has */
          break;
       case OPT_SHARE_DIAL:
       case OPT_DIAL_SWAP_XY:
@@ -1285,6 +1345,13 @@ void update_variables(bool first_time)
 
         case OPT_SAMPLE_RATE:
           options.samplerate = atoi(var.value);
+          break;
+
+        case OPT_DISCRETE_ADJUSTER:
+        case OPT_DISCRETE_ADJUSTER_2:
+        case OPT_DISCRETE_ADJUSTER_3:
+        case OPT_DISCRETE_ADJUSTER_4:
+          options.discrete_adjuster[index - OPT_DISCRETE_ADJUSTER] = atoi(var.value);
           break;
 
         case OPT_MAME_REMAPPING:
@@ -1667,6 +1734,21 @@ void set_content_flags(void)
   if(game_driver->bootstrap != NULL)
     options.content_flags[CONTENT_NVRAM_BOOTSTRAP] = true;
 
+  /************ DISCRETE SOUND ADJUSTERS, EACH WITH ITS OWN CORE OPTION ************/
+  i = 0;
+  for( input = game_driver->input_ports; (input->type & ~IPF_MASK) != IPT_END; input++ )
+  {
+    if( (input->type & ~IPF_MASK) == IPT_ADJUSTER && i < DISCRETE_ADJUSTER_SLOTS )
+    {
+      sprintf(discrete_adjuster_labels[i], "Discrete: %.50s", input->name);
+      sprintf(discrete_adjuster_info[i], "Sound circuit adjustment. The driver default is %d%%.", input->default_value);
+      sprintf(discrete_adjuster_defaults[i], "%d", input->default_value);
+      options.discrete_adjuster[i] = -1; /* the frontend sets it in update_variables() */
+      i++;
+    }
+  }
+  options.content_flags[CONTENT_ADJUSTER_COUNT] = i;
+
 
   /************ LOG THE STATE OF THE CONTENT FLAGS ************/
 
@@ -1677,6 +1759,14 @@ void set_content_flags(void)
   if(options.content_flags[CONTENT_DIEHARD])    log_cb(RETRO_LOG_INFO, LOGPRE "* Die Hard: Arcade BIOS required.\n");
   if(options.content_flags[CONTENT_ALT_SOUND])  log_cb(RETRO_LOG_INFO, LOGPRE "* Alternative soundtrack available.\n");
   if(options.content_flags[CONTENT_VECTOR])     log_cb(RETRO_LOG_INFO, LOGPRE "* Vector display.\n");
+
+  /* the same text as the discrete adjuster core option labels, to match them up in the frontend */
+  if(options.content_flags[CONTENT_ADJUSTER_COUNT])
+  {
+    log_cb(RETRO_LOG_INFO, LOGPRE "* Discrete sound adjusters: %i\n", options.content_flags[CONTENT_ADJUSTER_COUNT]);
+    for(i = 0; i < options.content_flags[CONTENT_ADJUSTER_COUNT]; i++)
+      log_cb(RETRO_LOG_INFO, LOGPRE "*   %s (default %s%%)\n", discrete_adjuster_labels[i], discrete_adjuster_defaults[i]);
+  }
 
   log_cb(RETRO_LOG_INFO, LOGPRE "* Supports %i players with %i distinct controls.\n", options.content_flags[CONTENT_PLAYER_COUNT], options.content_flags[CONTENT_CTRL_COUNT]);
   log_cb(RETRO_LOG_INFO, LOGPRE "* Supports %i distinct button controls.\n", options.content_flags[CONTENT_BUTTON_COUNT]);

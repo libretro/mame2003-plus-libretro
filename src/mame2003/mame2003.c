@@ -41,6 +41,7 @@ int            orig_samples_per_frame = 0;
 short*         samples_buffer;
 short*         conversion_buffer;
 int            usestereo = 1;
+static int     applied_discrete_adjuster[DISCRETE_ADJUSTER_SLOTS]; /* last discrete adjuster core option values applied, -1 for none */
 
 
 /* MAME data structures to store and translate keyboard state */
@@ -243,9 +244,12 @@ bool retro_load_game(const struct retro_game_info *game)
 
   int   driverIndex    = 0;
   int   port_index;
+  int   adjuster;
   char  *driver_lookup = NULL;
 
   frame_run_since_load = 0;
+  for(adjuster = 0; adjuster < DISCRETE_ADJUSTER_SLOTS; adjuster++)
+    applied_discrete_adjuster[adjuster] = -1;
 
   if(string_is_empty(game->path))
   {
@@ -388,6 +392,28 @@ void mame_pause(bool pause)
 
 extern UINT8 frameskip_counter;
 
+/* each discrete adjuster core option sets the 0-100 value of the game's matching */
+/* PORT_ADJUSTER port, read by its DISCRETE_ADJUSTMENT node                       */
+static void apply_discrete_adjusters(void)
+{
+  struct InputPort *in;
+  int adjuster = 0;
+
+  for (in = Machine->input_ports; in->type != IPT_END && adjuster < DISCRETE_ADJUSTER_SLOTS; in++)
+  {
+    if ((in->type & ~IPF_MASK) != IPT_ADJUSTER)
+      continue;
+
+    if (options.discrete_adjuster[adjuster] >= 0 && options.discrete_adjuster[adjuster] != applied_discrete_adjuster[adjuster])
+    {
+      log_cb(RETRO_LOG_DEBUG, LOGPRE "changing %s from %d to %d\n", input_port_name(in), in->default_value, options.discrete_adjuster[adjuster]);
+      in->default_value = options.discrete_adjuster[adjuster];
+      applied_discrete_adjuster[adjuster] = options.discrete_adjuster[adjuster];
+    }
+    adjuster++;
+  }
+}
+
 void retro_run (void)
 {
   bool updated = false;
@@ -416,6 +442,9 @@ void retro_run (void)
       environ_cb(RETRO_ENVIRONMENT_SET_SYSTEM_AV_INFO, &av_info);
     }
   }
+
+  if (options.content_flags[CONTENT_ADJUSTER_COUNT])
+    apply_discrete_adjusters();
 
   if (options.cpu_clock_scale)
   {
