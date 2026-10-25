@@ -298,6 +298,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 
 ## New Clones
 
+* 800 Fathoms (older), Knock Out!! (bootleg, set 2 and set 3), Triple Punch (set 2) - Romsets `800fatha`, `knockoutb`, `knockoutc`, `triplepa`
 * Asura Buster - Eternal Warriors (USA), (Japan, set 2) and (Japan) (ARCADIA review build) - Romsets `asurabus`, `asurabusja`, `asurabusjr`; the Japan set 1 is now `asurabusj`, as in current MAME
 * Battle Shark (Japan, Joystick)
 * Botanic (French version)
@@ -601,6 +602,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 
 ## Games now with improved sound
 
+* 800 Fathoms, Knock Out!!, Mariner, Triple Punch: AY-8910 clock of current MAME (1.536 MHz, verified on hardware), the sound was 16% too high and too fast
 * 1945kIII
 * Air Buster
 * Ashita no Joe
@@ -798,6 +800,7 @@ Notes on this option:
 
 
 ## Misc Changes
+* Save states (RunAhead, netplay) of the Galaxian/Scramble/Frogger hardware: Galaxian video (stars, flip, banks, background), the 7474 flip-flops, the Scramble sound RAM and timer, the RC filters of the sound streams, the global sound enable
 * Added HD647180 MCU sound support for Fire Shark and Vimana [arcadez]
 * Added sound sample support for Cosmic Alien [BritneysPAIRS, arcadez]
 * Updated sample support for Donkey Kong and Donkey kong JR to MAME87 [BritneysPAIRS, arcadez]

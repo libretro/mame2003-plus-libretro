@@ -1,4 +1,5 @@
 #include "driver.h"
+#include "state.h"
 #include <math.h>
 
 #define NEW_LFO 0
@@ -53,6 +54,8 @@ static int last_port2=0;
 
 static INT8 tonewave[4][TOOTHSAW_LENGTH];
 static int pitch,vol;
+static int tone_counter, tone_countdown;	/* the tone generator */
+static int lfobit[4];					/* the LFO frequency bits */
 
 static INT16 backgroundwave[32] =
 {
@@ -71,7 +74,6 @@ static void tone_update(int ch, INT16 *buffer, int length)
 {
 	int i,j;
 	INT8 *w = tonewave[vol];
-	static int counter, countdown;
 
 	/* only update if we have non-zero volume and frequency */
 	if( pitch != 0xff )
@@ -82,14 +84,14 @@ static void tone_update(int ch, INT16 *buffer, int length)
 
 			for (j = 0;j < STEPS;j++)
 			{
-				if (countdown >= 256)
+				if (tone_countdown >= 256)
 				{
-					counter = (counter + 1) % TOOTHSAW_LENGTH;
-					countdown = pitch;
+					tone_counter = (tone_counter + 1) % TOOTHSAW_LENGTH;
+					tone_countdown = pitch;
 				}
-				countdown++;
+				tone_countdown++;
 
-				mix += w[counter];
+				mix += w[tone_counter];
 			}
 			*buffer++ = (mix << 8) / STEPS;
 		}
@@ -485,6 +487,17 @@ static int galaxian_sh_start(const struct MachineSound *msound)
 	noisetimer = timer_alloc(noise_timer_cb);
 	lfotimer = timer_alloc(lfo_timer_cb);
 
+	/* save states (the timers and the mixer channels are saved by the core) */
+	state_save_register_INT32("galaxian_sound", 0, "freq",          (INT32 *)&freq, 1);
+	state_save_register_INT32("galaxian_sound", 0, "noisevolume",   (INT32 *)&noisevolume, 1);
+	state_save_register_INT32("galaxian_sound", 0, "last_port1",    (INT32 *)&last_port1, 1);
+	state_save_register_INT32("galaxian_sound", 0, "last_port2",    (INT32 *)&last_port2, 1);
+	state_save_register_INT32("galaxian_sound", 0, "pitch",         (INT32 *)&pitch, 1);
+	state_save_register_INT32("galaxian_sound", 0, "vol",           (INT32 *)&vol, 1);
+	state_save_register_INT32("galaxian_sound", 0, "tone_counter",  (INT32 *)&tone_counter, 1);
+	state_save_register_INT32("galaxian_sound", 0, "tone_countdown",(INT32 *)&tone_countdown, 1);
+	state_save_register_INT32("galaxian_sound", 0, "lfobit",        (INT32 *)lfobit, 4);
+
 	return 0;
 }
 
@@ -515,7 +528,6 @@ static void lfo_timer_cb(int param)
 WRITE_HANDLER( galaxian_lfo_freq_w )
 {
 #if NEW_LFO
-	static int lfobit[4];
 
 	/* R18 1M,R17 470K,R16 220K,R15 100K */
 	const int rv[4] = { 1000000,470000,220000,100000};
@@ -566,7 +578,6 @@ WRITE_HANDLER( galaxian_lfo_freq_w )
 	log_cb(RETRO_LOG_DEBUG, LOGPRE "lfo timer bits:%d%d%d%d r1:%d, r2:%d, re: %d, td: %9.2fsec\n", lfobit[0], lfobit[1], lfobit[2], lfobit[3], (int)r1, (int)r2, (int)Re, td);
 	timer_adjust(lfotimer, TIME_IN_SEC(td / (MAXFREQ-MINFREQ)), 0, TIME_IN_SEC(td / (MAXFREQ-MINFREQ)));
 #else
-	static int lfobit[4];
 	double r0, r1, rx = 100000.0;
 
 	if( (data & 1) == lfobit[offset] )

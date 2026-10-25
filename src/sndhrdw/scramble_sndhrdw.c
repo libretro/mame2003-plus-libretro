@@ -42,20 +42,9 @@ static int scramble_timer[10] =
 
 READ_HANDLER( scramble_portB_r )
 {
-	/* need to protect from totalcycles overflow */
-	static int last_totalcycles = 0;
-
-	/* number of Z80 clock cycles to count */
-	static int clock;
-
-	int current_totalcycles;
-
-	current_totalcycles = activecpu_gettotalcycles();
-	clock = (clock + (current_totalcycles-last_totalcycles)) % 5120;
-
-	last_totalcycles = current_totalcycles;
-
-	return scramble_timer[clock/512];
+	/* the count of the sound CPU clock, as current MAME: no state of its own
+	   (save states), and no 32-bit overflow */
+	return scramble_timer[(activecpu_gettotalcycles64() / 512) % 10];
 }
 
 
@@ -84,20 +73,9 @@ static int frogger_timer[10] =
 
 READ_HANDLER( frogger_portB_r )
 {
-	/* need to protect from totalcycles overflow */
-	static int last_totalcycles = 0;
-
-	/* number of Z80 clock cycles to count */
-	static int clock;
-
-	int current_totalcycles;
-
-	current_totalcycles = activecpu_gettotalcycles();
-	clock = (clock + (current_totalcycles-last_totalcycles)) % 5120;
-
-	last_totalcycles = current_totalcycles;
-
-	return frogger_timer[clock/512];
+	/* the count of the sound CPU clock, as current MAME: no state of its own
+	   (save states), and no 32-bit overflow */
+	return frogger_timer[(activecpu_gettotalcycles64() / 512) % 10];
 }
 
 

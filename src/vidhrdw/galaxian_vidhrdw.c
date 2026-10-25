@@ -5,6 +5,7 @@
 ***************************************************************************/
 
 #include "driver.h"
+#include "state.h"
 
 static struct rectangle _spritevisiblearea =
 {
@@ -118,6 +119,10 @@ static void gteikob2_draw_bullets(struct mame_bitmap *bitmap, int offs, int x, i
 static void scramble_draw_bullets(struct mame_bitmap *bitmap, int offs, int x, int y);
 static void   theend_draw_bullets(struct mame_bitmap *bitmap, int offs, int x, int y);
 static void darkplnt_draw_bullets(struct mame_bitmap *bitmap, int offs, int x, int y);
+
+/* rockclim scroll */
+static int rockclim_v=0;
+static int rockclim_h=0;
 
 /* background circuit */
 static int background_enable;
@@ -449,6 +454,45 @@ PALETTE_INIT( mariner )
 
 ***************************************************************************/
 
+/* after a state load: what the hardware writes set beside the RAM (the
+   attributes RAM holds the scroll values as written to the tilemap) */
+static void galaxian_postload(void)
+{
+	int i;
+
+	tilemap_set_flip(tilemap, (flip_screen_x ? TILEMAP_FLIPX : 0) | (flip_screen_y ? TILEMAP_FLIPY : 0));
+	if (tilemap_set_scroll)
+		for (i = 0; i < 32; i++)
+			tilemap_set_scroll(tilemap, i, galaxian_attributesram[i << 1]);
+	tilemap_mark_all_tiles_dirty(tilemap);
+
+	if (rockclim_tilemap)
+	{
+		tilemap_set_scrollx(rockclim_tilemap, 0, rockclim_h);
+		tilemap_set_scrolly(rockclim_tilemap, 0, rockclim_v);
+		tilemap_mark_all_tiles_dirty(rockclim_tilemap);
+	}
+}
+
+static void galaxian_state_register(void)
+{
+	state_save_register_INT32("galaxian_video", 0, "gfxbank",          (INT32 *)gfxbank, 5);
+	state_save_register_INT32("galaxian_video", 0, "flip_screen_x",    (INT32 *)&flip_screen_x, 1);
+	state_save_register_INT32("galaxian_video", 0, "flip_screen_y",    (INT32 *)&flip_screen_y, 1);
+	state_save_register_INT32("galaxian_video", 0, "stars_on",         (INT32 *)&galaxian_stars_on, 1);
+	state_save_register_INT32("galaxian_video", 0, "stars_scrollpos",  (INT32 *)&stars_scrollpos, 1);
+	state_save_register_INT32("galaxian_video", 0, "stars_blink_state",(INT32 *)&stars_blink_state, 1);
+	state_save_register_INT32("galaxian_video", 0, "timer_adjusted",   (INT32 *)&timer_adjusted, 1);
+	state_save_register_INT32("galaxian_video", 0, "darkplnt_bullet_color", (INT32 *)&darkplnt_bullet_color, 1);
+	state_save_register_INT32("galaxian_video", 0, "background_enable",(INT32 *)&background_enable, 1);
+	state_save_register_INT32("galaxian_video", 0, "background_red",   (INT32 *)&background_red, 1);
+	state_save_register_INT32("galaxian_video", 0, "background_green", (INT32 *)&background_green, 1);
+	state_save_register_INT32("galaxian_video", 0, "background_blue",  (INT32 *)&background_blue, 1);
+	state_save_register_INT32("galaxian_video", 0, "rockclim_h",       (INT32 *)&rockclim_h, 1);
+	state_save_register_INT32("galaxian_video", 0, "rockclim_v",       (INT32 *)&rockclim_v, 1);
+	state_save_register_func_postload(galaxian_postload);
+}
+
 static int video_start_common(UINT32 (*get_memory_offset)(UINT32,UINT32,UINT32,UINT32))
 {
 	tilemap = tilemap_create(get_tile_info,get_memory_offset,TILEMAP_TRANSPARENT,8,8,32,32);
@@ -486,6 +530,7 @@ static int video_start_common(UINT32 (*get_memory_offset)(UINT32,UINT32,UINT32,U
 
 	color_mask = (Machine->gfx[0]->color_granularity == 4) ? 7 : 3;
 
+	galaxian_state_register();
 	return 0;
 }
 
@@ -858,6 +903,7 @@ VIDEO_START( drivfrcg )
 
 	color_mask = 0xff;
 
+	galaxian_state_register();
 	return 0;
 }
 
@@ -1001,8 +1047,6 @@ WRITE_HANDLER( rockclim_videoram_w )
 	}
 }
 
-static int rockclim_v=0;
-static int rockclim_h=0;
 
 WRITE_HANDLER( rockclim_scroll_w )
 {

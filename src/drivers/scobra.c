@@ -212,7 +212,7 @@ MEMORY_END
 
 MEMORY_WRITE_START( scobra_sound_writemem )
 	{ 0x0000, 0x2fff, MWA_ROM },
-	{ 0x8000, 0x8fff, scobra_soundram_w },
+	{ 0x8000, 0x8fff, scobra_soundram_w, &scobra_soundram },	/* the base puts the RAM in the save states */
 	{ 0x8000, 0x83ff, MWA_NOP, &scobra_soundram },  /* only here to initialize pointer */
 	{ 0x9000, 0x9fff, scramble_filter_w },
 MEMORY_END
