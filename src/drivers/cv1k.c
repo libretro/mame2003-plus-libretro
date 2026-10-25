@@ -1390,7 +1390,6 @@ ROM_START( dfkbl )
 	ROM_LOAD16_WORD_SWAP( "u24", 0x400000, 0x400000, CRC(31f9eb0a) SHA1(322158779e969bb321241065dd49c1167b91ff6c) )
 ROM_END
 
-/*
 ROM_START( akatana )
 	ROM_REGION( 0x400000, REGION_CPU1, ROMREGION_ERASEFF)
 	ROM_LOAD16_WORD_SWAP( "u4", 0x000000, 0x400000, CRC(613fd380) SHA1(6e28480eef3b483d00b42d811a9d2c7fa1097924) ) // (2010/ 8/13 MASTER VER.)
@@ -1417,7 +1416,7 @@ ROM_START( ddpsdoj )
 	ROM_LOAD16_WORD_SWAP("u24", 0x400000, 0x400000, CRC(f593045b) SHA1(91b92870d0dd2a7817cb0059cc750e2393686f4c) )
 	ROM_IGNORE( 0x100 )
 ROM_END
-*/
+
 
 
 
@@ -1500,5 +1499,5 @@ GAME( 2008, dsmbl,     0,        cv1k_d, cv1k,  ddpdfk,   ROT0, "Cave (AMI licen
 GAME( 2008, ddpdfk,    0,        cv1k_d, cv1k,  ddpdfk,   ROT270, "Cave (AMI license)", "DoDonPachi Dai-Fukkatsu Ver 1.5 (Japan, 2008/06/23 MASTER VER 1.5)" )
 GAME( 2008, ddpdfk10,  ddpdfk,   cv1k_d, cv1k,  ddpdfk,   ROT270, "Cave (AMI license)", "DoDonPachi Dai-Fukkatsu Ver 1.0 (Japan, 2008/05/16 MASTER VER)" )
 GAME( 2010, dfkbl,     0,        cv1k_d, cv1k,  ddpdfk,   ROT270, "Cave", "DoDonPachi Dai-Fukkatsu Black Label (Japan, 2010/1/18 BLACK LABEL)" )
-//GAME( 2010, akatana,   0,        cv1k_d, cv1k,  ddpdfk,   ROT0,   "Cave", "Akai Katana (2010/ 8/13 MASTER VER.)" )
-//GAME( 2012, ddpsdoj,   0,        cv1k_d, cv1k,  ddpdfk,   ROT270, "Cave", "DoDonPachi SaiDaiOuJou (2012/ 4/20)" )
+GAME( 2010, akatana,   0,        cv1k_d, cv1k,  ddpdfk,   ROT0,   "Cave", "Akai Katana (2010/ 8/13 MASTER VER.)" )
+GAME( 2012, ddpsdoj,   0,        cv1k_d, cv1k,  ddpdfk,   ROT270, "Cave", "DoDonPachi SaiDaiOuJou (2012/ 4/20)" )
