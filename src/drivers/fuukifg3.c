@@ -86,6 +86,7 @@ FG-3J ROM-J 507KA0301P04       Rev:1.3
 ***************************************************************************/
 
 #include "driver.h"
+#include "state.h"
 #include "vidhrdw/generic.h"
 
 static int fuuki32_raster_enable = 1; /* Enabled by default */
@@ -814,8 +815,13 @@ ROM_END
 
 ***************************************************************************/
 
-GAMEX( 1998, asurabld,   0,        fuuki32, asurabld,  0, ROT0, "Fuuki", "Asura Blade - Sword of Dynasty (Japan)", GAME_IMPERFECT_GRAPHICS )
-GAMEX( 2001, asurabus,   0,        fuuki32, asurabus,  0, ROT0, "Fuuki", "Asura Buster - Eternal Warriors (USA)", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND )
-GAMEX( 2000, asurabusj,  asurabus, fuuki32, asurabus,  0, ROT0, "Fuuki", "Asura Buster - Eternal Warriors (Japan, set 1)", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND )
-GAMEX( 2000, asurabusja, asurabus, fuuki32, asurabus,  0, ROT0, "Fuuki", "Asura Buster - Eternal Warriors (Japan, set 2)", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND )
-GAMEX( 2000, asurabusjr, asurabus, fuuki32, asurabusa, 0, ROT0, "Fuuki", "Asura Buster - Eternal Warriors (Japan) (ARCADIA review build)", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND )
+static DRIVER_INIT( fuuki32 )
+{
+	state_save_register_UINT8("fuuki32", 0, "shared_ram", fuuki32_shared_ram, sizeof(fuuki32_shared_ram));
+}
+
+GAMEX( 1998, asurabld,   0,        fuuki32, asurabld,  fuuki32, ROT0, "Fuuki", "Asura Blade - Sword of Dynasty (Japan)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 2001, asurabus,   0,        fuuki32, asurabus,  fuuki32, ROT0, "Fuuki", "Asura Buster - Eternal Warriors (USA)", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND )
+GAMEX( 2000, asurabusj,  asurabus, fuuki32, asurabus,  fuuki32, ROT0, "Fuuki", "Asura Buster - Eternal Warriors (Japan, set 1)", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND )
+GAMEX( 2000, asurabusja, asurabus, fuuki32, asurabus,  fuuki32, ROT0, "Fuuki", "Asura Buster - Eternal Warriors (Japan, set 2)", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND )
+GAMEX( 2000, asurabusjr, asurabus, fuuki32, asurabusa, fuuki32, ROT0, "Fuuki", "Asura Buster - Eternal Warriors (Japan) (ARCADIA review build)", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND )
