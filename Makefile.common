@@ -1070,7 +1070,8 @@ SOURCES_C += \
     $(CORE_DIR)/drivers/hvyunit.c \
 	$(CORE_DIR)/machine/mc8123.c \
 	$(CORE_DIR)/machine/namcoio_machine.c \
-	$(CORE_DIR)/drivers/tatsumi.c $(CORE_DIR)/vidhrdw/tatsumi.c $(CORE_DIR)/machine/tatsumi.c
+	$(CORE_DIR)/drivers/tatsumi.c $(CORE_DIR)/vidhrdw/tatsumi.c $(CORE_DIR)/machine/tatsumi.c \
+	$(CORE_DIR)/drivers/tx1.c $(CORE_DIR)/vidhrdw/tx1_vidhrdw.c $(CORE_DIR)/machine/tx1_machine.c $(CORE_DIR)/sndhrdw/tx1_sndhrdw.c
 
 
 

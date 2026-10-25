@@ -39,6 +39,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Bubble Bobble 2 - The Return Of Super Drunk (prototype)
 * Bubble Buster
 * Buccaneers
+* Buggy Boy/Speed Buggy (cockpit, rev. D and B), Buggy Boy Junior/Speed Buggy (upright)
 * Bullet (unprotected of FD1094 317-0041 set)" )
 * Cabal (World, Joystick version)
 * Calorie Kun vs Moguranian
@@ -276,6 +277,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Twin Action
 * Twinkle
 * Twinkle Tale (Bootleg Of Megadrive Version)
+* TX-1 (World, Japan rev. B and C)
 * Tylz
 * Ufo Senshi Yohko Chan
 * Varia Metal

@@ -63,6 +63,7 @@ typedef struct
 	INT8 nmi_state;
 	INT8 irq_state;
 	int extra_cycles;       /* extra cycles for interrupts */
+	INT8 test_state;		/* the TEST input */
 }
 i86_Regs;
 
@@ -123,12 +124,53 @@ static void i86_state_register(void)
 	state_save_register_INT8(  type, cpu, "NMI_STATE",		&I.nmi_state, 1);
 	state_save_register_INT8(  type, cpu, "IRQ_STATE",		&I.irq_state, 1);
 	state_save_register_int(   type, cpu, "EXTRA_CYCLES",	&I.extra_cycles);
+	state_save_register_INT8(  type, cpu, "TEST_STATE",		&I.test_state, 1);
+}
+
+/* the 16-bit data bus, see i86intf.h */
+int i86_bus16;
+int i86_bus16_word;
+
+unsigned i86_read_word16(unsigned ea)
+{
+	unsigned lo, hi;
+
+	/* an odd address is two byte cycles on the 8086 too */
+	if (ea & 1)
+	{
+		lo = cpu_readmem20(ea);
+		hi = cpu_readmem20((ea + 1) & AMASK);
+		return lo | (hi << 8);
+	}
+	i86_bus16_word = 1;
+	lo = cpu_readmem20(ea);
+	hi = cpu_readmem20(ea + 1);
+	i86_bus16_word = 0;
+	return lo | (hi << 8);
+}
+
+void i86_write_word16(unsigned ea, unsigned val)
+{
+	if (ea & 1)
+	{
+		cpu_writemem20(ea, val & 0xff);
+		cpu_writemem20((ea + 1) & AMASK, (val >> 8) & 0xff);
+		return;
+	}
+	i86_bus16_word = 1;
+	cpu_writemem20(ea, val & 0xff);
+	cpu_writemem20(ea + 1, (val >> 8) & 0xff);
+	i86_bus16_word = 0;
 }
 
 void i86_init(void)
 {
 	unsigned int i, j, c;
 	BREGS reg_name[8] = {AL, CL, DL, BL, AH, CH, DH, BH};
+
+	/* the 16-bit data bus is off unless the driver turns it on */
+	i86_bus16 = 0;
+	i86_bus16_word = 0;
 	for (i = 0; i < 256; i++)
 	{
 		for (j = i, c = 0; j > 0; j >>= 1)
@@ -157,6 +199,7 @@ void i86_reset(void *param)
 {
 	memset(&I, 0, sizeof (I));
 
+	I.test_state = 1;
 	I.sregs[CS] = 0xf000;
 	I.base[CS] = SegBase(CS);
 	I.pc = 0xffff0 & AMASK;
@@ -287,6 +330,11 @@ void i86_set_reg(int regnum, unsigned val)
 
 void i86_set_irq_line(int irqline, int state)
 {
+	if (irqline == I86_TEST_LINE)
+	{
+		I.test_state = (state != CLEAR_LINE);
+		return;
+	}
 	if (irqline == IRQ_LINE_NMI)
 	{
 		if (I.nmi_state == state)

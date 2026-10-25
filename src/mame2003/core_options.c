@@ -801,6 +801,21 @@ static struct retro_core_option_v2_definition option_def_sh3_dynarec = {
    "enabled"
 };
 
+static struct retro_core_option_v2_definition option_def_tx1_screens = {
+   APPNAME"_tx1_screens",
+   "TX-1 / Buggy Boy Screens",
+   NULL,
+   "Restart core required. The cockpit cabinets of TX-1 and Buggy Boy have three screens: show them side by side, or only the middle one.",
+   NULL,
+   "cat_key_video",
+   {
+      { "3 screens",     NULL },
+      { "middle screen", NULL },
+      { NULL, NULL },
+   },
+   "3 screens"
+};
+
 static struct retro_core_option_v2_definition option_def_cyclone_mode = {
    APPNAME"_cyclone_mode",
    "Cyclone Mode",
@@ -938,6 +953,7 @@ void init_core_options(void)
   default_options[OPT_MIPS_DYNAREC]              = option_def_mips_dynarec;
   default_options[OPT_ADSP_DYNAREC]              = option_def_adsp_dynarec;
   default_options[OPT_SH3_DYNAREC]               = option_def_sh3_dynarec;
+  default_options[OPT_TX1_SCREENS]               = option_def_tx1_screens;
   default_options[OPT_OVERRIDE_AD_STICK]         = option_def_override_ad_stick;
   default_options[OPT_INPUT_TOGGLE]              = option_def_input_toggle;
 #if (HAS_CYCLONE || HAS_DRZ80)
@@ -977,6 +993,10 @@ static void set_variables(void)
       case OPT_ADSP_DYNAREC:
          if(!options.content_flags[CONTENT_ADSP_DYNAREC])
            continue; /* only offered for the games that use the recompiler */
+         break;
+      case OPT_TX1_SCREENS:
+         if(!options.content_flags[CONTENT_TX1_SCREENS])
+           continue;
          break;
       case OPT_SH3_DYNAREC:
          if(!options.content_flags[CONTENT_SH3_DYNAREC])
@@ -1311,6 +1331,13 @@ void update_variables(bool first_time)
             options.sh3_dynarec = false;
           break;
 
+        case OPT_TX1_SCREENS:
+          if(strcmp(var.value, "middle screen") == 0)
+            options.tx1_screens = 1;
+          else
+            options.tx1_screens = 3;
+          break;
+
         case OPT_CPU_CLOCK_SCALE:
           if(strcmp(var.value, "default") == 0)
             options.cpu_clock_scale = 1;
@@ -1447,6 +1474,12 @@ void set_content_flags(void)
       options.content_flags[CONTENT_SH3_DYNAREC] = true;
   }
 #endif
+
+  /************ TX-1 / BUGGY BOY: THE THREE SCREENS ************/
+  /* Buggy Boy Junior is the upright cabinet, with one screen */
+  if (game_driver->source_file && strstr(game_driver->source_file, "tx1.c")
+   && strcmp(game_driver->name, "buggyboyjr") != 0)
+    options.content_flags[CONTENT_TX1_SCREENS] = true;
 
   /************ DRIVERS WITH MULTIPLE BIOS OPTIONS ************/
 #ifndef SPLIT_CORE
