@@ -496,7 +496,7 @@ static float ram_get_f(void)
 	return u2f( m_copro_ram_data[ ram_scan() ] );
 }
 
-static void fadd(void)
+static void tgp_fadd(void)
 {
 	float a = fifoin_pop_f();
 	float b = fifoin_pop_f();
@@ -505,7 +505,7 @@ static void fadd(void)
 	fifoout_push_f(r);
 }
 
-static void fsub(void)
+static void tgp_fsub(void)
 {
 	float a = fifoin_pop_f();
 	float b = fifoin_pop_f();
@@ -514,7 +514,7 @@ static void fsub(void)
 	fifoout_push_f(r);
 }
 
-static void fmul(void)
+static void tgp_fmul(void)
 {
 	float a = fifoin_pop_f();
 	float b = fifoin_pop_f();
@@ -523,7 +523,7 @@ static void fmul(void)
 	fifoout_push_f(r);
 }
 
-static void fdiv(void)
+static void tgp_fdiv(void)
 {
 	float a = fifoin_pop_f();
 	float b = fifoin_pop_f();
@@ -1300,7 +1300,7 @@ static void matrix_sdir(void)
 	m_t71 = f2u( b );
 }
 
-static void fsqrt(void)
+static void tgp_fsqrt(void)
 {
 	float a = fifoin_pop_f();
 	LOG(("TGP fsqrt %f (%x)\n", a, m_pushpc));
@@ -2561,10 +2561,10 @@ static void matrix_settrans_vf(void)
 
 
 static const struct tgp_function ftab_vr[] = {
-	{ fadd,            2 }, /* 0x00 */ /* 0b5 09b */
-	{ fsub,            2 },            /* 0ba 0a0 */
-	{ fmul,            2 },            /* 0bf 0a5 */
-	{ fdiv,            2 },            /* 0c4 0aa */
+	{ tgp_fadd,            2 }, /* 0x00 */ /* 0b5 09b */
+	{ tgp_fsub,            2 },            /* 0ba 0a0 */
+	{ tgp_fmul,            2 },            /* 0bf 0a5 */
+	{ tgp_fdiv,            2 },            /* 0c4 0aa */
 	{ NULL,                        0 },            /* 0d2 0b9 */
 	{ matrix_push,     0 },            /* 0e3 0cc */
 	{ matrix_pop,      0 },            /* 0f7 0e0 */
@@ -2608,7 +2608,7 @@ static const struct tgp_function ftab_vr[] = {
 	{ f42,             3 },            /* 329 34b */
 	{ f43,             6 },            /* 36c 38f */
 	{ track_read_tri,  1 },            /* 3c2 3e2 */
-	{ fsqrt,           1 },            /* 3c7 3e9 */
+	{ tgp_fsqrt,           1 },            /* 3c7 3e9 */
 	{ vlength,         3 },            /* 3cf 3f2 */
 	{ NULL,                        0 },            /* 3ef 411 */
 
@@ -2642,9 +2642,9 @@ static const struct tgp_function ftab_vr[] = {
 /* 315-5724 (Virtua Fighter): its own versions where its program differs
    from 315-5573 */
 static const struct tgp_function ftab_vf[] = {
-	{ fadd,            2 }, /* 0x00 */
-	{ fsub,            2 },
-	{ fmul,            2 },
+	{ tgp_fadd,            2 }, /* 0x00 */
+	{ tgp_fsub,            2 },
+	{ tgp_fmul,            2 },
 	{ fdiv_vf,         2 },
 	{ nop_tgp,         0 },
 	{ matrix_push,     0 },
@@ -2758,10 +2758,10 @@ static const struct tgp_function ftab_vf[] = {
 /*   f49_swa */
 
 static const struct tgp_function ftab_swa[] = {
-	{ fadd,            2 },  /* 0x00 */
-	{ fsub,            2 },
-	{ fmul,            2 },
-	{ fdiv,            2 },
+	{ tgp_fadd,            2 },  /* 0x00 */
+	{ tgp_fsub,            2 },
+	{ tgp_fmul,            2 },
+	{ tgp_fdiv,            2 },
 	{ f04_swa,         2 },
 	{ matrix_push_swa, 0 },
 	{ matrix_pop,      0 },
