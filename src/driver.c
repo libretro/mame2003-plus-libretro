@@ -3309,8 +3309,6 @@ DokiDoki Penguin Land *not confirmed
 	DRIVER( goldnaxc )	/* (c) 1989 (protected) */
 	DRIVER( goldnaxj )	/* (c) 1989 (protected. Japan) */
 	DRIVER( jyuohki )	/* (c) 1988 (protected. Altered Beast Japan) */
-	DRIVER( moonwalk )	/* (c) 1990 (protected) */
-	DRIVER( moonwlka )	/* (c) 1990 (protected) */
 	DRIVER( passsht )	/* (protected) */
 	DRIVER( sdioj )		/* (c) 1987 (protected. Japan) */
 	DRIVER( shangon )	/* (c) 1992 (protected) */
@@ -3379,6 +3377,12 @@ DokiDoki Penguin Land *not confirmed
 	DRIVER( hangon )	/* (c) 1985 */
 	DRIVER( hwchamp )	/* (c) 1987 */
 	DRIVER( mjleague )	/* (c) 1985 */
+	DRIVER( mwalk )		/* (c) 1990 (FD1094/8751 317-0159) */
+	DRIVER( mwalku )	/* (c) 1990 (FD1094/8751 317-0158) */
+	DRIVER( mwalkj )	/* (c) 1990 (FD1094/8751 317-0157) */
+	DRIVER( mwalkd )	/* bootleg (decrypted mwalk) */
+	DRIVER( mwalkud )	/* bootleg (decrypted mwalku) */
+	DRIVER( mwalkjd )	/* bootleg (decrypted mwalkj) */
 	DRIVER( moonwlkb )	/* bootleg */
 	DRIVER( outrun )	/* (c) 1986 (bootleg)*/
 	DRIVER( outruna )	/* (c) 1986 (bootleg) */

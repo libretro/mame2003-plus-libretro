@@ -4178,6 +4178,14 @@ M68KMAKE_OP(cmpi, 32, ., d)
 	FLAG_Z = MASK_OUT_ABOVE_32(res);
 	FLAG_V = VFLAG_SUB_32(src, dst, res);
 	FLAG_C = CFLAG_SUB_32(src, dst, res);
+
+	if (m68k_cmpild_callback)
+	{
+		m68k_cmpild_callback(src, REG_IR & 7);
+#if M68K_EMULATE_PREFETCH
+		CPU_PREF_ADDR = 1;	/* the next words are fetched again (FD1094 state change) */
+#endif
+	}
 }
 
 
@@ -8967,6 +8975,14 @@ M68KMAKE_OP(rte, 32, ., .)
 		uint format_word;
 
 		m68ki_trace_t0();			   /* auto-disable (see m68kcpu.h) */
+
+		if (m68k_rte_callback)
+		{
+			m68k_rte_callback();
+#if M68K_EMULATE_PREFETCH
+			CPU_PREF_ADDR = 1;	/* fetched again with the new state */
+#endif
+		}
 
 		if(CPU_TYPE_IS_000(CPU_TYPE))
 		{

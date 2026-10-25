@@ -69,6 +69,7 @@ SOURCES_C += \
 
 SOURCES_C += \
 	$(CORE_DIR)/machine/fd1089.c \
+	$(CORE_DIR)/machine/fd1094.c \
 	$(CORE_DIR)/machine/6522via.c \
 	$(CORE_DIR)/machine/6532riot.c \
 	$(CORE_DIR)/machine/6821pia.c \

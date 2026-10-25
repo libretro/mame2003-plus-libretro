@@ -3924,6 +3924,14 @@ void m68k_op_rte_32(void)
 
 		m68ki_trace_t0();			   /* auto-disable (see m68kcpu.h) */
 
+		if (m68k_rte_callback)
+		{
+			m68k_rte_callback();
+#if M68K_EMULATE_PREFETCH
+			CPU_PREF_ADDR = 1;	/* fetched again with the new state */
+#endif
+		}
+
 		if(CPU_TYPE_IS_000(CPU_TYPE))
 		{
 			new_sr = m68ki_pull_16();
