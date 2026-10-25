@@ -130,6 +130,7 @@ CPUS+=I186@
 CPUS+=V20@
 CPUS+=V30@
 CPUS+=V33@
+CPUS+=V25@
 CPUS+=V60@
 CPUS+=V70@
 CPUS+=I8035@
@@ -1377,6 +1378,15 @@ CPUDEFS += -DHAS_V33=1
 HAS_V30=1
 else
 CPUDEFS += -DHAS_V33=0
+endif
+
+CPU=$(strip $(findstring V25@,$(CPUS)))
+ifneq ($(CPU),)
+OBJDIRS += $(CORE_DIR)/cpu/nec
+CPUDEFS += -DHAS_V25=1
+SOURCES_C += $(CORE_DIR)/cpu/nec/v25.c
+else
+CPUDEFS += -DHAS_V25=0
 endif
 
 ifeq ($(HAS_V30),1)

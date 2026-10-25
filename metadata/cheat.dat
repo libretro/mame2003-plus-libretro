@@ -7780,6 +7780,34 @@ batsugun:0:1013EB:09:000:Next 'P' always=10000 pts PL2:Get maximum fire power
 batsugun:0:1013EB:09:001:Next 'P' = 10000 pts Now! PL2:Get maximum fire power
 batsugun:0:101456:03:001:Up fire level Now! PL2
 batsugun:0:101457:00:501:Up fire level Now! PL2 (2/2)
+batsuguna:0:10139B:09:000:Infinite Lives PL1
+batsuguna:0:101415:07:000:Infinite Bombs PL1
+batsuguna:0:10141E:01:000:Invincibility PL1
+batsuguna:0:000000:00:999:[See the Dip Switch Menu to ]
+batsuguna:0:000000:00:999:[enable an alternate        ]
+batsuguna:0:000000:00:999:[Invincibility PL1 cheat.   ]
+batsuguna:0:000000:00:999:[But the cheat is better as ]
+batsuguna:0:000000:00:999:[the dipswitch causes a game]
+batsuguna:0:000000:00:999:[crash when PL2 is selected.]
+batsuguna:0:101411:02:000:Always have Max Weapon PL1
+batsuguna:0:101413:04:000:Always have Max Shot PowerPL1
+batsuguna:0:101411:02:001:Get Max Weapon Now! PL1
+batsuguna:0:101413:04:001:Get Max Shot Power Now! PL1
+batsuguna:0:1013E7:09:000:Next 'P' always=10000 pts PL1:Get maximum fire power
+batsuguna:0:1013E7:09:001:Next 'P' = 10000 pts Now! PL1:Get maximum fire power
+batsuguna:0:101416:03:001:Up fire level Now! PL1
+batsuguna:0:101417:00:501:Up fire level Now! PL1 (2/2)
+batsuguna:0:10139D:09:000:Infinite Lives PL2
+batsuguna:0:101455:07:000:Infinite Bombs PL2
+batsuguna:0:10145E:01:000:Invincibility PL2
+batsuguna:0:101451:02:000:Always have Max Weapon PL2
+batsuguna:0:101453:04:000:Always have Max Shot PowerPL2
+batsuguna:0:101451:02:001:Get Max Weapon Now! PL2
+batsuguna:0:101453:04:001:Get Max Shot Power Now! PL2
+batsuguna:0:1013EB:09:000:Next 'P' always=10000 pts PL2:Get maximum fire power
+batsuguna:0:1013EB:09:001:Next 'P' = 10000 pts Now! PL2:Get maximum fire power
+batsuguna:0:101456:03:001:Up fire level Now! PL2
+batsuguna:0:101457:00:501:Up fire level Now! PL2 (2/2)
 
 ; [ Battle Lane! Vol. 5 (set 2) ]
 battlan2:0:0CDA:03:000:Infinite Lives PL1
@@ -7986,34 +8014,34 @@ battroad:0:0000:00:999:[enable an alternate        ]
 battroad:0:0000:00:999:[Invincibility cheat.       ]
 
 ; [ Batsugun (Special Ver.) ]
-batugnsp:0:10139B:09:000:Infinite Lives PL1
-batugnsp:0:101415:07:000:Infinite Bombs PL1
-batugnsp:0:10141E:01:000:Invincibility PL1
-batugnsp:0:000000:00:999:[See the Dip Switch Menu to ]
-batugnsp:0:000000:00:999:[enable an alternate        ]
-batugnsp:0:000000:00:999:[Invincibility PL1 cheat.   ]
-batugnsp:0:000000:00:999:[But the cheat is better as ]
-batugnsp:0:000000:00:999:[the dipswitch causes a game]
-batugnsp:0:000000:00:999:[crash when PL2 is selected.]
-batugnsp:0:101411:02:000:Always have Max Weapon PL1
-batugnsp:0:101413:04:000:Always have Max Shot PowerPL1
-batugnsp:0:101411:02:001:Get Max Weapon Now! PL1
-batugnsp:0:101413:04:001:Get Max Shot Power Now! PL1
-batugnsp:0:1013E7:09:000:Next 'P' always=10000 pts PL1:Get maximum fire power
-batugnsp:0:1013E7:09:001:Next 'P' = 10000 pts Now! PL1:Get maximum fire power
-batugnsp:0:101416:03:001:Up fire level Now! PL1
-batugnsp:0:101417:00:501:Up fire level Now! PL1 (2/2)
-batugnsp:0:10139D:09:000:Infinite Lives PL2
-batugnsp:0:101455:07:000:Infinite Bombs PL2
-batugnsp:0:10145E:01:000:Invincibility PL2
-batugnsp:0:101451:02:000:Always have Max Weapon PL2
-batugnsp:0:101453:04:000:Always have Max Shot PowerPL2
-batugnsp:0:101451:02:001:Get Max Weapon Now! PL2
-batugnsp:0:101453:04:001:Get Max Shot Power Now! PL2
-batugnsp:0:1013EB:09:000:Next 'P' always=10000 pts PL2:Get maximum fire power
-batugnsp:0:1013EB:09:001:Next 'P' = 10000 pts Now! PL2:Get maximum fire power
-batugnsp:0:101456:03:001:Up fire level Now! PL2
-batugnsp:0:101457:00:501:Up fire level Now! PL2 (2/2)
+batsugunsp:0:10139B:09:000:Infinite Lives PL1
+batsugunsp:0:101415:07:000:Infinite Bombs PL1
+batsugunsp:0:10141E:01:000:Invincibility PL1
+batsugunsp:0:000000:00:999:[See the Dip Switch Menu to ]
+batsugunsp:0:000000:00:999:[enable an alternate        ]
+batsugunsp:0:000000:00:999:[Invincibility PL1 cheat.   ]
+batsugunsp:0:000000:00:999:[But the cheat is better as ]
+batsugunsp:0:000000:00:999:[the dipswitch causes a game]
+batsugunsp:0:000000:00:999:[crash when PL2 is selected.]
+batsugunsp:0:101411:02:000:Always have Max Weapon PL1
+batsugunsp:0:101413:04:000:Always have Max Shot PowerPL1
+batsugunsp:0:101411:02:001:Get Max Weapon Now! PL1
+batsugunsp:0:101413:04:001:Get Max Shot Power Now! PL1
+batsugunsp:0:1013E7:09:000:Next 'P' always=10000 pts PL1:Get maximum fire power
+batsugunsp:0:1013E7:09:001:Next 'P' = 10000 pts Now! PL1:Get maximum fire power
+batsugunsp:0:101416:03:001:Up fire level Now! PL1
+batsugunsp:0:101417:00:501:Up fire level Now! PL1 (2/2)
+batsugunsp:0:10139D:09:000:Infinite Lives PL2
+batsugunsp:0:101455:07:000:Infinite Bombs PL2
+batsugunsp:0:10145E:01:000:Invincibility PL2
+batsugunsp:0:101451:02:000:Always have Max Weapon PL2
+batsugunsp:0:101453:04:000:Always have Max Shot PowerPL2
+batsugunsp:0:101451:02:001:Get Max Weapon Now! PL2
+batsugunsp:0:101453:04:001:Get Max Shot Power Now! PL2
+batsugunsp:0:1013EB:09:000:Next 'P' always=10000 pts PL2:Get maximum fire power
+batsugunsp:0:1013EB:09:001:Next 'P' = 10000 pts Now! PL2:Get maximum fire power
+batsugunsp:0:101456:03:001:Up fire level Now! PL2
+batsugunsp:0:101457:00:501:Up fire level Now! PL2 (2/2)
 
 ; [ Battle Wings (alt) ]
 batwings:0:0084:0A:000:Infinite Lives
@@ -40404,27 +40432,27 @@ griffon:0:4BFF:00:000:Infinite Fuel
 griffon:0:0CC4:C9:100:Invincibility
 
 ; [ Grind Stormer (older set) ]
-grindsta:0:1003B3:09:000:Infinite Credits
-grindsta:0:10063D:0F:000:Infinite Lives
-grindsta:0:10065B:06:000:Infinite Bombs
-grindsta:0:000000:00:999:[ See the Dip Switch Menu to enable ]
-grindsta:0:000000:00:999:[ an Invincibility PL1 cheat. But   ]
-grindsta:0:000000:00:999:[ the dipswitch causes a game crash ]
-grindsta:0:000000:00:999:[ when PL2 is selected.           ]
-grindsta:0:100607:02:000:Always have 4 Side Ships
-grindsta:0:1005E7:B0:000:Always have Shot Side Ships
-grindsta:0:100601:00:500:Always have Shot Side Ships (2/2)
-grindsta:0:1005E7:B4:000:Always have Search Side Ships
-grindsta:0:100601:01:500:Always have Search Side Ships (2/2)
-grindsta:0:1005E7:C4:000:Always have Missile Side Ships
-grindsta:0:100601:02:500:Always have Missile Side Ships (2/2)
-grindsta:0:100607:02:001:Get 4 Side Ships Now!
-grindsta:0:1005E7:B0:001:Get Shot Side Ships Now!
-grindsta:0:100601:00:501:Get Shot Side Ships Now! (2/2)
-grindsta:0:1005E7:B4:001:Get Search Side Ships Now!
-grindsta:0:100601:01:501:Get Search Side Ships Now! (2/2)
-grindsta:0:1005E7:C4:001:Get Missile Side Ships Now!
-grindsta:0:100601:02:501:Get Missile Side Ships Now! (2/2)
+grindstma:0:1003B3:09:000:Infinite Credits
+grindstma:0:10063D:0F:000:Infinite Lives
+grindstma:0:10065B:06:000:Infinite Bombs
+grindstma:0:000000:00:999:[ See the Dip Switch Menu to enable ]
+grindstma:0:000000:00:999:[ an Invincibility PL1 cheat. But   ]
+grindstma:0:000000:00:999:[ the dipswitch causes a game crash ]
+grindstma:0:000000:00:999:[ when PL2 is selected.           ]
+grindstma:0:100607:02:000:Always have 4 Side Ships
+grindstma:0:1005E7:B0:000:Always have Shot Side Ships
+grindstma:0:100601:00:500:Always have Shot Side Ships (2/2)
+grindstma:0:1005E7:B4:000:Always have Search Side Ships
+grindstma:0:100601:01:500:Always have Search Side Ships (2/2)
+grindstma:0:1005E7:C4:000:Always have Missile Side Ships
+grindstma:0:100601:02:500:Always have Missile Side Ships (2/2)
+grindstma:0:100607:02:001:Get 4 Side Ships Now!
+grindstma:0:1005E7:B0:001:Get Shot Side Ships Now!
+grindstma:0:100601:00:501:Get Shot Side Ships Now! (2/2)
+grindstma:0:1005E7:B4:001:Get Search Side Ships Now!
+grindstma:0:100601:01:501:Get Search Side Ships Now! (2/2)
+grindstma:0:1005E7:C4:001:Get Missile Side Ships Now!
+grindstma:0:100601:02:501:Get Missile Side Ships Now! (2/2)
 
 ; [ Grind Stormer ]
 grindstm:0:1003B3:09:000:Infinite Credits

@@ -1661,7 +1661,8 @@ void register_banks(void)
 			UINT32 size = memory_region_length(REGION_CPU1 + cpunum);
 			if (size > (1<<bits))
 				size = 1 << bits;
-			rg_add_entry(0, size-1, RG_SAVE_READ|RG_SAVE_WRITE);
+			if (size > 0)	/* a CPU with no region (e.g. a program uploaded in its RAM) */
+				rg_add_entry(0, size-1, RG_SAVE_READ|RG_SAVE_WRITE);
 		}
 
 

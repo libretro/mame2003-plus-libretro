@@ -18291,7 +18291,7 @@ F.A.Q. by Kevin Butler A.K.A. War Doc
 $end
 
 
-$info=batsugun,batugnsp,batsugna,
+$info=batsugun,batsuguna,batsugunc,batsugunb,batsugunsp,
 $bio
 
 Batsugun (c) 02/1993 Toaplan.
@@ -57433,7 +57433,7 @@ Nintendo Famicom (1988, "Ikari 2 - Dogosoken")
 $end
 
 
-$info=dogyuun,
+$info=dogyuun,dogyuuna,dogyuunb,dogyuunt,
 $bio
 
 Dogyuun (c) 10/1992 Toaplan.
@@ -74054,7 +74054,7 @@ This game is also known as "Round-Up".
 $end
 
 
-$info=fixeight,fixeighb,
+$info=fixeight,fixeightk,fixeighth,fixeighttw,fixeighta,fixeightu,fixeightj,fixeightt,fixeightkt,fixeightht,fixeighttwt,fixeightat,fixeightut,fixeightjt,fixeightbl,
 $bio
 
 Fixeight (c) 1992 Toaplan.
@@ -89643,7 +89643,7 @@ F.A.Q. by Kevin Butler A.K.A. War Doc
 $end
 
 
-$info=grindstm,grindsta,
+$info=grindstm,grindstma,
 $bio
 
 Grind Stormer (c) 1992 Toaplan.
@@ -115022,7 +115022,7 @@ You can also get points by punching out enemies. If you can punch out an enemy w
 $end
 
 
-$info=kbash,
+$info=kbash,kbashk,kbashp,
 $bio
 
 Knuckle Bash (c) 1993 Toaplan.
