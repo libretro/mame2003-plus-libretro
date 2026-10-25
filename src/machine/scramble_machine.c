@@ -936,6 +936,16 @@ DRIVER_INIT( ckongs )
 	ppi8255_set_portCread(0, ckongs_input_port_2_r);
 }
 
+/* Knock Out!! bootlegs: an extra ROM, as Mariner */
+DRIVER_INIT( knockoutb )
+{
+	init_scramble_ppi();
+
+	/* extra ROM */
+	install_mem_read_handler (0, 0x5800, 0x67ff, MRA_ROM);
+	install_mem_write_handler(0, 0x5800, 0x67ff, MWA_ROM);
+}
+
 DRIVER_INIT( mariner )
 {
 	init_scramble_ppi();

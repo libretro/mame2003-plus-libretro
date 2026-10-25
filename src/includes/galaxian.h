@@ -153,6 +153,7 @@ DRIVER_INIT( scrambls );
 DRIVER_INIT( theend );
 DRIVER_INIT( ckongs );
 DRIVER_INIT( mariner );
+DRIVER_INIT( knockoutb );
 DRIVER_INIT( mars );
 DRIVER_INIT( devilfsh );
 DRIVER_INIT( hotshock );

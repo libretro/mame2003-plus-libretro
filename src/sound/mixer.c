@@ -190,6 +190,7 @@ void mixer_register_state(void)
 	ss_channels = first_free_channel;
 	state_save_register_UINT32("mixer", 0, "samples this frame", &samples_this_frame, 1);
 	state_save_register_UINT32("mixer", 0, "accum base", &ss_accum_base, 1);
+	state_save_register_INT32("mixer", 0, "sound enabled", (INT32 *)&mixer_sound_enabled, 1);
 	state_save_register_INT32("mixer", 0, "left accum", left_accum, ACCUMULATOR_SAMPLES);
 	state_save_register_INT32("mixer", 0, "right accum", right_accum, ACCUMULATOR_SAMPLES);
 	for (ch = 0; ch < ss_channels; ch++)

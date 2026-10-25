@@ -39,6 +39,7 @@
 
 #include "driver.h"
 #include "machine/7474.h"
+#include "state.h"
 
 
 #define MAX_TTL7474  12
@@ -158,4 +159,16 @@ void TTL7474_config(int which, const struct TTL7474_interface *intf)
     chips[which].last_clock = 1;
     chips[which].last_output = -1;
     chips[which].last_output_comp = -1;
+
+	/* save states (a reset configures the chip again: the entries are
+	   registered once, the duplicates are ignored) */
+	state_save_register_INT32("ttl7474", which, "clear",            (INT32 *)&chips[which].clear, 1);
+	state_save_register_INT32("ttl7474", which, "preset",           (INT32 *)&chips[which].preset, 1);
+	state_save_register_INT32("ttl7474", which, "clock",            (INT32 *)&chips[which].clock, 1);
+	state_save_register_INT32("ttl7474", which, "d",                (INT32 *)&chips[which].d, 1);
+	state_save_register_INT32("ttl7474", which, "output",           (INT32 *)&chips[which].output, 1);
+	state_save_register_INT32("ttl7474", which, "output_comp",      (INT32 *)&chips[which].output_comp, 1);
+	state_save_register_INT32("ttl7474", which, "last_clock",       (INT32 *)&chips[which].last_clock, 1);
+	state_save_register_INT32("ttl7474", which, "last_output",      (INT32 *)&chips[which].last_output, 1);
+	state_save_register_INT32("ttl7474", which, "last_output_comp", (INT32 *)&chips[which].last_output_comp, 1);
 }

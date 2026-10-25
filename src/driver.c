@@ -250,9 +250,13 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( froggers )	/* bootleg */
 	DRIVER( amidars )	/* GX337 (c) 1982 Konami */
 	DRIVER( triplep )	/* (c) 1982 KKI */	/* made by Sanritsu? */
+	DRIVER( triplepa )	/* (c) 1982 KKI */
 	DRIVER( knockout )	/* (c) 1982 KKK */
+	DRIVER( knockoutb )	/* bootleg */
+	DRIVER( knockoutc )	/* bootleg (ESG) */
 	DRIVER( mariner )	/* (c) 1981 Amenip */
 	DRIVER( 800fath )	/* (c) 1981 Amenip + U.S. Billiards license */
+	DRIVER( 800fatha )	/* (c) 1981 Amenip + U.S. Billiards license */
 	DRIVER( mars )		/* (c) 1981 Artic */
 	DRIVER( devilfsh )	/* (c) 1982 Artic */
 	DRIVER( newsin7 )	/* (c) 1983 ATW USA, Inc. */

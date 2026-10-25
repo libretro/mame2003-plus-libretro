@@ -7,6 +7,7 @@
 ***************************************************************************/
 
 #include "driver.h"
+#include "state.h"
 #include <math.h>
 
 
@@ -79,6 +80,16 @@ void apply_RC_filter(int channel,INT16 *buf,int len,int sample_rate)
 }
 
 
+
+/* the RC filters set by the drivers, and their last output */
+void streams_register_state(void)
+{
+	state_save_register_INT32("streams", 0, "rc memory", (INT32 *)memory, MIXER_MAX_CHANNELS);
+	state_save_register_INT32("streams", 0, "rc r1",     (INT32 *)r1, MIXER_MAX_CHANNELS);
+	state_save_register_INT32("streams", 0, "rc r2",     (INT32 *)r2, MIXER_MAX_CHANNELS);
+	state_save_register_INT32("streams", 0, "rc r3",     (INT32 *)r3, MIXER_MAX_CHANNELS);
+	state_save_register_INT32("streams", 0, "rc c",      (INT32 *)c, MIXER_MAX_CHANNELS);
+}
 
 int streams_sh_start(void)
 {
