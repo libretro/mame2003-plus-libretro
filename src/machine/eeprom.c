@@ -136,6 +136,7 @@ void EEPROM_init(struct EEPROM_interface *interface)
 	state_save_register_int  ("eeprom", 0, "clock count",   &eeprom_clock_count);
 	state_save_register_int  ("eeprom", 0, "data bits",     &eeprom_data_bits);
 	state_save_register_int  ("eeprom", 0, "address",       &eeprom_read_address);
+	state_save_register_int  ("eeprom", 0, "sending",       &sending);
 }
 
 static void EEPROM_write(int bit)
