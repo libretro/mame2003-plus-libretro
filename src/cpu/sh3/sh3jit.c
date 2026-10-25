@@ -43,7 +43,7 @@
 #include <stddef.h>
 #include <stdlib.h>
 
-#define JIT_TABLE_BITS		16
+#define JIT_TABLE_BITS		19
 #define JIT_TABLE_SIZE		(1 << JIT_TABLE_BITS)
 #define JIT_MAX_BLOCK		64				/* instructions */
 #define JIT_MAX_STUBS		(JIT_MAX_BLOCK * 4)
