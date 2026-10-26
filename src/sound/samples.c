@@ -88,7 +88,7 @@ void sample_set_stereo_volume(int channel,int volume_left, int volume_right)
 		return;
 	}
 
-	mixer_set_stereo_volume(channel + firstchannel,volume_left * 100 / 255, volume_right * 100 / 255);
+	mixer_set_stereo_volume(channel + firstchannel,volume_left,volume_right);
 }
 
 void sample_set_volume(int channel,int volume)
@@ -101,7 +101,7 @@ void sample_set_volume(int channel,int volume)
 		return;
 	}
 
-	mixer_set_volume(channel + firstchannel,volume * 100 / 255);
+	mixer_set_volume(channel + firstchannel,volume);
 }
 
 void sample_stop(int channel)

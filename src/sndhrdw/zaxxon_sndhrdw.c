@@ -125,7 +125,7 @@ WRITE_HANDLER( zaxxon_sound_w )
 					soundplaying[21] = 1;
 					sample_start(sa[21].channel,sa[21].num,sa[21].looped);
 				}
-				sample_set_volume(sa[21].channel,128 + 40 * (data & 0x03));
+				sample_set_volume(sa[21].channel,(128 + 40 * (data & 0x03)) * 100 / 255);
 				break;
 			case 0x00:
 			case 0x08:
@@ -134,7 +134,7 @@ WRITE_HANDLER( zaxxon_sound_w )
 					soundplaying[20] = 1;
 					sample_start(sa[20].channel,sa[20].num,sa[20].looped);
 				}
-				sample_set_volume(sa[20].channel,128 + 40 * (data & 0x03));
+				sample_set_volume(sa[20].channel,(128 + 40 * (data & 0x03)) * 100 / 255);
 				soundplaying[21] = 0;
 				sample_stop(sa[21].channel);
 				break;

@@ -696,7 +696,7 @@ void solarq_sound_w(UINT8 sound_val, UINT8 bits_changed)
             if (current_volume < target_volume)
                 current_volume += 20;
             if (current_volume > 0)
-                sample_set_volume(2, current_volume);
+                sample_set_volume(2, current_volume * 100 / 255);
             else
                 sample_stop(2);
             last_frame = cpu_getcurrentframe();

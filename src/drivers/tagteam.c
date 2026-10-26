@@ -296,7 +296,7 @@ static struct AY8910interface ay8910_interface =
 static struct DACinterface dac_interface =
 {
 	1,
-	{ 255 }
+	{ 25 }
 };
 
 static MACHINE_DRIVER_START( tagteam )

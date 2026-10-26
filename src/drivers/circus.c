@@ -345,7 +345,7 @@ static INTERRUPT_GEN( ripcord_interrupt )
 static struct DACinterface dac_interface =
 {
 	1,
-	{ 255, 255 }
+	{ 25, 25 }
 };
 
 static MACHINE_DRIVER_START( circus )

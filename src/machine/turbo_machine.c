@@ -257,7 +257,7 @@ static WRITE_HANDLER( subroc3d_sound_B_w )
 {
 	static UINT8 last = 0;
 
-	int volume = 16 * (15 - subroc3d_volume);
+	int volume = 16 * (15 - subroc3d_volume) * 100 / 255;
 
 	if ((data & 1) && !(last & 1))
 		sample_set_volume(0, volume);
@@ -285,7 +285,7 @@ static WRITE_HANDLER( subroc3d_sound_C_w )
 	if ((data & 0x10) && !(last & 0x10))
 		sample_start(5, (data & 0x20) ? 10 : 9, 0);
 
-	sample_set_volume(7, (data & 0x40) ? 0 : 255);
+	sample_set_volume(7, (data & 0x40) ? 0 : 100);
 
 	last = data;
 

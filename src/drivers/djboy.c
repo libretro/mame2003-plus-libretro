@@ -953,7 +953,7 @@ static struct YM2203interface ym2203_interface =
 {
 	1,
 	3000000, /* ? */
-	{ YM2203_VOL(0xff,0xff) },	/* gain,volume */
+	{ YM2203_VOL(25,25) },	/* gain,volume */
 	{ 0 },	/* port A read */
 	{ 0 }, /* port B read */
 	{ 0 }, /* port A write */
