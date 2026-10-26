@@ -7,6 +7,10 @@
 #include "driver.h"
 #include "ost_samples.h"
 
+/* Mixing level of the OST music. sa_volume (0-100) was passed to the
+   0-255 sample API, so the music always played at 100 * 100 / 255 = 39%;
+   with the 0-100 API this level keeps it there. */
+#define OST_MIXING_LEVEL 39
 
 /* ost configuration */
 static int  ost_support = OST_SUPPORT_DISABLED;
@@ -498,84 +502,84 @@ const char *const shinobi_sample_set_names[] =
 struct Samplesinterface ost_contra =
 {
 	2,	/* 2 channels*/
-	100, /* volume*/
+	OST_MIXING_LEVEL, /* volume*/
 	contra_sample_set_names
 };
 
 struct Samplesinterface ost_ddragon =
 {
 	2,	/* 2 channels*/
-	100, /* volume*/
+	OST_MIXING_LEVEL, /* volume*/
 	ddragon_sample_set_names
 };
 
 struct Samplesinterface ost_ffight =
 {
 	2,	/* 2 channels*/
-	100, /* volume*/
+	OST_MIXING_LEVEL, /* volume*/
 	ffight_sample_set_names
 };
 
 struct Samplesinterface ost_ikari =
 {
 	2,	/* 2 channels*/
-	100, /* volume*/
+	OST_MIXING_LEVEL, /* volume*/
 	ikari_sample_set_names
 };
 
 struct Samplesinterface ost_mk =
 {
 	2,	/* 2 channels*/
-	100, /* volume*/
+	OST_MIXING_LEVEL, /* volume*/
 	mk_sample_set_names
 };
 
 struct Samplesinterface ost_moonwalker =
 {
 	2,	/* 2 channels*/
-	100, /* volume*/
+	OST_MIXING_LEVEL, /* volume*/
 	moonwalker_sample_set_names
 };
 
 struct Samplesinterface ost_nba_jam =
 {
 	2,	/* 2 channels*/
-	100, /* volume*/
+	OST_MIXING_LEVEL, /* volume*/
 	nba_jam_sample_set_names
 };
 
 struct Samplesinterface ost_outrun =
 {
 	2,	/* 2 channels*/
-	100, /* volume*/
+	OST_MIXING_LEVEL, /* volume*/
 	outrun_sample_set_names
 };
 
 struct Samplesinterface ost_robocop =
 {
 	2,	/* 2 channels*/
-	100, /* volume*/
+	OST_MIXING_LEVEL, /* volume*/
 	robocop_sample_set_names
 };
 
 struct Samplesinterface ost_sf1 =
 {
 	2,	/* 2 channels*/
-	100, /* volume*/
+	OST_MIXING_LEVEL, /* volume*/
 	sf1_sample_set_names
 };
 
 struct Samplesinterface ost_sf2 =
 {
 	2,	/* 2 channels*/
-	100, /* volume*/
+	OST_MIXING_LEVEL, /* volume*/
 	sf2_sample_set_names
 };
 
 struct Samplesinterface ost_shinobi =
 {
 	2,	/* 2 channels*/
-	100, /* volume*/
+	OST_MIXING_LEVEL, /* volume*/
 	shinobi_sample_set_names
 };
 

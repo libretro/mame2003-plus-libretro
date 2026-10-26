@@ -569,13 +569,14 @@ WRITE_HANDLER( bb_ym2_a_w )
 }
 
 /* Until we support > 2 speakers, double the gain of the front speakers */
+/* (the YM2149 mixing level is doubled, so 100 here is the doubled gain) */
 static void bb_set_ym_gains(void)
 {
 	/* Rear left speaker */
-	AY8910_set_volume(0, ALL_8910_CHANNELS, (ym2_outputb & 0x80) ? 200 : 100);
+	AY8910_set_volume(0, ALL_8910_CHANNELS, (ym2_outputb & 0x80) ? 100 : 50);
 
 	/* Rear right speaker */
-	AY8910_set_volume(1, ALL_8910_CHANNELS, (ym2_outputb & 0x40) ? 200 : 100);
+	AY8910_set_volume(1, ALL_8910_CHANNELS, (ym2_outputb & 0x40) ? 100 : 50);
 }
 
 WRITE_HANDLER( bb_ym2_b_w )
@@ -723,4 +724,6 @@ void buggyboy_sh_reset(void)
 	noise_lfsrb = 1;
 	noise_lfsrc = 0;
 	noise_lfsrd = 0;
+
+	bb_set_ym_gains();
 }

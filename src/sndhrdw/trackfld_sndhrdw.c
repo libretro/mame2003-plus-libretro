@@ -7,7 +7,7 @@
 struct VLM5030interface konami_vlm5030_interface =
 {
     3580000,    /* master clock  */
-    255,        /* volume        */
+    25,         /* volume        */
     4,          /* memory region  */
     0           /* memory size    */
 };

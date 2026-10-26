@@ -106,7 +106,7 @@ static const struct R6532interface r6532_interface_1 =
 
 static struct TIAinterface tia_interface =
 {
-    31400, 255, TIA_DEFAULT_GAIN
+    31400, 25, TIA_DEFAULT_GAIN
 };
 
 

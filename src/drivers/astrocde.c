@@ -156,8 +156,8 @@ static WRITE_HANDLER( seawolf2_sound_2_w )  /* Port 41 */
 	sample_set_volume(9, (data & 0x80) ? 100 : 0);
 
 	/* dive panning controlled by low 3 bits */
-	sample_set_volume(2, (float)(~data & 0x07) / 70);
-	sample_set_volume(7, (float)(data & 0x07) / 70);
+	sample_set_volume(2, (~data & 0x07) * 100 / 7);
+	sample_set_volume(7, (data & 0x07) * 100 / 7);
 
 	if (rising_bits & 0x08)
 	{
@@ -664,14 +664,14 @@ static struct astrocade_interface astrocade_2chip_interface =
 {
 	2,			/* Number of chips */
 	1789773,	/* Clock speed */
-	{255,255}			/* Volume */
+	{25,25}			/* Volume */
 };
 
 static struct astrocade_interface astrocade_1chip_interface =
 {
 	1,			/* Number of chips */
 	1789773,	/* Clock speed */
-	{255}			/* Volume */
+	{25}			/* Volume */
 };
 
 static struct CustomSound_interface gorf_custom_interface =

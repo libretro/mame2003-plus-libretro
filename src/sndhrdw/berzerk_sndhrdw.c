@@ -131,7 +131,7 @@ WRITE_HANDLER( berzerk_sound_control_a_w )
 		{
 			/* We should use the volume and frequency on the voice samples */
 			voicevolume = ((data & 0x38) >> 3);
-			if (voicevolume > 0) voicevolume=255;
+			if (voicevolume > 0) voicevolume=100;
 
 			voicefrequency = (data & 0x07);
 #ifdef VOICE_PITCH_MODULATION
@@ -219,7 +219,7 @@ WRITE_HANDLER( berzerk_sound_control_a_w )
 		if (voicefrequency != 1750*(4-noise))
 		{
 			voicefrequency = 1750*(4-noise);
-			voicevolume = 85*noise;
+			voicevolume = noise * 100 / 3;
 		}
 
 		if (noise)
