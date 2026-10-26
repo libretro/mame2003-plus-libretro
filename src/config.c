@@ -32,6 +32,7 @@ struct cfg_format
 	int (*read_input_port)(mame_file *, struct InputPort *);
 	int (*read_seq)(mame_file *, InputSeq *);
 	int coin_counters;
+	int has_adjusters;		/* 0: a .cfg from before adjusters were input ports */
 };
 
 struct _config_file
@@ -205,7 +206,11 @@ static config_file *config_init(const char *name, int save)
 	static const struct cfg_format formats[] =
 	{
 		/* mame2003-plus - 8 coin counters, no mixer levels */
-		{ "MAMECFG\xa",	"MAMEDEF\x7",	input_port_read_ver_8, seq_read_ver_8, 8 },
+		{ "MAMECFG\xa",	"MAMEDEF\x7",	input_port_read_ver_8, seq_read_ver_8, 8, 1 },
+
+		/* libretro master before the mixer level core options, read only: mixer levels */
+		/* after the coin counters (left unread), and no adjuster ports                  */
+		{ "MAMECFG\x9",	"MAMEDEF\x7",	input_port_read_ver_8, seq_read_ver_8, 8, 0 },
 	};
 
 	config_file *cfg;
@@ -353,6 +358,13 @@ int config_read_ports(config_file *cfg, struct InputPort *input_ports_default, s
 	in = (struct InputPort *) input_ports_default;
 	while (in->type != IPT_END)
 	{
+		/* an older .cfg has no adjuster ports: they keep their driver defaults */
+		if (!cfg->format->has_adjusters && (in->type & ~IPF_MASK) == IPT_ADJUSTER)
+		{
+			in++;
+			continue;
+		}
+
 		if (read_input_port(cfg->file, &saved) != 0)
 			return CONFIG_ERROR_CORRUPT;
 
@@ -371,6 +383,12 @@ int config_read_ports(config_file *cfg, struct InputPort *input_ports_default, s
 	in = input_ports;
 	while (in->type != IPT_END)
 	{
+		if (!cfg->format->has_adjusters && (in->type & ~IPF_MASK) == IPT_ADJUSTER)
+		{
+			in++;
+			continue;
+		}
+
 		if (read_input_port(cfg->file, in) != 0)
 			break;
 
