@@ -22,12 +22,10 @@ static struct retro_core_option_v2_definition  effective_defaults[OPT_end + 1];
 /* prevent saving corrupt cfgs when the save type does not match the type initialized */
 bool save_protection;
 
-/* one CPU clock scale core option per CPU. The labels and sublabels name each CPU of */
-/* the loaded game (set_cpu_clock_scale_labels).                                     */
-static const char *cpu_clock_scale_keys[CPU_CLOCK_SCALE_SLOTS] = {
-   APPNAME"_cpu_clock_scale",   APPNAME"_cpu_clock_scale_2", APPNAME"_cpu_clock_scale_3", APPNAME"_cpu_clock_scale_4",
-   APPNAME"_cpu_clock_scale_5", APPNAME"_cpu_clock_scale_6", APPNAME"_cpu_clock_scale_7", APPNAME"_cpu_clock_scale_8"
-};
+/* one CPU clock scale core option per CPU. The labels and sublabels name each CPU of  */
+/* the loaded game (set_cpu_clock_scale_labels). The keys name the romset             */
+/* (APPNAME"_kinst_cpu_clock_scale_2"), so one game's saved values never reach another. */
+static char cpu_clock_scale_keys[CPU_CLOCK_SCALE_SLOTS][64];
 static char cpu_clock_scale_labels[CPU_CLOCK_SCALE_SLOTS][80];
 static char cpu_clock_scale_info[CPU_CLOCK_SCALE_SLOTS][128];
 
@@ -1490,6 +1488,14 @@ static void set_cpu_clock_scale_labels(void)
 {
   char description[64];
   int cpu;
+
+  for(cpu = 0; cpu < CPU_CLOCK_SCALE_SLOTS; cpu++)
+  {
+    if(cpu == 0)
+      sprintf(cpu_clock_scale_keys[cpu], APPNAME"_%.16s_cpu_clock_scale", game_driver->name);
+    else
+      sprintf(cpu_clock_scale_keys[cpu], APPNAME"_%.16s_cpu_clock_scale_%d", game_driver->name, cpu + 1);
+  }
 
   /* the sublabels name no speed: some drivers and CPU cores run a CPU at a multiple of */
   /* its machine driver clock (the V25 divides it, backfire and deco_mlc multiply it)    */
