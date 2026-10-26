@@ -244,7 +244,7 @@ static struct retro_core_option_v2_definition option_def_art_resolution = {
    APPNAME"_art_resolution",
    "Artwork Resolution Multiplier",
    "Resolution Multiplier",
-   "Restart core required. Increases the artwork resolution by the selected multiplier value.",
+   "Restart core required. Multiplies the rendered resolution by the selected overscale value.",
    NULL,
    "cat_key_artwork",
    {
@@ -431,7 +431,7 @@ static struct retro_core_option_v2_definition option_def_vector_resolution = {
    APPNAME"_vector_resolution",
    "Vector Resolution",
    "Resolution",
-   "Size of the screen the vector games are drawn on. Applied at once, also while the game runs.",
+   "Renders at the selected resolution for greater precision.",
    NULL,
    "cat_key_vector",
    {
