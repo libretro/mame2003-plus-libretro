@@ -319,11 +319,11 @@ INPUT_PORTS_START( skydiver )
 	PORT_BIT (0x3f, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT (0x40, IP_ACTIVE_LOW, IPT_TILT )
 	PORT_BIT (0x80, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_START
-	PORT_ADJUSTER( 67, "Whistle 1 Freq" )
+	PORT_START		/* 14, read by the whistle 2 circuit (R65) */
+	PORT_ADJUSTER( 67, "Whistle 2 Freq" )
 
-	PORT_START
-	PORT_ADJUSTER( 75, "Whistle 2 Freq" )
+	PORT_START		/* 15, read by the whistle 1 circuit (R66) */
+	PORT_ADJUSTER( 75, "Whistle 1 Freq" )
 INPUT_PORTS_END
 
 
