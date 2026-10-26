@@ -116,13 +116,10 @@ filter* filter_lp_fir_alloc(double freq, int order) {
 	}
 
 	/* adjust the gain to be exact 1.0 */
-	for(i=0;i<=midorder;++i) {
-#ifdef FILTER_USE_INT
+	/* the coefficients are already scaled by 1 << FILTER_INT_FRACT in the */
+	/* integer build, so both builds only divide by the gain here */
+	for(i=0;i<=midorder;++i)
 		f->xcoeffs[i] /= gain;
-#else
-		f->xcoeffs[i] = f->xcoeffs[i] * (double)(1 << FILTER_INT_FRAC) / gain;
-#endif
-	}
 
 	/* decrease the order if the last coeffs are 0 */
 	i = midorder;

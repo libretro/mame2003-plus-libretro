@@ -142,7 +142,8 @@ struct cpuinfo
 
 	UINT64 	totalcycles;			/* total CPU cycles executed */
 	double	localtime;				/* local time, relative to the timer system's global time */
-	double	clockscale;				/* current active clock scale factor */
+	double	clockscale;				/* current active clock scale factor, set by drivers and CPU cores */
+	double	overclock;				/* user overclock factor (core options), applied on top of clockscale */
 
 	int 	vblankint_countdown;	/* number of vblank callbacks left until we interrupt */
 	int 	vblankint_multiplier;	/* number of vblank callbacks per interrupt */
@@ -340,9 +341,10 @@ int cpu_init(void)
 		memset(&cpu[cpunum], 0, sizeof(cpu[cpunum]));
 		cpu[cpunum].suspend = SUSPEND_REASON_RESET;
 		cpu[cpunum].clockscale = cputype_get_interface(cputype)->overclock;
+		cpu[cpunum].overclock = 1.0;
 
 		/* compute the cycle times */
-		sec_to_cycles[cpunum] = cpu[cpunum].clockscale * Machine->drv->cpu[cpunum].cpu_clock;
+		sec_to_cycles[cpunum] = cpu[cpunum].clockscale * cpu[cpunum].overclock * Machine->drv->cpu[cpunum].cpu_clock;
 		cycles_to_sec[cpunum] = 1.0 / sec_to_cycles[cpunum];
 
 		/* initialize this CPU */
@@ -936,6 +938,24 @@ double cpunum_get_clockscale(int cpunum)
 
 /*************************************
  *
+ *	Recomputes a CPU's cycle times from
+ *	its clock, clock scale and overclock
+ *
+ *************************************/
+
+static void update_cycle_rate(int cpunum)
+{
+	sec_to_cycles[cpunum] = cpu[cpunum].clockscale * cpu[cpunum].overclock * Machine->drv->cpu[cpunum].cpu_clock;
+	cycles_to_sec[cpunum] = 1.0 / sec_to_cycles[cpunum];
+
+	/* re-compute the perfect interleave factor */
+	compute_perfect_interleave();
+}
+
+
+
+/*************************************
+ *
  *	Sets the current scaling factor
  *	for a CPU's clock speed
  *
@@ -946,11 +966,42 @@ void cpunum_set_clockscale(int cpunum, double clockscale)
 	VERIFY_CPUNUM_VOID(cpunum_set_clockscale);
 
 	cpu[cpunum].clockscale = clockscale;
-	sec_to_cycles[cpunum] = cpu[cpunum].clockscale * Machine->drv->cpu[cpunum].cpu_clock;
-	cycles_to_sec[cpunum] = 1.0 / sec_to_cycles[cpunum];
+	update_cycle_rate(cpunum);
+}
 
-	/* re-compute the perfect interleave factor */
-	compute_perfect_interleave();
+
+
+/*************************************
+ *
+ *	Returns the user overclock factor
+ *	for a CPU's clock speed
+ *
+ *************************************/
+
+double cpunum_get_overclock(int cpunum)
+{
+	VERIFY_CPUNUM(1.0, cpunum_get_overclock);
+	return cpu[cpunum].overclock;
+}
+
+
+
+/*************************************
+ *
+ *	Sets the user overclock factor for
+ *	a CPU's clock speed. It multiplies
+ *	the clock scale, so a clock scale
+ *	that a driver or CPU core sets is
+ *	kept
+ *
+ *************************************/
+
+void cpunum_set_overclock(int cpunum, double overclock)
+{
+	VERIFY_CPUNUM_VOID(cpunum_set_overclock);
+
+	cpu[cpunum].overclock = overclock;
+	update_cycle_rate(cpunum);
 }
 
 

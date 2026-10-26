@@ -1389,9 +1389,9 @@ static int cps2turbo_music_start(int side, int tune)
 		return 0;
 	}
 	if (side)
-		sample_set_stereo_volume(1, 0, 255);
+		sample_set_stereo_volume(1, 0, 100);
 	else
-		sample_set_stereo_volume(0, 255, 0);
+		sample_set_stereo_volume(0, 100, 0);
 	return 1;
 }
 

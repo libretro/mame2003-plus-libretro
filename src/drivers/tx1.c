@@ -728,7 +728,7 @@ static struct AY8910interface buggyboy_ym2149_interface =
 {
 	2,
 	BUGGYBOY_ZCLK / 4,
-	{ MIXER(15, MIXER_PAN_LEFT), MIXER(15, MIXER_PAN_RIGHT) },
+	{ MIXER(30, MIXER_PAN_LEFT), MIXER(30, MIXER_PAN_RIGHT) },
 	{ 0, 0 },
 	{ 0, 0 },
 	{ bb_ym1_a_w, bb_ym2_a_w },
@@ -740,7 +740,7 @@ static struct AY8910interface buggybjr_ym2149_interface =
 {
 	2,
 	BUGGYBOY_ZCLK / 4,
-	{ MIXER(15, MIXER_PAN_LEFT), MIXER(15, MIXER_PAN_RIGHT) },
+	{ MIXER(30, MIXER_PAN_LEFT), MIXER(30, MIXER_PAN_RIGHT) },
 	{ input_port_4_r, 0 },	/* YM2149 IC19 */
 	{ input_port_5_r, 0 },
 	{ 0, bb_ym2_a_w },		/* YM2149 IC24 */

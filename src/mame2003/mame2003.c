@@ -42,6 +42,7 @@ short*         samples_buffer;
 short*         conversion_buffer;
 int            usestereo = 1;
 static int     applied_discrete_adjuster[DISCRETE_ADJUSTER_SLOTS]; /* last discrete adjuster core option values applied, -1 for none */
+static double  applied_cpu_clock_scale[CPU_CLOCK_SCALE_SLOTS]; /* last CPU clock scale core option values applied, per CPU */
 
 
 /* MAME data structures to store and translate keyboard state */
@@ -417,6 +418,8 @@ static void apply_discrete_adjusters(void)
 void retro_run (void)
 {
   bool updated = false;
+  int cpunum = 0;
+  
   poll_cb(); /* execute input callback */
 
   if (retro_running == 0) /* first time through the loop */
@@ -443,18 +446,22 @@ void retro_run (void)
     }
   }
 
-  if (options.content_flags[CONTENT_ADJUSTER_COUNT])
+if (options.content_flags[CONTENT_ADJUSTER_COUNT])
     apply_discrete_adjusters();
 
-  if (options.cpu_clock_scale)
+  /* a CPU's clock scale core option sets its overclock, which multiplies the clock scale */
+  /* that drivers and CPU cores set.                                                       */
+  for (cpunum = 0; cpunum < cpu_gettotalcpu() && cpunum < CPU_CLOCK_SCALE_SLOTS; cpunum++)
   {
-    if (cpunum_get_clockscale(0) != options.cpu_clock_scale)
+    double scale = options.cpu_clock_scale[cpunum];
+
+    if (scale && scale != applied_cpu_clock_scale[cpunum])
     {
-      log_cb(RETRO_LOG_DEBUG, LOGPRE "changing cpu clock scale from %lf to %lf\n",cpunum_get_clockscale(0),options.cpu_clock_scale);
-      cpunum_set_clockscale(0, options.cpu_clock_scale);
+      log_cb(RETRO_LOG_DEBUG, LOGPRE "changing CPU %d overclock from %lf to %lf\n", cpunum + 1, cpunum_get_overclock(cpunum), scale);
+      cpunum_set_overclock(cpunum, scale);
+      applied_cpu_clock_scale[cpunum] = scale;
     }
-  }
-  mame_frame();
+  }  mame_frame();
   frame_run_since_load = 1;
   if(frameskip_counter <= 11)
     frameskip_counter++;
@@ -471,6 +478,7 @@ void retro_run (void)
 void retro_unload_game(void)
 {
     mame_done();
+    memset(applied_cpu_clock_scale, 0, sizeof(applied_cpu_clock_scale));
     /* do we need to be freeing things here? */
 
     free(options.romset_filename_noext);
