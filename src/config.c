@@ -347,11 +347,17 @@ int config_read_ports(config_file *cfg, struct InputPort *input_ports_default, s
 
 	read_input_port = cfg->format->read_input_port;
 
-	/* calculate the size of the array */
+	/* calculate the size of the array, without the adjusters for an older .cfg */
 	total = count_input_ports(input_ports_default);
+	if (!cfg->format->has_adjusters)
+		for (in = input_ports_default; in->type != IPT_END; in++)
+			if ((in->type & ~IPF_MASK) == IPT_ADJUSTER)
+				total--;
 
-	/* read array size */
+	/* read array size: a .cfg saved with a different number of ports is not loaded */
 	if (readint(cfg->file, &saved_total) != 0)
+		return CONFIG_ERROR_CORRUPT;
+	if (saved_total != total)
 		return CONFIG_ERROR_CORRUPT;
 
 	/* read the original settings and compare them with the ones defined in the driver */
