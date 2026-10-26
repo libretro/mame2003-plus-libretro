@@ -22,11 +22,10 @@ static struct retro_core_option_v2_definition  effective_defaults[OPT_end + 1];
 /* prevent saving corrupt cfgs when the save type does not match the type initialized */
 bool save_protection;
 
-/* one core option per discrete sound adjuster. The labels, sublabels and defaults come */
-/* from the loaded game's PORT_ADJUSTER ports (set_content_flags).                       */
-static const char *discrete_adjuster_keys[DISCRETE_ADJUSTER_SLOTS] = {
-   APPNAME"_discrete_adjuster", APPNAME"_discrete_adjuster_2", APPNAME"_discrete_adjuster_3", APPNAME"_discrete_adjuster_4"
-};
+/* one core option per discrete sound adjuster. The labels, sublabels and defaults come    */
+/* from the loaded game's PORT_ADJUSTER ports (set_content_flags). The keys name the romset */
+/* (APPNAME"_canyon_discrete_adjuster_2"), so one game's saved values never reach another.  */
+static char discrete_adjuster_keys[DISCRETE_ADJUSTER_SLOTS][64];
 static char discrete_adjuster_labels[DISCRETE_ADJUSTER_SLOTS][64];
 static char discrete_adjuster_info[DISCRETE_ADJUSTER_SLOTS][64];
 static char discrete_adjuster_defaults[DISCRETE_ADJUSTER_SLOTS][4];
@@ -1735,6 +1734,13 @@ void set_content_flags(void)
     options.content_flags[CONTENT_NVRAM_BOOTSTRAP] = true;
 
   /************ DISCRETE SOUND ADJUSTERS, EACH WITH ITS OWN CORE OPTION ************/
+  for( i = 0; i < DISCRETE_ADJUSTER_SLOTS; i++ )
+  {
+    if( i == 0 )
+      sprintf(discrete_adjuster_keys[i], APPNAME"_%.16s_discrete_adjuster", game_driver->name);
+    else
+      sprintf(discrete_adjuster_keys[i], APPNAME"_%.16s_discrete_adjuster_%d", game_driver->name, i + 1);
+  }
   i = 0;
   for( input = game_driver->input_ports; (input->type & ~IPF_MASK) != IPT_END; input++ )
   {
