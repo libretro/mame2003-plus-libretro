@@ -57,8 +57,8 @@ struct mixer_channel_data
 	/* mixing levels */
 	unsigned mixing_level;
 	unsigned default_mixing_level;
-	unsigned config_mixing_level;
-	unsigned config_default_mixing_level;
+	/* unsigned config_mixing_level; */			/* mixing levels are no longer saved in the .cfg */
+	/* unsigned config_default_mixing_level; */
 
 	/* current playback positions */
 	unsigned samples_available;
@@ -91,10 +91,10 @@ struct mixer_channel_data
 
 /* channel data */
 static struct mixer_channel_data mixer_channel[MIXER_MAX_CHANNELS];
-static unsigned config_mixing_level[MIXER_MAX_CHANNELS];
-static unsigned config_default_mixing_level[MIXER_MAX_CHANNELS];
+/* static unsigned config_mixing_level[MIXER_MAX_CHANNELS]; */			/* mixing levels are no longer saved in the .cfg */
+/* static unsigned config_default_mixing_level[MIXER_MAX_CHANNELS]; */
 static int first_free_channel = 0;
-static int is_config_invalid;
+/* static int is_config_invalid; */
 static int is_stereo;
 
 /* 32-bit accumulators */
@@ -756,8 +756,8 @@ int mixer_sh_start(void)
 	{
 		channel->mixing_level 					= 0xff;
 		channel->default_mixing_level 			= 0xff;
-		channel->config_mixing_level 			= config_mixing_level[i];
-		channel->config_default_mixing_level 	= config_default_mixing_level[i];
+		/* channel->config_mixing_level 			= config_mixing_level[i]; */
+		/* channel->config_default_mixing_level 	= config_default_mixing_level[i]; */
 
 		channel->left = filter_state_alloc();
 		channel->right = filter_state_alloc();
@@ -929,7 +929,8 @@ int mixer_allocate_channel(int default_mixing_level)
 
 int mixer_allocate_channels(int channels, const int *default_mixing_levels)
 {
-	int i, j;
+	int i;
+	/* int j; */	/* used only by the .cfg mixing level loading below, now #if 0 */
 
 	mixerlogerror(("Mixer:mixer_allocate_channels(%d)\n",channels));
 
@@ -957,8 +958,9 @@ int mixer_allocate_channels(int channels, const int *default_mixing_levels)
 		if (channel->default_mixing_level > 100)
 			channel->default_mixing_level = channel->default_mixing_level * 25 / 255;
 
-		/* attempt to load in the configuration data for this channel */
+		/* the mixing level is set by a core option, not saved in the .cfg */
 		channel->mixing_level = channel->default_mixing_level;
+#if 0	/* mixing levels are no longer read from the .cfg: the mixer level core options set them */
 		if (!is_config_invalid)
 		{
 			/* if the defaults match, set the mixing level from the config */
@@ -973,6 +975,7 @@ int mixer_allocate_channels(int channels, const int *default_mixing_levels)
 					mixer_set_mixing_level(j, mixer_channel[j].default_mixing_level);
 			}
 		}
+#endif
 
 		/* set the default name */
 		mixer_set_name(first_free_channel + i, 0);
@@ -1094,6 +1097,7 @@ int mixer_get_default_mixing_level(int ch)
 }
 
 
+#if 0	/* mixing levels are no longer saved in the .cfg: the mixer level core options set them */
 /***************************************************************************
 	mixer_load_config
 ***************************************************************************/
@@ -1158,6 +1162,7 @@ void mixer_write_config(mame_file *f)
 	mame_fwrite(f, config.default_levels, MIXER_MAX_CHANNELS);
 	mame_fwrite(f, config.mixing_levels, MIXER_MAX_CHANNELS);
 }
+#endif
 
 
 /***************************************************************************

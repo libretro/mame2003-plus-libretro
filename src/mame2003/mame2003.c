@@ -41,6 +41,7 @@ int            orig_samples_per_frame = 0;
 short*         samples_buffer;
 short*         conversion_buffer;
 int            usestereo = 1;
+static int     applied_mixer_level[MIXER_LEVEL_SLOTS]; /* last mixer level core option values applied, -1 for none */
 
 
 /* MAME data structures to store and translate keyboard state */
@@ -243,9 +244,12 @@ bool retro_load_game(const struct retro_game_info *game)
 
   int   driverIndex    = 0;
   int   port_index;
+  int   channel;
   char  *driver_lookup = NULL;
 
   frame_run_since_load = 0;
+  for(channel = 0; channel < MIXER_LEVEL_SLOTS; channel++)
+    applied_mixer_level[channel] = -1;
 
   if(string_is_empty(game->path))
   {
@@ -338,7 +342,10 @@ bool retro_load_game(const struct retro_game_info *game)
   environ_cb(RETRO_ENVIRONMENT_SET_CONTROLLER_INFO, (void*)input_subdevice_ports);
 
   if(!run_game(driverIndex))
+  {
+    update_mixer_level_options(); /* the mixer channels exist once the game has started */
     return true;
+  }
 
   return false;
 }
@@ -388,6 +395,23 @@ void mame_pause(bool pause)
 
 extern UINT8 frameskip_counter;
 
+/* each mixer level core option sets the mixing level of the matching mixer channel */
+static void apply_mixer_levels(void)
+{
+  int channel, level;
+
+  for (channel = 0; channel < options.content_flags[CONTENT_MIXER_CHANNEL_COUNT]; channel++)
+  {
+    level = options.mixer_level[channel];
+    if (level >= 0 && level != applied_mixer_level[channel])
+    {
+      log_cb(RETRO_LOG_DEBUG, LOGPRE "changing %s mixing level from %d to %d\n", mixer_get_name(channel), mixer_get_mixing_level(channel), level);
+      mixer_set_mixing_level(channel, level);
+      applied_mixer_level[channel] = level;
+    }
+  }
+}
+
 void retro_run (void)
 {
   bool updated = false;
@@ -416,6 +440,8 @@ void retro_run (void)
       environ_cb(RETRO_ENVIRONMENT_SET_SYSTEM_AV_INFO, &av_info);
     }
   }
+
+  apply_mixer_levels();
 
   if (options.cpu_clock_scale)
   {

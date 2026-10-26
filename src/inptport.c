@@ -681,7 +681,6 @@ int load_input_port_settings(void)
 {
 	config_file *cfg;
 	int err;
-	struct mixer_config mixercfg;
 	char buf[20];
 
 	if(options.mame_remapping)
@@ -702,11 +701,13 @@ int load_input_port_settings(void)
 		if (err)
 				goto getout;
 
+#if 0	/* mixing levels are no longer read from the .cfg: the mixer level core options set them */
 		err = config_read_mixer_config(cfg, &mixercfg);
 		if (err)
 			goto getout;
 
 		mixer_load_config(&mixercfg);
+#endif
 
 getout:
 		config_close(cfg);
@@ -751,7 +752,6 @@ void save_input_port_settings(void)
 	if (save_protection == options.mame_remapping)
 	{
 		config_file *cfg;
-		struct mixer_config mixercfg;
 		char buf[20];
 		if(options.mame_remapping)
 			sprintf(buf,"%s",Machine->gamedrv->name);
@@ -763,11 +763,8 @@ void save_input_port_settings(void)
 		cfg = config_create(buf);
 		if (cfg)
 		{
-			mixer_save_config(&mixercfg);
-
 			config_write_ports(cfg, Machine->input_ports_default, Machine->input_ports);
 			config_write_coin_and_ticket_counters(cfg, coins, lastcoin, coinlockedout, dispensed_tickets);
-			config_write_mixer_config(cfg, &mixercfg);
 			config_close(cfg);
 		}
 	}
@@ -1688,6 +1685,7 @@ struct InputPort* input_port_allocate(const struct InputPortTiny *src)
 			case IPT_PORT :
 			case IPT_DIPSWITCH_NAME :
 			case IPT_DIPSWITCH_SETTING :
+			case IPT_ADJUSTER :
 				seq_default = CODE_NONE;
 			break;
 			default:

@@ -104,6 +104,8 @@ enum /* the "display numbers" for each player, as opposed to their array index *
 
 #define MAX_PLAYER_COUNT  DISP_PLAYER8   /* We currently support a maximum of eight simultaneous players */
 
+#define MIXER_LEVEL_SLOTS  16   /* one core option per mixer channel, up to MIXER_MAX_CHANNELS in sound/mixer.h */
+
 /******************************************************************************
 
     The following is a set of OS joystick codes (also including buttons and controls
@@ -192,6 +194,7 @@ extern int vector_resize_pending;
 void set_content_flags(void);
 void init_core_options(void);
 void update_variables(bool first_time);
+void update_mixer_level_options(void);
 
 enum CORE_OPTIONS  /* controls the order in which core options appear. common, important, and content-specific options should go earlier on the list */
 {
@@ -217,6 +220,23 @@ enum CORE_OPTIONS  /* controls the order in which core options appear. common, i
   OPT_USE_SAMPLES,
   OPT_USE_ALT_SOUND,
   OPT_SAMPLE_RATE,
+  /* As of October 2026, gyruss, gyrussce and venus use all 16 mixer channels */
+  OPT_MIXER_LEVEL,   /* channel 1 */
+  OPT_MIXER_LEVEL_2,
+  OPT_MIXER_LEVEL_3,
+  OPT_MIXER_LEVEL_4,
+  OPT_MIXER_LEVEL_5,
+  OPT_MIXER_LEVEL_6,
+  OPT_MIXER_LEVEL_7,
+  OPT_MIXER_LEVEL_8,
+  OPT_MIXER_LEVEL_9,
+  OPT_MIXER_LEVEL_10,
+  OPT_MIXER_LEVEL_11,
+  OPT_MIXER_LEVEL_12,
+  OPT_MIXER_LEVEL_13,
+  OPT_MIXER_LEVEL_14,
+  OPT_MIXER_LEVEL_15,
+  OPT_MIXER_LEVEL_16,
   OPT_BRIGHTNESS,
   OPT_GAMMA,
   OPT_TATE_MODE,

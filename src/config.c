@@ -17,7 +17,7 @@
 #define POSITION_BEGIN			0
 #define POSITION_AFTER_PORTS	1
 #define POSITION_AFTER_COINS	2
-#define POSITION_AFTER_MIXER	3
+#define POSITION_AFTER_MIXER	3	/* used only by the disabled mixer level code */
 
 
 
@@ -204,8 +204,8 @@ static config_file *config_init(const char *name, int save)
 {
 	static const struct cfg_format formats[] =
 	{
-		/* mame 0.74 with 8 coin counters */
-		{ "MAMECFG\x9",	"MAMEDEF\x7",	input_port_read_ver_8, seq_read_ver_8, 8 },
+		/* mame2003-plus - 8 coin counters, no mixer levels */
+		{ "MAMECFG\xa",	"MAMEDEF\x7",	input_port_read_ver_8, seq_read_ver_8, 8 },
 	};
 
 	config_file *cfg;
@@ -373,6 +373,10 @@ int config_read_ports(config_file *cfg, struct InputPort *input_ports_default, s
 	{
 		if (read_input_port(cfg->file, in) != 0)
 			break;
+
+		/* an adjuster's setting comes from its core option, not the .cfg */
+		if ((in->type & ~IPF_MASK) == IPT_ADJUSTER)
+			in->default_value = input_ports_default[in - input_ports].default_value;
 		in++;
 	}
 
@@ -469,6 +473,7 @@ done:
 
 
 
+#if 0	/* mixing levels are no longer saved in the .cfg: the mixer level core options set them */
 /***************************************************************************
 	config_read_mixer_config
 ***************************************************************************/
@@ -487,7 +492,7 @@ int config_read_mixer_config(config_file *cfg, struct mixer_config *mixercfg)
 	cfg->position = POSITION_AFTER_MIXER;
 	return CONFIG_ERROR_SUCCESS;
 }
-
+#endif
 
 
 /***************************************************************************
@@ -551,11 +556,15 @@ int config_write_ports(config_file *cfg, const struct InputPort *input_ports_def
 		in++;
 	}
 
-	/* write the current settings */
+	/* write the current settings, with each adjuster at its driver default: its setting */
+	/* comes from its core option, not the .cfg                                        */
 	in = input_ports;
 	while (in->type != IPT_END)
 	{
-		input_port_write(cfg->file, in);
+		if ((in->type & ~IPF_MASK) == IPT_ADJUSTER)
+			input_port_write(cfg->file, &input_ports_default[in - input_ports]);
+		else
+			input_port_write(cfg->file, in);
 		in++;
 	}
 
@@ -614,6 +623,7 @@ int config_write_coin_and_ticket_counters(config_file *cfg, const unsigned int *
 
 
 
+#if 0	/* mixing levels are no longer saved in the .cfg: the mixer level core options set them */
 /***************************************************************************
 	config_write_mixer_config
 ***************************************************************************/
@@ -630,3 +640,4 @@ int config_write_mixer_config(config_file *cfg, const struct mixer_config *mixer
 	cfg->position = POSITION_AFTER_MIXER;
 	return CONFIG_ERROR_SUCCESS;
 }
+#endif

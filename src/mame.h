@@ -181,6 +181,7 @@ enum /* used to index content-specific flags */
   CONTENT_ADSP_DYNAREC,
   CONTENT_SH3_DYNAREC,
   CONTENT_TX1_SCREENS,
+  CONTENT_MIXER_CHANNEL_COUNT,
   CONTENT_end,
 };
 
@@ -266,6 +267,7 @@ struct GameOptions
   bool     input_toggle;
   bool     digital_joy_centering; /* center digital joysticks enable/disable */
   double   cpu_clock_scale;
+  int      mixer_level[MIXER_LEVEL_SLOTS]; /* 0-100, -1 until the frontend sends a value */
   int      autosave_hiscore;      /* default saves on exit / recursively saves every number of frames defined in hiscore.c / disabled bypasses hiscore implementation entirely */
 #if (HAS_CYCLONE || HAS_DRZ80)
   int      cyclone_mode;

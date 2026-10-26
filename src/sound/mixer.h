@@ -104,6 +104,7 @@ void mixer_set_mixing_level(int channel,int level);
 int mixer_get_mixing_level(int level);
 int mixer_get_default_mixing_level(int level);
 
+#if 0	/* mixing levels are no longer saved in the .cfg: the mixer level core options set them */
 /* configuration functions */
 
 struct mixer_config
@@ -116,6 +117,8 @@ void mixer_load_config(const struct mixer_config *config);
 void mixer_save_config(struct mixer_config *config);
 void mixer_read_config(mame_file *f);
 void mixer_write_config(mame_file *f);
+#endif
+
 void mixer_set_pause(int ch, int pause);
 void mixer_set_stereo_volume(int ch, int l_vol, int r_vol );
 
