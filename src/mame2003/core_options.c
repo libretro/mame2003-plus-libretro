@@ -966,8 +966,6 @@ struct retro_core_options_v2 options_us = {
 void init_core_options(void)
 {
   int adjuster;
-
-  default_options[OPT_4WAY]                     = option_def_four_way_emulation;
   int cpu;
 
   default_options[OPT_4WAY]                      = option_def_four_way_emulation;
@@ -1863,6 +1861,8 @@ void set_content_flags(void)
     log_cb(RETRO_LOG_INFO, LOGPRE "* Discrete sound adjusters: %i\n", options.content_flags[CONTENT_ADJUSTER_COUNT]);
     for(i = 0; i < options.content_flags[CONTENT_ADJUSTER_COUNT]; i++)
       log_cb(RETRO_LOG_INFO, LOGPRE "*   %s (default %s%%)\n", discrete_adjuster_labels[i], discrete_adjuster_defaults[i]);
+  }
+
   /* the same text as the CPU clock scale core option labels, to match them up in the frontend */
   if(options.content_flags[CONTENT_CPU_COUNT] == 1)
     log_cb(RETRO_LOG_INFO, LOGPRE "* Uses 1 CPU: %s\n", cpu_clock_scale_labels[0]);

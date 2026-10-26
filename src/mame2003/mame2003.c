@@ -418,8 +418,8 @@ static void apply_discrete_adjusters(void)
 void retro_run (void)
 {
   bool updated = false;
-  int cpunum = 0;
-  
+  int cpunum;
+
   poll_cb(); /* execute input callback */
 
   if (retro_running == 0) /* first time through the loop */
@@ -446,7 +446,7 @@ void retro_run (void)
     }
   }
 
-if (options.content_flags[CONTENT_ADJUSTER_COUNT])
+  if (options.content_flags[CONTENT_ADJUSTER_COUNT])
     apply_discrete_adjusters();
 
   /* a CPU's clock scale core option sets its overclock, which multiplies the clock scale */
@@ -461,7 +461,8 @@ if (options.content_flags[CONTENT_ADJUSTER_COUNT])
       cpunum_set_overclock(cpunum, scale);
       applied_cpu_clock_scale[cpunum] = scale;
     }
-  }  mame_frame();
+  }
+  mame_frame();
   frame_run_since_load = 1;
   if(frameskip_counter <= 11)
     frameskip_counter++;

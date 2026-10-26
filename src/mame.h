@@ -267,7 +267,6 @@ struct GameOptions
   int      override_ad_stick;
   bool     input_toggle;
   bool     digital_joy_centering; /* center digital joysticks enable/disable */
-  double   cpu_clock_scale;
   int      discrete_adjuster[DISCRETE_ADJUSTER_SLOTS]; /* 0-100, -1 until the frontend sends a value */
   double   cpu_clock_scale[CPU_CLOCK_SCALE_SLOTS];
   int      autosave_hiscore;      /* default saves on exit / recursively saves every number of frames defined in hiscore.c / disabled bypasses hiscore implementation entirely */
