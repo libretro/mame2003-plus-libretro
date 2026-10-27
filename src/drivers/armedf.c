@@ -147,6 +147,7 @@ Stephh's notes (based on the games M68000 code and some tests) :
 #include "vidhrdw/generic.h"
 #include "cpu/m68000/m68000.h"
 #include "cpu/z80/z80.h"
+#include "cpu/i8051/i8051.h"
 
 #define LEGION_HACK	0
 
@@ -412,6 +413,112 @@ static MEMORY_WRITE16_START( armedf_writemem )
 	{ 0x06d008, 0x06d009, armedf_fg_scrolly_w },
 	{ 0x06d00a, 0x06d00b, sound_command_w },
 MEMORY_END
+
+static UINT8 bigfghtr_sharedram[0x3a00];
+
+static READ16_HANDLER( bigfghtr_sharedram_r )
+{
+	return (bigfghtr_sharedram[offset * 2] << 8) | bigfghtr_sharedram[offset * 2 + 1];
+}
+
+static WRITE16_HANDLER( bigfghtr_sharedram_w )
+{
+	if (ACCESSING_MSB)
+		bigfghtr_sharedram[offset * 2] = data >> 8;
+	if (ACCESSING_LSB)
+		bigfghtr_sharedram[offset * 2 + 1] = data;
+}
+
+static READ_HANDLER( bigfghtr_mcu_sharedram_r )
+{
+	return bigfghtr_sharedram[offset];
+}
+
+static WRITE_HANDLER( bigfghtr_mcu_sharedram_w )
+{
+	bigfghtr_sharedram[offset] = data;
+}
+
+static READ_HANDLER( bigfghtr_mcu_p1_r )
+{
+	return 0xdf;
+}
+
+static READ16_HANDLER( bigfghtr_latch_r )
+{
+	cpu_set_irq_line(2, I8051_INT0_LINE, CLEAR_LINE);
+	cpu_set_irq_line(2, I8051_INT0_LINE, ASSERT_LINE);
+	return 0;
+}
+
+static WRITE16_HANDLER( bigfghtr_irq_ack_w )
+{
+	cpu_set_irq_line(0, 1, CLEAR_LINE);
+}
+
+static INTERRUPT_GEN( bigfghtr_interrupt )
+{
+	cpu_set_irq_line(0, 1, ASSERT_LINE);
+}
+
+static MACHINE_INIT( bigfghtr )
+{
+	memset(bigfghtr_sharedram, 0, sizeof(bigfghtr_sharedram));
+	armedf_vreg = 0;
+	cpu_set_irq_line(2, I8051_INT0_LINE, CLEAR_LINE);
+}
+
+static MEMORY_READ16_START( bigfghtr_readmem )
+    { 0x000000, 0x07ffff, MRA16_ROM },
+	{ 0x080000, 0x0805ff, MRA16_RAM },
+	{ 0x080600, 0x083fff, bigfghtr_sharedram_r },
+	{ 0x084000, 0x085fff, MRA16_RAM },
+	{ 0x086000, 0x086fff, MRA16_RAM },
+	{ 0x087000, 0x087fff, MRA16_RAM },
+	{ 0x088000, 0x089fff, MRA16_RAM },
+	{ 0x08a000, 0x08afff, MRA16_RAM },
+	{ 0x08b000, 0x08bfff, MRA16_RAM },
+	{ 0x08c000, 0x08c001, input_port_0_word_r },
+	{ 0x08c002, 0x08c003, input_port_1_word_r },
+	{ 0x08c004, 0x08c005, input_port_2_word_r },
+	{ 0x08c006, 0x08c007, input_port_3_word_r },
+	{ 0x400000, 0x400001, bigfghtr_latch_r },
+MEMORY_END
+
+static MEMORY_WRITE16_START( bigfghtr_writemem )
+    { 0x000000, 0x07ffff, MWA16_ROM },
+	{ 0x080000, 0x0805ff, MWA16_RAM, &spriteram16, &spriteram_size },
+	{ 0x080600, 0x083fff, bigfghtr_sharedram_w },
+	{ 0x084000, 0x085fff, MWA16_RAM },
+	{ 0x086000, 0x086fff, armedf_bg_videoram_w, &armedf_bg_videoram },
+	{ 0x087000, 0x087fff, armedf_fg_videoram_w, &armedf_fg_videoram },
+	{ 0x088000, 0x089fff, armedf_text_videoram_w, &terraf_text_videoram },
+	{ 0x08a000, 0x08afff, paletteram16_xxxxRRRRGGGGBBBB_word_w, &paletteram16 },
+	{ 0x08b000, 0x08bfff, MWA16_RAM, &spr_pal_clut },
+	{ 0x08d000, 0x08d001, io_w },
+	{ 0x08d002, 0x08d003, armedf_bg_scrollx_w },
+	{ 0x08d004, 0x08d005, armedf_bg_scrolly_w },
+	{ 0x08d006, 0x08d007, armedf_fg_scrollx_w },
+	{ 0x08d008, 0x08d009, armedf_fg_scrolly_w },
+	{ 0x08d00a, 0x08d00b, sound_command_w },
+	{ 0x08d00c, 0x08d00d, MWA16_NOP },
+	{ 0x08d00e, 0x08d00f, bigfghtr_irq_ack_w },
+MEMORY_END
+
+static MEMORY_READ_START( bigfghtr_mcu_readmem )
+     { 0x0000, 0x0fff, MRA_ROM },
+	 { 0x0600, 0x3fff, bigfghtr_mcu_sharedram_r },
+MEMORY_END
+
+static MEMORY_WRITE_START( bigfghtr_mcu_writemem )
+     { 0x0000, 0x0fff, MWA_ROM },
+     { 0x0600, 0x3fff, bigfghtr_mcu_sharedram_w },
+MEMORY_END
+
+
+static PORT_READ_START( bigfghtr_mcu_readport )
+     { 0x01, 0x01, bigfghtr_mcu_p1_r },
+PORT_END
 
 
 static MEMORY_READ_START( soundreadmem )
@@ -792,6 +899,83 @@ INPUT_PORTS_START( armedf )
 INPUT_PORTS_END
 
 
+INPUT_PORTS_START( bigfghtr )
+	PORT_START
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY | IPF_PLAYER1)
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY | IPF_PLAYER1)
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY | IPF_PLAYER1)
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1)
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1)
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1)
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1)
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_START2 )
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0xf000, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY | IPF_PLAYER2)
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY | IPF_PLAYER2)
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY | IPF_PLAYER2)
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER2)
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2)
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2)
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2)
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_SERVICE1 )
+	PORT_SERVICE( 0x0200, IP_ACTIVE_LOW )
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0xf800, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START
+	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Lives ) )
+	PORT_DIPSETTING(    0x03, "3" )
+	PORT_DIPSETTING(    0x02, "4" )
+	PORT_DIPSETTING(    0x01, "5" )
+	PORT_DIPSETTING(    0x00, "6" )
+	PORT_DIPNAME( 0x0c, 0x0c, DEF_STR( Bonus_Life ) )
+	PORT_DIPSETTING(    0x0c, "80k then every 80k" )
+	PORT_DIPSETTING(    0x04, "80k then every 100k" )
+	PORT_DIPSETTING(    0x08, "100k then every 80k" )
+	PORT_DIPSETTING(    0x00, "100k then every 100k" )
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( On ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Cabinet ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Cocktail ) )
+	PORT_DIPNAME( 0xc0, 0xc0, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(    0xc0, "Easy" )
+	PORT_DIPSETTING(    0x80, "Normal" )
+	PORT_DIPSETTING(    0x40, "Hard" )
+	PORT_DIPSETTING(    0x00, "Hardest" )
+
+	PORT_START
+	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Coin_A ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x03, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Free_Play ) )
+	PORT_DIPNAME( 0x0c, 0x0c, DEF_STR( Coin_B ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x0c, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( 2C_3C ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( 1C_2C ) )
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x20, "Debug 2 (requires Debug On) (P2 Start skip stage, Invulnerability)" )
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Flip_Screen ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, "Debug (P1 Start to pause)" )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+INPUT_PORTS_END
 
 static struct GfxLayout char_layout =
 {
@@ -839,12 +1023,26 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 	{ -1 } /* end of array */
 };
 
-
+static struct GfxDecodeInfo bigfghtr_gfxdecodeinfo[] =
+{
+	{ REGION_GFX1, 0, &char_layout, 0 * 16, 32 },
+	{ REGION_GFX2, 0, &tile_layout, 64 * 16, 32 },
+	{ REGION_GFX3, 0, &tile_layout, 96 * 16, 32 },
+	{ REGION_GFX4, 0, &tile_layout, 32 * 16, 32 },
+	{ -1 }
+};
 
 static struct YM3812interface ym3812_interface =
 {
 	1,				/* 1 chip (no more supported) */
 	4000000,        /* 4 MHz */
+	{ 50 }         /* (not supported) */
+};
+
+static struct YM3812interface bigfghtr_ym3812_interface =
+{
+	1,				/* 1 chip (no more supported) */
+	24000000/6,        /* 4 MHz */
 	{ 50 }         /* (not supported) */
 };
 
@@ -861,6 +1059,38 @@ static struct DACinterface cclimbr2_dac_interface =
 };
 
 
+static MACHINE_DRIVER_START( bigfghtr )
+	MDRV_CPU_ADD(M68000, 16000000/2)
+	MDRV_CPU_MEMORY(bigfghtr_readmem, bigfghtr_writemem)
+	MDRV_CPU_VBLANK_INT(bigfghtr_interrupt, 1)
+
+	MDRV_CPU_ADD(Z80, 24000000/6)
+	MDRV_CPU_MEMORY(soundreadmem, soundwritemem)
+	MDRV_CPU_PORTS(readport, writeport)
+	MDRV_CPU_PERIODIC_INT(irq0_line_hold, (8000000/2/512))
+
+	MDRV_CPU_ADD(I8751, 16000000/2/I8051_CLOCK_DIVIDER)
+	MDRV_CPU_MEMORY(bigfghtr_mcu_readmem, bigfghtr_mcu_writemem)
+	MDRV_CPU_PORTS(bigfghtr_mcu_readport, 0)
+
+	MDRV_FRAMES_PER_SECOND(8000000.0 / (531 * 254))
+	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)
+	MDRV_INTERLEAVE(100)
+	MDRV_MACHINE_INIT(bigfghtr)
+
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_BUFFERS_SPRITERAM)
+	MDRV_SCREEN_SIZE(64 * 8, 32 * 8)
+	MDRV_VISIBLE_AREA(12 * 8, (64 - 12) * 8 - 1, 8, 247)
+	MDRV_GFXDECODE(bigfghtr_gfxdecodeinfo)
+	MDRV_PALETTE_LENGTH(2048)
+	MDRV_VIDEO_EOF(armedf)
+	MDRV_VIDEO_START(armedf)
+	MDRV_VIDEO_UPDATE(armedf)
+
+	/* sound hardware */
+	MDRV_SOUND_ADD(YM3812, bigfghtr_ym3812_interface)
+	MDRV_SOUND_ADD(DAC, dac_interface)
+MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( terraf )
 
@@ -1272,6 +1502,71 @@ ROM_START( armedf )
 	ROM_LOAD( "af_12.rom", 0x20000, 0x20000, CRC(23cb6bfe) SHA1(34cb013827206bea71f5336b308ba92bee688506) )
 ROM_END
 
+ROM_START( skyrobo )
+	ROM_REGION( 0x80000, REGION_CPU1, 0 )
+	ROM_LOAD16_BYTE( "3", 0x00000, 0x20000, CRC(02d8ba9f) SHA1(7622cc17561e5d1c069341b5f412f732f901d4a8) )
+	ROM_LOAD16_BYTE( "1", 0x00001, 0x20000, CRC(fcfd9e2e) SHA1(c69b34653f04af8d488e323bc2db89656f76c332) )
+	ROM_LOAD16_BYTE( "4", 0x40000, 0x20000, CRC(37ced4b7) SHA1(9ded66f795d3c0886f48e52de632e6edb8c57e84) )
+	ROM_LOAD16_BYTE( "2", 0x40001, 0x20000, CRC(88d52f8e) SHA1(33b0d2b3cd38a13d8580694e7c50c059914eebe2) )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 )
+	ROM_LOAD( "8.17k", 0x00000, 0x10000, CRC(0aeab61e) SHA1(165e0ad58542b65383fef714578da21f62df7b74) )
+
+	ROM_REGION( 0x10000, REGION_CPU3, 0 )
+
+	ROM_LOAD( "i8751.bin", 0x00000, 0x1000, BAD_DUMP CRC(64a0d225) SHA1(ccc5c33c0c412bf9e3a4f7de5e39b042e00c41dd) )
+
+	ROM_REGION( 0x08000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_LOAD( "7", 0x00000, 0x08000, CRC(f556ef28) SHA1(2acb83cdf23356091056f2cfbbc2b9828ee25b6f) )
+
+	ROM_REGION( 0x30000, REGION_GFX2, ROMREGION_DISPOSE )
+	ROM_LOAD( "5.13f", 0x00000, 0x20000, CRC(d440a29f) SHA1(9e6ea7c9903e5e3e8e10ac7680c6120e1aa27250) )
+	ROM_LOAD( "6.15f", 0x20000, 0x10000, CRC(27469a76) SHA1(ebf2c60e1f70a589680c05adf10771ac2097b9d0) )
+
+	ROM_REGION( 0x20000, REGION_GFX3, ROMREGION_DISPOSE )
+	ROM_LOAD( "12.8a", 0x00000, 0x10000, CRC(a5694ea9) SHA1(ea94174495b3a65b3797932074a94df3b55fa0a2) )
+	ROM_LOAD( "11.6a", 0x10000, 0x10000, CRC(10b74e2c) SHA1(e3ec68726e7f277dc2043424f2e4d863eb01b3dc) )
+
+	ROM_REGION( 0x40000, REGION_GFX4, ROMREGION_DISPOSE )
+	ROM_LOAD16_BYTE( "9.8d",  0x00000, 0x20000, CRC(fe67800e) SHA1(0d3c4c3cb185270260fa691a97cddf082d6a056e) )
+	ROM_LOAD16_BYTE( "10.9d", 0x00001, 0x20000, CRC(dcb828c4) SHA1(607bc86580a6fe6e15e91131532b0eecd8b7a0cb) )
+
+	ROM_REGION( 0x0100, REGION_PROMS, 0 )
+	ROM_LOAD( "tf.13h", 0x0000, 0x0100, CRC(81244757) SHA1(6324f63e571f0f7a0bb9eb97f9994809db79493f) )
+ROM_END
+
+ROM_START( bigfghtr )
+	ROM_REGION( 0x80000, REGION_CPU1, 0 )
+	ROM_LOAD16_BYTE( "3.ic3", 0x00000, 0x20000, CRC(e1e1f291) SHA1(dbbd707be6250d9ffcba3fee265869b72f790e26) )
+	ROM_LOAD16_BYTE( "1.ic2", 0x00001, 0x20000, CRC(1100d991) SHA1(3c79398804b3a26b3df0c5734b270c37e1ba6a60) )
+	ROM_LOAD16_BYTE( "4.ic5", 0x40000, 0x20000, CRC(2464a83b) SHA1(00f5ac81bc33148daafeab757647b63894e0e0ca) )
+	ROM_LOAD16_BYTE( "2.ic4", 0x40001, 0x20000, CRC(b47bbcd5) SHA1(811bd4bc8fb662abf4734ab51e24c863d5cc3df3) )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 )
+	ROM_LOAD( "8.17k", 0x00000, 0x10000, CRC(0aeab61e) SHA1(165e0ad58542b65383fef714578da21f62df7b74) )
+
+	ROM_REGION( 0x10000, REGION_CPU3, 0 )
+	ROM_LOAD( "i8751.bin", 0x00000, 0x1000,  CRC(64a0d225) SHA1(ccc5c33c0c412bf9e3a4f7de5e39b042e00c41dd) )
+
+	ROM_REGION( 0x08000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_LOAD( "7.11c", 0x00000, 0x08000, CRC(1809e79f) SHA1(730547771f803857acb552a84a8bc21bd3bda33f) )
+
+	ROM_REGION( 0x30000, REGION_GFX2, ROMREGION_DISPOSE )
+	ROM_LOAD( "5.13f", 0x00000, 0x20000, CRC(d440a29f) SHA1(9e6ea7c9903e5e3e8e10ac7680c6120e1aa27250) )
+	ROM_LOAD( "6.15f", 0x20000, 0x10000, CRC(27469a76) SHA1(ebf2c60e1f70a589680c05adf10771ac2097b9d0) )
+
+	ROM_REGION( 0x20000, REGION_GFX3, ROMREGION_DISPOSE )
+	ROM_LOAD( "12.8a", 0x00000, 0x10000, CRC(a5694ea9) SHA1(ea94174495b3a65b3797932074a94df3b55fa0a2) )
+	ROM_LOAD( "11.6a", 0x10000, 0x10000, CRC(10b74e2c) SHA1(e3ec68726e7f277dc2043424f2e4d863eb01b3dc) )
+
+	ROM_REGION( 0x40000, REGION_GFX4, ROMREGION_DISPOSE )
+	ROM_LOAD16_BYTE( "9.8d",  0x00000, 0x20000, CRC(fe67800e) SHA1(0d3c4c3cb185270260fa691a97cddf082d6a056e) )
+	ROM_LOAD16_BYTE( "10.9d", 0x00001, 0x20000, CRC(dcb828c4) SHA1(607bc86580a6fe6e15e91131532b0eecd8b7a0cb) )
+
+	ROM_REGION( 0x0100, REGION_PROMS, 0 )
+	ROM_LOAD( "tf.13h", 0x0000, 0x0100, CRC(81244757) SHA1(6324f63e571f0f7a0bb9eb97f9994809db79493f) )
+ROM_END
+
 
 DRIVER_INIT( terraf )
 {
@@ -1341,3 +1636,5 @@ GAMEX( 1987, terrafu,  terraf, terraf,   terraf,   terrafu,  ROT0,   "Nichibutsu
 GAMEX( 1987, kodure,   0,      kodure,   kodure,   kodure,   ROT0,   "Nichibutsu", "Kodure Ookami (Japan)",  GAME_IMPERFECT_GRAPHICS | GAME_UNEMULATED_PROTECTION )
 GAMEX( 1988, cclimbr2, 0,      cclimbr2, cclimbr2, cclimbr2, ROT0,   "Nichibutsu", "Crazy Climber 2 (Japan)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1988, armedf,   0,      armedf,   armedf,   armedf,   ROT270, "Nichibutsu", "Armed Formation", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1989, skyrobo,  0,      bigfghtr, bigfghtr, armedf,   ROT0,   "Nichibutsu", "Sky Robo", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1989, bigfghtr, skyrobo,bigfghtr, bigfghtr, armedf,   ROT0,   "Nichibutsu", "Tatakae! Big Fighter (Japan)", GAME_IMPERFECT_GRAPHICS )
