@@ -301,16 +301,22 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 ## New Clones
 
 * 800 Fathoms (older), Knock Out!! (bootleg, set 2 and set 3), Triple Punch (set 2) - Romsets `800fatha`, `knockoutb`, `knockoutc`, `triplepa`
+* Alien Storm (bootlegs of the 3 players and Japan sets) - Romsets `astorm3d`, `astormud`, `astormjd`
 * Asura Buster - Eternal Warriors (USA), (Japan, set 2) and (Japan) (ARCADIA review build) - Romsets `asurabus`, `asurabusja`, `asurabusjr`; the Japan set 1 is now `asurabusj`, as in current MAME
 * Battle Shark (Japan, Joystick)
+* Bloxeed (bootleg) - Romset `bloxeedd`
 * Botanic (French version)
 * Bubble Bobble (prototype on tokio hardware)
 * Calorie Kun vs Moguranian (bootleg)
 * Cannon Dancer
+* Clutch Hitter (bootlegs) - Romsets `cltchitrd`, `cltchitrjd`
 * Competition Golf Final Round (old version) - `compglfo`
+* Cotton (bootlegs of the US and Japan sets) - Romsets `cottonud`, `cottonjd`, `cottonjad`
 * Crouching Tiger Hidden Dragon 2003
 * Crouching Tiger Hidden Dragon 2003 Super Plus
 * Crystal Castles (Joystick Version)
+* D. D. Crew (bootlegs of the six FD1094 sets) - Romsets `ddcrewd`, `ddcrewud`, `ddcrew1d`, `ddcrew2d`, `ddcrewjd`, `ddcrewj2d`
+* Desert Breaker (bootlegs) - Romsets `desertbrd`, `desertbrjd`
 * DJ Boy (Japan)
 * DoDonPachi Dai-Ou-Jou (Black Label)
 * Double Dragon 3 - The Rosetta Stone (Japan)
@@ -336,6 +342,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * King of Gladiator
 * Knuckle Bash 2
 * Kyukyoku Tiger (Japan, 2 Players) 
+* Laser Ghost (bootlegs) - Romsets `lghostd`, `lghostud`
 * Mad Ball V2.0 * Mature * - Romset `madball`
 * Magical Drop
 * Magical Drop Plus 1
@@ -344,6 +351,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Renegade (US, Bootleg)
 * Safari Rally (World) - safarir
 * Sexy Parodius (Ver AAA) * Mature *
+* Shadow Dancer (World, Japan and US) - Romsets `shdancer`, `shdancerj`, `shdancer1` (were `shdancer`, `shdancrj`, `shdancrb`), now on the System 18 memory mapper and video as in current MAME
 * Snk Vs Capcom : Svc Chaos (bootleg)
 * Super Bishi Bashi Championship (ver KAA, 3 Players)
 * Target Ball * Mature * (Romset `tgtballa`)
@@ -404,6 +412,8 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 
 * Agent Super Bond - Romset `superbon` - colors fixed
 * Alcon - Romset: `alcon`
+* Alien Storm (World and Japan 2 players, World and US 3 players) - Romsets `astorm`, `astormj`, `astorm3`, `astormu` - FD1094 encrypted 68000, Sega System 18
+* Bloxeed (Japan, two sets) - Romsets `bloxeed`, `bloxeeda` - FD1094 encrypted 68000, Sega System 18
 * Arch Rivals - Romset: `archrivl`
 * Avengers In Galactic Storm US - Romset: `avengrgs`
 * Avengers In Galactic Storm Japan - Romset: `avengrgsj`
@@ -421,10 +431,14 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Cheeky Mouse - Romset `cheekyms` - colors fixed
 * Chouji Meikyuu Legion (ver 1.05) - Romset `legiono`
 * Competition Golf Final Round (revision 3) - `compgolf`
+* Cotton (World, US, Japan Rev A and Rev B) - Romsets `cotton`, `cottonu`, `cottonj`, `cottonja` - FD1094 encrypted 68000
+* Clutch Hitter (US and Japan) - Romsets `cltchitr`, `cltchitrj` - FD1094 encrypted 68000, Sega System 18
 * Crater Raider - Romset `crater`
 * Crazy Climber 2 - Romset `cclimbr2`
 * Dark Edge - Romset `darkedge`
 * DD Crew - Romset `ddcrew`
+* D. D. Crew (all FD1094 sets: World 2, 3 and 4 players, US, Japan 2 and 4 players) - Romsets `ddcrew`, `ddcrew1`, `ddcrew2`, `ddcrewu`, `ddcrewj`, `ddcrewj2` - Sega System 18, as in current MAME
+* Desert Breaker (World and Japan) - Romsets `desertbr`, `desertbrj` - FD1094 encrypted 68000, Sega System 18
 * Demolition Derby - Romset `demoderb`
 * Die Hard Arcade - Romset `diehard` - Requires a fast system; video and sound issues remain
 * Discs Of Tron - Romsets `dotron` and `dotrone`
@@ -466,6 +480,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Kick - Romset `kick`
 * Kick'N Run- Romset `kicknrun`
 * Kozmik Kroozr - Romset `kroozr`
+* Laser Ghost (World, US and Japan) - Romsets `lghost`, `lghostu`, `lghostj` - FD1094 encrypted 68000, Sega System 18, light guns
 * Legion (ver 2.03) - Romset `legion`
 * Macho Mouse - Romset `machomou` - colors fixed
 * Mario's Open Golf (Playchoice 10) - Romset `pc_moglf`
@@ -535,6 +550,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Under Fire - Romset `undrfire`
 * U.S. Classic - Romset `usclssic` - colors fixed
 * VS. Hot Smash - `hotsmash`
+* Wally wo Sagase! (rev A and B, 2 and 3 players) - Romsets `wwallyj`, `wwallyja`, `wwallyja3p` - FD1094 encrypted 68000, Sega System 18, trackballs
 * Wonder Boy in Monster Land (Japan New Ver.) - Romset `wbml`
 * Wonder Boy in Monster Land (Japan Old Ver.) - Romset `wbmljo`
 * Xenophobe - Romset `xenophob`
@@ -803,6 +819,10 @@ Notes on this option:
 
 ## Misc Changes
 * Save states (RunAhead, netplay) of the Galaxian/Scramble/Frogger hardware: Galaxian video (stars, flip, banks, background), the 7474 flip-flops, the Scramble sound RAM and timer, the RC filters of the sound streams, the global sound enable
+* Sega System 18: all the games on the 315-5195 memory mapper, the segaic16 video and the VDP layer as in current MAME (171-5874, 171-5987 and Shadow Dancer ROM boards, FD1094 sets, Laser Ghost light guns, Wally wo Sagase! trackballs); the old `astorm` and `astorm2p` are now `astormj` and `astorm`
+* Sega System 18 (also Moonwalker): the VDP palette writes no longer overflow the System 16 palette RAM (they corrupted the memory after it, e.g. garbled graphics in Shadow Dancer), and the sprite shadows over the VDP layer no longer index past the palette
+* Save states (RunAhead, netplay) of the Sega System 18 hardware: the RF5C68 PCM, the YM2612/YM3438 envelope, LFO, frequency and timer state, the VDP layer, the sound ROM bank
+* Save states (RunAhead, netplay) of the Sega System 16B hardware: the uPD7759 ADPCM chip, the sound CPU ROM bank, the segaic16 tilemap and sprite banks, flip, scroll latches and display enable
 * Added HD647180 MCU sound support for Fire Shark and Vimana [arcadez]
 * Added sound sample support for Cosmic Alien [BritneysPAIRS, arcadez]
 * Updated sample support for Donkey Kong and Donkey kong JR to MAME87 [BritneysPAIRS, arcadez]

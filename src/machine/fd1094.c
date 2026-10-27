@@ -49,6 +49,15 @@ static UINT16 *fd1094_current;		/* the one for the current state */
 static UINT8   fd1094_state;
 static UINT8   fd1094_irqmode;
 
+/* CPU address windows that fetch their opcodes from the ROM, through the
+   decryption: by default the whole ROM at its own address */
+#define FD1094_MAX_WINDOWS	4
+static int     fd1094_numwindows;
+static offs_t  fd1094_win_start[FD1094_MAX_WINDOWS];
+static offs_t  fd1094_win_end[FD1094_MAX_WINDOWS];
+static offs_t  fd1094_win_rgnoffs[FD1094_MAX_WINDOWS];
+static int     fd1094_curwin;		/* window of the current opcode base, or -1 */
+
 /* opcodes using PC-relative addressing, replaced by FFFF */
 static const UINT16 masked_opcodes[] =
 {
@@ -373,17 +382,22 @@ static UINT16 *fd1094_get_decrypted(UINT8 state)
 
 static OPBASE_HANDLER( fd1094_setopbase )
 {
-	if (address < fd1094_rom_size)
-	{
-		OP_RAM = (UINT8 *)fd1094_rom;
-		OP_ROM = (UINT8 *)fd1094_current;
-		OP_MEM_MIN = 0;
-		OP_MEM_MAX = fd1094_rom_size - 1;
-		opcode_entry = STATIC_ROM;
-		return ~0;
-	}
+	int w;
+
+	for (w = 0; w < fd1094_numwindows; w++)
+		if (address >= fd1094_win_start[w] && address <= fd1094_win_end[w])
+		{
+			OP_RAM = (UINT8 *)fd1094_rom + fd1094_win_rgnoffs[w] - fd1094_win_start[w];
+			OP_ROM = (UINT8 *)fd1094_current + fd1094_win_rgnoffs[w] - fd1094_win_start[w];
+			OP_MEM_MIN = fd1094_win_start[w];
+			OP_MEM_MAX = fd1094_win_end[w];
+			opcode_entry = STATIC_ROM;
+			fd1094_curwin = w;
+			return ~0;
+		}
 
 	/* let the memory system find the base, with no offset for the opcodes */
+	fd1094_curwin = -1;
 	OP_ROM = OP_RAM;
 	return address;
 }
@@ -399,8 +413,12 @@ static void fd1094_refresh(void)
 	fd1094_current = fd1094_get_decrypted(fd1094_irqmode ? fd1094_key[0] : fd1094_state);
 
 	cpuintrf_push_context(fd1094_cpunum);
-	if (OP_RAM == (UINT8 *)fd1094_rom)
-		OP_ROM = (UINT8 *)fd1094_current;
+	if (fd1094_curwin >= 0)
+	{
+		offs_t delta = fd1094_win_rgnoffs[fd1094_curwin] - fd1094_win_start[fd1094_curwin];
+		if (OP_RAM == (UINT8 *)fd1094_rom + delta)
+			OP_ROM = (UINT8 *)fd1094_current + delta;
+	}
 	cpuintrf_pop_context();
 }
 
@@ -477,6 +495,12 @@ void fd1094_driver_init(int cpunum, int keyregion)
 		fd1094_cache[i] = NULL;
 	build_masked_opcodes_lookup();
 
+	fd1094_numwindows = 1;
+	fd1094_win_start[0] = 0;
+	fd1094_win_end[0] = fd1094_rom_size - 1;
+	fd1094_win_rgnoffs[0] = 0;
+	fd1094_curwin = -1;
+
 	fd1094_state = 0;
 	fd1094_irqmode = 0;
 	fd1094_current = fd1094_get_decrypted(0);
@@ -484,6 +508,15 @@ void fd1094_driver_init(int cpunum, int keyregion)
 	state_save_register_UINT8("fd1094", 0, "state", &fd1094_state, 1);
 	state_save_register_UINT8("fd1094", 0, "irqmode", &fd1094_irqmode, 1);
 	state_save_register_func_postload(fd1094_postload);
+}
+
+void fd1094_set_window(int which, offs_t start, offs_t end, offs_t rgnoffs)
+{
+	fd1094_win_start[which] = start;
+	fd1094_win_end[which] = end;
+	fd1094_win_rgnoffs[which] = rgnoffs;
+	if (fd1094_numwindows < which + 1)
+		fd1094_numwindows = which + 1;
 }
 
 void fd1094_machine_init(void)
@@ -498,8 +531,9 @@ void fd1094_machine_init(void)
 	cpuintrf_push_context(fd1094_cpunum);
 	OP_RAM = (UINT8 *)fd1094_rom;
 	OP_MEM_MIN = 0;
-	OP_MEM_MAX = fd1094_rom_size - 1;
+	OP_MEM_MAX = fd1094_win_end[0];
 	opcode_entry = STATIC_ROM;
+	fd1094_curwin = 0;
 	cpuintrf_pop_context();
 
 	fd1094_cpu_reset();

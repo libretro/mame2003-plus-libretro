@@ -2,6 +2,7 @@
 #include "vidhrdw/generic.h"
 #include "system16.h"
 #include "vidhrdw/segaic16.h"
+#include "state.h"
 
 static struct mame_bitmap *tempbitmap;
 
@@ -28,9 +29,13 @@ static void draw_vdp(struct mame_bitmap *bitmap, const struct rectangle *cliprec
 		for (x = cliprect->min_x; x <= cliprect->max_x; x++)
 		{
 			UINT16 pix = src[x];
-			if (pix != 0xffff)
+
+			/* as in MAME: the VDP shadow/highlight flags (0x800/0x1000) are not
+			   used, only the 64 VDP colors at 0x1800; they would also index
+			   past the end of the palette */
+			if (pix != 0xffff && (pix & 0xf))
 			{
-				dst[x] = pix;
+				dst[x] = 0x1800 + (pix & 0x3f);
 				pri[x] |= priority;
 			}
 		}
@@ -92,6 +97,13 @@ VIDEO_START( system18_new )
 	tempbitmap = auto_bitmap_alloc_depth(Machine->drv->screen_width, Machine->drv->screen_height, 16);
 	if (!tempbitmap)
 		return 1;
+	fillbitmap(tempbitmap, 0xffff, NULL);
+
+	grayscale_enable = vdp_enable = vdp_mixing = 0;
+	state_save_register_UINT8("system18", 0, "grayscale", &grayscale_enable, 1);
+	state_save_register_UINT8("system18", 0, "vdp_enable", &vdp_enable, 1);
+	state_save_register_UINT8("system18", 0, "vdp_mixing", &vdp_mixing, 1);
+	state_save_register_UINT16("system18", 0, "vdp_bitmap", (UINT16 *)tempbitmap->base, tempbitmap->rowpixels * (tempbitmap->height - 1) + tempbitmap->width);
 	return 0;
 }
 
@@ -105,12 +117,11 @@ VIDEO_UPDATE( system18_new )
 	if (!segaic16_display_enable)
 	{
 		fillbitmap(bitmap, get_black_pen(), cliprect);
+		if (vdp_enable)
+			update_system18_vdp(tempbitmap, cliprect);
 		return;
 	}
 
-	/* if the VDP is enabled, update our tempbitmap */
-	if (vdp_enable)
-		update_system18_vdp(tempbitmap, cliprect);
 
 	/* reset priorities */
 	fillbitmap(priority_bitmap, 0, cliprect);
@@ -136,4 +147,10 @@ VIDEO_UPDATE( system18_new )
 	if (vdp_enable && vdplayer == 3) draw_vdp(bitmap, cliprect, vdppri);
 	/* draw the sprites */
 	segaic16_sprites_draw(0, bitmap, cliprect);
+
+	/* the VDP layer shows one frame later than the other layers, as in MAME
+	   (it renders its lines ahead of the screen): render it for the next
+	   frame. It is part of the save states. */
+	if (vdp_enable)
+		update_system18_vdp(tempbitmap, cliprect);
 }
