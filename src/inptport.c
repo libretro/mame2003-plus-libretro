@@ -681,6 +681,7 @@ int load_input_port_settings(void)
 {
 	config_file *cfg;
 	int err;
+	/* struct mixer_config mixercfg; */	/* mixing levels are no longer read from the .cfg */
 	char buf[20];
 
 	if(options.mame_remapping)
@@ -701,7 +702,7 @@ int load_input_port_settings(void)
 		if (err)
 				goto getout;
 
-#if 0	/* mixing levels are no longer read from the .cfg: the mixer level core options set them */
+#if 0	/* mixing levels are no longer read from the .cfg */
 		err = config_read_mixer_config(cfg, &mixercfg);
 		if (err)
 			goto getout;
@@ -752,6 +753,7 @@ void save_input_port_settings(void)
 	if (save_protection == options.mame_remapping)
 	{
 		config_file *cfg;
+		/* struct mixer_config mixercfg; */	/* mixing levels are no longer saved in the .cfg */
 		char buf[20];
 		if(options.mame_remapping)
 			sprintf(buf,"%s",Machine->gamedrv->name);
@@ -763,8 +765,11 @@ void save_input_port_settings(void)
 		cfg = config_create(buf);
 		if (cfg)
 		{
+			/* mixer_save_config(&mixercfg); */	/* mixing levels are no longer saved in the .cfg */
+
 			config_write_ports(cfg, Machine->input_ports_default, Machine->input_ports);
 			config_write_coin_and_ticket_counters(cfg, coins, lastcoin, coinlockedout, dispensed_tickets);
+			/* config_write_mixer_config(cfg, &mixercfg); */
 			config_close(cfg);
 		}
 	}

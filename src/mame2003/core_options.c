@@ -34,6 +34,7 @@ bool save_protection;
 static char sound_channel_scale_keys[SOUND_CHANNEL_SCALE_SLOTS][64];
 static char sound_channel_scale_labels[SOUND_CHANNEL_SCALE_SLOTS][64];
 static char sound_channel_scale_info[SOUND_CHANNEL_SCALE_SLOTS][100];
+/* static char mixer_level_defaults[SOUND_CHANNEL_SCALE_SLOTS][4]; */	/* every scale defaults to "100" */
 /* one CPU clock scale core option per CPU. The labels and sublabels name each CPU of  */
 /* the loaded game (set_cpu_clock_scale_labels). The keys name the romset             */
 /* (APPNAME"_kinst_cpu_clock_scale_2"), so one game's saved values never reach another. */
@@ -1003,6 +1004,7 @@ void init_core_options(void)
     default_options[OPT_SOUND_CHANNEL_SCALE + channel].key  = sound_channel_scale_keys[channel];
     default_options[OPT_SOUND_CHANNEL_SCALE + channel].desc = sound_channel_scale_labels[channel];
     default_options[OPT_SOUND_CHANNEL_SCALE + channel].info = sound_channel_scale_info[channel];
+    /* default_options[OPT_SOUND_CHANNEL_SCALE + channel].default_value = mixer_level_defaults[channel]; */
   }
   default_options[OPT_INPUT_INTERFACE]           = option_def_input_interface;
   default_options[OPT_MAME_REMAPPING]            = option_def_mame_remapping;
@@ -1561,6 +1563,7 @@ void update_sound_channel_scale_options(void)
     /* from 1 ("CPU 1 Clock Scale"), though the mixer and cpuexec number them from 0        */
     sprintf(sound_channel_scale_labels[channel], "Sound Mixer %d: %.48s", channel + 1, mixer_get_name(channel));
     sprintf(sound_channel_scale_info[channel], "Adjusts this channel's default level proportionally. Default: %d", mixer_get_default_mixing_level(channel));
+    /* sprintf(mixer_level_defaults[channel], "%d", mixer_get_default_mixing_level(channel)); */
   }
   options.content_flags[CONTENT_MIXER_CHANNEL_COUNT] = channel;
   set_variables();
@@ -1886,6 +1889,7 @@ void set_content_flags(void)
       sprintf(sound_channel_scale_keys[i], APPNAME"_sound_channel_scale_%d", i + 1);
     sprintf(sound_channel_scale_labels[i], "Sound Mixer: unused channel");
     sprintf(sound_channel_scale_info[i], "Not used by this game.");
+    /* sprintf(mixer_level_defaults[i], "100"); */
     options.sound_channel_scale[i] = -1; /* the frontend sets it in update_sound_channel_scale_options() */
   }
   /************ NUMBER OF CPUS, EACH WITH ITS OWN CLOCK SCALE CORE OPTION ************/

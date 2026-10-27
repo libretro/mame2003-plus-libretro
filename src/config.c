@@ -497,7 +497,7 @@ done:
 
 
 
-#if 0	/* mixing levels are no longer saved in the .cfg: the mixer level core options set them */
+#if 0	/* mixing levels are no longer saved in the .cfg */
 /***************************************************************************
 	config_read_mixer_config
 ***************************************************************************/
@@ -647,7 +647,7 @@ int config_write_coin_and_ticket_counters(config_file *cfg, const unsigned int *
 
 
 
-#if 0	/* mixing levels are no longer saved in the .cfg: the mixer level core options set them */
+#if 0	/* mixing levels are no longer saved in the .cfg */
 /***************************************************************************
 	config_write_mixer_config
 ***************************************************************************/

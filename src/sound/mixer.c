@@ -973,9 +973,9 @@ int mixer_allocate_channels(int channels, const int *default_mixing_levels)
 		/* mixing levels are 0-100 */
 		channel->default_mixing_level = mixer_clamp_level(channel->default_mixing_level);
 
-		/* the mixing level is set by a core option, not saved in the .cfg */
+		/* attempt to load in the configuration data for this channel */
 		channel->mixing_level = channel->default_mixing_level;
-#if 0	/* mixing levels are no longer read from the .cfg: the mixer level core options set them */
+#if 0	/* mixing levels are no longer read from the .cfg */
 		if (!is_config_invalid)
 		{
 			/* if the defaults match, set the mixing level from the config */
@@ -1139,7 +1139,7 @@ int mixer_get_default_mixing_level(int ch)
 }
 
 
-#if 0	/* mixing levels are no longer saved in the .cfg: the mixer level core options set them */
+#if 0	/* mixing levels are no longer saved in the .cfg */
 /***************************************************************************
 	mixer_load_config
 ***************************************************************************/
