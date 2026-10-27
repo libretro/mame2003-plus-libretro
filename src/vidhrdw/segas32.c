@@ -2279,7 +2279,7 @@ static void mix_all_layers(int which, int xoffs, struct mame_bitmap *bitmap, con
 		UINT8		coloroffs;			/* color offset index */
 	} layerorder[16][8], layersort[8];
 	struct layer_info temp_sprite_save = { 0 };
-	UINT8 sprgroup_shift, sprgroup_mask, sprgroup_or;
+	UINT8 sprgroup_shift, sprgroup_mask;
 	int numlayers, laynum, groupnum;
 	int rgboffs[3][3];
 	int sprpixmask, sprshadowmask;
@@ -2310,25 +2310,25 @@ static void mix_all_layers(int which, int xoffs, struct mame_bitmap *bitmap, con
 	switch (mixer_control[which][0x4c/2] & 0x0f)
 	{
 		default:
-		case 0x0:	sprgroup_shift = 14;	sprgroup_mask = 0x00;	sprgroup_or = 0x01;	break;
-		case 0x1:	sprgroup_shift = 14;	sprgroup_mask = 0x01;	sprgroup_or = 0x02;	break;
-		case 0x2:	sprgroup_shift = 13;	sprgroup_mask = 0x03;	sprgroup_or = 0x04;	break;
-		case 0x3:	sprgroup_shift = 12;	sprgroup_mask = 0x07;	sprgroup_or = 0x08;	break;
+		case 0x0:	sprgroup_shift = 14;	sprgroup_mask = 0x00;	break;
+		case 0x1:	sprgroup_shift = 14;	sprgroup_mask = 0x01;	break;
+		case 0x2:	sprgroup_shift = 13;	sprgroup_mask = 0x03;	break;
+		case 0x3:	sprgroup_shift = 12;	sprgroup_mask = 0x07;	break;
 
-		case 0x4:	sprgroup_shift = 14;	sprgroup_mask = 0x01;	sprgroup_or = 0x00;	break;
-		case 0x5:	sprgroup_shift = 13;	sprgroup_mask = 0x03;	sprgroup_or = 0x00;	break;
-		case 0x6:	sprgroup_shift = 12;	sprgroup_mask = 0x07;	sprgroup_or = 0x00;	break;
-		case 0x7:	sprgroup_shift = 11;	sprgroup_mask = 0x0f;	sprgroup_or = 0x00;	break;
+		case 0x4:	sprgroup_shift = 14;	sprgroup_mask = 0x01;	break;
+		case 0x5:	sprgroup_shift = 13;	sprgroup_mask = 0x03;	break;
+		case 0x6:	sprgroup_shift = 12;	sprgroup_mask = 0x07;	break;
+		case 0x7:	sprgroup_shift = 11;	sprgroup_mask = 0x0f;	break;
 
-		case 0x8:	sprgroup_shift = 14;	sprgroup_mask = 0x01;	sprgroup_or = 0x00;	break;
-		case 0x9:	sprgroup_shift = 13;	sprgroup_mask = 0x03;	sprgroup_or = 0x00;	break;
-		case 0xa:	sprgroup_shift = 12;	sprgroup_mask = 0x07;	sprgroup_or = 0x00;	break;
-		case 0xb:	sprgroup_shift = 11;	sprgroup_mask = 0x0f;	sprgroup_or = 0x00;	break;
+		case 0x8:	sprgroup_shift = 14;	sprgroup_mask = 0x01;	break;
+		case 0x9:	sprgroup_shift = 13;	sprgroup_mask = 0x03;	break;
+		case 0xa:	sprgroup_shift = 12;	sprgroup_mask = 0x07;	break;
+		case 0xb:	sprgroup_shift = 11;	sprgroup_mask = 0x0f;	break;
 
-		case 0xc:	sprgroup_shift = 13;	sprgroup_mask = 0x01;	sprgroup_or = 0x00;	break;
-		case 0xd:	sprgroup_shift = 12;	sprgroup_mask = 0x03;	sprgroup_or = 0x00;	break;
-		case 0xe:	sprgroup_shift = 11;	sprgroup_mask = 0x07;	sprgroup_or = 0x00;	break;
-		case 0xf:	sprgroup_shift = 10;	sprgroup_mask = 0x0f;	sprgroup_or = 0x00;	break;
+		case 0xc:	sprgroup_shift = 13;	sprgroup_mask = 0x01;	break;
+		case 0xd:	sprgroup_shift = 12;	sprgroup_mask = 0x03;	break;
+		case 0xe:	sprgroup_shift = 11;	sprgroup_mask = 0x07;	break;
+		case 0xf:	sprgroup_shift = 10;	sprgroup_mask = 0x0f;	break;
 	}
 	sprshadowmask = (mixer_control[which][0x4c/2] & 0x04) ? 0x8000 : 0x0000;
 	sprpixmask = ((1 << sprgroup_shift) - 1) & 0x3fff;
@@ -2375,15 +2375,14 @@ static void mix_all_layers(int which, int xoffs, struct mame_bitmap *bitmap, con
 	/* for each possible sprite group, insert the sprites into the list at the appropriate point */
 	for (groupnum = 0; groupnum <= sprgroup_mask; groupnum++)
 	{
-		int effgroup = sprgroup_or | groupnum;
-		int priority = mixer_control[which][0x00/2 + effgroup] & 0x0f;
+		int priority = mixer_control[which][0x00/2 + groupnum] & 0x0f;
 		int effpri = (priority << 3) | 7;
 		int sprindex = numlayers;
 		int dstnum = 0;
 
-		/* f1lap priority hack */
+		/* f1lap priority hack 
 		if (f1lap_kludge && priority == 0x0a)
-			effpri = (0x0d << 3) | 7;
+			effpri = (0x0d << 3) | 7;*/
 
 		/* make a copy of the sorted list, finding a location for the sprite entry */
 		for (laynum = 0; laynum < numlayers; laynum++)
@@ -2397,10 +2396,10 @@ static void mix_all_layers(int which, int xoffs, struct mame_bitmap *bitmap, con
 		layerorder[groupnum][sprindex].index = MIXER_LAYER_SPRITES;
 		layerorder[groupnum][sprindex].effpri = effpri;
 		if ((mixer_control[which][0x4c/2] & 3) != 3)
-			layerorder[groupnum][sprindex].palbase = (mixer_control[which][0x00/2 + effgroup] & 0x00f0) << 6;
+			layerorder[groupnum][sprindex].palbase = (mixer_control[which][0x00/2 + groupnum] & 0x00f0) << 6;
 		else
 			layerorder[groupnum][sprindex].palbase = (mixer_control[which][0x4c/2] & 0x00f0) << 6;
-		layerorder[groupnum][sprindex].mixshift = (mixer_control[which][0x00/2 + effgroup] >> 8) & 3;
+		layerorder[groupnum][sprindex].mixshift = (mixer_control[which][0x00/2 + groupnum] >> 8) & 3;
 		layerorder[groupnum][sprindex].blendmask = 0;
 		layerorder[groupnum][sprindex].sprblendmask = 0;
 		layerorder[groupnum][sprindex].coloroffs = compute_color_offsets(which, BIT(mixer_control[which][0x3e/2], 6), BIT(mixer_control[which][0x4c/2], 15));
