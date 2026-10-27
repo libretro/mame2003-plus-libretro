@@ -22,18 +22,18 @@ static struct retro_core_option_v2_definition  effective_defaults[OPT_end + 1];
 /* prevent saving corrupt cfgs when the save type does not match the type initialized */
 bool save_protection;
 
-/* one core option per mixer channel. The mixer channels exist only once the game has      */
-/* started, but the number of core options can't change after the first registration, so  */
-/* all 16 slots are always registered. The first registration sends hidden placeholders    */
-/* with keys shared by every game (APPNAME"_mixer_level_2"); once the game has started,    */
-/* update_mixer_level_options() gives each of its channels a key naming the romset          */
-/* (APPNAME"_rastan_mixer_level_2"), its name and its default level, and registers again.   */
-/* Romset keys keep one game's saved values from reaching another, and the placeholders     */
-/* never get a romset key, so no placeholder value is ever saved for a real channel.        */
-static char mixer_level_keys[MIXER_LEVEL_SLOTS][64];
-static char mixer_level_labels[MIXER_LEVEL_SLOTS][64];
-static char mixer_level_info[MIXER_LEVEL_SLOTS][64];
-static char mixer_level_defaults[MIXER_LEVEL_SLOTS][4];
+/* one sound channel scale core option per mixer channel. The mixer channels exist only   */
+/* once the game has started, but the number of core options can't change after the first */
+/* registration, so all 16 slots are always registered. The first registration sends      */
+/* hidden placeholders with keys shared by every game (APPNAME"_sound_channel_scale_2");  */
+/* once the game has started, update_sound_channel_scale_options() gives each of its      */
+/* channels a key naming the romset (APPNAME"_rastan_sound_channel_scale_2") and its name */
+/* and default level, and registers again. Romset keys keep one game's saved values from  */
+/* reaching another, and the placeholders never get a romset key, so no placeholder value */
+/* is ever saved for a real channel.                                                      */
+static char sound_channel_scale_keys[SOUND_CHANNEL_SCALE_SLOTS][64];
+static char sound_channel_scale_labels[SOUND_CHANNEL_SCALE_SLOTS][64];
+static char sound_channel_scale_info[SOUND_CHANNEL_SCALE_SLOTS][100];
 /* one CPU clock scale core option per CPU. The labels and sublabels name each CPU of  */
 /* the loaded game (set_cpu_clock_scale_labels). The keys name the romset             */
 /* (APPNAME"_kinst_cpu_clock_scale_2"), so one game's saved values never reach another. */
@@ -49,7 +49,7 @@ static char cpu_clock_scale_info[CPU_CLOCK_SCALE_SLOTS][128];
 
 static void   set_variables(void);
 static void   determine_core_options_version(struct retro_core_options_v2 *core_options_us);
-static void   show_mixer_level_slots(void);
+static void   show_sound_channel_scale_slots(void);
 static void   format_cpu_clock(char *buf, int hz);
 static void   describe_cpu(char *buf, int cpu);
 static void   set_cpu_clock_scale_labels(void);
@@ -607,38 +607,34 @@ static struct retro_core_option_v2_definition option_def_sample_rate = {
    "48000"
 };
 
-static struct retro_core_option_v2_definition option_def_mixer_level = {
-   NULL,   /* key, label, sublabel and default are set for each mixer channel of the loaded game */
+static struct retro_core_option_v2_definition option_def_sound_channel_scale = {
+   NULL,   /* key, label and sublabel are set for each mixer channel of the loaded game */
    NULL,
    NULL,
    NULL,
    NULL,
    "cat_key_audio",
    {
-      { "0", "0%" }, { "1", "1%" }, { "2", "2%" }, { "3", "3%" }, { "4", "4%" },
-      { "5", "5%" }, { "6", "6%" }, { "7", "7%" }, { "8", "8%" }, { "9", "9%" },
-      { "10", "10%" }, { "11", "11%" }, { "12", "12%" }, { "13", "13%" }, { "14", "14%" },
-      { "15", "15%" }, { "16", "16%" }, { "17", "17%" }, { "18", "18%" }, { "19", "19%" },
-      { "20", "20%" }, { "21", "21%" }, { "22", "22%" }, { "23", "23%" }, { "24", "24%" },
-      { "25", "25%" }, { "26", "26%" }, { "27", "27%" }, { "28", "28%" }, { "29", "29%" },
-      { "30", "30%" }, { "31", "31%" }, { "32", "32%" }, { "33", "33%" }, { "34", "34%" },
-      { "35", "35%" }, { "36", "36%" }, { "37", "37%" }, { "38", "38%" }, { "39", "39%" },
-      { "40", "40%" }, { "41", "41%" }, { "42", "42%" }, { "43", "43%" }, { "44", "44%" },
-      { "45", "45%" }, { "46", "46%" }, { "47", "47%" }, { "48", "48%" }, { "49", "49%" },
-      { "50", "50%" }, { "51", "51%" }, { "52", "52%" }, { "53", "53%" }, { "54", "54%" },
-      { "55", "55%" }, { "56", "56%" }, { "57", "57%" }, { "58", "58%" }, { "59", "59%" },
-      { "60", "60%" }, { "61", "61%" }, { "62", "62%" }, { "63", "63%" }, { "64", "64%" },
-      { "65", "65%" }, { "66", "66%" }, { "67", "67%" }, { "68", "68%" }, { "69", "69%" },
-      { "70", "70%" }, { "71", "71%" }, { "72", "72%" }, { "73", "73%" }, { "74", "74%" },
-      { "75", "75%" }, { "76", "76%" }, { "77", "77%" }, { "78", "78%" }, { "79", "79%" },
-      { "80", "80%" }, { "81", "81%" }, { "82", "82%" }, { "83", "83%" }, { "84", "84%" },
-      { "85", "85%" }, { "86", "86%" }, { "87", "87%" }, { "88", "88%" }, { "89", "89%" },
-      { "90", "90%" }, { "91", "91%" }, { "92", "92%" }, { "93", "93%" }, { "94", "94%" },
-      { "95", "95%" }, { "96", "96%" }, { "97", "97%" }, { "98", "98%" }, { "99", "99%" },
-      { "100", "100%" },
+      { "0", "0%" }, { "5", "5%" }, { "10", "10%" }, { "15", "15%" }, { "20", "20%" },
+      { "25", "25%" }, { "30", "30%" }, { "35", "35%" }, { "40", "40%" }, { "45", "45%" },
+      { "50", "50%" }, { "55", "55%" }, { "60", "60%" }, { "65", "65%" }, { "70", "70%" },
+      { "75", "75%" }, { "80", "80%" }, { "85", "85%" }, { "90", "90%" }, { "95", "95%" },
+      { "100", "100%" }, { "105", "105%" }, { "110", "110%" }, { "115", "115%" }, { "120", "120%" },
+      { "125", "125%" }, { "130", "130%" }, { "135", "135%" }, { "140", "140%" }, { "145", "145%" },
+      { "150", "150%" }, { "155", "155%" }, { "160", "160%" }, { "165", "165%" }, { "170", "170%" },
+      { "175", "175%" }, { "180", "180%" }, { "185", "185%" }, { "190", "190%" }, { "195", "195%" },
+      { "200", "200%" }, { "205", "205%" }, { "210", "210%" }, { "215", "215%" }, { "220", "220%" },
+      { "225", "225%" }, { "230", "230%" }, { "235", "235%" }, { "240", "240%" }, { "245", "245%" },
+      { "250", "250%" }, { "255", "255%" }, { "260", "260%" }, { "265", "265%" }, { "270", "270%" },
+      { "275", "275%" }, { "280", "280%" }, { "285", "285%" }, { "290", "290%" }, { "295", "295%" },
+      { "300", "300%" }, { "305", "305%" }, { "310", "310%" }, { "315", "315%" }, { "320", "320%" },
+      { "325", "325%" }, { "330", "330%" }, { "335", "335%" }, { "340", "340%" }, { "345", "345%" },
+      { "350", "350%" }, { "355", "355%" }, { "360", "360%" }, { "365", "365%" }, { "370", "370%" },
+      { "375", "375%" }, { "380", "380%" }, { "385", "385%" }, { "390", "390%" }, { "395", "395%" },
+      { "400", "400%" },
       { NULL, NULL },
    },
-   NULL
+   "100"
 };
 
 static struct retro_core_option_v2_definition option_def_input_interface = {
@@ -1001,13 +997,12 @@ void init_core_options(void)
   default_options[OPT_VECTOR_INTENSITY]          = option_def_vector_intensity;
   default_options[OPT_NVRAM_BOOTSTRAP]           = option_def_nvram_bootstraps;
   default_options[OPT_SAMPLE_RATE]               = option_def_sample_rate;
-  for(channel = 0; channel < MIXER_LEVEL_SLOTS; channel++)
+  for(channel = 0; channel < SOUND_CHANNEL_SCALE_SLOTS; channel++)
   {
-    default_options[OPT_MIXER_LEVEL + channel]               = option_def_mixer_level;
-    default_options[OPT_MIXER_LEVEL + channel].key           = mixer_level_keys[channel];
-    default_options[OPT_MIXER_LEVEL + channel].desc          = mixer_level_labels[channel];
-    default_options[OPT_MIXER_LEVEL + channel].info          = mixer_level_info[channel];
-    default_options[OPT_MIXER_LEVEL + channel].default_value = mixer_level_defaults[channel];
+    default_options[OPT_SOUND_CHANNEL_SCALE + channel]      = option_def_sound_channel_scale;
+    default_options[OPT_SOUND_CHANNEL_SCALE + channel].key  = sound_channel_scale_keys[channel];
+    default_options[OPT_SOUND_CHANNEL_SCALE + channel].desc = sound_channel_scale_labels[channel];
+    default_options[OPT_SOUND_CHANNEL_SCALE + channel].info = sound_channel_scale_info[channel];
   }
   default_options[OPT_INPUT_INTERFACE]           = option_def_input_interface;
   default_options[OPT_MAME_REMAPPING]            = option_def_mame_remapping;
@@ -1129,19 +1124,19 @@ static void set_variables(void)
   }
 
   determine_core_options_version( &options_us );
-  show_mixer_level_slots();
+  show_sound_channel_scale_slots();
 }
 
 
-/* show the mixer level slots of the game's channels and hide the placeholders */
-static void show_mixer_level_slots(void)
+/* show the sound channel scale slots of the game's channels and hide the placeholders */
+static void show_sound_channel_scale_slots(void)
 {
   struct retro_core_option_display option_display;
   int channel;
 
-  for( channel = 0; channel < MIXER_LEVEL_SLOTS; channel++ )
+  for( channel = 0; channel < SOUND_CHANNEL_SCALE_SLOTS; channel++ )
   {
-    option_display.key     = mixer_level_keys[channel];
+    option_display.key     = sound_channel_scale_keys[channel];
     option_display.visible = channel < options.content_flags[CONTENT_MIXER_CHANNEL_COUNT];
     environ_cb(RETRO_ENVIRONMENT_SET_CORE_OPTIONS_DISPLAY, &option_display);
   }
@@ -1387,23 +1382,23 @@ void update_variables(bool first_time)
           options.samplerate = atoi(var.value);
           break;
 
-        case OPT_MIXER_LEVEL:
-        case OPT_MIXER_LEVEL_2:
-        case OPT_MIXER_LEVEL_3:
-        case OPT_MIXER_LEVEL_4:
-        case OPT_MIXER_LEVEL_5:
-        case OPT_MIXER_LEVEL_6:
-        case OPT_MIXER_LEVEL_7:
-        case OPT_MIXER_LEVEL_8:
-        case OPT_MIXER_LEVEL_9:
-        case OPT_MIXER_LEVEL_10:
-        case OPT_MIXER_LEVEL_11:
-        case OPT_MIXER_LEVEL_12:
-        case OPT_MIXER_LEVEL_13:
-        case OPT_MIXER_LEVEL_14:
-        case OPT_MIXER_LEVEL_15:
-        case OPT_MIXER_LEVEL_16:
-          options.mixer_level[index - OPT_MIXER_LEVEL] = atoi(var.value);
+        case OPT_SOUND_CHANNEL_SCALE:
+        case OPT_SOUND_CHANNEL_SCALE_2:
+        case OPT_SOUND_CHANNEL_SCALE_3:
+        case OPT_SOUND_CHANNEL_SCALE_4:
+        case OPT_SOUND_CHANNEL_SCALE_5:
+        case OPT_SOUND_CHANNEL_SCALE_6:
+        case OPT_SOUND_CHANNEL_SCALE_7:
+        case OPT_SOUND_CHANNEL_SCALE_8:
+        case OPT_SOUND_CHANNEL_SCALE_9:
+        case OPT_SOUND_CHANNEL_SCALE_10:
+        case OPT_SOUND_CHANNEL_SCALE_11:
+        case OPT_SOUND_CHANNEL_SCALE_12:
+        case OPT_SOUND_CHANNEL_SCALE_13:
+        case OPT_SOUND_CHANNEL_SCALE_14:
+        case OPT_SOUND_CHANNEL_SCALE_15:
+        case OPT_SOUND_CHANNEL_SCALE_16:
+          options.sound_channel_scale[index - OPT_SOUND_CHANNEL_SCALE] = atoi(var.value);
           break;
 
         case OPT_MAME_REMAPPING:
@@ -1551,37 +1546,38 @@ void update_variables(bool first_time)
 
 /* once the game has started, give each of its mixer channels a romset key, name and      */
 /* default level, register the core options again and read them                          */
-void update_mixer_level_options(void)
+void update_sound_channel_scale_options(void)
 {
   struct retro_variable var;
   int channel;
 
-  for( channel = 0; channel < MIXER_LEVEL_SLOTS && mixer_get_name(channel); channel++ )
+  for( channel = 0; channel < SOUND_CHANNEL_SCALE_SLOTS && mixer_get_name(channel); channel++ )
   {
     if( channel == 0 )
-      sprintf(mixer_level_keys[channel], APPNAME"_%.16s_mixer_level", game_driver->name);
+      sprintf(sound_channel_scale_keys[channel], APPNAME"_%.16s_sound_channel_scale", game_driver->name);
     else
-      sprintf(mixer_level_keys[channel], APPNAME"_%.16s_mixer_level_%d", game_driver->name, channel + 1);
-    sprintf(mixer_level_labels[channel], "Sound: %.50s", mixer_get_name(channel));
-    sprintf(mixer_level_info[channel], "Mixer level. The driver default is %d%%.", mixer_get_default_mixing_level(channel));
-    sprintf(mixer_level_defaults[channel], "%d", mixer_get_default_mixing_level(channel));
+      sprintf(sound_channel_scale_keys[channel], APPNAME"_%.16s_sound_channel_scale_%d", game_driver->name, channel + 1);
+    /* the frontend counts mixer channels from 1, as the CPU clock scale options count CPUs */
+    /* from 1 ("CPU 1 Clock Scale"), though the mixer and cpuexec number them from 0        */
+    sprintf(sound_channel_scale_labels[channel], "Sound Mixer %d: %.48s", channel + 1, mixer_get_name(channel));
+    sprintf(sound_channel_scale_info[channel], "Adjusts this channel's default level proportionally. Default: %d", mixer_get_default_mixing_level(channel));
   }
   options.content_flags[CONTENT_MIXER_CHANNEL_COUNT] = channel;
   set_variables();
 
-  /* the same text as the mixer level core option labels, to match them up in the frontend */
+  /* the same text as the sound channel scale core option labels, to match them up in the frontend */
   log_cb(RETRO_LOG_INFO, LOGPRE "* Sound channels: %i\n", options.content_flags[CONTENT_MIXER_CHANNEL_COUNT]);
-  for( channel = 0; channel < MIXER_LEVEL_SLOTS; channel++ )
+  for( channel = 0; channel < SOUND_CHANNEL_SCALE_SLOTS; channel++ )
   {
-    options.mixer_level[channel] = -1;
+    options.sound_channel_scale[channel] = -1;
     if( channel >= options.content_flags[CONTENT_MIXER_CHANNEL_COUNT] )
       continue;
 
-    log_cb(RETRO_LOG_INFO, LOGPRE "*   %s (default %d%%)\n", mixer_level_labels[channel], mixer_get_default_mixing_level(channel));
-    var.key = mixer_level_keys[channel];
+    log_cb(RETRO_LOG_INFO, LOGPRE "*   %s (default %d%%)\n", sound_channel_scale_labels[channel], mixer_get_default_mixing_level(channel));
+    var.key = sound_channel_scale_keys[channel];
     var.value = NULL;
     if( environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && !string_is_empty(var.value) )
-      options.mixer_level[channel] = atoi(var.value);
+      options.sound_channel_scale[channel] = atoi(var.value);
   }
 }
 
@@ -1879,19 +1875,18 @@ void set_content_flags(void)
   if(game_driver->bootstrap != NULL)
     options.content_flags[CONTENT_NVRAM_BOOTSTRAP] = true;
 
-  /************ MIXER CHANNELS, EACH WITH ITS OWN LEVEL CORE OPTION ************/
-  /* hidden placeholders until the game has started: update_mixer_level_options() fills them */
+  /************ MIXER CHANNELS, EACH WITH ITS OWN SCALE CORE OPTION ************/
+  /* hidden placeholders until the game has started: update_sound_channel_scale_options() fills them */
   options.content_flags[CONTENT_MIXER_CHANNEL_COUNT] = 0;
-  for( i = 0; i < MIXER_LEVEL_SLOTS; i++ )
+  for( i = 0; i < SOUND_CHANNEL_SCALE_SLOTS; i++ )
   {
     if( i == 0 )
-      sprintf(mixer_level_keys[i], APPNAME"_mixer_level");
+      sprintf(sound_channel_scale_keys[i], APPNAME"_sound_channel_scale");
     else
-      sprintf(mixer_level_keys[i], APPNAME"_mixer_level_%d", i + 1);
-    sprintf(mixer_level_labels[i], "Sound: unused channel");
-    sprintf(mixer_level_info[i], "Not used by this game.");
-    sprintf(mixer_level_defaults[i], "100");
-    options.mixer_level[i] = -1; /* the frontend sets it in update_mixer_level_options() */
+      sprintf(sound_channel_scale_keys[i], APPNAME"_sound_channel_scale_%d", i + 1);
+    sprintf(sound_channel_scale_labels[i], "Sound Mixer: unused channel");
+    sprintf(sound_channel_scale_info[i], "Not used by this game.");
+    options.sound_channel_scale[i] = -1; /* the frontend sets it in update_sound_channel_scale_options() */
   }
   /************ NUMBER OF CPUS, EACH WITH ITS OWN CLOCK SCALE CORE OPTION ************/
   for( i = 0; i < CPU_CLOCK_SCALE_SLOTS && Machine->drv->cpu[i].cpu_type != CPU_DUMMY; i++ )

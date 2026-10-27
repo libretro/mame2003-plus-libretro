@@ -2,6 +2,7 @@
 #define MIXER_H
 
 #define MIXER_MAX_CHANNELS 16
+#define MIXER_MAX_SCALE 400	/* percent, the most mixer_set_scale() accepts */
 
 /*
   When you allocate a channel, you pass a default mixing level setting.
@@ -103,6 +104,8 @@ void mixer_set_lowpass_frequency(int ch, int freq);
 void mixer_set_mixing_level(int channel,int level);
 int mixer_get_mixing_level(int level);
 int mixer_get_default_mixing_level(int level);
+void mixer_set_scale(int channel,int percent);
+int mixer_get_scale(int channel);
 
 #if 0	/* mixing levels are no longer saved in the .cfg: the mixer level core options set them */
 /* configuration functions */

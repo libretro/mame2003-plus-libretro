@@ -41,7 +41,7 @@ int            orig_samples_per_frame = 0;
 short*         samples_buffer;
 short*         conversion_buffer;
 int            usestereo = 1;
-static int     applied_mixer_level[MIXER_LEVEL_SLOTS]; /* last mixer level core option values applied, -1 for none */
+static int     applied_sound_channel_scale[SOUND_CHANNEL_SCALE_SLOTS]; /* last sound channel scale core option values applied, -1 for none */
 static double  applied_cpu_clock_scale[CPU_CLOCK_SCALE_SLOTS]; /* last CPU clock scale core option values applied, per CPU */
 
 
@@ -249,8 +249,8 @@ bool retro_load_game(const struct retro_game_info *game)
   char  *driver_lookup = NULL;
 
   frame_run_since_load = 0;
-  for(channel = 0; channel < MIXER_LEVEL_SLOTS; channel++)
-    applied_mixer_level[channel] = -1;
+  for(channel = 0; channel < SOUND_CHANNEL_SCALE_SLOTS; channel++)
+    applied_sound_channel_scale[channel] = -1;
 
   if(string_is_empty(game->path))
   {
@@ -344,7 +344,7 @@ bool retro_load_game(const struct retro_game_info *game)
 
   if(!run_game(driverIndex))
   {
-    update_mixer_level_options(); /* the mixer channels exist once the game has started */
+    update_sound_channel_scale_options(); /* the mixer channels exist once the game has started */
     return true;
   }
 
@@ -396,19 +396,20 @@ void mame_pause(bool pause)
 
 extern UINT8 frameskip_counter;
 
-/* each mixer level core option sets the mixing level of the matching mixer channel */
-static void apply_mixer_levels(void)
+/* a mixer channel's sound channel scale core option sets its scale, which multiplies the */
+/* mixing level and the volume that the driver sets                                       */
+static void apply_sound_channel_scales(void)
 {
-  int channel, level;
+  int channel, scale;
 
   for (channel = 0; channel < options.content_flags[CONTENT_MIXER_CHANNEL_COUNT]; channel++)
   {
-    level = options.mixer_level[channel];
-    if (level >= 0 && level != applied_mixer_level[channel])
+    scale = options.sound_channel_scale[channel];
+    if (scale >= 0 && scale != applied_sound_channel_scale[channel])
     {
-      log_cb(RETRO_LOG_DEBUG, LOGPRE "changing %s mixing level from %d to %d\n", mixer_get_name(channel), mixer_get_mixing_level(channel), level);
-      mixer_set_mixing_level(channel, level);
-      applied_mixer_level[channel] = level;
+      log_cb(RETRO_LOG_DEBUG, LOGPRE "changing %s scale from %d to %d percent\n", mixer_get_name(channel), mixer_get_scale(channel), scale);
+      mixer_set_scale(channel, scale);
+      applied_sound_channel_scale[channel] = scale;
     }
   }
 }
@@ -443,7 +444,7 @@ void retro_run (void)
     }
   }
 
-  apply_mixer_levels();
+  apply_sound_channel_scales();
 
   /* a CPU's clock scale core option sets its overclock, which multiplies the clock scale */
   /* that drivers and CPU cores set.                                                       */
