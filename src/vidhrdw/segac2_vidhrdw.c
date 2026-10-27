@@ -275,8 +275,7 @@ int start_system18_vdp(void)
 
 	display_enable = 1;
 
-//	scanbase = 0;
-	scanbase = 256*2;
+	scanbase = 0;
 	return 0;
 }
 
@@ -618,7 +617,15 @@ static void vdp_data_w(int data)
 
 
 		case 0x03:		/* Palette write - puckpkmn */
-			paletteram16_xxxxBBBBGGGGRRRR_word_w(vdp_address/2+segac2_pal_offs, data, 0);
+			if (segac2_pal_offs)
+			{
+				/* System 18: the 64 VDP colors live after the System 16 palette,
+				   not in paletteram16 (only 0x800 entries there) */
+				int r = data & 0x0f, g = (data >> 4) & 0x0f, b = (data >> 8) & 0x0f;
+				palette_set_color(segac2_pal_offs + ((vdp_address / 2) & 0x3f), (r << 4) | r, (g << 4) | g, (b << 4) | b);
+			}
+			else
+				paletteram16_xxxxBBBBGGGGRRRR_word_w(vdp_address/2+segac2_pal_offs, data, 0);
 			break;
 
 

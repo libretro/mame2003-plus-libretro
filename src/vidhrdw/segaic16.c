@@ -328,6 +328,7 @@ Quick review of the system16 hardware:
 #include "driver.h"
 #include "segaic16.h"
 #include "vidhrdw/res_net.h"
+#include "state.h"
 
 
 
@@ -446,6 +447,58 @@ static struct palette_info palette;
 static struct tilemap_info tilemap[SEGAIC16_MAX_TILEMAPS];
 static struct sprite_info sprites[SEGAIC16_MAX_SPRITES];
 static struct road_info road[SEGAIC16_MAX_ROADS];
+
+
+
+/*************************************
+ *
+ *	Save states
+ *
+ *************************************/
+
+static void segaic16_tilemap_postload(void)
+{
+	int which, pagenum;
+
+	for (which = 0; which < SEGAIC16_MAX_TILEMAPS; which++)
+	{
+		struct tilemap_info *info = &tilemap[which];
+		int flip = info->flip ? (TILEMAP_FLIPX | TILEMAP_FLIPY) : 0;
+
+		if (!info->textmap)
+			continue;
+		tilemap_set_flip(info->textmap, flip);
+		for (pagenum = 0; pagenum < info->numpages; pagenum++)
+			tilemap_set_flip(info->tilemaps[pagenum], flip);
+	}
+	tilemap_mark_all_tiles_dirty(NULL);
+}
+
+static void segaic16_tilemap_register_state(int which)
+{
+	struct tilemap_info *info = &tilemap[which];
+
+	state_save_register_UINT8 ("segaic16_tilemap", which, "flip",           &info->flip, 1);
+	state_save_register_UINT8 ("segaic16_tilemap", which, "rowscroll",      &info->rowscroll, 1);
+	state_save_register_UINT8 ("segaic16_tilemap", which, "colscroll",      &info->colscroll, 1);
+	state_save_register_UINT8 ("segaic16_tilemap", which, "bank",           info->bank, 8);
+	state_save_register_UINT16("segaic16_tilemap", which, "latched_xscroll", info->latched_xscroll, 4);
+	state_save_register_UINT16("segaic16_tilemap", which, "latched_yscroll", info->latched_yscroll, 4);
+	state_save_register_UINT16("segaic16_tilemap", which, "latched_pageselect", info->latched_pageselect, 4);
+	state_save_register_UINT8 ("segaic16", 0, "display_enable", &segaic16_display_enable, 1);
+	state_save_register_func_postload(segaic16_tilemap_postload);
+}
+
+static void segaic16_sprites_register_state(int which)
+{
+	struct sprite_info *info = &sprites[which];
+
+	state_save_register_UINT8 ("segaic16_sprites", which, "flip",   &info->flip, 1);
+	state_save_register_UINT8 ("segaic16_sprites", which, "shadow", &info->shadow, 1);
+	state_save_register_UINT8 ("segaic16_sprites", which, "bank",   info->bank, 16);
+	if (info->buffer)
+		state_save_register_UINT16("segaic16_sprites", which, "buffer", info->buffer, info->ramsize / 2);
+}
 
 
 
@@ -1278,6 +1331,8 @@ int segaic16_tilemap_init(int which, int type, int colorbase, int xoffs, int num
 		tilemap_set_palette_offset(info->tilemaps[pagenum], colorbase);
 		tilemap_set_transparent_pen(info->tilemaps[pagenum], 0);
 	}
+
+	segaic16_tilemap_register_state(which);
 	return 0;
 }
 
@@ -1955,8 +2010,12 @@ static void segaic16_sprites_16a_draw(struct sprite_info *info, struct mame_bitm
 		if (sprpri > pri[x])												\
 		{																	\
 			/* shadow/hilight mode? */										\
+			/* (only over our own palette: the System 18 VDP layer is above it) */ \
 			if (color == info->colorbase + (0x3f << 4))						\
-				dest[x] += (paletteram16[dest[x]] & 0x8000) ? palette.entries*2 : palette.entries;	\
+			{																\
+				if (dest[x] < palette.entries)								\
+					dest[x] += (paletteram16[dest[x]] & 0x8000) ? palette.entries*2 : palette.entries;	\
+			}																\
 																			\
 			/* regular draw */												\
 			else															\
@@ -2346,6 +2405,8 @@ int segaic16_sprites_init(int which, int type, int colorbase, int xoffs)
 		if (!info->buffer)
 			return 1;
 	}
+
+	segaic16_sprites_register_state(which);
 	return 0;
 }
 

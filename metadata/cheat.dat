@@ -5721,7 +5721,26 @@ astinvad:0:1F9D:99:000:Infinite Credits
 astinvad:0:1D01:08:000:Infinite Lives
 astinvad:0:1CD8:00:000:Invincibility
 
-; [ Alien Storm ]
+; [ Alien Storm (Japan, 2 Players) ]
+astormj:0:000000:00:999:[Invincibility only works   ]
+astormj:0:000000:00:999:[for the following missions ]
+astormj:0:000000:00:999:[ 1-1, 2-1, 2-3, 3-1, 3-5,  ]
+astormj:0:000000:00:999:[ 3-7, 4-1, 4-5, 5-1, 5-2,  ]
+astormj:0:000000:00:999:[ 5-4, 6-1, 6-2, 6-4, 6-5.  ]
+astormj:0:FFE00D:30:000:Infinite Life PL1
+astormj:0:FFE00E:80:000:Infinite Energy PL1
+astormj:0:FFC061:78:000:Invincibility PL1
+astormj:0:FFE031:00:000:No delay for extra weapon PL1
+astormj:0:FFE08D:30:000:Infinite Life PL2
+astormj:0:FFE08E:80:000:Infinite Energy PL2
+astormj:0:FFC461:78:000:Invincibility PL2
+astormj:0:FFE0B1:00:000:No delay for extra weapon PL2
+astormj:0:FFE10D:30:000:Infinite Life PL3
+astormj:0:FFE10E:80:000:Infinite Energy PL3
+astormj:0:FFC861:78:000:Invincibility PL3
+astormj:0:FFE131:00:000:No delay for extra weapon PL3
+
+; [ Alien Storm (World, 2 Players) ]
 astorm:0:000000:00:999:[Invincibility only works   ]
 astorm:0:000000:00:999:[for the following missions ]
 astorm:0:000000:00:999:[ 1-1, 2-1, 2-3, 3-1, 3-5,  ]
@@ -5735,25 +5754,6 @@ astorm:0:FFE08D:30:000:Infinite Life PL2
 astorm:0:FFE08E:80:000:Infinite Energy PL2
 astorm:0:FFC461:78:000:Invincibility PL2
 astorm:0:FFE0B1:00:000:No delay for extra weapon PL2
-astorm:0:FFE10D:30:000:Infinite Life PL3
-astorm:0:FFE10E:80:000:Infinite Energy PL3
-astorm:0:FFC861:78:000:Invincibility PL3
-astorm:0:FFE131:00:000:No delay for extra weapon PL3
-
-; [ Alien Storm (2 Player) ]
-astorm2p:0:000000:00:999:[Invincibility only works   ]
-astorm2p:0:000000:00:999:[for the following missions ]
-astorm2p:0:000000:00:999:[ 1-1, 2-1, 2-3, 3-1, 3-5,  ]
-astorm2p:0:000000:00:999:[ 3-7, 4-1, 4-5, 5-1, 5-2,  ]
-astorm2p:0:000000:00:999:[ 5-4, 6-1, 6-2, 6-4, 6-5.  ]
-astorm2p:0:FFE00D:30:000:Infinite Life PL1
-astorm2p:0:FFE00E:80:000:Infinite Energy PL1
-astorm2p:0:FFC061:78:000:Invincibility PL1
-astorm2p:0:FFE031:00:000:No delay for extra weapon PL1
-astorm2p:0:FFE08D:30:000:Infinite Life PL2
-astorm2p:0:FFE08E:80:000:Infinite Energy PL2
-astorm2p:0:FFC461:78:000:Invincibility PL2
-astorm2p:0:FFE0B1:00:000:No delay for extra weapon PL2
 
 ; [ Alien Storm (bootleg) ]
 astormbl:0:000000:00:999:[Invincibility only works   ]
@@ -15518,16 +15518,6 @@ clshroad:0:81E7:00:500:Infinite Time (3/3)
 clshroad:0:81FD:03:000:Infinite Energy
 clshroad:0:81FE:0E:500:Infinite Energy (2/2)
 
-; [ Clutch Hitter ]
-cltchitr:0:0000:00:999:[ There are no cheats   ]:REASON 1
-cltchitr:0:0000:00:999:[ for this game as it   ]:REASON 1
-cltchitr:0:0000:00:999:[ didn't work the last  ]:REASON 1
-cltchitr:0:0000:00:999:[ time it was tested.   ]:REASON 1
-cltchitr:0:0000:00:999:[ If the game now works ]:REASON 1
-cltchitr:0:0000:00:999:[ please request cheats ]:REASON 1
-cltchitr:0:0000:00:999:[ for it on the cheat   ]:REASON 1
-cltchitr:0:0000:00:999:[ forums.               ]:REASON 1
-
 ; [ Mahjong CLUB 90's (set 1) (Japan 900919) ]
 club90s:0:F0EF:63:000:Infinite Money
 club90s:0:0000:00:999:[ The winning hand cheat must be      ]
@@ -16587,16 +16577,6 @@ cosmos:0:1C91:5C:000:Infinite Energy
 cosmos:0:1D66:01:040:Invincibility:Turn OFF to dock!
 cosmos:0:1CDD:05:000:Infinite Lives PL1
 cosmos:0:1CDE:05:000:Infinite Lives PL2
-
-; [ Cotton (Japan) ]
-cotton:0:0000:00:999:[ There are no cheats   ]:REASON 1
-cotton:0:0000:00:999:[ for this game as it   ]:REASON 1
-cotton:0:0000:00:999:[ didn't work the last  ]:REASON 1
-cotton:0:0000:00:999:[ time it was tested.   ]:REASON 1
-cotton:0:0000:00:999:[ If the game now works ]:REASON 1
-cotton:0:0000:00:999:[ please request cheats ]:REASON 1
-cotton:0:0000:00:999:[ for it on the cheat   ]:REASON 1
-cotton:0:0000:00:999:[ forums.               ]:REASON 1
 
 ; [ Cotton 2 ]
 cotton2:0:060E518F:06:000:Invincibility PL1
@@ -19894,16 +19874,6 @@ ddayjlc:0:0000:00:999:[ If the game now works ]:REASON 1
 ddayjlc:0:0000:00:999:[ please request cheats ]:REASON 1
 ddayjlc:0:0000:00:999:[ for it on the cheat   ]:REASON 1
 ddayjlc:0:0000:00:999:[ forums.               ]:REASON 1
-
-; [ DD Crew ]
-ddcrew:0:0000:00:999:[ There are no cheats   ]:REASON 1
-ddcrew:0:0000:00:999:[ for this game as it   ]:REASON 1
-ddcrew:0:0000:00:999:[ didn't work the last  ]:REASON 1
-ddcrew:0:0000:00:999:[ time it was tested.   ]:REASON 1
-ddcrew:0:0000:00:999:[ If the game now works ]:REASON 1
-ddcrew:0:0000:00:999:[ please request cheats ]:REASON 1
-ddcrew:0:0000:00:999:[ for it on the cheat   ]:REASON 1
-ddcrew:0:0000:00:999:[ forums.               ]:REASON 1
 
 ; [ Don Den Lover Vol. 1 (Hong Kong) ]
 ddenlovr:0:FF9576:64:000:Infinite Time
@@ -59663,16 +59633,6 @@ lethalth:0:E3ADE:03:001:Get Ball Shot Now! PL2
 ; [ Levers ]
 levers:0:4175:63:000:Infinite Lives PL1
 levers:0:4176:63:000:Infinite Lives PL2
-
-; [ Laser Ghost ]
-lghost:0:0000:00:999:[ There are no cheats   ]:REASON 1
-lghost:0:0000:00:999:[ for this game as it   ]:REASON 1
-lghost:0:0000:00:999:[ didn't work the last  ]:REASON 1
-lghost:0:0000:00:999:[ time it was tested.   ]:REASON 1
-lghost:0:0000:00:999:[ If the game now works ]:REASON 1
-lghost:0:0000:00:999:[ please request cheats ]:REASON 1
-lghost:0:0000:00:999:[ for it on the cheat   ]:REASON 1
-lghost:0:0000:00:999:[ forums.               ]:REASON 1
 
 ; [ Lightning Fighters (US) ]
 lgtnfght:0:000000:00:999:[Enable invincibility during]
@@ -114044,7 +114004,7 @@ shdancbl:0:FFC490:01:001:Get the Power-up gun Now!
 shdancbl:0:FFEB0A:9A:000:Infinite Lives PL1
 shdancbl:0:FFEB8A:9A:000:Infinite Lives PL2
 
-; [ Shadow Dancer (US) ]
+; [ Shadow Dancer (World) ]
 shdancer:0:FFC407:59:000:Infinite Time
 shdancer:0:FFC41F:09:000:Infinite Magic
 shdancer:0:FFC490:00:000:Always have the Normal gun
@@ -114054,25 +114014,25 @@ shdancer:0:FFC490:01:001:Get the Power-up gun Now!
 shdancer:0:FFEB0A:9A:000:Infinite Lives PL1
 shdancer:0:FFEB8A:9A:000:Infinite Lives PL2
 
-; [ Shadow Dancer (Rev.B) ]
-shdancrb:0:FFC407:59:000:Infinite Time
-shdancrb:0:FFC41F:09:000:Infinite Magic
-shdancrb:0:FFC490:00:000:Always have the Normal gun
-shdancrb:0:FFC490:01:000:Always have the Power-up gun
-shdancrb:0:FFC490:00:001:Get the Normal gun Now!
-shdancrb:0:FFC490:01:001:Get the Power-up gun Now!
-shdancrb:0:FFEB0A:9A:000:Infinite Lives PL1
-shdancrb:0:FFEB8A:9A:000:Infinite Lives PL2
+; [ Shadow Dancer (US) ]
+shdancer1:0:FFC407:59:000:Infinite Time
+shdancer1:0:FFC41F:09:000:Infinite Magic
+shdancer1:0:FFC490:00:000:Always have the Normal gun
+shdancer1:0:FFC490:01:000:Always have the Power-up gun
+shdancer1:0:FFC490:00:001:Get the Normal gun Now!
+shdancer1:0:FFC490:01:001:Get the Power-up gun Now!
+shdancer1:0:FFEB0A:9A:000:Infinite Lives PL1
+shdancer1:0:FFEB8A:9A:000:Infinite Lives PL2
 
 ; [ Shadow Dancer (Japan) ]
-shdancrj:0:FFC407:59:000:Infinite Time
-shdancrj:0:FFC41F:09:000:Infinite Magic
-shdancrj:0:FFC490:00:000:Always have the Normal gun
-shdancrj:0:FFC490:01:000:Always have the Power-up gun
-shdancrj:0:FFC490:00:001:Get the Normal gun Now!
-shdancrj:0:FFC490:01:001:Get the Power-up gun Now!
-shdancrj:0:FFEB0A:9A:000:Infinite Lives PL1
-shdancrj:0:FFEB8A:9A:000:Infinite Lives PL2
+shdancerj:0:FFC407:59:000:Infinite Time
+shdancerj:0:FFC41F:09:000:Infinite Magic
+shdancerj:0:FFC490:00:000:Always have the Normal gun
+shdancerj:0:FFC490:01:000:Always have the Power-up gun
+shdancerj:0:FFC490:00:001:Get the Normal gun Now!
+shdancerj:0:FFC490:01:001:Get the Power-up gun Now!
+shdancerj:0:FFEB0A:9A:000:Infinite Lives PL1
+shdancerj:0:FFEB8A:9A:000:Infinite Lives PL2
 
 ; [ Sheriff ]
 sheriff:0:6035:FF:000:Invincibility
@@ -138672,16 +138632,6 @@ wtennis:0:00C2:00:001:Set 'HIS' to 0 Now! PL2
 wtennis:0:00C1:00:001:Set 'HER' to 0 Now! PL2
 wtennis:0:00C2:03:001:Set 'HIS' to 3 Now! PL2
 wtennis:0:00C1:03:001:Set 'HER' to 3 Now! PL2
-
-; [ Where's Wally? ]
-wwally:0:0000:00:999:[ There are no cheats   ]:REASON 1
-wwally:0:0000:00:999:[ for this game as it   ]:REASON 1
-wwally:0:0000:00:999:[ didn't work the last  ]:REASON 1
-wwally:0:0000:00:999:[ time it was tested.   ]:REASON 1
-wwally:0:0000:00:999:[ If the game now works ]:REASON 1
-wwally:0:0000:00:999:[ please request cheats ]:REASON 1
-wwally:0:0000:00:999:[ for it on the cheat   ]:REASON 1
-wwally:0:0000:00:999:[ forums.               ]:REASON 1
 
 ; [ Wild Western (set 2) ]
 wwester1:0:8620:03:000:Infinite Lives

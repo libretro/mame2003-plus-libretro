@@ -14,6 +14,7 @@
 #include "driver.h"
 #include "sound/fm.h"
 #include "sound/2612intf.h"
+#include "state.h"
 
 
 #ifdef BUILD_YM2612
@@ -70,6 +71,15 @@ static void TimerHandler(int n,int c,int count,double stepTime)
 	}
 }
 
+/* the time of the last overflow of each FM timer, used to start the next
+   one, in the save states (the timers themselves are saved by the core) */
+static void YM2612_timer_state_register(void)
+{
+	int n;
+	for (n = 0; n < intf->num; n++)
+		state_save_register_double("ym2612timer", n, "lastfired", lastfired[n], 2);
+}
+
 static void FMTimerInit( void )
 {
 	int i;
@@ -124,7 +134,10 @@ int YM2612_sh_start(const struct MachineSound *msound)
 
 	/**** initialize YM2612 ****/
 	if (YM2612Init(intf->num,intf->baseclock,rate,TimerHandler,IRQHandler) == 0)
-	  return 0;
+	{
+		YM2612_timer_state_register();
+		return 0;
+	}
 	/* error */
 	return 1;
 }

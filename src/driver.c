@@ -3301,8 +3301,6 @@ DokiDoki Penguin Land *not confirmed
 	DRIVER( aliensya )	/* (c) 1987 (protected) */
 	DRIVER( aliensyb )	/* (c) 1987 (protected) */
 	DRIVER( aliensyj )	/* (c) 1987 (protected. Japan) */
-	DRIVER( astorm )	/* (c) 1990 (protected) */
-	DRIVER( astorm2p )	/* (c) 1990 (protected 2 Players) */
 	DRIVER( aurail1 )	/* (c) 1990 Sega / Westone (protected) */
 	DRIVER( aurailj )	/* (c) 1990 Sega / Westone (protected) */
 	DRIVER( bayrouta )	/* (c) 1989 (protected) */
@@ -3328,11 +3326,6 @@ DokiDoki Penguin Land *not confirmed
 	DRIVER( hamaway )
 	DRIVER( aceattac )	/* (protected) */
 	DRIVER( afighter )	/* (protected) */
-	DRIVER( bloxeed )	/* (protected) */
-	DRIVER( cltchitr )	/* (protected) */
-	DRIVER( cotton )	/* (protected) */
-	DRIVER( cottona )	/* (protected) */
-	DRIVER( ddcrew )	/* (protected) */
 	DRIVER( dunkshot )	/* (protected) */
 	DRIVER( dunkshota )	/* (protected) */
 	DRIVER( dunkshoto )	/* (protected) */
@@ -3340,7 +3333,6 @@ DokiDoki Penguin Land *not confirmed
 	DRIVER( sdib )		/* (protected) */
 	DRIVER( sjryuko )	/* (protected) */
 	DRIVER( exctleag )  /* (protected) */
-	DRIVER( lghost )	/* (protected) */
 	DRIVER( loffire )	/* (protected) */
 	DRIVER( mvp )		/* (protected) */
 	DRIVER( ryukyu )	/* (protected) */
@@ -3365,7 +3357,14 @@ DokiDoki Penguin Land *not confirmed
 	DRIVER( aurail1d )	/* (c) 1990 Sega / Westone */
 	DRIVER( aurailjd )	/* (c) 1990 Sega / Westone */
 	DRIVER( bayroute )	/* (c) 1989 Sunsoft / Sega */
-	DRIVER( cottond )
+	DRIVER( cotton )	/* (c) 1991 (FD1094 317-0181a) */
+	DRIVER( cottonu )	/* (c) 1991 (FD1094 317-0180) */
+	DRIVER( cottonj )	/* (c) 1991 (FD1094 317-0179b) */
+	DRIVER( cottonja )	/* (c) 1991 (FD1094 317-0179a) */
+	DRIVER( cottond )	/* bootleg (decrypted cotton) */
+	DRIVER( cottonud )	/* bootleg (decrypted cottonu) */
+	DRIVER( cottonjd )	/* bootleg (decrypted cottonj) */
+	DRIVER( cottonjad )	/* bootleg (decrypted cottonja) */
 	DRIVER( bulletd )
 	DRIVER( bodyslam )	/* (c) 1986 */
 	DRIVER( dduxbl )	/* (c) 1989 (Datsu bootleg) */
@@ -3383,6 +3382,46 @@ DokiDoki Penguin Land *not confirmed
 	DRIVER( hangon )	/* (c) 1985 */
 	DRIVER( hwchamp )	/* (c) 1987 */
 	DRIVER( mjleague )	/* (c) 1985 */
+	DRIVER( astorm )	/* (c) 1990 (FD1094 317-0154) */
+	DRIVER( astorm3 )	/* (c) 1990 (FD1094 317-0148) */
+	DRIVER( astormu )	/* (c) 1990 (FD1094 317-0147) */
+	DRIVER( astormj )	/* (c) 1990 (FD1094 317-0146) */
+	DRIVER( astorm3d )	/* bootleg (decrypted astorm3) */
+	DRIVER( astormud )	/* bootleg (decrypted astormu) */
+	DRIVER( astormjd )	/* bootleg (decrypted astormj) */
+	DRIVER( bloxeed )	/* (c) 1989 (FD1094 317-0139) */
+	DRIVER( bloxeeda )	/* (c) 1989 (FD1094 317-0139) */
+	DRIVER( bloxeedd )	/* bootleg (decrypted bloxeed) */
+	DRIVER( cltchitr )	/* (c) 1991 (FD1094 317-0176) */
+	DRIVER( cltchitrj )	/* (c) 1991 (FD1094 317-0175) */
+	DRIVER( cltchitrd )	/* bootleg (decrypted cltchitr) */
+	DRIVER( cltchitrjd )	/* bootleg (decrypted cltchitrj) */
+	DRIVER( wwallyj )	/* (c) 1992 (FD1094 317-0197B) */
+	DRIVER( wwallyja )	/* (c) 1992 (FD1094 317-0197A) */
+	DRIVER( wwallyja3p )	/* (c) 1992 (FD1094 317-0198A) */
+	DRIVER( wwallyjd )	/* bootleg (decrypted wwallyj) */
+	DRIVER( wwallyjad )	/* bootleg (decrypted wwallyja) */
+	DRIVER( ddcrew )	/* (c) 1991 (FD1094 317-0190) */
+	DRIVER( ddcrewu )	/* (c) 1991 (FD1094 317-0186) */
+	DRIVER( ddcrew2 )	/* (c) 1991 (FD1094 317-0184) */
+	DRIVER( ddcrew1 )	/* (c) 1991 (FD1094 317-0187) */
+	DRIVER( ddcrewj )	/* (c) 1991 (FD1094 317-0185) */
+	DRIVER( ddcrewj2 )	/* (c) 1991 (FD1094 317-0182) */
+	DRIVER( ddcrewd )	/* bootleg (decrypted ddcrew) */
+	DRIVER( ddcrewud )	/* bootleg (decrypted ddcrewu) */
+	DRIVER( ddcrew2d )	/* bootleg (decrypted ddcrew2) */
+	DRIVER( ddcrew1d )	/* bootleg (decrypted ddcrew1) */
+	DRIVER( ddcrewjd )	/* bootleg (decrypted ddcrewj) */
+	DRIVER( ddcrewj2d )	/* bootleg (decrypted ddcrewj2) */
+	DRIVER( desertbr )	/* (c) 1992 (FD1094 317-0196) */
+	DRIVER( desertbrj )	/* (c) 1992 (FD1094 317-0194) */
+	DRIVER( desertbrd )	/* bootleg (decrypted desertbr) */
+	DRIVER( desertbrjd )	/* bootleg (decrypted desertbrj) */
+	DRIVER( lghost )	/* (c) 1990 (FD1094 317-0166) */
+	DRIVER( lghostu )	/* (c) 1990 (FD1094 317-0165) */
+	DRIVER( lghostj )	/* (c) 1990 (FD1094 317-0164) */
+	DRIVER( lghostd )	/* bootleg (decrypted lghost) */
+	DRIVER( lghostud )	/* bootleg (decrypted lghostu) */
 	DRIVER( mwalk )		/* (c) 1990 (FD1094/8751 317-0159) */
 	DRIVER( mwalku )	/* (c) 1990 (FD1094/8751 317-0158) */
 	DRIVER( mwalkj )	/* (c) 1990 (FD1094/8751 317-0157) */
@@ -3406,8 +3445,8 @@ DokiDoki Penguin Land *not confirmed
 	DRIVER( sharrier )	/* (c) 1985 */
 	DRIVER( shdancbl )	/* (c) 1989 (but bootleg) */
 	DRIVER( shdancer )	/* (c) 1989 */
-	DRIVER( shdancrj )	/* (c) 1989 */
-	DRIVER( shdancrb )	/* (c) 1989 */
+	DRIVER( shdancerj )	/* (c) 1989 */
+	DRIVER( shdancer1 )	/* (c) 1989 */
 	DRIVER( shinobi )	/* (c) 1987 */
 	DRIVER( shinobl )	/* (c) 1987 (but bootleg) */
   DRIVER( smgp )  /* 1989 (decrypted) */

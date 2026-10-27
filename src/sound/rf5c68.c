@@ -4,6 +4,7 @@
 
 #include "driver.h"
 #include "rf5c68.h"
+#include "state.h"
 #include <math.h>
 
 
@@ -152,6 +153,22 @@ int RF5C68_sh_start( const struct MachineSound *msound )
 	vol[1] = mixed_vol >>= 16;
 	chip->stream = stream_init_multi( 2, name, vol,  inintf->clock / 384 , 0, rf5c68_update );
 	if(chip->stream == -1) return 1;
+
+	/* save states */
+	for (i = 0; i < NUM_CHANNELS; i++)
+	{
+		state_save_register_UINT8 ("rf5c68", i, "enable", &chip->chan[i].enable, 1);
+		state_save_register_UINT8 ("rf5c68", i, "env",    &chip->chan[i].env, 1);
+		state_save_register_UINT8 ("rf5c68", i, "pan",    &chip->chan[i].pan, 1);
+		state_save_register_UINT8 ("rf5c68", i, "start",  &chip->chan[i].start, 1);
+		state_save_register_UINT32("rf5c68", i, "addr",   &chip->chan[i].addr, 1);
+		state_save_register_UINT16("rf5c68", i, "step",   &chip->chan[i].step, 1);
+		state_save_register_UINT16("rf5c68", i, "loopst", &chip->chan[i].loopst, 1);
+	}
+	state_save_register_UINT8("rf5c68", 0, "cbank",  &chip->cbank, 1);
+	state_save_register_UINT8("rf5c68", 0, "wbank",  &chip->wbank, 1);
+	state_save_register_UINT8("rf5c68", 0, "enable", &chip->enable, 1);
+	state_save_register_UINT8("rf5c68", 0, "data",   chip->data, 0x10000);
 
 	return 0;
 }

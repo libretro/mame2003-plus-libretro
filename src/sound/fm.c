@@ -4865,7 +4865,7 @@ static void YM2612_postload(void)
 				OPNWriteReg(&FM2612[num].OPN,r|0x100,FM2612[num].REGS[r|0x100]);
 			}
 		/* FB / CONNECT , L / R / AMS / PMS */
-		for(r=0xb0;r<0xb6;r++)
+		for(r=0xb0;r<0xb7;r++)	/* b4-b6: L/R, AMS, PMS of channels 1-3 */
 			if((r&3) != 3)
 			{
 				OPNWriteReg(&FM2612[num].OPN,r,FM2612[num].REGS[r]);
@@ -4877,10 +4877,107 @@ static void YM2612_postload(void)
 	cur_chip = NULL;
 }
 
+/* the parts of the chip state that the registers and FMsave_state_channel
+   leave out (global envelope and LFO counters, key state, SSG-EG negation,
+   envelope output, algorithm memory), as for the YM2610: kept in a copy
+   because the postload rewrites the registers, which changes some of them */
+static struct
+{
+	UINT32 eg_cnt, eg_timer, lfo_cnt, lfo_inc;
+	UINT32 key[6*4], vol_out[6*4];
+	UINT8 ssgn[6*4];
+	INT32 mem_value[6];
+	UINT8 kcode[6];
+	UINT32 block_fnum[6];
+	UINT32 sl3_block_fnum[3];
+} *ym2612_ext;
+
+static void YM2612_ext_presave(void)
+{
+	int num, c, s;
+	for (num = 0; num < YM2612NumChips; num++)
+	{
+		YM2612 *F2612 = &(FM2612[num]);
+		ym2612_ext[num].eg_cnt = F2612->OPN.eg_cnt;
+		ym2612_ext[num].eg_timer = F2612->OPN.eg_timer;
+		ym2612_ext[num].lfo_cnt = F2612->OPN.lfo_cnt;
+		ym2612_ext[num].lfo_inc = F2612->OPN.lfo_inc;
+		for (c = 0; c < 3; c++)
+			ym2612_ext[num].sl3_block_fnum[c] = F2612->OPN.SL3.block_fnum[c];
+		for (c = 0; c < 6; c++)
+		{
+			ym2612_ext[num].mem_value[c] = F2612->CH[c].mem_value;
+			ym2612_ext[num].kcode[c] = F2612->CH[c].kcode;
+			ym2612_ext[num].block_fnum[c] = F2612->CH[c].block_fnum;
+			for (s = 0; s < 4; s++)
+			{
+				ym2612_ext[num].key[c*4+s] = F2612->CH[c].SLOT[s].key;
+				ym2612_ext[num].vol_out[c*4+s] = F2612->CH[c].SLOT[s].vol_out;
+				ym2612_ext[num].ssgn[c*4+s] = F2612->CH[c].SLOT[s].ssgn;
+			}
+		}
+	}
+}
+
+static void YM2612_ext_postload(void)
+{
+	int num, c, s;
+	for (num = 0; num < YM2612NumChips; num++)
+	{
+		YM2612 *F2612 = &(FM2612[num]);
+		F2612->OPN.eg_cnt = ym2612_ext[num].eg_cnt;
+		F2612->OPN.eg_timer = ym2612_ext[num].eg_timer;
+		F2612->OPN.lfo_cnt = ym2612_ext[num].lfo_cnt;
+		F2612->OPN.lfo_inc = ym2612_ext[num].lfo_inc;
+		for (c = 0; c < 3; c++)
+			F2612->OPN.SL3.block_fnum[c] = ym2612_ext[num].sl3_block_fnum[c];
+		for (c = 0; c < 6; c++)
+		{
+			F2612->CH[c].mem_value = ym2612_ext[num].mem_value[c];
+			F2612->CH[c].kcode = ym2612_ext[num].kcode[c];
+			F2612->CH[c].block_fnum = ym2612_ext[num].block_fnum[c];
+			/* recompute the phase steps and the envelope rates */
+			F2612->CH[c].SLOT[SLOT1].Incr = -1;
+			for (s = 0; s < 4; s++)
+				F2612->CH[c].SLOT[s].ksr = 0xff;
+			for (s = 0; s < 4; s++)
+			{
+				F2612->CH[c].SLOT[s].key = ym2612_ext[num].key[c*4+s];
+				F2612->CH[c].SLOT[s].vol_out = ym2612_ext[num].vol_out[c*4+s];
+				F2612->CH[c].SLOT[s].ssgn = ym2612_ext[num].ssgn[c*4+s];
+			}
+		}
+	}
+}
+
 static void YM2612_save_state(void)
 {
 	int num;
 	const char statename[] = "YM2612";
+
+	/* registered before YM2612_postload (the postloads run last registered
+	   first), so it puts its values back after the registers are rewritten */
+	ym2612_ext = auto_malloc(sizeof(*ym2612_ext) * YM2612NumChips);
+	if (ym2612_ext != NULL)
+	{
+	memset(ym2612_ext, 0, sizeof(*ym2612_ext) * YM2612NumChips);
+	for (num = 0; num < YM2612NumChips; num++)
+	{
+		state_save_register_UINT32("YM2612ext", num, "eg_cnt", &ym2612_ext[num].eg_cnt, 1);
+		state_save_register_UINT32("YM2612ext", num, "eg_timer", &ym2612_ext[num].eg_timer, 1);
+		state_save_register_UINT32("YM2612ext", num, "lfo_cnt", &ym2612_ext[num].lfo_cnt, 1);
+		state_save_register_UINT32("YM2612ext", num, "key", ym2612_ext[num].key, 6*4);
+		state_save_register_UINT32("YM2612ext", num, "vol_out", ym2612_ext[num].vol_out, 6*4);
+		state_save_register_UINT8("YM2612ext", num, "ssgn", ym2612_ext[num].ssgn, 6*4);
+		state_save_register_INT32("YM2612ext", num, "mem_value", ym2612_ext[num].mem_value, 6);
+		state_save_register_UINT32("YM2612ext", num, "lfo_inc", &ym2612_ext[num].lfo_inc, 1);
+		state_save_register_UINT8("YM2612ext", num, "kcode", ym2612_ext[num].kcode, 6);
+		state_save_register_UINT32("YM2612ext", num, "block_fnum", ym2612_ext[num].block_fnum, 6);
+		state_save_register_UINT32("YM2612ext", num, "sl3_block_fnum", ym2612_ext[num].sl3_block_fnum, 3);
+	}
+	state_save_register_func_presave(YM2612_ext_presave);
+	state_save_register_func_postload(YM2612_ext_postload);
+	}
 
 	for(num=0;num<YM2612NumChips;num++)
 	{
