@@ -34,6 +34,12 @@ static char mixer_level_keys[MIXER_LEVEL_SLOTS][64];
 static char mixer_level_labels[MIXER_LEVEL_SLOTS][64];
 static char mixer_level_info[MIXER_LEVEL_SLOTS][64];
 static char mixer_level_defaults[MIXER_LEVEL_SLOTS][4];
+/* one CPU clock scale core option per CPU. The labels and sublabels name each CPU of  */
+/* the loaded game (set_cpu_clock_scale_labels). The keys name the romset             */
+/* (APPNAME"_kinst_cpu_clock_scale_2"), so one game's saved values never reach another. */
+static char cpu_clock_scale_keys[CPU_CLOCK_SCALE_SLOTS][64];
+static char cpu_clock_scale_labels[CPU_CLOCK_SCALE_SLOTS][80];
+static char cpu_clock_scale_info[CPU_CLOCK_SCALE_SLOTS][128];
 
 /******************************************************************************
 
@@ -44,6 +50,9 @@ static char mixer_level_defaults[MIXER_LEVEL_SLOTS][4];
 static void   set_variables(void);
 static void   determine_core_options_version(struct retro_core_options_v2 *core_options_us);
 static void   show_mixer_level_slots(void);
+static void   format_cpu_clock(char *buf, int hz);
+static void   describe_cpu(char *buf, int cpu);
+static void   set_cpu_clock_scale_labels(void);
 
 
 /******************************************************************************
@@ -258,7 +267,7 @@ static struct retro_core_option_v2_definition option_def_art_resolution = {
    APPNAME"_art_resolution",
    "Artwork Resolution Multiplier",
    "Resolution Multiplier",
-   "Restart core required. Increases the artwork resolution by the selected multiplier value.",
+   "Restart core required. Multiplies the rendered resolution by the selected overscale value.",
    NULL,
    "cat_key_artwork",
    {
@@ -445,7 +454,7 @@ static struct retro_core_option_v2_definition option_def_vector_resolution = {
    APPNAME"_vector_resolution",
    "Vector Resolution",
    "Resolution",
-   "Size of the screen the vector games are drawn on. Applied at once, also while the game runs.",
+   "Renders at the selected resolution for greater precision.",
    NULL,
    "cat_key_vector",
    {
@@ -771,11 +780,10 @@ static struct retro_core_option_v2_definition option_def_cpu_clock_scale = {
    APPNAME"_cpu_clock_scale",
    "CPU Clock Scale",
    NULL,
-   "Used to under or over clock the emulated CPU by a specified percentage.",
+   "Used to underclock or overclock the emulated CPU by a specified percentage.",
    NULL,
    NULL,
    {
-      { "default", NULL },
       { "25",     "25%" },
       { "30",     "30%" },
       { "35",     "35%" },
@@ -791,6 +799,7 @@ static struct retro_core_option_v2_definition option_def_cpu_clock_scale = {
       { "85",     "85%" },
       { "90",     "90%" },
       { "95",     "95%" },
+      { "100",   "100%" },
       { "105",   "105%" },
       { "110",   "110%" },
       { "115",   "115%" },
@@ -801,7 +810,7 @@ static struct retro_core_option_v2_definition option_def_cpu_clock_scale = {
       { "300",   "300%" },
       { NULL, NULL },
    },
-   "default"
+   "100"
 };
 
 static struct retro_core_option_v2_definition option_def_mips_dynarec = {
@@ -963,6 +972,7 @@ struct retro_core_options_v2 options_us = {
 void init_core_options(void)
 {
   int channel;
+  int cpu;
 
   default_options[OPT_4WAY]                      = option_def_four_way_emulation;
   default_options[OPT_XY_DEVICE]                 = option_def_xy_device;
@@ -1007,7 +1017,13 @@ void init_core_options(void)
   default_options[OPT_AUTOSAVE_HISCORE]          = option_def_autosave_hiscore;
   default_options[OPT_CHEAT_INPUT_PORTS]         = option_def_cheat_input_ports;
   default_options[OPT_DIGITAL_JOY_CENTERING]     = option_def_digital_joy_centering;
-  default_options[OPT_CPU_CLOCK_SCALE]           = option_def_cpu_clock_scale;
+  for(cpu = 0; cpu < CPU_CLOCK_SCALE_SLOTS; cpu++)
+  {
+    default_options[OPT_CPU_CLOCK_SCALE + cpu]      = option_def_cpu_clock_scale;
+    default_options[OPT_CPU_CLOCK_SCALE + cpu].key  = cpu_clock_scale_keys[cpu];
+    default_options[OPT_CPU_CLOCK_SCALE + cpu].desc = cpu_clock_scale_labels[cpu];
+    default_options[OPT_CPU_CLOCK_SCALE + cpu].info = cpu_clock_scale_info[cpu];
+  }
   default_options[OPT_MIPS_DYNAREC]              = option_def_mips_dynarec;
   default_options[OPT_ADSP_DYNAREC]              = option_def_adsp_dynarec;
   default_options[OPT_SH3_DYNAREC]               = option_def_sh3_dynarec;
@@ -1043,6 +1059,16 @@ static void set_variables(void)
       case OPT_STV_BIOS:
          if(!options.content_flags[CONTENT_STV])
            continue; /* only offer BIOS selection when it is relevant */
+         break;
+      case OPT_CPU_CLOCK_SCALE_2:
+      case OPT_CPU_CLOCK_SCALE_3:
+      case OPT_CPU_CLOCK_SCALE_4:
+      case OPT_CPU_CLOCK_SCALE_5:
+      case OPT_CPU_CLOCK_SCALE_6:
+      case OPT_CPU_CLOCK_SCALE_7:
+      case OPT_CPU_CLOCK_SCALE_8:
+         if(option_index - OPT_CPU_CLOCK_SCALE >= options.content_flags[CONTENT_CPU_COUNT])
+           continue; /* one clock scale option for each CPU the game has */
          break;
       case OPT_MIPS_DYNAREC:
          if(!options.content_flags[CONTENT_MIPS_DYNAREC])
@@ -1432,10 +1458,14 @@ void update_variables(bool first_time)
           break;
 
         case OPT_CPU_CLOCK_SCALE:
-          if(strcmp(var.value, "default") == 0)
-            options.cpu_clock_scale = 1;
-          else
-            options.cpu_clock_scale = (double) atoi(var.value) / 100;
+        case OPT_CPU_CLOCK_SCALE_2:
+        case OPT_CPU_CLOCK_SCALE_3:
+        case OPT_CPU_CLOCK_SCALE_4:
+        case OPT_CPU_CLOCK_SCALE_5:
+        case OPT_CPU_CLOCK_SCALE_6:
+        case OPT_CPU_CLOCK_SCALE_7:
+        case OPT_CPU_CLOCK_SCALE_8:
+          options.cpu_clock_scale[index - OPT_CPU_CLOCK_SCALE] = (double) atoi(var.value) / 100;
           break;
 
         case OPT_CORE_SYS_SUBFOLDER:
@@ -1552,6 +1582,58 @@ void update_mixer_level_options(void)
     var.value = NULL;
     if( environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && !string_is_empty(var.value) )
       options.mixer_level[channel] = atoi(var.value);
+  }
+}
+
+/* a clock in Hz as "8 MHz", "3.072 MHz" or "756 kHz" */
+static void format_cpu_clock(char *buf, int hz)
+{
+  char *end;
+
+  sprintf(buf, "%.3f", hz >= 1000000 ? hz / 1000000.0 : hz / 1000.0);
+  end = buf + strlen(buf) - 1;
+  while(*end == '0')
+    *end-- = '\0';
+  if(*end == '.')
+    *end = '\0';
+  strcat(buf, hz >= 1000000 ? " MHz" : " kHz");
+}
+
+/* "8 MHz 68010", or "8 MHz 68000, Sound" for a CPU flagged as a sound CPU */
+static void describe_cpu(char *buf, int cpu)
+{
+  const struct MachineCPU *machine_cpu = &Machine->drv->cpu[cpu];
+
+  format_cpu_clock(buf, machine_cpu->cpu_clock);
+  strcat(buf, " ");
+  strcat(buf, cputype_name(machine_cpu->cpu_type));
+  if(machine_cpu->cpu_flags & CPU_AUDIO_CPU)
+    strcat(buf, ", Sound");
+}
+
+static void set_cpu_clock_scale_labels(void)
+{
+  char description[64];
+  int cpu;
+
+  for(cpu = 0; cpu < CPU_CLOCK_SCALE_SLOTS; cpu++)
+  {
+    if(cpu == 0)
+      sprintf(cpu_clock_scale_keys[cpu], APPNAME"_%.16s_cpu_clock_scale", game_driver->name);
+    else
+      sprintf(cpu_clock_scale_keys[cpu], APPNAME"_%.16s_cpu_clock_scale_%d", game_driver->name, cpu + 1);
+  }
+
+  /* the sublabels name no speed: some drivers and CPU cores run a CPU at a multiple of */
+  /* its machine driver clock (the V25 divides it, backfire and deco_mlc multiply it)    */
+  for(cpu = 0; cpu < options.content_flags[CONTENT_CPU_COUNT]; cpu++)
+  {
+    describe_cpu(description, cpu);
+    if(options.content_flags[CONTENT_CPU_COUNT] == 1)
+      sprintf(cpu_clock_scale_labels[cpu], "CPU Clock Scale (%s)", description);
+    else
+      sprintf(cpu_clock_scale_labels[cpu], "CPU %d Clock Scale (%s)", cpu + 1, description);
+    sprintf(cpu_clock_scale_info[cpu], "Under or overclock CPU %d. 100%% is its normal speed.", cpu + 1);
   }
 }
 
@@ -1811,6 +1893,12 @@ void set_content_flags(void)
     sprintf(mixer_level_defaults[i], "100");
     options.mixer_level[i] = -1; /* the frontend sets it in update_mixer_level_options() */
   }
+  /************ NUMBER OF CPUS, EACH WITH ITS OWN CLOCK SCALE CORE OPTION ************/
+  for( i = 0; i < CPU_CLOCK_SCALE_SLOTS && Machine->drv->cpu[i].cpu_type != CPU_DUMMY; i++ )
+    ;
+  options.content_flags[CONTENT_CPU_COUNT] = i;
+  memset(options.cpu_clock_scale, 0, sizeof(options.cpu_clock_scale)); /* the frontend sets them in update_variables() */
+  set_cpu_clock_scale_labels();
 
 
   /************ LOG THE STATE OF THE CONTENT FLAGS ************/
@@ -1822,6 +1910,16 @@ void set_content_flags(void)
   if(options.content_flags[CONTENT_DIEHARD])    log_cb(RETRO_LOG_INFO, LOGPRE "* Die Hard: Arcade BIOS required.\n");
   if(options.content_flags[CONTENT_ALT_SOUND])  log_cb(RETRO_LOG_INFO, LOGPRE "* Alternative soundtrack available.\n");
   if(options.content_flags[CONTENT_VECTOR])     log_cb(RETRO_LOG_INFO, LOGPRE "* Vector display.\n");
+
+  /* the same text as the CPU clock scale core option labels, to match them up in the frontend */
+  if(options.content_flags[CONTENT_CPU_COUNT] == 1)
+    log_cb(RETRO_LOG_INFO, LOGPRE "* Uses 1 CPU: %s\n", cpu_clock_scale_labels[0]);
+  else
+  {
+    log_cb(RETRO_LOG_INFO, LOGPRE "* Uses %i CPUs:\n", options.content_flags[CONTENT_CPU_COUNT]);
+    for(i = 0; i < options.content_flags[CONTENT_CPU_COUNT]; i++)
+      log_cb(RETRO_LOG_INFO, LOGPRE "*   %s\n", cpu_clock_scale_labels[i]);
+  }
 
   log_cb(RETRO_LOG_INFO, LOGPRE "* Supports %i players with %i distinct controls.\n", options.content_flags[CONTENT_PLAYER_COUNT], options.content_flags[CONTENT_CTRL_COUNT]);
   log_cb(RETRO_LOG_INFO, LOGPRE "* Supports %i distinct button controls.\n", options.content_flags[CONTENT_BUTTON_COUNT]);

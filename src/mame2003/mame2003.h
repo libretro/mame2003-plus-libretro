@@ -105,6 +105,7 @@ enum /* the "display numbers" for each player, as opposed to their array index *
 #define MAX_PLAYER_COUNT  DISP_PLAYER8   /* We currently support a maximum of eight simultaneous players */
 
 #define MIXER_LEVEL_SLOTS  16   /* one core option per mixer channel, up to MIXER_MAX_CHANNELS in sound/mixer.h */
+#define CPU_CLOCK_SCALE_SLOTS  8   /* one CPU clock scale core option per CPU, up to MAX_CPU in driver.h */
 
 /******************************************************************************
 
@@ -252,7 +253,15 @@ enum CORE_OPTIONS  /* controls the order in which core options appear. common, i
   OPT_VECTOR_INTENSITY,
   OPT_NEOGEO_BIOS,
   OPT_STV_BIOS,
-  OPT_CPU_CLOCK_SCALE,
+  OPT_CPU_CLOCK_SCALE,   /* CPU 1 */
+  OPT_CPU_CLOCK_SCALE_2,
+  OPT_CPU_CLOCK_SCALE_3,
+  OPT_CPU_CLOCK_SCALE_4,
+  OPT_CPU_CLOCK_SCALE_5,
+  OPT_CPU_CLOCK_SCALE_6,
+  /* As of October 2026, the maximum number of CPUs of any supported driver is 6 */
+  OPT_CPU_CLOCK_SCALE_7,
+  OPT_CPU_CLOCK_SCALE_8,
   OPT_MIPS_DYNAREC,
   OPT_ADSP_DYNAREC,
   OPT_SH3_DYNAREC,

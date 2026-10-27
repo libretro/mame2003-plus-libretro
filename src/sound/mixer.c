@@ -607,6 +607,20 @@ static unsigned mixer_channel_resample_16_pan(struct mixer_channel_data *channel
 }
 
 /***************************************************************************
+	mixer_clamp_level
+***************************************************************************/
+
+/* volumes and mixing levels are 0-100 */
+static int mixer_clamp_level(int level)
+{
+	if (level < 0)
+		return 0;
+	if (level > 100)
+		return 100;
+	return level;
+}
+
+/***************************************************************************
 	mix_sample_8
 ***************************************************************************/
 
@@ -954,9 +968,8 @@ int mixer_allocate_channels(int channels, const int *default_mixing_levels)
 		channel->left_volume 				= 100;
 		channel->right_volume 				= 100;
 
-		/* backwards compatibility with old 0-255 volume range */
-		if (channel->default_mixing_level > 100)
-			channel->default_mixing_level = channel->default_mixing_level * 25 / 255;
+		/* mixing levels are 0-100 */
+		channel->default_mixing_level = mixer_clamp_level(channel->default_mixing_level);
 
 		/* the mixing level is set by a core option, not saved in the .cfg */
 		channel->mixing_level = channel->default_mixing_level;
@@ -1034,8 +1047,8 @@ void mixer_set_volume(int ch, int volume)
 	struct mixer_channel_data *channel = &mixer_channel[ch];
 
 	mixer_update_channel(channel, sound_scalebufferpos(samples_this_frame));
-	channel->left_volume  = volume;
-	channel->right_volume = volume;
+	channel->left_volume  = mixer_clamp_level(volume);
+	channel->right_volume = mixer_clamp_level(volume);
 }
 
 /***************************************************************************
@@ -1059,7 +1072,7 @@ void mixer_set_mixing_level(int ch, int level)
 	struct mixer_channel_data *channel = &mixer_channel[ch];
 
 	mixer_update_channel(channel, sound_scalebufferpos(samples_this_frame));
-	channel->mixing_level = level;
+	channel->mixing_level = mixer_clamp_level(level);
 }
 
 
@@ -1071,8 +1084,8 @@ void mixer_set_stereo_volume(int ch, int l_vol, int r_vol )
 	struct mixer_channel_data *channel = &mixer_channel[ch];
 
 	mixer_update_channel(channel, sound_scalebufferpos(samples_this_frame));
-	channel->left_volume  = l_vol;
-	channel->right_volume = r_vol;
+	channel->left_volume  = mixer_clamp_level(l_vol);
+	channel->right_volume = mixer_clamp_level(r_vol);
 }
 
 /***************************************************************************
