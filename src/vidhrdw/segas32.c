@@ -21,14 +21,8 @@
 	- Sonic while globally flipped via the service menu, fails to flip
 	  the "SEGA" and "SEGASONIC" sprite based logos on the title screen.
 
-	- Wrong priority cases (parenthesis for the level setup):
-	  dbzvrvs: draws text layer ($e) behind sprite-based gauges ($f).
-	  dbzvrvs: Shen-Long speech balloon during Piccolo ending (fixme: check levels).
-	  f1lap: attract mode ranking sprite-based text ($a) vs. road ($d)
-	  f1lap: attract mode map display (after aforementioned), sprite-based turn names
-	  ($a) are hidden by map ($d) again;
-	  (Note: Theory about these being CPU core bug(s) is debunked by the fact that latter
-	   sets up via immediate opcodes)
+	- Wrong priority cases:
+	  f1lap: ot gas gauge on loading screen before race begins.
 
 	- Tilemap opaque behaviour is incorrect
 
@@ -269,7 +263,6 @@ UINT16 system32_tilebank_external;
 
 bool opaquey_hack  = false; /* dink */
 bool titlef_kludge = false;
-bool f1lap_kludge  = false;
 
 
 
@@ -2379,10 +2372,6 @@ static void mix_all_layers(int which, int xoffs, struct mame_bitmap *bitmap, con
 		int effpri = (priority << 3) | 7;
 		int sprindex = numlayers;
 		int dstnum = 0;
-
-		/* f1lap priority hack 
-		if (f1lap_kludge && priority == 0x0a)
-			effpri = (0x0d << 3) | 7;*/
 
 		/* make a copy of the sorted list, finding a location for the sprite entry */
 		for (laynum = 0; laynum < numlayers; laynum++)
