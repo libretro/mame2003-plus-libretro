@@ -23,7 +23,9 @@ struct segavdp_interface
 	int		cram_base;			/* first palette entry of the VDP colors (SEGAVDP_CRAM_DIRECT) */
 	int		bg_palbase;			/* initial base of the background palette */
 	int		sp_palbase;			/* initial base of the sprite palette */
-	int		scanbase;			/* added to the scanline of the partial updates */
+	int		scanbase;			/* screen row of the first VDP line (partial updates) */
+	int		line_scale;			/* screen scanlines per VDP line (Mega-Tech: 2, the screen
+								   has the BIOS display too), 0 = 1 */
 	int		display_enable;		/* initial state of the board display enable */
 	int		set_visible_area;	/* register 12 (H32/H40) resizes the screen */
 	void	(*irq_update)(void);	/* called after a write to register 0 or 1, or NULL */
@@ -53,6 +55,12 @@ void segavdp_set_palbank(int palbank);
 int  segavdp_get_palbank(void);
 int  segavdp_get_reg(int regnum);
 int  segavdp_get_scanbase(void);
+
+/* the VDP line timing, the cpu_getscanline() family scaled by line_scale */
+int    segavdp_scanline(void);
+int    segavdp_horzbeampos(void);
+double segavdp_scanlinetime(int line);
+double segavdp_scanlineperiod(void);
 
 /* rendering: one line into a 320 pixel buffer; bgfill is the background
    pen (0 = the VDP background color, 0xffff = transparent) */

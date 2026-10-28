@@ -60,6 +60,7 @@ int system18_vdp_start(void)
 	intf.bg_palbase       = 0x1800;
 	intf.sp_palbase       = 0x1800;
 	intf.scanbase         = 0;
+	intf.line_scale       = 1;
 	intf.display_enable   = 1;
 	intf.set_visible_area = 0;
 	intf.irq_update       = NULL;

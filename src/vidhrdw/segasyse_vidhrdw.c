@@ -115,20 +115,6 @@ int start_megatech_video_normal(void)
 	return 0;
 }
 
-void update_megatech_video_normal(struct mame_bitmap *bitmap, const struct rectangle *cliprect )
-{
-	int i;
-
-	/*- Draw from cache_bitmap to screen -*/
-
-	for (i = 0; i < 192;i++)
-		segae_drawscanline(i,0,0);
-
-	for (i = 0;i < 192;i++)
-		draw_scanline8(bitmap,32,i,256,&cache_bitmap[i * (16+256+16) +16],&Machine->pens[segasyse_palettebase],-1);
-
-}
-
 void update_megaplay_video_normal(struct mame_bitmap *bitmap, const struct rectangle *cliprect )
 {
 	int i;
@@ -137,13 +123,18 @@ void update_megaplay_video_normal(struct mame_bitmap *bitmap, const struct recta
 
 	/* The overlay is stretched over the whole Genesis picture, as on the real
 	   board (and in current MAME): its 256 active pixels map onto the visible
-	   width, 320 in H40 mode and 256 in H32. Pen 0 is transparent.
+	   width, 320 in H40 mode and 256 in H32.
+	   As in MAME a pixel is transparent when its colour is 0 of either
+	   palette (the low 4 bits of the pen); the border lines above and below
+	   the 192 active lines, and the lines with the display off, show the
+	   backdrop colour unless it's colour 0.
 	   Only the lines inside cliprect are drawn: with partial updates the game
 	   layer is rendered in slices, and a full-height overlay would be
 	   overwritten by the slices that follow. */
 	int width = Machine->visible_area.max_x - Machine->visible_area.min_x + 1;
+	int backdrop = segae_vdp_regs[0][7] & 0x0f;
 
-	for (i = 0; i < 192;i++)
+	for (i = -16; i < 192 + 16; i++)
 	{
 		const UINT8 *src;
 		UINT16 *dst;
@@ -151,14 +142,23 @@ void update_megaplay_video_normal(struct mame_bitmap *bitmap, const struct recta
 
 		if (i + 16 < cliprect->min_y || i + 16 > cliprect->max_y)
 			continue;
+		dst = (UINT16 *)bitmap->line[i + 16] + Machine->visible_area.min_x;
+
+		if (i < 0 || i >= 192 || !(segae_vdp_regs[0][1] & 0x40))
+		{
+			if (backdrop)
+				for (x = 0; x < width; x++)
+					dst[x] = Machine->pens[segasyse_palettebase + 16 + backdrop];
+			continue;
+		}
+
 		segae_drawscanline(i,0,0);
 
 		src = &cache_bitmap[i * (16+256+16) + 16];
-		dst = (UINT16 *)bitmap->line[i + 16] + Machine->visible_area.min_x;
 		for (x = 0; x < width; x++)
 		{
 			UINT8 pix = src[(x * 256) / width];
-			if (pix)
+			if (pix & 0x0f)
 				dst[x] = Machine->pens[segasyse_palettebase + pix];
 		}
 	}
