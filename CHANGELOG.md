@@ -228,6 +228,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Shuihu Feng Yun Zhuan
 * Skater (Deco Cassette)
 * Skull Fang
+* Sky Robo / Tatakae! Big Fighter
 * Slap Shooter
 * Snow Brothers 3 - Magical Adventure
 * Snk Vs Capcom : Svc Chaos (MVS)
@@ -330,6 +331,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Gals Panic DX * Mature *
 * Ghox (Joystick)
 * Ganbare! Gonta!! 2 / Party Time: Gonta the Diver II * Mature *
+* Golden Axe II (Mega Play, original revision) - Romset `mp_gaxe2a`
 * GunNail (Location Test)
 * Guwange Special Version
 * Hacha Mecha Fighter (bootleg)
@@ -514,6 +516,15 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Satan's Hollow - Romset `shollow`
 * Sega Megaplay : Golden Axe II - Romset `mp_gaxe2`
 * Sega Megaplay : Sonic The Hedgehog - Romset `mp_sonic`
+* Sega Mega-Tech : After Burner - Romset `mt_aftrb` - SMS based
+* Sega Mega-Tech : Astro Warrior - Romset `mt_astro` - SMS based
+* Sega Mega-Tech : Bonanza Bros. - Romset `mt_bbros` - the good dump of current MAME
+* Sega Mega-Tech : Ghouls'n Ghosts - Romset `mt_gng` - the good dump of current MAME
+* Sega Mega-Tech : Golden Axe II - Romset `mt_gaxe2`
+* Sega Mega-Tech : Great Golf - Romset `mt_ggolf` - SMS based, the good dump of current MAME
+* Sega Mega-Tech : Parlour Games - Romset `mt_parlg` - SMS based
+* Sega Mega-Tech : Shinobi - Romset `mt_shnbi` - SMS based
+* Sega Mega-Tech : Tetris - Romset `mt_tetri` - the good dump of current MAME
 * Shisensho II * Mature * - Romset `shisen2`
 * Shogun Warriors - Romset `shogwarr`
 * Shrike Avenger - Romset `shrike`
@@ -820,6 +831,11 @@ Notes on this option:
 ## Misc Changes
 * Save states (RunAhead, netplay) of the Galaxian/Scramble/Frogger hardware: Galaxian video (stars, flip, banks, background), the 7474 flip-flops, the Scramble sound RAM and timer, the RC filters of the sound streams, the global sound enable
 * Sega System 18: all the games on the 315-5195 memory mapper, the segaic16 video and the VDP layer as in current MAME (171-5874, 171-5987 and Shadow Dancer ROM boards, FD1094 sets, Laser Ghost light guns, Wally wo Sagase! trackballs); the old `astorm` and `astorm2p` are now `astormj` and `astorm`
+* Sega Mega Drive VDP (315-5313): now a module of its own (`vidhrdw/segavdp.c`), started with its own configuration by System C/C2, Mega-Tech, Mega Play, the Mega Drive bootlegs and System 18, so a change for one board no longer reaches the others; a game loaded after a Mega Play game in the same session no longer inherits its interrupt mode (e.g. Columns attract out of sync), and the VDP window position and VBLANK flag are in the save states
+* Sega Mega Play: its own driver (`drivers/megaplay.c`, as in current MAME), the Mega Drive part shared with the other Mega Drive based boards; Tecmo World Cup is now `mp_twcup` and the BIOS version 2 ROM `epr-a15294.ic2`, as in current MAME
+* Sega Mega-Tech: its own driver (`drivers/megatech.c`, as in current MAME), sets, ROMs and names as in current MAME (good dumps of `mt_bbros`, `mt_ggolf`, `mt_gng`, `mt_tetri`, the instruction ROMs in the cart at 0x300000); the Master System carts now run, on the Mega Drive in Mark III mode as in current MAME (the VDP in mode 4, the Z80 with the Sega mapper); the BIOS cart slots as in current MAME (the menu lists the one cart in slot 1, the slot RAM, the window into the cart), the BIOS display in its 224 line mode (the MENU title was cut) and drawn line by line; the Mega Drive VDP line timing and partial updates now count its own lines below the BIOS screen (they used the scanlines of the double screen); the 68000 writes to 0xa02000 of the boards without the Mega Play BIOS no longer go through a NULL pointer (Great Golf and Great Soccer crashed)
+* Sega Mega Play: the BIOS overlay is transparent on colour 0 of both its palettes and covers its borders, as in current MAME (the boot logo screen was hidden behind a green background)
+* Save states (netplay, RunAhead with a second instance) of the Mega Drive based boards: the Z80 RAM and bus state and the Mega-Tech / Mega Play BIOS registers and RAM are saved (Gunstar Heroes and Mazin Wars Mega Play went out of sync after loading a state in a new instance); the SN76496 PSG is saved, and the YM2612 DAC enable is restored from its own register (0x2b, it was read from 0x2d)
 * Sega System 18 (also Moonwalker): the VDP palette writes no longer overflow the System 16 palette RAM (they corrupted the memory after it, e.g. garbled graphics in Shadow Dancer), and the sprite shadows over the VDP layer no longer index past the palette
 * Save states (RunAhead, netplay) of the Sega System 18 hardware: the RF5C68 PCM, the YM2612/YM3438 envelope, LFO, frequency and timer state, the VDP layer, the sound ROM bank
 * Save states (RunAhead, netplay) of the Sega System 16B hardware: the uPD7759 ADPCM chip, the sound CPU ROM bank, the segaic16 tilemap and sprite banks, flip, scroll latches and display enable
@@ -1230,4 +1246,5 @@ could crash on the score calc between levels is sorted [amadvance, arcadez]
 * Ported a new raiden2.c driver Raiden II Raiden DX and Zero Team etc etc now playable [Salvia, MAMEDev, FBN, vanni and claude, arcadez]
 * Ported the Cave CV1000 driver from current MAME: SH-3 CPU (interpreter and a recompiler with the same results), the blitter, the YMZ770 sound chip, the NAND flash and the RTC9701 [MAMEDev, vanni and claude]
 * Added support for the hvyunit.c driver ported across from my xbox project [arcadez, mistydreams, vanni and claude]
-
+* Added Sky Robo / Tatakae! Big Fighter to armedf.c and hooked it up to the new mcs51 cpu
+[arcadez, grant2258, AdvanceMAME, Zanac]

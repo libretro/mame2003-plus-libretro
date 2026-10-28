@@ -3,6 +3,7 @@
 #include "system16.h"
 #include "vidhrdw/segaic16.h"
 #include "state.h"
+#include "vidhrdw/segavdp.h"
 
 static struct mame_bitmap *tempbitmap;
 
@@ -40,6 +41,45 @@ static void draw_vdp(struct mame_bitmap *bitmap, const struct rectangle *cliprec
 			}
 		}
 	}
+}
+
+/*************************************
+ *
+ *	The VDP of System 18: its 64 colors
+ *	are set directly after the System 16
+ *	palette, the screen is not resized
+ *
+ *************************************/
+
+int system18_vdp_start(void)
+{
+	struct segavdp_interface intf;
+
+	intf.cram_mode        = SEGAVDP_CRAM_DIRECT;
+	intf.cram_base        = 0x1800;
+	intf.bg_palbase       = 0x1800;
+	intf.sp_palbase       = 0x1800;
+	intf.scanbase         = 0;
+	intf.line_scale       = 1;
+	intf.display_enable   = 1;
+	intf.set_visible_area = 0;
+	intf.irq_update       = NULL;
+	return segavdp_start(&intf);
+}
+
+/* render the VDP layer, transparent where the VDP draws nothing */
+void system18_vdp_update(struct mame_bitmap *bitmap, const struct rectangle *cliprect)
+{
+	int y;
+
+	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
+		segavdp_draw_line((UINT16 *)bitmap->line[y], y, 0xffff);
+}
+
+/* the VBLANK flag of the VDP */
+VIDEO_EOF( system18 )
+{
+	segavdp_eof();
 }
 
 void system18_set_grayscale(int enable)
@@ -92,7 +132,8 @@ VIDEO_START( system18_new )
 		return 1;
 
 	/* create the VDP */
-	start_system18_vdp();
+	if (system18_vdp_start())
+		return 1;
 	/* create a temp bitmap to draw the VDP data into */
 	tempbitmap = auto_bitmap_alloc_depth(Machine->drv->screen_width, Machine->drv->screen_height, 16);
 	if (!tempbitmap)
@@ -118,7 +159,7 @@ VIDEO_UPDATE( system18_new )
 	{
 		fillbitmap(bitmap, get_black_pen(), cliprect);
 		if (vdp_enable)
-			update_system18_vdp(tempbitmap, cliprect);
+			system18_vdp_update(tempbitmap, cliprect);
 		return;
 	}
 
@@ -152,5 +193,5 @@ VIDEO_UPDATE( system18_new )
 	   (it renders its lines ahead of the screen): render it for the next
 	   frame. It is part of the save states. */
 	if (vdp_enable)
-		update_system18_vdp(tempbitmap, cliprect);
+		system18_vdp_update(tempbitmap, cliprect);
 }

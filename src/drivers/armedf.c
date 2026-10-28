@@ -198,7 +198,7 @@ static WRITE_HANDLER( bigfghtr_mcu_movx_w )
 		bigfghtr_sharedram[offset-0x600] = data; 
   else 
 		printf("unmapped offset mcu_write: %x\n",offset);
-}
+
 
 static WRITE16_HANDLER( io_w )
 {
@@ -485,11 +485,11 @@ static MACHINE_INIT( bigfghtr )
 {
 	memset(bigfghtr_sharedram, 0, sizeof(bigfghtr_sharedram));
 	armedf_vreg = 0;
-	cpu_set_irq_line(2, I8051_INT0_LINE, CLEAR_LINE);
+	cpu_set_irq_line(2, I8051_INT0_LINE, ASSERT_LINE);
 }
 
 static MEMORY_READ16_START( bigfghtr_readmem )
-  { 0x000000, 0x07ffff, MRA16_ROM },
+    { 0x000000, 0x07ffff, MRA16_ROM },
 	{ 0x080000, 0x0805ff, MRA16_RAM },
 	{ 0x080600, 0x083fff, bigfghtr_sharedram_r },
 	{ 0x084000, 0x085fff, MRA16_RAM },
@@ -506,7 +506,7 @@ static MEMORY_READ16_START( bigfghtr_readmem )
 MEMORY_END
 
 static MEMORY_WRITE16_START( bigfghtr_writemem )
-  { 0x000000, 0x07ffff, MWA16_ROM },
+    { 0x000000, 0x07ffff, MWA16_ROM },
 	{ 0x080000, 0x0805ff, MWA16_RAM, &spriteram16, &spriteram_size },
 	{ 0x080600, 0x083fff, bigfghtr_sharedram_w },
 	{ 0x084000, 0x085fff, MWA16_RAM },
@@ -515,7 +515,7 @@ static MEMORY_WRITE16_START( bigfghtr_writemem )
 	{ 0x088000, 0x089fff, armedf_text_videoram_w, &terraf_text_videoram },
 	{ 0x08a000, 0x08afff, paletteram16_xxxxRRRRGGGGBBBB_word_w, &paletteram16 },
 	{ 0x08b000, 0x08bfff, MWA16_RAM, &spr_pal_clut },
-	{ 0x08d000, 0x08d001, terraf_io_w },
+	{ 0x08d000, 0x08d001, io_w },
 	{ 0x08d002, 0x08d003, armedf_bg_scrollx_w },
 	{ 0x08d004, 0x08d005, armedf_bg_scrolly_w },
 	{ 0x08d006, 0x08d007, armedf_fg_scrollx_w },
@@ -526,7 +526,7 @@ static MEMORY_WRITE16_START( bigfghtr_writemem )
 MEMORY_END
 
 static MEMORY_READ_START( bigfghtr_mcu_readmem )
-   { 0x0000, 0x0fff, MRA_ROM },
+     { 0x0000, 0x0fff, MRA_ROM },
 	 { 0x0600, 0x3fff, bigfghtr_mcu_sharedram_r },
 MEMORY_END
 
@@ -1654,6 +1654,12 @@ DRIVER_INIT( cclimbr2 )
 	armedf_setgfxtype(4);
 }
 
+DRIVER_INIT( bigfghtr )
+{
+	armedf_setgfxtype(1);
+	i8051_set_movx_handlers(2, bigfghtr_mcu_movx_r, bigfghtr_mcu_movx_w);
+}
+
 
 /*     YEAR, NAME,   PARENT,   MACHINE,  INPUT,    INIT,     MONITOR, COMPANY,     FULLNAME, FLAGS */
 GAMEX( 1987, legion,   0,      legion,   legion,   legion,   ROT270, "Nichibutsu", "Legion - Spinner-87 (World ver 2.03)",  GAME_IMPERFECT_GRAPHICS | GAME_UNEMULATED_PROTECTION )
@@ -1663,5 +1669,6 @@ GAMEX( 1987, terrafu,  terraf, terraf,   terraf,   terrafu,  ROT0,   "Nichibutsu
 GAMEX( 1987, kodure,   0,      kodure,   kodure,   kodure,   ROT0,   "Nichibutsu", "Kodure Ookami (Japan)",  GAME_IMPERFECT_GRAPHICS | GAME_UNEMULATED_PROTECTION )
 GAMEX( 1988, cclimbr2, 0,      cclimbr2, cclimbr2, cclimbr2, ROT0,   "Nichibutsu", "Crazy Climber 2 (Japan)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1988, armedf,   0,      armedf,   armedf,   armedf,   ROT270, "Nichibutsu", "Armed Formation", GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1989, skyrobo,  0,      bigfghtr, bigfghtr, bigfghtr,   ROT0,   "Nichibutsu", "Sky Robo", GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1989, bigfghtr, skyrobo,bigfghtr, bigfghtr, bigfghtr,   ROT0,   "Nichibutsu", "Tatakae! Big Fighter (Japan)", GAME_IMPERFECT_GRAPHICS )
+)
+GAMEX( 1989, bigfghtr, skyrobo,bigfghtr, bigfghtr, bigfghtr, ROT0,   "Nichibutsu", "Tatakae! Big Fighter (Japan)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1989, skyrobo,  0,      bigfghtr, bigfghtr, bigfghtr, ROT0,   "Nichibutsu", "Sky Robo", GAME_IMPERFECT_GRAPHICS )
