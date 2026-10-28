@@ -330,6 +330,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Gals Panic DX * Mature *
 * Ghox (Joystick)
 * Ganbare! Gonta!! 2 / Party Time: Gonta the Diver II * Mature *
+* Golden Axe II (Mega Play, original revision) - Romset `mp_gaxe2a`
 * GunNail (Location Test)
 * Guwange Special Version
 * Hacha Mecha Fighter (bootleg)
@@ -821,6 +822,7 @@ Notes on this option:
 * Save states (RunAhead, netplay) of the Galaxian/Scramble/Frogger hardware: Galaxian video (stars, flip, banks, background), the 7474 flip-flops, the Scramble sound RAM and timer, the RC filters of the sound streams, the global sound enable
 * Sega System 18: all the games on the 315-5195 memory mapper, the segaic16 video and the VDP layer as in current MAME (171-5874, 171-5987 and Shadow Dancer ROM boards, FD1094 sets, Laser Ghost light guns, Wally wo Sagase! trackballs); the old `astorm` and `astorm2p` are now `astormj` and `astorm`
 * Sega Mega Drive VDP (315-5313): now a module of its own (`vidhrdw/segavdp.c`), started with its own configuration by System C/C2, Mega-Tech, Mega Play, the Mega Drive bootlegs and System 18, so a change for one board no longer reaches the others; a game loaded after a Mega Play game in the same session no longer inherits its interrupt mode (e.g. Columns attract out of sync), and the VDP window position and VBLANK flag are in the save states
+* Sega Mega Play: its own driver (`drivers/megaplay.c`, as in current MAME), the Mega Drive part shared with the other Mega Drive based boards; Tecmo World Cup is now `mp_twcup` and the BIOS version 2 ROM `epr-a15294.ic2`, as in current MAME
 * Save states (netplay, RunAhead with a second instance) of the Mega Drive based boards: the Z80 RAM and bus state and the Mega-Tech / Mega Play BIOS registers and RAM are saved (Gunstar Heroes and Mazin Wars Mega Play went out of sync after loading a state in a new instance); the SN76496 PSG is saved, and the YM2612 DAC enable is restored from its own register (0x2b, it was read from 0x2d)
 * Sega System 18 (also Moonwalker): the VDP palette writes no longer overflow the System 16 palette RAM (they corrupted the memory after it, e.g. garbled graphics in Shadow Dancer), and the sprite shadows over the VDP layer no longer index past the palette
 * Save states (RunAhead, netplay) of the Sega System 18 hardware: the RF5C68 PCM, the YM2612/YM3438 envelope, LFO, frequency and timer state, the VDP layer, the sound ROM bank
