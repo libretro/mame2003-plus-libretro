@@ -414,6 +414,7 @@ static MEMORY_WRITE16_START( armedf_writemem )
 	{ 0x06d00a, 0x06d00b, sound_command_w },
 MEMORY_END
 
+static UNIT8 *bigfghtr_sharedram;
 static UINT8 bigfghtr_sharedram[0x3a00];
 
 static READ16_HANDLER( bigfghtr_sharedram_r )
