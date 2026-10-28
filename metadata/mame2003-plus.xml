@@ -211093,7 +211093,7 @@
 		</dipswitch>
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="2080"/>
 	</game>
-	<game name="mp_sonic" sourcefile="segac2.c" romof="megaplay">
+	<game name="mp_sonic" sourcefile="megaplay.c" romof="megaplay">
 		<description>Sonic The Hedgehog</description>
 		<year>1993</year>
 		<manufacturer>Sega</manufacturer>
@@ -211103,7 +211103,7 @@
 		<rom name="ep15176.ic1" size="262144" crc="d180cc21" sha1="62805cfaaa80c1da6146dd89fc2b49d819fd4f22" region="cpu1" offset="1"/>
 		<rom name="ep15175-01.ic3" size="32768" crc="99246889" sha1="184aa3b7fdedcf578c5e34edb7ed44f57f832258" region="user1" offset="0"/>
 		<rom name="ep15294.ic2" merge="ep15294.ic2" bios="ver1" size="131072" crc="aa8dc2d8" sha1="96771ad7b79dc9c83a1594243250d65052d23176" region="cpu3" offset="0"/>
-		<rom name="megaplay.bin" merge="megaplay.bin" bios="ver2" size="131072" crc="f97c68aa" sha1="bcabc879950bca1ced11c550a484e697ec5706b2" region="cpu3" offset="0"/>
+		<rom name="epr-a15294.ic2" merge="epr-a15294.ic2" bios="ver2" size="131072" crc="f97c68aa" sha1="bcabc879950bca1ced11c550a484e697ec5706b2" region="cpu3" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
@@ -211163,8 +211163,8 @@
 		</dipswitch>
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="2080"/>
 	</game>
-	<game name="mp_gaxe2" sourcefile="segac2.c" romof="megaplay">
-		<description>Golden Axe II</description>
+	<game name="mp_gaxe2" sourcefile="megaplay.c" romof="megaplay">
+		<description>Golden Axe II (revision B)</description>
 		<year>1993</year>
 		<manufacturer>Sega</manufacturer>
 		<biosset name="ver1" description="Megaplay Bios (Ver. 1)" default="yes"/>
@@ -211173,7 +211173,7 @@
 		<rom name="ep15178b.ic1" size="262144" crc="2ea576db" sha1="6d96b948243533de1f488b1f80e0d5431a4f1f53" region="cpu1" offset="1"/>
 		<rom name="ep15175-02b.ic3" size="32768" crc="3039b653" sha1="b19874c74d0fc0cca1169f62e5e74f0e8ca83679" region="user1" offset="0"/>
 		<rom name="ep15294.ic2" merge="ep15294.ic2" bios="ver1" size="131072" crc="aa8dc2d8" sha1="96771ad7b79dc9c83a1594243250d65052d23176" region="cpu3" offset="0"/>
-		<rom name="megaplay.bin" merge="megaplay.bin" bios="ver2" size="131072" crc="f97c68aa" sha1="bcabc879950bca1ced11c550a484e697ec5706b2" region="cpu3" offset="0"/>
+		<rom name="epr-a15294.ic2" merge="epr-a15294.ic2" bios="ver2" size="131072" crc="f97c68aa" sha1="bcabc879950bca1ced11c550a484e697ec5706b2" region="cpu3" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
@@ -211237,7 +211237,81 @@
 		</dipswitch>
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="2080"/>
 	</game>
-	<game name="mp_gslam" sourcefile="segac2.c" romof="megaplay">
+	<game name="mp_gaxe2a" sourcefile="megaplay.c" cloneof="mp_gaxe2" romof="mp_gaxe2">
+		<description>Golden Axe II</description>
+		<year>1993</year>
+		<manufacturer>Sega</manufacturer>
+		<biosset name="ver1" description="Megaplay Bios (Ver. 1)" default="yes"/>
+		<biosset name="ver2" description="Megaplay Bios (Ver. 2)"/>
+		<rom name="epr-15179.ic2" size="262144" crc="d35f1a35" sha1="3105cd3b55f65337863703db04527fe298fc04e0" region="cpu1" offset="0"/>
+		<rom name="epr-15178.ic1" size="262144" crc="2c6b6b76" sha1="25577f49ecad451c217da9cacbd78ffca9dca24e" region="cpu1" offset="1"/>
+		<rom name="epr-15175-02.ic3" size="32768" crc="cfc87f91" sha1="110609094aa6d848bec613faa0558db7ad272b77" region="user1" offset="0"/>
+		<rom name="ep15294.ic2" merge="ep15294.ic2" bios="ver1" size="131072" crc="aa8dc2d8" sha1="96771ad7b79dc9c83a1594243250d65052d23176" region="cpu3" offset="0"/>
+		<rom name="epr-a15294.ic2" merge="epr-a15294.ic2" bios="ver2" size="131072" crc="f97c68aa" sha1="bcabc879950bca1ced11c550a484e697ec5706b2" region="cpu3" offset="0"/>
+		<chip type="cpu" name="68000" clock="7670442"/>
+		<chip type="cpu" name="Z80" clock="3579540"/>
+		<chip type="cpu" name="Z80" clock="3579540"/>
+		<chip type="audio" name="YM2612" clock="7670442"/>
+		<chip type="audio" name="SN76496" clock="3579540"/>
+		<chip type="audio" name="SN76496" clock="3579540"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="2" control="joy8way" buttons="3" coins="2" service="yes"/>
+		<dipswitch name="Coin slot 1">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 coins/1 credit - 5 coins/3 credits - 6 coins/4 credits"/>
+			<dipvalue name="2 coins/1 credit - 4 coins/3 credits"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 coin/1 credit - 5 coins/6 credits"/>
+			<dipvalue name="1 coin/1 credit - 4 coins/5 credits"/>
+			<dipvalue name="1 coin/1 credit - 2 coins/3 credits"/>
+			<dipvalue name="Free Play"/>
+		</dipswitch>
+		<dipswitch name="Coin slot 2">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 coins/1 credit - 5 coins/3 credits - 6 coins/4 credits"/>
+			<dipvalue name="2 coins/1 credit - 4 coins/3 credits"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 coin/1 credit - 5 coins/6 credits"/>
+			<dipvalue name="1 coin/1 credit - 4 coins/5 credits"/>
+			<dipvalue name="1 coin/1 credit - 2 coins/3 credits"/>
+			<dipvalue name=" 1 coin/1 credit"/>
+		</dipswitch>
+		<dipswitch name="Difficulty">
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Hard"/>
+		</dipswitch>
+		<dipswitch name="Life">
+			<dipvalue name="1"/>
+			<dipvalue name="2" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Initial Players">
+			<dipvalue name="1"/>
+			<dipvalue name="2" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Timer">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2080"/>
+	</game>
+	<game name="mp_gslam" sourcefile="megaplay.c" romof="megaplay">
 		<description>Grand Slam</description>
 		<year>1993</year>
 		<manufacturer>Sega</manufacturer>
@@ -211247,7 +211321,7 @@
 		<rom name="epr-15180.ic1" size="262144" crc="73bb48f1" sha1="981b64f834d5618599352f5fad683bf232390ba3" region="cpu1" offset="1"/>
 		<rom name="epr-15175-03.ic3" size="32768" crc="70ea1aec" sha1="0d9d82a1f8aa51d02707f7b343e7cfb6591efccd" region="user1" offset="0"/>
 		<rom name="ep15294.ic2" merge="ep15294.ic2" bios="ver1" size="131072" crc="aa8dc2d8" sha1="96771ad7b79dc9c83a1594243250d65052d23176" region="cpu3" offset="0"/>
-		<rom name="megaplay.bin" merge="megaplay.bin" bios="ver2" size="131072" crc="f97c68aa" sha1="bcabc879950bca1ced11c550a484e697ec5706b2" region="cpu3" offset="0"/>
+		<rom name="epr-a15294.ic2" merge="epr-a15294.ic2" bios="ver2" size="131072" crc="f97c68aa" sha1="bcabc879950bca1ced11c550a484e697ec5706b2" region="cpu3" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
@@ -211309,7 +211383,7 @@
 		</dipswitch>
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="2080"/>
 	</game>
-	<game name="mp_sor2" sourcefile="segac2.c" romof="megaplay">
+	<game name="mp_sor2" sourcefile="megaplay.c" romof="megaplay">
 		<description>Streets Of Rage II</description>
 		<year>1993</year>
 		<manufacturer>Sega</manufacturer>
@@ -211318,7 +211392,7 @@
 		<rom name="mpr-15425.ic1" size="2097152" crc="cd6376af" sha1="57ec210975e40505649f152b60ef54f99da31f0e" region="cpu1" offset="0"/>
 		<rom name="epr-15175-05.ic2" size="32768" crc="1df5347c" sha1="faced2e875e1914392f61577b5256d006eebeef9" region="user1" offset="0"/>
 		<rom name="ep15294.ic2" merge="ep15294.ic2" bios="ver1" size="131072" crc="aa8dc2d8" sha1="96771ad7b79dc9c83a1594243250d65052d23176" region="cpu3" offset="0"/>
-		<rom name="megaplay.bin" merge="megaplay.bin" bios="ver2" size="131072" crc="f97c68aa" sha1="bcabc879950bca1ced11c550a484e697ec5706b2" region="cpu3" offset="0"/>
+		<rom name="epr-a15294.ic2" merge="epr-a15294.ic2" bios="ver2" size="131072" crc="f97c68aa" sha1="bcabc879950bca1ced11c550a484e697ec5706b2" region="cpu3" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
@@ -211378,7 +211452,7 @@
 		</dipswitch>
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="2080"/>
 	</game>
-	<game name="mp_twc" sourcefile="segac2.c" romof="megaplay">
+	<game name="mp_twcup" sourcefile="megaplay.c" romof="megaplay">
 		<description>Tecmo World Cup</description>
 		<year>1993</year>
 		<manufacturer>Sega</manufacturer>
@@ -211388,7 +211462,7 @@
 		<rom name="ep15182.ic1" size="262144" crc="eb8325c3" sha1="bb21ac926c353e14184dd476222bc6a8714606e5" region="cpu1" offset="1"/>
 		<rom name="ep15175-04.ic3" size="32768" crc="faf7c030" sha1="16ef405335b4d3ecb0b7d97b088dafc4278d4726" region="user1" offset="0"/>
 		<rom name="ep15294.ic2" merge="ep15294.ic2" bios="ver1" size="131072" crc="aa8dc2d8" sha1="96771ad7b79dc9c83a1594243250d65052d23176" region="cpu3" offset="0"/>
-		<rom name="megaplay.bin" merge="megaplay.bin" bios="ver2" size="131072" crc="f97c68aa" sha1="bcabc879950bca1ced11c550a484e697ec5706b2" region="cpu3" offset="0"/>
+		<rom name="epr-a15294.ic2" merge="epr-a15294.ic2" bios="ver2" size="131072" crc="f97c68aa" sha1="bcabc879950bca1ced11c550a484e697ec5706b2" region="cpu3" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
@@ -211450,7 +211524,7 @@
 		</dipswitch>
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="2080"/>
 	</game>
-	<game name="mp_soni2" sourcefile="segac2.c" romof="megaplay">
+	<game name="mp_soni2" sourcefile="megaplay.c" romof="megaplay">
 		<description>Sonic The Hedgehog 2</description>
 		<year>1993</year>
 		<manufacturer>Sega</manufacturer>
@@ -211459,7 +211533,7 @@
 		<rom name="mpr-16011.ic1" size="1048576" crc="3d7bf98a" sha1="dce0e4e8f2573e0ffe851edaa235e4ed9e61ee2d" region="cpu1" offset="0"/>
 		<rom name="epr-15175-07.ic1" size="32768" crc="bb5f67f0" sha1="33b7a5d14015a5fcf41976a8f648f8f48ce9bb03" region="user1" offset="0"/>
 		<rom name="ep15294.ic2" merge="ep15294.ic2" bios="ver1" size="131072" crc="aa8dc2d8" sha1="96771ad7b79dc9c83a1594243250d65052d23176" region="cpu3" offset="0"/>
-		<rom name="megaplay.bin" merge="megaplay.bin" bios="ver2" size="131072" crc="f97c68aa" sha1="bcabc879950bca1ced11c550a484e697ec5706b2" region="cpu3" offset="0"/>
+		<rom name="epr-a15294.ic2" merge="epr-a15294.ic2" bios="ver2" size="131072" crc="f97c68aa" sha1="bcabc879950bca1ced11c550a484e697ec5706b2" region="cpu3" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
@@ -211519,7 +211593,7 @@
 		</dipswitch>
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="2080"/>
 	</game>
-	<game name="mp_bio" sourcefile="segac2.c" romof="megaplay">
+	<game name="mp_bio" sourcefile="megaplay.c" romof="megaplay">
 		<description>Bio-Hazard Battle</description>
 		<year>1993</year>
 		<manufacturer>Sega</manufacturer>
@@ -211528,7 +211602,7 @@
 		<rom name="mpr-15699-f.ic1" size="1048576" crc="4b193229" sha1="f8629171ae9b4792f142f6957547d886e5cc6817" region="cpu1" offset="0"/>
 		<rom name="epr-15175-06.ic2" size="32768" crc="1ef64e41" sha1="13984b714b014ea41963b70de74a5358ed223bc5" region="user1" offset="0"/>
 		<rom name="ep15294.ic2" merge="ep15294.ic2" bios="ver1" size="131072" crc="aa8dc2d8" sha1="96771ad7b79dc9c83a1594243250d65052d23176" region="cpu3" offset="0"/>
-		<rom name="megaplay.bin" merge="megaplay.bin" bios="ver2" size="131072" crc="f97c68aa" sha1="bcabc879950bca1ced11c550a484e697ec5706b2" region="cpu3" offset="0"/>
+		<rom name="epr-a15294.ic2" merge="epr-a15294.ic2" bios="ver2" size="131072" crc="f97c68aa" sha1="bcabc879950bca1ced11c550a484e697ec5706b2" region="cpu3" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
@@ -211588,7 +211662,7 @@
 		</dipswitch>
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="2080"/>
 	</game>
-	<game name="mp_shnb3" sourcefile="segac2.c" romof="megaplay">
+	<game name="mp_shnb3" sourcefile="megaplay.c" romof="megaplay">
 		<description>Shinobi III</description>
 		<year>1993</year>
 		<manufacturer>Sega</manufacturer>
@@ -211597,7 +211671,7 @@
 		<rom name="mpr-16197.ic1" size="1048576" crc="48162361" sha1="77d544509339b5ddf6d19941377e81d29e9e21dc" region="cpu1" offset="0"/>
 		<rom name="epr-15175-09.ic2" size="32768" crc="6254e45a" sha1="8667922a6eade03c964ce224f7fa39ba871c60a4" region="user1" offset="0"/>
 		<rom name="ep15294.ic2" merge="ep15294.ic2" bios="ver1" size="131072" crc="aa8dc2d8" sha1="96771ad7b79dc9c83a1594243250d65052d23176" region="cpu3" offset="0"/>
-		<rom name="megaplay.bin" merge="megaplay.bin" bios="ver2" size="131072" crc="f97c68aa" sha1="bcabc879950bca1ced11c550a484e697ec5706b2" region="cpu3" offset="0"/>
+		<rom name="epr-a15294.ic2" merge="epr-a15294.ic2" bios="ver2" size="131072" crc="f97c68aa" sha1="bcabc879950bca1ced11c550a484e697ec5706b2" region="cpu3" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
@@ -211657,7 +211731,7 @@
 		</dipswitch>
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="2080"/>
 	</game>
-	<game name="mp_gunhe" sourcefile="segac2.c" romof="megaplay">
+	<game name="mp_gunhe" sourcefile="megaplay.c" romof="megaplay">
 		<description>Gunstar Heroes</description>
 		<year>1993</year>
 		<manufacturer>Sega</manufacturer>
@@ -211666,7 +211740,7 @@
 		<rom name="mpr-16390.ic1" size="1048576" crc="d963a748" sha1="adf231c5180a9307fd6675fe77fffd4c5bfa3d6a" region="cpu1" offset="0"/>
 		<rom name="epr-15175-10.ic2" size="32768" crc="e4f08233" sha1="b7e0ad3f6ae1c56df6ec76375842050f08afcbef" region="user1" offset="0"/>
 		<rom name="ep15294.ic2" merge="ep15294.ic2" bios="ver1" size="131072" crc="aa8dc2d8" sha1="96771ad7b79dc9c83a1594243250d65052d23176" region="cpu3" offset="0"/>
-		<rom name="megaplay.bin" merge="megaplay.bin" bios="ver2" size="131072" crc="f97c68aa" sha1="bcabc879950bca1ced11c550a484e697ec5706b2" region="cpu3" offset="0"/>
+		<rom name="epr-a15294.ic2" merge="epr-a15294.ic2" bios="ver2" size="131072" crc="f97c68aa" sha1="bcabc879950bca1ced11c550a484e697ec5706b2" region="cpu3" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
@@ -211726,7 +211800,7 @@
 		</dipswitch>
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="2080"/>
 	</game>
-	<game name="mp_mazin" sourcefile="segac2.c" romof="megaplay">
+	<game name="mp_mazin" sourcefile="megaplay.c" romof="megaplay">
 		<description>Mazin Wars / Mazin Saga</description>
 		<year>1993</year>
 		<manufacturer>Sega</manufacturer>
@@ -211735,7 +211809,7 @@
 		<rom name="mpr-16460.ic1" size="1048576" crc="e9635a83" sha1="ab3afa11656f0ae3a50c957dce012fb15d3992e0" region="cpu1" offset="0"/>
 		<rom name="epr-15175-11.ic2" size="32768" crc="bb651120" sha1="81cb736f2732373e260dde162249c1d29a3489c3" region="user1" offset="0"/>
 		<rom name="ep15294.ic2" merge="ep15294.ic2" bios="ver1" size="131072" crc="aa8dc2d8" sha1="96771ad7b79dc9c83a1594243250d65052d23176" region="cpu3" offset="0"/>
-		<rom name="megaplay.bin" merge="megaplay.bin" bios="ver2" size="131072" crc="f97c68aa" sha1="bcabc879950bca1ced11c550a484e697ec5706b2" region="cpu3" offset="0"/>
+		<rom name="epr-a15294.ic2" merge="epr-a15294.ic2" bios="ver2" size="131072" crc="f97c68aa" sha1="bcabc879950bca1ced11c550a484e697ec5706b2" region="cpu3" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
@@ -211797,7 +211871,7 @@
 		</dipswitch>
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="2080"/>
 	</game>
-	<game name="mp_col3" sourcefile="segac2.c" romof="megaplay">
+	<game name="mp_col3" sourcefile="megaplay.c" romof="megaplay">
 		<description>Columns III</description>
 		<year>1993</year>
 		<manufacturer>Sega</manufacturer>
@@ -211807,7 +211881,7 @@
 		<rom name="2.ic1" size="262144" crc="999b2fe6" sha1="ad967a28e4eebd7b01273e4e04c35a0198ef834a" region="cpu1" offset="1"/>
 		<rom name="1.ic3" size="32768" crc="dac9bf91" sha1="0117972a7181f8aaf942a259cc8764b821031253" region="user1" offset="0"/>
 		<rom name="ep15294.ic2" merge="ep15294.ic2" bios="ver1" size="131072" crc="aa8dc2d8" sha1="96771ad7b79dc9c83a1594243250d65052d23176" region="cpu3" offset="0"/>
-		<rom name="megaplay.bin" merge="megaplay.bin" bios="ver2" size="131072" crc="f97c68aa" sha1="bcabc879950bca1ced11c550a484e697ec5706b2" region="cpu3" offset="0"/>
+		<rom name="epr-a15294.ic2" merge="epr-a15294.ic2" bios="ver2" size="131072" crc="f97c68aa" sha1="bcabc879950bca1ced11c550a484e697ec5706b2" region="cpu3" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
@@ -211855,7 +211929,7 @@
 		</dipswitch>
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="2080"/>
 	</game>
-	<game name="mp_addams" sourcefile="segac2.c" romof="megaplay">
+	<game name="mp_addams" sourcefile="megaplay.c" romof="megaplay">
 		<description>The Addams Family ARCADE (Mega Play)</description>
 		<year>2026</year>
 		<manufacturer>hack</manufacturer>
@@ -211864,7 +211938,7 @@
 		<rom name="epr-26013.ic1" size="2097152" crc="87ecace1" sha1="d6529b4b692a9515ccf6722f26c011660154ae7a" region="cpu1" offset="0"/>
 		<rom name="epr-15175-20.ic2" size="32768" crc="dcfde4e7" sha1="3f5a1b4de94fad4ccd404b95a53fdb2e1c4773e6" region="user1" offset="0"/>
 		<rom name="ep15294.ic2" merge="ep15294.ic2" bios="ver1" size="131072" crc="aa8dc2d8" sha1="96771ad7b79dc9c83a1594243250d65052d23176" region="cpu3" offset="0"/>
-		<rom name="megaplay.bin" merge="megaplay.bin" bios="ver2" size="131072" crc="f97c68aa" sha1="bcabc879950bca1ced11c550a484e697ec5706b2" region="cpu3" offset="0"/>
+		<rom name="epr-a15294.ic2" merge="epr-a15294.ic2" bios="ver2" size="131072" crc="f97c68aa" sha1="bcabc879950bca1ced11c550a484e697ec5706b2" region="cpu3" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>

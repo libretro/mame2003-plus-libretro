@@ -84877,7 +84877,7 @@ The US version has the "Recycle It, Don't Trash It!" screen.
 $end
 
 
-$info=mp_gaxe2,
+$info=mp_gaxe2,mp_gaxe2a,
 $bio
 
 Golden Axe II (c) 1993 Sega.
@@ -242217,7 +242217,7 @@ Directed by : Strong Shima
 $end
 
 
-$info=mp_twc,
+$info=mp_twcup,
 $bio
 
 Tecmo World Cup (c) 1993 Sega.
