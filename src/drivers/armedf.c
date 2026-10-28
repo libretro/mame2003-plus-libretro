@@ -192,8 +192,6 @@ static READ_HANDLER( bigfghtr_mcu_movx_r )
  
 static WRITE_HANDLER( bigfghtr_mcu_movx_w )
 {
-	if (offset == 0x600) printf("we hit gold\n");
-
 	if ( offset >= 0x0600  && offset <= 0x3fff)
 		bigfghtr_sharedram[offset-0x600] = data; 
   else 
