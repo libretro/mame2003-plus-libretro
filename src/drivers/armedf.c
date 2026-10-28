@@ -506,23 +506,23 @@ static MEMORY_WRITE16_START( bigfghtr_writemem )
 MEMORY_END
 
 static MEMORY_READ_START( bigfghtr_mcu_readmem )
-     { 0x0000, 0x0fff, MRA_ROM },
-//	 { 0x0600, 0x3fff, bigfghtr_mcu_sharedram_r },
+   { 0x0000, 0x0fff, MRA_ROM },
+	 { 0x0600, 0x3fff, bigfghtr_mcu_sharedram_r },
 MEMORY_END
 
 static MEMORY_WRITE_START( bigfghtr_mcu_writemem )
      { 0x0000, 0x0fff, MWA_ROM },
-//     { 0x0600, 0x3fff, bigfghtr_mcu_sharedram_w },
+     { 0x0600, 0x3fff, bigfghtr_mcu_sharedram_w, &bigfghtr_sharedram },
 MEMORY_END
 
 
 static PORT_READ_START( bigfghtr_mcu_readport )
-     { 0x0600, 0x3fff, bigfghtr_mcu_sharedram_r },
+//     { 0x0600, 0x3fff, bigfghtr_mcu_sharedram_r },
      { I8051_P1, I8051_P1, bigfghtr_mcu_p1_r },
 PORT_END
 
 static PORT_WRITE_START( bigfghtr_mcu_writeport )
-      { 0x0600, 0x3fff, bigfghtr_mcu_sharedram_w, &bigfghtr_sharedram },
+ //     { 0x0600, 0x3fff, bigfghtr_mcu_sharedram_w, &bigfghtr_sharedram },
 PORT_END
 
 
