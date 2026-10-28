@@ -956,3 +956,18 @@ ifeq ($(SPLIT_UP_LINK), 1)
 	@rm $@.in
 endif
 	$(HIDE)rm -f $(OBJECTS) $(TARGET)
+# 1. Map object files to dependency trackers
+DEPFILES := $(OBJECTS:.o=.d)
+
+# 2. ONLY read or handle dependencies if we are NOT running a clean command
+ifneq ($(MAKECMDGOALS),clean)
+-include $(DEPFILES)
+
+# 3. FIXED: Generate a pure, clean dependency file directly using the -MM flag
+%.d: %.c
+	@echo "Generating dependency tracker for $<..."
+	$(HIDE)$(CC) -MM -MP -MT $(@:.d=.o) -MF $@ $< $(CFLAGS)
+
+# 4. Fallback stub to prevent build errors if a header file is deleted
+$(DEPFILES):
+endif
