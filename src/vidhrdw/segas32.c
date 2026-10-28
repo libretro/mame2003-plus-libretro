@@ -21,9 +21,6 @@
 	- Sonic while globally flipped via the service menu, fails to flip
 	  the "SEGA" and "SEGASONIC" sprite based logos on the title screen.
 
-	- Wrong priority cases:
-	  f1lap: ot gas gauge on loading screen before race begins.
-
 	- Tilemap opaque behaviour is incorrect
 
     Information extracted from below, and from Modeler:
