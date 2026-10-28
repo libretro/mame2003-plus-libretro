@@ -35,6 +35,7 @@
 ***************************************************************************/
 
 #include "driver.h"
+#include "state.h"
 
 
 #define MAX_OUTPUT 0x7fff
@@ -321,6 +322,17 @@ int SN76496_sh_start(const struct MachineSound *msound)
 		R->FeedbackMask = 0x8000;     /* mask for feedback */
 		R->WhitenoiseTaps = 0x06;     /* mask for white noise taps */
 		R->WhitenoiseInvert = false;  /* white noise invert flag */
+
+		/* save states: the tone/noise generators run on, so a state loaded
+		   in a new instance (netplay, RunAhead) needs them too */
+		state_save_register_INT32 ("sn76496", chip, "Register", R->Register, 8);
+		state_save_register_INT32 ("sn76496", chip, "LastRegister", &R->LastRegister, 1);
+		state_save_register_INT32 ("sn76496", chip, "Volume", R->Volume, 4);
+		state_save_register_UINT32("sn76496", chip, "RNG", &R->RNG, 1);
+		state_save_register_INT32 ("sn76496", chip, "NoiseMode", &R->NoiseMode, 1);
+		state_save_register_INT32 ("sn76496", chip, "Period", R->Period, 4);
+		state_save_register_INT32 ("sn76496", chip, "Count", R->Count, 4);
+		state_save_register_INT32 ("sn76496", chip, "Output", R->Output, 4);
 	}
 	return 0;
 }

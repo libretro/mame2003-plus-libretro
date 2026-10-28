@@ -4855,7 +4855,7 @@ static void YM2612_postload(void)
 	{
 		/* DAC data & port */
 		FM2612[num].dacout = ((int)FM2612[num].REGS[0x2a] - 0x80) << 6;	/* level unknown */
-		FM2612[num].dacen  = FM2612[num].REGS[0x2d] & 0x80;
+		FM2612[num].dacen  = FM2612[num].REGS[0x2b] & 0x80;	/* DAC Sel (0x2b), as YM2612Write */
 		/* OPN registers */
 		/* DT / MULTI , TL , KS / AR , AMON / DR , SR , SL / RR , SSG-EG */
 		for(r=0x30;r<0x9e;r++)

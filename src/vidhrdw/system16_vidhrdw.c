@@ -93,11 +93,6 @@ type1		type0			function
 #include "system16.h"
 #include "vidhrdw/res_net.h"
 
-/* vidhrdw/segac2.c */
-extern void update_system18_vdp( struct mame_bitmap *bitmap, const struct rectangle *cliprect );
-extern void start_system18_vdp(void);
-extern READ16_HANDLER( segac2_vdp_r );
-extern WRITE16_HANDLER( segac2_vdp_w );
 data16_t sys18_ddcrew_bankregs[0x20];
 
 /*
@@ -1138,7 +1133,8 @@ VIDEO_START( system18 ){
 	int i;
 	sys16_bg1_trans=1;
 	
-	start_system18_vdp();
+	if (system18_vdp_start())
+		return 1;
 	
 	/* clear these registers to -1 so that writes of 0 get picked up */
 	for (i=0;i<0x20;i++)
@@ -1466,14 +1462,10 @@ VIDEO_UPDATE( system18 ){
 /*	sprite_draw(sprite_list,1); */
 	if(sys18_fg2_active) tilemap_draw( bitmap,cliprect, foreground2, 1, 0x7 );
 	tilemap_draw( bitmap,cliprect, foreground, 1, 0x7 );
-// here like ddcrew or below as per clutch hitter.??
-  if (!strcmp(Machine->gamedrv->name,"ddcrew"))  update_system18_vdp(bitmap,cliprect); // kludge: render vdp here for DD CREW
 
 	tilemap_draw( bitmap,cliprect, text_layer, 1, 0x7 );
 /*	sprite_draw(sprite_list,0); */
 	tilemap_draw( bitmap,cliprect, text_layer, 0, 0xf );
-	
-	if (!strcmp(Machine->gamedrv->name,"aquario"))  update_system18_vdp(bitmap,cliprect); // kludge: render vdp here for clthitr, draws the ball in game!
 
 	if (!sys16_sprite_draw)
 	{

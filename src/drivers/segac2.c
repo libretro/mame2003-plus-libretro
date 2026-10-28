@@ -217,7 +217,6 @@ static unsigned char* ic3_ram;
 static unsigned char ic37_ram[0x8000];
 
 unsigned int readpos = 1;  /* serial bank selection position (9-bit)*/
-extern UINT16 scanbase;
 
 /******************************************************************************
 	Interrupt handling
@@ -249,9 +248,9 @@ extern UINT16 scanbase;
 
 /* Mega Play: H-INT/V-INT are cleared by the 68000 interrupt acknowledge
    (see genesis_irq_ack_callback) instead of timing out; also selects the
-   corrected HBLANK status bit in vidhrdw/segac2_vidhrdw.c */
-int genesis_vdp_iack;
-void segac2_vdp_set_vblank(void);
+   corrected HBLANK status bit of the VDP (segavdp_set_iack_mode) */
+static int genesis_vdp_iack;
+static void genesis_state_register(void);
 
 /* call this whenever the interrupt state has changed */
 static void update_interrupts(void)
@@ -266,8 +265,8 @@ static void update_interrupts(void)
 		   enabled in VDP register 0/1, as on the real 315-5313 (Mazin Wars masks
 		   H-INT this way while its V-INT handler borrows a5/a6, which its H-INT
 		   handler jumps through) */
-		if (scanline_int && (segac2_vdp_regs[0] & 0x10)) level = 4;
-		if (vblank_int && (segac2_vdp_regs[1] & 0x20)) level = 6;
+		if (scanline_int && (segavdp_get_reg(0) & 0x10)) level = 4;
+		if (vblank_int && (segavdp_get_reg(1) & 0x20)) level = 6;
 	}
 	else
 	{
@@ -295,8 +294,8 @@ static void vdp_int4_off(int param)
 static void vdp_reload_counter(int scanline)
 {
 	/* generate an int if they're enabled */
-	if ((segac2_vdp_regs[0] & 0x10) && !(iochip_reg[7] & 0x10))
-		if (scanline != 0 || segac2_vdp_regs[10] == 0)
+	if ((segavdp_get_reg(0) & 0x10) && !(iochip_reg[7] & 0x10))
+		if (scanline != 0 || segavdp_get_reg(10) == 0)
 		{
 			scanline_int = 1;
 			update_interrupts();
@@ -309,7 +308,7 @@ static void vdp_reload_counter(int scanline)
 	/* behavior 2: 0 count means interrupt after one scanline */
 	/* (this behavior matches the Sega C2 emulator) */
 	/* (in this case the vidhrdw ichidant kludge should be -2) */
-	scanline += segac2_vdp_regs[10] + 1;
+	scanline += segavdp_get_reg(10) + 1;
 	if (scanline >= 224)
 		scanline = 0;
 
@@ -354,7 +353,7 @@ static INTERRUPT_GEN( vblank_interrupt )
 		   see VBLANK before the interrupt takes over. Mazin Wars depends on it:
 		   its V-INT handler outlasts the blanking period, so without the gap its
 		   main loop never sees VBLANK and hangs in a fade loop after coin-up. */
-		segac2_vdp_set_vblank();
+		segavdp_set_vblank();
 		timer_set(TIME_IN_USEC(788.0 * 1000000.0 / 53693100.0), 0, genesis_vint_delayed);
 		return;
 	}
@@ -388,6 +387,10 @@ static void ym3438_interrupt(int state)
 
 static MACHINE_INIT( segac2 )
 {
+	/* the Mega Play interrupt acknowledge is not used here */
+	genesis_vdp_iack = 0;
+	segavdp_set_iack_mode(0);
+
 	/* set the first scanline 0 timer to go off */
 	timer_set(cpu_getscanlinetime(0) + cpu_getscanlineperiod() * (320. / 342.), 0, vdp_reload_counter);
 
@@ -405,6 +408,10 @@ static MACHINE_INIT( segac2 )
 static MACHINE_INIT( genesis )
 {
 	genesis_vdp_iack = 0;
+	segavdp_set_iack_mode(0);
+
+	/* the Mega Drive, Mega-Tech and Mega Play state (repeated registrations are ignored) */
+	genesis_state_register();
 
 	/* the following ensures that the Z80 begins without running away from 0 */
 	/* 0x76 is just a forced 'halt' as soon as the CPU is initially run */
@@ -450,8 +457,8 @@ static int genesis_irq_ack_callback(int irqline)
 		vblank_int = 0;
 
 	if (ym3438_int) level = 2;
-	if (scanline_int && (segac2_vdp_regs[0] & 0x10)) level = 4;
-	if (vblank_int && (segac2_vdp_regs[1] & 0x20)) level = 6;
+	if (scanline_int && (segavdp_get_reg(0) & 0x10)) level = 4;
+	if (vblank_int && (segavdp_get_reg(1) & 0x20)) level = 6;
 
 	/* drop the line now (an immediate clear cannot re-enter the CPU core),
 	   then re-assert whatever is still pending */
@@ -474,6 +481,7 @@ static MACHINE_INIT( megaplay )
 	machine_init_genesis();
 
 	genesis_vdp_iack = 1;
+	segavdp_set_iack_mode(1);
 	scanline_int = vblank_int = 0;
 	cpu_set_irq_callback(0, genesis_irq_ack_callback);
 }
@@ -600,7 +608,7 @@ static WRITE16_HANDLER( sn76489_w )
 /* handle reads from the paletteram */
 static READ16_HANDLER( palette_r )
 {
-	return paletteram16[(offset & 0x1ff) + segac2_palbank];
+	return paletteram16[(offset & 0x1ff) + segavdp_get_palbank()];
 }
 
 
@@ -610,7 +618,7 @@ static WRITE16_HANDLER( palette_w )
 	int r,g,b,newword;
 
 	/* adjust for the palette bank */
-	offset = (offset & 0x1ff) + segac2_palbank;
+	offset = (offset & 0x1ff) + segavdp_get_palbank();
 
 	/* combine data */
 	COMBINE_DATA(&paletteram16[offset]);
@@ -768,10 +776,10 @@ static WRITE16_HANDLER( iochip_w )
 			/* Bit  4   = IRQ4 enable/acknowledge */
 			/* Bit  5   = IRQ6 enable/acknowledge (?) */
 			newbank = (data & 3) * 0x200;
-			if (newbank != segac2_palbank)
+			if (newbank != segavdp_get_palbank())
 			{
-				force_partial_update((cpu_getscanline()) + 1 + scanbase);
-				segac2_palbank = newbank;
+				force_partial_update((cpu_getscanline()) + 1 + segavdp_get_scanbase());
+				segavdp_set_palbank(newbank);
 			}
 			if (sound_banks > 1)
 			{
@@ -818,7 +826,7 @@ static WRITE16_HANDLER( control_w )
 	data &= 0xff;
 
 	/* bit 0 controls display enable */
-	segac2_enable_display(~data & 1);
+	segavdp_enable_display(~data & 1);
 
 	/* log anything suspicious */
 	if (LOG_IOCHIP)
@@ -871,12 +879,11 @@ static WRITE16_HANDLER( prot_w )
 	if (LOG_PROTECTION) log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:protection w=%02X, new result=%02X\n", activecpu_get_previouspc(), data & 0x0f, prot_read_buf);
 
 	/* if the palette changed, force an update */
-	if (new_sp_palbase != segac2_sp_palbase || new_bg_palbase != segac2_bg_palbase)
+	if (new_sp_palbase != segavdp_get_sp_palbase() || new_bg_palbase != segavdp_get_bg_palbase())
 	{
-		force_partial_update((cpu_getscanline()) + 1 + scanbase);
-		segac2_sp_palbase = new_sp_palbase;
-		segac2_bg_palbase = new_bg_palbase;
-		if (LOG_PALETTE) log_cb(RETRO_LOG_DEBUG, LOGPRE "Set palbank: %d/%d (scan=%d)\n", segac2_bg_palbase, segac2_sp_palbase, cpu_getscanline());
+		force_partial_update((cpu_getscanline()) + 1 + segavdp_get_scanbase());
+		segavdp_set_palbases(new_bg_palbase, new_sp_palbase);
+		if (LOG_PALETTE) log_cb(RETRO_LOG_DEBUG, LOGPRE "Set palbank: %d/%d (scan=%d)\n", new_bg_palbase, new_sp_palbase, cpu_getscanline());
 	}
 }
 
@@ -1025,7 +1032,7 @@ static MEMORY_READ16_START( readmem )
 	{ 0x840000, 0x84001f, iochip_r },					/* I/O Chip */
 	{ 0x840100, 0x840107, ym3438_r },					/* Ym3438 Sound Chip Status Register */
 	{ 0x8c0000, 0x8c0fff, palette_r },					/* Palette Ram */
-	{ 0xc00000, 0xc0001f, segac2_vdp_r },				/* VDP Access */
+	{ 0xc00000, 0xc0001f, segavdp_r },				/* VDP Access */
 	{ 0xff0000, 0xffffff, MRA16_RAM },					/* Main Ram */
 MEMORY_END
 
@@ -1039,7 +1046,7 @@ static MEMORY_WRITE16_START( writemem )
 	{ 0x880134, 0x880135, counter_timer_w },			/* Bookkeeping */
 	{ 0x880334, 0x880335, counter_timer_w },			/* Bookkeeping (mirror) */
 	{ 0x8c0000, 0x8c0fff, palette_w, &paletteram16 },	/* Palette Ram */
-	{ 0xc00000, 0xc0000f, segac2_vdp_w },				/* VDP Access */
+	{ 0xc00000, 0xc0000f, segavdp_w },				/* VDP Access */
 	{ 0xc00010, 0xc00017, sn76489_w },					/* SN76489 Access */
 	{ 0xff0000, 0xffffff, MWA16_RAM, &main_ram },		/* Main Ram */
 MEMORY_END
@@ -1050,7 +1057,7 @@ static MEMORY_READ16_START( ooparts_readmem )
 	{ 0x840000, 0x84001f, iochip_r },					/* I/O Chip */
 	{ 0x840100, 0x840107, ym3438_r },					/* Ym3438 Sound Chip Status Register */
 	{ 0x8c0000, 0x8c0fff, palette_r },					/* Palette Ram */
-	{ 0xc00000, 0xc0001f, segac2_vdp_r },				/* VDP Access */
+	{ 0xc00000, 0xc0001f, segavdp_r },				/* VDP Access */
 	{ 0xe00000, 0xe0ffff, MRA16_RAM },					/* Main Ram */
 	{ 0xfe0000, 0xffffff, MRA16_RAM },					/* Mirror */
 MEMORY_END
@@ -1065,7 +1072,7 @@ static MEMORY_WRITE16_START( ooparts_writemem )
 	{ 0x880134, 0x880135, counter_timer_w },			/* Bookkeeping */
 	{ 0x880334, 0x880335, counter_timer_w },			/* Bookkeeping (mirror) */
 	{ 0x8c0000, 0x8c0fff, palette_w, &paletteram16 },	/* Palette Ram */
-	{ 0xc00000, 0xc0000f, segac2_vdp_w },				/* VDP Access */
+	{ 0xc00000, 0xc0000f, segavdp_w },				/* VDP Access */
 	{ 0xc00010, 0xc00017, sn76489_w },					/* SN76489 Access */
 	{ 0xe00000, 0xe0ffff, MWA16_RAM, &main_ram },		/* Main Ram */
 	{ 0xfe0000, 0xffffff, MWA16_RAM, &main_ram },		/* Mirror */
@@ -1080,7 +1087,7 @@ static MEMORY_READ16_START( puckpkmn_readmem )
 	{ 0x700018, 0x700019, input_port_4_word_r },		/* Input (DSW2) */
 	{ 0x700022, 0x700023, OKIM6295_status_0_lsb_r },	/* M6295 Sound Chip Status Register */
 	{ 0xa04000, 0xa04001, puckpkmn_YM3438_r },			/* Ym3438 Sound Chip Status Register */
-	{ 0xc00000, 0xc0001f, segac2_vdp_r },				/* VDP Access */
+	{ 0xc00000, 0xc0001f, segavdp_r },				/* VDP Access */
 	{ 0xe00000, 0xe1ffff, MRA16_BANK1 },				/* VDP sees the roms here */
 	{ 0xfe0000, 0xfeffff, MRA16_BANK2 },				/* VDP sees the ram here */
 	{ 0xff0000, 0xffffff, MRA16_RAM	},					/* Main Ram */
@@ -1095,7 +1102,7 @@ static MEMORY_WRITE16_START( puckpkmn_writemem )
 	{ 0x000000, 0x1fffff, MWA16_ROM },					/* Main 68k Program Roms */
 	{ 0x700022, 0x700023, OKIM6295_data_0_lsb_w },		/* M6295 Sound Chip Writes */
 	{ 0xa04000, 0xa04003, puckpkmn_YM3438_w },			/* Ym3438 Sound Chip Writes */
-	{ 0xc00000, 0xc0000f, segac2_vdp_w },				/* VDP Access */
+	{ 0xc00000, 0xc0000f, segavdp_w },				/* VDP Access */
 	{ 0xc00010, 0xc00017, sn76489_w },					/* SN76489 Access */
 	{ 0xff0000, 0xffffff, MWA16_RAM, &main_ram },		/* Main Ram */
 
@@ -1146,7 +1153,7 @@ static MEMORY_READ16_START( jzth_readmem )
 	{ 0x700022, 0x700023, OKIM6295_status_0_lsb_r },	/* M6295 Sound Chip Status Register */
 	{ 0x710000, 0x710001, bl_710000_r },                /* protection, will erase the VDP address causing writes to 0 unless this returns 0xe */
 	{ 0xa04000, 0xa04001, puckpkmn_YM3438_r },			/* Ym3438 Sound Chip Status Register */
-	{ 0xc00000, 0xc0001f, segac2_vdp_r },				/* VDP Access */
+	{ 0xc00000, 0xc0001f, segavdp_r },				/* VDP Access */
 	{ 0xe00000, 0xe1ffff, MRA16_BANK1 },				/* VDP sees the roms here */
 	{ 0xfe0000, 0xfeffff, MRA16_BANK2 },				/* VDP sees the ram here */
 	{ 0xff0000, 0xffffff, MRA16_RAM	},					/* Main Ram */
@@ -1159,7 +1166,7 @@ static MEMORY_WRITE16_START( jzth_writemem )
 	{ 0x700022, 0x700023, OKIM6295_data_0_lsb_w },		/* M6295 Sound Chip Writes */
 	{ 0x710000, 0x710001, bl_710000_w },                /* protection, will erase the VDP address causing writes to 0 unless this returns 0xe */
 	{ 0xa04000, 0xa04003, puckpkmn_YM3438_w },			/* Ym3438 Sound Chip Writes */
-	{ 0xc00000, 0xc0000f, segac2_vdp_w },				/* VDP Access */
+	{ 0xc00000, 0xc0000f, segavdp_w },				/* VDP Access */
 	{ 0xc00010, 0xc00017, sn76489_w },					/* SN76489 Access */
 	{ 0xff0000, 0xffffff, MWA16_RAM, &main_ram },		/* Main Ram */
 	{ 0xa00000, 0xa00551, MWA16_NOP },
@@ -1241,7 +1248,7 @@ static MEMORY_READ16_START( songjang_readmem )
 	{ 0x70001c, 0x70001d, sj_70001c_r },
 	{ 0x700022, 0x700023, OKIM6295_status_0_lsb_r },	/* M6295 Sound Chip Status Register */
 	{ 0xa04000, 0xa04001, puckpkmn_YM3438_r },			/* Ym3438 Sound Chip Status Register */
-	{ 0xc00000, 0xc0001f, segac2_vdp_r },				/* VDP Access */
+	{ 0xc00000, 0xc0001f, segavdp_r },				/* VDP Access */
 	{ 0xe00000, 0xfeffff, MRA16_MAIN_RAMNSHARE_R },	
 	{ 0xff0000, 0xffffff, MRA16_MAIN_RAMNSHARE_R },	
 MEMORY_END
@@ -1256,7 +1263,7 @@ static MEMORY_WRITE16_START( songjang_writemem )
 	{ 0x45bdb2, 0x45bdb3, protval_w }, // used with 0x465461 read
 	{ 0x700022, 0x700023, OKIM6295_data_0_lsb_w },		/* M6295 Sound Chip Writes */
 	{ 0xa04000, 0xa04003, puckpkmn_YM3438_w },			/* Ym3438 Sound Chip Writes */
-	{ 0xc00000, 0xc0000f, segac2_vdp_w },				/* VDP Access */
+	{ 0xc00000, 0xc0000f, segavdp_w },				/* VDP Access */
 	{ 0xc00010, 0xc00017, sn76489_w },					/* SN76489 Access */
 	{ 0xe00000, 0xfeffff, MWA16_MAIN_RAMNSHARE_W, &main_ram },	
 	{ 0xff0000, 0xffffff, MWA16_MAIN_RAMNSHARE_W, &main_ram 	}, 
@@ -2018,7 +2025,7 @@ static MEMORY_READ16_START( genesis_readmem )
 	{ 0x000000, 0x3fffff, MRA16_ROM },					/* Cartridge Program Rom */
 	{ 0xa10000, 0xa1001f, genesis_io_r },				/* Genesis Input */
 	{ 0xa00000, 0xa0ffff, genesis_68k_to_z80_r },
-	{ 0xc00000, 0xc0001f, segac2_vdp_r },				/* VDP Access */
+	{ 0xc00000, 0xc0001f, segavdp_r },				/* VDP Access */
 	{ 0xfe0000, 0xfeffff, MRA16_BANK3 },				/* Main Ram */
 	{ 0xff0000, 0xffffff, MRA16_RAM },					/* Main Ram */
 MEMORY_END
@@ -2028,7 +2035,7 @@ static MEMORY_WRITE16_START( genesis_writemem )
 	{ 0xa10000, 0xa1001f, genesis_io_w, &genesis_io_ram },				/* Genesis Input */
 	{ 0xa11000, 0xa11203, genesis_ctrl_w },
 	{ 0xa00000, 0xa0ffff, megaplay_68k_to_z80_w },
-	{ 0xc00000, 0xc0000f, segac2_vdp_w },				/* VDP Access */
+	{ 0xc00000, 0xc0000f, segavdp_w },				/* VDP Access */
 	{ 0xc00010, 0xc00017, sn76489_w },					/* SN76489 Access */
 	{ 0xfe0000, 0xfeffff, MWA16_BANK3 },				/* Main Ram */
 	{ 0xff0000, 0xffffff, MWA16_RAM, &genesis_68k_ram },/* Main Ram */
@@ -2039,7 +2046,7 @@ static MEMORY_READ16_START( megaplay_genesis_readmem )
 	{ 0xa10000, 0xa1001f, megaplay_genesis_io_r },				/* Genesis Input */
 	{ 0xa11000, 0xa11203, genesis_ctrl_r },
 	{ 0xa00000, 0xa0ffff, megaplay_68k_to_z80_r },
-	{ 0xc00000, 0xc0001f, segac2_vdp_r },				/* VDP Access */
+	{ 0xc00000, 0xc0001f, segavdp_r },				/* VDP Access */
 	{ 0xfe0000, 0xfeffff, MRA16_BANK3 },				/* Main Ram */
 	{ 0xff0000, 0xffffff, MRA16_RAM },					/* Main Ram */
 MEMORY_END
@@ -2049,7 +2056,7 @@ static MEMORY_WRITE16_START( megaplay_genesis_writemem )
 	{ 0xa10000, 0xa1001f, genesis_io_w, &genesis_io_ram },				/* Genesis Input */
 	{ 0xa11000, 0xa11203, genesis_ctrl_w },
 	{ 0xa00000, 0xa0ffff, megaplay_68k_to_z80_w, &ic36_ram }, /* ok.?? */
-	{ 0xc00000, 0xc0000f, segac2_vdp_w },				/* VDP Access */
+	{ 0xc00000, 0xc0000f, segavdp_w },				/* VDP Access */
 	{ 0xc00010, 0xc00017, sn76489_w },					/* SN76489 Access */
 	{ 0xfe0000, 0xfeffff, MWA16_BANK3 },				/* Main Ram */
 	{ 0xff0000, 0xffffff, MWA16_RAM, &genesis_68k_ram },/* Main Ram */
@@ -2059,7 +2066,7 @@ static MEMORY_READ16_START( sbubsm_readmem )
     { 0x000000, 0x0fffff, MRA16_ROM },					/* Cartridge Program Rom */
 	{ 0x202000, 0x2023ff, MRA16_RAM },
 	{ 0xa00000, 0xa0ffff, genesis_68k_to_z80_r },
-	{ 0xc00000, 0xc0001f, segac2_vdp_r },			/* VDP Access */
+	{ 0xc00000, 0xc0001f, segavdp_r },			/* VDP Access */
 	{ 0xe00000, 0xe1ffff, MRA16_BANK3 },
 	{ 0xfe0000, 0xfeffff, MRA16_BANK4 },
 	{ 0xff0000, 0xffffff, MRA16_RAM },					/* Main Ram */
@@ -2072,7 +2079,7 @@ static MEMORY_WRITE16_START( sbubsm_writemem )
 	{ 0xa10000, 0xa1001f, genesis_io_w, &genesis_io_ram },				/* Genesis Input */
 	{ 0xa11000, 0xa11203, genesis_ctrl_w },
 	{ 0xa00000, 0xa0ffff, megaplay_68k_to_z80_w },
-	{ 0xc00000, 0xc0000f, segac2_vdp_w },			/* VDP Access */
+	{ 0xc00000, 0xc0000f, segavdp_w },			/* VDP Access */
 	{ 0xc00010, 0xc00017, sn76489_w },				/* SN76489 Access */
     { 0xfe0000, 0xfeffff, MWA16_BANK4 },
 	{ 0xff0000, 0xffffff, MWA16_RAM, &genesis_68k_ram }, /* Main Ram */
@@ -2084,7 +2091,7 @@ static MEMORY_READ16_START( barek2ch_readmem )
 	{ 0xa10000, 0xa1001f, genesis_68000_io_r },				/* Genesis Input */
 	{ 0xa11000, 0xa11203, genesis_ctrl_r },
 	{ 0xa00000, 0xa0ffff, genesis_68k_to_z80_r },
-	{ 0xc00000, 0xc0001f, segac2_vdp_r },			/* VDP Access */
+	{ 0xc00000, 0xc0001f, segavdp_r },			/* VDP Access */
 	{ 0xe00000, 0xe1ffff, MRA16_BANK3 },
 	{ 0xfe0000, 0xfeffff, MRA16_BANK4 },
 	{ 0xff0000, 0xffffff, MRA16_RAM },					/* Main Ram */
@@ -2097,7 +2104,7 @@ static MEMORY_WRITE16_START( barek2ch_writemem )
 	{ 0xa10000, 0xa1001f, genesis_68000_io_w, &genesis_io_ram },				/* Genesis Input */
 	{ 0xa11000, 0xa11203, genesis_ctrl_w },
 	{ 0xa00000, 0xa0ffff, megaplay_68k_to_z80_w },
-	{ 0xc00000, 0xc0000f, segac2_vdp_w },			/* VDP Access */
+	{ 0xc00000, 0xc0000f, segavdp_w },			/* VDP Access */
 	{ 0xc00010, 0xc00017, sn76489_w },				/* SN76489 Access */
     { 0xfe0000, 0xfeffff, MWA16_BANK4 },
 	{ 0xff0000, 0xffffff, MWA16_RAM, &genesis_68k_ram }, /* Main Ram */
@@ -2108,7 +2115,7 @@ static MEMORY_READ16_START( barek3_readmem )
 	{ 0xa10000, 0xa1001f, genesis_68000_io_r },				/* Genesis Input */
 	{ 0xa11000, 0xa11203, genesis_ctrl_r },
 	{ 0xa00000, 0xa0ffff, genesis_68k_to_z80_r },
-	{ 0xc00000, 0xc0001f, segac2_vdp_r },				/* VDP Access */
+	{ 0xc00000, 0xc0001f, segavdp_r },				/* VDP Access */
 	{ 0xfe0000, 0xfeffff, MRA16_BANK3 },				/* Main Ram */
 	{ 0xff0000, 0xffffff, MRA16_RAM },					/* Main Ram */
 MEMORY_END
@@ -2118,7 +2125,7 @@ static MEMORY_WRITE16_START( barek3_writemem )
 	{ 0xa10000, 0xa1001f, genesis_68000_io_w, &genesis_io_ram },				/* Genesis Input */
 	{ 0xa11000, 0xa11203, genesis_ctrl_w },
 	{ 0xa00000, 0xa0ffff, megaplay_68k_to_z80_w },
-	{ 0xc00000, 0xc0000f, segac2_vdp_w },				/* VDP Access */
+	{ 0xc00000, 0xc0000f, segavdp_w },				/* VDP Access */
 	{ 0xc00010, 0xc00017, sn76489_w },					/* SN76489 Access */
 	{ 0xfe0000, 0xfeffff, MWA16_BANK3 },				/* Main Ram */
 	{ 0xff0000, 0xffffff, MWA16_RAM, &genesis_68k_ram },/* Main Ram */
@@ -7040,3 +7047,46 @@ static DRIVER_INIT (megaplay)
 /* 11 */ GAMEB( 1993, mp_mazin, megaplay, megaplay, megaplay, mp_mazin, megaplay, ROT0, "Sega",    "Mazin Wars / Mazin Saga", &megaplay_ctrl, NULL )
 /* ?? */ GAMEB( 1993, mp_col3,  megaplay, megaplay, megaplay, megaplay, megaplay, ROT0, "Sega",    "Columns III", &megaplay_ctrl, NULL )
 /* -- */ GAMEB( 2026, mp_addams, megaplay, megaplay, megaplay_nvram, mp_addams, megaplay, ROT0, "hack", "The Addams Family ARCADE (Mega Play)", &megaplay_ctrl, NULL )
+
+
+
+/******************************************************************************
+	Save states of the Mega Drive based boards (Mega-Tech, Mega Play and
+	the bootlegs): the Z80 RAM and bus state, the BIOS registers and RAM,
+	so that a state loaded in a new instance (netplay, RunAhead with a
+	second instance) continues exactly as the one that saved it
+******************************************************************************/
+
+static void genesis_state_register(void)
+{
+	state_save_register_int   ("genesis", 0, "z80running", &z80running);
+	state_save_register_UINT32("genesis", 0, "z80_68000_latch", (UINT32 *)&z80_68000_latch, 1);
+	state_save_register_UINT32("genesis", 0, "z80_latch_bitcount", (UINT32 *)&z80_latch_bitcount, 1);
+	if (genesis_z80_ram)
+		state_save_register_UINT8("genesis", 0, "z80_ram", genesis_z80_ram, 0x2000);
+	state_save_register_int   ("genesis", 0, "protcount", &protcount);
+	state_save_register_int   ("genesis", 0, "protval", &protval);
+	state_save_register_int   ("genesis", 0, "cam_data", &cam_data);
+	state_save_register_UINT8 ("genesis", 0, "prot_cmd", &prot_cmd, 1);
+
+	/* Mega-Tech / Mega Play BIOS */
+	state_save_register_UINT8 ("megatech", 0, "mt_ram", &mt_ram, 1);
+	state_save_register_UINT8 ("megatech", 0, "hintcount", &hintcount, 1);
+	state_save_register_UINT8 ("megatech", 0, "vintpending", &vintpending, 1);
+	state_save_register_UINT8 ("megatech", 0, "hintpending", &hintpending, 1);
+	state_save_register_UINT32("megaplay", 0, "bios_port_ctrl", (UINT32 *)&bios_port_ctrl, 1);
+	state_save_register_UINT32("megaplay", 0, "bios_ctrl_inputs", (UINT32 *)&bios_ctrl_inputs, 1);
+	state_save_register_UINT32("megaplay", 0, "bios_bank", (UINT32 *)&bios_bank, 1);
+	state_save_register_UINT16("megaplay", 0, "game_banksel", (UINT16 *)&game_banksel, 1);
+	state_save_register_UINT32("megaplay", 0, "bios_game", (UINT32 *)&bios_game, 1);
+	state_save_register_UINT32("megaplay", 0, "bios_mode", (UINT32 *)&bios_mode, 1);
+	state_save_register_UINT32("megaplay", 0, "bios_width", (UINT32 *)&bios_width, 1);
+	state_save_register_UINT32("megaplay", 0, "readpos", (UINT32 *)&readpos, 1);
+	state_save_register_UINT8 ("megaplay", 0, "bios_ctrl", bios_ctrl, 6);
+	state_save_register_UINT8 ("megaplay", 0, "bios_6600", &bios_6600, 1);
+	state_save_register_UINT8 ("megaplay", 0, "bios_6204", &bios_6204, 1);
+	state_save_register_UINT8 ("megaplay", 0, "bios_6402", &bios_6402, 1);
+	state_save_register_UINT8 ("megaplay", 0, "bios_6403", &bios_6403, 1);
+	state_save_register_UINT8 ("megaplay", 0, "bios_6404", &bios_6404, 1);
+	state_save_register_UINT8 ("megaplay", 0, "ic37_ram", ic37_ram, 0x8000);
+}
