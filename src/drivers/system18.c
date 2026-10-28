@@ -72,7 +72,7 @@ Other notes:
 #include "machine/fd1094.h"
 #include "state.h"
 
-VIDEO_EOF( segac2 );	/* vidhrdw/segac2_vidhrdw.c: the VBLANK flag of the VDP */
+#include "vidhrdw/segavdp.h"
 
 static read16_handler custom_io_r;
 static write16_handler custom_io_w;
@@ -1327,7 +1327,7 @@ static MEMORY_READ16_START( mwalk_readmem )
 	{ 0x410000, 0x410fff, segaic16_textram_r },
 	{ 0x440000, 0x4407ff, segaic16_spriteram_r },
 	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
-	{ 0xc00000, 0xc0ffff, segac2_vdp_r },
+	{ 0xc00000, 0xc0ffff, segavdp_r },
 	{ 0xe40000, 0xe4ffff, misc_io_r },
 	{ 0xfe0000, 0xfe003f, mwalk_mapper_r },
 	{ 0xffc000, 0xffffff, SYS16_MRA16_WORKINGRAM },
@@ -1339,7 +1339,7 @@ static MEMORY_WRITE16_START( mwalk_writemem )
 	{ 0x410000, 0x410fff, segaic16_textram_0_w, &segaic16_textram_0 },
 	{ 0x440000, 0x4407ff, SYS16_MWA16_SPRITERAM, &segaic16_spriteram_0 },
 	{ 0x840000, 0x840fff, segaic16_paletteram_w, &paletteram16 },
-	{ 0xc00000, 0xc0ffff, segac2_vdp_w },
+	{ 0xc00000, 0xc0ffff, segavdp_w },
 	{ 0xe40000, 0xe4ffff, misc_io_w },
 	{ 0xfe0000, 0xfe003f, mwalk_mapper_w },
 	{ 0xffc000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
@@ -1436,7 +1436,7 @@ static MEMORY_READ16_START( sys18_astorm_readmem )
 	{ 0x200000, 0x2007ff, segaic16_spriteram_r },
 	{ 0x200800, 0x20ffff, sys18_sprite_mirror_r },
 	{ 0xa00000, 0xa0ffff, misc_io_r },
-	{ 0xc00000, 0xc0ffff, segac2_vdp_r },
+	{ 0xc00000, 0xc0ffff, segavdp_r },
 	{ 0xfe0000, 0xfe003f, mwalk_mapper_r },
 	{ 0xff0000, 0xffbfff, sys18_workram_mirror_r },
 	{ 0xffc000, 0xffffff, SYS16_MRA16_WORKINGRAM },
@@ -1452,7 +1452,7 @@ static MEMORY_WRITE16_START( sys18_astorm_writemem )
 	{ 0x200000, 0x2007ff, SYS16_MWA16_SPRITERAM, &segaic16_spriteram_0 },
 	{ 0x200800, 0x20ffff, sys18_sprite_mirror_w },
 	{ 0xa00000, 0xa0ffff, misc_io_w },
-	{ 0xc00000, 0xc0ffff, segac2_vdp_w },
+	{ 0xc00000, 0xc0ffff, segavdp_w },
 	{ 0xfe0000, 0xfe003f, mwalk_mapper_w },
 	{ 0xff0000, 0xffbfff, sys18_workram_mirror_w },
 	{ 0xffc000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
@@ -1468,7 +1468,7 @@ static MEMORY_READ16_START( sys18_bloxeed_readmem )
 	{ 0x440800, 0x44ffff, sys18_sprite_mirror_r },
 	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM },
 	{ 0x841000, 0x84ffff, sys18_palette_mirror_r },
-	{ 0xc00000, 0xc0ffff, segac2_vdp_r },
+	{ 0xc00000, 0xc0ffff, segavdp_r },
 	{ 0xe40000, 0xe4ffff, misc_io_r },
 	{ 0xfe0000, 0xfe003f, mwalk_mapper_r },
 	{ 0xff0000, 0xffbfff, sys18_workram_mirror_r },
@@ -1484,7 +1484,7 @@ static MEMORY_WRITE16_START( sys18_bloxeed_writemem )
 	{ 0x440800, 0x44ffff, sys18_sprite_mirror_w },
 	{ 0x840000, 0x840fff, segaic16_paletteram_w, &paletteram16 },
 	{ 0x841000, 0x84ffff, sys18_palette_mirror_w },
-	{ 0xc00000, 0xc0ffff, segac2_vdp_w },
+	{ 0xc00000, 0xc0ffff, segavdp_w },
 	{ 0xe40000, 0xe4ffff, misc_io_w },
 	{ 0xfe0000, 0xfe003f, mwalk_mapper_w },
 	{ 0xff0000, 0xffbfff, sys18_workram_mirror_w },
@@ -1510,7 +1510,7 @@ static MEMORY_READ16_START( name ) \
 	{ 0x840000, 0x840fff, SYS16_MRA16_PALETTERAM }, \
 	{ 0x841000, 0x84ffff, sys18_palette_mirror_r }, \
 	{ io, io + 0xffff, misc_io_r }, \
-	{ 0xc00000, 0xc0ffff, segac2_vdp_r }, \
+	{ 0xc00000, 0xc0ffff, segavdp_r }, \
 	{ 0xfe0000, 0xfe003f, mwalk_mapper_r }, \
 	{ 0xff0000, 0xffbfff, sys18_workram_mirror_r }, \
 	{ 0xffc000, 0xffffff, SYS16_MRA16_WORKINGRAM }, \
@@ -1529,7 +1529,7 @@ static MEMORY_WRITE16_START( name ) \
 	{ 0x840000, 0x840fff, segaic16_paletteram_w, &paletteram16 }, \
 	{ 0x841000, 0x84ffff, sys18_palette_mirror_w }, \
 	{ io, io + 0xffff, misc_io_w }, \
-	{ 0xc00000, 0xc0ffff, segac2_vdp_w }, \
+	{ 0xc00000, 0xc0ffff, segavdp_w }, \
 	{ 0xfe0000, 0xfe003f, mwalk_mapper_w }, \
 	{ 0xff0000, 0xffbfff, sys18_workram_mirror_w }, \
 	{ 0xffc000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram }, \
@@ -1959,7 +1959,7 @@ static MEMORY_READ16_START( aquario_readmem )
 	{ 0x600000, 0x6007ff, segaic16_spriteram_r },
 	{ 0x800000, 0x801fff, SYS16_MRA16_PALETTERAM },
 	{ 0xa00000, 0xa03fff,  misc_io_r }, //
-	{ 0xc00000, 0xc0ffff, segac2_vdp_r },
+	{ 0xc00000, 0xc0ffff, segavdp_r },
 	{ 0xff0000, 0xffffff, SYS16_MRA16_WORKINGRAM },
 MEMORY_END
 
@@ -1972,7 +1972,7 @@ static MEMORY_WRITE16_START( aquario_writemem )
 	{ 0x600000, 0x6007ff, SYS16_MWA16_SPRITERAM, &segaic16_spriteram_0  },
 	{ 0x800000, 0x801fff, segaic16_paletteram_w, &paletteram16  },
 	{ 0xa00000, 0xa03fff,  misc_io_w },
-	{ 0xc00000, 0xc0ffff, segac2_vdp_w },
+	{ 0xc00000, 0xc0ffff, segavdp_w },
 	{ 0xf00006, 0xf00007, sound_command_nmi_w },
 	{ 0xff0000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram},
 MEMORY_END
@@ -1985,7 +1985,7 @@ static MEMORY_READ16_START( hamaway_readmem )
 	{ 0x500000, 0x5007ff, segaic16_spriteram_r },
 	{ 0x840000, 0x841fff, SYS16_MRA16_PALETTERAM },
 	{ 0xa00000, 0xa03fff, misc_io_r },
-	{ 0xc00000, 0xc0ffff, segac2_vdp_r },
+	{ 0xc00000, 0xc0ffff, segavdp_r },
 	{ 0xff0000, 0xffffff, SYS16_MRA16_WORKINGRAM },
 MEMORY_END
 
@@ -1997,7 +1997,7 @@ static MEMORY_WRITE16_START( hamaway_writemem )
 	{ 0x500000, 0x500fff,  SYS16_MWA16_SPRITERAM, &segaic16_spriteram_0 },
 	{ 0x840000, 0x841fff, segaic16_paletteram_w, &paletteram16  },
 	{ 0xa00000, 0xa03fff, misc_io_w },
-   	{ 0xc00000, 0xc0ffff, segac2_vdp_w },
+   	{ 0xc00000, 0xc0ffff, segavdp_w },
 	{ 0xfe0006, 0xfe0007, sound_command_nmi_w },
 	{ 0xff0000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
 MEMORY_END
@@ -2096,7 +2096,7 @@ static MACHINE_DRIVER_START( mwalk )
 	MDRV_VBLANK_DURATION(1000000.0 * (262 - 224) / (262 * 57.23))
 	MDRV_VIDEO_START(system18_new)
 	MDRV_VIDEO_UPDATE(system18_new)
-	MDRV_VIDEO_EOF(segac2)	/* the VDP VBLANK */
+	MDRV_VIDEO_EOF(system18)	/* the VDP VBLANK */
 
 	MDRV_INSTALL_OST_SUPPORT(OST_SUPPORT_MOONWALKER)
 MACHINE_DRIVER_END
@@ -2116,7 +2116,7 @@ static MACHINE_DRIVER_START( sys18_astorm )
 	MDRV_VBLANK_DURATION(1000000.0 * (262 - 224) / (262 * 57.23))
 	MDRV_VIDEO_START(system18_new)
 	MDRV_VIDEO_UPDATE(system18_new)
-	MDRV_VIDEO_EOF(segac2)	/* the VDP VBLANK */
+	MDRV_VIDEO_EOF(system18)	/* the VDP VBLANK */
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( sys18_bloxeed )
@@ -2175,7 +2175,7 @@ static MACHINE_DRIVER_START( aquario )
 	MDRV_VBLANK_DURATION(1000000 * (262 - 224) / (262 * 60))
 	MDRV_VIDEO_START( system18_new )
 	MDRV_VIDEO_UPDATE( system18_new )
-	MDRV_VIDEO_EOF(segac2)	/* the VDP VBLANK */
+	MDRV_VIDEO_EOF(system18)	/* the VDP VBLANK */
 	MDRV_MACHINE_INIT( hamaway )
 MACHINE_DRIVER_END
 
@@ -2192,7 +2192,7 @@ static MACHINE_DRIVER_START( hamaway )
 	MDRV_VBLANK_DURATION(1000000 * (262 - 224) / (262 * 60))
 	MDRV_VIDEO_START(system18_new)
 	MDRV_VIDEO_UPDATE(system18_new)
-	MDRV_VIDEO_EOF(segac2)	/* the VDP VBLANK */
+	MDRV_VIDEO_EOF(system18)	/* the VDP VBLANK */
 	MDRV_MACHINE_INIT( hamaway )
 	MDRV_SOUND_REMOVE("3438")
 	MDRV_SOUND_ADD_TAG("3438", YM3438, hamaway)
