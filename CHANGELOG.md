@@ -228,6 +228,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Shuihu Feng Yun Zhuan
 * Skater (Deco Cassette)
 * Skull Fang
+* Sky Robo / Tatakae! Big Fighter
 * Slap Shooter
 * Snow Brothers 3 - Magical Adventure
 * Snk Vs Capcom : Svc Chaos (MVS)
@@ -1245,4 +1246,5 @@ could crash on the score calc between levels is sorted [amadvance, arcadez]
 * Ported a new raiden2.c driver Raiden II Raiden DX and Zero Team etc etc now playable [Salvia, MAMEDev, FBN, vanni and claude, arcadez]
 * Ported the Cave CV1000 driver from current MAME: SH-3 CPU (interpreter and a recompiler with the same results), the blitter, the YMZ770 sound chip, the NAND flash and the RTC9701 [MAMEDev, vanni and claude]
 * Added support for the hvyunit.c driver ported across from my xbox project [arcadez, mistydreams, vanni and claude]
-
+* Added Sky Robo / Tatakae! Big Fighter to armedf.c and hooked it up to the new mcs51 cpu
+[arcadez, grant2258, AdvanceMAME, Zanac]
