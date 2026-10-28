@@ -414,7 +414,7 @@ static MEMORY_WRITE16_START( armedf_writemem )
 	{ 0x06d00a, 0x06d00b, sound_command_w },
 MEMORY_END
 
-static UNIT8 *bigfghtr_sharedram;
+//static UNIT8 *bigfghtr_sharedram;
 static UINT8 bigfghtr_sharedram[0x3a00];
 
 static READ16_HANDLER( bigfghtr_sharedram_r )
@@ -513,7 +513,7 @@ MEMORY_END
 
 static MEMORY_WRITE_START( bigfghtr_mcu_writemem )
      { 0x0000, 0x0fff, MWA_ROM },
-     { 0x0600, 0x3fff, bigfghtr_mcu_sharedram_w, &bigfghtr_sharedram },
+     { 0x0600, 0x3fff, bigfghtr_mcu_sharedram_w },/*, &bigfghtr_sharedram }, */
 MEMORY_END
 
 static PORT_READ_START( bigfghtr_mcu_readport )
