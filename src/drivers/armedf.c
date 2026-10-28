@@ -179,6 +179,26 @@ extern data16_t *terraf_text_videoram;
 
 extern data16_t *legion_cmd;
 extern struct tilemap *armedf_tx_tilemap;
+static UINT8 bigfghtr_sharedram[0x3a00];
+
+
+static READ_HANDLER( bigfghtr_mcu_movx_r )
+{
+	if ( offset >= 0x0600 && offset <= 0x3fff)
+		return bigfghtr_sharedram[offset-0x600];
+	else
+	printf("offset mcu_read: %x\n",offset-0x600);
+}  
+ 
+static WRITE_HANDLER( bigfghtr_mcu_movx_w )
+{
+	if (offset == 0x600) printf("we hit gold\n");
+
+	if ( offset >= 0x0600  && offset <= 0x3fff)
+		bigfghtr_sharedram[offset-0x600] = data; 
+  else 
+		printf("unmapped offset mcu_write: %x\n",offset);
+}
 
 static WRITE16_HANDLER( io_w )
 {
@@ -414,7 +434,6 @@ static MEMORY_WRITE16_START( armedf_writemem )
 	{ 0x06d00a, 0x06d00b, sound_command_w },
 MEMORY_END
 
-static UINT8 bigfghtr_sharedram[0x3a00];
 
 static READ16_HANDLER( bigfghtr_sharedram_r )
 {
@@ -423,6 +442,7 @@ static READ16_HANDLER( bigfghtr_sharedram_r )
 
 static WRITE16_HANDLER( bigfghtr_sharedram_w )
 {
+
 	if (ACCESSING_MSB)
 		bigfghtr_sharedram[offset * 2] = data >> 8;
 	if (ACCESSING_LSB)
@@ -517,6 +537,9 @@ MEMORY_END
 
 static PORT_READ_START( bigfghtr_mcu_readport )
      { I8051_P1, I8051_P1, bigfghtr_mcu_p1_r },
+PORT_END
+static PORT_WRITE_START( bigfghtr_mcu_writeport )
+     { I8051_P1, I8051_P3, MWA_NOP },
 PORT_END
 
 static MEMORY_READ_START( soundreadmem )
@@ -1069,7 +1092,7 @@ static MACHINE_DRIVER_START( bigfghtr )
 
 	MDRV_CPU_ADD(I8751, 16000000/2/I8051_CLOCK_DIVIDER)
 	MDRV_CPU_MEMORY(bigfghtr_mcu_readmem, bigfghtr_mcu_writemem)
-	MDRV_CPU_PORTS(bigfghtr_mcu_readport, 0)
+	MDRV_CPU_PORTS(bigfghtr_mcu_readport, bigfghtr_mcu_writeport)
 
 	MDRV_FRAMES_PER_SECOND(8000000.0 / (531 * 254))
 	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)
@@ -1581,6 +1604,12 @@ DRIVER_INIT( armedf )
 	armedf_setgfxtype(1);
 }
 
+DRIVER_INIT( bigfghtr )
+{
+	armedf_setgfxtype(1);
+	i8051_set_movx_handlers(2, bigfghtr_mcu_movx_r, bigfghtr_mcu_movx_w);
+}
+
 DRIVER_INIT( kodure )
 {
   data16_t *ROM = (data16_t *)memory_region(REGION_CPU1);
@@ -1634,5 +1663,5 @@ GAMEX( 1987, terrafu,  terraf, terraf,   terraf,   terrafu,  ROT0,   "Nichibutsu
 GAMEX( 1987, kodure,   0,      kodure,   kodure,   kodure,   ROT0,   "Nichibutsu", "Kodure Ookami (Japan)",  GAME_IMPERFECT_GRAPHICS | GAME_UNEMULATED_PROTECTION )
 GAMEX( 1988, cclimbr2, 0,      cclimbr2, cclimbr2, cclimbr2, ROT0,   "Nichibutsu", "Crazy Climber 2 (Japan)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1988, armedf,   0,      armedf,   armedf,   armedf,   ROT270, "Nichibutsu", "Armed Formation", GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1989, skyrobo,  0,      bigfghtr, bigfghtr, armedf,   ROT0,   "Nichibutsu", "Sky Robo", GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1989, bigfghtr, skyrobo,bigfghtr, bigfghtr, armedf,   ROT0,   "Nichibutsu", "Tatakae! Big Fighter (Japan)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1989, skyrobo,  0,      bigfghtr, bigfghtr, bigfghtr,   ROT0,   "Nichibutsu", "Sky Robo", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1989, bigfghtr, skyrobo,bigfghtr, bigfghtr, bigfghtr,   ROT0,   "Nichibutsu", "Tatakae! Big Fighter (Japan)", GAME_IMPERFECT_GRAPHICS )
