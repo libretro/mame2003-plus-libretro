@@ -507,17 +507,22 @@ MEMORY_END
 
 static MEMORY_READ_START( bigfghtr_mcu_readmem )
      { 0x0000, 0x0fff, MRA_ROM },
-	 { 0x0600, 0x3fff, bigfghtr_mcu_sharedram_r },
+//	 { 0x0600, 0x3fff, bigfghtr_mcu_sharedram_r },
 MEMORY_END
 
 static MEMORY_WRITE_START( bigfghtr_mcu_writemem )
      { 0x0000, 0x0fff, MWA_ROM },
-     { 0x0600, 0x3fff, bigfghtr_mcu_sharedram_w },
+//     { 0x0600, 0x3fff, bigfghtr_mcu_sharedram_w },
 MEMORY_END
 
 
 static PORT_READ_START( bigfghtr_mcu_readport )
-     { 0x01, 0x01, bigfghtr_mcu_p1_r },
+     { 0x0600, 0x3fff, bigfghtr_mcu_sharedram_r },
+     { I8051_P1, I8051_P1, bigfghtr_mcu_p1_r },
+PORT_END
+
+static PORT_WRITE_START( bigfghtr_mcu_writeport )
+      { 0x0600, 0x3fff, bigfghtr_mcu_sharedram_w, &bigfghtr_sharedram },
 PORT_END
 
 
@@ -1071,7 +1076,7 @@ static MACHINE_DRIVER_START( bigfghtr )
 
 	MDRV_CPU_ADD(I8751, 16000000/2/I8051_CLOCK_DIVIDER)
 	MDRV_CPU_MEMORY(bigfghtr_mcu_readmem, bigfghtr_mcu_writemem)
-	MDRV_CPU_PORTS(bigfghtr_mcu_readport, 0)
+	MDRV_CPU_PORTS(bigfghtr_mcu_readport, bigfghtr_mcu_writeport)
 
 	MDRV_FRAMES_PER_SECOND(8000000.0 / (531 * 254))
 	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)
