@@ -208877,20 +208877,20 @@
 		</dipswitch>
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
 	</game>
-	<game name="mt_beast" sourcefile="segac2.c" romof="megatech">
-		<description>MegaTech - Altered Beast</description>
-		<year>1989</year>
+	<game name="mt_beast" sourcefile="megatech.c" romof="megatech">
+		<description>Altered Beast (Mega-Tech)</description>
+		<year>1988</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="mp12538.ic1" size="524288" crc="3bea3dce" sha1="ec72e4fde191dedeb3f148f132603ed3c23f0f86" region="cpu1" offset="0"/>
-		<rom name="12368-01.ic2" size="32768" crc="40cb0088" sha1="e1711532c29f395a35a1cb34d789015881b5a1ed" region="user1" offset="0"/>
-		<rom name="epr12664.20" merge="epr12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
+		<rom name="epr-12368-01.ic2" size="32768" crc="40cb0088" sha1="e1711532c29f395a35a1cb34d789015881b5a1ed" region="cpu1" offset="300001"/>
+		<rom name="epr-12664.20" merge="epr-12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="audio" name="YM2612" clock="7670442"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
-		<video screen="raster" orientation="horizontal" width="320" height="416" aspectx="4" aspecty="6" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="448" aspectx="4" aspecty="6" refresh="60.000000"/>
 		<sound channels="1"/>
 		<input players="2" control="joy8way" buttons="3" coins="4" service="yes"/>
 		<dipswitch name="Coin slot 3">
@@ -208957,22 +208957,22 @@
 			<dipvalue name="1:00"/>
 			<dipvalue name="0:30"/>
 		</dipswitch>
-		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="2080"/>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="2208"/>
 	</game>
-	<game name="mt_shar2" sourcefile="segac2.c" romof="megatech">
-		<description>MegaTech - Space Harrier 2.</description>
-		<year>1989</year>
+	<game name="mt_shar2" sourcefile="megatech.c" romof="megatech">
+		<description>Space Harrier II (Mega-Tech)</description>
+		<year>1988</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="mp11934.ic1" size="524288" crc="932daa09" sha1="a2d7a76f3604c6227d43229908bfbd02b0ef5fd9" region="cpu1" offset="0"/>
-		<rom name="12368-02.ic1" size="32768" crc="c129c66c" sha1="e7c0c97db9df9eb04e2f9ff561b64305219b8f1f" region="user1" offset="0"/>
-		<rom name="epr12664.20" merge="epr12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
+		<rom name="epr-12368-02.ic2" size="32768" crc="c129c66c" sha1="e7c0c97db9df9eb04e2f9ff561b64305219b8f1f" region="cpu1" offset="300001"/>
+		<rom name="epr-12664.20" merge="epr-12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="audio" name="YM2612" clock="7670442"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
-		<video screen="raster" orientation="horizontal" width="320" height="416" aspectx="4" aspecty="6" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="448" aspectx="4" aspecty="6" refresh="60.000000"/>
 		<sound channels="1"/>
 		<input players="2" control="joy8way" buttons="3" coins="4" service="yes"/>
 		<dipswitch name="Coin slot 3">
@@ -209039,22 +209039,22 @@
 			<dipvalue name="1:00"/>
 			<dipvalue name="0:30"/>
 		</dipswitch>
-		<driver status="good" color="good" sound="good" graphic="good" palettesize="2080"/>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2208"/>
 	</game>
-	<game name="mt_stbld" sourcefile="segac2.c" romof="megatech">
-		<description>MegaTech - Super Thunder Blade</description>
-		<year>1989</year>
+	<game name="mt_stbld" sourcefile="megatech.c" romof="megatech">
+		<description>Super Thunder Blade (Mega-Tech)</description>
+		<year>1988</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="mp11996f.ic1" size="524288" crc="9355c34e" sha1="26ff91c2921408673c644b0b1c8931d98524bf63" region="cpu1" offset="0"/>
-		<rom name="12368-03.ic2" size="32768" crc="1ba4ac5d" sha1="9bde57d70189d159ebdc537a9026001abfd0deae" region="user1" offset="0"/>
-		<rom name="epr12664.20" merge="epr12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
+		<rom name="epr-12368-03.ic2" size="32768" crc="1ba4ac5d" sha1="9bde57d70189d159ebdc537a9026001abfd0deae" region="cpu1" offset="300001"/>
+		<rom name="epr-12664.20" merge="epr-12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="audio" name="YM2612" clock="7670442"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
-		<video screen="raster" orientation="horizontal" width="320" height="416" aspectx="4" aspecty="6" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="448" aspectx="4" aspecty="6" refresh="60.000000"/>
 		<sound channels="1"/>
 		<input players="2" control="joy8way" buttons="3" coins="4" service="yes"/>
 		<dipswitch name="Coin slot 3">
@@ -209121,22 +209121,22 @@
 			<dipvalue name="1:00"/>
 			<dipvalue name="0:30"/>
 		</dipswitch>
-		<driver status="good" color="good" sound="good" graphic="good" palettesize="2080"/>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2208"/>
 	</game>
-	<game name="mt_ggolf" sourcefile="segac2.c" romof="megatech">
-		<description>MegaTech - Great Golf</description>
-		<year>1989</year>
+	<game name="mt_ggolf" sourcefile="megatech.c" romof="megatech">
+		<description>Great Golf (Mega-Tech, SMS based)</description>
+		<year>1987</year>
 		<manufacturer>Sega</manufacturer>
-		<rom name="mp11129f.ic1" size="131072" crc="942738ba" sha1="e99d4e39c965fc123a39d75521a274687e917a57" region="cpu1" status="baddump" offset="0"/>
-		<rom name="12368-04.ic2" size="32768" crc="62e5579b" sha1="e1f531be5c40a1216d4192baeda9352384444410" region="user1" offset="0"/>
-		<rom name="epr12664.20" merge="epr12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
+		<rom name="mp11129f.ic1" size="131072" crc="c6611c84" sha1="eab0eed872dd26b13bcf0b2dd74fcbbc078812c9" region="cpu1" offset="0"/>
+		<rom name="epr-12368-04.ic2" size="32768" crc="62e5579b" sha1="e1f531be5c40a1216d4192baeda9352384444410" region="cpu1" offset="300001"/>
+		<rom name="epr-12664.20" merge="epr-12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="audio" name="YM2612" clock="7670442"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
-		<video screen="raster" orientation="horizontal" width="320" height="416" aspectx="4" aspecty="6" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="448" aspectx="4" aspecty="6" refresh="60.000000"/>
 		<sound channels="1"/>
 		<input players="2" control="joy8way" buttons="3" coins="4" service="yes"/>
 		<dipswitch name="Coin slot 3">
@@ -209203,22 +209203,22 @@
 			<dipvalue name="1:00"/>
 			<dipvalue name="0:30"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="2080"/>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2208"/>
 	</game>
-	<game name="mt_gsocr" sourcefile="segac2.c" romof="megatech">
-		<description>MegaTech - Great Soccer</description>
-		<year>1989</year>
+	<game name="mt_gsocr" sourcefile="megatech.c" romof="megatech">
+		<description>Great Soccer (Mega-Tech, SMS based)</description>
+		<year>198?</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="mp10747f.ic1" size="131072" crc="9cf53703" sha1="c6b4d1de56bd5bf067ec7fc80449c07686d01337" region="cpu1" status="baddump" offset="0"/>
-		<rom name="12368-05.ic2" size="32768" crc="bab91fcc" sha1="a160c9d34b253e93ac54fdcef33f95f44d8fa90c" region="user1" offset="0"/>
-		<rom name="epr12664.20" merge="epr12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
+		<rom name="epr-12368-05.ic2" size="32768" crc="bab91fcc" sha1="a160c9d34b253e93ac54fdcef33f95f44d8fa90c" region="cpu1" offset="300001"/>
+		<rom name="epr-12664.20" merge="epr-12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="audio" name="YM2612" clock="7670442"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
-		<video screen="raster" orientation="horizontal" width="320" height="416" aspectx="4" aspecty="6" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="448" aspectx="4" aspecty="6" refresh="60.000000"/>
 		<sound channels="1"/>
 		<input players="2" control="joy8way" buttons="3" coins="4" service="yes"/>
 		<dipswitch name="Coin slot 3">
@@ -209285,22 +209285,22 @@
 			<dipvalue name="1:00"/>
 			<dipvalue name="0:30"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="2080"/>
+		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="2208"/>
 	</game>
-	<game name="mt_shnbi" sourcefile="segac2.c" romof="megatech">
-		<description>MegaTech - Shinobi</description>
-		<year>1989</year>
+	<game name="mt_shnbi" sourcefile="megatech.c" romof="megatech">
+		<description>Shinobi (Mega-Tech, SMS based)</description>
+		<year>1987</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="mp11706.ic1" size="262144" crc="0c6fac4e" sha1="7c0778c055dc9c2b0aae1d166dbdb4734e55b9d1" region="cpu1" offset="0"/>
-		<rom name="12368-08.ic2" size="32768" crc="103a0459" sha1="d803ddf7926b83785e8503c985b8c78e7ccb5dac" region="user1" offset="0"/>
-		<rom name="epr12664.20" merge="epr12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
+		<rom name="epr-12368-08.ic2" size="32768" crc="103a0459" sha1="d803ddf7926b83785e8503c985b8c78e7ccb5dac" region="cpu1" offset="300001"/>
+		<rom name="epr-12664.20" merge="epr-12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="audio" name="YM2612" clock="7670442"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
-		<video screen="raster" orientation="horizontal" width="320" height="416" aspectx="4" aspecty="6" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="448" aspectx="4" aspecty="6" refresh="60.000000"/>
 		<sound channels="1"/>
 		<input players="2" control="joy8way" buttons="3" coins="4" service="yes"/>
 		<dipswitch name="Coin slot 3">
@@ -209367,22 +209367,22 @@
 			<dipvalue name="1:00"/>
 			<dipvalue name="0:30"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="2080"/>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2208"/>
 	</game>
-	<game name="mt_aftrb" sourcefile="segac2.c" romof="megatech">
-		<description>MegaTech - Afterburner</description>
-		<year>1989</year>
+	<game name="mt_aftrb" sourcefile="megatech.c" romof="megatech">
+		<description>After Burner (Mega-Tech, SMS based)</description>
+		<year>1987</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="mp11271.ic1" size="524288" crc="1c951f8e" sha1="51531df038783c84640a0cab93122e0b59e3b69a" region="cpu1" offset="0"/>
-		<rom name="12368-10.ic2" size="32768" crc="2a7cb590" sha1="2236963bddc89ca9045b530259cc7b5ccf889eaf" region="user1" offset="0"/>
-		<rom name="epr12664.20" merge="epr12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
+		<rom name="epr-12368-10.ic2" size="32768" crc="2a7cb590" sha1="2236963bddc89ca9045b530259cc7b5ccf889eaf" region="cpu1" offset="300001"/>
+		<rom name="epr-12664.20" merge="epr-12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="audio" name="YM2612" clock="7670442"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
-		<video screen="raster" orientation="horizontal" width="320" height="416" aspectx="4" aspecty="6" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="448" aspectx="4" aspecty="6" refresh="60.000000"/>
 		<sound channels="1"/>
 		<input players="2" control="joy8way" buttons="3" coins="4" service="yes"/>
 		<dipswitch name="Coin slot 3">
@@ -209449,22 +209449,22 @@
 			<dipvalue name="1:00"/>
 			<dipvalue name="0:30"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="2080"/>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2208"/>
 	</game>
-	<game name="mt_tfor2" sourcefile="segac2.c" romof="megatech">
-		<description>MegaTech - Thunder Force 2</description>
+	<game name="mt_tfor2" sourcefile="megatech.c" romof="megatech">
+		<description>Thunder Force II MD (Mega-Tech)</description>
 		<year>1989</year>
-		<manufacturer>Sega</manufacturer>
+		<manufacturer>Techno Soft / Sega</manufacturer>
 		<rom name="mp12559.ic1" size="524288" crc="b093bee3" sha1="0bf6194c3d228425f8cf1903ed70d8da1b027b6a" region="cpu1" offset="0"/>
-		<rom name="12368-11.ic2" size="32768" crc="f4f27e8d" sha1="ae1a2823deb416c53838115966f1833d5dac72d4" region="user1" offset="0"/>
-		<rom name="epr12664.20" merge="epr12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
+		<rom name="epr-12368-11.ic2" size="32768" crc="f4f27e8d" sha1="ae1a2823deb416c53838115966f1833d5dac72d4" region="cpu1" offset="300001"/>
+		<rom name="epr-12664.20" merge="epr-12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="audio" name="YM2612" clock="7670442"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
-		<video screen="raster" orientation="horizontal" width="320" height="416" aspectx="4" aspecty="6" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="448" aspectx="4" aspecty="6" refresh="60.000000"/>
 		<sound channels="1"/>
 		<input players="2" control="joy8way" buttons="3" coins="4" service="yes"/>
 		<dipswitch name="Coin slot 3">
@@ -209531,22 +209531,22 @@
 			<dipvalue name="1:00"/>
 			<dipvalue name="0:30"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="2080"/>
+		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="2208"/>
 	</game>
-	<game name="mt_astro" sourcefile="segac2.c" romof="megatech">
-		<description>MegaTech - Astro Warrior</description>
-		<year>1989</year>
+	<game name="mt_astro" sourcefile="megatech.c" romof="megatech">
+		<description>Astro Warrior (Mega-Tech, SMS based)</description>
+		<year>1986</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="ep13817.ic2" size="131072" crc="299cbb74" sha1="901697a3535ad70190647f34ad5b30b695d54542" region="cpu1" offset="0"/>
-		<rom name="12368-13.ic1" size="32768" crc="4038cbd1" sha1="696bc1efce45d9f0052b2cf0332a232687c8d6ab" region="user1" offset="0"/>
-		<rom name="epr12664.20" merge="epr12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
+		<rom name="epr-12368-13.ic1" size="32768" crc="4038cbd1" sha1="696bc1efce45d9f0052b2cf0332a232687c8d6ab" region="cpu1" offset="300001"/>
+		<rom name="epr-12664.20" merge="epr-12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="audio" name="YM2612" clock="7670442"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
-		<video screen="raster" orientation="horizontal" width="320" height="416" aspectx="4" aspecty="6" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="448" aspectx="4" aspecty="6" refresh="60.000000"/>
 		<sound channels="1"/>
 		<input players="2" control="joy8way" buttons="3" coins="4" service="yes"/>
 		<dipswitch name="Coin slot 3">
@@ -209613,22 +209613,22 @@
 			<dipvalue name="1:00"/>
 			<dipvalue name="0:30"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="2080"/>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2208"/>
 	</game>
-	<game name="mt_lastb" sourcefile="segac2.c" romof="megatech">
-		<description>MegaTech - Last Battle.</description>
+	<game name="mt_lastb" sourcefile="megatech.c" romof="megatech">
+		<description>Last Battle (Mega-Tech)</description>
 		<year>1989</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="mp12578f.ic1" size="524288" crc="531191a0" sha1="f6bc26e975c01a3e10ab4033e4c5f494627a1e2f" region="cpu1" offset="0"/>
-		<rom name="12368-20.ic2" size="32768" crc="e1a71c91" sha1="c250da18660d8aea86eb2abace41ba46130dabc8" region="user1" offset="0"/>
-		<rom name="epr12664.20" merge="epr12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
+		<rom name="epr-12368-20.ic2" size="32768" crc="e1a71c91" sha1="c250da18660d8aea86eb2abace41ba46130dabc8" region="cpu1" offset="300001"/>
+		<rom name="epr-12664.20" merge="epr-12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="audio" name="YM2612" clock="7670442"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
-		<video screen="raster" orientation="horizontal" width="320" height="416" aspectx="4" aspecty="6" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="448" aspectx="4" aspecty="6" refresh="60.000000"/>
 		<sound channels="1"/>
 		<input players="2" control="joy8way" buttons="3" coins="4" service="yes"/>
 		<dipswitch name="Coin slot 3">
@@ -209695,22 +209695,22 @@
 			<dipvalue name="1:00"/>
 			<dipvalue name="0:30"/>
 		</dipswitch>
-		<driver status="good" color="good" sound="good" graphic="good" palettesize="2080"/>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2208"/>
 	</game>
-	<game name="mt_wcsoc" sourcefile="segac2.c" romof="megatech">
-		<description>MegaTech - World Cup Soccer</description>
+	<game name="mt_wcsoc" sourcefile="megatech.c" romof="megatech">
+		<description>World Championship Soccer (Mega-Tech)</description>
 		<year>1989</year>
 		<manufacturer>Sega</manufacturer>
-		<rom name="12607.ic1" size="524288" crc="bc591b30" sha1="55e8577171c0933eee53af1dabd0f4c6462d5fc8" region="cpu1" offset="0"/>
-		<rom name="12368-21.ic2" size="32768" crc="028ee46b" sha1="cd8f81d66e5ae62107eb20e0ca5db4b66d4b2987" region="user1" offset="0"/>
-		<rom name="epr12664.20" merge="epr12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
+		<rom name="mp12607b.ic1" size="524288" crc="bc591b30" sha1="55e8577171c0933eee53af1dabd0f4c6462d5fc8" region="cpu1" offset="0"/>
+		<rom name="epr-12368-21.ic2" size="32768" crc="028ee46b" sha1="cd8f81d66e5ae62107eb20e0ca5db4b66d4b2987" region="cpu1" offset="300001"/>
+		<rom name="epr-12664.20" merge="epr-12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="audio" name="YM2612" clock="7670442"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
-		<video screen="raster" orientation="horizontal" width="320" height="416" aspectx="4" aspecty="6" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="448" aspectx="4" aspecty="6" refresh="60.000000"/>
 		<sound channels="1"/>
 		<input players="2" control="joy8way" buttons="3" coins="4" service="yes"/>
 		<dipswitch name="Coin slot 3">
@@ -209777,23 +209777,23 @@
 			<dipvalue name="1:00"/>
 			<dipvalue name="0:30"/>
 		</dipswitch>
-		<driver status="good" color="good" sound="good" graphic="good" palettesize="2080"/>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2208"/>
 	</game>
-	<game name="mt_tetri" sourcefile="segac2.c" romof="megatech">
-		<description>MegaTech - Tetris</description>
+	<game name="mt_tetri" sourcefile="megatech.c" romof="megatech">
+		<description>Tetris (Mega-Tech)</description>
 		<year>1989</year>
 		<manufacturer>Sega</manufacturer>
-		<rom name="mp12356.ic1" size="131072" crc="136767d2" sha1="4fa07facda60fa85588a997ff9ff2ddde0dc2534" region="cpu1" status="baddump" offset="1"/>
-		<rom name="mp12357.ic2" size="131072" crc="6d5a20f2" sha1="e8aef99621974a137ea81a597f600881741f94d1" region="cpu1" status="baddump" offset="0"/>
-		<rom name="12368-22.ic3" size="32768" crc="1c1b6468" sha1="568a38f4186167486e39ab4aa2c1ceffd0b81156" region="user1" offset="0"/>
-		<rom name="epr12664.20" merge="epr12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
+		<rom name="mpr-12356f.ic1" size="131072" crc="1e71c1a0" sha1="44b2312792e49d46d71e0417a7f022e5ffddbbfe" region="cpu1" offset="1"/>
+		<rom name="mpr-12357f.ic2" size="131072" crc="d52ca49c" sha1="a9159892eee2c0cf28ebfcfa99f81f80781851c6" region="cpu1" offset="0"/>
+		<rom name="epr-12368-22.ic3" size="32768" crc="1c1b6468" sha1="568a38f4186167486e39ab4aa2c1ceffd0b81156" region="cpu1" offset="300001"/>
+		<rom name="epr-12664.20" merge="epr-12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="audio" name="YM2612" clock="7670442"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
-		<video screen="raster" orientation="horizontal" width="320" height="416" aspectx="4" aspecty="6" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="448" aspectx="4" aspecty="6" refresh="60.000000"/>
 		<sound channels="1"/>
 		<input players="2" control="joy8way" buttons="3" coins="4" service="yes"/>
 		<dipswitch name="Coin slot 3">
@@ -209860,23 +209860,23 @@
 			<dipvalue name="1:00"/>
 			<dipvalue name="0:30"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="2080"/>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2208"/>
 	</game>
-	<game name="mt_gng" sourcefile="segac2.c" romof="megatech">
-		<description>MegaTech - Ghouls and Ghosts</description>
+	<game name="mt_gng" sourcefile="megatech.c" romof="megatech">
+		<description>Ghouls'n Ghosts (Mega-Tech)</description>
 		<year>1989</year>
 		<manufacturer>Capcom / Sega</manufacturer>
-		<rom name="mp12605.ic1" size="524288" crc="0c6d6f25" sha1="96c9c0e41036a23fc8e75e18ee2dad87654f200f" region="cpu1" status="baddump" offset="0"/>
-		<rom name="mpr12605.14" size="131072" crc="1066c6ab" sha1="c30e4442732bdb38c96d780542f8550a94d127b0" region="cpu1" status="baddump" offset="80000"/>
-		<rom name="12368-23.ic3" size="32768" crc="7ee58546" sha1="ad5bb0934475eacdc5e354f67c96fe0d2512d33b" region="user1" offset="0"/>
-		<rom name="epr12664.20" merge="epr12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
+		<rom name="mp12605.ic1" size="131072" crc="1066c6ab" sha1="c30e4442732bdb38c96d780542f8550a94d127b0" region="cpu1" offset="0"/>
+		<rom name="mpr12606.ic2" size="524288" crc="d0be7777" sha1="a44b2a3d427f6973b5c1a3dcd8d1776366acb9f7" region="cpu1" offset="80000"/>
+		<rom name="epr-12368-23.ic3" size="32768" crc="7ee58546" sha1="ad5bb0934475eacdc5e354f67c96fe0d2512d33b" region="cpu1" offset="300001"/>
+		<rom name="epr-12664.20" merge="epr-12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="audio" name="YM2612" clock="7670442"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
-		<video screen="raster" orientation="horizontal" width="320" height="416" aspectx="4" aspecty="6" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="448" aspectx="4" aspecty="6" refresh="60.000000"/>
 		<sound channels="1"/>
 		<input players="2" control="joy8way" buttons="3" coins="4" service="yes"/>
 		<dipswitch name="Coin slot 3">
@@ -209943,22 +209943,22 @@
 			<dipvalue name="1:00"/>
 			<dipvalue name="0:30"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="2080"/>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2208"/>
 	</game>
-	<game name="mt_gaxe" sourcefile="segac2.c" romof="megatech">
-		<description>MegaTech - Golden Axe</description>
+	<game name="mt_gaxe" sourcefile="megatech.c" romof="megatech">
+		<description>Golden Axe (Mega-Tech)</description>
 		<year>1989</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="12806.ic1" size="524288" crc="43456820" sha1="2f7f1fcd979969ac99426f11ab99999a5494a121" region="cpu1" offset="0"/>
-		<rom name="12368-25.ic2" size="32768" crc="1f07ed28" sha1="9d54192f4c6c1f8a51c38a835c1dd1e4e3e8279e" region="user1" offset="0"/>
-		<rom name="epr12664.20" merge="epr12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
+		<rom name="epr-12368-25.ic2" size="32768" crc="1f07ed28" sha1="9d54192f4c6c1f8a51c38a835c1dd1e4e3e8279e" region="cpu1" offset="300001"/>
+		<rom name="epr-12664.20" merge="epr-12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="audio" name="YM2612" clock="7670442"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
-		<video screen="raster" orientation="horizontal" width="320" height="416" aspectx="4" aspecty="6" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="448" aspectx="4" aspecty="6" refresh="60.000000"/>
 		<sound channels="1"/>
 		<input players="2" control="joy8way" buttons="3" coins="4" service="yes"/>
 		<dipswitch name="Coin slot 3">
@@ -210025,22 +210025,22 @@
 			<dipvalue name="1:00"/>
 			<dipvalue name="0:30"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="2080"/>
+		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="2208"/>
 	</game>
-	<game name="mt_mystd" sourcefile="segac2.c" romof="megatech">
-		<description>MegaTech - Mystic Defender</description>
+	<game name="mt_mystd" sourcefile="megatech.c" romof="megatech">
+		<description>Mystic Defender (Mega-Tech)</description>
 		<year>1989</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="mp12707.1" size="524288" crc="4f2c513d" sha1="f9bb548b3688170fe18bb3f1b5b54182354143cf" region="cpu1" offset="0"/>
-		<rom name="12368-27.ic2" size="32768" crc="caf46f78" sha1="a9659e86a6a223646338cd8f29c346866e4406c7" region="user1" offset="0"/>
-		<rom name="epr12664.20" merge="epr12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
+		<rom name="epr-12368-27.ic2" size="32768" crc="caf46f78" sha1="a9659e86a6a223646338cd8f29c346866e4406c7" region="cpu1" offset="300001"/>
+		<rom name="epr-12664.20" merge="epr-12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="audio" name="YM2612" clock="7670442"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
-		<video screen="raster" orientation="horizontal" width="320" height="416" aspectx="4" aspecty="6" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="448" aspectx="4" aspecty="6" refresh="60.000000"/>
 		<sound channels="1"/>
 		<input players="2" control="joy8way" buttons="3" coins="4" service="yes"/>
 		<dipswitch name="Coin slot 3">
@@ -210107,22 +210107,22 @@
 			<dipvalue name="1:00"/>
 			<dipvalue name="0:30"/>
 		</dipswitch>
-		<driver status="good" color="good" sound="good" graphic="good" palettesize="2080"/>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2208"/>
 	</game>
-	<game name="mt_revsh" sourcefile="segac2.c" romof="megatech">
-		<description>MegaTech - The Revenge Of Shinobi</description>
+	<game name="mt_revsh" sourcefile="megatech.c" romof="megatech">
+		<description>The Revenge of Shinobi (Mega-Tech)</description>
 		<year>1989</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="mp12675.ic1" size="524288" crc="672a1d4d" sha1="5fd0af14c8f2cf8ceab1ae61a5a19276d861289a" region="cpu1" offset="0"/>
-		<rom name="12368-28.ic2" size="32768" crc="0d30bede" sha1="73a090d84b78a570e02fb54a33666dcada52849b" region="user1" offset="0"/>
-		<rom name="epr12664.20" merge="epr12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
+		<rom name="epr-12368-28.ic2" size="32768" crc="0d30bede" sha1="73a090d84b78a570e02fb54a33666dcada52849b" region="cpu1" offset="300001"/>
+		<rom name="epr-12664.20" merge="epr-12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="audio" name="YM2612" clock="7670442"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
-		<video screen="raster" orientation="horizontal" width="320" height="416" aspectx="4" aspecty="6" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="448" aspectx="4" aspecty="6" refresh="60.000000"/>
 		<sound channels="1"/>
 		<input players="2" control="joy8way" buttons="3" coins="4" service="yes"/>
 		<dipswitch name="Coin slot 3">
@@ -210189,22 +210189,22 @@
 			<dipvalue name="1:00"/>
 			<dipvalue name="0:30"/>
 		</dipswitch>
-		<driver status="good" color="good" sound="good" graphic="good" palettesize="2080"/>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2208"/>
 	</game>
-	<game name="mt_parlg" sourcefile="segac2.c" romof="megatech">
-		<description>MegaTech - Parlour Games</description>
-		<year>1989</year>
+	<game name="mt_parlg" sourcefile="megatech.c" romof="megatech">
+		<description>Parlour Games (Mega-Tech, SMS based)</description>
+		<year>1987</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="mp11404.ic1" size="131072" crc="e030e66c" sha1="06664daf208f07cb00b603b12eccfc3f01213a17" region="cpu1" offset="0"/>
-		<rom name="12368-29.ic2" size="32768" crc="534151e8" sha1="219238d90c1d3ac07ff64c9a2098b490fff68f04" region="user1" offset="0"/>
-		<rom name="epr12664.20" merge="epr12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
+		<rom name="epr-12368-29.ic2" size="32768" crc="534151e8" sha1="219238d90c1d3ac07ff64c9a2098b490fff68f04" region="cpu1" offset="300001"/>
+		<rom name="epr-12664.20" merge="epr-12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="audio" name="YM2612" clock="7670442"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
-		<video screen="raster" orientation="horizontal" width="320" height="416" aspectx="4" aspecty="6" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="448" aspectx="4" aspecty="6" refresh="60.000000"/>
 		<sound channels="1"/>
 		<input players="2" control="joy8way" buttons="3" coins="4" service="yes"/>
 		<dipswitch name="Coin slot 3">
@@ -210271,22 +210271,22 @@
 			<dipvalue name="1:00"/>
 			<dipvalue name="0:30"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="2080"/>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2208"/>
 	</game>
-	<game name="mt_tgolf" sourcefile="segac2.c" romof="megatech">
-		<description>MegaTech - Arnold Palmer Tournament Golf</description>
+	<game name="mt_tgolf" sourcefile="megatech.c" romof="megatech">
+		<description>Arnold Palmer Tournament Golf (Mega-Tech)</description>
 		<year>1989</year>
 		<manufacturer>Sega</manufacturer>
-		<rom name="mp12645f.ic1" size="524288" crc="c07ef8d2" sha1="9d111fdc7bb92d52bfa048cd134aa488b4f475ef" region="cpu1" offset="0"/>
-		<rom name="12368-31.ic2" size="32768" crc="30af7e4a" sha1="baf91d527393dc90aba9371abcb1e690bcc83c7e" region="user1" offset="0"/>
-		<rom name="epr12664.20" merge="epr12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
+		<rom name="mpr-12645f.ic1" size="524288" crc="c07ef8d2" sha1="9d111fdc7bb92d52bfa048cd134aa488b4f475ef" region="cpu1" offset="0"/>
+		<rom name="epr-12368-31.ic2" size="32768" crc="30af7e4a" sha1="baf91d527393dc90aba9371abcb1e690bcc83c7e" region="cpu1" offset="300001"/>
+		<rom name="epr-12664.20" merge="epr-12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="audio" name="YM2612" clock="7670442"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
-		<video screen="raster" orientation="horizontal" width="320" height="416" aspectx="4" aspecty="6" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="448" aspectx="4" aspecty="6" refresh="60.000000"/>
 		<sound channels="1"/>
 		<input players="2" control="joy8way" buttons="3" coins="4" service="yes"/>
 		<dipswitch name="Coin slot 3">
@@ -210353,22 +210353,22 @@
 			<dipvalue name="1:00"/>
 			<dipvalue name="0:30"/>
 		</dipswitch>
-		<driver status="good" color="good" sound="good" graphic="good" palettesize="2080"/>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2208"/>
 	</game>
-	<game name="mt_tlbba" sourcefile="segac2.c" romof="megatech">
-		<description>MegaTech - Tommy Lasorda Baseball</description>
+	<game name="mt_tlbba" sourcefile="megatech.c" romof="megatech">
+		<description>Tommy Lasorda Baseball (Mega-Tech)</description>
 		<year>1989</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="mp12706.ic1" size="524288" crc="8901214f" sha1="f5ec166be1cf9b86623b9d7a78ec903b899da32a" region="cpu1" offset="0"/>
-		<rom name="12368-35.ic2" size="32768" crc="67bbe482" sha1="6fc283b22e68befabb44b2cc61a7f82a71d6f029" region="user1" offset="0"/>
-		<rom name="epr12664.20" merge="epr12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
+		<rom name="epr-12368-35.ic2" size="32768" crc="67bbe482" sha1="6fc283b22e68befabb44b2cc61a7f82a71d6f029" region="cpu1" offset="300001"/>
+		<rom name="epr-12664.20" merge="epr-12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="audio" name="YM2612" clock="7670442"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
-		<video screen="raster" orientation="horizontal" width="320" height="416" aspectx="4" aspecty="6" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="448" aspectx="4" aspecty="6" refresh="60.000000"/>
 		<sound channels="1"/>
 		<input players="2" control="joy8way" buttons="3" coins="4" service="yes"/>
 		<dipswitch name="Coin slot 3">
@@ -210435,22 +210435,22 @@
 			<dipvalue name="1:00"/>
 			<dipvalue name="0:30"/>
 		</dipswitch>
-		<driver status="good" color="good" sound="good" graphic="good" palettesize="2080"/>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2208"/>
 	</game>
-	<game name="mt_eswat" sourcefile="segac2.c" romof="megatech">
-		<description>MegaTech - E-Swat</description>
-		<year>1989</year>
+	<game name="mt_eswat" sourcefile="megatech.c" romof="megatech">
+		<description>Cyber Police ESWAT: Enhanced Special Weapons and Tactics (Mega-Tech)</description>
+		<year>1990</year>
 		<manufacturer>Sega</manufacturer>
-		<rom name="mp13192.ic1" size="524288" crc="82f458ef" sha1="58444b783312def71ecffc4ad021b72a609685cb" region="cpu1" offset="0"/>
-		<rom name="12368-38.ic2" size="32768" crc="43c5529b" sha1="104f85adea6da1612c0aa96d553efcaa387d7aaf" region="user1" offset="0"/>
-		<rom name="epr12664.20" merge="epr12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
+		<rom name="mp13192-h.ic1" size="524288" crc="82f458ef" sha1="58444b783312def71ecffc4ad021b72a609685cb" region="cpu1" offset="0"/>
+		<rom name="epr-12368-38.ic2" size="32768" crc="43c5529b" sha1="104f85adea6da1612c0aa96d553efcaa387d7aaf" region="cpu1" offset="300001"/>
+		<rom name="epr-12664.20" merge="epr-12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="audio" name="YM2612" clock="7670442"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
-		<video screen="raster" orientation="horizontal" width="320" height="416" aspectx="4" aspecty="6" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="448" aspectx="4" aspecty="6" refresh="60.000000"/>
 		<sound channels="1"/>
 		<input players="2" control="joy8way" buttons="3" coins="4" service="yes"/>
 		<dipswitch name="Coin slot 3">
@@ -210517,22 +210517,22 @@
 			<dipvalue name="1:00"/>
 			<dipvalue name="0:30"/>
 		</dipswitch>
-		<driver status="good" color="good" sound="good" graphic="good" palettesize="2080"/>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2208"/>
 	</game>
-	<game name="mt_smgp" sourcefile="segac2.c" romof="megatech">
-		<description>MegaTech - Super Monaco Grand Prix</description>
+	<game name="mt_smgp" sourcefile="megatech.c" romof="megatech">
+		<description>Super Monaco GP (Mega-Tech)</description>
 		<year>1990</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="13250.ic1" size="524288" crc="189b885f" sha1="31c06ffcb48b1604989a94e584261457de4f1f46" region="cpu1" offset="0"/>
-		<rom name="12368-39.ic2" size="32768" crc="64b3ce25" sha1="83a9f2432d146a712b037f96f261742f7dc810bb" region="user1" offset="0"/>
-		<rom name="epr12664.20" merge="epr12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
+		<rom name="epr-12368-39.ic2" size="32768" crc="64b3ce25" sha1="83a9f2432d146a712b037f96f261742f7dc810bb" region="cpu1" offset="300001"/>
+		<rom name="epr-12664.20" merge="epr-12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="audio" name="YM2612" clock="7670442"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
-		<video screen="raster" orientation="horizontal" width="320" height="416" aspectx="4" aspecty="6" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="448" aspectx="4" aspecty="6" refresh="60.000000"/>
 		<sound channels="1"/>
 		<input players="2" control="joy8way" buttons="3" coins="4" service="yes"/>
 		<dipswitch name="Coin slot 3">
@@ -210599,22 +210599,22 @@
 			<dipvalue name="1:00"/>
 			<dipvalue name="0:30"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="2080"/>
+		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="2208"/>
 	</game>
-	<game name="mt_mwalk" sourcefile="segac2.c" romof="megatech">
-		<description>MegaTech - Moonwalker</description>
-		<year>1989</year>
+	<game name="mt_mwalk" sourcefile="megatech.c" romof="megatech">
+		<description>Michael Jackson's Moonwalker (Mega-Tech)</description>
+		<year>1990</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="mp13285a.ic1" size="524288" crc="189516e4" sha1="2a79e07da2e831832b8d448cae87a833c85e67c9" region="cpu1" offset="0"/>
-		<rom name="12368-40.ic2" size="32768" crc="0482378c" sha1="734772f3ddb5ff82b76c3514d18a464b2bce8381" region="user1" offset="0"/>
-		<rom name="epr12664.20" merge="epr12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
+		<rom name="epr-12368-40.ic2" size="32768" crc="0482378c" sha1="734772f3ddb5ff82b76c3514d18a464b2bce8381" region="cpu1" offset="300001"/>
+		<rom name="epr-12664.20" merge="epr-12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="audio" name="YM2612" clock="7670442"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
-		<video screen="raster" orientation="horizontal" width="320" height="416" aspectx="4" aspecty="6" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="448" aspectx="4" aspecty="6" refresh="60.000000"/>
 		<sound channels="1"/>
 		<input players="2" control="joy8way" buttons="3" coins="4" service="yes"/>
 		<dipswitch name="Coin slot 3">
@@ -210681,22 +210681,22 @@
 			<dipvalue name="1:00"/>
 			<dipvalue name="0:30"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="2080"/>
+		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="2208"/>
 	</game>
-	<game name="mt_bbros" sourcefile="segac2.c" romof="megatech">
-		<description>MegaTech - Bonanza Bros.</description>
-		<year>1989</year>
+	<game name="mt_bbros" sourcefile="megatech.c" romof="megatech">
+		<description>Bonanza Bros. (Mega-Tech)</description>
+		<year>1991</year>
 		<manufacturer>Sega</manufacturer>
-		<rom name="mp13905a.ic1" size="1048576" crc="68a88d60" sha1="2f56e8a2b0999de4fa0d14a1527f4e1df0f9c7a2" region="cpu1" offset="0"/>
-		<rom name="12368-49.ic2" size="32768" crc="c5101da2" sha1="636f30043e2e9291e193ef9a2ead2e97a0bf7380" region="user1" offset="0"/>
-		<rom name="epr12664.20" merge="epr12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
+		<rom name="mpr-13905a.ic1" size="524288" crc="6d617940" sha1="11d5ff1c2db79632f6dea2edf97f56af2149cea4" region="cpu1" offset="0"/>
+		<rom name="epr-12368-49.ic2" size="32768" crc="c5101da2" sha1="636f30043e2e9291e193ef9a2ead2e97a0bf7380" region="cpu1" offset="300001"/>
+		<rom name="epr-12664.20" merge="epr-12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="audio" name="YM2612" clock="7670442"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
-		<video screen="raster" orientation="horizontal" width="320" height="416" aspectx="4" aspecty="6" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="448" aspectx="4" aspecty="6" refresh="60.000000"/>
 		<sound channels="1"/>
 		<input players="2" control="joy8way" buttons="3" coins="4" service="yes"/>
 		<dipswitch name="Coin slot 3">
@@ -210763,22 +210763,22 @@
 			<dipvalue name="1:00"/>
 			<dipvalue name="0:30"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="2080"/>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2208"/>
 	</game>
-	<game name="mt_sonic" sourcefile="segac2.c" romof="megatech">
-		<description>MegaTech - Sonic the Hedgehog</description>
-		<year>1989</year>
+	<game name="mt_sonic" sourcefile="megatech.c" romof="megatech">
+		<description>Sonic The Hedgehog (Mega-Tech, set 1)</description>
+		<year>1991</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="mp13913.ic1" size="524288" crc="480b4b5c" sha1="ab1dc1f738e3b2d0898a314b123fa71182bf572e" region="cpu1" offset="0"/>
-		<rom name="12368-52.ic2" size="32768" crc="6a69d20c" sha1="e483b39ff6eca37dc192dc296d004049e220554a" region="user1" offset="0"/>
-		<rom name="epr12664.20" merge="epr12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
+		<rom name="epr-12368-52.ic2" size="32768" crc="6a69d20c" sha1="e483b39ff6eca37dc192dc296d004049e220554a" region="cpu1" offset="300001"/>
+		<rom name="epr-12664.20" merge="epr-12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="audio" name="YM2612" clock="7670442"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
-		<video screen="raster" orientation="horizontal" width="320" height="416" aspectx="4" aspecty="6" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="448" aspectx="4" aspecty="6" refresh="60.000000"/>
 		<sound channels="1"/>
 		<input players="2" control="joy8way" buttons="3" coins="4" service="yes"/>
 		<dipswitch name="Coin slot 3">
@@ -210845,22 +210845,22 @@
 			<dipvalue name="1:00"/>
 			<dipvalue name="0:30"/>
 		</dipswitch>
-		<driver status="good" color="good" sound="good" graphic="good" palettesize="2080"/>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2208"/>
 	</game>
-	<game name="mt_fshrk" sourcefile="segac2.c" romof="megatech">
-		<description>MegaTech - Fire Shark</description>
-		<year>1989</year>
-		<manufacturer>Sega</manufacturer>
+	<game name="mt_fshrk" sourcefile="megatech.c" romof="megatech">
+		<description>Fire Shark (Mega-Tech)</description>
+		<year>1990</year>
+		<manufacturer>Toaplan / Sega</manufacturer>
 		<rom name="mp14341.ic1" size="524288" crc="04d65ebc" sha1="24338aecdc52b6f416548be722ca475c83dbae96" region="cpu1" offset="0"/>
-		<rom name="12368-53.ic2" size="32768" crc="4fa61044" sha1="7810deea221c10b0b2f5233443d81f4f1998ee58" region="user1" offset="0"/>
-		<rom name="epr12664.20" merge="epr12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
+		<rom name="epr-12368-53.ic2" size="32768" crc="4fa61044" sha1="7810deea221c10b0b2f5233443d81f4f1998ee58" region="cpu1" offset="300001"/>
+		<rom name="epr-12664.20" merge="epr-12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="audio" name="YM2612" clock="7670442"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
-		<video screen="raster" orientation="horizontal" width="320" height="416" aspectx="4" aspecty="6" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="448" aspectx="4" aspecty="6" refresh="60.000000"/>
 		<sound channels="1"/>
 		<input players="2" control="joy8way" buttons="3" coins="4" service="yes"/>
 		<dipswitch name="Coin slot 3">
@@ -210927,22 +210927,22 @@
 			<dipvalue name="1:00"/>
 			<dipvalue name="0:30"/>
 		</dipswitch>
-		<driver status="good" color="good" sound="good" graphic="good" palettesize="2080"/>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2208"/>
 	</game>
-	<game name="mt_gaxe2" sourcefile="segac2.c" romof="megatech">
-		<description>MegaTech - Golden Axe 2</description>
-		<year>1989</year>
+	<game name="mt_gaxe2" sourcefile="megatech.c" romof="megatech">
+		<description>Golden Axe II (Mega-Tech)</description>
+		<year>1991</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="mp14272.ic1" size="524288" crc="d4784cae" sha1="b6c286027d06fd850016a2a1ee1f1aeea080c3bb" region="cpu1" offset="0"/>
-		<rom name="12368-57.ic2" size="32768" crc="dc9b4433" sha1="efd3a598569010cdc4bf38ecbf9ed1b4e14ffe36" region="user1" offset="0"/>
-		<rom name="epr12664.20" merge="epr12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
+		<rom name="epr-12368-57.ic2" size="32768" crc="dc9b4433" sha1="efd3a598569010cdc4bf38ecbf9ed1b4e14ffe36" region="cpu1" offset="300001"/>
+		<rom name="epr-12664.20" merge="epr-12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="audio" name="YM2612" clock="7670442"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
-		<video screen="raster" orientation="horizontal" width="320" height="416" aspectx="4" aspecty="6" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="448" aspectx="4" aspecty="6" refresh="60.000000"/>
 		<sound channels="1"/>
 		<input players="2" control="joy8way" buttons="3" coins="4" service="yes"/>
 		<dipswitch name="Coin slot 3">
@@ -211009,22 +211009,22 @@
 			<dipvalue name="1:00"/>
 			<dipvalue name="0:30"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="2080"/>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2208"/>
 	</game>
-	<game name="mt_kcham" sourcefile="segac2.c" romof="megatech">
-		<description>MegaTech - Kid Chameleon</description>
-		<year>1989</year>
+	<game name="mt_kcham" sourcefile="megatech.c" romof="megatech">
+		<description>Kid Chameleon (Mega-Tech)</description>
+		<year>1992</year>
 		<manufacturer>Sega</manufacturer>
 		<rom name="mp14557.ic1" size="1048576" crc="e1a889a4" sha1="a2768eacafc47d371e5276f0cce4b12b6041337a" region="cpu1" offset="0"/>
-		<rom name="12368-60.ic2" size="32768" crc="a8e4af18" sha1="dfa49f6ec4047718f33dba1180f6204dbaff884c" region="user1" offset="0"/>
-		<rom name="epr12664.20" merge="epr12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
+		<rom name="epr-12368-60.ic2" size="32768" crc="a8e4af18" sha1="dfa49f6ec4047718f33dba1180f6204dbaff884c" region="cpu1" offset="300001"/>
+		<rom name="epr-12664.20" merge="epr-12664.20" size="32768" crc="f71e9526" sha1="1c7887541d02c41426992d17f8e3db9e03975953" region="cpu3" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="audio" name="YM2612" clock="7670442"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
-		<video screen="raster" orientation="horizontal" width="320" height="416" aspectx="4" aspecty="6" refresh="60.000000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="448" aspectx="4" aspecty="6" refresh="60.000000"/>
 		<sound channels="1"/>
 		<input players="2" control="joy8way" buttons="3" coins="4" service="yes"/>
 		<dipswitch name="Coin slot 3">
@@ -211091,7 +211091,7 @@
 			<dipvalue name="1:00"/>
 			<dipvalue name="0:30"/>
 		</dipswitch>
-		<driver status="good" color="good" sound="good" graphic="good" palettesize="2080"/>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2208"/>
 	</game>
 	<game name="mp_sonic" sourcefile="megaplay.c" romof="megaplay">
 		<description>Sonic The Hedgehog</description>

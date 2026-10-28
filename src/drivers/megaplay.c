@@ -36,6 +36,7 @@ static unsigned char bios_6404;
 static unsigned char *ic3_ram;				/* battery-backed RAM (credits, bookkeeping, high scores) */
 static unsigned char ic37_ram[0x8000];
 static unsigned int readpos = 1;			/* serial bank selection position (9-bit) */
+static data16_t *ic36_ram;					/* the BIOS RAM, also seen by the 68000 at 0xa02000 */
 
 static void megaplay_state_register(void)
 {
@@ -51,6 +52,71 @@ static void megaplay_state_register(void)
 }
 
 /* the 68000 side of the Z80 area and of the I/O chip */
+static WRITE16_HANDLER ( megaplay_68k_to_z80_w )
+{
+	offset *= 2;
+	offset &= 0x7fff;
+
+	/* Shared Ram */
+	if ((offset >= 0x0000) && (offset <= 0x1fff))
+	{
+		offset &=0x1fff;
+
+	if (ACCESSING_LSB) genesis_z80_ram[offset+1] = data & 0xff;
+	if (ACCESSING_MSB) genesis_z80_ram[offset] = (data >> 8) & 0xff;
+	}
+
+	if ((offset >= 0x2000) && (offset <= 0x3fff))
+	{
+		offset &=0x1fff;
+
+	if (ACCESSING_LSB) ic36_ram[offset+1] = data & 0xff;
+	if (ACCESSING_MSB) ic36_ram[offset] = (data >> 8) & 0xff;
+	}
+
+
+	/* YM2610 */
+	if ((offset >= 0x4000) && (offset <= 0x5fff))
+	{
+		switch (offset & 3)
+		{
+		case 0:
+			if (ACCESSING_MSB)	YM2612_control_port_0_A_w	(0,	(data >> 8) & 0xff);
+			else 				YM2612_data_port_0_A_w		(0,	(data >> 0) & 0xff);
+			break;
+		case 2:
+			if (ACCESSING_MSB)	YM2612_control_port_0_B_w	(0,	(data >> 8) & 0xff);
+			else 				YM2612_data_port_0_B_w		(0,	(data >> 0) & 0xff);
+			break;
+		}
+	}
+
+	/* Bank Register */
+	if ((offset >= 0x6000) && (offset <= 0x60ff))
+	{
+
+	}
+
+	/* Unused / Illegal */
+	if ((offset >= 0x6100) && (offset <= 0x7eff))
+	{
+		/* nothing */
+	}
+
+	/* VDP */
+	if ((offset >= 0x7f00) && (offset <= 0x7fff))
+	{
+		offset &= 0x1f;
+
+		if ( (offset >= 0x10) && (offset <=0x17) )
+		{
+			if (ACCESSING_LSB) SN76496_0_w(0, data & 0xff);
+			if (ACCESSING_MSB) SN76496_0_w(0, (data >>8) & 0xff);
+		}
+
+	}
+}
+
 static READ16_HANDLER ( megaplay_68k_to_z80_r )
 {
 	offset *= 2;

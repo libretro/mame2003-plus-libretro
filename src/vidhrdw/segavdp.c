@@ -133,6 +133,8 @@ int segavdp_start(const struct segavdp_interface *intf)
 	/* nothing survives from a previous game */
 	memset(&vdp, 0, sizeof(vdp));
 	vdp.intf = *intf;
+	if (vdp.intf.line_scale < 1)
+		vdp.intf.line_scale = 1;
 
 	/* allocate memory for the VDP and the lookup table */
 	vdp.vram				= auto_malloc(VRAM_SIZE);
@@ -246,7 +248,7 @@ void segavdp_eof(void)
 	vdp.internal_vblank = 1;
 
 	/* set a timer for VBLANK off */
-	timer_set(cpu_getscanlinetime(0), 0, vblank_end);
+	timer_set(segavdp_scanlinetime(0), 0, vblank_end);
 }
 
 
@@ -265,7 +267,7 @@ void segavdp_set_iack_mode(int enable)
 void segavdp_enable_display(int enable)
 {
 	if (!vdp.internal_vblank)
-		force_partial_update((cpu_getscanline()) + vdp.intf.scanbase);
+		force_partial_update(segavdp_scanline() + vdp.intf.scanbase);
 	vdp.display_enable = enable;
 }
 
@@ -286,6 +288,31 @@ void segavdp_set_palbank(int palbank)
 int segavdp_get_palbank(void) { return vdp.palbank; }
 int segavdp_get_reg(int regnum) { return vdp.regs[regnum & 0x1f]; }
 int segavdp_get_scanbase(void) { return vdp.intf.scanbase; }
+
+/* the VDP line timing: with a line_scale of 1 these are the cpu_getscanline()
+   family as they are; the Mega-Tech screen has both displays, so a VDP line
+   takes line_scale screen scanlines */
+int segavdp_scanline(void)
+{
+	return cpu_getscanline() / vdp.intf.line_scale;
+}
+
+int segavdp_horzbeampos(void)
+{
+	if (vdp.intf.line_scale == 1)
+		return cpu_gethorzbeampos();
+	return ((cpu_getscanline() % vdp.intf.line_scale) * Machine->drv->screen_width + cpu_gethorzbeampos()) / vdp.intf.line_scale;
+}
+
+double segavdp_scanlinetime(int line)
+{
+	return cpu_getscanlinetime(line * vdp.intf.line_scale);
+}
+
+double segavdp_scanlineperiod(void)
+{
+	return cpu_getscanlineperiod() * vdp.intf.line_scale;
+}
 
 void segavdp_draw_line(UINT16 *dest, int line, int bgfill)
 {
@@ -337,8 +364,8 @@ READ16_HANDLER( segavdp_r )
 		case 0x06:
 		case 0x07:
 		{
-			int xpos = cpu_gethorzbeampos();
-			int ypos = cpu_getscanline();
+			int xpos = segavdp_horzbeampos();
+			int ypos = segavdp_scanline();
 
 			/* adjust for the weird counting rules */
 			if (xpos > 0xe9) xpos -= (342 - 0x100);
@@ -453,7 +480,7 @@ static void vdp_data_w(int data)
 			if (!vdp.internal_vblank &&
 				vdp.address >= vdp.hscrollbase &&
 				vdp.address < vdp.hscrollbase + vdp.hscrollsize)
-				force_partial_update((cpu_getscanline()) + vdp.intf.scanbase);
+				force_partial_update(segavdp_scanline() + vdp.intf.scanbase);
 
 			/* write to VRAM */
 			if (vdp.address & 1)
@@ -480,7 +507,7 @@ static void vdp_data_w(int data)
 
 			/* if the vscroll RAM is changing during screen refresh, force an update */
 			if (!vdp.internal_vblank)
-				force_partial_update((cpu_getscanline()) + vdp.intf.scanbase);
+				force_partial_update(segavdp_scanline() + vdp.intf.scanbase);
 
 			/* write to VSRAM */
 			if (vdp.address & 1)
@@ -536,7 +563,7 @@ static void vdp_data_w(int data)
 
 static int vdp_control_r(void)
 {
-	int beampos = cpu_gethorzbeampos();
+	int beampos = segavdp_horzbeampos();
 	int status = 0x3600; /* wwally needs fifo empty set */
 
 	/* kill 2nd write pending flag */
@@ -550,7 +577,7 @@ static int vdp_control_r(void)
 	{
 		if (vdp.iack_mode)
 		{
-			/* cpu_gethorzbeampos() runs 0..screen_width-1 over the whole line, so in
+			/* segavdp_horzbeampos() runs 0..screen_width-1 over the whole line, so in
 			   H40 mode (visible area 0-319) the old test below was never true and
 			   HBLANK never appeared. Mega Play: HBLANK for the last fifth of the line
 			   (the same window the old test gave in H32 mode). Grand Slam waits on
@@ -610,7 +637,7 @@ static void vdp_register_w(int data)
 	/* are written during a screen refresh. This must happen BEFORE the
 	   store, otherwise the lines already displayed get the new value */
 	if (!vdp.internal_vblank && is_important[regnum] && vdp.regs[regnum] != regdat)
-		force_partial_update((cpu_getscanline())+ vdp.intf.scanbase);
+		force_partial_update(segavdp_scanline() + vdp.intf.scanbase);
 
 	vdp.regs[regnum] = regdat;
 

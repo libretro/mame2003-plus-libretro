@@ -15,7 +15,6 @@
 
 /* in vidhrdw/segasyse.c */
 int start_megatech_video_normal(void);
-void update_megatech_video_normal(struct mame_bitmap *bitmap, const struct rectangle *cliprect );
 void update_megaplay_video_normal(struct mame_bitmap *bitmap, const struct rectangle *cliprect );
 
 
@@ -28,7 +27,7 @@ void update_megaplay_video_normal(struct mame_bitmap *bitmap, const struct recta
 
 ******************************************************************************/
 
-static int start_vdp(int sp_palbase, int display_enable, int scanbase)
+static int start_vdp(int sp_palbase, int display_enable, int scanbase, int line_scale, int set_visible_area)
 {
 	struct segavdp_interface intf;
 
@@ -40,8 +39,9 @@ static int start_vdp(int sp_palbase, int display_enable, int scanbase)
 	intf.bg_palbase       = 0x000;
 	intf.sp_palbase       = sp_palbase;
 	intf.scanbase         = scanbase;
+	intf.line_scale       = line_scale;
 	intf.display_enable   = display_enable;
-	intf.set_visible_area = 1;
+	intf.set_visible_area = set_visible_area;
 	intf.irq_update       = segac2_vdp_irq_update;
 	return segavdp_start(&intf);
 }
@@ -50,7 +50,7 @@ static int start_vdp(int sp_palbase, int display_enable, int scanbase)
 VIDEO_START( segac2 )
 {
 	/* the display is enabled by the board (control_w) */
-	return start_vdp(0x100, 0, 0);
+	return start_vdp(0x100, 0, 0, 1, 1);
 }
 
 
@@ -59,7 +59,7 @@ VIDEO_START( puckpkmn )
 	paletteram16 = auto_malloc(0x800 * sizeof(data16_t));
 
 	/* same palettes for sprites and bg */
-	return start_vdp(0x000, 1, 0);
+	return start_vdp(0x000, 1, 0, 1, 1);
 }
 
 
@@ -67,8 +67,9 @@ VIDEO_START( megatech )
 {
 	paletteram16 = auto_malloc(0x800 * sizeof(data16_t));
 
-	/* same palettes for sprites and bg */
-	if (start_vdp(0x000, 1, 256*2))
+	/* same palettes for sprites and bg; the screen keeps its width, it has
+	   the BIOS display too (drivers/megatech.c centres the H32 mode) */
+	if (start_vdp(0x000, 1, 224, 2, 0))
 		return 1;
 
 	return start_megatech_video_normal();
@@ -80,7 +81,7 @@ VIDEO_START( megaplay )
 	paletteram16 = auto_malloc(0x800 * sizeof(data16_t));
 
 	/* same palettes for sprites and bg */
-	if (start_vdp(0x000, 1, 0))
+	if (start_vdp(0x000, 1, 0, 1, 1))
 		return 1;
 
 	return start_megatech_video_normal();
@@ -108,21 +109,6 @@ VIDEO_UPDATE( segac2 )
 	/* generate the final screen */
 	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
 		segavdp_draw_line((UINT16 *)bitmap->line[y], y, 0);
-}
-
-
-/* megatech, same but drawing the sms display too */
-VIDEO_UPDATE( megatech )
-{
-	int y;
-
-	/* generate the final screen */
-	for (y = cliprect->min_y+192; y <= cliprect->max_y; y++)
-		segavdp_draw_line((UINT16 *)bitmap->line[y], y-192, 0);
-
-	/* sms display should be on second monitor, for now we control it with a fake dipswitch while
-	   the driver is in development (if (readinputport(5)&0x01)) */
-	update_megatech_video_normal(bitmap, cliprect);
 }
 
 

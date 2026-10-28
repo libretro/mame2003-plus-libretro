@@ -14,18 +14,19 @@ DRIVER_INIT( segac2 );
 /* the Mega Drive based boards, shared with drivers/megaplay.c */
 extern data16_t *genesis_68k_ram;
 extern unsigned char *genesis_z80_ram;
-extern data16_t *ic36_ram;
 extern data16_t *genesis_io_ram;
 
+MACHINE_DRIVER_EXTERN( genesis_base );
 MACHINE_INIT( genesis );
 INTERRUPT_GEN( genesis_vblank_interrupt );
 INTERRUPT_GEN( megatech_irq );
 void genesis_enable_iack(void);
+READ16_HANDLER( genesis_68k_to_z80_r );
 
 READ16_HANDLER( genesis_ctrl_r );
 WRITE16_HANDLER( genesis_ctrl_w );
 WRITE16_HANDLER( genesis_io_w );
-WRITE16_HANDLER( megaplay_68k_to_z80_w );
+WRITE16_HANDLER( genesis_68k_to_z80_w );
 WRITE16_HANDLER( sn76489_w );
 READ_HANDLER( genesis_z80_r );
 WRITE_HANDLER( genesis_z80_w );
@@ -92,5 +93,4 @@ VIDEO_START( segac2 );
 VIDEO_EOF( segac2 );
 
 VIDEO_UPDATE( segac2 );
-VIDEO_UPDATE( megatech );
 VIDEO_UPDATE( megaplay );
