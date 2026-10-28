@@ -3582,8 +3582,6 @@ static DRIVER_INIT ( f1lap )
 	install_mem_write16_handler(0, 0x800000, 0x800fff,  dual_pcb_comms_w);
 	install_mem_read16_handler (0, 0x801000, 0x801003,  dual_pcb_masterslave);
 	system32_prot_vblank = f1lap_fd1149_vblank;
-
-	f1lap_kludge = true;
 }
 
 static DRIVER_INIT ( arf )
