@@ -495,7 +495,7 @@ static MEMORY_WRITE16_START( bigfghtr_writemem )
 	{ 0x088000, 0x089fff, armedf_text_videoram_w, &terraf_text_videoram },
 	{ 0x08a000, 0x08afff, paletteram16_xxxxRRRRGGGGBBBB_word_w, &paletteram16 },
 	{ 0x08b000, 0x08bfff, MWA16_RAM, &spr_pal_clut },
-	{ 0x08d000, 0x08d001, terraf_io_w },
+	{ 0x08d000, 0x08d001, io_w },
 	{ 0x08d002, 0x08d003, armedf_bg_scrollx_w },
 	{ 0x08d004, 0x08d005, armedf_bg_scrolly_w },
 	{ 0x08d006, 0x08d007, armedf_fg_scrollx_w },
@@ -512,7 +512,7 @@ MEMORY_END
 
 static MEMORY_WRITE_START( bigfghtr_mcu_writemem )
      { 0x0000, 0x0fff, MWA_ROM },
-     { 0x0600, 0x3fff, bigfghtr_mcu_sharedram_w },
+     { 0x0600, 0x3fff, bigfghtr_mcu_sharedram_w, &bigfghtr_sharedram },
 MEMORY_END
 
 static PORT_READ_START( bigfghtr_mcu_readport )
