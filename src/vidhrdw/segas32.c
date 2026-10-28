@@ -1960,7 +1960,7 @@ static int draw_one_sprite(UINT16 *data, int xoffs, int yoffs, const struct rect
 	int ypos      = SEXT(data[4], 12);
 	int xpos      = SEXT(data[5], 12);
 	UINT32 addr   = data[6] | ((data[2] & 0xf000) << 4);
-	int color     = 0x8000 | (data[7] & (bpp8 ? 0x7f00 : 0x7ff0));
+	int color     = data[7] & (bpp8 ? 0x7f00 : 0x7ff0);
 	int hzoom, vzoom;
 	int xdelta = 1, ydelta = 1;
 	int x, y, xtarget, ytarget, yacc = 0, pix, transmask;
@@ -1971,6 +1971,12 @@ static int draw_one_sprite(UINT16 *data, int xoffs, int yoffs, const struct rect
 	/* if hidden, or top greater than/equal to bottom, or invalid bank, punt */
 	if (srcw == 0 || srch == 0 || dstw == 0 || dsth == 0)
 		goto bail;
+
+	/* sprite group modes 0-3 take the top group bit from palette bit 15, the other modes use pixel bit 15 for shadows */
+	if ((mixer_control[(is_multi32 && BIT(data[3], 11)) ? 1 : 0][0x4c/2] & 0x0c) == 0)
+		color |= data[7] & 0x8000;
+	else
+		color |= 0x8000;
 
 	/* determine the transparency mask for pixels */
 	transmask = transparency_masks[sprite_control_latched[0x08/2] & 3][sprite_control_latched[0x0a/2] & 3];
@@ -2303,10 +2309,10 @@ static void mix_all_layers(int which, int xoffs, struct mame_bitmap *bitmap, con
 	switch (mixer_control[which][0x4c/2] & 0x0f)
 	{
 		default:
-		case 0x0:	sprgroup_shift = 14;	sprgroup_mask = 0x00;	break;
-		case 0x1:	sprgroup_shift = 14;	sprgroup_mask = 0x01;	break;
-		case 0x2:	sprgroup_shift = 13;	sprgroup_mask = 0x03;	break;
-		case 0x3:	sprgroup_shift = 12;	sprgroup_mask = 0x07;	break;
+		case 0x0:	sprgroup_shift = 15;	sprgroup_mask = 0x01;	break;
+		case 0x1:	sprgroup_shift = 14;	sprgroup_mask = 0x03;	break;
+		case 0x2:	sprgroup_shift = 13;	sprgroup_mask = 0x07;	break;
+		case 0x3:	sprgroup_shift = 12;	sprgroup_mask = 0x0f;	break;
 
 		case 0x4:	sprgroup_shift = 14;	sprgroup_mask = 0x01;	break;
 		case 0x5:	sprgroup_shift = 13;	sprgroup_mask = 0x03;	break;
