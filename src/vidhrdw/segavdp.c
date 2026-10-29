@@ -666,8 +666,8 @@ static void vdp_register_w(int data)
 			vdp.scrollbbase = (regdat & 0x07) << 13;
 			break;
 
-		case 0x05: /* Sprite Table Base */
-			vdp.spritebase = (regdat & 0x7e) << 9;
+		case 0x05: /* Sprite Table Base: bit 0 (AT9) is used in H32 mode only */
+			vdp.spritebase = (regdat & ((vdp.regs[12] & 0x01) ? 0x7e : 0x7f)) << 9;
 			break;
 
 		case 0x07: /* BG Colour */
@@ -709,6 +709,8 @@ static void vdp_register_w(int data)
 				set_visible_area(0, scrwidth*8-1,
 				Machine->visible_area.min_y,
 				Machine->visible_area.max_y);
+			/* the sprite table base depends on the H40 / H32 mode */
+			vdp.spritebase = (vdp.regs[5] & ((regdat & 0x01) ? 0x7e : 0x7f)) << 9;
 			break;
 
 		case 0x0d: /* HScroll Base */
