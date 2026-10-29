@@ -1160,6 +1160,8 @@ void mb86233_init( void )
 	state_save_register_int( "mb86233", cpu, "gpio1", &mb.gpio[ 1 ] );
 	state_save_register_int( "mb86233", cpu, "gpio2", &mb.gpio[ 2 ] );
 	state_save_register_int( "mb86233", cpu, "gpio3", &mb.gpio[ 3 ] );
+	/* a stalled FIFO access is retried when the CPU runs again */
+	state_save_register_int( "mb86233", cpu, "stall", &mb.stall );
 }
 
 void mb86233_reset( void *param )

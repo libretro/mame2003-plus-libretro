@@ -554,6 +554,24 @@ static void state_register(const char *type)
 	state_save_register_UINT8 (type, cpu, "NMI_STATE", &m6800.nmi_state, 1);
 	state_save_register_UINT8 (type, cpu, "IRQ_STATE", &m6800.irq_state[M6800_IRQ_LINE], 1);
 	state_save_register_UINT8 (type, cpu, "TIN_STATE", &m6800.irq_state[M6800_TIN_LINE], 1);
+	state_save_register_UINT16(type, cpu, "PPC", &m6800.ppc.w.l, 1);
+	state_save_register_UINT8 (type, cpu, "WAI_STATE", &m6800.wai_state, 1);
+	state_save_register_UINT8 (type, cpu, "IC_EDDGE", &m6800.ic_eddge, 1);
+	state_save_register_int   (type, cpu, "EXTRA_CYCLES", &m6800.extra_cycles);
+	/* the internal registers of the 6801/6803/63701: ports, timer, RAM control */
+	state_save_register_UINT8 (type, cpu, "PORT1_DDR", &m6800.port1_ddr, 1);
+	state_save_register_UINT8 (type, cpu, "PORT2_DDR", &m6800.port2_ddr, 1);
+	state_save_register_UINT8 (type, cpu, "PORT1_DATA", &m6800.port1_data, 1);
+	state_save_register_UINT8 (type, cpu, "PORT2_DATA", &m6800.port2_data, 1);
+	state_save_register_UINT8 (type, cpu, "TCSR", &m6800.tcsr, 1);
+	state_save_register_UINT8 (type, cpu, "PENDING_TCSR", &m6800.pending_tcsr, 1);
+	state_save_register_UINT8 (type, cpu, "IRQ2", &m6800.irq2, 1);
+	state_save_register_UINT8 (type, cpu, "RAM_CTRL", &m6800.ram_ctrl, 1);
+	state_save_register_UINT32(type, cpu, "COUNTER", &m6800.counter.d, 1);
+	state_save_register_UINT32(type, cpu, "OUTPUT_COMPARE", &m6800.output_compare.d, 1);
+	state_save_register_UINT16(type, cpu, "INPUT_CAPTURE", &m6800.input_capture, 1);
+	state_save_register_UINT32(type, cpu, "TIMER_OVER", &m6800.timer_over.d, 1);
+	state_save_register_UINT32(type, cpu, "TIMER_NEXT", &timer_next, 1);
 }
 
 void m6800_init(void)

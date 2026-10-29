@@ -73,6 +73,7 @@ Revision History:
 
 #include "driver.h"		/* use M.A.M.E. */
 
+#include "state.h"
 #include "ymdeltat.h"
 
 #include "fmopl.h"
@@ -2006,6 +2007,157 @@ static int OPLTimerOver(FM_OPL *OPL,int c)
 #define MAX_OPL_CHIPS 2
 
 
+/* Save states: the whole chip state, so that a state loaded in a new
+   instance (netplay, RunAhead with a second instance) goes on exactly as
+   the running one. Only pointers are left out: connect1 is rebuilt from
+   CON, and the Delta-T pan pointer is kept as its index. */
+static FM_OPL *OPL_saved[3 * MAX_OPL_CHIPS];
+static int OPL_saved_count;
+#if BUILD_Y8950
+static UINT8 OPL_deltat_pan[3 * MAX_OPL_CHIPS];
+#endif
+
+static void OPL_save_presave(void)
+{
+#if BUILD_Y8950
+	int i;
+	for (i = 0; i < OPL_saved_count; i++)
+	{
+		YM_DELTAT *DELTAT = OPL_saved[i]->deltat;
+		if (DELTAT && DELTAT->pan && DELTAT->output_pointer)
+			OPL_deltat_pan[i] = DELTAT->pan - DELTAT->output_pointer;
+	}
+#endif
+}
+
+static void OPL_save_postload(void)
+{
+	int i, ch;
+	for (i = 0; i < OPL_saved_count; i++)
+	{
+		FM_OPL *OPL = OPL_saved[i];
+		for (ch = 0; ch < 9; ch++)
+		{
+			OPL_SLOT *SLOT = &OPL->P_CH[ch].SLOT[SLOT1];
+			SLOT->connect1 = SLOT->CON ? &output[0] : &phase_modulation;
+		}
+#if BUILD_Y8950
+		if (OPL->deltat && OPL->deltat->output_pointer)
+		{
+			OPL->deltat->pan = &OPL->deltat->output_pointer[OPL_deltat_pan[i] & 3];
+		}
+#endif
+	}
+}
+
+static void OPL_save_state(FM_OPL *OPL, const char *name, int num)
+{
+	char buf[32];
+	int ch, s;
+
+	if (OPL_saved_count >= 3 * MAX_OPL_CHIPS)
+		return;
+	OPL_saved[OPL_saved_count++] = OPL;
+
+	for (ch = 0; ch < 9; ch++)
+	{
+		OPL_CH *CH = &OPL->P_CH[ch];
+		sprintf(buf, "%s.ch%d", name, ch);
+		state_save_register_UINT32(buf, num, "block_fnum", &CH->block_fnum, 1);
+		state_save_register_UINT32(buf, num, "fc",         &CH->fc, 1);
+		state_save_register_UINT32(buf, num, "ksl_base",   &CH->ksl_base, 1);
+		state_save_register_UINT8 (buf, num, "kcode",      &CH->kcode, 1);
+		for (s = 0; s < 2; s++)
+		{
+			OPL_SLOT *SLOT = &CH->SLOT[s];
+			sprintf(buf, "%s.ch%d.slot%d", name, ch, s);
+			state_save_register_UINT32(buf, num, "ar",        &SLOT->ar, 1);
+			state_save_register_UINT32(buf, num, "dr",        &SLOT->dr, 1);
+			state_save_register_UINT32(buf, num, "rr",        &SLOT->rr, 1);
+			state_save_register_UINT8 (buf, num, "KSR",       &SLOT->KSR, 1);
+			state_save_register_UINT8 (buf, num, "ksl",       &SLOT->ksl, 1);
+			state_save_register_UINT8 (buf, num, "ksr",       &SLOT->ksr, 1);
+			state_save_register_UINT8 (buf, num, "mul",       &SLOT->mul, 1);
+			state_save_register_UINT32(buf, num, "Cnt",       &SLOT->Cnt, 1);
+			state_save_register_UINT32(buf, num, "Incr",      &SLOT->Incr, 1);
+			state_save_register_UINT8 (buf, num, "FB",        &SLOT->FB, 1);
+			state_save_register_INT32 (buf, num, "op1_out",   SLOT->op1_out, 2);
+			state_save_register_UINT8 (buf, num, "CON",       &SLOT->CON, 1);
+			state_save_register_UINT8 (buf, num, "eg_type",   &SLOT->eg_type, 1);
+			state_save_register_UINT8 (buf, num, "state",     &SLOT->state, 1);
+			state_save_register_UINT32(buf, num, "TL",        &SLOT->TL, 1);
+			state_save_register_INT32 (buf, num, "TLL",       &SLOT->TLL, 1);
+			state_save_register_INT32 (buf, num, "volume",    &SLOT->volume, 1);
+			state_save_register_UINT32(buf, num, "sl",        &SLOT->sl, 1);
+			state_save_register_UINT8 (buf, num, "eg_sh_ar",  &SLOT->eg_sh_ar, 1);
+			state_save_register_UINT8 (buf, num, "eg_sel_ar", &SLOT->eg_sel_ar, 1);
+			state_save_register_UINT8 (buf, num, "eg_sh_dr",  &SLOT->eg_sh_dr, 1);
+			state_save_register_UINT8 (buf, num, "eg_sel_dr", &SLOT->eg_sel_dr, 1);
+			state_save_register_UINT8 (buf, num, "eg_sh_rr",  &SLOT->eg_sh_rr, 1);
+			state_save_register_UINT8 (buf, num, "eg_sel_rr", &SLOT->eg_sel_rr, 1);
+			state_save_register_UINT32(buf, num, "key",       &SLOT->key, 1);
+			state_save_register_UINT32(buf, num, "AMmask",    &SLOT->AMmask, 1);
+			state_save_register_UINT8 (buf, num, "vib",       &SLOT->vib, 1);
+			state_save_register_UINT16(buf, num, "wavetable", &SLOT->wavetable, 1);
+		}
+	}
+	state_save_register_UINT32(name, num, "eg_cnt",             &OPL->eg_cnt, 1);
+	state_save_register_UINT32(name, num, "eg_timer",           &OPL->eg_timer, 1);
+	state_save_register_UINT8 (name, num, "rhythm",             &OPL->rhythm, 1);
+	state_save_register_UINT8 (name, num, "lfo_am_depth",       &OPL->lfo_am_depth, 1);
+	state_save_register_UINT8 (name, num, "lfo_pm_depth_range", &OPL->lfo_pm_depth_range, 1);
+	state_save_register_UINT32(name, num, "lfo_am_cnt",         &OPL->lfo_am_cnt, 1);
+	state_save_register_UINT32(name, num, "lfo_pm_cnt",         &OPL->lfo_pm_cnt, 1);
+	state_save_register_UINT32(name, num, "noise_rng",          &OPL->noise_rng, 1);
+	state_save_register_UINT32(name, num, "noise_p",            &OPL->noise_p, 1);
+	state_save_register_UINT8 (name, num, "wavesel",            &OPL->wavesel, 1);
+	state_save_register_UINT32(name, num, "T",                  OPL->T, 2);
+	state_save_register_UINT8 (name, num, "st",                 OPL->st, 2);
+	state_save_register_UINT8 (name, num, "address",            &OPL->address, 1);
+	state_save_register_UINT8 (name, num, "status",             &OPL->status, 1);
+	state_save_register_UINT8 (name, num, "statusmask",         &OPL->statusmask, 1);
+	state_save_register_UINT8 (name, num, "mode",               &OPL->mode, 1);
+#if BUILD_Y8950
+	if (OPL->deltat)
+	{
+		YM_DELTAT *DELTAT = OPL->deltat;
+		state_save_register_UINT8 (name, num, "portDirection",  &OPL->portDirection, 1);
+		state_save_register_UINT8 (name, num, "portLatch",      &OPL->portLatch, 1);
+		sprintf(buf, "%s.deltat", name);
+		state_save_register_UINT32(buf, num, "now_addr",  &DELTAT->now_addr, 1);
+		state_save_register_UINT32(buf, num, "now_step",  &DELTAT->now_step, 1);
+		state_save_register_UINT32(buf, num, "step",      &DELTAT->step, 1);
+		state_save_register_UINT32(buf, num, "start",     &DELTAT->start, 1);
+		state_save_register_UINT32(buf, num, "limit",     &DELTAT->limit, 1);
+		state_save_register_UINT32(buf, num, "end",       &DELTAT->end, 1);
+		state_save_register_UINT32(buf, num, "delta",     &DELTAT->delta, 1);
+		state_save_register_INT32 (buf, num, "volume",    &DELTAT->volume, 1);
+		state_save_register_INT32 (buf, num, "acc",       &DELTAT->acc, 1);
+		state_save_register_INT32 (buf, num, "adpcmd",    &DELTAT->adpcmd, 1);
+		state_save_register_INT32 (buf, num, "adpcml",    &DELTAT->adpcml, 1);
+		state_save_register_INT32 (buf, num, "prev_acc",  &DELTAT->prev_acc, 1);
+		state_save_register_UINT8 (buf, num, "now_data",  &DELTAT->now_data, 1);
+		state_save_register_UINT8 (buf, num, "CPU_data",  &DELTAT->CPU_data, 1);
+		state_save_register_UINT8 (buf, num, "portstate", &DELTAT->portstate, 1);
+		state_save_register_UINT8 (buf, num, "control2",  &DELTAT->control2, 1);
+		state_save_register_UINT8 (buf, num, "portshift", &DELTAT->portshift, 1);
+		state_save_register_UINT8 (buf, num, "DRAMportshift", &DELTAT->DRAMportshift, 1);
+		state_save_register_UINT8 (buf, num, "memread",   &DELTAT->memread, 1);
+		state_save_register_UINT8 (buf, num, "PCM_BSY",   &DELTAT->PCM_BSY, 1);
+		state_save_register_UINT8 (buf, num, "reg",       DELTAT->reg, 16);
+		state_save_register_UINT8 (buf, num, "pan",       &OPL_deltat_pan[OPL_saved_count - 1], 1);
+	}
+#endif
+	state_save_register_func_presave(OPL_save_presave);
+	state_save_register_func_postload(OPL_save_postload);
+}
+
+static void OPL_save_reset(void)
+{
+	OPL_saved_count = 0;
+}
+
+
 #if (BUILD_YM3812)
 
 static FM_OPL *OPL_YM3812[MAX_OPL_CHIPS];	/* array of pointers to the YM3812's */
@@ -2032,6 +2184,7 @@ int YM3812Init(int num, int clock, int rate)
 		}
 		/* reset */
 		YM3812ResetChip(i);
+		OPL_save_state(OPL_YM3812[i], "YM3812", i);
 	}
 
 	return 0;
@@ -2040,6 +2193,8 @@ int YM3812Init(int num, int clock, int rate)
 void YM3812Shutdown(void)
 {
 	int i;
+
+	OPL_save_reset();
 
 	for (i = 0;i < YM3812NumChips; i++)
 	{
@@ -2183,6 +2338,7 @@ int YM3526Init(int num, int clock, int rate)
 		}
 		/* reset */
 		YM3526ResetChip(i);
+		OPL_save_state(OPL_YM3526[i], "YM3526", i);
 	}
 
 	return 0;
@@ -2191,6 +2347,8 @@ int YM3526Init(int num, int clock, int rate)
 void YM3526Shutdown(void)
 {
 	int i;
+
+	OPL_save_reset();
 
 	for (i = 0;i < YM3526NumChips; i++)
 	{
@@ -2352,6 +2510,7 @@ int Y8950Init(int num, int clock, int rate)
 		/*OPL_Y8950[i]->deltat->read_time  = 8.0 / clock;*/		/* a single byte read takes 8 cycles of main clock */
 		/* reset */
 		Y8950ResetChip(i);
+		OPL_save_state(OPL_Y8950[i], "Y8950", i);
 	}
 
 	return 0;
@@ -2360,6 +2519,8 @@ int Y8950Init(int num, int clock, int rate)
 void Y8950Shutdown(void)
 {
 	int i;
+
+	OPL_save_reset();
 
 	for (i = 0;i < Y8950NumChips; i++)
 	{

@@ -1,6 +1,7 @@
 
 #include "driver.h"
 #include "vidhrdw/generic.h"
+#include "state.h"
 
 
 /*
@@ -180,11 +181,26 @@ void mspacman_decode(void)
 }
 
 
-MACHINE_INIT( mspacman )
+/* the board boots from the original Pac-Man ROMs and switches to the
+   decoded Ms. Pac-Man ROMs on a write to 0x5006; the switch is part of the
+   save state, so that a state loaded in a new instance runs the same code */
+static UINT8 mspacman_rom_active;
+
+static void mspacman_set_bank(void)
 {
 	unsigned char *RAM = memory_region(REGION_CPU1);
+
+	cpu_setbank (1, &RAM[mspacman_rom_active ? 0x10000 : 0x00000]);
+}
+
+MACHINE_INIT( mspacman )
+{
 	mspacman_decode();
-	cpu_setbank (1, &RAM[0x00000]);
+	mspacman_rom_active = 0;
+	mspacman_set_bank();
+
+	state_save_register_UINT8("mspacman", 0, "rom_active", &mspacman_rom_active, 1);
+	state_save_register_func_postload(mspacman_set_bank);
 
 	machine_init_pacman();
 }
@@ -192,7 +208,9 @@ MACHINE_INIT( mspacman )
 
 WRITE_HANDLER( mspacman_activate_rom )
 {
-	unsigned char *RAM = memory_region(REGION_CPU1);
-
-	if(data==1) cpu_setbank (1, &RAM[0x10000]);
+	if (data == 1)
+	{
+		mspacman_rom_active = 1;
+		mspacman_set_bank();
+	}
 }

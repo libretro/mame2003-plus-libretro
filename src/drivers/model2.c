@@ -1881,6 +1881,7 @@ static DRIVER_INIT( model2a )
 	state_save_register_UINT8( "model2comm", 0, "zfg", &m2comm_zfg, 1 );
 	state_save_register_UINT8( "model2", 0, "io_analog_channel", &io_analog_channel, 1 );
 	state_save_register_UINT8( "model2", 0, "lightgun_mux", &m_lightgun_mux, 1 );
+	state_save_register_int( "model2", 0, "scsp_last_line", &scsp_last_line );
 	state_save_register_func_postload( model2_postload );
 }
 
