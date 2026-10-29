@@ -1820,6 +1820,86 @@ static void FMsave_state_st(const char *state_name,int num,FM_ST *ST)
 	state_save_register_UINT8 (state_name, num, "TIMER B"   , &ST->TB   , 1);
 	state_save_register_int   (state_name, num, "TIMER Bcnt", &ST->TBC  );
 }
+
+#if (BUILD_YM2203||BUILD_YM2610||BUILD_YM2610B||BUILD_YM2612||BUILD_YM3438)
+/* the parts of an OPN chip state that the registers and FMsave_state_channel
+   leave out: global envelope and LFO counters, key state, SSG-EG negation,
+   envelope output, algorithm memory, key codes and the phase steps and
+   envelope rates. The chip recomputes the steps and rates only when a
+   register write asks for it, so they can lag behind the registers (e.g.
+   after a 3 slot mode change) and are saved as they are. The postload of
+   the chip rewrites the registers, which changes some of them, so they are
+   kept in a copy and put back after it. */
+typedef struct
+{
+	UINT32 eg_cnt, eg_timer, lfo_cnt, lfo_inc;
+	UINT32 key[6*4], vol_out[6*4];
+	UINT8 ssgn[6*4];
+	INT32 mem_value[6];
+	UINT8 kcode[6];
+	UINT32 block_fnum[6];
+	UINT32 sl3_block_fnum[3];
+	INT32 incr[6*4];
+	UINT8 ksr[6*4];
+	UINT8 eg_rates[6*4*8];
+} OPN_EXT;
+
+static void opn_ext_copy(FM_OPN *OPN, FM_CH *CH, int channels, OPN_EXT *e, int restore)
+{
+	int c, s, i;
+
+#define OPN_EXT_COPY(chip, saved) if (restore) (chip) = (saved); else (saved) = (chip)
+	OPN_EXT_COPY(OPN->eg_cnt, e->eg_cnt);
+	OPN_EXT_COPY(OPN->eg_timer, e->eg_timer);
+	OPN_EXT_COPY(OPN->lfo_cnt, e->lfo_cnt);
+	OPN_EXT_COPY(OPN->lfo_inc, e->lfo_inc);
+	for (c = 0; c < 3; c++)
+		OPN_EXT_COPY(OPN->SL3.block_fnum[c], e->sl3_block_fnum[c]);
+	for (c = 0; c < channels; c++)
+	{
+		OPN_EXT_COPY(CH[c].mem_value, e->mem_value[c]);
+		OPN_EXT_COPY(CH[c].kcode, e->kcode[c]);
+		OPN_EXT_COPY(CH[c].block_fnum, e->block_fnum[c]);
+		for (s = 0; s < 4; s++)
+		{
+			FM_SLOT *SLOT = &CH[c].SLOT[s];
+			UINT8 *rates[8];
+			UINT8 *r = &e->eg_rates[(c*4+s)*8];
+
+			OPN_EXT_COPY(SLOT->key, e->key[c*4+s]);
+			OPN_EXT_COPY(SLOT->vol_out, e->vol_out[c*4+s]);
+			OPN_EXT_COPY(SLOT->ssgn, e->ssgn[c*4+s]);
+			OPN_EXT_COPY(SLOT->Incr, e->incr[c*4+s]);
+			OPN_EXT_COPY(SLOT->ksr, e->ksr[c*4+s]);
+			rates[0] = &SLOT->eg_sh_ar;  rates[1] = &SLOT->eg_sel_ar;
+			rates[2] = &SLOT->eg_sh_d1r; rates[3] = &SLOT->eg_sel_d1r;
+			rates[4] = &SLOT->eg_sh_d2r; rates[5] = &SLOT->eg_sel_d2r;
+			rates[6] = &SLOT->eg_sh_rr;  rates[7] = &SLOT->eg_sel_rr;
+			for (i = 0; i < 8; i++)
+				OPN_EXT_COPY(*rates[i], r[i]);
+		}
+	}
+#undef OPN_EXT_COPY
+}
+
+static void opn_ext_register(const char *name, int num, OPN_EXT *e)
+{
+	state_save_register_UINT32(name, num, "eg_cnt", &e->eg_cnt, 1);
+	state_save_register_UINT32(name, num, "eg_timer", &e->eg_timer, 1);
+	state_save_register_UINT32(name, num, "lfo_cnt", &e->lfo_cnt, 1);
+	state_save_register_UINT32(name, num, "key", e->key, 6*4);
+	state_save_register_UINT32(name, num, "vol_out", e->vol_out, 6*4);
+	state_save_register_UINT8(name, num, "ssgn", e->ssgn, 6*4);
+	state_save_register_INT32(name, num, "mem_value", e->mem_value, 6);
+	state_save_register_UINT32(name, num, "lfo_inc", &e->lfo_inc, 1);
+	state_save_register_UINT8(name, num, "kcode", e->kcode, 6);
+	state_save_register_UINT32(name, num, "block_fnum", e->block_fnum, 6);
+	state_save_register_UINT32(name, num, "sl3_block_fnum", e->sl3_block_fnum, 3);
+	state_save_register_INT32(name, num, "incr", e->incr, 6*4);
+	state_save_register_UINT8(name, num, "ksr", e->ksr, 6*4);
+	state_save_register_UINT8(name, num, "eg_rates", e->eg_rates, 6*4*8);
+}
+#endif
 #endif /* _STATE_H */
 
 #if BUILD_OPN
@@ -2305,7 +2385,11 @@ void YM2203ResetChip(int num)
 
 	reset_channels( &OPN->ST , FM2203[num].CH , 3 );
 	/* reset OPerator paramater */
-	for(i = 0xb2 ; i >= 0x30 ; i-- ) OPNWriteReg(OPN,i,0);
+	for(i = 0xb2 ; i >= 0x30 ; i-- )
+	{
+		OPNWriteReg(OPN,i,0);
+		FM2203[num].REGS[i] = 0;	/* the reset values, for the save states */
+	}
 	for(i = 0x26 ; i >= 0x20 ; i-- ) OPNWriteReg(OPN,i,0);
 }
 
@@ -2342,10 +2426,39 @@ static void YM2203_postload(void)
 	cur_chip = NULL;
 }
 
+/* the parts of the chip state that the registers leave out (see OPN_EXT) */
+static OPN_EXT *ym2203_ext;
+
+static void YM2203_ext_presave(void)
+{
+	int num;
+	for (num = 0; num < YM2203NumChips; num++)
+		opn_ext_copy(&FM2203[num].OPN, FM2203[num].CH, 3, &ym2203_ext[num], 0);
+}
+
+static void YM2203_ext_postload(void)
+{
+	int num;
+	for (num = 0; num < YM2203NumChips; num++)
+		opn_ext_copy(&FM2203[num].OPN, FM2203[num].CH, 3, &ym2203_ext[num], 1);
+}
+
 static void YM2203_save_state(void)
 {
 	int num;
 	const char statename[] = "YM2203";
+
+	/* registered before YM2203_postload (the postloads run last registered
+	   first), so it puts its values back after the registers are rewritten */
+	ym2203_ext = auto_malloc(sizeof(*ym2203_ext) * YM2203NumChips);
+	if (ym2203_ext != NULL)
+	{
+		memset(ym2203_ext, 0, sizeof(*ym2203_ext) * YM2203NumChips);
+		for (num = 0; num < YM2203NumChips; num++)
+			opn_ext_register("YM2203ext", num, &ym2203_ext[num]);
+		state_save_register_func_presave(YM2203_ext_presave);
+		state_save_register_func_postload(YM2203_ext_postload);
+	}
 
 	for(num=0;num<YM2203NumChips;num++)
 	{
@@ -3565,7 +3678,7 @@ static void YM2608_postload(void)
 				OPNWriteReg(&F2608->OPN,r|0x100,F2608->REGS[r|0x100]);
 			}
 		/* FB / CONNECT , L / R / AMS / PMS */
-		for(r=0xb0;r<0xb6;r++)
+		for(r=0xb0;r<0xb7;r++)	/* b4-b6: L/R, AMS, PMS of channels 1-3 */
 			if((r&3) != 3)
 			{
 				OPNWriteReg(&F2608->OPN,r,F2608->REGS[r]);
@@ -3729,11 +3842,13 @@ void YM2608ResetChip(int num)
 	{
 		OPNWriteReg(OPN,i      ,0xc0);
 		OPNWriteReg(OPN,i|0x100,0xc0);
+		FM2608[num].REGS[i] = FM2608[num].REGS[i|0x100] = 0xc0;	/* the reset values, for the save states (the postload writes them back) */
 	}
 	for(i = 0xb2 ; i >= 0x30 ; i-- )
 	{
 		OPNWriteReg(OPN,i      ,0);
 		OPNWriteReg(OPN,i|0x100,0);
+		FM2608[num].REGS[i] = FM2608[num].REGS[i|0x100] = 0;
 	}
 	for(i = 0x26 ; i >= 0x20 ; i-- ) OPNWriteReg(OPN,i,0);
 
@@ -4269,7 +4384,7 @@ static void YM2610_postload(void)
 				OPNWriteReg(&F2610->OPN,r|0x100,F2610->REGS[r|0x100]);
 			}
 		/* FB / CONNECT , L / R / AMS / PMS */
-		for(r=0xb0;r<0xb6;r++)
+		for(r=0xb0;r<0xb7;r++)	/* b4-b6: L/R, AMS, PMS of channels 1-3 */
 			if((r&3) != 3)
 			{
 				OPNWriteReg(&F2610->OPN,r,F2610->REGS[r]);
@@ -4295,62 +4410,23 @@ static void YM2610_postload(void)
 }
 
 /* optional: the parts of the chip state that YM2610_save_state leaves out
-   (global envelope and LFO counters, key state, SSG-EG negation, the
-   envelope output and the algorithm memory). The postload of the chip
-   rewrites the registers, which changes some of them, so they are kept in
-   a copy and put back after it. */
+   (see OPN_EXT) */
 #define YM2610_EXT_CHIPS 2
-static struct
-{
-	UINT32 eg_cnt, eg_timer, lfo_cnt;
-	UINT32 key[6*4], vol_out[6*4];
-	UINT8 ssgn[6*4];
-	INT32 mem_value[6];
-} ym2610_ext[YM2610_EXT_CHIPS];
+static OPN_EXT ym2610_ext[YM2610_EXT_CHIPS];
 static int ym2610_ext_chips;
 
 static void YM2610_ext_presave(void)
 {
-	int num, c, s;
+	int num;
 	for (num = 0; num < ym2610_ext_chips && num < YM2610NumChips; num++)
-	{
-		YM2610 *F2610 = &(FM2610[num]);
-		ym2610_ext[num].eg_cnt = F2610->OPN.eg_cnt;
-		ym2610_ext[num].eg_timer = F2610->OPN.eg_timer;
-		ym2610_ext[num].lfo_cnt = F2610->OPN.lfo_cnt;
-		for (c = 0; c < 6; c++)
-		{
-			ym2610_ext[num].mem_value[c] = F2610->CH[c].mem_value;
-			for (s = 0; s < 4; s++)
-			{
-				ym2610_ext[num].key[c*4+s] = F2610->CH[c].SLOT[s].key;
-				ym2610_ext[num].vol_out[c*4+s] = F2610->CH[c].SLOT[s].vol_out;
-				ym2610_ext[num].ssgn[c*4+s] = F2610->CH[c].SLOT[s].ssgn;
-			}
-		}
-	}
+		opn_ext_copy(&FM2610[num].OPN, FM2610[num].CH, 6, &ym2610_ext[num], 0);
 }
 
 static void YM2610_ext_postload(void)
 {
-	int num, c, s;
+	int num;
 	for (num = 0; num < ym2610_ext_chips && num < YM2610NumChips; num++)
-	{
-		YM2610 *F2610 = &(FM2610[num]);
-		F2610->OPN.eg_cnt = ym2610_ext[num].eg_cnt;
-		F2610->OPN.eg_timer = ym2610_ext[num].eg_timer;
-		F2610->OPN.lfo_cnt = ym2610_ext[num].lfo_cnt;
-		for (c = 0; c < 6; c++)
-		{
-			F2610->CH[c].mem_value = ym2610_ext[num].mem_value[c];
-			for (s = 0; s < 4; s++)
-			{
-				F2610->CH[c].SLOT[s].key = ym2610_ext[num].key[c*4+s];
-				F2610->CH[c].SLOT[s].vol_out = ym2610_ext[num].vol_out[c*4+s];
-				F2610->CH[c].SLOT[s].ssgn = ym2610_ext[num].ssgn[c*4+s];
-			}
-		}
-	}
+		opn_ext_copy(&FM2610[num].OPN, FM2610[num].CH, 6, &ym2610_ext[num], 1);
 }
 
 /* call before YM2610Init (the postload functions run last registered first) */
@@ -4360,15 +4436,7 @@ void YM2610_ext_state_register(int chips)
 	if (chips > YM2610_EXT_CHIPS) chips = YM2610_EXT_CHIPS;
 	ym2610_ext_chips = chips;
 	for (num = 0; num < chips; num++)
-	{
-		state_save_register_UINT32("YM2610ext", num, "eg_cnt", &ym2610_ext[num].eg_cnt, 1);
-		state_save_register_UINT32("YM2610ext", num, "eg_timer", &ym2610_ext[num].eg_timer, 1);
-		state_save_register_UINT32("YM2610ext", num, "lfo_cnt", &ym2610_ext[num].lfo_cnt, 1);
-		state_save_register_UINT32("YM2610ext", num, "key", ym2610_ext[num].key, 6*4);
-		state_save_register_UINT32("YM2610ext", num, "vol_out", ym2610_ext[num].vol_out, 6*4);
-		state_save_register_UINT8("YM2610ext", num, "ssgn", ym2610_ext[num].ssgn, 6*4);
-		state_save_register_INT32("YM2610ext", num, "mem_value", ym2610_ext[num].mem_value, 6);
-	}
+		opn_ext_register("YM2610ext", num, &ym2610_ext[num]);
 	state_save_register_func_presave(YM2610_ext_presave);
 	state_save_register_func_postload(YM2610_ext_postload);
 }
@@ -4505,11 +4573,13 @@ void YM2610ResetChip(int num)
 	{
 		OPNWriteReg(OPN,i      ,0xc0);
 		OPNWriteReg(OPN,i|0x100,0xc0);
+		F2610->REGS[i] = F2610->REGS[i|0x100] = 0xc0;	/* the reset values, for the save states (the postload writes them back) */
 	}
 	for(i = 0xb2 ; i >= 0x30 ; i-- )
 	{
 		OPNWriteReg(OPN,i      ,0);
 		OPNWriteReg(OPN,i|0x100,0);
+		F2610->REGS[i] = F2610->REGS[i|0x100] = 0;
 	}
 	for(i = 0x26 ; i >= 0x20 ; i-- ) OPNWriteReg(OPN,i,0);
 	/**** ADPCM work initial ****/
@@ -4853,8 +4923,8 @@ static void YM2612_postload(void)
 
 	for(num=0;num<YM2612NumChips;num++)
 	{
-		/* DAC data & port */
-		FM2612[num].dacout = ((int)FM2612[num].REGS[0x2a] - 0x80) << 6;	/* level unknown */
+		/* DAC port (the DAC data is saved as it is: before the first write
+		   it is 0, which is not what the register would give) */
 		FM2612[num].dacen  = FM2612[num].REGS[0x2b] & 0x80;	/* DAC Sel (0x2b), as YM2612Write */
 		/* OPN registers */
 		/* DT / MULTI , TL , KS / AR , AMON / DR , SR , SL / RR , SSG-EG */
@@ -4877,77 +4947,21 @@ static void YM2612_postload(void)
 	cur_chip = NULL;
 }
 
-/* the parts of the chip state that the registers and FMsave_state_channel
-   leave out (global envelope and LFO counters, key state, SSG-EG negation,
-   envelope output, algorithm memory), as for the YM2610: kept in a copy
-   because the postload rewrites the registers, which changes some of them */
-static struct
-{
-	UINT32 eg_cnt, eg_timer, lfo_cnt, lfo_inc;
-	UINT32 key[6*4], vol_out[6*4];
-	UINT8 ssgn[6*4];
-	INT32 mem_value[6];
-	UINT8 kcode[6];
-	UINT32 block_fnum[6];
-	UINT32 sl3_block_fnum[3];
-} *ym2612_ext;
+/* the parts of the chip state that the registers leave out (see OPN_EXT) */
+static OPN_EXT *ym2612_ext;
 
 static void YM2612_ext_presave(void)
 {
-	int num, c, s;
+	int num;
 	for (num = 0; num < YM2612NumChips; num++)
-	{
-		YM2612 *F2612 = &(FM2612[num]);
-		ym2612_ext[num].eg_cnt = F2612->OPN.eg_cnt;
-		ym2612_ext[num].eg_timer = F2612->OPN.eg_timer;
-		ym2612_ext[num].lfo_cnt = F2612->OPN.lfo_cnt;
-		ym2612_ext[num].lfo_inc = F2612->OPN.lfo_inc;
-		for (c = 0; c < 3; c++)
-			ym2612_ext[num].sl3_block_fnum[c] = F2612->OPN.SL3.block_fnum[c];
-		for (c = 0; c < 6; c++)
-		{
-			ym2612_ext[num].mem_value[c] = F2612->CH[c].mem_value;
-			ym2612_ext[num].kcode[c] = F2612->CH[c].kcode;
-			ym2612_ext[num].block_fnum[c] = F2612->CH[c].block_fnum;
-			for (s = 0; s < 4; s++)
-			{
-				ym2612_ext[num].key[c*4+s] = F2612->CH[c].SLOT[s].key;
-				ym2612_ext[num].vol_out[c*4+s] = F2612->CH[c].SLOT[s].vol_out;
-				ym2612_ext[num].ssgn[c*4+s] = F2612->CH[c].SLOT[s].ssgn;
-			}
-		}
-	}
+		opn_ext_copy(&FM2612[num].OPN, FM2612[num].CH, 6, &ym2612_ext[num], 0);
 }
 
 static void YM2612_ext_postload(void)
 {
-	int num, c, s;
+	int num;
 	for (num = 0; num < YM2612NumChips; num++)
-	{
-		YM2612 *F2612 = &(FM2612[num]);
-		F2612->OPN.eg_cnt = ym2612_ext[num].eg_cnt;
-		F2612->OPN.eg_timer = ym2612_ext[num].eg_timer;
-		F2612->OPN.lfo_cnt = ym2612_ext[num].lfo_cnt;
-		F2612->OPN.lfo_inc = ym2612_ext[num].lfo_inc;
-		for (c = 0; c < 3; c++)
-			F2612->OPN.SL3.block_fnum[c] = ym2612_ext[num].sl3_block_fnum[c];
-		for (c = 0; c < 6; c++)
-		{
-			F2612->CH[c].mem_value = ym2612_ext[num].mem_value[c];
-			F2612->CH[c].kcode = ym2612_ext[num].kcode[c];
-			F2612->CH[c].block_fnum = ym2612_ext[num].block_fnum[c];
-			/* recompute the phase steps and the envelope rates */
-			F2612->CH[c].SLOT[SLOT1].Incr = -1;
-			for (s = 0; s < 4; s++)
-				F2612->CH[c].SLOT[s].ksr = 0xff;
-			for (s = 0; s < 4; s++)
-			{
-				F2612->CH[c].SLOT[s].key = ym2612_ext[num].key[c*4+s];
-				F2612->CH[c].SLOT[s].vol_out = ym2612_ext[num].vol_out[c*4+s];
-				F2612->CH[c].SLOT[s].ssgn = ym2612_ext[num].ssgn[c*4+s];
-			}
-		}
-	}
+		opn_ext_copy(&FM2612[num].OPN, FM2612[num].CH, 6, &ym2612_ext[num], 1);
 }
 
 static void YM2612_save_state(void)
@@ -4962,19 +4976,7 @@ static void YM2612_save_state(void)
 	{
 	memset(ym2612_ext, 0, sizeof(*ym2612_ext) * YM2612NumChips);
 	for (num = 0; num < YM2612NumChips; num++)
-	{
-		state_save_register_UINT32("YM2612ext", num, "eg_cnt", &ym2612_ext[num].eg_cnt, 1);
-		state_save_register_UINT32("YM2612ext", num, "eg_timer", &ym2612_ext[num].eg_timer, 1);
-		state_save_register_UINT32("YM2612ext", num, "lfo_cnt", &ym2612_ext[num].lfo_cnt, 1);
-		state_save_register_UINT32("YM2612ext", num, "key", ym2612_ext[num].key, 6*4);
-		state_save_register_UINT32("YM2612ext", num, "vol_out", ym2612_ext[num].vol_out, 6*4);
-		state_save_register_UINT8("YM2612ext", num, "ssgn", ym2612_ext[num].ssgn, 6*4);
-		state_save_register_INT32("YM2612ext", num, "mem_value", ym2612_ext[num].mem_value, 6);
-		state_save_register_UINT32("YM2612ext", num, "lfo_inc", &ym2612_ext[num].lfo_inc, 1);
-		state_save_register_UINT8("YM2612ext", num, "kcode", ym2612_ext[num].kcode, 6);
-		state_save_register_UINT32("YM2612ext", num, "block_fnum", ym2612_ext[num].block_fnum, 6);
-		state_save_register_UINT32("YM2612ext", num, "sl3_block_fnum", ym2612_ext[num].sl3_block_fnum, 3);
-	}
+		opn_ext_register("YM2612ext", num, &ym2612_ext[num]);
 	state_save_register_func_presave(YM2612_ext_presave);
 	state_save_register_func_postload(YM2612_ext_postload);
 	}
@@ -4982,6 +4984,7 @@ static void YM2612_save_state(void)
 	for(num=0;num<YM2612NumChips;num++)
 	{
 		state_save_register_UINT8 (statename, num, "regs"   , FM2612[num].REGS   , 512);
+		state_save_register_INT32 (statename, num, "dacout" , &FM2612[num].dacout, 1);
 		FMsave_state_st(statename,num,&FM2612[num].OPN.ST);
 		FMsave_state_channel(statename,num,FM2612[num].CH,6);
 		/* 3slots */
@@ -5070,15 +5073,18 @@ void YM2612ResetChip(int num)
 	{
 		OPNWriteReg(OPN,i      ,0xc0);
 		OPNWriteReg(OPN,i|0x100,0xc0);
+		F2612->REGS[i] = F2612->REGS[i|0x100] = 0xc0;	/* the reset values, for the save states (the postload writes them back) */
 	}
 	for(i = 0xb2 ; i >= 0x30 ; i-- )
 	{
 		OPNWriteReg(OPN,i      ,0);
 		OPNWriteReg(OPN,i|0x100,0);
+		F2612->REGS[i] = F2612->REGS[i|0x100] = 0;
 	}
 	for(i = 0x26 ; i >= 0x20 ; i-- ) OPNWriteReg(OPN,i,0);
 	/* DAC mode clear */
 	F2612->dacen = 0;
+	F2612->REGS[0x2b] = 0;
 }
 
 /* YM2612 write */
