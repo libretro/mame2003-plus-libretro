@@ -53,6 +53,7 @@ int  segavdp_get_bg_palbase(void);
 int  segavdp_get_sp_palbase(void);
 void segavdp_set_palbank(int palbank);
 int  segavdp_get_palbank(void);
+void segavdp_set_alt_palette(int enable);
 int  segavdp_get_reg(int regnum);
 int  segavdp_get_scanbase(void);
 

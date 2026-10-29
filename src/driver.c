@@ -3608,43 +3608,64 @@ Propose          deniam-16c 1997/06/21
 BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 */
 
-	/* System C games */
-	DRIVER( bloxeedc )	/* (c) 1989 Sega / Elorg*/
-	DRIVER( columns )	/* (c) 1990 Sega */
+	/* System C / C-2 (drivers/segac2.c) */
+	DRIVER( bloxeedc )	/* (c) 1989 Sega / Elorg */
+	DRIVER( bloxeedu )	/* (c) 1989 Sega / Elorg */
+	DRIVER( columns )		/* (c) 1990 Sega */
+	DRIVER( columnsu )	/* (c) 1990 Sega */
 	DRIVER( columnsj )	/* (c) 1990 Sega */
 	DRIVER( columns2 )	/* (c) 1990 Sega */
-
-	/* System C-2 games */
-	DRIVER( ssonicbr )  /* Sega, Unreleased */
-	DRIVER( borench )	/* (c) 1990 Sega */
-	DRIVER( tfrceac )	/* (c) 1990 Sega / Technosoft */
-	DRIVER( tfrceacj )	/* (c) 1990 Sega / Technosoft */
-	DRIVER( tfrceacb )	/* bootleg */
-	DRIVER( tfrceacjpb ) /* Prototype Bootleg */
-	DRIVER( ribbit )	/* (c) 1991 Sega */
+	DRIVER( column2j )	/* (c) 1990 Sega */
+	DRIVER( tfrceac )		/* (c) 1990 Technosoft / Sega */
+	DRIVER( tfrceacj )	/* (c) 1990 Technosoft / Sega */
+	DRIVER( tfrceacb )	/* (c) 1990 bootleg */
+	DRIVER( tfrceacjpb )	/* (c) 1990 bootleg */
+	DRIVER( borench )		/* (c) 1990 Sega */
+	DRIVER( borencha )	/* (c) 1990 Sega */
+	DRIVER( borenchj )	/* (c) 1990 Sega */
+	DRIVER( ribbit )		/* (c) 1991 Sega */
+	DRIVER( ribbitj )		/* (c) 1991 Sega */
+	DRIVER( twinsqua )	/* (c) 1991 Sega */
+	DRIVER( soniccar )	/* (c) 1991 Sega */
+	DRIVER( ssonicbr )	/* (c) 1992 hack */
+	DRIVER( ooparts )		/* (c) 1992 hack */
+	DRIVER( puyo )		/* (c) 1992 Compile / Sega */
+	DRIVER( puyobl )		/* (c) 1992 bootleg */
+	DRIVER( puyoj )		/* (c) 1992 Compile / Sega */
+	DRIVER( puyoja )		/* (c) 1992 Compile / Sega */
 	DRIVER( tantr )		/* (c) 1992 Sega */
 	DRIVER( tantrkor )	/* (c) 1993 Sega */
-	DRIVER( tantrbl )	/* bootleg */
-	DRIVER( tantrbl2 )	/* bootleg */
-	DRIVER( puyopuyo )	/* (c) 1992 Sega / Compile */
-	DRIVER( puyopuya )	/* (c) 1992 Sega / Compile */
-	DRIVER( puyopuyb )	/* bootleg */
-	DRIVER( ichir )	    /* (c) 1994 Sega */
-	DRIVER( ichirk )	/* (c) 1994 Sega */
-	DRIVER( ichirj )	/* (c) 1994 Sega */
-	DRIVER( ichirjbl )	/* bootleg */
-	DRIVER( stkclmns )	/* (c) 1994 Sega */
-	DRIVER( puyopuy2 )	/* (c) 1994 Compile + Sega license */
+	DRIVER( tantrbl )		/* (c) 1992 bootleg */
+	DRIVER( tantrbl4 )	/* (c) 1992 bootleg */
+	DRIVER( tantrbl2 )	/* (c) 1994 bootleg */
+	DRIVER( tantrbl3 )	/* (c) 1994 bootleg */
+	DRIVER( wwanpanm )	/* (c) 1992 Sega */
+	DRIVER( wwanpanmo )	/* (c) 1992 Sega */
+	DRIVER( wwjumbo )		/* (c) 1990 Sega */
+	DRIVER( wwmarine )	/* (c) 1992 Sega */
+	DRIVER( wwpajero )	/* (c) 1990 Sega */
+	DRIVER( anpanman )	/* (c) 1992 Sega */
+	DRIVER( anpanmana )	/* (c) 1992 Sega */
+	DRIVER( sonicpop )	/* (c) 1993 Sega */
+	DRIVER( sonicfgt )	/* (c) 1993 Sega */
+	DRIVER( sonicfgtj )	/* (c) 1993 Sega */
 	DRIVER( potopoto )	/* (c) 1994 Sega */
-	DRIVER( zunkyou )	/* (c) 1994 Sega */
-	DRIVER( headonch ) /* Sega Unreleased */
-	DRIVER( ooparts ) /* Sega Unreleased */
-
-	/* Atlus Print Club 'Games' C-2 board */
-	DRIVER( pclubj )
-	DRIVER( pclubjv2 )
-	DRIVER( pclubjv4 )
-	DRIVER( pclubjv5 )
+	DRIVER( stkclmns )	/* (c) 1994 Sega */
+	DRIVER( stkclmnsj )	/* (c) 1994 Sega */
+	DRIVER( ichir )		/* (c) 1994 Sega */
+	DRIVER( ichirbl )		/* (c) 1994 bootleg */
+	DRIVER( ichirk )		/* (c) 1994 Sega */
+	DRIVER( ichirj )		/* (c) 1994 Sega */
+	DRIVER( ichirjbl )	/* (c) 1994 bootleg */
+	DRIVER( puyopuy2 )	/* (c) 1994 Compile (Sega license) */
+	DRIVER( zunkyou )		/* (c) 1994 Sega */
+	DRIVER( headonch )	/* (c) 1994 hack */
+	DRIVER( pclubj )		/* (c) 1995 Atlus */
+	DRIVER( pclubjv2 )	/* (c) 1995 Atlus */
+	DRIVER( pclub )		/* (c) 1995 Atlus */
+	DRIVER( pclubjv3 )	/* (c) 1995 Atlus */
+	DRIVER( pclubjv4 )	/* (c) 1996 Atlus */
+	DRIVER( pclubjv5 )	/* (c) 1996 Atlus */
 
 	/* Genie / Y-BOX hardware (drivers/megadriv_ybox.c) */
 	DRIVER( puckpkmn )	/* (c) 2000 Sun Mixing */

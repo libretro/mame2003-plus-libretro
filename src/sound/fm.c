@@ -5091,6 +5091,15 @@ void YM2612ResetChip(int num)
 /* n = number  */
 /* a = address */
 /* v = value   */
+/* the chip is busy for 32 internal cycles (32 x 6 input clocks) after a data
+   write, as in current MAME (ymfm): games that wait on the BUSY bit of the
+   status before each write (e.g. the System C/C2 sound drivers) take that long */
+#if FM_BUSY_FLAG_SUPPORT
+#define YM2612_BUSY_SET(F) ((F)->OPN.ST.BusyExpire = FM_GET_TIME_NOW() + (32.0 * 6.0) / (double)(F)->OPN.ST.clock)
+#else
+#define YM2612_BUSY_SET(F) do { } while (0)
+#endif
+
 int YM2612Write(int n, int a, UINT8 v)
 {
 	YM2612 *F2612 = &(FM2612[n]);
@@ -5135,6 +5144,7 @@ int YM2612Write(int n, int a, UINT8 v)
 			/* write register */
 			OPNWriteReg(&(F2612->OPN),addr,v);
 		}
+		YM2612_BUSY_SET(F2612);
 		break;
 
 	case 2:	/* address port 1 */
@@ -5150,6 +5160,7 @@ int YM2612Write(int n, int a, UINT8 v)
 		F2612->REGS[addr | 0x100] = v;
 		YM2612UpdateReq(n);
 		OPNWriteReg(&(F2612->OPN),addr | 0x100,v);
+		YM2612_BUSY_SET(F2612);
 		break;
 	}
 	return F2612->OPN.ST.irq;

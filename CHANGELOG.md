@@ -54,6 +54,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Choky! Choky!
 * Choutetsu Brikin'ger - iron clad
 * Clockwork Aquario
+* Columns II: The Voyage Through Time (World) - Romset `columns2`; the old `columns2` (Japan) is now its clone `column2j`, as in current MAME
 * Combat Hawk
 * Come Back Toto
 * Cookie & Bibi
@@ -200,6 +201,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Power Up Baseball
 * Progear
 * Puckman Pockimon Genie 2000 - Romset `puckpkmn` - the set of current MAME; the old `puckpkmn` set is now its clone `puckpkmnb`, as in current MAME
+* Puyo Puyo (World) - Romset `puyo`; the old `puyopuyo`, `puyopuya` and `puyopuyb` are now its clones `puyoj`, `puyoja` and `puyobl`, as in current MAME
 * Puzz Loop 2 (All Sets)
 * Puzzle Break
 * Puzzle Star
@@ -230,6 +232,8 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Sega Megaplay : Streets Of Rage II
 * Sega Megaplay : Tecmo World Cup
 * Sega Sonic Bros (Japan, Prototype)
+* SegaSonic Cosmo Fighter (World and Japan) - Romsets `sonicfgt`, `sonicfgtj`
+* SegaSonic Popcorn Shop (Rev B) - Romset `sonicpop` - the popcorn machine itself isn't emulated, as in current MAME
 * Sengoku 3
 * Shuihu Feng Yun Zhuan
 * Skater (Deco Cassette)
@@ -242,11 +246,13 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Sonic Boom
 * Sonic The Hedgehog 2 (Bootleg Of Megadrive Version)
 * Sonic The Hedgehog 3 (Bootleg Of Megadrive Version)
+* Soreike! Anpanman Popcorn Koujou (Rev B and Rev A) - Romsets `anpanman`, `anpanmana` - the popcorn machine itself isn't emulated, as in current MAME
 * Space Fever High Splitter
 * Space Launcher
 * Space Raider
 * Spectrum 2000 (Euro)
 * Squash
+* Stack Columns (World) - Romset `stkclmns`; the old `stkclmns` (Japan) is now its clone `stkclmnsj`, as in current MAME
 * Stadium Cross (World, linkable) and (US) - Romsets `scrossa`, `scrossu`; `scross` now uses the ROM names of current MAME
 * Star Fire 2
 * Steel Worker
@@ -287,6 +293,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Turkey Hunting
 * Twin Cobra 2
 * Twin Action
+* Twin Squash - Romset `twinsqua`
 * Twinkle
 * Twinkle Tale (Bootleg Of Megadrive Version)
 * TX-1 (World, Japan rev. B and C)
@@ -296,6 +303,11 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Vasara 2
 * Virtua Bowling
 * Virtua Fighter
+* Waku Waku Anpanman (Rev A and original) - Romsets `wwanpanm`, `wwanpanmo`
+* Waku Waku Jumbo (Rev A) - Romset `wwjumbo`
+* Waku Waku Marine - Romset `wwmarine`
+* Waku Waku Pajero - Romset `wwpajero`
+* Waku Waku Sonic Patrol Car - Romset `soniccar`
 * Wheels Runner
 * Wing Force
 * Wing Shooting Championship
@@ -315,6 +327,13 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Asura Buster - Eternal Warriors (USA), (Japan, set 2) and (Japan) (ARCADIA review build) - Romsets `asurabus`, `asurabusja`, `asurabusjr`; the Japan set 1 is now `asurabusj`, as in current MAME
 * Bare Knuckle III (bootleg of Mega Drive version, alt set, the PIC simulated) - Romset `barek3mba` - not working, as in current MAME
 * Bare Knuckle III / Sunset Riders (scrambled bootleg of Mega Drive versions) - Romset `bk3ssrmb` - not working, as in current MAME (only Bare Knuckle III boots)
+* Bloxeed (US, C System, Rev A) - Romset `bloxeedu`
+* Borench (set 2) and (Japan) - Romsets `borencha`, `borenchj`
+* Columns (US, cocktail, Rev A) - Romset `columnsu`
+* Print Club (World) and (Japan Vol.3) - Romsets `pclub`, `pclubjv3` - not working (camera and printer), as in current MAME
+* Puzzle & Action: Ichidant-R (World) (bootleg) - Romset `ichirbl`
+* Puzzle & Action: Tant-R (Japan) (bootleg set 3 and set 4) - Romsets `tantrbl3`, `tantrbl4`
+* Ribbit! (Japan) - Romset `ribbitj`
 * Sunset Riders / Super Street Fighter II - The New Challengers (scrambled bootleg of Mega Drive versions) - Romset `srssf2mb` - not working, as in current MAME (the order of the ROMs is not known)
 * Battle Shark (Japan, Joystick)
 * Bloxeed (bootleg) - Romset `bloxeedd`
@@ -850,6 +869,10 @@ Notes on this option:
 * Sega Mega Play: the BIOS overlay is transparent on colour 0 of both its palettes and covers its borders, as in current MAME (the boot logo screen was hidden behind a green background)
 * Sega Mega Drive based bootlegs: their own driver (`drivers/megadriv_acbl.c`, as in current MAME), with the board variants of current MAME (the 6 button pads, the DIP switches at 0x770070 of the scrambled boards, the 3rd I/O port coins, the PIC16C57 of `barek2mb`); the new sets take their V-INT / H-INT through the VDP interrupt enables as on the real hardware (Mortal Kombat 3 crashed at boot), the descrambling of the bootlegs and the PIC of `barek2mb` now also work on big-endian hosts
 * Genie / Y-BOX and Sun Mixing boards: their own drivers (`drivers/megadriv_ybox.c`, `drivers/megadriv_sunmix.c`, as in current MAME); the Y-BOX games run on the Mega Drive machine as in MAME (Z80, I/O, the VDP interrupts and HBLANK as on the real hardware), with the protection read back latches and the ROM address remapping of Shuihu Feng Yun Zhuan of current MAME
+* Sega System C/C2: `drivers/segac2.c` now has only System C/C2, the Mega Drive part shared by the other boards is in `machine/megadriv.c` (as `megadriv.cpp` in current MAME); the sets, ROMs, titles, inputs and DIP switches as in current MAME; the protection chip as the EPM5032 logic of each game of current MAME (no more Ribbit! and Puyo Puyo 2 workarounds and fake tables, Print Club Vol.2, 4 and 5 now get past the protection); the alternate palette mode of Ribbit! and Twin Squash (instead of the palette address watching of Ribbit!); the 68000 at 8.95 MHz and the 59.92 Hz refresh as in current MAME (it ran at 7.67 MHz and 60 Hz: the games now follow the timing of MAME frame for frame), the V-INT and H-INT held until the 68000 takes them as on the board, the address mirrors, the battery-backed work RAM (high scores kept, as in current MAME) and the coin meters on the I/O chip
+* YM2612 / YM3438: the busy flag after a data write (192 clocks, as in current MAME), and a timer started long after its last overflow runs a whole period instead of firing at once (Thunder Force AC, Bloxeed and the other System C2 games follow MAME again)
+* Sega Mega Play: the V-INT of the BIOS VDP comes about 12 lines after the Mega Drive VBLANK, as in current MAME (it came ~80 lines early, and the BIOS/game handshake on port C could miss: Tecmo World Cup stayed on a black screen)
+* Sega Mega Play / System E: the tiles of the SMS-type VDP are read byte by byte, so they are drawn right on big-endian hosts (the Mega Play BIOS screen had the wrong colours)
 * Sega Mega Drive VDP: in H32 mode the sprite table base uses bit 0 of register 5, as on the real VDP (the fighters of Super Street Fighter II were missing, the sprites of Bonanza Bros. on Mega-Tech were garbled)
 * PIC16C5x CPU core: the program counter wraps at the end of the program memory (the 2K parts start at 0x7ff and ran past the ROM), and the save states no longer register the ports and STATUS through a NULL pointer (the save of a game with a PIC crashed); these are in the data RAM, saved with the CPU memory
 * Save states (netplay, RunAhead with a second instance) of the Mega Drive based boards: the Z80 RAM and bus state and the Mega-Tech / Mega Play BIOS registers and RAM are saved (Gunstar Heroes and Mazin Wars Mega Play went out of sync after loading a state in a new instance); the SN76496 PSG is saved, and the YM2612 DAC enable is restored from its own register (0x2b, it was read from 0x2d)

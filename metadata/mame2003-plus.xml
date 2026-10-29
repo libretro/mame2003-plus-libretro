@@ -209753,16 +209753,16 @@
 		<driver status="good" color="good" sound="imperfect" graphic="good" palettesize="2048"/>
 	</game>
 	<game name="bloxeedc" sourcefile="segac2.c" cloneof="bloxeed" romof="bloxeed">
-		<description>Bloxeed (C System)</description>
+		<description>Bloxeed (World, C System)</description>
 		<year>1989</year>
 		<manufacturer>Sega / Elorg</manufacturer>
-		<rom name="epr12908.32" size="131072" crc="fc77cb91" sha1="248a462e3858ffdc171af7d806e57deecb5dae50" region="cpu1" offset="0"/>
-		<rom name="epr12907.31" size="131072" crc="e5fcbac6" sha1="a1adec5ef5574bff96a3d66619a24a6715097bb9" region="cpu1" offset="1"/>
-		<rom name="epr12993.34" size="131072" crc="487bc8fc" sha1="3fb205bf56f35443e993e08b39c1a08c13ca5e3b" region="cpu1" offset="40000"/>
-		<rom name="epr12992.33" size="131072" crc="19b0084c" sha1="b3ba0f3d8d39a19aa66edb24885ea21192e22704" region="cpu1" offset="40001"/>
-		<chip type="cpu" name="68000" clock="7670442"/>
-		<chip type="audio" name="YM2612" clock="7670442"/>
-		<chip type="audio" name="SN76496" clock="3579540"/>
+		<rom name="epr-12908.ic32" size="131072" crc="fc77cb91" sha1="248a462e3858ffdc171af7d806e57deecb5dae50" region="cpu1" offset="0"/>
+		<rom name="epr-12907.ic31" size="131072" crc="e5fcbac6" sha1="a1adec5ef5574bff96a3d66619a24a6715097bb9" region="cpu1" offset="1"/>
+		<rom name="epr-12993.ic34" size="131072" crc="487bc8fc" sha1="3fb205bf56f35443e993e08b39c1a08c13ca5e3b" region="cpu1" offset="40000"/>
+		<rom name="epr-12992.ic33" size="131072" crc="19b0084c" sha1="b3ba0f3d8d39a19aa66edb24885ea21192e22704" region="cpu1" offset="40001"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
 		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="1"/>
 		<input players="2" control="joy8way" buttons="1" coins="2" service="yes"/>
@@ -209802,15 +209802,15 @@
 			<dipvalue name="1 Coin/6 Credits"/>
 			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin A also)"/>
 		</dipswitch>
-		<dipswitch name="VS Mode Price">
-			<dipvalue name="Same as Ordinary"/>
-			<dipvalue name="Double as Ordinary" default="yes"/>
+		<dipswitch name="Credits to Start (VS)">
+			<dipvalue name="1"/>
+			<dipvalue name="2" default="yes"/>
 		</dipswitch>
-		<dipswitch name="Credits to Start">
+		<dipswitch name="Credits to Start (Normal)">
 			<dipvalue name="1" default="yes"/>
 			<dipvalue name="2"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
@@ -209818,33 +209818,111 @@
 			<dipvalue name="Off"/>
 			<dipvalue name="On" default="yes"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Difficulty">
+			<dipvalue name="Easy"/>
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Hardest"/>
+		</dipswitch>
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="High Speed Mode">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
+	</game>
+	<game name="bloxeedu" sourcefile="segac2.c" cloneof="bloxeed" romof="bloxeed">
+		<description>Bloxeed (US, C System, Rev A)</description>
+		<year>1989</year>
+		<manufacturer>Sega / Elorg</manufacturer>
+		<rom name="epr-12997a.ic32" size="131072" crc="23655bc9" sha1="32fc1f75a43aa49dc656d40d34ec10f3f0a2bdb3" region="cpu1" offset="0"/>
+		<rom name="epr-12996a.ic31" size="131072" crc="83c83f0c" sha1="ca8e2ad7cceabd8de7a91b91cb92eafb6dd3171f" region="cpu1" offset="1"/>
+		<rom name="epr-12993.ic34" size="131072" crc="487bc8fc" sha1="3fb205bf56f35443e993e08b39c1a08c13ca5e3b" region="cpu1" offset="40000"/>
+		<rom name="epr-12992.ic33" size="131072" crc="19b0084c" sha1="b3ba0f3d8d39a19aa66edb24885ea21192e22704" region="cpu1" offset="40001"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="2" control="joy8way" buttons="1" coins="2" service="yes"/>
+		<dipswitch name="Coin A">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin B also)"/>
+		</dipswitch>
+		<dipswitch name="Coin B">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin A also)"/>
+		</dipswitch>
+		<dipswitch name="Credits to Start (Normal / VS)">
+			<dipvalue name="1 / 1"/>
+			<dipvalue name="1 / 2" default="yes"/>
+			<dipvalue name="1 / 2"/>
+			<dipvalue name="2 / 4"/>
+		</dipswitch>
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Difficulty">
+			<dipvalue name="Easy"/>
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Hardest"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="High Speed Mode">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
 	</game>
 	<game name="columns" sourcefile="segac2.c">
-		<description>Columns (US)</description>
+		<description>Columns (World)</description>
 		<year>1990</year>
 		<manufacturer>Sega</manufacturer>
-		<rom name="epr13114.32" size="131072" crc="ff78f740" sha1="0a034103a4b942f43e62f6e717f5dbf1bfb0b613" region="cpu1" offset="0"/>
-		<rom name="epr13113.31" size="131072" crc="9a426d9b" sha1="3322e65ebf8d0a6047f7d408387c63ea401b8973" region="cpu1" offset="1"/>
-		<chip type="cpu" name="68000" clock="7670442"/>
-		<chip type="audio" name="YM2612" clock="7670442"/>
-		<chip type="audio" name="SN76496" clock="3579540"/>
+		<rom name="epr-13114.ic32" size="131072" crc="ff78f740" sha1="0a034103a4b942f43e62f6e717f5dbf1bfb0b613" region="cpu1" offset="0"/>
+		<rom name="epr-13113.ic31" size="131072" crc="9a426d9b" sha1="3322e65ebf8d0a6047f7d408387c63ea401b8973" region="cpu1" offset="1"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
 		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="1"/>
 		<input players="2" control="joy8way" buttons="1" coins="2" service="yes"/>
@@ -209884,7 +209962,7 @@
 			<dipvalue name="1 Coin/6 Credits"/>
 			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin A also)"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
@@ -209892,25 +209970,105 @@
 			<dipvalue name="Off"/>
 			<dipvalue name="On" default="yes"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
 		<dipswitch name="Difficulty">
+			<dipvalue name="Easiest"/>
 			<dipvalue name="Easy"/>
-			<dipvalue name="Medium"/>
-			<dipvalue name="Hard" default="yes"/>
-			<dipvalue name="Hardest"/>
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Hard"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
+	</game>
+	<game name="columnsu" sourcefile="segac2.c" cloneof="columns" romof="columns">
+		<description>Columns (US, cocktail, Rev A)</description>
+		<year>1990</year>
+		<manufacturer>Sega</manufacturer>
+		<rom name="epr-13116a.ic32" size="131072" crc="a0284b16" sha1="a72c8567ab2386ef6bc7bb83cc1612f4c6bf8461" region="cpu1" offset="0"/>
+		<rom name="epr-13115a.ic31" size="131072" crc="e37496f3" sha1="30ebeed76613ae8d6d3ce9fca282124685067b27" region="cpu1" offset="1"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="2" control="joy8way" buttons="1" coins="2" service="yes"/>
+		<dipswitch name="Coin A">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin B also)"/>
+		</dipswitch>
+		<dipswitch name="Coin B">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin A also)"/>
+		</dipswitch>
+		<dipswitch name="Cabinet">
+			<dipvalue name="Upright" default="yes"/>
+			<dipvalue name="Cocktail"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Background Music">
+			<dipvalue name="BGM #1"/>
+			<dipvalue name="BGM #2" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Difficulty">
+			<dipvalue name="Easiest"/>
+			<dipvalue name="Easy"/>
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Hard"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
@@ -209920,11 +210078,11 @@
 		<description>Columns (Japan)</description>
 		<year>1990</year>
 		<manufacturer>Sega</manufacturer>
-		<rom name="epr13112.32" size="131072" crc="bae6e53e" sha1="2c2fd621eecd55591f22d076323972a7d0314615" region="cpu1" offset="0"/>
-		<rom name="epr13111.31" size="131072" crc="aa5ccd6d" sha1="480e29e3112282d1790f1fb68075453325ba4336" region="cpu1" offset="1"/>
-		<chip type="cpu" name="68000" clock="7670442"/>
-		<chip type="audio" name="YM2612" clock="7670442"/>
-		<chip type="audio" name="SN76496" clock="3579540"/>
+		<rom name="epr-13112.ic32" size="131072" crc="bae6e53e" sha1="2c2fd621eecd55591f22d076323972a7d0314615" region="cpu1" offset="0"/>
+		<rom name="epr-13111.ic31" size="131072" crc="aa5ccd6d" sha1="480e29e3112282d1790f1fb68075453325ba4336" region="cpu1" offset="1"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
 		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="1"/>
 		<input players="2" control="joy8way" buttons="1" coins="2" service="yes"/>
@@ -209964,7 +210122,7 @@
 			<dipvalue name="1 Coin/6 Credits"/>
 			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin A also)"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
@@ -209972,39 +210130,39 @@
 			<dipvalue name="Off"/>
 			<dipvalue name="On" default="yes"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
 		<dipswitch name="Difficulty">
+			<dipvalue name="Easiest"/>
 			<dipvalue name="Easy"/>
-			<dipvalue name="Medium"/>
-			<dipvalue name="Hard" default="yes"/>
-			<dipvalue name="Hardest"/>
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Hard"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
 	</game>
 	<game name="columns2" sourcefile="segac2.c">
-		<description>Columns II - The Voyage Through Time (Japan)</description>
+		<description>Columns II: The Voyage Through Time (World)</description>
 		<year>1990</year>
 		<manufacturer>Sega</manufacturer>
-		<rom name="epr13361.rom" size="131072" crc="b54b5f12" sha1="4d7fbae7d9bcadd433ebc25aef255dc43df611bc" region="cpu1" offset="0"/>
-		<rom name="epr13360.rom" size="131072" crc="a59b1d4f" sha1="e9ee315677782e1c61ae8f11260101cc03176188" region="cpu1" offset="1"/>
-		<chip type="cpu" name="68000" clock="7670442"/>
-		<chip type="audio" name="YM2612" clock="7670442"/>
-		<chip type="audio" name="SN76496" clock="3579540"/>
+		<rom name="epr-13363.ic32" size="131072" crc="c99e4ffd" sha1="67981aa08c8a625af35dd7689011364159cf9194" region="cpu1" offset="0"/>
+		<rom name="epr-13362.ic31" size="131072" crc="394e2419" sha1="d4f726b32cf301d0d52611237b83177e69bfaf71" region="cpu1" offset="1"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
 		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="1"/>
 		<input players="2" control="joy8way" buttons="1" coins="2" service="yes"/>
@@ -210060,7 +210218,85 @@
 		</dipswitch>
 		<dipswitch name="Flash Mode Difficulty">
 			<dipvalue name="Easy"/>
-			<dipvalue name="Medium" default="yes"/>
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Hardest"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
+	</game>
+	<game name="column2j" sourcefile="segac2.c" cloneof="columns2" romof="columns2">
+		<description>Columns II: The Voyage Through Time (Japan)</description>
+		<year>1990</year>
+		<manufacturer>Sega</manufacturer>
+		<rom name="epr-13361.ic32" size="131072" crc="b54b5f12" sha1="4d7fbae7d9bcadd433ebc25aef255dc43df611bc" region="cpu1" offset="0"/>
+		<rom name="epr-13360.ic31" size="131072" crc="a59b1d4f" sha1="e9ee315677782e1c61ae8f11260101cc03176188" region="cpu1" offset="1"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="2" control="joy8way" buttons="1" coins="2" service="yes"/>
+		<dipswitch name="Coin A">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin B also)"/>
+		</dipswitch>
+		<dipswitch name="Coin B">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin A also)"/>
+		</dipswitch>
+		<dipswitch name="Cabinet">
+			<dipvalue name="Upright" default="yes"/>
+			<dipvalue name="Cocktail"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="VS. Mode Credits/Match">
+			<dipvalue name="1" default="yes"/>
+			<dipvalue name="2"/>
+			<dipvalue name="3"/>
+			<dipvalue name="4"/>
+		</dipswitch>
+		<dipswitch name="Flash Mode Difficulty">
+			<dipvalue name="Easy"/>
+			<dipvalue name="Normal" default="yes"/>
 			<dipvalue name="Hard"/>
 			<dipvalue name="Hardest"/>
 		</dipswitch>
@@ -210075,15 +210311,15 @@
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
 	</game>
 	<game name="ssonicbr" sourcefile="segac2.c">
-		<description>SegaSonic Bros (Japan, prototype)</description>
+		<description>SegaSonic Bros. (prototype, hack)</description>
 		<year>1992</year>
-		<manufacturer>Sega</manufacturer>
+		<manufacturer>hack</manufacturer>
 		<rom name="ssonicbr.ic32" size="262144" crc="cf254ecd" sha1="4bb295ec80f8ddfeab4e360eebf12c5e2dfb9800" region="cpu1" offset="0"/>
 		<rom name="ssonicbr.ic31" size="262144" crc="03709746" sha1="0b457f557da77acd3f43950428117c1decdfaf26" region="cpu1" offset="1"/>
 		<rom name="ssonicbr.ic4" size="131072" crc="78e56a51" sha1="8a72c12975cd74919b4337e0f681273e6b5cbbc6" region="sound1" offset="0"/>
-		<chip type="cpu" name="68000" clock="7670442"/>
-		<chip type="audio" name="YM2612" clock="7670442"/>
-		<chip type="audio" name="SN76496" clock="3579540"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
 		<chip type="audio" name="uPD7759"/>
 		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="1"/>
@@ -210128,13 +210364,103 @@
 			<dipvalue name="On" default="yes"/>
 			<dipvalue name="Off"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Difficulty">
+			<dipvalue name="Easy"/>
+			<dipvalue name="Medium" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Hardest"/>
+		</dipswitch>
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
+	</game>
+	<game name="borench" sourcefile="segac2.c">
+		<description>Borench (set 1)</description>
+		<year>1990</year>
+		<manufacturer>Sega</manufacturer>
+		<rom name="ic32.bin" size="262144" crc="2c54457d" sha1="adf3ea5393d2633ec6215e64f0cd89ad4567e765" region="cpu1" offset="0"/>
+		<rom name="ic31.bin" size="262144" crc="b46445fc" sha1="24e85ef5abbc5376a854b13ed90f08f0c30d7f25" region="cpu1" offset="1"/>
+		<rom name="epr-13587.ic4" size="131072" crc="62b85e56" sha1="822ab733c87938bb70a9e32cc5dd36bbf6f21d11" region="sound1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
+		<chip type="audio" name="uPD7759"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="2" control="joy8way" buttons="2" coins="2" service="yes"/>
+		<dipswitch name="Coin A">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin B also)"/>
+		</dipswitch>
+		<dipswitch name="Coin B">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin A also)"/>
+		</dipswitch>
+		<dipswitch name="Credits to Start">
+			<dipvalue name="1" default="yes"/>
+			<dipvalue name="2"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Lives 1P Mode">
+			<dipvalue name="1"/>
+			<dipvalue name="2" default="yes"/>
+			<dipvalue name="3"/>
+			<dipvalue name="4"/>
+		</dipswitch>
+		<dipswitch name="Lives 2P Mode">
+			<dipvalue name="2"/>
+			<dipvalue name="3" default="yes"/>
+			<dipvalue name="4"/>
+			<dipvalue name="5"/>
 		</dipswitch>
 		<dipswitch name="Difficulty">
 			<dipvalue name="Easy"/>
@@ -210142,38 +210468,96 @@
 			<dipvalue name="Hard"/>
 			<dipvalue name="Hardest"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
+	</game>
+	<game name="borencha" sourcefile="segac2.c" cloneof="borench" romof="borench">
+		<description>Borench (set 2)</description>
+		<year>1990</year>
+		<manufacturer>Sega</manufacturer>
+		<rom name="epr-13591.ic32" size="262144" crc="7851078b" sha1="122934f0414a29b4b363acad01ee4db369259e72" region="cpu1" offset="0"/>
+		<rom name="epr-13590.ic31" size="262144" crc="01bc6fe6" sha1="b241b09852f52f712e3ddc6660ec3eb436b1302c" region="cpu1" offset="1"/>
+		<rom name="epr-13587.ic4" merge="epr-13587.ic4" size="131072" crc="62b85e56" sha1="822ab733c87938bb70a9e32cc5dd36bbf6f21d11" region="sound1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
+		<chip type="audio" name="uPD7759"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="2" control="joy8way" buttons="2" coins="2" service="yes"/>
+		<dipswitch name="Coin A">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin B also)"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
+		<dipswitch name="Coin B">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin A also)"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
+		<dipswitch name="Credits to Start">
+			<dipvalue name="1" default="yes"/>
+			<dipvalue name="2"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
+		<dipswitch name="Lives 1P Mode">
+			<dipvalue name="1"/>
+			<dipvalue name="2" default="yes"/>
+			<dipvalue name="3"/>
+			<dipvalue name="4"/>
+		</dipswitch>
+		<dipswitch name="Lives 2P Mode">
+			<dipvalue name="2"/>
+			<dipvalue name="3" default="yes"/>
+			<dipvalue name="4"/>
+			<dipvalue name="5"/>
+		</dipswitch>
+		<dipswitch name="Difficulty">
+			<dipvalue name="Easy"/>
+			<dipvalue name="Medium" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Hardest"/>
 		</dipswitch>
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
 	</game>
-	<game name="borench" sourcefile="segac2.c">
-		<description>Borench</description>
+	<game name="borenchj" sourcefile="segac2.c" cloneof="borench" romof="borench">
+		<description>Borench (Japan)</description>
 		<year>1990</year>
 		<manufacturer>Sega</manufacturer>
-		<rom name="ic32.bin" size="262144" crc="2c54457d" sha1="adf3ea5393d2633ec6215e64f0cd89ad4567e765" region="cpu1" offset="0"/>
-		<rom name="ic31.bin" size="262144" crc="b46445fc" sha1="24e85ef5abbc5376a854b13ed90f08f0c30d7f25" region="cpu1" offset="1"/>
-		<rom name="ic4.bin" size="131072" crc="62b85e56" sha1="822ab733c87938bb70a9e32cc5dd36bbf6f21d11" region="sound1" offset="0"/>
-		<chip type="cpu" name="68000" clock="7670442"/>
-		<chip type="audio" name="YM2612" clock="7670442"/>
-		<chip type="audio" name="SN76496" clock="3579540"/>
+		<rom name="epr-13586.ic32" size="262144" crc="62d7f8e8" sha1="a2b11584c79ead70e6b8cab0b076df9bbf114803" region="cpu1" offset="0"/>
+		<rom name="epr-13585.ic31" size="262144" crc="087b9704" sha1="1e974d1e40ea28e8f5e721ccf78a2ffc76f4d17d" region="cpu1" offset="1"/>
+		<rom name="epr-13587.ic4" merge="epr-13587.ic4" size="131072" crc="62b85e56" sha1="822ab733c87938bb70a9e32cc5dd36bbf6f21d11" region="sound1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
 		<chip type="audio" name="uPD7759"/>
 		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="1"/>
@@ -210243,17 +210627,17 @@
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
 	</game>
 	<game name="tfrceac" sourcefile="segac2.c">
-		<description>ThunderForce AC</description>
+		<description>Thunder Force AC</description>
 		<year>1990</year>
-		<manufacturer>Sega / Technosoft</manufacturer>
-		<rom name="ic32.bin" size="262144" crc="95ecf202" sha1="92b0f351f2bee7d59873a4991615f14f1afe4da7" region="cpu1" offset="0"/>
-		<rom name="ic31.bin" size="262144" crc="e63d7f1a" sha1="a40d0a5a96f379a467048dc8fddd8aaaeb94da1d" region="cpu1" offset="1"/>
-		<rom name="ic34.bin" size="262144" crc="29f23461" sha1="032a7125fef5a660b85654d595aafc46812cdde6" region="cpu1" offset="100000"/>
-		<rom name="ic33.bin" size="262144" crc="9e23734f" sha1="64d27dc53f0ffc3513345a26ed077751b25d15f1" region="cpu1" offset="100001"/>
-		<rom name="ic4.bin" size="262144" crc="e09961f6" sha1="e109b5f41502b765d191f22e3bbcff97d6defaa1" region="sound1" offset="0"/>
-		<chip type="cpu" name="68000" clock="7670442"/>
-		<chip type="audio" name="YM2612" clock="7670442"/>
-		<chip type="audio" name="SN76496" clock="3579540"/>
+		<manufacturer>Technosoft / Sega</manufacturer>
+		<rom name="epr-13675.ic32" size="262144" crc="95ecf202" sha1="92b0f351f2bee7d59873a4991615f14f1afe4da7" region="cpu1" offset="0"/>
+		<rom name="epr-13674.ic31" size="262144" crc="e63d7f1a" sha1="a40d0a5a96f379a467048dc8fddd8aaaeb94da1d" region="cpu1" offset="1"/>
+		<rom name="epr-13659.ic34" size="262144" crc="29f23461" sha1="032a7125fef5a660b85654d595aafc46812cdde6" region="cpu1" offset="100000"/>
+		<rom name="epr-13658.ic33" size="262144" crc="9e23734f" sha1="64d27dc53f0ffc3513345a26ed077751b25d15f1" region="cpu1" offset="100001"/>
+		<rom name="epr-13655.ic4" size="262144" crc="e09961f6" sha1="e109b5f41502b765d191f22e3bbcff97d6defaa1" region="sound1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
 		<chip type="audio" name="uPD7759"/>
 		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="1"/>
@@ -210323,17 +210707,17 @@
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
 	</game>
 	<game name="tfrceacj" sourcefile="segac2.c" cloneof="tfrceac" romof="tfrceac">
-		<description>ThunderForce AC (Japan)</description>
+		<description>Thunder Force AC (Japan)</description>
 		<year>1990</year>
-		<manufacturer>Sega / Technosoft</manufacturer>
-		<rom name="epr13657.32" size="262144" crc="a0f38ffd" sha1="da548e7f61aed0e82a460553a119941da8857bc4" region="cpu1" offset="0"/>
-		<rom name="epr13656.31" size="262144" crc="b9438d1e" sha1="598209c9fec3527fde720af09e5bebd7379f5b2b" region="cpu1" offset="1"/>
-		<rom name="ic34.bin" merge="ic34.bin" size="262144" crc="29f23461" sha1="032a7125fef5a660b85654d595aafc46812cdde6" region="cpu1" offset="100000"/>
-		<rom name="ic33.bin" merge="ic33.bin" size="262144" crc="9e23734f" sha1="64d27dc53f0ffc3513345a26ed077751b25d15f1" region="cpu1" offset="100001"/>
-		<rom name="ic4.bin" merge="ic4.bin" size="262144" crc="e09961f6" sha1="e109b5f41502b765d191f22e3bbcff97d6defaa1" region="sound1" offset="0"/>
-		<chip type="cpu" name="68000" clock="7670442"/>
-		<chip type="audio" name="YM2612" clock="7670442"/>
-		<chip type="audio" name="SN76496" clock="3579540"/>
+		<manufacturer>Technosoft / Sega</manufacturer>
+		<rom name="epr-13657.ic32" size="262144" crc="a0f38ffd" sha1="da548e7f61aed0e82a460553a119941da8857bc4" region="cpu1" offset="0"/>
+		<rom name="epr-13656.ic31" size="262144" crc="b9438d1e" sha1="598209c9fec3527fde720af09e5bebd7379f5b2b" region="cpu1" offset="1"/>
+		<rom name="epr-13659.ic34" merge="epr-13659.ic34" size="262144" crc="29f23461" sha1="032a7125fef5a660b85654d595aafc46812cdde6" region="cpu1" offset="100000"/>
+		<rom name="epr-13658.ic33" merge="epr-13658.ic33" size="262144" crc="9e23734f" sha1="64d27dc53f0ffc3513345a26ed077751b25d15f1" region="cpu1" offset="100001"/>
+		<rom name="epr-13655.ic4" merge="epr-13655.ic4" size="262144" crc="e09961f6" sha1="e109b5f41502b765d191f22e3bbcff97d6defaa1" region="sound1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
 		<chip type="audio" name="uPD7759"/>
 		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="1"/>
@@ -210403,17 +210787,17 @@
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
 	</game>
 	<game name="tfrceacb" sourcefile="segac2.c" cloneof="tfrceac" romof="tfrceac">
-		<description>ThunderForce AC (bootleg)</description>
+		<description>Thunder Force AC (bootleg)</description>
 		<year>1990</year>
 		<manufacturer>bootleg</manufacturer>
 		<rom name="4.bin" size="262144" crc="eba059d3" sha1="7bc04401f9a138fa151ac09a528b70acfb2021e3" region="cpu1" offset="0"/>
 		<rom name="3.bin" size="262144" crc="3e5dc542" sha1="4a66dc842afaa145dab82b232738eea107bdf0f8" region="cpu1" offset="1"/>
-		<rom name="ic34.bin" merge="ic34.bin" size="262144" crc="29f23461" sha1="032a7125fef5a660b85654d595aafc46812cdde6" region="cpu1" offset="100000"/>
-		<rom name="ic33.bin" merge="ic33.bin" size="262144" crc="9e23734f" sha1="64d27dc53f0ffc3513345a26ed077751b25d15f1" region="cpu1" offset="100001"/>
-		<rom name="ic4.bin" merge="ic4.bin" size="262144" crc="e09961f6" sha1="e109b5f41502b765d191f22e3bbcff97d6defaa1" region="sound1" offset="0"/>
-		<chip type="cpu" name="68000" clock="7670442"/>
-		<chip type="audio" name="YM2612" clock="7670442"/>
-		<chip type="audio" name="SN76496" clock="3579540"/>
+		<rom name="epr-13659.ic34" merge="epr-13659.ic34" size="262144" crc="29f23461" sha1="032a7125fef5a660b85654d595aafc46812cdde6" region="cpu1" offset="100000"/>
+		<rom name="epr-13658.ic33" merge="epr-13658.ic33" size="262144" crc="9e23734f" sha1="64d27dc53f0ffc3513345a26ed077751b25d15f1" region="cpu1" offset="100001"/>
+		<rom name="epr-13655.ic4" merge="epr-13655.ic4" size="262144" crc="e09961f6" sha1="e109b5f41502b765d191f22e3bbcff97d6defaa1" region="sound1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
 		<chip type="audio" name="uPD7759"/>
 		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="1"/>
@@ -210483,16 +210867,16 @@
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
 	</game>
 	<game name="tfrceacjpb" sourcefile="segac2.c" cloneof="tfrceac" romof="tfrceac">
-		<description>ThunderForce AC (Japan, prototype, bootleg)</description>
+		<description>Thunder Force AC (Japan, prototype, bootleg)</description>
 		<year>1990</year>
-		<manufacturer>Sega / Technosoft</manufacturer>
+		<manufacturer>bootleg</manufacturer>
 		<rom name="ic32_t.f.ac_075f.ic32" size="262144" crc="2167dd93" sha1="0e5b8eb87e07e6e5cecf096e6b62e15ff7406bba" region="cpu1" offset="0"/>
 		<rom name="ic31_t.f.ac_0d26.id31" size="262144" crc="ebf02bba" sha1="effdc60837063ba04b7b4517e57a240b29a199e1" region="cpu1" offset="1"/>
 		<rom name="ic34_t.f.ac_549d.ic34" size="262144" crc="902ad2ec" sha1="58db20ca5888110e97f80e7df9dac1b8e9817562" region="cpu1" offset="100000"/>
 		<rom name="ic33_t.f.ac_d131.ic33" size="262144" crc="b162219d" sha1="ad022307019b4a70cb532e1101cb5ed8d31f10e2" region="cpu1" offset="100001"/>
-		<chip type="cpu" name="68000" clock="7670442"/>
-		<chip type="audio" name="YM2612" clock="7670442"/>
-		<chip type="audio" name="SN76496" clock="3579540"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
 		<chip type="audio" name="uPD7759"/>
 		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="1"/>
@@ -210565,14 +210949,14 @@
 		<description>Ribbit!</description>
 		<year>1991</year>
 		<manufacturer>Sega</manufacturer>
-		<rom name="ep13833.32" size="262144" crc="5347f8ce" sha1="b95b99536157edfbf0d74a42f64235f47dca7ee1" region="cpu1" offset="0"/>
-		<rom name="ep13832.31" size="262144" crc="889c42c2" sha1="0839a50a68b64a66d995f1bfaff42fcb60bb4d45" region="cpu1" offset="1"/>
-		<rom name="ep13838.34" size="524288" crc="a5d62ac3" sha1="8d83a7bc4017e125ef4231278f766b2368d5fc1f" region="cpu1" offset="100000"/>
-		<rom name="ep13837.33" size="524288" crc="434de159" sha1="cf2973131cabf2bc0ebb2bfe9f804ad3d7d0a733" region="cpu1" offset="100001"/>
-		<rom name="ep13834.4" size="131072" crc="ab0c1833" sha1="f864e12ecf6c0524da20fc66747a4fa4280e67e9" region="sound1" offset="0"/>
-		<chip type="cpu" name="68000" clock="7670442"/>
-		<chip type="audio" name="YM2612" clock="7670442"/>
-		<chip type="audio" name="SN76496" clock="3579540"/>
+		<rom name="epr-13833.ic32" size="262144" crc="5347f8ce" sha1="b95b99536157edfbf0d74a42f64235f47dca7ee1" region="cpu1" offset="0"/>
+		<rom name="epr-13832.ic31" size="262144" crc="889c42c2" sha1="0839a50a68b64a66d995f1bfaff42fcb60bb4d45" region="cpu1" offset="1"/>
+		<rom name="epr-13838.ic34" size="524288" crc="a5d62ac3" sha1="8d83a7bc4017e125ef4231278f766b2368d5fc1f" region="cpu1" offset="100000"/>
+		<rom name="epr-13837.ic33" size="524288" crc="434de159" sha1="cf2973131cabf2bc0ebb2bfe9f804ad3d7d0a733" region="cpu1" offset="100001"/>
+		<rom name="epr-13834.ic4" size="131072" crc="ab0c1833" sha1="f864e12ecf6c0524da20fc66747a4fa4280e67e9" region="sound1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
 		<chip type="audio" name="uPD7759"/>
 		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="1"/>
@@ -210633,13 +211017,259 @@
 			<dipvalue name="Hard"/>
 			<dipvalue name="Hardest"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
+	</game>
+	<game name="ribbitj" sourcefile="segac2.c" cloneof="ribbit" romof="ribbit">
+		<description>Ribbit! (Japan)</description>
+		<year>1991</year>
+		<manufacturer>Sega</manufacturer>
+		<rom name="epr-13836.ic32" size="262144" crc="21f222e2" sha1="1e4b640833d3ec428bd50d89dc93a670a17a4451" region="cpu1" offset="0"/>
+		<rom name="epr-13835.ic31" size="262144" crc="1c4b291a" sha1="61b2e7721aefb97bbd38b3ca9275d7f345f3d0a6" region="cpu1" offset="1"/>
+		<rom name="epr-13838.ic34" merge="epr-13838.ic34" size="524288" crc="a5d62ac3" sha1="8d83a7bc4017e125ef4231278f766b2368d5fc1f" region="cpu1" offset="100000"/>
+		<rom name="epr-13837.ic33" merge="epr-13837.ic33" size="524288" crc="434de159" sha1="cf2973131cabf2bc0ebb2bfe9f804ad3d7d0a733" region="cpu1" offset="100001"/>
+		<rom name="epr-13834.ic4" merge="epr-13834.ic4" size="131072" crc="ab0c1833" sha1="f864e12ecf6c0524da20fc66747a4fa4280e67e9" region="sound1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
+		<chip type="audio" name="uPD7759"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="2" control="joy8way" coins="2" service="yes"/>
+		<dipswitch name="Coin A">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin B also)"/>
+		</dipswitch>
+		<dipswitch name="Coin B">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin A also)"/>
+		</dipswitch>
+		<dipswitch name="Credits to Start">
+			<dipvalue name="1" default="yes"/>
+			<dipvalue name="2"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds">
 			<dipvalue name="Off"/>
 			<dipvalue name="On" default="yes"/>
 		</dipswitch>
-		<dipswitch name="Unknown">
+		<dipswitch name="Lives">
+			<dipvalue name="1"/>
+			<dipvalue name="2"/>
+			<dipvalue name="3" default="yes"/>
+			<dipvalue name="5"/>
+		</dipswitch>
+		<dipswitch name="Difficulty">
+			<dipvalue name="Easy"/>
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Hardest"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
+	</game>
+	<game name="twinsqua" sourcefile="segac2.c">
+		<description>Twin Squash</description>
+		<year>1991</year>
+		<manufacturer>Sega</manufacturer>
+		<rom name="epr-14657.ic32" size="262144" crc="becbb1a1" sha1="787b1a4bf420186d05b5448582f6492e40d394fa" region="cpu1" offset="0"/>
+		<rom name="epr-14656.ic31" size="262144" crc="411906e7" sha1="68a4e66b9e18499d77cdb584470f35f67edec6fd" region="cpu1" offset="1"/>
+		<rom name="epr-14588.ic4" size="131072" crc="5a9b6881" sha1="d86ec7f569fae5a1ce93a1cf40998cbb13726e0c" region="sound1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
+		<chip type="audio" name="uPD7759"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="2" control="dial" buttons="1" coins="2" service="yes"/>
+		<dipswitch name="Coin A">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin B also)"/>
+		</dipswitch>
+		<dipswitch name="Coin B">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin A also)"/>
+		</dipswitch>
+		<dipswitch name="Credits to Start">
+			<dipvalue name="1" default="yes"/>
+			<dipvalue name="2"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds">
 			<dipvalue name="Off"/>
 			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Buy In">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Difficulty">
+			<dipvalue name="Easy"/>
+			<dipvalue name="Medium" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Hardest"/>
+		</dipswitch>
+		<dipswitch name="Seat Type">
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Moving"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
+	</game>
+	<game name="soniccar" sourcefile="segac2.c">
+		<description>Waku Waku Sonic Patrol Car</description>
+		<year>1991</year>
+		<manufacturer>Sega</manufacturer>
+		<rom name="epr-14369.ic32" size="262144" crc="2ea4c9a3" sha1="92ee27c93bd1cbb99c88af39f5f227a8cadfb13c" region="cpu1" offset="0"/>
+		<rom name="epr-14395.ic31" size="262144" crc="39622e18" sha1="b7093c6d86e429e9721a0e1fd781231dc4342b31" region="cpu1" offset="1"/>
+		<rom name="epr-14394.ic4" size="262144" crc="476e30dd" sha1="c9d381160c58b05763ea286a53c7ca6de074fda2" region="sound1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
+		<chip type="audio" name="uPD7759"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="1" control="doublejoy8way" buttons="4" coins="1" service="yes"/>
+		<dipswitch name="Coin A">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin B also)"/>
+		</dipswitch>
+		<dipswitch name="Coin B">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin A also)"/>
+		</dipswitch>
+		<dipswitch name="Demo Sound Interval">
+			<dipvalue name="Off"/>
+			<dipvalue name="Every 4 Minutes"/>
+			<dipvalue name="Every 2 Minutes"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Lighting Time">
+			<dipvalue name="Advertise &amp; Playtime" default="yes"/>
+			<dipvalue name="Playtime Only"/>
+		</dipswitch>
+		<dipswitch name="Light">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Screen Display">
+			<dipvalue name="Insert 100-400 Yen" default="yes"/>
+			<dipvalue name="Insert Money"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
 		</dipswitch>
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
 	</game>
@@ -210647,18 +211277,18 @@
 		<description>Puzzle &amp; Action: Tant-R (Japan)</description>
 		<year>1992</year>
 		<manufacturer>Sega</manufacturer>
-		<rom name="epr15614.32" size="524288" crc="557782bc" sha1="1546a999ab97c380dc87f6c95d5687722206740d" region="cpu1" offset="0"/>
-		<rom name="epr15613.31" size="524288" crc="14bbb235" sha1="8dbfec5fb1d7a695acbb2fc0e78e4bdf76eb8d9d" region="cpu1" offset="1"/>
-		<rom name="mpr15616.34" size="524288" crc="17b80202" sha1="f47bf2aa0c5972647438619b8453c7dede5c422f" region="cpu1" offset="100000"/>
-		<rom name="mpr15615.33" size="524288" crc="36a88bd4" sha1="cc7f6a947d1b79bb86957c43035b53d6d2bcfa28" region="cpu1" offset="100001"/>
-		<rom name="epr15617.4" size="262144" crc="338324a1" sha1="79e2782d0d4764dd723886f846c852a6f6c1fb64" region="sound1" offset="0"/>
-		<chip type="cpu" name="68000" clock="7670442"/>
-		<chip type="audio" name="YM2612" clock="7670442"/>
-		<chip type="audio" name="SN76496" clock="3579540"/>
+		<rom name="epr-15614.ic32" size="524288" crc="557782bc" sha1="1546a999ab97c380dc87f6c95d5687722206740d" region="cpu1" offset="0"/>
+		<rom name="epr-15613.ic31" size="524288" crc="14bbb235" sha1="8dbfec5fb1d7a695acbb2fc0e78e4bdf76eb8d9d" region="cpu1" offset="1"/>
+		<rom name="mpr-15616.ic34" size="524288" crc="17b80202" sha1="f47bf2aa0c5972647438619b8453c7dede5c422f" region="cpu1" offset="100000"/>
+		<rom name="mpr-15615.ic33" size="524288" crc="36a88bd4" sha1="cc7f6a947d1b79bb86957c43035b53d6d2bcfa28" region="cpu1" offset="100001"/>
+		<rom name="epr-15617.ic4" size="262144" crc="338324a1" sha1="79e2782d0d4764dd723886f846c852a6f6c1fb64" region="sound1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
 		<chip type="audio" name="uPD7759"/>
 		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="1"/>
-		<input players="2" control="joy8way" buttons="2" coins="2" service="yes"/>
+		<input players="2" control="joy8way" buttons="1" coins="2" service="yes"/>
 		<dipswitch name="Coin A">
 			<dipvalue name="4 Coins/1 Credit"/>
 			<dipvalue name="3 Coins/1 Credit"/>
@@ -210731,18 +211361,18 @@
 		<description>Puzzle &amp; Action: Tant-R (Korea)</description>
 		<year>1993</year>
 		<manufacturer>Sega</manufacturer>
-		<rom name="m15592b.32" size="524288" crc="7efe26b3" sha1="958420b9b400eafe392745af90bff729463427c7" region="cpu1" offset="0"/>
-		<rom name="m15592b.31" size="524288" crc="af5a860f" sha1="cb0011f420721d035e9f0e43bb72cf286982fd32" region="cpu1" offset="1"/>
-		<rom name="m15992b.34" size="524288" crc="6282a5d4" sha1="9220e119e79d969d7d70e8a25c75dd3d9bc340ae" region="cpu1" offset="100000"/>
-		<rom name="m15592b.33" size="524288" crc="82d78413" sha1="9ff9c2b1632e280444965110bab90c0fc98cd6da" region="cpu1" offset="100001"/>
-		<rom name="epr15617.4" merge="epr15617.4" size="262144" crc="338324a1" sha1="79e2782d0d4764dd723886f846c852a6f6c1fb64" region="sound1" offset="0"/>
-		<chip type="cpu" name="68000" clock="7670442"/>
-		<chip type="audio" name="YM2612" clock="7670442"/>
-		<chip type="audio" name="SN76496" clock="3579540"/>
+		<rom name="mpr-15592b.ic32" size="524288" crc="7efe26b3" sha1="958420b9b400eafe392745af90bff729463427c7" region="cpu1" offset="0"/>
+		<rom name="mpr-15592b.ic31" size="524288" crc="af5a860f" sha1="cb0011f420721d035e9f0e43bb72cf286982fd32" region="cpu1" offset="1"/>
+		<rom name="mpr-15992b.ic34" size="524288" crc="6282a5d4" sha1="9220e119e79d969d7d70e8a25c75dd3d9bc340ae" region="cpu1" offset="100000"/>
+		<rom name="mpr-15592b.ic33" size="524288" crc="82d78413" sha1="9ff9c2b1632e280444965110bab90c0fc98cd6da" region="cpu1" offset="100001"/>
+		<rom name="epr-15617.ic4" merge="epr-15617.ic4" size="262144" crc="338324a1" sha1="79e2782d0d4764dd723886f846c852a6f6c1fb64" region="sound1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
 		<chip type="audio" name="uPD7759"/>
 		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="1"/>
-		<input players="2" control="joy8way" buttons="2" coins="2" service="yes"/>
+		<input players="2" control="joy8way" buttons="1" coins="2" service="yes"/>
 		<dipswitch name="Coin A">
 			<dipvalue name="4 Coins/1 Credit"/>
 			<dipvalue name="3 Coins/1 Credit"/>
@@ -210817,17 +211447,102 @@
 		<manufacturer>bootleg</manufacturer>
 		<rom name="pa_e10.bin" size="524288" crc="6c3f711f" sha1="55aa2d50422134b95d9a7c5cbdc453b207b91b4c" region="cpu1" offset="0"/>
 		<rom name="pa_f10.bin" size="524288" crc="75526786" sha1="8f5aa7f6918b71a79e6fca18194beec2aef15844" region="cpu1" offset="1"/>
-		<rom name="mpr15616.34" merge="mpr15616.34" size="524288" crc="17b80202" sha1="f47bf2aa0c5972647438619b8453c7dede5c422f" region="cpu1" offset="100000"/>
-		<rom name="mpr15615.33" merge="mpr15615.33" size="524288" crc="36a88bd4" sha1="cc7f6a947d1b79bb86957c43035b53d6d2bcfa28" region="cpu1" offset="100001"/>
+		<rom name="mpr-15616.ic34" merge="mpr-15616.ic34" size="524288" crc="17b80202" sha1="f47bf2aa0c5972647438619b8453c7dede5c422f" region="cpu1" offset="100000"/>
+		<rom name="mpr-15615.ic33" merge="mpr-15615.ic33" size="524288" crc="36a88bd4" sha1="cc7f6a947d1b79bb86957c43035b53d6d2bcfa28" region="cpu1" offset="100001"/>
 		<rom name="pa_e03.bin" size="131072" crc="72918c58" sha1="cb42363b163727a887a0b762519c72dcdf0a6460" region="sound1" offset="0"/>
 		<rom name="pa_e02.bin" size="131072" crc="4e85b2a3" sha1="3f92fb931d315c5a2d6c54b3204718574928cb7b" region="sound1" offset="20000"/>
-		<chip type="cpu" name="68000" clock="7670442"/>
-		<chip type="audio" name="YM2612" clock="7670442"/>
-		<chip type="audio" name="SN76496" clock="3579540"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
 		<chip type="audio" name="uPD7759"/>
 		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="1"/>
-		<input players="2" control="joy8way" buttons="2" coins="2" service="yes"/>
+		<input players="2" control="joy8way" buttons="1" coins="2" service="yes"/>
+		<dipswitch name="Coin A">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin B also)"/>
+		</dipswitch>
+		<dipswitch name="Coin B">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin A also)"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Difficulty">
+			<dipvalue name="Easy"/>
+			<dipvalue name="Medium" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Hardest"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
+	</game>
+	<game name="tantrbl4" sourcefile="segac2.c" cloneof="tantr" romof="tantr">
+		<description>Puzzle &amp; Action: Tant-R (Japan) (bootleg set 4)</description>
+		<year>1992</year>
+		<manufacturer>bootleg</manufacturer>
+		<rom name="a.bin" size="524288" crc="25cafec2" sha1="872ce10c080c8bddc2eaf1a48be7b43eeae32f28" region="cpu1" offset="0"/>
+		<rom name="b.bin" size="524288" crc="8cf5ffd5" sha1="21bcde46d3e075a93725292a344c3d9784ae5178" region="cpu1" offset="1"/>
+		<rom name="d.bin" merge="mpr-15616.ic34" size="524288" crc="17b80202" sha1="f47bf2aa0c5972647438619b8453c7dede5c422f" region="cpu1" offset="100000"/>
+		<rom name="c.bin" merge="mpr-15615.ic33" size="524288" crc="36a88bd4" sha1="cc7f6a947d1b79bb86957c43035b53d6d2bcfa28" region="cpu1" offset="100001"/>
+		<rom name="2.bin" size="131072" crc="72918c58" sha1="cb42363b163727a887a0b762519c72dcdf0a6460" region="sound1" offset="0"/>
+		<rom name="1.bin" size="131072" crc="4e85b2a3" sha1="3f92fb931d315c5a2d6c54b3204718574928cb7b" region="sound1" offset="20000"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
+		<chip type="audio" name="uPD7759"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="2" control="joy8way" buttons="1" coins="2" service="yes"/>
 		<dipswitch name="Coin A">
 			<dipvalue name="4 Coins/1 Credit"/>
 			<dipvalue name="3 Coins/1 Credit"/>
@@ -210902,14 +211617,14 @@
 		<manufacturer>bootleg</manufacturer>
 		<rom name="trb2_2.32" size="524288" crc="8fc99c48" sha1="d90ed673fe1f6e1f878c0d8fc62f5439b56d0a47" region="cpu1" offset="0"/>
 		<rom name="trb2_1.31" size="524288" crc="c318d00d" sha1="703760d4ddc45bc0921ae96a27d9a8fbf12a1e96" region="cpu1" offset="1"/>
-		<rom name="mpr15616.34" merge="mpr15616.34" size="524288" crc="17b80202" sha1="f47bf2aa0c5972647438619b8453c7dede5c422f" region="cpu1" offset="100000"/>
-		<rom name="mpr15615.33" merge="mpr15615.33" size="524288" crc="36a88bd4" sha1="cc7f6a947d1b79bb86957c43035b53d6d2bcfa28" region="cpu1" offset="100001"/>
-		<chip type="cpu" name="68000" clock="7670442"/>
-		<chip type="audio" name="YM2612" clock="7670442"/>
-		<chip type="audio" name="SN76496" clock="3579540"/>
+		<rom name="mpr-15616.ic34" merge="mpr-15616.ic34" size="524288" crc="17b80202" sha1="f47bf2aa0c5972647438619b8453c7dede5c422f" region="cpu1" offset="100000"/>
+		<rom name="mpr-15615.ic33" merge="mpr-15615.ic33" size="524288" crc="36a88bd4" sha1="cc7f6a947d1b79bb86957c43035b53d6d2bcfa28" region="cpu1" offset="100001"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
 		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="1"/>
-		<input players="2" control="joy8way" buttons="2" coins="2" service="yes"/>
+		<input players="2" control="joy8way" buttons="1" coins="2" service="yes"/>
 		<dipswitch name="Coin A">
 			<dipvalue name="4 Coins/1 Credit"/>
 			<dipvalue name="3 Coins/1 Credit"/>
@@ -210978,187 +211693,17 @@
 		</dipswitch>
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
 	</game>
-	<game name="puyopuyo" sourcefile="segac2.c">
-		<description>Puyo Puyo (Japan)</description>
-		<year>1992</year>
-		<manufacturer>Sega / Compile</manufacturer>
-		<rom name="epr15036" size="131072" crc="5310ca1b" sha1="dcfe2bf7476b640dfb790e8716e75b483d535e48" region="cpu1" offset="0"/>
-		<rom name="epr15035" size="131072" crc="bc62e400" sha1="12bb6031574838a28889f6edb31dbb689265287c" region="cpu1" offset="1"/>
-		<rom name="epr15038" size="131072" crc="3b9eea0c" sha1="e3e6148c1769834cc0061932eb035daa79673144" region="cpu1" offset="100000"/>
-		<rom name="epr15037" size="131072" crc="be2f7974" sha1="77027ced7a62f94e9fc6e8a0a4ac0c62f7ea813b" region="cpu1" offset="100001"/>
-		<rom name="epr15034" size="131072" crc="5688213b" sha1="f3f234e482871ca903a782e51008f3bfed04ee63" region="sound1" offset="0"/>
-		<chip type="cpu" name="68000" clock="7670442"/>
-		<chip type="audio" name="YM2612" clock="7670442"/>
-		<chip type="audio" name="SN76496" clock="3579540"/>
-		<chip type="audio" name="uPD7759"/>
-		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
-		<sound channels="1"/>
-		<input players="2" control="joy8way" buttons="1" coins="2" service="yes"/>
-		<dipswitch name="Coin A">
-			<dipvalue name="4 Coins/1 Credit"/>
-			<dipvalue name="3 Coins/1 Credit"/>
-			<dipvalue name="2 Coins/1 Credit"/>
-			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3"/>
-			<dipvalue name="1 Coin/1 Credit" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3"/>
-			<dipvalue name="2 Coins/3 Credits"/>
-			<dipvalue name="1 Coin/2 Credits"/>
-			<dipvalue name="1 Coin/3 Credits"/>
-			<dipvalue name="1 Coin/4 Credits"/>
-			<dipvalue name="1 Coin/5 Credits"/>
-			<dipvalue name="1 Coin/6 Credits"/>
-			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin B also)"/>
-		</dipswitch>
-		<dipswitch name="Coin B">
-			<dipvalue name="4 Coins/1 Credit"/>
-			<dipvalue name="3 Coins/1 Credit"/>
-			<dipvalue name="2 Coins/1 Credit"/>
-			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3"/>
-			<dipvalue name="1 Coin/1 Credit" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3"/>
-			<dipvalue name="2 Coins/3 Credits"/>
-			<dipvalue name="1 Coin/2 Credits"/>
-			<dipvalue name="1 Coin/3 Credits"/>
-			<dipvalue name="1 Coin/4 Credits"/>
-			<dipvalue name="1 Coin/5 Credits"/>
-			<dipvalue name="1 Coin/6 Credits"/>
-			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin A also)"/>
-		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Demo Sounds">
-			<dipvalue name="Off"/>
-			<dipvalue name="On" default="yes"/>
-		</dipswitch>
-		<dipswitch name="VS. Mode Credits/Match">
-			<dipvalue name="1" default="yes"/>
-			<dipvalue name="3"/>
-		</dipswitch>
-		<dipswitch name="1P Mode Difficulty">
-			<dipvalue name="Easy"/>
-			<dipvalue name="Medium" default="yes"/>
-			<dipvalue name="Hard"/>
-			<dipvalue name="Hardest"/>
-		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Moving Seat">
-			<dipvalue name="No Use" default="yes"/>
-			<dipvalue name="In Use"/>
-		</dipswitch>
-		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
-	</game>
-	<game name="puyopuya" sourcefile="segac2.c" cloneof="puyopuyo" romof="puyopuyo">
-		<description>Puyo Puyo (Japan) (Rev A)</description>
-		<year>1992</year>
-		<manufacturer>Sega / Compile</manufacturer>
-		<rom name="ep15036a.32" size="131072" crc="61b35257" sha1="e09a7e992999befc88fc7928a478d1e2d14d7b08" region="cpu1" offset="0"/>
-		<rom name="ep15035a.31" size="131072" crc="dfebb6d9" sha1="6f685729ef4660c2eba409c5236c6d2f313eef5b" region="cpu1" offset="1"/>
-		<rom name="epr15038" merge="epr15038" size="131072" crc="3b9eea0c" sha1="e3e6148c1769834cc0061932eb035daa79673144" region="cpu1" offset="100000"/>
-		<rom name="epr15037" merge="epr15037" size="131072" crc="be2f7974" sha1="77027ced7a62f94e9fc6e8a0a4ac0c62f7ea813b" region="cpu1" offset="100001"/>
-		<rom name="epr15034" merge="epr15034" size="131072" crc="5688213b" sha1="f3f234e482871ca903a782e51008f3bfed04ee63" region="sound1" offset="0"/>
-		<chip type="cpu" name="68000" clock="7670442"/>
-		<chip type="audio" name="YM2612" clock="7670442"/>
-		<chip type="audio" name="SN76496" clock="3579540"/>
-		<chip type="audio" name="uPD7759"/>
-		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
-		<sound channels="1"/>
-		<input players="2" control="joy8way" buttons="1" coins="2" service="yes"/>
-		<dipswitch name="Coin A">
-			<dipvalue name="4 Coins/1 Credit"/>
-			<dipvalue name="3 Coins/1 Credit"/>
-			<dipvalue name="2 Coins/1 Credit"/>
-			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3"/>
-			<dipvalue name="1 Coin/1 Credit" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3"/>
-			<dipvalue name="2 Coins/3 Credits"/>
-			<dipvalue name="1 Coin/2 Credits"/>
-			<dipvalue name="1 Coin/3 Credits"/>
-			<dipvalue name="1 Coin/4 Credits"/>
-			<dipvalue name="1 Coin/5 Credits"/>
-			<dipvalue name="1 Coin/6 Credits"/>
-			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin B also)"/>
-		</dipswitch>
-		<dipswitch name="Coin B">
-			<dipvalue name="4 Coins/1 Credit"/>
-			<dipvalue name="3 Coins/1 Credit"/>
-			<dipvalue name="2 Coins/1 Credit"/>
-			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
-			<dipvalue name="2 Coins/1 Credit, 4/3"/>
-			<dipvalue name="1 Coin/1 Credit" default="yes"/>
-			<dipvalue name="1 Coin/1 Credit, 5/6"/>
-			<dipvalue name="1 Coin/1 Credit, 4/5"/>
-			<dipvalue name="1 Coin/1 Credit, 2/3"/>
-			<dipvalue name="2 Coins/3 Credits"/>
-			<dipvalue name="1 Coin/2 Credits"/>
-			<dipvalue name="1 Coin/3 Credits"/>
-			<dipvalue name="1 Coin/4 Credits"/>
-			<dipvalue name="1 Coin/5 Credits"/>
-			<dipvalue name="1 Coin/6 Credits"/>
-			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin A also)"/>
-		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Demo Sounds">
-			<dipvalue name="Off"/>
-			<dipvalue name="On" default="yes"/>
-		</dipswitch>
-		<dipswitch name="VS. Mode Credits/Match">
-			<dipvalue name="1" default="yes"/>
-			<dipvalue name="3"/>
-		</dipswitch>
-		<dipswitch name="1P Mode Difficulty">
-			<dipvalue name="Easy"/>
-			<dipvalue name="Medium" default="yes"/>
-			<dipvalue name="Hard"/>
-			<dipvalue name="Hardest"/>
-		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Moving Seat">
-			<dipvalue name="No Use" default="yes"/>
-			<dipvalue name="In Use"/>
-		</dipswitch>
-		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
-	</game>
-	<game name="puyopuyb" sourcefile="segac2.c" cloneof="puyopuyo" romof="puyopuyo">
-		<description>Puyo Puyo (English) (bootleg)</description>
-		<year>1992</year>
+	<game name="tantrbl3" sourcefile="segac2.c" cloneof="tantr" romof="tantr">
+		<description>Puzzle &amp; Action: Tant-R (Japan) (bootleg set 3)</description>
+		<year>1994</year>
 		<manufacturer>bootleg</manufacturer>
-		<rom name="puyopuyb.4bo" size="131072" crc="89ea4d33" sha1="bef9d011524e71c072d309f6da3c2ebc38878e0e" region="cpu1" offset="0"/>
-		<rom name="puyopuyb.3bo" size="131072" crc="c002e545" sha1="7a59ac764d60e9955830d9617b0bd122b44e7b2f" region="cpu1" offset="1"/>
-		<rom name="puyopuyb.6bo" size="131072" crc="0a0692e5" sha1="d4ecc5b1791a91e3b33a5d4d0dd305f1623483d9" region="cpu1" offset="100000"/>
-		<rom name="puyopuyb.5bo" size="131072" crc="353109b8" sha1="92440987add3124b758e7eaa77a3a6f54ca61bb8" region="cpu1" offset="100001"/>
-		<rom name="puyopuyb.abo" size="131072" crc="79112b3b" sha1="fc3a202e1e2ff39950d4af689b7fcca86c301805" region="sound1" offset="0"/>
-		<chip type="cpu" name="68000" clock="7670442"/>
-		<chip type="audio" name="YM2612" clock="7670442"/>
-		<chip type="audio" name="SN76496" clock="3579540"/>
-		<chip type="audio" name="uPD7759"/>
+		<rom name="2.u29" size="524288" crc="faecb7b1" sha1="ddca61996dbd0d66e9ecc04647e61a6d0af25807" region="cpu1" offset="0"/>
+		<rom name="1.u28" size="524288" crc="3304556d" sha1="586265c846bf6404dcb33404e961bf0733e24bf5" region="cpu1" offset="1"/>
+		<rom name="4.u31" merge="mpr-15616.ic34" size="524288" crc="17b80202" sha1="f47bf2aa0c5972647438619b8453c7dede5c422f" region="cpu1" offset="100000"/>
+		<rom name="3.u30" merge="mpr-15615.ic33" size="524288" crc="36a88bd4" sha1="cc7f6a947d1b79bb86957c43035b53d6d2bcfa28" region="cpu1" offset="100001"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
 		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="1"/>
 		<input players="2" control="joy8way" buttons="1" coins="2" service="yes"/>
@@ -211198,19 +211743,11 @@
 			<dipvalue name="1 Coin/6 Credits"/>
 			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin A also)"/>
 		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
 		<dipswitch name="Demo Sounds">
 			<dipvalue name="Off"/>
 			<dipvalue name="On" default="yes"/>
 		</dipswitch>
-		<dipswitch name="VS. Mode Credits/Match">
-			<dipvalue name="1" default="yes"/>
-			<dipvalue name="3"/>
-		</dipswitch>
-		<dipswitch name="1P Mode Difficulty">
+		<dipswitch name="Difficulty">
 			<dipvalue name="Easy"/>
 			<dipvalue name="Medium" default="yes"/>
 			<dipvalue name="Hard"/>
@@ -211224,9 +211761,855 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Moving Seat">
-			<dipvalue name="No Use" default="yes"/>
-			<dipvalue name="In Use"/>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
+	</game>
+	<game name="wwanpanm" sourcefile="segac2.c">
+		<description>Waku Waku Anpanman (Rev A)</description>
+		<year>1992</year>
+		<manufacturer>Sega</manufacturer>
+		<rom name="epr-14123a.ic32" size="262144" crc="0e4f38c6" sha1="2913fbde9a7e6428bab05c6e550c3e2d79c9f211" region="cpu1" offset="0"/>
+		<rom name="epr-14122a.ic31" size="262144" crc="01b8fe20" sha1="8d21c346b141a298074d199ce2bc4094217e8c25" region="cpu1" offset="1"/>
+		<rom name="epr-14121.ic4" size="262144" crc="69adf3a1" sha1="63233e723ab9be8d5663651cb2e6e54b64a7bb8e" region="sound1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
+		<chip type="audio" name="uPD7759"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="1" control="joy8way" buttons="3" coins="1" service="yes"/>
+		<dipswitch name="Coin A">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin B also)"/>
+		</dipswitch>
+		<dipswitch name="Coin B">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin A also)"/>
+		</dipswitch>
+		<dipswitch name="Demo Sound Interval">
+			<dipvalue name="Off"/>
+			<dipvalue name="Every 3 Demo Cycles"/>
+			<dipvalue name="Every 2 Demo Cycles"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Capsule Mode">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Credit Mode">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
+	</game>
+	<game name="wwanpanmo" sourcefile="segac2.c" cloneof="wwanpanm" romof="wwanpanm">
+		<description>Waku Waku Anpanman</description>
+		<year>1992</year>
+		<manufacturer>Sega</manufacturer>
+		<rom name="epr-14123.ic32" merge="epr-14123a.ic32" size="262144" crc="0e4f38c6" sha1="2913fbde9a7e6428bab05c6e550c3e2d79c9f211" region="cpu1" offset="0"/>
+		<rom name="epr-14122.ic31" size="262144" crc="20c0db3b" sha1="de3b599d3d348008752a9691f72255e6f63d9d27" region="cpu1" offset="1"/>
+		<rom name="epr-14121.ic4" merge="epr-14121.ic4" size="262144" crc="69adf3a1" sha1="63233e723ab9be8d5663651cb2e6e54b64a7bb8e" region="sound1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
+		<chip type="audio" name="uPD7759"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="1" control="joy8way" buttons="3" coins="1" service="yes"/>
+		<dipswitch name="Coin A">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin B also)"/>
+		</dipswitch>
+		<dipswitch name="Coin B">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin A also)"/>
+		</dipswitch>
+		<dipswitch name="Demo Sound Interval">
+			<dipvalue name="Off"/>
+			<dipvalue name="Every 3 Demo Cycles"/>
+			<dipvalue name="Every 2 Demo Cycles"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Capsule Mode">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Credit Mode">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
+	</game>
+	<game name="wwjumbo" sourcefile="segac2.c">
+		<description>Waku Waku Jumbo (Rev A)</description>
+		<year>1990</year>
+		<manufacturer>Sega</manufacturer>
+		<rom name="epr-13474a.ic32" size="131072" crc="a9373fe0" sha1="1abb334bbd16ab62459b25834ca1510af6dd5291" region="cpu1" offset="0"/>
+		<rom name="epr-13473a.ic31" size="131072" crc="860a29cb" sha1="31b36d6dc8226663c4e18e1b15ca6a9691b400b6" region="cpu1" offset="1"/>
+		<rom name="epr-13472.ic4" size="131072" crc="e0c677fc" sha1="42dc5798876b863c5c2175798f40067215527145" region="sound1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
+		<chip type="audio" name="uPD7759"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="1" control="joy8way" buttons="2" coins="1" service="yes"/>
+		<dipswitch name="Coinage">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Demo Sound Interval">
+			<dipvalue name="Off"/>
+			<dipvalue name="Every 4 Minutes"/>
+			<dipvalue name="Every 2 Minutes"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Lighting Time">
+			<dipvalue name="Playtime Only" default="yes"/>
+			<dipvalue name="Advertise &amp; Playtime"/>
+		</dipswitch>
+		<dipswitch name="Light">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Screen Display">
+			<dipvalue name="Insert 100-400 Yen" default="yes"/>
+			<dipvalue name="Insert Money"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
+	</game>
+	<game name="wwmarine" sourcefile="segac2.c">
+		<description>Waku Waku Marine</description>
+		<year>1992</year>
+		<manufacturer>Sega</manufacturer>
+		<rom name="epr-15097.ic32" size="262144" crc="1223a77a" sha1="3725f17745da0d1f2d50b0a99a37b768c5539ce2" region="cpu1" offset="0"/>
+		<rom name="epr-15096.ic31" size="262144" crc="1b833932" sha1="a37caa75cbcc2b7ce84fccfd5768e6d1580c0bc0" region="cpu1" offset="1"/>
+		<rom name="epr-15095.ic4" size="262144" crc="df13755b" sha1="177aac7aaadc36e14dbcdf12bd42dbe70b3edd49" region="sound1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
+		<chip type="audio" name="uPD7759"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="1" control="joy8way" buttons="3" coins="1" service="yes"/>
+		<dipswitch name="Coin A">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin B also)"/>
+		</dipswitch>
+		<dipswitch name="Coin B">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin A also)"/>
+		</dipswitch>
+		<dipswitch name="Demo Sound Interval">
+			<dipvalue name="Off"/>
+			<dipvalue name="Every 3 Demo Cycles"/>
+			<dipvalue name="Every 2 Demo Cycles"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Capsule Mode">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Credit Mode">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
+	</game>
+	<game name="wwpajero" sourcefile="segac2.c">
+		<description>Waku Waku Pajero</description>
+		<year>1990</year>
+		<manufacturer>Sega</manufacturer>
+		<rom name="epr-12925.ic32" size="131072" crc="47a814a1" sha1="19199a13d823615fb804a2ae7896871442a844bb" region="cpu1" offset="0"/>
+		<rom name="epr-12924.ic31" size="131072" crc="69a5df3a" sha1="39b082034c4800547bedffca47eb24b43f9832fc" region="cpu1" offset="1"/>
+		<rom name="epr-13125.ic34" size="131072" crc="a1ee9e69" sha1="19bebb71aa3b8279b0e140f495f2df756d80c7f7" region="cpu1" offset="40000"/>
+		<rom name="epr-13124.ic33" size="131072" crc="edf17b0d" sha1="3709c5a31766a81baf01188d09364fce6b75dd1a" region="cpu1" offset="40001"/>
+		<rom name="epr-12923.ic4" size="131072" crc="774557a9" sha1="e267369338717b26546cb4e4706dd04a3eee0905" region="sound1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
+		<chip type="audio" name="uPD7759"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="2" control="joy8way" buttons="3" coins="2" service="yes"/>
+		<dipswitch name="Coin A">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin B also)"/>
+		</dipswitch>
+		<dipswitch name="Coin B">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin A also)"/>
+		</dipswitch>
+		<dipswitch name="Demo Sound Interval">
+			<dipvalue name="Off"/>
+			<dipvalue name="Every 8 Demo Cycles"/>
+			<dipvalue name="Every 4 Demo Cycles"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
+	</game>
+	<game name="anpanman" sourcefile="segac2.c">
+		<description>Soreike! Anpanman Popcorn Koujou (Rev B)</description>
+		<year>1992</year>
+		<manufacturer>Sega</manufacturer>
+		<rom name="epr-14804b.ic32" size="262144" crc="7ce88c49" sha1="959ee459a5b4a6324488a935fa6a48e38ce93464" region="cpu1" offset="0"/>
+		<rom name="epr-14803b.ic31" size="262144" crc="eb3ca1b9" sha1="e4dd9d2bd2301f47f167d6516457386ba4e57df0" region="cpu1" offset="1"/>
+		<rom name="epr-14806.ic34" size="262144" crc="40f398db" sha1="abaaf4404342232b58f02c7ea0571926b2417b45" region="cpu1" offset="100000"/>
+		<rom name="epr-14805.ic33" size="262144" crc="f27229ed" sha1="307182cdcd8954bbc56d4b412df452b406466d53" region="cpu1" offset="100001"/>
+		<rom name="epr-14807.ic4" size="262144" crc="9827549f" sha1="66d195299085ec690498fc795a3088c05e6db820" region="sound1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
+		<chip type="audio" name="uPD7759"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="3" buttons="10" coins="1" service="yes"/>
+		<dipswitch name="Coin A">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin B also)"/>
+		</dipswitch>
+		<dipswitch name="Coin B">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin A also)"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="On" default="yes"/>
+			<dipvalue name="Off"/>
+		</dipswitch>
+		<dipswitch name="Demo Voice">
+			<dipvalue name="On" default="yes"/>
+			<dipvalue name="Off"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
+	</game>
+	<game name="anpanmana" sourcefile="segac2.c" cloneof="anpanman" romof="anpanman">
+		<description>Soreike! Anpanman Popcorn Koujou (Rev A)</description>
+		<year>1992</year>
+		<manufacturer>Sega</manufacturer>
+		<rom name="epr-14804a.ic32" size="262144" crc="a80bd024" sha1="bfd3cc45214cd89d5cbed99f88ba2d3e8cc61538" region="cpu1" offset="0"/>
+		<rom name="epr-14803a.ic31" size="262144" crc="32e1f248" sha1="151c59d0be5bb2e77c777da2b99627c887d49f55" region="cpu1" offset="1"/>
+		<rom name="epr-14806.ic34" merge="epr-14806.ic34" size="262144" crc="40f398db" sha1="abaaf4404342232b58f02c7ea0571926b2417b45" region="cpu1" offset="100000"/>
+		<rom name="epr-14805.ic33" merge="epr-14805.ic33" size="262144" crc="f27229ed" sha1="307182cdcd8954bbc56d4b412df452b406466d53" region="cpu1" offset="100001"/>
+		<rom name="epr-14807.ic4" merge="epr-14807.ic4" size="262144" crc="9827549f" sha1="66d195299085ec690498fc795a3088c05e6db820" region="sound1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
+		<chip type="audio" name="uPD7759"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="3" buttons="10" coins="1" service="yes"/>
+		<dipswitch name="Coin A">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin B also)"/>
+		</dipswitch>
+		<dipswitch name="Coin B">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin A also)"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="On" default="yes"/>
+			<dipvalue name="Off"/>
+		</dipswitch>
+		<dipswitch name="Demo Voice">
+			<dipvalue name="On" default="yes"/>
+			<dipvalue name="Off"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
+	</game>
+	<game name="sonicpop" sourcefile="segac2.c">
+		<description>SegaSonic Popcorn Shop (Rev B)</description>
+		<year>1993</year>
+		<manufacturer>Sega</manufacturer>
+		<rom name="epr-14592b.ic32" size="262144" crc="bac586a1" sha1="0208213bfa1a5093e76edb1a7e0ba5ebc862801d" region="cpu1" offset="0"/>
+		<rom name="epr-15491b.ic31" size="262144" crc="527106c3" sha1="97f08006bba4b87c304c7ad3b1480b77e99dff10" region="cpu1" offset="1"/>
+		<rom name="epr-15494.ic34" size="262144" crc="0520df5e" sha1="5a795a1630d841406a106a566228223583deef44" region="cpu1" offset="100000"/>
+		<rom name="epr-15493.ic33" size="262144" crc="d51b3b85" sha1="66f6b4656841ab70ffde0141a613eaf91c06f86b" region="cpu1" offset="100001"/>
+		<rom name="epr-15495.ic4" size="262144" crc="d3ee4c68" sha1="557c57b22521339d94d9a3e6fd2af68a67a153b6" region="sound1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
+		<chip type="audio" name="uPD7759"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="3" buttons="10" coins="1" service="yes"/>
+		<dipswitch name="Coin A">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin B also)"/>
+		</dipswitch>
+		<dipswitch name="Coin B">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin A also)"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="On" default="yes"/>
+			<dipvalue name="Off"/>
+		</dipswitch>
+		<dipswitch name="Trouble BGM">
+			<dipvalue name="On" default="yes"/>
+			<dipvalue name="Off"/>
+		</dipswitch>
+		<dipswitch name="Region">
+			<dipvalue name="USA" default="yes"/>
+			<dipvalue name="Export"/>
+			<dipvalue name="USA (duplicate)"/>
+			<dipvalue name="Japan"/>
+		</dipswitch>
+		<dipswitch name="Sensor Advertise">
+			<dipvalue name="On" default="yes"/>
+			<dipvalue name="Off"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
+	</game>
+	<game name="sonicfgt" sourcefile="segac2.c">
+		<description>SegaSonic Cosmo Fighter (World)</description>
+		<year>1993</year>
+		<manufacturer>Sega</manufacturer>
+		<rom name="epr-17178.ic32" size="262144" crc="e05b7388" sha1="38fd175c265986a14d1365e3a403e12fbc6c73c3" region="cpu1" offset="0"/>
+		<rom name="epr-17177.ic31" size="262144" crc="7c2ec4eb" sha1="f74f21f5dcfbf6ee902c2a44fed908a628d60363" region="cpu1" offset="1"/>
+		<rom name="epr-17180.ic34" size="262144" crc="8933e91c" sha1="5dc7451874f97e0e5d0c666800c26907b9abf5f5" region="cpu1" offset="100000"/>
+		<rom name="epr-17179.ic33" size="262144" crc="0ae979cd" sha1="a4d4f096e976d4993123de0c2505382f878ea42a" region="cpu1" offset="100001"/>
+		<rom name="epr-17176.ic4" size="262144" crc="4211745d" sha1="710f7dab436bf0551b95786efc5ea4303c0fd5ec" region="sound1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
+		<chip type="audio" name="uPD7759"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="1" control="joy8way" buttons="3" coins="1" service="yes"/>
+		<dipswitch name="Coin A">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin B also)"/>
+		</dipswitch>
+		<dipswitch name="Coin B">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin A also)"/>
+		</dipswitch>
+		<dipswitch name="Credit Mode">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
+	</game>
+	<game name="sonicfgtj" sourcefile="segac2.c" cloneof="sonicfgt" romof="sonicfgt">
+		<description>SegaSonic Cosmo Fighter (Japan)</description>
+		<year>1993</year>
+		<manufacturer>Sega</manufacturer>
+		<rom name="epr-16001.ic32" size="262144" crc="8ed1dc11" sha1="cd1cb6066c2ff159bec88802bc4b7ca7fff2ed71" region="cpu1" offset="0"/>
+		<rom name="epr-16000.ic31" size="262144" crc="1440caec" sha1="9e50c28544d6c42cdc7d3ae0f321670fed68fedb" region="cpu1" offset="1"/>
+		<rom name="epr-16003.ic34" merge="epr-17180.ic34" size="262144" crc="8933e91c" sha1="5dc7451874f97e0e5d0c666800c26907b9abf5f5" region="cpu1" offset="100000"/>
+		<rom name="epr-16002.ic33" merge="epr-17179.ic33" size="262144" crc="0ae979cd" sha1="a4d4f096e976d4993123de0c2505382f878ea42a" region="cpu1" offset="100001"/>
+		<rom name="epr-16004.ic4" size="262144" crc="e87e8433" sha1="b2b7945c7660ab2383049af5a2434768544a4ea8" region="sound1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
+		<chip type="audio" name="uPD7759"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="1" control="joy8way" buttons="3" coins="1" service="yes"/>
+		<dipswitch name="Coin A">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin B also)"/>
+		</dipswitch>
+		<dipswitch name="Coin B">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin A also)"/>
+		</dipswitch>
+		<dipswitch name="Credit Mode">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
 		</dipswitch>
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
 	</game>
@@ -211236,16 +212619,100 @@
 		<manufacturer>Sega</manufacturer>
 		<rom name="pa2_32.bin" size="524288" crc="7ba0c025" sha1="855e9bb2a20c6f51b26381233c57c26aa96ad1f6" region="cpu1" offset="0"/>
 		<rom name="pa2_31.bin" size="524288" crc="5f86e5cc" sha1="44e201de00dfbf7c66d0e0d40d17b162c6f0625b" region="cpu1" offset="1"/>
-		<rom name="epr16888" size="524288" crc="85d73722" sha1="7ebe81b4d6c89f87f60200a3a8cddb07d581adef" region="cpu1" offset="100000"/>
-		<rom name="epr16887" size="524288" crc="bc3bbf25" sha1="e760ad400bc183b38e9787d88c8ac084fbe2ae21" region="cpu1" offset="100001"/>
+		<rom name="epr-16888.ic34" size="524288" crc="85d73722" sha1="7ebe81b4d6c89f87f60200a3a8cddb07d581adef" region="cpu1" offset="100000"/>
+		<rom name="epr-16887.ic33" size="524288" crc="bc3bbf25" sha1="e760ad400bc183b38e9787d88c8ac084fbe2ae21" region="cpu1" offset="100001"/>
 		<rom name="pa2_02.bin" size="524288" crc="fc7b0da5" sha1="46770aa7e19b4f8a183be3f433c48ad677b552b1" region="sound1" offset="0"/>
-		<chip type="cpu" name="68000" clock="7670442"/>
-		<chip type="audio" name="YM2612" clock="7670442"/>
-		<chip type="audio" name="SN76496" clock="3579540"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
 		<chip type="audio" name="uPD7759"/>
 		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="1"/>
-		<input players="2" control="joy8way" buttons="2" coins="2" service="yes"/>
+		<input players="2" control="joy8way" buttons="1" coins="2" service="yes"/>
+		<dipswitch name="Coin A">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin B also)"/>
+		</dipswitch>
+		<dipswitch name="Coin B">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin A also)"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Difficulty">
+			<dipvalue name="Easy"/>
+			<dipvalue name="Medium" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Hardest"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
+	</game>
+	<game name="ichirbl" sourcefile="segac2.c" cloneof="ichir" romof="ichir">
+		<description>Puzzle &amp; Action: Ichidant-R (World) (bootleg)</description>
+		<year>1994</year>
+		<manufacturer>bootleg</manufacturer>
+		<rom name="2.f11" size="524288" crc="b8201c2e" sha1="95ac035ffd5948745324d855ecffdb7d2ff9f0fb" region="cpu1" offset="0"/>
+		<rom name="1.f10" size="524288" crc="af0dd811" sha1="75b1f51ad93f99933037ffff4106c92f9c2393e6" region="cpu1" offset="1"/>
+		<rom name="4.f8" merge="epr-16888.ic34" size="524288" crc="85d73722" sha1="7ebe81b4d6c89f87f60200a3a8cddb07d581adef" region="cpu1" offset="100000"/>
+		<rom name="3.f9" merge="epr-16887.ic33" size="524288" crc="bc3bbf25" sha1="e760ad400bc183b38e9787d88c8ac084fbe2ae21" region="cpu1" offset="100001"/>
+		<rom name="2.e3" merge="pa2_02.bin" size="524288" crc="fc7b0da5" sha1="46770aa7e19b4f8a183be3f433c48ad677b552b1" region="sound1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
+		<chip type="audio" name="uPD7759"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="2" control="joy8way" buttons="1" coins="2" service="yes"/>
 		<dipswitch name="Coin A">
 			<dipvalue name="4 Coins/1 Credit"/>
 			<dipvalue name="3 Coins/1 Credit"/>
@@ -211320,16 +212787,16 @@
 		<manufacturer>Sega</manufacturer>
 		<rom name="epr_ichi.32" size="524288" crc="804dea11" sha1="40bf8cbd40969a5880df10914252b7f64d5ce8e9" region="cpu1" offset="0"/>
 		<rom name="epr_ichi.31" size="524288" crc="92452353" sha1="d2e1da5b139965611cd8d707d23396b5d4c07d12" region="cpu1" offset="1"/>
-		<rom name="epr16888" merge="epr16888" size="524288" crc="85d73722" sha1="7ebe81b4d6c89f87f60200a3a8cddb07d581adef" region="cpu1" offset="100000"/>
-		<rom name="epr16887" merge="epr16887" size="524288" crc="bc3bbf25" sha1="e760ad400bc183b38e9787d88c8ac084fbe2ae21" region="cpu1" offset="100001"/>
+		<rom name="epr-16888.ic34" merge="epr-16888.ic34" size="524288" crc="85d73722" sha1="7ebe81b4d6c89f87f60200a3a8cddb07d581adef" region="cpu1" offset="100000"/>
+		<rom name="epr-16887.ic33" merge="epr-16887.ic33" size="524288" crc="bc3bbf25" sha1="e760ad400bc183b38e9787d88c8ac084fbe2ae21" region="cpu1" offset="100001"/>
 		<rom name="pa2_02.bin" merge="pa2_02.bin" size="524288" crc="fc7b0da5" sha1="46770aa7e19b4f8a183be3f433c48ad677b552b1" region="sound1" offset="0"/>
-		<chip type="cpu" name="68000" clock="7670442"/>
-		<chip type="audio" name="YM2612" clock="7670442"/>
-		<chip type="audio" name="SN76496" clock="3579540"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
 		<chip type="audio" name="uPD7759"/>
 		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="1"/>
-		<input players="2" control="joy8way" buttons="2" coins="2" service="yes"/>
+		<input players="2" control="joy8way" buttons="1" coins="2" service="yes"/>
 		<dipswitch name="Coin A">
 			<dipvalue name="4 Coins/1 Credit"/>
 			<dipvalue name="3 Coins/1 Credit"/>
@@ -211402,18 +212869,18 @@
 		<description>Puzzle &amp; Action: Ichidant-R (Japan)</description>
 		<year>1994</year>
 		<manufacturer>Sega</manufacturer>
-		<rom name="epr16886" size="524288" crc="38208e28" sha1="07fc634bdf2d3e25274c9c374b3506dec765114c" region="cpu1" offset="0"/>
-		<rom name="epr16885" size="524288" crc="1ce4e837" sha1="16600600e12e3f35e3da89524f7f51f019b5ad17" region="cpu1" offset="1"/>
-		<rom name="epr16888" merge="epr16888" size="524288" crc="85d73722" sha1="7ebe81b4d6c89f87f60200a3a8cddb07d581adef" region="cpu1" offset="100000"/>
-		<rom name="epr16887" merge="epr16887" size="524288" crc="bc3bbf25" sha1="e760ad400bc183b38e9787d88c8ac084fbe2ae21" region="cpu1" offset="100001"/>
-		<rom name="epr16884" size="524288" crc="fd9dcdd6" sha1="b8053a2e68072e7664ffc3c53f983f3ba72a892b" region="sound1" offset="0"/>
-		<chip type="cpu" name="68000" clock="7670442"/>
-		<chip type="audio" name="YM2612" clock="7670442"/>
-		<chip type="audio" name="SN76496" clock="3579540"/>
+		<rom name="epr-16886.ic32" size="524288" crc="38208e28" sha1="07fc634bdf2d3e25274c9c374b3506dec765114c" region="cpu1" offset="0"/>
+		<rom name="epr-16885.ic31" size="524288" crc="1ce4e837" sha1="16600600e12e3f35e3da89524f7f51f019b5ad17" region="cpu1" offset="1"/>
+		<rom name="epr-16888.ic34" merge="epr-16888.ic34" size="524288" crc="85d73722" sha1="7ebe81b4d6c89f87f60200a3a8cddb07d581adef" region="cpu1" offset="100000"/>
+		<rom name="epr-16887.ic33" merge="epr-16887.ic33" size="524288" crc="bc3bbf25" sha1="e760ad400bc183b38e9787d88c8ac084fbe2ae21" region="cpu1" offset="100001"/>
+		<rom name="epr-16884.ic4" size="524288" crc="fd9dcdd6" sha1="b8053a2e68072e7664ffc3c53f983f3ba72a892b" region="sound1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
 		<chip type="audio" name="uPD7759"/>
 		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="1"/>
-		<input players="2" control="joy8way" buttons="2" coins="2" service="yes"/>
+		<input players="2" control="joy8way" buttons="1" coins="2" service="yes"/>
 		<dipswitch name="Coin A">
 			<dipvalue name="4 Coins/1 Credit"/>
 			<dipvalue name="3 Coins/1 Credit"/>
@@ -211488,14 +212955,14 @@
 		<manufacturer>bootleg</manufacturer>
 		<rom name="27c4000.2" size="524288" crc="5a194f44" sha1="67a4d21b91704f8c2210b5106e82e22ba3366f4c" region="cpu1" offset="0"/>
 		<rom name="27c4000.1" size="524288" crc="de209f84" sha1="0860d0ebfab2952e82fc1e292bf9410d673d9322" region="cpu1" offset="1"/>
-		<rom name="epr16888" merge="epr16888" size="524288" crc="85d73722" sha1="7ebe81b4d6c89f87f60200a3a8cddb07d581adef" region="cpu1" offset="100000"/>
-		<rom name="epr16887" merge="epr16887" size="524288" crc="bc3bbf25" sha1="e760ad400bc183b38e9787d88c8ac084fbe2ae21" region="cpu1" offset="100001"/>
-		<chip type="cpu" name="68000" clock="7670442"/>
-		<chip type="audio" name="YM2612" clock="7670442"/>
-		<chip type="audio" name="SN76496" clock="3579540"/>
+		<rom name="epr-16888" merge="epr-16888.ic34" size="524288" crc="85d73722" sha1="7ebe81b4d6c89f87f60200a3a8cddb07d581adef" region="cpu1" offset="100000"/>
+		<rom name="epr-16887" merge="epr-16887.ic33" size="524288" crc="bc3bbf25" sha1="e760ad400bc183b38e9787d88c8ac084fbe2ae21" region="cpu1" offset="100001"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
 		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="1"/>
-		<input players="2" control="joy8way" buttons="2" coins="2" service="yes"/>
+		<input players="2" control="joy8way" buttons="1" coins="2" service="yes"/>
 		<dipswitch name="Coin A">
 			<dipvalue name="4 Coins/1 Credit"/>
 			<dipvalue name="3 Coins/1 Credit"/>
@@ -211565,17 +213032,17 @@
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
 	</game>
 	<game name="stkclmns" sourcefile="segac2.c">
-		<description>Stack Columns (Japan)</description>
+		<description>Stack Columns (World)</description>
 		<year>1994</year>
 		<manufacturer>Sega</manufacturer>
-		<rom name="epr16795.32" size="524288" crc="b478fd02" sha1="aaf9d9f9f4dc900b4e8ff6f258f26e782e5c3166" region="cpu1" offset="0"/>
-		<rom name="epr16794.31" size="524288" crc="6d0e8c56" sha1="8f98d9fd98a1faa70b173cfd72f15102d11e79ae" region="cpu1" offset="1"/>
-		<rom name="mpr16797.34" size="524288" crc="b28e9bd5" sha1="227eb591d10c9dbc52b35954ebd322e2a4451df2" region="cpu1" offset="100000"/>
-		<rom name="mpr16796.33" size="524288" crc="ec7de52d" sha1="85bc48cef15e615ad9059500808d17916c854a87" region="cpu1" offset="100001"/>
-		<rom name="epr16793.4" size="131072" crc="ebb2d057" sha1="4a19ee5d71e4aabe7d9b9b968ab5ee4bc6262aad" region="sound1" offset="0"/>
-		<chip type="cpu" name="68000" clock="7670442"/>
-		<chip type="audio" name="YM2612" clock="7670442"/>
-		<chip type="audio" name="SN76496" clock="3579540"/>
+		<rom name="epr-16874.ic32" size="524288" crc="d78a871c" sha1="7efcd5d07b089442be5170a3cf9e09579527252f" region="cpu1" offset="0"/>
+		<rom name="epr-16873.ic31" size="524288" crc="1def1da4" sha1="da534a971b40277b2d58ef22c07ca468250d23ca" region="cpu1" offset="1"/>
+		<rom name="mpr-16797.ic34" size="524288" crc="b28e9bd5" sha1="227eb591d10c9dbc52b35954ebd322e2a4451df2" region="cpu1" offset="100000"/>
+		<rom name="mpr-16796.ic33" size="524288" crc="ec7de52d" sha1="85bc48cef15e615ad9059500808d17916c854a87" region="cpu1" offset="100001"/>
+		<rom name="epr-16793.ic4" size="131072" crc="ebb2d057" sha1="4a19ee5d71e4aabe7d9b9b968ab5ee4bc6262aad" region="sound1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
 		<chip type="audio" name="uPD7759"/>
 		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="1"/>
@@ -211616,9 +213083,89 @@
 			<dipvalue name="1 Coin/6 Credits"/>
 			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin A also)"/>
 		</dipswitch>
+		<dipswitch name="Difficulty">
+			<dipvalue name="Easy"/>
+			<dipvalue name="Medium" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Hardest"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Match Mode Price">
+			<dipvalue name="1" default="yes"/>
+			<dipvalue name="2"/>
+		</dipswitch>
 		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
+	</game>
+	<game name="stkclmnsj" sourcefile="segac2.c" cloneof="stkclmns" romof="stkclmns">
+		<description>Stack Columns (Japan)</description>
+		<year>1994</year>
+		<manufacturer>Sega</manufacturer>
+		<rom name="epr-16795.ic32" size="524288" crc="b478fd02" sha1="aaf9d9f9f4dc900b4e8ff6f258f26e782e5c3166" region="cpu1" offset="0"/>
+		<rom name="epr-16794.ic31" size="524288" crc="6d0e8c56" sha1="8f98d9fd98a1faa70b173cfd72f15102d11e79ae" region="cpu1" offset="1"/>
+		<rom name="mpr-16797.ic34" merge="mpr-16797.ic34" size="524288" crc="b28e9bd5" sha1="227eb591d10c9dbc52b35954ebd322e2a4451df2" region="cpu1" offset="100000"/>
+		<rom name="mpr-16796.ic33" merge="mpr-16796.ic33" size="524288" crc="ec7de52d" sha1="85bc48cef15e615ad9059500808d17916c854a87" region="cpu1" offset="100001"/>
+		<rom name="epr-16793.ic4" merge="epr-16793.ic4" size="131072" crc="ebb2d057" sha1="4a19ee5d71e4aabe7d9b9b968ab5ee4bc6262aad" region="sound1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
+		<chip type="audio" name="uPD7759"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="2" control="joy8way" buttons="2" coins="2" service="yes"/>
+		<dipswitch name="Coin A">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin B also)"/>
+		</dipswitch>
+		<dipswitch name="Coin B">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin A also)"/>
 		</dipswitch>
 		<dipswitch name="Difficulty">
 			<dipvalue name="Easy"/>
@@ -211656,12 +213203,12 @@
 		<description>Puyo Puyo 2 (Japan)</description>
 		<year>1994</year>
 		<manufacturer>Compile (Sega license)</manufacturer>
-		<rom name="pp2.eve" size="524288" crc="1cad1149" sha1="77fb0482fa35e615c0bed65f4d7f4dd89b241f23" region="cpu1" offset="0"/>
-		<rom name="pp2.odd" size="524288" crc="beecf96d" sha1="c2bdad4b6184c11f81f2a5db409cb4ea186205a7" region="cpu1" offset="1"/>
-		<rom name="pp2.snd" size="524288" crc="020ff6ef" sha1="6095b8277b47a6fd7a9721f15a70ae5bf6be9b1a" region="sound1" offset="0"/>
-		<chip type="cpu" name="68000" clock="7670442"/>
-		<chip type="audio" name="YM2612" clock="7670442"/>
-		<chip type="audio" name="SN76496" clock="3579540"/>
+		<rom name="epr-17241.ic32" size="524288" crc="1cad1149" sha1="77fb0482fa35e615c0bed65f4d7f4dd89b241f23" region="cpu1" offset="0"/>
+		<rom name="epr-17240.ic31" size="524288" crc="beecf96d" sha1="c2bdad4b6184c11f81f2a5db409cb4ea186205a7" region="cpu1" offset="1"/>
+		<rom name="epr-17239.ic4" size="524288" crc="020ff6ef" sha1="6095b8277b47a6fd7a9721f15a70ae5bf6be9b1a" region="sound1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
 		<chip type="audio" name="uPD7759"/>
 		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="1"/>
@@ -211733,15 +213280,15 @@
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
 	</game>
 	<game name="potopoto" sourcefile="segac2.c">
-		<description>Poto Poto (Japan)</description>
+		<description>Poto Poto (Japan, Rev A)</description>
 		<year>1994</year>
 		<manufacturer>Sega</manufacturer>
-		<rom name="epr16662" size="262144" crc="bbd305d6" sha1="1a4f4869fefac188c69bc67df0b625e43a0c3f1f" region="cpu1" offset="0"/>
-		<rom name="epr16661" size="262144" crc="5a7d14f4" sha1="a615b5f481256366db7b1c6302a8dcb69708102b" region="cpu1" offset="1"/>
-		<rom name="epr16660" size="262144" crc="8251c61c" sha1="03eef3aa0bdde2c1d93128648f54fd69278d85dd" region="sound1" offset="0"/>
-		<chip type="cpu" name="68000" clock="7670442"/>
-		<chip type="audio" name="YM2612" clock="7670442"/>
-		<chip type="audio" name="SN76496" clock="3579540"/>
+		<rom name="epr-16662a.ic32" size="262144" crc="bbd305d6" sha1="1a4f4869fefac188c69bc67df0b625e43a0c3f1f" region="cpu1" offset="0"/>
+		<rom name="epr-16661a.ic31" size="262144" crc="5a7d14f4" sha1="a615b5f481256366db7b1c6302a8dcb69708102b" region="cpu1" offset="1"/>
+		<rom name="epr-16660.ic4" size="262144" crc="8251c61c" sha1="03eef3aa0bdde2c1d93128648f54fd69278d85dd" region="sound1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
 		<chip type="audio" name="uPD7759"/>
 		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="1"/>
@@ -211815,17 +213362,17 @@
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
 	</game>
 	<game name="zunkyou" sourcefile="segac2.c">
-		<description>Zunzunkyou No Yabou (Japan)</description>
+		<description>Zunzunkyou no Yabou (Japan)</description>
 		<year>1994</year>
 		<manufacturer>Sega</manufacturer>
-		<rom name="epr16812.32" size="524288" crc="eb088fb0" sha1="69089a3516ad50f35e81971ef3c33eb3f5d52374" region="cpu1" offset="0"/>
-		<rom name="epr16811.31" size="524288" crc="9ac7035b" sha1="1803ffbadc1213e04646d483e27da1591e22cd06" region="cpu1" offset="1"/>
-		<rom name="epr16814.34" size="524288" crc="821b3b77" sha1="c45c7393a792ce8306a52f83f8ed8f6b0d7c11e9" region="cpu1" offset="100000"/>
-		<rom name="epr16813.33" size="524288" crc="3cba9e8f" sha1="208819bc1a205eaab089542afc7a59f69ce5bb81" region="cpu1" offset="100001"/>
-		<rom name="epr16810.4" size="524288" crc="d542f0fe" sha1="23ea50110dfe1cd9f286a535d15e0c3bcba73b00" region="sound1" offset="0"/>
-		<chip type="cpu" name="68000" clock="7670442"/>
-		<chip type="audio" name="YM2612" clock="7670442"/>
-		<chip type="audio" name="SN76496" clock="3579540"/>
+		<rom name="epr-16812.ic32" size="524288" crc="eb088fb0" sha1="69089a3516ad50f35e81971ef3c33eb3f5d52374" region="cpu1" offset="0"/>
+		<rom name="epr-16811.ic31" size="524288" crc="9ac7035b" sha1="1803ffbadc1213e04646d483e27da1591e22cd06" region="cpu1" offset="1"/>
+		<rom name="epr-16814.ic34" size="524288" crc="821b3b77" sha1="c45c7393a792ce8306a52f83f8ed8f6b0d7c11e9" region="cpu1" offset="100000"/>
+		<rom name="epr-16813.ic33" size="524288" crc="3cba9e8f" sha1="208819bc1a205eaab089542afc7a59f69ce5bb81" region="cpu1" offset="100001"/>
+		<rom name="epr-16810.ic4" size="524288" crc="d542f0fe" sha1="23ea50110dfe1cd9f286a535d15e0c3bcba73b00" region="sound1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
 		<chip type="audio" name="uPD7759"/>
 		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="1"/>
@@ -211899,17 +213446,17 @@
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
 	</game>
 	<game name="headonch" sourcefile="segac2.c">
-		<description>Head On Channel (Japan, prototype)</description>
+		<description>Monita to Rimoko no Head On Channel (prototype, hack)</description>
 		<year>1994</year>
-		<manufacturer>Sega</manufacturer>
+		<manufacturer>hack</manufacturer>
 		<rom name="headonch.ic32" size="524288" crc="091cf538" sha1="04673678f543743b395edea39ad4ee6177436dc0" region="cpu1" offset="0"/>
 		<rom name="headonch.ic31" size="524288" crc="91f3b5f1" sha1="15cbe7a172dde7de7b73f0c9eeddfee41e8d1f80" region="cpu1" offset="1"/>
 		<rom name="headonch.ic34" size="524288" crc="d8dc6323" sha1="e7e891324764641691dcb63e5222f2ed9207fb96" region="cpu1" offset="100000"/>
 		<rom name="headonch.ic33" size="524288" crc="3268e38b" sha1="10ded2be01465014ca9e6c64ffab1190ec985359" region="cpu1" offset="100001"/>
 		<rom name="headonch.ic4" size="262144" crc="90af7301" sha1="227227cb5d0df6612bac7b4c94b99e2287686ccd" region="sound1" offset="0"/>
-		<chip type="cpu" name="68000" clock="7670442"/>
-		<chip type="audio" name="YM2612" clock="7670442"/>
-		<chip type="audio" name="SN76496" clock="3579540"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
 		<chip type="audio" name="uPD7759"/>
 		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="1"/>
@@ -211960,14 +213507,6 @@
 			<dipvalue name="Hard"/>
 			<dipvalue name="Hardest"/>
 		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
 		<dipswitch name="Lives">
 			<dipvalue name="2"/>
 			<dipvalue name="3" default="yes"/>
@@ -211989,21 +213528,21 @@
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
 	</game>
 	<game name="ooparts" sourcefile="segac2.c">
-		<description>OOPArts (Japan, Prototype)</description>
+		<description>OOPArts (prototype, joystick hack)</description>
 		<year>1992</year>
-		<manufacturer>Sega / Success</manufacturer>
+		<manufacturer>hack</manufacturer>
 		<rom name="ooparts.ic32" size="524288" crc="8dcf2940" sha1="f72630e8a26e7f2089da56878a1599268c355246" region="cpu1" offset="0"/>
 		<rom name="ooparts.ic31" size="524288" crc="35381899" sha1="524f6e1b1292542079589275e20f45c2eb68605c" region="cpu1" offset="1"/>
 		<rom name="ooparts.ic34" size="524288" crc="7192ac29" sha1="d3028a9bbb7faa733285cf7e47fd840ec0d0bf69" region="cpu1" offset="100000"/>
 		<rom name="ooparts.ic33" size="524288" crc="42755dc2" sha1="cd0aa79418b922266c5d41bf24b9136f9f105dc5" region="cpu1" offset="100001"/>
 		<rom name="epr-13655.ic4" size="262144" crc="e09961f6" sha1="e109b5f41502b765d191f22e3bbcff97d6defaa1" region="sound1" offset="0"/>
-		<chip type="cpu" name="68000" clock="7670442"/>
-		<chip type="audio" name="YM2612" clock="7670442"/>
-		<chip type="audio" name="SN76496" clock="3579540"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
 		<chip type="audio" name="uPD7759"/>
 		<video screen="raster" orientation="vertical" width="224" height="320" aspectx="3" aspecty="4" refresh="60.000000"/>
 		<sound channels="1"/>
-		<input players="2" control="joy8way" buttons="2" coins="2" service="yes"/>
+		<input players="2" control="joy8way" buttons="3" coins="2" service="yes"/>
 		<dipswitch name="Coin A">
 			<dipvalue name="4 Coins/1 Credit"/>
 			<dipvalue name="3 Coins/1 Credit"/>
@@ -212050,27 +213589,11 @@
 			<dipvalue name="4"/>
 			<dipvalue name="5"/>
 		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
 		<dipswitch name="Difficulty">
 			<dipvalue name="Easy"/>
 			<dipvalue name="Medium" default="yes"/>
 			<dipvalue name="Hard"/>
 			<dipvalue name="Hardest"/>
-		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unused">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
 		</dipswitch>
 		<dipswitch name="Region">
 			<dipvalue name="Japan" default="yes"/>
@@ -212084,6 +213607,342 @@
 		</dipswitch>
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
 	</game>
+	<game name="puyo" sourcefile="segac2.c">
+		<description>Puyo Puyo (World)</description>
+		<year>1992</year>
+		<manufacturer>Compile / Sega</manufacturer>
+		<rom name="epr-15198.ic32" size="131072" crc="9610d80c" sha1="1ffad09d3369c1942d4db611c41bae47d08c7564" region="cpu1" offset="0"/>
+		<rom name="epr-15197.ic31" size="131072" crc="7b1f3229" sha1="13d0905291e748973d7d17eb404a286ffb94de03" region="cpu1" offset="1"/>
+		<rom name="epr-15200.ic34" size="131072" crc="0a0692e5" sha1="d4ecc5b1791a91e3b33a5d4d0dd305f1623483d9" region="cpu1" offset="100000"/>
+		<rom name="epr-15199.ic33" size="131072" crc="353109b8" sha1="92440987add3124b758e7eaa77a3a6f54ca61bb8" region="cpu1" offset="100001"/>
+		<rom name="epr-15196.ic4" size="131072" crc="79112b3b" sha1="fc3a202e1e2ff39950d4af689b7fcca86c301805" region="sound1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
+		<chip type="audio" name="uPD7759"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="2" control="joy8way" buttons="1" coins="2" service="yes"/>
+		<dipswitch name="Coin A">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin B also)"/>
+		</dipswitch>
+		<dipswitch name="Coin B">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin A also)"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="VS. Mode Credits/Match">
+			<dipvalue name="1" default="yes"/>
+			<dipvalue name="3"/>
+		</dipswitch>
+		<dipswitch name="1P Mode Difficulty">
+			<dipvalue name="Easy"/>
+			<dipvalue name="Medium" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Hardest"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Moving Seat">
+			<dipvalue name="No Use" default="yes"/>
+			<dipvalue name="In Use"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
+	</game>
+	<game name="puyobl" sourcefile="segac2.c" cloneof="puyo" romof="puyo">
+		<description>Puyo Puyo (World, bootleg)</description>
+		<year>1992</year>
+		<manufacturer>bootleg</manufacturer>
+		<rom name="puyopuyb.4bo" size="131072" crc="89ea4d33" sha1="bef9d011524e71c072d309f6da3c2ebc38878e0e" region="cpu1" offset="0"/>
+		<rom name="puyopuyb.3bo" size="131072" crc="c002e545" sha1="7a59ac764d60e9955830d9617b0bd122b44e7b2f" region="cpu1" offset="1"/>
+		<rom name="puyopuyb.6bo" merge="epr-15200.ic34" size="131072" crc="0a0692e5" sha1="d4ecc5b1791a91e3b33a5d4d0dd305f1623483d9" region="cpu1" offset="100000"/>
+		<rom name="puyopuyb.5bo" merge="epr-15199.ic33" size="131072" crc="353109b8" sha1="92440987add3124b758e7eaa77a3a6f54ca61bb8" region="cpu1" offset="100001"/>
+		<rom name="puyopuyb.abo" merge="epr-15196.ic4" size="131072" crc="79112b3b" sha1="fc3a202e1e2ff39950d4af689b7fcca86c301805" region="sound1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
+		<chip type="audio" name="uPD7759"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="2" control="joy8way" buttons="1" coins="2" service="yes"/>
+		<dipswitch name="Coin A">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin B also)"/>
+		</dipswitch>
+		<dipswitch name="Coin B">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin A also)"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="VS. Mode Credits/Match">
+			<dipvalue name="1" default="yes"/>
+			<dipvalue name="3"/>
+		</dipswitch>
+		<dipswitch name="1P Mode Difficulty">
+			<dipvalue name="Easy"/>
+			<dipvalue name="Medium" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Hardest"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Moving Seat">
+			<dipvalue name="No Use" default="yes"/>
+			<dipvalue name="In Use"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
+	</game>
+	<game name="puyoj" sourcefile="segac2.c" cloneof="puyo" romof="puyo">
+		<description>Puyo Puyo (Japan, Rev B)</description>
+		<year>1992</year>
+		<manufacturer>Compile / Sega</manufacturer>
+		<rom name="epr-15036b.ic32" size="131072" crc="5310ca1b" sha1="dcfe2bf7476b640dfb790e8716e75b483d535e48" region="cpu1" offset="0"/>
+		<rom name="epr-15035b.ic31" size="131072" crc="bc62e400" sha1="12bb6031574838a28889f6edb31dbb689265287c" region="cpu1" offset="1"/>
+		<rom name="epr-15038.ic34" size="131072" crc="3b9eea0c" sha1="e3e6148c1769834cc0061932eb035daa79673144" region="cpu1" offset="100000"/>
+		<rom name="epr-15037.ic33" size="131072" crc="be2f7974" sha1="77027ced7a62f94e9fc6e8a0a4ac0c62f7ea813b" region="cpu1" offset="100001"/>
+		<rom name="epr-15034.ic4" size="131072" crc="5688213b" sha1="f3f234e482871ca903a782e51008f3bfed04ee63" region="sound1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
+		<chip type="audio" name="uPD7759"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="2" control="joy8way" buttons="1" coins="2" service="yes"/>
+		<dipswitch name="Coin A">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin B also)"/>
+		</dipswitch>
+		<dipswitch name="Coin B">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin A also)"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="VS. Mode Credits/Match">
+			<dipvalue name="1" default="yes"/>
+			<dipvalue name="3"/>
+		</dipswitch>
+		<dipswitch name="1P Mode Difficulty">
+			<dipvalue name="Easy"/>
+			<dipvalue name="Medium" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Hardest"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Moving Seat">
+			<dipvalue name="No Use" default="yes"/>
+			<dipvalue name="In Use"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
+	</game>
+	<game name="puyoja" sourcefile="segac2.c" cloneof="puyo" romof="puyo">
+		<description>Puyo Puyo (Japan, Rev A)</description>
+		<year>1992</year>
+		<manufacturer>Compile / Sega</manufacturer>
+		<rom name="epr-15036a.ic32" size="131072" crc="61b35257" sha1="e09a7e992999befc88fc7928a478d1e2d14d7b08" region="cpu1" offset="0"/>
+		<rom name="epr-15035a.ic31" size="131072" crc="dfebb6d9" sha1="6f685729ef4660c2eba409c5236c6d2f313eef5b" region="cpu1" offset="1"/>
+		<rom name="epr-15038.ic34" size="131072" crc="3b9eea0c" sha1="e3e6148c1769834cc0061932eb035daa79673144" region="cpu1" offset="100000"/>
+		<rom name="epr-15037.ic33" size="131072" crc="be2f7974" sha1="77027ced7a62f94e9fc6e8a0a4ac0c62f7ea813b" region="cpu1" offset="100001"/>
+		<rom name="epr-15034.ic4" size="131072" crc="5688213b" sha1="f3f234e482871ca903a782e51008f3bfed04ee63" region="sound1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7670453"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
+		<chip type="audio" name="uPD7759"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="2" control="joy8way" buttons="1" coins="2" service="yes"/>
+		<dipswitch name="Coin A">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin B also)"/>
+		</dipswitch>
+		<dipswitch name="Coin B">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin A also)"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="VS. Mode Credits/Match">
+			<dipvalue name="1" default="yes"/>
+			<dipvalue name="3"/>
+		</dipswitch>
+		<dipswitch name="1P Mode Difficulty">
+			<dipvalue name="Easy"/>
+			<dipvalue name="Medium" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Hardest"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Moving Seat">
+			<dipvalue name="No Use" default="yes"/>
+			<dipvalue name="In Use"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
+	</game>
 	<game name="pclubj" sourcefile="segac2.c">
 		<description>Print Club (Japan Vol.1)</description>
 		<year>1995</year>
@@ -212093,9 +213952,9 @@
 		<rom name="epr18173.34" size="524288" crc="9809dc72" sha1="6dbe6b7d4e525aa9b6174f8dc5aee12a5e00a009" region="cpu1" offset="100000"/>
 		<rom name="epr18172.33" size="524288" crc="c61d819b" sha1="4813ed3161e16099f482e0cf8df3cbe6c01c619c" region="cpu1" offset="100001"/>
 		<rom name="epr18169.4" size="524288" crc="5c00ccfb" sha1="d043ffa6528bb9b76774c96df4edf8222a1878a4" region="sound1" offset="0"/>
-		<chip type="cpu" name="68000" clock="7670442"/>
-		<chip type="audio" name="YM2612" clock="7670442"/>
-		<chip type="audio" name="SN76496" clock="3579540"/>
+		<chip type="cpu" name="68000" clock="7552428"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
 		<chip type="audio" name="uPD7759"/>
 		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="1"/>
@@ -212110,43 +213969,43 @@
 			<dipvalue name="1 Coin/1 Credit"/>
 			<dipvalue name="Free Play"/>
 		</dipswitch>
-		<dipswitch name="Unknown 4-4">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown 4-5">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown 4-6">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown 4-7">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown 4-8">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown 5-1">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown 5-2">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown 5-3">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown 5-4">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown 5-5">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
@@ -212154,17 +214013,17 @@
 			<dipvalue name="Off"/>
 			<dipvalue name="On" default="yes"/>
 		</dipswitch>
-		<dipswitch name="Unknown 5-7">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown 5-8">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
 		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="2048"/>
 	</game>
-	<game name="pclubjv2" sourcefile="segac2.c" cloneof="pclubj" romof="pclubj">
+	<game name="pclubjv2" sourcefile="segac2.c">
 		<description>Print Club (Japan Vol.2)</description>
 		<year>1995</year>
 		<manufacturer>Atlus</manufacturer>
@@ -212172,61 +214031,63 @@
 		<rom name="p2jwn.u31" size="524288" crc="6ab4c694" sha1="d8cfaa1a49e86842079c6e3800a95c5afaf76ab6" region="cpu1" offset="1"/>
 		<rom name="p2jwn.u34" size="524288" crc="854fd456" sha1="eff7413a7acd8ee37cb73bc8dfd4f4ae53c04836" region="cpu1" offset="100000"/>
 		<rom name="p2jwn.u33" size="524288" crc="64428a69" sha1="e2c5ead4b35db76fda1db03adcd020bde5ca1dd2" region="cpu1" offset="100001"/>
-		<rom name="epr18169.4" merge="epr18169.4" size="524288" crc="5c00ccfb" sha1="d043ffa6528bb9b76774c96df4edf8222a1878a4" region="sound1" offset="0"/>
-		<chip type="cpu" name="68000" clock="7670442"/>
-		<chip type="audio" name="YM2612" clock="7670442"/>
-		<chip type="audio" name="SN76496" clock="3579540"/>
+		<rom name="epr18169.4" size="524288" crc="5c00ccfb" sha1="d043ffa6528bb9b76774c96df4edf8222a1878a4" region="sound1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7552428"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
 		<chip type="audio" name="uPD7759"/>
 		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="1"/>
 		<input players="1" control="joy8way" buttons="2" coins="2" service="yes"/>
-		<dipswitch name="Coinage">
-			<dipvalue name="7 Coins/1 Credit"/>
-			<dipvalue name="6 Coins/1 Credit"/>
-			<dipvalue name="5 Coins/1 Credit"/>
+		<dipswitch name="Coins per Credit (Normal / Alternate)">
+			<dipvalue name="25 / 30"/>
+			<dipvalue name="6 / 7"/>
+			<dipvalue name="10 / 12"/>
+			<dipvalue name="1 / 2"/>
+			<dipvalue name="3 / Free Play" default="yes"/>
+			<dipvalue name="15 / 20"/>
+			<dipvalue name="4 / 5"/>
+			<dipvalue name="8 / 9"/>
+		</dipswitch>
+		<dipswitch name="Alternate Coinage">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Coin B">
 			<dipvalue name="4 Coins/1 Credit"/>
-			<dipvalue name="3 Coins/1 Credit" default="yes"/>
+			<dipvalue name="3 Coins/1 Credit"/>
 			<dipvalue name="2 Coins/1 Credit"/>
-			<dipvalue name="1 Coin/1 Credit"/>
-			<dipvalue name="Free Play"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin A also)"/>
 		</dipswitch>
-		<dipswitch name="Unknown 4-4">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown 4-5">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown 4-6">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown 4-7">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown 4-8">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown 5-1">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown 5-2">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown 5-3">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown 5-4">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown 5-5">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
@@ -212234,17 +214095,181 @@
 			<dipvalue name="Off"/>
 			<dipvalue name="On" default="yes"/>
 		</dipswitch>
-		<dipswitch name="Unknown 5-7">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown 5-8">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
 		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="2048"/>
 	</game>
-	<game name="pclubjv4" sourcefile="segac2.c" cloneof="pclubj" romof="pclubj">
+	<game name="pclub" sourcefile="segac2.c" cloneof="pclubjv2" romof="pclubjv2">
+		<description>Print Club (World)</description>
+		<year>1995</year>
+		<manufacturer>Atlus</manufacturer>
+		<rom name="epr-ic32.32" size="524288" crc="3fe9bda7" sha1="2d3bf0f10c8b9a07a263365c5d81067c91974fe1" region="cpu1" offset="0"/>
+		<rom name="epr-ic31.31" size="524288" crc="90f994d0" sha1="687d537481bfc05a5809161a8f1c686aa157cb8f" region="cpu1" offset="1"/>
+		<rom name="epr-ic34.34" size="524288" crc="4d1ebb55" sha1="f403990ff41418d14bae645cffd5c042ce13312c" region="cpu1" offset="100000"/>
+		<rom name="epr-ic33.33" size="524288" crc="bdfdc797" sha1="aec561a591ca1387b7d38ffe48a2c179a39c1b06" region="cpu1" offset="100001"/>
+		<rom name="epr-ic4.4" size="524288" crc="84eed1c4" sha1="271b199250f9a7f6ba5d3bf09e187417b7c2f88e" region="sound1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7552428"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
+		<chip type="audio" name="uPD7759"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="1" control="joy8way" buttons="2" coins="2" service="yes"/>
+		<dipswitch name="Coins per Credit (Normal / Alternate)">
+			<dipvalue name="25 / 30"/>
+			<dipvalue name="6 / 7"/>
+			<dipvalue name="10 / 12"/>
+			<dipvalue name="1 / 2"/>
+			<dipvalue name="3 / Free Play" default="yes"/>
+			<dipvalue name="15 / 20"/>
+			<dipvalue name="4 / 5"/>
+			<dipvalue name="8 / 9"/>
+		</dipswitch>
+		<dipswitch name="Alternate Coinage">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Coin B">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin A also)"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="2048"/>
+	</game>
+	<game name="pclubjv3" sourcefile="segac2.c">
+		<description>Print Club (Japan Vol.3)</description>
+		<year>1995</year>
+		<manufacturer>Atlus</manufacturer>
+		<rom name="ic32-p3jsp.ic32" size="524288" crc="cb5b6221" sha1="43c1352bfcaa4012019ae58742a5d09c3c4e5a8f" region="cpu1" offset="0"/>
+		<rom name="ic31-p3jsp.ic31" size="524288" crc="cdec8418" sha1="7b5d6316182ec89230984b617ce0404ea0f1c331" region="cpu1" offset="1"/>
+		<rom name="ic34-p3jsp.ic34" size="524288" crc="c33f71a3" sha1="21f9de9db4504307d5290c11dc86bfed9ee23ef0" region="cpu1" offset="100000"/>
+		<rom name="ic33-p3jsp.ic33" size="524288" crc="c8da13e4" sha1="38434f628b43549a234cf612f8a22993c76c20f0" region="cpu1" offset="100001"/>
+		<rom name="epr18169.4" size="524288" crc="5c00ccfb" sha1="d043ffa6528bb9b76774c96df4edf8222a1878a4" region="sound1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7552428"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
+		<chip type="audio" name="uPD7759"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="1" control="joy8way" buttons="2" coins="2" service="yes"/>
+		<dipswitch name="Coins per Credit (Normal / Alternate)">
+			<dipvalue name="25 / 30"/>
+			<dipvalue name="6 / 7"/>
+			<dipvalue name="10 / 12"/>
+			<dipvalue name="1 / 2"/>
+			<dipvalue name="3 / Free Play" default="yes"/>
+			<dipvalue name="15 / 20"/>
+			<dipvalue name="4 / 5"/>
+			<dipvalue name="8 / 9"/>
+		</dipswitch>
+		<dipswitch name="Alternate Coinage">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Coin B">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin A also)"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="2048"/>
+	</game>
+	<game name="pclubjv4" sourcefile="segac2.c">
 		<description>Print Club (Japan Vol.4)</description>
 		<year>1996</year>
 		<manufacturer>Atlus</manufacturer>
@@ -212252,61 +214277,63 @@
 		<rom name="p4jsm.u31" size="524288" crc="f3c021ad" sha1="34792d861265b609d5022955eb7d2f471c63dfb8" region="cpu1" offset="1"/>
 		<rom name="p4jsm.u34" size="524288" crc="d0fd4b33" sha1="c272404f09bdb6596740ab150eb158cc22cc9aa6" region="cpu1" offset="100000"/>
 		<rom name="p4jsm.u33" size="524288" crc="ec667875" sha1="d235a1d8dfa90e1c638e1f079ce528f61450e1f0" region="cpu1" offset="100001"/>
-		<rom name="epr18169.4" merge="epr18169.4" size="524288" crc="5c00ccfb" sha1="d043ffa6528bb9b76774c96df4edf8222a1878a4" region="sound1" offset="0"/>
-		<chip type="cpu" name="68000" clock="7670442"/>
-		<chip type="audio" name="YM2612" clock="7670442"/>
-		<chip type="audio" name="SN76496" clock="3579540"/>
+		<rom name="epr-18169.ic4" size="524288" crc="5c00ccfb" sha1="d043ffa6528bb9b76774c96df4edf8222a1878a4" region="sound1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7552428"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
 		<chip type="audio" name="uPD7759"/>
 		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="1"/>
 		<input players="1" control="joy8way" buttons="2" coins="2" service="yes"/>
-		<dipswitch name="Coinage">
-			<dipvalue name="7 Coins/1 Credit"/>
-			<dipvalue name="6 Coins/1 Credit"/>
-			<dipvalue name="5 Coins/1 Credit"/>
+		<dipswitch name="Coins per Credit (Normal / Alternate)">
+			<dipvalue name="25 / 30"/>
+			<dipvalue name="6 / 7"/>
+			<dipvalue name="10 / 12"/>
+			<dipvalue name="1 / 2"/>
+			<dipvalue name="3 / Free Play" default="yes"/>
+			<dipvalue name="15 / 20"/>
+			<dipvalue name="4 / 5"/>
+			<dipvalue name="8 / 9"/>
+		</dipswitch>
+		<dipswitch name="Alternate Coinage">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Coin B">
 			<dipvalue name="4 Coins/1 Credit"/>
-			<dipvalue name="3 Coins/1 Credit" default="yes"/>
+			<dipvalue name="3 Coins/1 Credit"/>
 			<dipvalue name="2 Coins/1 Credit"/>
-			<dipvalue name="1 Coin/1 Credit"/>
-			<dipvalue name="Free Play"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin A also)"/>
 		</dipswitch>
-		<dipswitch name="Unknown 4-4">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown 4-5">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown 4-6">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown 4-7">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown 4-8">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown 5-1">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown 5-2">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown 5-3">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown 5-4">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown 5-5">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
@@ -212314,17 +214341,17 @@
 			<dipvalue name="Off"/>
 			<dipvalue name="On" default="yes"/>
 		</dipswitch>
-		<dipswitch name="Unknown 5-7">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown 5-8">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
 		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="2048"/>
 	</game>
-	<game name="pclubjv5" sourcefile="segac2.c" cloneof="pclubj" romof="pclubj">
+	<game name="pclubjv5" sourcefile="segac2.c">
 		<description>Print Club (Japan Vol.5)</description>
 		<year>1996</year>
 		<manufacturer>Atlus</manufacturer>
@@ -212332,61 +214359,63 @@
 		<rom name="p5jat.u31" size="524288" crc="06d83fde" sha1="dc68375ccb16cde7900eb05f702bc15e7e702ea5" region="cpu1" offset="1"/>
 		<rom name="p5jat.u34" size="524288" crc="b172ab58" sha1="47a70bd678f6c4dafe70b83bd3db678cf44de48b" region="cpu1" offset="100000"/>
 		<rom name="p5jat.u33" size="524288" crc="ba38ec50" sha1="666fdba56d8a4dab041015c5e8102305b491d293" region="cpu1" offset="100001"/>
-		<rom name="epr18169.4" merge="epr18169.4" size="524288" crc="5c00ccfb" sha1="d043ffa6528bb9b76774c96df4edf8222a1878a4" region="sound1" offset="0"/>
-		<chip type="cpu" name="68000" clock="7670442"/>
-		<chip type="audio" name="YM2612" clock="7670442"/>
-		<chip type="audio" name="SN76496" clock="3579540"/>
+		<rom name="epr-18169.ic4" size="524288" crc="5c00ccfb" sha1="d043ffa6528bb9b76774c96df4edf8222a1878a4" region="sound1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7552428"/>
+		<chip type="audio" name="YM2612" clock="7670453"/>
+		<chip type="audio" name="SN76496" clock="3579545"/>
 		<chip type="audio" name="uPD7759"/>
 		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
 		<sound channels="1"/>
 		<input players="1" control="joy8way" buttons="2" coins="2" service="yes"/>
-		<dipswitch name="Coinage">
-			<dipvalue name="7 Coins/1 Credit"/>
-			<dipvalue name="6 Coins/1 Credit"/>
-			<dipvalue name="5 Coins/1 Credit"/>
+		<dipswitch name="Coins per Credit (Normal / Alternate)">
+			<dipvalue name="25 / 30"/>
+			<dipvalue name="6 / 7"/>
+			<dipvalue name="10 / 12"/>
+			<dipvalue name="1 / 2"/>
+			<dipvalue name="3 / Free Play" default="yes"/>
+			<dipvalue name="15 / 20"/>
+			<dipvalue name="4 / 5"/>
+			<dipvalue name="8 / 9"/>
+		</dipswitch>
+		<dipswitch name="Alternate Coinage">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Coin B">
 			<dipvalue name="4 Coins/1 Credit"/>
-			<dipvalue name="3 Coins/1 Credit" default="yes"/>
+			<dipvalue name="3 Coins/1 Credit"/>
 			<dipvalue name="2 Coins/1 Credit"/>
-			<dipvalue name="1 Coin/1 Credit"/>
-			<dipvalue name="Free Play"/>
+			<dipvalue name="2 Coins/1 Credit 5/3 6/4"/>
+			<dipvalue name="2 Coins/1 Credit, 4/3"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/1 Credit, 5/6"/>
+			<dipvalue name="1 Coin/1 Credit, 4/5"/>
+			<dipvalue name="1 Coin/1 Credit, 2/3"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+			<dipvalue name="1 Coin/1 Credit (Freeplay if Coin A also)"/>
 		</dipswitch>
-		<dipswitch name="Unknown 4-4">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown 4-5">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown 4-6">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown 4-7">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown 4-8">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown 5-1">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown 5-2">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown 5-3">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown 5-4">
-			<dipvalue name="Off" default="yes"/>
-			<dipvalue name="On"/>
-		</dipswitch>
-		<dipswitch name="Unknown 5-5">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
@@ -212394,11 +214423,11 @@
 			<dipvalue name="Off"/>
 			<dipvalue name="On" default="yes"/>
 		</dipswitch>
-		<dipswitch name="Unknown 5-7">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<dipswitch name="Unknown 5-8">
+		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>

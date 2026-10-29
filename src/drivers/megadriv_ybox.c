@@ -101,7 +101,7 @@ Screenshots available on my site at http://unemulated.emuunlim.com (under PCB Sh
 
 #include "driver.h"
 #include "state.h"
-#include "segac2.h"
+#include "megadriv.h"
 
 /******************************************************************************
 	The Mega Drive part (as MAME's md_ntsc: 68000, Z80, YM2612, PSG, VDP)
@@ -648,7 +648,6 @@ static DRIVER_INIT( puckpkmn )
 	for (i = 0; i < len; i++)
 		rom[i] = BITSWAP8(rom[i], 1, 4, 2, 0, 7, 5, 3, 6);
 
-	init_segac2();
 }
 
 static DRIVER_INIT( jzth )

@@ -17,7 +17,7 @@
 ***************************************************************************/
 
 #include "driver.h"
-#include "segac2.h"
+#include "megadriv.h"
 
 /******************************************************************************
 	Memory maps
@@ -205,7 +205,6 @@ static DRIVER_INIT( topshoot )
 	cpu_setbank(3, memory_region(REGION_CPU1));
 	cpu_setbank(4, &genesis_68k_ram[0]);
 
-	init_segac2();
 }
 
 

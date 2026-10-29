@@ -8,7 +8,7 @@
 
 	Moved here from drivers/segac2.c, as in current MAME (megaplay.cpp);
 	the Mega Drive part (68000, sound Z80, I/O, interrupts) is shared with
-	the other Mega Drive based boards (includes/segac2.h), the VDP is in
+	the other Mega Drive based boards (machine/megadriv.c), the VDP is in
 	vidhrdw/segavdp.c and the video glue in vidhrdw/segac2_vidhrdw.c.
 
 	Set names as in current MAME (mp_twc is now mp_twcup).
@@ -17,7 +17,7 @@
 
 #include "driver.h"
 #include "state.h"
-#include "segac2.h"
+#include "megadriv.h"
 
 /******************************************************************************
 	The BIOS
@@ -38,6 +38,61 @@ static unsigned char ic37_ram[0x8000];
 static unsigned int readpos = 1;			/* serial bank selection position (9-bit) */
 static data16_t *ic36_ram;					/* the BIOS RAM, also seen by the 68000 at 0xa02000 */
 
+/******************************************************************************
+	The BIOS VDP interrupts, from drivers/segasyse.c
+******************************************************************************/
+
+/* in drivers/segasyse.c */
+extern UINT8 vintpending;
+extern UINT8 hintpending;
+extern UINT8 *segae_vdp_regs[];		/* pointer to vdp's registers */
+
+static UINT8 hintcount;			/* line interrupt counter, decreased each scanline */
+
+static INTERRUPT_GEN( megaplay_bios_irq )
+{
+	int sline;
+	/* the 262 calls start at the Mega Drive VBLANK (line 224); the BIOS
+	   VDP shares the screen and raises its V-INT (its line 193) about
+	   12 lines later, as in current MAME. Counting from the VBLANK put it
+	   ~80 lines early, and the BIOS/game handshake on port C could miss. */
+	sline = (261 - cpu_getiloops() + 181) % 262;
+
+	if (sline ==0) {
+		hintcount = segae_vdp_regs[0][10];
+	}
+
+	if (sline <= 192) {
+
+/*		if (sline != 192) segae_drawscanline(sline,1,1);*/
+
+		if (sline == 192)
+			vintpending = 1;
+
+		if (hintcount == 0) {
+			hintcount = segae_vdp_regs[0][10];
+			hintpending = 1;
+
+			if  ((segae_vdp_regs[0][0] & 0x10)) {
+				cpu_set_irq_line(2, 0, HOLD_LINE);
+				return;
+			}
+
+		} else {
+			hintcount--;
+		}
+	}
+
+	if (sline > 192) {
+		hintcount = segae_vdp_regs[0][10];
+
+		if ( (sline<0xe0) && (vintpending) ) {
+			cpu_set_irq_line(2, 0, HOLD_LINE);
+		}
+	}
+
+}
+
 static void megaplay_state_register(void)
 {
 	state_save_register_UINT32("megaplay", 0, "bios_bank", (UINT32 *)&bios_bank, 1);
@@ -49,6 +104,9 @@ static void megaplay_state_register(void)
 	state_save_register_UINT8 ("megaplay", 0, "bios_6403", &bios_6403, 1);
 	state_save_register_UINT8 ("megaplay", 0, "bios_6404", &bios_6404, 1);
 	state_save_register_UINT8 ("megaplay", 0, "ic37_ram", ic37_ram, 0x8000);
+	state_save_register_UINT8 ("megatech", 0, "hintcount", &hintcount, 1);
+	state_save_register_UINT8 ("megatech", 0, "vintpending", &vintpending, 1);
+	state_save_register_UINT8 ("megatech", 0, "hintpending", &hintpending, 1);
 }
 
 /* the 68000 side of the Z80 area and of the I/O chip */
@@ -886,7 +944,7 @@ static MACHINE_DRIVER_START( megaplay )
 	MDRV_CPU_MEMORY(megaplay_bios_readmem, megaplay_bios_writemem)
 	MDRV_CPU_PORTS(megaplay_bios_readport,megaplay_bios_writeport)
 	MDRV_SOUND_ADD(SN76496, megatech_sn76489_intf)
-	MDRV_CPU_VBLANK_INT(megatech_irq, 262)
+	MDRV_CPU_VBLANK_INT(megaplay_bios_irq, 262)
 MACHINE_DRIVER_END
 
 /* The BIOS keeps its credits, bookkeeping and each slot's 256-byte game
@@ -1146,7 +1204,6 @@ static DRIVER_INIT (megaplay)
 
 	}
 
-	init_segac2();
 
 }
 

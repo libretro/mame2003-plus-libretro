@@ -65,6 +65,9 @@ static void TimerHandler(int n,int c,int count,double stepTime)
 		/* hackish way to make bstars intro sync without */
 		/* breaking sonicwi2 command 0x35 */
 		if (slack < 0.000050) slack = 0;
+		/* a timer started long after its last overflow (or never fired)
+		   runs a whole period, as in current MAME: it fired at once */
+		if (slack >= timeSec) slack = 0;
 
 		if (!timer_enable(Timer[n][c], 1))
 			timer_adjust(Timer[n][c], timeSec - slack, (c<<7)|n, 0);
