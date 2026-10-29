@@ -23,6 +23,7 @@
 #include "driver.h"
 #include "vidhrdw/generic.h"
 #include "cpu/h6280/h6280.h"
+#include "state.h"
 
 VIDEO_UPDATE( battlera );
 VIDEO_START( battlera );
@@ -107,11 +108,10 @@ static WRITE_HANDLER( YM2203_w )
 }
 
 static int msm5205next;
+static int toggle;
 
 static void battlera_adpcm_int(int data)
 {
-	static int toggle;
-
 	MSM5205_data_w(0,msm5205next >> 4);
 	msm5205next<<=4;
 
@@ -368,5 +368,14 @@ ROM_END
 
 /******************************************************************************/
 
-GAMEX( 1988, battlera, 0,        battlera, battlera,  0,   ROT0, "Data East Corporation", "Battle Rangers (World)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1988, bldwolf,  battlera, battlera, battlera,  0,   ROT0, "Data East USA", "Bloody Wolf (US)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+static DRIVER_INIT( battlera )
+{
+	state_save_register_int("battlera", 0, "control_port_select", &control_port_select);
+	state_save_register_int("battlera", 0, "msm5205next", &msm5205next);
+	state_save_register_int("battlera", 0, "adpcm_toggle", &toggle);
+}
+
+/******************************************************************************/
+
+GAMEX( 1988, battlera, 0,        battlera, battlera,  battlera, ROT0, "Data East Corporation", "Battle Rangers (World)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1988, bldwolf,  battlera, battlera, battlera,  battlera, ROT0, "Data East USA", "Bloody Wolf (US)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
