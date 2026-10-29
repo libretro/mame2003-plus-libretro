@@ -104,6 +104,7 @@ enum /* the "display numbers" for each player, as opposed to their array index *
 
 #define MAX_PLAYER_COUNT  DISP_PLAYER8   /* We currently support a maximum of eight simultaneous players */
 
+#define DISCRETE_ADJUSTER_SLOTS  4   /* one core option per discrete sound adjuster (PORT_ADJUSTER) */
 #define CPU_CLOCK_SCALE_SLOTS  8   /* one CPU clock scale core option per CPU, up to MAX_CPU in driver.h */
 
 /******************************************************************************
@@ -219,6 +220,11 @@ enum CORE_OPTIONS  /* controls the order in which core options appear. common, i
   OPT_USE_SAMPLES,
   OPT_USE_ALT_SOUND,
   OPT_SAMPLE_RATE,
+  /* As of October 2026, the maximum number of adjusters of any supported driver is 4 */
+  OPT_DISCRETE_ADJUSTER,   /* adjuster 1 */
+  OPT_DISCRETE_ADJUSTER_2,
+  OPT_DISCRETE_ADJUSTER_3,
+  OPT_DISCRETE_ADJUSTER_4,
   OPT_BRIGHTNESS,
   OPT_GAMMA,
   OPT_TATE_MODE,
