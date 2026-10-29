@@ -3646,11 +3646,16 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( pclubjv4 )
 	DRIVER( pclubjv5 )
 
-	/* Genie Hardware (uses Genesis VDP) also has 'Sun Mixing Co' put into tile ram */
-	DRIVER( puckpkmn )	/* (c) 2000 Genie */
+	/* Genie / Y-BOX hardware (drivers/megadriv_ybox.c) */
+	DRIVER( puckpkmn )	/* (c) 2000 Sun Mixing */
+	DRIVER( jingling )	/* (c) 2000 IBS Co. Ltd */
+	DRIVER( puckpkmnb )	/* bootleg */
 	DRIVER( jzth )		/* (c) 2000 <unknown> */
-  DRIVER( songjang )  /* (c) 2000 WAH LAB */
-  DRIVER( shuifeng )  /* (c) 1999 WAH LAB */
+	DRIVER( songjang )	/* (c) 2000 WAH LAP */
+	DRIVER( shuifeng )	/* (c) 1999 WAH LAP */
+
+	/* Sun Mixing Mega Drive based boards (drivers/megadriv_sunmix.c) */
+	DRIVER( topshoot )	/* (c) 1995 Sun Mixing */
 	DRIVER( sbubsm )	/* (c) 1996 Sun Mixing */
 
 	/* Mega Drive based bootlegs (drivers/megadriv_acbl.c) */
