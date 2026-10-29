@@ -512,12 +512,14 @@ void m6809_init(void)
 	state_save_register_UINT16("m6809", cpu, "S", &S, 1);
 	state_save_register_UINT16("m6809", cpu, "X", &X, 1);
 	state_save_register_UINT16("m6809", cpu, "Y", &Y, 1);
+	state_save_register_UINT16("m6809", cpu, "D", &D, 1);	/* the accumulators A and B */
 	state_save_register_UINT8("m6809", cpu, "DP", &DP, 1);
 	state_save_register_UINT8("m6809", cpu, "CC", &CC, 1);
 	state_save_register_UINT8("m6809", cpu, "INT", &m6809.int_state, 1);
 	state_save_register_UINT8("m6809", cpu, "NMI", &m6809.nmi_state, 1);
 	state_save_register_UINT8("m6809", cpu, "IRQ", &m6809.irq_state[0], 1);
 	state_save_register_UINT8("m6809", cpu, "FIRQ", &m6809.irq_state[1], 1);
+	state_save_register_int("m6809", cpu, "extra_cycles", &m6809.extra_cycles);	/* the cycles of an interrupt taken outside the execute loop */
 }
 
 void m6809_reset(void *param)

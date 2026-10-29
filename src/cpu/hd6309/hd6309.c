@@ -587,6 +587,8 @@ void hd6309_init(void)
 	state_save_register_UINT16("hd6309", cpu, "X", &X, 1);
 	state_save_register_UINT16("hd6309", cpu, "Y", &Y, 1);
 	state_save_register_UINT16("hd6309", cpu, "V", &V, 1);
+	state_save_register_UINT16("hd6309", cpu, "D", &D, 1);	/* the accumulators A and B */
+	state_save_register_UINT16("hd6309", cpu, "W", &W, 1);	/* the accumulators E and F */
 	state_save_register_UINT8("hd6309", cpu, "DP", &DP, 1);
 	state_save_register_UINT8("hd6309", cpu, "CC", &CC, 1);
 	state_save_register_UINT8("hd6309", cpu, "MD", &MD, 1);
@@ -595,6 +597,7 @@ void hd6309_init(void)
 	state_save_register_UINT8("hd6309", cpu, "NMI", &hd6309.nmi_state, 1);
 	state_save_register_UINT8("hd6309", cpu, "IRQ", &hd6309.irq_state[0], 1);
 	state_save_register_UINT8("hd6309", cpu, "FIRQ", &hd6309.irq_state[1], 1);
+	state_save_register_int("hd6309", cpu, "extra_cycles", &hd6309.extra_cycles);	/* the cycles of an interrupt taken outside the execute loop */
 }
 
 /****************************************************************************/

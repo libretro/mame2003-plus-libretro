@@ -76,10 +76,8 @@ static void FMTimerInit( void )
 	}
 }
 
-/* optional: keep the two FM timers of each chip in save states (the core
-   does not save its timers), with the parts of the FM and SSG state the
-   YM2610 save state leaves out. Opt-in, so the save states of the other
-   YM2610 drivers keep their layout. */
+/* optional: keep the two FM timers of each chip in save states (from before
+   the core saved its timers) */
 static void YM2610_timer_presave( void )
 {
 	int n, c;
@@ -116,16 +114,18 @@ static void YM2610_timer_state_start( void )
 {
 	int n;
 	memset( timer_on, 0, sizeof( timer_on ) );
-	if( !timer_state_wanted )
-		return;
-	for( n = 0; n < intf->num; n++ )
+	if( timer_state_wanted )
 	{
-		state_save_register_UINT8( "ym2610timer", n, "on", timer_on[n], 2 );
-		state_save_register_double( "ym2610timer", n, "left", timer_left[n], 2 );
+		for( n = 0; n < intf->num; n++ )
+		{
+			state_save_register_UINT8( "ym2610timer", n, "on", timer_on[n], 2 );
+			state_save_register_double( "ym2610timer", n, "left", timer_left[n], 2 );
+		}
+		state_save_register_func_presave( YM2610_timer_presave );
+		state_save_register_func_postload( YM2610_timer_postload );
 	}
-	state_save_register_func_presave( YM2610_timer_presave );
-	state_save_register_func_postload( YM2610_timer_postload );
-	/* the chip and SSG state the YM2610 save state leaves out */
+	/* the chip and SSG state the YM2610 save state leaves out: for all the
+	   games (Neo Geo too), the save states and RunAhead lost it */
 	YM2610_ext_state_register( intf->num );
 	AY8910_ym_ext_state_register( intf->num );
 }

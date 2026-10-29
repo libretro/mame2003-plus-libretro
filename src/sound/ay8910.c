@@ -832,7 +832,7 @@ int AY8910_sh_start_ym(const struct MachineSound *msound)
 /* optional: the internal counters of the SSG of a YM chip in save states.
    The YM postload rewrites the SSG registers, which restarts the envelope,
    so the counters are kept in a copy and put back after it. */
-#define AY_EXT_INT 12
+#define AY_EXT_INT 17
 #define AY_EXT_U8 13
 static INT32 ay_ext_int[MAX_8910][AY_EXT_INT];
 static UINT8 ay_ext_u8[MAX_8910][AY_EXT_U8];
@@ -850,6 +850,10 @@ static void AY8910_ext_presave(void)
 		i[3] = PSG->CountN; i[4] = PSG->CountE; i[5] = PSG->RNG;
 		i[6] = PSG->VolA; i[7] = PSG->VolB; i[8] = PSG->VolC; i[9] = PSG->VolE;
 		i[10] = PSG->lastEnable; i[11] = PSG->register_latch;
+		/* the periods as they were made: a clock change (the YM prescaler)
+		   does not remake them, the register rewrite of the postload does */
+		i[12] = PSG->PeriodA; i[13] = PSG->PeriodB; i[14] = PSG->PeriodC;
+		i[15] = PSG->PeriodN; i[16] = PSG->PeriodE;
 		u[0] = PSG->EnvelopeA; u[1] = PSG->EnvelopeB; u[2] = PSG->EnvelopeC;
 		u[3] = PSG->OutputA; u[4] = PSG->OutputB; u[5] = PSG->OutputC; u[6] = PSG->OutputN;
 		u[7] = (UINT8)PSG->CountEnv; u[8] = PSG->Hold; u[9] = PSG->Alternate;
@@ -869,6 +873,8 @@ static void AY8910_ext_postload(void)
 		PSG->CountN = i[3]; PSG->CountE = i[4]; PSG->RNG = i[5];
 		PSG->VolA = i[6]; PSG->VolB = i[7]; PSG->VolC = i[8]; PSG->VolE = i[9];
 		PSG->lastEnable = i[10]; PSG->register_latch = i[11];
+		PSG->PeriodA = i[12]; PSG->PeriodB = i[13]; PSG->PeriodC = i[14];
+		PSG->PeriodN = i[15]; PSG->PeriodE = i[16];
 		PSG->EnvelopeA = u[0]; PSG->EnvelopeB = u[1]; PSG->EnvelopeC = u[2];
 		PSG->OutputA = u[3]; PSG->OutputB = u[4]; PSG->OutputC = u[5]; PSG->OutputN = u[6];
 		PSG->CountEnv = (signed char)u[7]; PSG->Hold = u[8]; PSG->Alternate = u[9];

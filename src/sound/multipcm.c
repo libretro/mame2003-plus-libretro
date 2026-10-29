@@ -83,6 +83,7 @@ typedef struct Voice_t
   	int 	relamt;		/* release amount*/
   	int 	relcount;	/* release counter*/
 	INT8	relstage;	/* release stage*/
+	INT32	samp_offset;	/* pSamp in the ROM, for the save states */
 } VoiceT;
 
 /* chip structure*/
@@ -104,19 +105,27 @@ typedef struct MultiPCM_t
 
 static MultiPCMT mpcm[MAX_MULTIPCM];
 
+/* the sample pointer of each voice as its offset in the ROM: it was made at
+   the key on, with the bank and the sample number of then (the registers
+   can have changed since) */
+static void MultiPCM_presave(void)
+{
+	int i, j;
+
+	for (i = 0; i < MAX_MULTIPCM; i++)
+		for (j = 0; j < 28; j++)
+			mpcm[i].Voices[j].samp_offset = (mpcm[i].Voices[j].pSamp && mpcm[i].romptr) ?
+				(INT32)(mpcm[i].Voices[j].pSamp - (INT8 *)mpcm[i].romptr) : -1;
+}
+
 static void MultiPCM_postload(void)
 {
-	int i, j, inum;
+	int i, j;
 
-	/* recalculate all the proper voice pointers*/
-	for (i = 0; i < 2; i++)
-	{
+	for (i = 0; i < MAX_MULTIPCM; i++)
 		for (j = 0; j < 28; j++)
-		{
-			inum = mpcm[i].registers[j][1] | ((mpcm[i].registers[j][2]&0x1)<<8);
-		  	mpcm[i].Voices[j].pSamp = &mpcm[i].romptr[mpcm[i].samples[inum].st];
-		}
-	}
+			mpcm[i].Voices[j].pSamp = (mpcm[i].Voices[j].samp_offset >= 0 && mpcm[i].romptr) ?
+				(INT8 *)&mpcm[i].romptr[mpcm[i].Voices[j].samp_offset] : NULL;
 }
 
 static void MultiPCM_update(int chip, INT16 **buffer, int length )
@@ -340,12 +349,15 @@ int MultiPCM_sh_start(const struct MachineSound *msound)
 			state_save_register_INT32(mname2, 1, "ptsum", &mpcm[i].Voices[v].ptsum, 1);
 			state_save_register_int(mname2, 1, "relamt", &mpcm[i].Voices[v].relamt);
 			state_save_register_INT8(mname2, 1, "relstage", &mpcm[i].Voices[v].relstage, 1);
+			state_save_register_int(mname2, 1, "relcount", &mpcm[i].Voices[v].relcount);
+			state_save_register_INT32(mname2, 1, "sample offset", &mpcm[i].Voices[v].samp_offset, 1);
 		}
 
 		state_save_register_int(mname, i, "curreg", &mpcm[i].curreg);
 		state_save_register_int(mname, i, "curvoice", &mpcm[i].curvoice);
 	}
 
+	state_save_register_func_presave(MultiPCM_presave);
 	state_save_register_func_postload(MultiPCM_postload);
 
 	return 0;

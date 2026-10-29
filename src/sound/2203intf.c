@@ -73,6 +73,10 @@ int YM2203_sh_start(const struct MachineSound *msound)
 
 	intf = msound->sound_interface;
 
+	/* the SSG state the YM2203 save state leaves out (before YM2203Init:
+	   the postloads run last registered first) */
+	AY8910_ym_ext_state_register(intf->num);
+
 	/* Timer Handler set */
 	FMTimerInit();
 	/* stream system initialize */

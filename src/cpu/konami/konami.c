@@ -483,6 +483,7 @@ void konami_init(void)
 	state_save_register_UINT8("konami", cpu, "NMI", &konami.nmi_state, 1);
 	state_save_register_UINT8("konami", cpu, "IRQ", &konami.irq_state[0], 1);
 	state_save_register_UINT8("konami", cpu, "FIRQ", &konami.irq_state[1], 1);
+	state_save_register_int("konami", cpu, "extra_cycles", &konami.extra_cycles);	/* the cycles of an interrupt taken outside the execute loop */
 }
 
 void konami_reset(void *param)
