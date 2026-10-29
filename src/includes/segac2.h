@@ -17,11 +17,14 @@ extern unsigned char *genesis_z80_ram;
 extern data16_t *genesis_io_ram;
 
 MACHINE_DRIVER_EXTERN( genesis_base );
+MACHINE_DRIVER_EXTERN( genesis );		/* genesis_base and the PSG */
 MACHINE_INIT( genesis );
 INTERRUPT_GEN( genesis_vblank_interrupt );
 INTERRUPT_GEN( megatech_irq );
 void genesis_enable_iack(void);
 READ16_HANDLER( genesis_68k_to_z80_r );
+READ16_HANDLER( genesis_68000_io_r );
+WRITE16_HANDLER( genesis_68000_io_w );
 
 READ16_HANDLER( genesis_ctrl_r );
 WRITE16_HANDLER( genesis_ctrl_w );

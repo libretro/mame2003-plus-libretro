@@ -27,11 +27,14 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Backfire!
 * Back Fire (Tecmo)
 * Bang Bang Busters
+* Bare Knuckle (scrambled bootleg of Mega Drive version) - Romset `barekch` - 6 button pads
+* Bare Knuckle II (bootleg of Mega Drive version) - Romset `barek2mb` - its PIC16C57 emulated
 * Bare Knuckle II (chinese bootleg of Megadrive version)
 * Bare Knuckle III (bootleg of Megadrive version)
 * Baryon: Future Assault
 * Beastie Feastie (Epos Tristar 9000) - Romset `beastf`; the Pac-Man conversion is now `beastfp`, as in current MAME
 * Big Fight - Big Trouble In The Atlantic Ocean
+* Bio-Hazard Battle (scrambled bootleg of Mega Drive version) - Romset `biohzdmb`
 * Bomb Kick
 * Boogie Wings
 * Born To Fight
@@ -161,6 +164,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Monsters World (Bootleg Of Super Pang)
 * Monster Maulers
 * More More
+* Mortal Kombat 3 (scrambled bootleg of Mega Drive version) - Romset `mk3mdb` - 6 button pads
 * Mortal Race
 * Mouse Shooter GoGo
 * Ms. Pacman Twin
@@ -250,8 +254,10 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Super Bishi Bashi Championship (ver JAA, 2 Players)
 * Super Bubble Bobble (Sun Mixing, Megadrive clone hardware)
 * Super Doubles Tennis (Deco Cassette)
+* Sunset Riders (scrambled bootleg of Mega Drive version) - Romset `srmdb`
 * Super Monaco GP
 * Super Rider
+* Super Street Fighter II - The New Challengers (scrambled bootleg of Mega Drive version) - Romset `ssf2mdb` - 6 button pads
 * Super Trio
 * SWAT Police
 * Tang Tang
@@ -304,6 +310,9 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * 800 Fathoms (older), Knock Out!! (bootleg, set 2 and set 3), Triple Punch (set 2) - Romsets `800fatha`, `knockoutb`, `knockoutc`, `triplepa`
 * Alien Storm (bootlegs of the 3 players and Japan sets) - Romsets `astorm3d`, `astormud`, `astormjd`
 * Asura Buster - Eternal Warriors (USA), (Japan, set 2) and (Japan) (ARCADIA review build) - Romsets `asurabus`, `asurabusja`, `asurabusjr`; the Japan set 1 is now `asurabusj`, as in current MAME
+* Bare Knuckle III (bootleg of Mega Drive version, alt set, the PIC simulated) - Romset `barek3mba` - not working, as in current MAME
+* Bare Knuckle III / Sunset Riders (scrambled bootleg of Mega Drive versions) - Romset `bk3ssrmb` - not working, as in current MAME (only Bare Knuckle III boots)
+* Sunset Riders / Super Street Fighter II - The New Challengers (scrambled bootleg of Mega Drive versions) - Romset `srssf2mb` - not working, as in current MAME (the order of the ROMs is not known)
 * Battle Shark (Japan, Joystick)
 * Bloxeed (bootleg) - Romset `bloxeedd`
 * Botanic (French version)
@@ -835,6 +844,9 @@ Notes on this option:
 * Sega Mega Play: its own driver (`drivers/megaplay.c`, as in current MAME), the Mega Drive part shared with the other Mega Drive based boards; Tecmo World Cup is now `mp_twcup` and the BIOS version 2 ROM `epr-a15294.ic2`, as in current MAME
 * Sega Mega-Tech: its own driver (`drivers/megatech.c`, as in current MAME), sets, ROMs and names as in current MAME (good dumps of `mt_bbros`, `mt_ggolf`, `mt_gng`, `mt_tetri`, the instruction ROMs in the cart at 0x300000); the Master System carts now run, on the Mega Drive in Mark III mode as in current MAME (the VDP in mode 4, the Z80 with the Sega mapper); the BIOS cart slots as in current MAME (the menu lists the one cart in slot 1, the slot RAM, the window into the cart), the BIOS display in its 224 line mode (the MENU title was cut) and drawn line by line; the Mega Drive VDP line timing and partial updates now count its own lines below the BIOS screen (they used the scanlines of the double screen); the 68000 writes to 0xa02000 of the boards without the Mega Play BIOS no longer go through a NULL pointer (Great Golf and Great Soccer crashed)
 * Sega Mega Play: the BIOS overlay is transparent on colour 0 of both its palettes and covers its borders, as in current MAME (the boot logo screen was hidden behind a green background)
+* Sega Mega Drive based bootlegs: their own driver (`drivers/megadriv_acbl.c`, as in current MAME), with the board variants of current MAME (the 6 button pads, the DIP switches at 0x770070 of the scrambled boards, the 3rd I/O port coins, the PIC16C57 of `barek2mb`); the new sets take their V-INT / H-INT through the VDP interrupt enables as on the real hardware (Mortal Kombat 3 crashed at boot), the descrambling of the bootlegs and the PIC of `barek2mb` now also work on big-endian hosts
+* Sega Mega Drive VDP: in H32 mode the sprite table base uses bit 0 of register 5, as on the real VDP (the fighters of Super Street Fighter II were missing, the sprites of Bonanza Bros. on Mega-Tech were garbled)
+* PIC16C5x CPU core: the program counter wraps at the end of the program memory (the 2K parts start at 0x7ff and ran past the ROM), and the save states no longer register the ports and STATUS through a NULL pointer (the save of a game with a PIC crashed); these are in the data RAM, saved with the CPU memory
 * Save states (netplay, RunAhead with a second instance) of the Mega Drive based boards: the Z80 RAM and bus state and the Mega-Tech / Mega Play BIOS registers and RAM are saved (Gunstar Heroes and Mazin Wars Mega Play went out of sync after loading a state in a new instance); the SN76496 PSG is saved, and the YM2612 DAC enable is restored from its own register (0x2b, it was read from 0x2d)
 * Sega System 18 (also Moonwalker): the VDP palette writes no longer overflow the System 16 palette RAM (they corrupted the memory after it, e.g. garbled graphics in Shadow Dancer), and the sprite shadows over the VDP layer no longer index past the palette
 * Save states (RunAhead, netplay) of the Sega System 18 hardware: the RF5C68 PCM, the YM2612/YM3438 envelope, LFO, frequency and timer state, the VDP layer, the sound ROM bank

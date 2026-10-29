@@ -212719,8 +212719,8 @@
 		<input players="2" control="joy8way" buttons="2" coins="1"/>
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
 	</game>
-	<game name="barek3mb" sourcefile="segac2.c">
-		<description>Bare Knuckle III (bootleg of Megadrive version)</description>
+	<game name="barek3mb" sourcefile="megadriv_acbl.c">
+		<description>Bare Knuckle III (scrambled bootleg of Mega Drive version)</description>
 		<year>1994</year>
 		<manufacturer>bootleg / Sega</manufacturer>
 		<rom name="6.u19" size="524288" crc="2de19519" sha1="f5fcef1da8b5370e399f0451382e3c6e7754c9c8" region="cpu1" offset="0"/>
@@ -212761,8 +212761,8 @@
 		</dipswitch>
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
 	</game>
-	<game name="aladmdb" sourcefile="segac2.c">
-		<description>Aladdin (bootleg of Japanese Megadrive version)</description>
+	<game name="aladmdb" sourcefile="megadriv_acbl.c">
+		<description>Aladdin (bootleg of Mega Drive version)</description>
 		<year>1993</year>
 		<manufacturer>bootleg / Sega</manufacturer>
 		<rom name="m1.bin" size="524288" crc="5e2671e4" sha1="54705c7614fc7b5a1065478fa41f51dd1d8045b7" region="cpu1" offset="1"/>
@@ -212792,10 +212792,10 @@
 		</dipswitch>
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
 	</game>
-	<game name="barek2ch" sourcefile="segac2.c">
-		<description>Bare Knuckle II (Chinese bootleg of Megadrive version)</description>
+	<game name="barek2ch" sourcefile="megadriv_acbl.c">
+		<description>Bare Knuckle II (scrambled bootleg of Mega Drive version)</description>
 		<year>1994</year>
-		<manufacturer>bootleg / Sega</manufacturer>
+		<manufacturer>bootleg</manufacturer>
 		<rom name="u14" size="524288" crc="b0ee177f" sha1="d63e6ee30fe7f4aaab098d3920eabc456730b2c5" region="cpu1" offset="1"/>
 		<rom name="u15" size="524288" crc="09264195" sha1="c5439731d932c90a57d68c4d82c9ebed8a01bd53" region="cpu1" offset="0"/>
 		<rom name="u16" size="524288" crc="6c814fc4" sha1="edaf5117b19d3fb40218c5f7c4b5099c9189f1be" region="cpu1" offset="100001"/>
@@ -212899,8 +212899,8 @@
 		</dipswitch>
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
 	</game>
-	<game name="sonic2mb" sourcefile="segac2.c">
-		<description>Sonic The Hedgehog 2 (bootleg of Megadrive version)</description>
+	<game name="sonic2mb" sourcefile="megadriv_acbl.c">
+		<description>Sonic The Hedgehog 2 (bootleg of Mega Drive version)</description>
 		<year>1993</year>
 		<manufacturer>bootleg / Sega</manufacturer>
 		<rom name="m1" size="524288" crc="7b40aa24" sha1="247882cd1f412366d61aeb4d85bbeefd5f108e1d" region="cpu1" offset="1"/>
@@ -212946,8 +212946,8 @@
 		</dipswitch>
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
 	</game>
-	<game name="sonic3mb" sourcefile="segac2.c">
-		<description>Sonic The Hedgehog 3 (bootleg of Megadrive version)</description>
+	<game name="sonic3mb" sourcefile="megadriv_acbl.c">
+		<description>Sonic The Hedgehog 3 (bootleg of Mega Drive version)</description>
 		<year>1993</year>
 		<manufacturer>bootleg / Sega</manufacturer>
 		<rom name="sonic3-4.bin" size="524288" crc="b7318bb8" sha1="1707b563794c3ab4a1f04cb449efdd6f817317fb" region="cpu1" offset="0"/>
@@ -212975,8 +212975,98 @@
 		</dipswitch>
 		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="2048"/>
 	</game>
-	<game name="jparkmb" sourcefile="segac2.c">
-		<description>Jurassic Park (bootleg of Megadrive version)</description>
+	<game name="barek2mb" sourcefile="megadriv_acbl.c">
+		<description>Bare Knuckle II (bootleg of Mega Drive version)</description>
+		<year>1994</year>
+		<manufacturer>bootleg / Sega</manufacturer>
+		<rom name="m1.bin" size="524288" crc="1c1fa718" sha1="393488f7747478728eb4f20c10b0cfce3b188719" region="cpu1" offset="1"/>
+		<rom name="m2.bin" size="524288" crc="59ee0905" sha1="0e9f1f6e17aae2dd99bf9d7f640568b48ba699c7" region="cpu1" offset="0"/>
+		<rom name="m3.bin" size="524288" crc="6ec5af5d" sha1="9088a2d4cff5e7eb439ebaa91ad3bfff11366127" region="cpu1" offset="100001"/>
+		<rom name="m4.bin" size="524288" crc="d8c61e0d" sha1="3d06e656f6621bb0741211f80c1ecff1669475ee" region="cpu1" offset="100000"/>
+		<rom name="bk_pic16c57rcp.bin" size="4096" crc="434ad1b7" sha1="9241554793c7375cf58239e762481a4b80a51df6" region="cpu3" offset="1000"/>
+		<chip type="cpu" name="68000" clock="7670442"/>
+		<chip type="cpu" name="Z80" clock="3579540"/>
+		<chip type="cpu" name="PIC16C57" clock="1000000"/>
+		<chip type="audio" name="YM2612" clock="7670442"/>
+		<chip type="audio" name="SN76496" clock="3579540"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="2" control="joy8way" buttons="3" coins="1"/>
+		<dipswitch name="Coinage">
+			<dipvalue name="6 Coins/1 Credit"/>
+			<dipvalue name="5 Coins/1 Credit"/>
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="8 Coins/3 Credits"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="5 Coins/3 Credits"/>
+			<dipvalue name="3 Coins/2 Credits"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="2 Coins/3 Credits"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+			<dipvalue name="1 Coin/6 Credits"/>
+		</dipswitch>
+		<dipswitch name="Lives">
+			<dipvalue name="1" default="yes"/>
+			<dipvalue name="2"/>
+			<dipvalue name="3"/>
+			<dipvalue name="4"/>
+		</dipswitch>
+		<dipswitch name="Difficulty">
+			<dipvalue name="Easy" default="yes"/>
+			<dipvalue name="Medium"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Hardest"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
+	</game>
+	<game name="barek3mba" sourcefile="megadriv_acbl.c" cloneof="barek3mb" romof="barek3mb">
+		<description>Bare Knuckle III (bootleg of Mega Drive version)</description>
+		<year>1994</year>
+		<manufacturer>bootleg / Sega</manufacturer>
+		<rom name="u4" size="524288" crc="6b116813" sha1="df9811c5da9f58f2bba462447b792f3067b10411" region="cpu1" offset="0"/>
+		<rom name="u3" size="524288" crc="8c891e5a" sha1="aa1fb1aa2c68b1ae24e1ac30a82bc4e454b952b5" region="cpu1" offset="1"/>
+		<rom name="u6" size="524288" crc="a2ec29e2" sha1="8e8eee64554396070455a737f4009d33d2ffa535" region="cpu1" offset="100000"/>
+		<rom name="u5" size="524288" crc="f79e0028" sha1="54022eadc6e345c049b7357b17b636b31d2af914" region="cpu1" offset="100001"/>
+		<rom name="u8" size="524288" crc="55be9542" sha1="f78c273858f3ae77b36f1229797e80a4ab102a03" region="cpu1" offset="200000"/>
+		<rom name="u7" merge="2.u16" size="524288" crc="bba4a585" sha1="32c59729943d7b4c1a39f2a2b0dae9ce16991e9c" region="cpu1" offset="200001"/>
+		<chip type="cpu" name="68000" clock="7670442"/>
+		<chip type="cpu" name="Z80" clock="3579540"/>
+		<chip type="audio" name="YM2612" clock="7670442"/>
+		<chip type="audio" name="SN76496" clock="3579540"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="2" control="joy8way" buttons="3" coins="1"/>
+		<dipswitch name="Coinage">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+		</dipswitch>
+		<dipswitch name="Lives">
+			<dipvalue name="1" default="yes"/>
+			<dipvalue name="2"/>
+			<dipvalue name="3"/>
+			<dipvalue name="4"/>
+		</dipswitch>
+		<dipswitch name="Difficulty">
+			<dipvalue name="Very Easy"/>
+			<dipvalue name="Easy"/>
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Very Hard"/>
+		</dipswitch>
+		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="2048"/>
+	</game>
+	<game name="jparkmb" sourcefile="megadriv_acbl.c">
+		<description>Jurassic Park (bootleg of Mega Drive version)</description>
 		<year>1993</year>
 		<manufacturer>bootleg / Sega</manufacturer>
 		<rom name="f24.bin" size="524288" crc="bdd851d2" sha1="1a75922e848fd5c7cd4ab102c99effcfcf382097" region="cpu1" offset="0"/>
@@ -213024,8 +213114,590 @@
 		</dipswitch>
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
 	</game>
-	<game name="twinktmb" sourcefile="segac2.c">
-		<description>Twinkle Tale (bootleg of Megadrive version)</description>
+	<game name="barekch" sourcefile="megadriv_acbl.c">
+		<description>Bare Knuckle (scrambled bootleg of Mega Drive version)</description>
+		<year>1994</year>
+		<manufacturer>bootleg</manufacturer>
+		<rom name="1.u1" size="131072" crc="a119b5ef" sha1="710ef6dc340a2c3741af69cd9a3d16e5fdd73be6" region="cpu1" offset="1"/>
+		<rom name="2.u2" size="131072" crc="7d4ad276" sha1="9ab2a28356cc5c36eee8dba40c04a64cf5d2cfde" region="cpu1" offset="0"/>
+		<rom name="3.u3" size="131072" crc="af6a9122" sha1="0f2bac1ad20f5918b04dd5a503121445029e4c84" region="cpu1" offset="40001"/>
+		<rom name="4.u4" size="131072" crc="98245384" sha1="f4f96f369764a7d204ec414f053b25da662ff401" region="cpu1" offset="40000"/>
+		<chip type="cpu" name="68000" clock="7670442"/>
+		<chip type="cpu" name="Z80" clock="3579540"/>
+		<chip type="audio" name="YM2612" clock="7670442"/>
+		<chip type="audio" name="SN76496" clock="3579540"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="2" control="joy8way" buttons="6" coins="2"/>
+		<dipswitch name="SW1:1">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="SW1:2">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="SW1:3">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="SW1:4">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="SW1:5">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="SW1:6">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="SW1:7">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="SW1:8">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="SW2:1">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="SW2:2">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="SW2:3">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="SW2:4">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="SW2:5">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="SW2:6">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="SW2:7">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="SW2:8">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="SW3:1">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="SW3:2">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="SW3:3">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="SW3:4">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="SW3:5">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="SW3:6">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Lives">
+			<dipvalue name="3" default="yes"/>
+			<dipvalue name="4"/>
+			<dipvalue name="5"/>
+			<dipvalue name="6"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
+	</game>
+	<game name="bk3ssrmb" sourcefile="megadriv_acbl.c">
+		<description>Bare Knuckle III / Sunset Riders (scrambled bootleg of Mega Drive versions)</description>
+		<year>1994</year>
+		<manufacturer>bootleg / Sega</manufacturer>
+		<rom name="1.u15" size="524288" crc="120a4b64" sha1="7084fde0d08143f48f83d2afef30522d75c7889c" region="cpu1" offset="0"/>
+		<rom name="5.u14" size="524288" crc="1eb625d3" sha1="8f67ab874643b3eafe91768df84ea4a3b8a5fa82" region="cpu1" offset="1"/>
+		<rom name="2.u13" size="524288" crc="af439685" sha1="5cc55608355e11096c9fadb8d2460cf66704deec" region="cpu1" offset="100000"/>
+		<rom name="6.u12" size="524288" crc="24d31e12" sha1="64c1b968e1ee5d0355d902e280f33e4466f27b07" region="cpu1" offset="100001"/>
+		<rom name="3.u11" size="524288" crc="dfa5c478" sha1="079a9cad5c2252b2d65aa3c4dc9cba331078eeb9" region="cpu1" offset="200000"/>
+		<rom name="7.u10" size="524288" crc="bba4a585" sha1="32c59729943d7b4c1a39f2a2b0dae9ce16991e9c" region="cpu1" offset="200001"/>
+		<rom name="4.u9" size="262144" crc="e5f1ab97" sha1="0f4c527043f1272e75a996f4f7270c6ea4ed3c4d" region="cpu1" offset="300000"/>
+		<rom name="8.u8" size="262144" crc="32ee1048" sha1="1b135c200b4440e95a7d1766b4b404ddd238872d" region="cpu1" offset="300001"/>
+		<chip type="cpu" name="68000" clock="7670442"/>
+		<chip type="cpu" name="Z80" clock="3579540"/>
+		<chip type="audio" name="YM2612" clock="7670442"/>
+		<chip type="audio" name="SN76496" clock="3579540"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="2" control="joy8way" buttons="3" coins="2"/>
+		<dipswitch name="Coinage">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+		</dipswitch>
+		<dipswitch name="Lives">
+			<dipvalue name="1" default="yes"/>
+			<dipvalue name="2"/>
+			<dipvalue name="3"/>
+			<dipvalue name="4"/>
+		</dipswitch>
+		<dipswitch name="Difficulty">
+			<dipvalue name="Very Easy"/>
+			<dipvalue name="Easy"/>
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Very Hard"/>
+		</dipswitch>
+		<dipswitch name="DSWB:1">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWB:2">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWB:3">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWB:4">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWB:5">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWB:6">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWB:7">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWB:8">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWC:1">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWC:2">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWC:3">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWC:4">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWC:5">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWC:6">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWC:7">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWC:8">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="2048"/>
+	</game>
+	<game name="srssf2mb" sourcefile="megadriv_acbl.c">
+		<description>Sunset Riders / Super Street Fighter II - The New Challengers (scrambled bootleg of Mega Drive versions)</description>
+		<year>1994</year>
+		<manufacturer>bootleg / Sega</manufacturer>
+		<rom name="1.u15" size="262144" crc="b40982ca" sha1="fa7b266d346e2a79936984b2b989f3e8b6a90223" region="cpu1" offset="0"/>
+		<rom name="3.u14" size="262144" crc="81ac9700" sha1="cdc7d49d75b8d4a5ff41181a063e1917483afd75" region="cpu1" offset="1"/>
+		<rom name="2.u13" size="262144" crc="e5f1ab97" sha1="0f4c527043f1272e75a996f4f7270c6ea4ed3c4d" region="cpu1" offset="80000"/>
+		<rom name="4.u12" size="262144" crc="32ee1048" sha1="1b135c200b4440e95a7d1766b4b404ddd238872d" region="cpu1" offset="80001"/>
+		<rom name="ys104-01.u5" size="2097152" crc="055dea8b" sha1="663005c6c87046e955c6295bf25379d258dd4066" region="cpu1" offset="100000"/>
+		<rom name="ys104-02.u6" size="2097152" crc="6fcf8db5" sha1="319f320110966058ccec8da640877e8a82c3e4b4" region="cpu1" offset="300000"/>
+		<rom name="ys104-03.u7" size="2097152" crc="0771d570" sha1="6bb93a1fd8f0f2a1a12e9cd3eec762ac46912632" region="cpu1" offset="500000"/>
+		<chip type="cpu" name="68000" clock="7670442"/>
+		<chip type="cpu" name="Z80" clock="3579540"/>
+		<chip type="audio" name="YM2612" clock="7670442"/>
+		<chip type="audio" name="SN76496" clock="3579540"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="2" control="joy8way" buttons="3" coins="2"/>
+		<dipswitch name="Coinage">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+		</dipswitch>
+		<dipswitch name="Lives">
+			<dipvalue name="1" default="yes"/>
+			<dipvalue name="2"/>
+			<dipvalue name="3"/>
+			<dipvalue name="4"/>
+		</dipswitch>
+		<dipswitch name="Difficulty">
+			<dipvalue name="Very Easy"/>
+			<dipvalue name="Easy"/>
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Very Hard"/>
+		</dipswitch>
+		<dipswitch name="DSWB:1">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWB:2">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWB:3">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWB:4">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWB:5">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWB:6">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWB:7">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWB:8">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWC:1">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWC:2">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWC:3">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWC:4">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWC:5">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWC:6">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWC:7">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWC:8">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="2048"/>
+	</game>
+	<game name="biohzdmb" sourcefile="megadriv_acbl.c">
+		<description>Bio-Hazard Battle (scrambled bootleg of Mega Drive version)</description>
+		<year>1995</year>
+		<manufacturer>bootleg / Sega</manufacturer>
+		<rom name="u14" size="524288" crc="b96cf28c" sha1="0a49cf2fc0a2712b423b4e1f95a4befe3bf5c746" region="cpu1" offset="1"/>
+		<rom name="u15" size="524288" crc="41a8eae8" sha1="a9db565f4ca4d71c81fbb44fd429221951887bab" region="cpu1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7670442"/>
+		<chip type="cpu" name="Z80" clock="3579540"/>
+		<chip type="audio" name="YM2612" clock="7670442"/>
+		<chip type="audio" name="SN76496" clock="3579540"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="2" control="joy8way" buttons="3" coins="2"/>
+		<dipswitch name="DSWA:1">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWA:2">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWA:3">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWA:4">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWA:5">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWA:6">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWA:7">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWA:8">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWB:1">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWB:2">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWB:3">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWB:4">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWB:5">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWB:6">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWB:7">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWB:8">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWC:1">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWC:2">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWC:3">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWC:4">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWC:5">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWC:6">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWC:7">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="DSWC:8">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
+	</game>
+	<game name="mk3mdb" sourcefile="megadriv_acbl.c">
+		<description>Mortal Kombat 3 (scrambled bootleg of Mega Drive version)</description>
+		<year>1996</year>
+		<manufacturer>bootleg / Midway</manufacturer>
+		<rom name="1.u1" size="524288" crc="0dc01b23" sha1="f1aa7ac88c8e3deb5a0a065862722e9d27b87b4c" region="cpu1" offset="80001"/>
+		<rom name="2.u3" size="524288" crc="50250235" sha1="9f9e06f26163b92c76397fde43b38b3536bcb637" region="cpu1" offset="180001"/>
+		<rom name="3.u9" size="524288" crc="493404c1" sha1="73f4bd1eeeee3f175f4378ab406a97f94f88880b" region="cpu1" offset="280001"/>
+		<rom name="4.u11" size="524288" crc="a52156b8" sha1="0990ef1fb3427a5d3c262e264feb25c1db75ed33" region="cpu1" offset="380001"/>
+		<rom name="6.u2" size="524288" crc="9852fd6f" sha1="348befeca5129c5ea2c142760ec93511f98f23cc" region="cpu1" offset="80000"/>
+		<rom name="5.u4" size="524288" crc="ed6a6d13" sha1="eaab912ee035ece03f7cfceb1b546004399daad5" region="cpu1" offset="180000"/>
+		<rom name="7.u10" size="524288" crc="a124d8d1" sha1="d391b130992701d0fae7e827ba314b8368d809de" region="cpu1" offset="280000"/>
+		<rom name="8.u12" size="524288" crc="8176f7cc" sha1="375e1e982b97ba709fb160b04f56f6aa2d580104" region="cpu1" offset="380000"/>
+		<chip type="cpu" name="68000" clock="7670442"/>
+		<chip type="cpu" name="Z80" clock="3579540"/>
+		<chip type="audio" name="YM2612" clock="7670442"/>
+		<chip type="audio" name="SN76496" clock="3579540"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="2" control="joy8way" buttons="6" coins="2"/>
+		<dipswitch name="Coinage">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+		</dipswitch>
+		<dipswitch name="Difficulty">
+			<dipvalue name="Easiest" default="yes"/>
+			<dipvalue name="Easy"/>
+			<dipvalue name="Medium"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Hardest"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Blood">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
+	</game>
+	<game name="ssf2mdb" sourcefile="megadriv_acbl.c">
+		<description>Super Street Fighter II - The New Challengers (scrambled bootleg of Mega Drive version)</description>
+		<year>1994</year>
+		<manufacturer>bootleg / Capcom</manufacturer>
+		<rom name="rom_a" size="2097152" crc="59726521" sha1="3120bac17f56c01ffb9d3f9e31efa0263e3774af" region="cpu1" offset="0"/>
+		<rom name="rom_b" size="2097152" crc="7dad5540" sha1="9279068b2218d239fdd557dd959ac70e74853178" region="cpu1" offset="1"/>
+		<rom name="rom_c" size="524288" crc="deb48624" sha1="39ffa7de7b808e0b95cb039bb381705d77420933" region="cpu1" offset="400000"/>
+		<rom name="rom_d" size="524288" crc="b99f6a5b" sha1="adbe28a7522024bc66328ac86fecf9ded3310e8e" region="cpu1" offset="400001"/>
+		<chip type="cpu" name="68000" clock="7670442"/>
+		<chip type="cpu" name="Z80" clock="3579540"/>
+		<chip type="audio" name="YM2612" clock="7670442"/>
+		<chip type="audio" name="SN76496" clock="3579540"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="2" control="joy8way" buttons="6" coins="2"/>
+		<dipswitch name="Coinage">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+		</dipswitch>
+		<dipswitch name="Difficulty">
+			<dipvalue name="0 (Easiest)"/>
+			<dipvalue name="1"/>
+			<dipvalue name="2"/>
+			<dipvalue name="3"/>
+			<dipvalue name="4" default="yes"/>
+			<dipvalue name="5"/>
+			<dipvalue name="6"/>
+			<dipvalue name="7 (Hardest)"/>
+		</dipswitch>
+		<dipswitch name="Speed">
+			<dipvalue name="0 (Slowest)"/>
+			<dipvalue name="1"/>
+			<dipvalue name="2"/>
+			<dipvalue name="3"/>
+			<dipvalue name="4" default="yes"/>
+			<dipvalue name="5"/>
+			<dipvalue name="6"/>
+			<dipvalue name="7"/>
+			<dipvalue name="8"/>
+			<dipvalue name="9"/>
+			<dipvalue name="10 (Fastest)"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
+	</game>
+	<game name="srmdb" sourcefile="megadriv_acbl.c">
+		<description>Sunset Riders (scrambled bootleg of Mega Drive version)</description>
+		<year>1993</year>
+		<manufacturer>bootleg / Konami</manufacturer>
+		<rom name="u1" size="131072" crc="c59f33bd" sha1="bd5bce7698a70ea005b79ab34bcdb056872ef980" region="cpu1" offset="1"/>
+		<rom name="u2" size="131072" crc="9125c054" sha1="c73bdeb6b11c59d2b5f5968959b02697957ca894" region="cpu1" offset="0"/>
+		<rom name="u3" size="131072" crc="0fee0fbe" sha1="001e0fda12707512aad537e533acf28e726e6107" region="cpu1" offset="40001"/>
+		<rom name="u4" size="131072" crc="fc2aed41" sha1="27eb3957f5ed26ee5276523b1df46fa7eb298e1f" region="cpu1" offset="40000"/>
+		<chip type="cpu" name="68000" clock="7670442"/>
+		<chip type="cpu" name="Z80" clock="3579540"/>
+		<chip type="audio" name="YM2612" clock="7670442"/>
+		<chip type="audio" name="SN76496" clock="3579540"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="2" control="joy8way" buttons="2" coins="2"/>
+		<dipswitch name="Coinage">
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+			<dipvalue name="1 Coin/5 Credits"/>
+		</dipswitch>
+		<dipswitch name="Difficulty">
+			<dipvalue name="Easy" default="yes"/>
+			<dipvalue name="Medium"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Hardest"/>
+		</dipswitch>
+		<dipswitch name="Lives">
+			<dipvalue name="3" default="yes"/>
+			<dipvalue name="4"/>
+			<dipvalue name="5"/>
+			<dipvalue name="6"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
+	</game>
+	<game name="twinktmb" sourcefile="megadriv_acbl.c">
+		<description>Twinkle Tale (bootleg of Mega Drive version)</description>
 		<year>1993</year>
 		<manufacturer>bootleg / Sega</manufacturer>
 		<rom name="m2.bin" size="524288" crc="44424f8f" sha1="e16318bfdf869765c821c264cf9a7e6c728f7073" region="cpu1" offset="0"/>

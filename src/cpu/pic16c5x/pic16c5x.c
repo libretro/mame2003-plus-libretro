@@ -704,11 +704,9 @@ void pic16C5x_init(void)
 	state_save_register_UINT8("pic16C5x", cpu, "TRISA", &R.TRISA, 1);
 	state_save_register_UINT8("pic16C5x", cpu, "TRISB", &R.TRISB, 1);
 	state_save_register_UINT8("pic16C5x", cpu, "TRISC", &R.TRISC, 1);
-	state_save_register_UINT8("pic16C5x", cpu, "PORTA", &R.PORTA, 1);
-	state_save_register_UINT8("pic16C5x", cpu, "PORTB", &R.PORTB, 1);
-	state_save_register_UINT8("pic16C5x", cpu, "PORTC", &R.PORTC, 1);
 	state_save_register_UINT8("pic16C5x", cpu, "Old_T0", &old_T0, 1);
-	state_save_register_UINT8("pic16C5x", cpu, "STR", &R.STATUS, 1);
+	/* STATUS and the ports are in the data RAM (picRAM), saved with the memory
+	   of the CPU: R.picRAM is not set yet here */
 	state_save_register_UINT8("pic16C5x", cpu, "RAM_mask", &picRAMmask, 1);
 	state_save_register_UINT16("pic16C5x", cpu, "WDT", &R.WDT, 1);
 	state_save_register_UINT16("pic16C5x", cpu, "Prescaler", &R.prescaler, 1);
@@ -858,7 +856,7 @@ int pic16C5x_execute(int cycles)
 			CALL_MAME_DEBUG;
 
 			R.opcode.d = M_RDOP(R.PC);
-			R.PC++;
+			R.PC = (R.PC + 1) & ADDR_MASK;	/* wraps to 0 after the reset vector 0x7ff of the 2K parts */
 			R.PCL++;
 
 			if ((R.opcode.w.l & 0xff0) != 0x000)	{	/* Do all opcodes except the 00? ones */
