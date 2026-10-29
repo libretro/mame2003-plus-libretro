@@ -212404,16 +212404,17 @@
 		</dipswitch>
 		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="2048"/>
 	</game>
-	<game name="puckpkmn" sourcefile="segac2.c">
-		<description>Puckman Pockimon</description>
+	<game name="puckpkmn" sourcefile="megadriv_ybox.c">
+		<description>Puckman Pockimon Genie 2000</description>
 		<year>2000</year>
-		<manufacturer>Genie</manufacturer>
-		<rom name="puckpoke.u5" size="524288" crc="fd334b91" sha1="cf8bf6645a4082ea4392937e169b1686c9c7e246" region="cpu1" offset="0"/>
-		<rom name="puckpoke.u4" size="524288" crc="839cc76b" sha1="e15662a7175db7a8e222dda176a8ed92e0d56e9d" region="cpu1" offset="1"/>
-		<rom name="puckpoke.u8" size="524288" crc="7936bec8" sha1="4b350105abe514fbfeabae1c6f3aeee695c3d07a" region="cpu1" offset="100000"/>
-		<rom name="puckpoke.u7" size="524288" crc="96b66bdf" sha1="3cc2861ad9bc232cbe683e01b58090f832d03db5" region="cpu1" offset="100001"/>
-		<rom name="puckpoke.u3" size="262144" crc="7b066bac" sha1="429616e21c672b07e0705bc63234249cac3af56f" region="sound1" soundonly="yes" offset="0"/>
+		<manufacturer>Sun Mixing</manufacturer>
+		<rom name="200061.u5" size="524288" crc="502a5093" sha1="6dc1c79d52ebb653cb2e4388f74fd975ec323566" region="cpu1" offset="0"/>
+		<rom name="200060.u4" size="524288" crc="5f160c18" sha1="5a5ce1b9a81afe836e435e9d6f16cf57b63cbd31" region="cpu1" offset="1"/>
+		<rom name="200063.u8" size="524288" crc="0c29781e" sha1="db442f9b588608b2ac04d65fd830103296599a6a" region="cpu1" offset="100000"/>
+		<rom name="200062.u7" size="524288" crc="00bbf9a9" sha1="924c1ed85090c497ce89528082c15d1548a854a0" region="cpu1" offset="100001"/>
+		<rom name="206295.u3" size="262144" crc="7b066bac" sha1="429616e21c672b07e0705bc63234249cac3af56f" region="sound1" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
+		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="audio" name="YM2612" clock="7670442"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
 		<chip type="audio" name="MSM6295" clock="8000"/>
@@ -212478,7 +212479,157 @@
 		</dipswitch>
 		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
 	</game>
-	<game name="jzth" sourcefile="segac2.c">
+	<game name="jingling" sourcefile="megadriv_ybox.c" cloneof="puckpkmn" romof="puckpkmn">
+		<description>Jingling Jiazu Genie 2000</description>
+		<year>2000</year>
+		<manufacturer>IBS Co. Ltd</manufacturer>
+		<rom name="b2.u59" size="1048576" crc="3fbea2c7" sha1="89f3770ae92c62714f0795ddd2f311a9532eb25a" region="cpu1" offset="0"/>
+		<rom name="b1.u59" size="1048576" crc="dc7b4254" sha1="8ba5c5e8123e62e9af091971d0d0401d2df49350" region="cpu1" offset="1"/>
+		<rom name="b4.u59" size="1048576" crc="375c9f80" sha1="9b0eb729e95c22355e4117eec596f90e10282492" region="cpu1" offset="100000"/>
+		<rom name="b3.u59" size="1048576" crc="d5487df6" sha1="d1d3d717e184a4e8e067665bbbe94e7cf45db478" region="cpu1" offset="100001"/>
+		<rom name="a.u3" size="524288" crc="77891c9b" sha1="66f28b418a480a89ddb3fae3a7c2fe702c62364c" region="sound1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7670442"/>
+		<chip type="cpu" name="Z80" clock="3579540"/>
+		<chip type="audio" name="YM2612" clock="7670442"/>
+		<chip type="audio" name="SN76496" clock="3579540"/>
+		<chip type="audio" name="MSM6295" clock="8000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="2" control="joy8way" buttons="1" coins="1"/>
+		<dipswitch name="Coinage">
+			<dipvalue name="5 Coins/1 Credit"/>
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+		</dipswitch>
+		<dipswitch name="Lives">
+			<dipvalue name="1"/>
+			<dipvalue name="2"/>
+			<dipvalue name="3" default="yes"/>
+			<dipvalue name="4"/>
+			<dipvalue name="5"/>
+			<dipvalue name="6"/>
+			<dipvalue name="7"/>
+			<dipvalue name="8"/>
+		</dipswitch>
+		<dipswitch name="Difficulty">
+			<dipvalue name="Easy"/>
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Hardest"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
+		</dipswitch>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
+	</game>
+	<game name="puckpkmnb" sourcefile="megadriv_ybox.c" cloneof="puckpkmn" romof="puckpkmn">
+		<description>Puckman Pockimon Genie 2000 (bootleg)</description>
+		<year>2000</year>
+		<manufacturer>bootleg</manufacturer>
+		<rom name="puckpoke.u5" size="524288" crc="fd334b91" sha1="cf8bf6645a4082ea4392937e169b1686c9c7e246" region="cpu1" offset="0"/>
+		<rom name="puckpoke.u4" size="524288" crc="839cc76b" sha1="e15662a7175db7a8e222dda176a8ed92e0d56e9d" region="cpu1" offset="1"/>
+		<rom name="puckpoke.u8" size="524288" crc="7936bec8" sha1="4b350105abe514fbfeabae1c6f3aeee695c3d07a" region="cpu1" offset="100000"/>
+		<rom name="puckpoke.u7" size="524288" crc="96b66bdf" sha1="3cc2861ad9bc232cbe683e01b58090f832d03db5" region="cpu1" offset="100001"/>
+		<rom name="puckpoke.u3" merge="206295.u3" size="262144" crc="7b066bac" sha1="429616e21c672b07e0705bc63234249cac3af56f" region="sound1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7670442"/>
+		<chip type="cpu" name="Z80" clock="3579540"/>
+		<chip type="audio" name="YM2612" clock="7670442"/>
+		<chip type="audio" name="SN76496" clock="3579540"/>
+		<chip type="audio" name="MSM6295" clock="8000"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="2" control="joy8way" buttons="1" coins="1"/>
+		<dipswitch name="Coinage">
+			<dipvalue name="5 Coins/1 Credit"/>
+			<dipvalue name="4 Coins/1 Credit"/>
+			<dipvalue name="3 Coins/1 Credit"/>
+			<dipvalue name="2 Coins/1 Credit"/>
+			<dipvalue name="1 Coin/1 Credit" default="yes"/>
+			<dipvalue name="1 Coin/2 Credits"/>
+			<dipvalue name="1 Coin/3 Credits"/>
+			<dipvalue name="1 Coin/4 Credits"/>
+		</dipswitch>
+		<dipswitch name="Lives">
+			<dipvalue name="1"/>
+			<dipvalue name="2"/>
+			<dipvalue name="3" default="yes"/>
+			<dipvalue name="4"/>
+			<dipvalue name="5"/>
+			<dipvalue name="6"/>
+			<dipvalue name="7"/>
+			<dipvalue name="8"/>
+		</dipswitch>
+		<dipswitch name="Difficulty">
+			<dipvalue name="Easy"/>
+			<dipvalue name="Normal" default="yes"/>
+			<dipvalue name="Hard"/>
+			<dipvalue name="Hardest"/>
+		</dipswitch>
+		<dipswitch name="Service Mode">
+		</dipswitch>
+		<dipswitch name="Demo Sounds">
+			<dipvalue name="Off"/>
+			<dipvalue name="On" default="yes"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
+	</game>
+	<game name="jzth" sourcefile="megadriv_ybox.c">
 		<description>Juezhan Tianhuang</description>
 		<year>2000</year>
 		<manufacturer>&lt;unknown&gt;</manufacturer>
@@ -212492,6 +212643,7 @@
 		<rom name="s.y.u65" size="524288" crc="de64e526" sha1="e3b3e5c95b8ae36c0c57f8c9a6f55084464c4c05" region="cpu1" offset="300001"/>
 		<rom name="s.y.u3" size="524288" crc="38eef2f2" sha1="2f750dbf71fea0622e8493f0a8be7c43555ed5cf" region="sound1" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
+		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="audio" name="YM2612" clock="7670442"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
 		<chip type="audio" name="MSM6295" clock="8000"/>
@@ -212556,7 +212708,7 @@
 		</dipswitch>
 		<driver status="good" color="good" sound="imperfect" graphic="good" palettesize="2048"/>
 	</game>
-	<game name="songjang" sourcefile="segac2.c">
+	<game name="songjang" sourcefile="megadriv_ybox.c">
 		<description>Songjiangyanyi Final</description>
 		<year>2000</year>
 		<manufacturer>WAH LAP</manufacturer>
@@ -212566,6 +212718,7 @@
 		<rom name="rom.u7" size="524288" crc="1e24f2c9" sha1="562249b08a8fe317a606c16ce07a8009a0c5418a" region="cpu1" offset="100001"/>
 		<rom name="rom.u3" size="524288" crc="44287ab4" sha1="42de2010e73c036a2a0e01c9dd3c1c8aef1a54a1" region="sound1" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
+		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="audio" name="YM2612" clock="7670442"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
 		<chip type="audio" name="MSM6295" clock="8000"/>
@@ -212600,10 +212753,6 @@
 		</dipswitch>
 		<dipswitch name="Service Mode">
 		</dipswitch>
-		<dipswitch name="Demo Sounds">
-			<dipvalue name="Off"/>
-			<dipvalue name="On" default="yes"/>
-		</dipswitch>
 		<dipswitch name="Unused">
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
@@ -212628,9 +212777,13 @@
 			<dipvalue name="Off" default="yes"/>
 			<dipvalue name="On"/>
 		</dipswitch>
-		<driver status="preliminary" color="good" sound="good" graphic="good" palettesize="2048"/>
+		<dipswitch name="Unused">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="2048"/>
 	</game>
-	<game name="shuifeng" sourcefile="segac2.c">
+	<game name="shuifeng" sourcefile="megadriv_ybox.c">
 		<description>Shuihu Feng Yun Zhuan</description>
 		<year>1999</year>
 		<manufacturer>WAH LAP</manufacturer>
@@ -212640,6 +212793,7 @@
 		<rom name="shuihufengyunzhuan.u7" size="524288" crc="51caef9f" sha1="252dbb29ae878aaf28cb4586e02d823296eaf378" region="cpu1" offset="100001"/>
 		<rom name="shuihufengyunzhuan-oki.u3" size="524288" crc="44287ab4" sha1="42de2010e73c036a2a0e01c9dd3c1c8aef1a54a1" region="sound1" offset="0"/>
 		<chip type="cpu" name="68000" clock="7670442"/>
+		<chip type="cpu" name="Z80" clock="3579540"/>
 		<chip type="audio" name="YM2612" clock="7670442"/>
 		<chip type="audio" name="SN76496" clock="3579540"/>
 		<chip type="audio" name="MSM6295" clock="8000"/>
@@ -212704,8 +212858,24 @@
 		</dipswitch>
 		<driver status="good" color="good" sound="good" graphic="imperfect" palettesize="2048"/>
 	</game>
-	<game name="sbubsm" sourcefile="segac2.c">
-		<description>Super Bubble Bobble (Sun Mixing, Megadrive clone hardware)</description>
+	<game name="topshoot" sourcefile="megadriv_sunmix.c">
+		<description>Top Shooter</description>
+		<year>1995</year>
+		<manufacturer>Sun Mixing</manufacturer>
+		<rom name="tc574000ad_u11_2.bin" size="524288" crc="b235c4d9" sha1="fbb308a5f6e769f3277824cb6a3b50c308969ac2" region="cpu1" offset="0"/>
+		<rom name="tc574000ad_u12_1.bin" size="524288" crc="e826f6ad" sha1="23ec8bb608f954d3b915f061e7076c0c63b8259e" region="cpu1" offset="1"/>
+		<rom name="89c51.bin" size="4096" crc="595475c8" sha1="8313819ba06cc92b54f88c1ca9f34be8d1ec94d0" region="user1" offset="0"/>
+		<chip type="cpu" name="68000" clock="7670442"/>
+		<chip type="cpu" name="Z80" clock="3579540"/>
+		<chip type="audio" name="YM2612" clock="7670442"/>
+		<chip type="audio" name="SN76496" clock="3579540"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="1"/>
+		<input players="1" buttons="4" coins="2" service="yes"/>
+		<driver status="good" color="good" sound="good" graphic="good" palettesize="2048"/>
+	</game>
+	<game name="sbubsm" sourcefile="megadriv_sunmix.c">
+		<description>Super Bubble Bobble (Sun Mixing, Mega Drive clone hardware)</description>
 		<year>1996</year>
 		<manufacturer>Sun Mixing</manufacturer>
 		<rom name="u11.bin" size="524288" crc="4f9337ea" sha1="b245eb615f80afd25e29b2efdddb7f61c1deff6b" region="cpu1" offset="0"/>

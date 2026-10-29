@@ -132,6 +132,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Indian Battle
 * Invasion
 * Jammin (Atari Prototype)
+* Jingling Jiazu Genie 2000 - Romset `jingling`
 * Joe & Mac Returns
 * Jolly Jogger
 * Jurassic Park (Bootleg Of Megadrive Version)
@@ -198,6 +199,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Power Instinct Matrimelee
 * Power Up Baseball
 * Progear
+* Puckman Pockimon Genie 2000 - Romset `puckpkmn` - the set of current MAME; the old `puckpkmn` set is now its clone `puckpkmnb`, as in current MAME
 * Puzz Loop 2 (All Sets)
 * Puzzle Break
 * Puzzle Star
@@ -273,6 +275,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * ThunderForce AC (Japan, prototype, bootleg)
 * Top Driving
 * Top Roller
+* Top Shooter - Romset `topshoot`
 * Toppy & Rappy
 * Torus * Mature *
 * Touch & Go (Korea, unprotected)
@@ -542,6 +545,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Slipstream - Romset `slipstrm`
 * Snowboard Championship - Romset `snowboar`
 * Solar Fox - Romset `solarfox`
+* Songjiangyanyi Final - Romset `songjang` - the Mega Drive board of current MAME, the HBLANK status it waits for
 * Space Position - Romset `spcpostn`
 * Space Seeker - Romset `spaceskr`
 * Speed Spin - Romset `speedspn` - gfx glitches
@@ -845,6 +849,7 @@ Notes on this option:
 * Sega Mega-Tech: its own driver (`drivers/megatech.c`, as in current MAME), sets, ROMs and names as in current MAME (good dumps of `mt_bbros`, `mt_ggolf`, `mt_gng`, `mt_tetri`, the instruction ROMs in the cart at 0x300000); the Master System carts now run, on the Mega Drive in Mark III mode as in current MAME (the VDP in mode 4, the Z80 with the Sega mapper); the BIOS cart slots as in current MAME (the menu lists the one cart in slot 1, the slot RAM, the window into the cart), the BIOS display in its 224 line mode (the MENU title was cut) and drawn line by line; the Mega Drive VDP line timing and partial updates now count its own lines below the BIOS screen (they used the scanlines of the double screen); the 68000 writes to 0xa02000 of the boards without the Mega Play BIOS no longer go through a NULL pointer (Great Golf and Great Soccer crashed)
 * Sega Mega Play: the BIOS overlay is transparent on colour 0 of both its palettes and covers its borders, as in current MAME (the boot logo screen was hidden behind a green background)
 * Sega Mega Drive based bootlegs: their own driver (`drivers/megadriv_acbl.c`, as in current MAME), with the board variants of current MAME (the 6 button pads, the DIP switches at 0x770070 of the scrambled boards, the 3rd I/O port coins, the PIC16C57 of `barek2mb`); the new sets take their V-INT / H-INT through the VDP interrupt enables as on the real hardware (Mortal Kombat 3 crashed at boot), the descrambling of the bootlegs and the PIC of `barek2mb` now also work on big-endian hosts
+* Genie / Y-BOX and Sun Mixing boards: their own drivers (`drivers/megadriv_ybox.c`, `drivers/megadriv_sunmix.c`, as in current MAME); the Y-BOX games run on the Mega Drive machine as in MAME (Z80, I/O, the VDP interrupts and HBLANK as on the real hardware), with the protection read back latches and the ROM address remapping of Shuihu Feng Yun Zhuan of current MAME
 * Sega Mega Drive VDP: in H32 mode the sprite table base uses bit 0 of register 5, as on the real VDP (the fighters of Super Street Fighter II were missing, the sprites of Bonanza Bros. on Mega-Tech were garbled)
 * PIC16C5x CPU core: the program counter wraps at the end of the program memory (the 2K parts start at 0x7ff and ran past the ROM), and the save states no longer register the ports and STATUS through a NULL pointer (the save of a game with a PIC crashed); these are in the data RAM, saved with the CPU memory
 * Save states (netplay, RunAhead with a second instance) of the Mega Drive based boards: the Z80 RAM and bus state and the Mega-Tech / Mega Play BIOS registers and RAM are saved (Gunstar Heroes and Mazin Wars Mega Play went out of sync after loading a state in a new instance); the SN76496 PSG is saved, and the YM2612 DAC enable is restored from its own register (0x2b, it was read from 0x2d)
