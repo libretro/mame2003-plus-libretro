@@ -3487,6 +3487,7 @@ if( _BC > 1 && _PCD < 0xfffc ) {									\
 		if( op3==0x20 && op4==0xfb )								\
 		{															\
 			int cnt =												\
+				cc[Z80_TABLE_op][0x0b] +							\
 				cc[Z80_TABLE_op][0x78] +							\
 				cc[Z80_TABLE_op][0xb1] +							\
 				cc[Z80_TABLE_op][0x20] +							\
@@ -3505,6 +3506,7 @@ if( _BC > 1 && _PCD < 0xfffc ) {									\
 			if( (ad1 + 256 * ad2) == (_PCD - 1) )					\
 			{														\
 				int cnt =											\
+					cc[Z80_TABLE_op][0x0b] +						\
 					cc[Z80_TABLE_op][0x78] +						\
 					cc[Z80_TABLE_op][0xb1] +						\
 					cc[Z80_TABLE_op][0xc2] +						\
@@ -3530,6 +3532,7 @@ if( _DE > 1 && _PCD < 0xfffc ) {									\
 		if( op3==0x20 && op4==0xfb )								\
 		{															\
 			int cnt =												\
+				cc[Z80_TABLE_op][0x1b] +							\
 				cc[Z80_TABLE_op][0x7a] +							\
 				cc[Z80_TABLE_op][0xb3] +							\
 				cc[Z80_TABLE_op][0x20] +							\
@@ -3548,6 +3551,7 @@ if( _DE > 1 && _PCD < 0xfffc ) {									\
 			if( (ad1 + 256 * ad2) == (_PCD - 1) )					\
 			{														\
 				int cnt =											\
+					cc[Z80_TABLE_op][0x1b] +						\
 					cc[Z80_TABLE_op][0x7a] +						\
 					cc[Z80_TABLE_op][0xb3] +						\
 					cc[Z80_TABLE_op][0xc2] +						\
@@ -3573,6 +3577,7 @@ if( _HL > 1 && _PCD < 0xfffc ) {									\
 		if( op3==0x20 && op4==0xfb )								\
 		{															\
 			int cnt =												\
+				cc[Z80_TABLE_op][0x2b] +							\
 				cc[Z80_TABLE_op][0x7c] +							\
 				cc[Z80_TABLE_op][0xb5] +							\
 				cc[Z80_TABLE_op][0x20] +							\
@@ -3591,6 +3596,7 @@ if( _HL > 1 && _PCD < 0xfffc ) {									\
 			if( (ad1 + 256 * ad2) == (_PCD - 1) )					\
 			{														\
 				int cnt =											\
+					cc[Z80_TABLE_op][0x2b] +						\
 					cc[Z80_TABLE_op][0x7c] +						\
 					cc[Z80_TABLE_op][0xb5] +						\
 					cc[Z80_TABLE_op][0xc2] +						\
