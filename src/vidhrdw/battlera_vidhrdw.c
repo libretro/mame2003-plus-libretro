@@ -10,6 +10,7 @@
 #include "driver.h"
 #include "vidhrdw/generic.h"
 #include "cpu/h6280/h6280.h"
+#include "state.h"
 
 static int HuC6270_registers[20];
 static int VDC_register,vram_ptr;
@@ -18,6 +19,9 @@ static struct mame_bitmap *tile_bitmap,*front_bitmap;
 
 static int current_scanline,inc_value;
 static int irq_enable,rcr_enable,sb_enable,bb_enable,bldwolf_vblank;
+static int last_line;
+
+static void battlera_postload(void);
 
 
 
@@ -45,8 +49,42 @@ VIDEO_START( battlera )
 	inc_value=1;
 	current_scanline=0;
 	irq_enable=rcr_enable=sb_enable=bb_enable=0;
+	last_line=0;
+
+	state_save_register_UINT8("battlera_video", 0, "HuC6270_vram", HuC6270_vram, 0x20000);
+	state_save_register_INT32("battlera_video", 0, "HuC6270_registers", (INT32 *)HuC6270_registers, 20);
+	state_save_register_int("battlera_video", 0, "VDC_register", &VDC_register);
+	state_save_register_int("battlera_video", 0, "vram_ptr", &vram_ptr);
+	state_save_register_int("battlera_video", 0, "current_scanline", &current_scanline);
+	state_save_register_int("battlera_video", 0, "inc_value", &inc_value);
+	state_save_register_int("battlera_video", 0, "irq_enable", &irq_enable);
+	state_save_register_int("battlera_video", 0, "rcr_enable", &rcr_enable);
+	state_save_register_int("battlera_video", 0, "sb_enable", &sb_enable);
+	state_save_register_int("battlera_video", 0, "bb_enable", &bb_enable);
+	state_save_register_int("battlera_video", 0, "bldwolf_vblank", &bldwolf_vblank);
+	state_save_register_int("battlera_video", 0, "last_line", &last_line);
+	state_save_register_UINT8("battlera_video", 0, "paletteram", paletteram, 0x400);
+	state_save_register_func_postload(battlera_postload);
 
 	return 0;
+}
+
+static void battlera_postload(void)
+{
+	int offs,r,g,b,pal_word;
+
+	memset(tile_dirty,1,0x1000);
+	memset(sprite_dirty,1,0x400);
+	memset(vram_dirty,1,0x1000);
+
+	for (offs = 0; offs < 0x400; offs += 2)
+	{
+		pal_word=paletteram[offs] | (paletteram[offs+1]<<8);
+		r = ((pal_word >> 3) & 7) << 5;
+		g = ((pal_word >> 6) & 7) << 5;
+		b = ((pal_word >> 0) & 7) << 5;
+		palette_set_color(offs/2, r, g, b);
+	}
 }
 
 /******************************************************************************/
@@ -436,8 +474,6 @@ void battlera_raster_partial_refresh(struct mame_bitmap *bitmap,int start_line,i
 
 INTERRUPT_GEN( battlera_interrupt )
 {
-	static int last_line=0;
-
 	current_scanline=255-cpu_getiloops(); /* 8 lines clipped at top */
 
 	/* If raster interrupt occurs, refresh screen _up_ to this point */

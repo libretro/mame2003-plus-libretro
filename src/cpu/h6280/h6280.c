@@ -60,6 +60,7 @@
 
 #include "memory.h"
 #include "cpuintrf.h"
+#include "state.h"
 #include "mamedbg.h"
 #include "h6280.h"
 
@@ -138,6 +139,31 @@ UINT8	H6280_debug_mmr[8];
 /*****************************************************************************/
 void h6280_init(void)
 {
+	int cpu = cpu_getactivecpu();
+
+	state_save_register_UINT32("h6280", cpu, "PPC", &h6280.ppc.d, 1);
+	state_save_register_UINT32("h6280", cpu, "PC", &h6280.pc.d, 1);
+	state_save_register_UINT32("h6280", cpu, "SP", &h6280.sp.d, 1);
+	state_save_register_UINT32("h6280", cpu, "ZP", &h6280.zp.d, 1);
+	state_save_register_UINT32("h6280", cpu, "EA", &h6280.ea.d, 1);
+	state_save_register_UINT8("h6280", cpu, "A", &h6280.a, 1);
+	state_save_register_UINT8("h6280", cpu, "X", &h6280.x, 1);
+	state_save_register_UINT8("h6280", cpu, "Y", &h6280.y, 1);
+	state_save_register_UINT8("h6280", cpu, "P", &h6280.p, 1);
+	state_save_register_UINT8("h6280", cpu, "MMR", h6280.mmr, 8);
+	state_save_register_UINT8("h6280", cpu, "IRQ_MASK", &h6280.irq_mask, 1);
+	state_save_register_UINT8("h6280", cpu, "TIMER_STATUS", &h6280.timer_status, 1);
+	state_save_register_UINT8("h6280", cpu, "TIMER_ACK", &h6280.timer_ack, 1);
+	state_save_register_int("h6280", cpu, "TIMER_VALUE", &h6280.timer_value);
+	state_save_register_int("h6280", cpu, "TIMER_LOAD", &h6280.timer_load);
+	state_save_register_int("h6280", cpu, "EXTRA_CYCLES", &h6280.extra_cycles);
+	state_save_register_int("h6280", cpu, "NMI_STATE", &h6280.nmi_state);
+	state_save_register_int("h6280", cpu, "IRQ1_STATE", &h6280.irq_state[0]);
+	state_save_register_int("h6280", cpu, "IRQ2_STATE", &h6280.irq_state[1]);
+	state_save_register_int("h6280", cpu, "IRQT_STATE", &h6280.irq_state[2]);
+#if LAZY_FLAGS
+	state_save_register_int("h6280", cpu, "NZ", &h6280.NZ);
+#endif
 }
 
 void h6280_reset(void *param)
