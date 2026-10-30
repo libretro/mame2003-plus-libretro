@@ -55,6 +55,7 @@ struct SN76496
 	INT32 FeedbackMask;     /* mask for feedback */
 	INT32 WhitenoiseTaps;   /* mask for white noise taps */
 	INT32 WhitenoiseInvert; /* white noise invert flag */
+	INT32 SegaPSG;          /* Sega PSG: a tone period of 0 counts as 0x400 */
 	INT32 Period[4];
 	INT32 Count[4];
 	INT32 Output[4];
@@ -90,7 +91,7 @@ static void SN76496Write(int chip,int data)
 		case 4:	/* tone 2 : frequency */
 		    if ((data & 0x80) == 0) R->Register[r] = (R->Register[r] & 0x0f) | ((data & 0x3f) << 4);
 			R->Period[c] = STEP * R->Register[r];
-			if (R->Period[c] == 0) R->Period[c] = STEP;
+			if (R->Period[c] == 0) R->Period[c] = R->SegaPSG ? STEP * 0x400 : STEP;
 			if (r == 4)
 			{
 				/* update noise shift frequency */
@@ -322,6 +323,7 @@ int SN76496_sh_start(const struct MachineSound *msound)
 		R->FeedbackMask = 0x8000;     /* mask for feedback */
 		R->WhitenoiseTaps = 0x06;     /* mask for white noise taps */
 		R->WhitenoiseInvert = false;  /* white noise invert flag */
+		R->SegaPSG = 0;
 
 		/* save states: the tone/noise generators run on, so a state loaded
 		   in a new instance (netplay, RunAhead) needs them too */
@@ -335,4 +337,19 @@ int SN76496_sh_start(const struct MachineSound *msound)
 		state_save_register_INT32 ("sn76496", chip, "Output", R->Output, 4);
 	}
 	return 0;
+}
+
+/* switch a chip to the Sega PSG variant (the one integrated in the Sega
+   315-5124 VDP, as the MAME segapsg device): white noise taps on bits 0 and 3,
+   and a tone period of 0 behaves as 0x400. Call it after the sound start. */
+void SN76496_set_segapsg(int chip)
+{
+	struct SN76496 *R = &sn[chip];
+
+	R->FeedbackMask = 0x8000;
+	R->WhitenoiseTaps = 0x09;
+	R->WhitenoiseInvert = false;
+	R->SegaPSG = 1;
+	R->RNG = R->FeedbackMask;
+	R->Output[3] = R->RNG & 1;
 }

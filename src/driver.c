@@ -3308,7 +3308,6 @@ DokiDoki Penguin Land *not confirmed
 	DRIVER( bayrouta )	/* (c) 1989 (protected) */
 	DRIVER( bayrtbl1 )	/* (c) 1989 (protected) (bootleg) */
 	DRIVER( bayrtbl2 )	/* (c) 1989 (protected) (bootleg) */
-	DRIVER( enduror )	/* (c) 1985 (protected) */
 	DRIVER( eswat )		/* (c) 1989 (protected) */
 	DRIVER( fpoint )	/* (c) 1989 (protected) */
 	DRIVER( goldnaxb )	/* (c) 1989 (protected) */
@@ -3317,7 +3316,6 @@ DokiDoki Penguin Land *not confirmed
 	DRIVER( jyuohki )	/* (c) 1988 (protected. Altered Beast Japan) */
 	DRIVER( passsht )	/* (protected) */
 	DRIVER( sdioj )		/* (c) 1987 (protected. Japan) */
-	DRIVER( shangon )	/* (c) 1992 (protected) */
 	DRIVER( shinobia )	/* (c) 1987 (protected) */
 	DRIVER( shinobib )	/* (c) 1987 (protected) */
 	DRIVER( tetris )	/* (c) 1988 (protected) */
@@ -3371,8 +3369,14 @@ DokiDoki Penguin Land *not confirmed
 	DRIVER( bodyslam )	/* (c) 1986 */
 	DRIVER( dduxbl )	/* (c) 1989 (Datsu bootleg) */
 	DRIVER( dumpmtmt )	/* (c) 1986 (Japan) */
-	DRIVER( endurob2 )	/* (c) 1985 (Beta bootleg) */
-	DRIVER( endurobl )	/* (c) 1985 (Herb bootleg) */
+	DRIVER( enduror )	/* (c) 1986 (FD1089B) */
+	DRIVER( endurora )	/* (c) 1986 (FD1089B) */
+	DRIVER( endurorb )	/* (c) 1986 (FD1089B) */
+	DRIVER( enduror1 )	/* (c) 1986 (FD1089B) */
+	DRIVER( endurobl )	/* (c) 1986 (Herb bootleg) */
+	DRIVER( endurob2 )	/* (c) 1986 (Beta bootleg) */
+	DRIVER( endurord )	/* (c) 1986 (bootleg) */
+	DRIVER( enduror1d )	/* (c) 1986 (bootleg) */
 	DRIVER( eswatbl )	/* (c) 1989 (but bootleg) */
 	DRIVER( fantzone )	/* (c) 1986 */
 	DRIVER( fantzono )	/* (c) 1986 */
@@ -3443,7 +3447,14 @@ DokiDoki Penguin Land *not confirmed
   DRIVER( rachero )  /* 1989 (decrypted) */
 	DRIVER( riotcity )	/* (c) 1991 Sega / Westone */
 	DRIVER( sdi )		/* (c) 1987 */
-	DRIVER( shangonb )	/* (c) 1992 (but bootleg) */
+	DRIVER( shangon )	/* (c) 1987 */
+	DRIVER( shangon1 )	/* (c) 1987 (FD1089B) */
+	DRIVER( shangon2 )	/* (c) 1987 (FD1089B) */
+	DRIVER( shangon3 )	/* (c) 1987 (FD1089B) */
+	DRIVER( shangon3d )	/* (c) 1987 (bootleg) */
+	DRIVER( shangonle )	/* (c) 1991 */
+	DRIVER( shangonrb )	/* (c) 1992 (bootleg) */
+	DRIVER( shangonrb2 )	/* (c) 1987 (Beta bootleg) */
 	DRIVER( sharrier )	/* (c) 1985 */
 	DRIVER( shdancbl )	/* (c) 1989 (but bootleg) */
 	DRIVER( shdancer )	/* (c) 1989 */

@@ -118,8 +118,6 @@ extern struct GfxDecodeInfo sys16_gfxdecodeinfo[];
 /* encryption decoding */
 void endurob2_decode_data(data16_t *dest,data16_t *source,int size);
 void endurob2_decode_data2(data16_t *dest,data16_t *source,int size);
-void enduror_decode_data(data16_t *dest,data16_t *source,int size);
-void enduror_decode_data2(data16_t *dest,data16_t *source,int size);
 
 void aurail_decode_data(data16_t *dest,data16_t *source,int size);
 void aurail_decode_opcode1(data16_t *dest,data16_t *source,int size);

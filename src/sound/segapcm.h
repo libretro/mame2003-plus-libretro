@@ -23,7 +23,8 @@ struct SEGAPCMinterface
 enum SEGAPCM_samplerate
 {
 	SEGAPCM_SAMPLE15K,
-	SEGAPCM_SAMPLE32K
+	SEGAPCM_SAMPLE32K,
+	SEGAPCM_DISCRETE	/* 8-voice discrete logic version: voices at 0x40-0x7f/0xc0-0xff, clock/64, no banking */
 };
 
 int SEGAPCM_sh_start( const struct MachineSound *msound );

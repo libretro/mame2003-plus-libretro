@@ -42,6 +42,7 @@ static int segasyse_palettebase; /* needed for megatech for now..*/
 
 extern UINT8 vintpending;
 extern UINT8 hintpending;
+void segae_vdp_irq_reg_written(int reg);
 
 /*-- Prototypes --*/
 
@@ -63,14 +64,37 @@ static void segae_draw8pixsprite(UINT8 *dest, UINT8 chip, UINT16 tile, UINT8 lin
  vhstart, vhstop and vhrefresh functions
 *******************************************************************************/
 
+/* System E uses the 315-5124 output levels of MAME (blue is non-linear, see
+   the MAME sega315_5124 device); the Mega-Tech / Mega Play BIOS screen keeps
+   the old linear levels */
+static const UINT8 *segae_level, *segae_blue_level;
+static UINT8 segae_vscroll_latch[CHIPS];	/* System E: vertical scroll latched at line 0 */
+static UINT8 segae_hscroll_latch[CHIPS];	/* System E: horizontal scroll latched at the start of each line */
+
+void segae_latch_hscroll(void)
+{
+	segae_hscroll_latch[0] = segae_vdp_regs[0][8];
+	segae_hscroll_latch[1] = segae_vdp_regs[1][8];
+}
+static const UINT8 level_5124[4]      = { 0, 78, 160, 238 };
+static const UINT8 blue_level_5124[4] = { 0, 98, 160, 238 };
+
 VIDEO_START( segae )
 {
 	UINT8 temp;
 
 	segasyse_palettebase = 0;
+	segae_level = level_5124;
+	segae_blue_level = blue_level_5124;
 
 	for (temp=0;temp<CHIPS;temp++)
 		if (segae_vdp_start(temp)) return 1;
+
+	/* System E: the 64 pens are the 64 colours the VDPs can output, each
+	   scanline is converted through the CRAM contents at the time it is drawn
+	   (as in MAME, games change the CRAM in the middle of the frame) */
+	for (temp = 0; temp < 64; temp++)
+		palette_set_color(temp, level_5124[temp & 3], level_5124[(temp >> 2) & 3], blue_level_5124[(temp >> 4) & 3]);
 
 	cache_bitmap = auto_malloc( (16+256+16) * 192); /* 16 pixels either side to simplify drawing */
 
@@ -86,7 +110,7 @@ VIDEO_UPDATE( segae )
 	/*- Draw from cache_bitmap to screen -*/
 
 	for (i = 0;i < 192;i++)
-		draw_scanline8(bitmap,0,i,256,&cache_bitmap[i * (16+256+16) +16],&Machine->pens[segasyse_palettebase],15);
+		draw_scanline8(bitmap,0,i,256,&cache_bitmap[i * (16+256+16) +16],&Machine->pens[segasyse_palettebase],-1);
 }
 
 VIDEO_UPDATE( megrescu )
@@ -105,6 +129,7 @@ VIDEO_UPDATE( megrescu )
 int start_megatech_video_normal(void)
 {
 	segasyse_palettebase = 0x800;
+	segae_level = segae_blue_level = NULL;
 
 	if (segae_vdp_start(0)) return 1;
 
@@ -324,8 +349,9 @@ void segae_vdp_data_w ( UINT8 chip, UINT8 data )
 			r = (segae_vdp_cram[chip][segae_vdp_accessaddr[chip]] & 0x03) << 6;
 			g = (segae_vdp_cram[chip][segae_vdp_accessaddr[chip]] & 0x0c) << 4;
 			b = (segae_vdp_cram[chip][segae_vdp_accessaddr[chip]] & 0x30) << 2;
-
-			palette_set_color(segae_vdp_accessaddr[chip] + 32*chip+segasyse_palettebase, r, g, b);
+			/* System E resolves the CRAM per scanline (see segae_drawscanline_e) */
+			if (!segae_level)
+				palette_set_color(segae_vdp_accessaddr[chip] + 32*chip+segasyse_palettebase, r, g, b);
 		}
 
 		segae_vdp_accessaddr[chip] += 1;
@@ -402,20 +428,9 @@ void segae_vdp_setregister ( UINT8 chip, UINT16 cmd )
 
 	if (regnumber < 11) {
 		segae_vdp_regs[chip][regnumber] = regdata;
-		if (regnumber == 1 && chip == 1) {
-			if ((segae_vdp_regs[chip][0x1]&0x20) && vintpending) {
-				cpu_set_irq_line(0, 0, HOLD_LINE);
-			} else {
-				cpu_set_irq_line(0, 0, CLEAR_LINE);
-			}
-		}
-		if (regnumber == 0 && chip == 1) {
-			if ((segae_vdp_regs[chip][0x0]&0x10) && hintpending) { /* dink */
-				cpu_set_irq_line(0, 0, HOLD_LINE);
-			} else {
-				cpu_set_irq_line(0, 0, CLEAR_LINE);
-			}
-		}
+		/* the Front Layer VDP (only used by System E) drives /INT, see drivers/segasyse.c */
+		if (chip == 1 && regnumber <= 1)
+			segae_vdp_irq_reg_written(regnumber);
 	} else {
 		/* Illegal, there aren't this many registers! */
 	}
@@ -454,6 +469,154 @@ void segae_vdp_setregister ( UINT8 chip, UINT16 cmd )
 
 *******************************************************************************/
 
+/* System E sprites, as the MAME 315-5124 mode 4: up to 8 sprites per line
+   (the 9th sets the overflow flag), Y >= 240 wraps to the top, sprite shift
+   (register 0 bit 3), zoom (register 1 bit 0, only the first 4 sprites of the
+   line are doubled horizontally) and collision flag. The first sprite in the
+   table has priority. */
+extern UINT8 segae_vdp_status[];
+
+static void segae_drawspriteline_e(UINT8 *pix, UINT8 chip, int line)
+{
+	UINT8 *vram = segae_vdp_vram[chip] + 0x4000 * segae_vdp_vrambank[chip];
+	UINT16 satb = (segae_vdp_regs[chip][5] << 7) & 0x3f00;
+	int height = (segae_vdp_regs[chip][1] & 0x02) ? 16 : 8;
+	int zoom = (segae_vdp_regs[chip][1] & 0x01) ? 2 : 1;
+	int spr_x[8], spr_tile[8], spr_line[8];
+	UINT8 collision[256];
+	int count = 0, index, i, collided = 0;
+
+	for (index = 0; index < 64; index++)
+	{
+		int parse_line = line - 1;
+		int y = vram[satb + index];
+
+		if (y == 0xd0)
+			break;
+		if (y >= 240)
+			y -= 256;
+		if (zoom > 1)
+		{
+			parse_line >>= 1;
+			y >>= 1;
+		}
+		if (parse_line >= y && parse_line < y + height)
+		{
+			if (count < 8)
+			{
+				int sline = parse_line - y;
+				int x = vram[satb + 0x80 + (index << 1)];
+				int tile = vram[satb + 0x81 + (index << 1)];
+
+				if (segae_vdp_regs[chip][0] & 0x08)
+					x -= 8;
+				if (segae_vdp_regs[chip][6] & 0x04)
+					tile += 256;
+				if (height == 16)
+					tile &= 0x1fe;
+				if (sline > 7)
+					tile += 1;
+
+				spr_x[count] = x;
+				spr_tile[count] = tile;
+				spr_line[count] = (sline & 7) << 2;
+				count++;
+			}
+			else if (!(segae_vdp_status[chip] & 0x80))
+			{
+				/* sprite overflow */
+				segae_vdp_status[chip] |= 0x40;
+				segae_vdp_status[chip] &= ((index < 14) ? (index + 1) / 2 : index / 2) | 0xe0;
+			}
+		}
+	}
+
+	memset(collision, 0, sizeof(collision));
+	for (i = count - 1; i >= 0; i--)
+	{
+		const UINT8 *p = vram + (spr_tile[i] << 5) + spr_line[i];
+		int scale = (i < 4) ? zoom : 1;
+		int px;
+
+		for (px = 0; px < 8; px++)
+		{
+			int bit = 7 - px;
+			UINT8 pen = ((p[0] >> bit) & 1) | (((p[1] >> bit) & 1) << 1) | (((p[2] >> bit) & 1) << 2) | (((p[3] >> bit) & 1) << 3);
+			int x = spr_x[i] + px * scale, z;
+
+			if (!pen)
+				continue;
+			for (z = 0; z < scale; z++, x++)
+			{
+				if (x < 0 || x > 255)
+					continue;
+				pix[x] = 32 * chip + 16 + pen;
+				if (collision[x])
+					collided = 1;
+				collision[x] = 1;
+			}
+		}
+	}
+	if (collided)
+		segae_vdp_status[chip] |= 0x20;
+}
+
+/* System E line, drawn as the MAME 315-5124 device does: the Back Layer VDP
+   is shown where the Front Layer one is transparent; a disabled display or
+   the leftmost column blanked by bit 5 of register 0 show the backdrop colour
+   (register 7), which is transparent on the Front Layer VDP when it is colour
+   0. Pixels are stored as the 6-bit colour read from the CRAM now. */
+static void segae_drawscanline_e(int line)
+{
+	UINT8 *dest = cache_bitmap + (16+256+16) * line;
+	UINT8 *pix = dest + 16;
+	UINT8 bd0 = 16 + (segae_vdp_regs[0][7] & 0x0f);
+	UINT8 bd1 = segae_vdp_regs[1][7] & 0x0f;
+	UINT8 column0[8];
+	int x;
+
+	if (line == 0)
+	{
+		segae_vscroll_latch[0] = segae_vdp_regs[0][9];
+		segae_vscroll_latch[1] = segae_vdp_regs[1][9];
+	}
+
+	/* Back Layer VDP */
+	if (segae_vdp_regs[0][1] & 0x40)
+	{
+		memset(dest, 0, 16+256+16);
+		segae_drawtilesline (pix, line, 0,2);
+		segae_drawspriteline_e(pix, 0, line);
+		segae_drawtilesline (pix, line, 0,3);
+		if (segae_vdp_regs[0][0] & 0x20)
+			memset(pix, bd0, 8);
+	}
+	else
+		memset(dest, bd0, 16+256+16);
+
+	/* Front Layer VDP (pens 32-63) */
+	if (segae_vdp_regs[1][1] & 0x40)
+	{
+		memcpy(column0, pix, 8);
+		segae_drawtilesline (pix, line, 1,2);
+		segae_drawspriteline_e(pix, 1, line);
+		segae_drawtilesline (pix, line, 1,3);
+		if (segae_vdp_regs[1][0] & 0x20)
+		{
+			if (bd1)
+				memset(pix, 32 + 16 + bd1, 8);
+			else
+				memcpy(pix, column0, 8);	/* transparent backdrop */
+		}
+	}
+	else if (bd1)
+		memset(pix, 32 + 16 + bd1, 256);
+
+	/* resolve the colours through the current CRAM */
+	for (x = 0; x < 256; x++)
+		pix[x] = segae_vdp_cram[pix[x] >> 5][pix[x] & 0x1f] & 0x3f;
+}
+
 void segae_drawscanline(int line, int chips, int blank)
 {
 
@@ -461,6 +624,12 @@ void segae_drawscanline(int line, int chips, int blank)
 
 	if (osd_skip_this_frame())
 		return;
+
+	if (segae_level)
+	{
+		segae_drawscanline_e(line);
+		return;
+	}
 
 	dest = cache_bitmap + (16+256+16) * line;
 
@@ -506,8 +675,19 @@ void segae_drawtilesline(UINT8 *dest, int line, UINT8 chip, UINT8 pri)
 	UINT8 coloffset, coloffset2;
 	UINT8 loopcount;
 
-	hscroll = (256-segae_vdp_regs[chip][8]);
-	vscroll = segae_vdp_regs[chip][9];
+	/* pri 0/1: old behaviour (Mega-Tech BIOS); System E (as the MAME
+	   315-5124) uses pri 2 = all the tiles, opaque, then pri 3 = high priority
+	   tiles over the sprites with colour 0 transparent, with the vertical
+	   scroll latched at the start of the frame and the register 0 bits 6
+	   (top two rows not scrolled horizontally) and 7 (right 8 columns not
+	   scrolled vertically) */
+	int systeme = (pri >= 2);
+	UINT8 vscroll_latched = systeme ? segae_vscroll_latch[chip] : segae_vdp_regs[chip][9];
+
+	hscroll = (256-(systeme ? segae_hscroll_latch[chip] : segae_vdp_regs[chip][8]));
+	if (systeme && (segae_vdp_regs[chip][0] & 0x40) && line < 16)
+		hscroll = 0;
+	vscroll = vscroll_latched;
 	vscroll_line = (line + vscroll) % 224;
 
 	tmbase =  (segae_vdp_regs[chip][2] & 0x0e) << 10;
@@ -528,6 +708,14 @@ void segae_drawtilesline(UINT8 *dest, int line, UINT8 chip, UINT8 pri)
 		UINT16 tile_no;
 		UINT8  palette, priority, flipx, flipy;
 
+		if (systeme)
+		{
+			/* screen column of this tile (the first one may be partially offscreen) */
+			int column = loopcount - (coloffset2 ? 1 : 0);
+			vscroll = ((segae_vdp_regs[chip][0] & 0x80) && column > 23) ? 0 : vscroll_latched;
+			vscroll_line = (line + vscroll) % 224;
+			tilesline = vscroll_line >> 3;
+		}
 		vram_offset = tmbase
 					+ (2 * (32*tilesline + ((coloffset+loopcount)&0x1f) ) );
 		vram_word = segae_vdp_vram[chip][vram_offset] | (segae_vdp_vram[chip][vram_offset+1] << 8);
@@ -541,7 +729,14 @@ void segae_drawtilesline(UINT8 *dest, int line, UINT8 chip, UINT8 pri)
 		tilesline2= vscroll_line % 8;
 		if (flipy) tilesline2 = 7-tilesline2;
 
-		if (priority == pri) {
+		if (pri == 2) {
+			if (chip == 0) segae_draw8pix_solid16(dest, chip, tile_no,tilesline2,flipx,palette);
+			else segae_draw8pix(dest, chip, tile_no,tilesline2,flipx,palette);
+		}
+		else if (pri == 3) {
+			if (priority) segae_draw8pix(dest, chip, tile_no,tilesline2,flipx,palette);
+		}
+		else if (priority == pri) {
 			if (chip == 0) segae_draw8pix_solid16(dest, chip, tile_no,tilesline2,flipx,palette);
 			else segae_draw8pix(dest, chip, tile_no,tilesline2,flipx,palette);
 		}

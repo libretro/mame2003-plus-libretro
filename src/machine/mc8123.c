@@ -3122,3 +3122,333 @@ void mc8123_decrypt_ninjakid2(void)
 		rom[A] = mc8123_decrypt(A,src,key,0);
 	}
 }
+
+
+/***************************************************************************
+
+    Key based MC-8123 decryption (backport of the current MAME mc8123
+    device). The 0x2000 byte key is the dump of the battery-backed RAM of
+    the CPU (317-xxxx.key in the current MAME sets): the first half holds
+    the tables used for opcodes, the second half the ones used for data.
+
+***************************************************************************/
+
+static UINT8 mc8123k_decrypt_type0(UINT8 val, UINT8 param, unsigned swap)
+{
+	if (swap == 0) val = BITSWAP8(val,7,5,3,1,2,0,6,4);
+	if (swap == 1) val = BITSWAP8(val,5,3,7,2,1,0,4,6);
+	if (swap == 2) val = BITSWAP8(val,0,3,4,6,7,1,5,2);
+	if (swap == 3) val = BITSWAP8(val,0,7,3,2,6,4,1,5);
+
+	if (BIT(param,3) && BIT(val,7))
+		val ^= 0x29;
+
+	if (BIT(param,2) && BIT(val,6))
+		val ^= 0x86;
+
+	if (BIT(val,6)) val ^= 0x80;
+
+	if (BIT(param,1) && BIT(val,7))
+		val ^= 0x40;
+
+	if (BIT(val,2)) val ^= 0x21;
+
+	val ^= 0x1a;
+
+	if (BIT(param,2)) val ^= 0x25;
+	if (BIT(param,1)) val ^= 0xc0;
+	if (BIT(param,0)) val ^= 0x21;
+
+	if (BIT(param,0)) val = BITSWAP8(val,7,6,5,1,4,3,2,0);
+
+	return val;
+}
+
+
+static UINT8 mc8123k_decrypt_type1a(UINT8 val, UINT8 param, unsigned swap)
+{
+	if (swap == 0) val = BITSWAP8(val,4,2,6,5,3,7,1,0);
+	if (swap == 1) val = BITSWAP8(val,6,0,5,4,3,2,1,7);
+	if (swap == 2) val = BITSWAP8(val,2,3,6,1,4,0,7,5);
+	if (swap == 3) val = BITSWAP8(val,6,5,1,3,2,7,0,4);
+
+	if (BIT(param,2)) val = BITSWAP8(val,7,6,1,5,3,2,4,0);
+
+	if (BIT(val,1)) val ^= 0x01;
+	if (BIT(val,6)) val ^= 0x08;
+	if (BIT(val,7)) val ^= 0x48;
+	if (BIT(val,2)) val ^= 0x4a;
+	if (BIT(val,4)) val ^= 0xc4;
+
+	if (BIT(val,7) ^ BIT(val,2))
+		val ^= 0x10;
+
+	val ^= 0x4b;
+
+	if (BIT(param,3)) val ^= 0x84;
+	if (BIT(param,1)) val ^= 0x48;
+
+	if (BIT(param,0)) val = BITSWAP8(val,7,6,1,4,3,2,5,0);
+
+	return val;
+}
+
+static UINT8 mc8123k_decrypt_type1b(UINT8 val, UINT8 param, unsigned swap)
+{
+	if (swap == 0) val = BITSWAP8(val,1,0,3,2,5,6,4,7);
+	if (swap == 1) val = BITSWAP8(val,2,0,5,1,7,4,6,3);
+	if (swap == 2) val = BITSWAP8(val,6,4,7,2,0,5,1,3);
+	if (swap == 3) val = BITSWAP8(val,7,1,3,6,0,2,5,4);
+
+	if (BIT(val,2) && BIT(val,0))
+		val ^= 0x90;
+
+	if (BIT(val,7)) val ^= 0x04;
+	if (BIT(val,5)) val ^= 0x84;
+	if (BIT(val,1)) val ^= 0x20;
+	if (BIT(val,6)) val ^= 0x02;
+	if (BIT(val,4)) val ^= 0x60;
+	if (BIT(val,0)) val ^= 0x46;
+	if (BIT(val,3)) val ^= 0xc7;
+
+	val ^= 0x51;
+
+	if (BIT(param,3)) val ^= 0x12;
+	if (BIT(param,2)) val ^= 0xc9;
+	if (BIT(param,1)) val ^= 0x18;
+	if (BIT(param,0)) val ^= 0x47;
+
+	return val;
+}
+
+static UINT8 mc8123k_decrypt_type2a(UINT8 val, UINT8 param, unsigned swap)
+{
+	if (swap == 0) val = BITSWAP8(val,0,1,4,3,5,6,2,7);
+	if (swap == 1) val = BITSWAP8(val,6,3,0,5,7,4,1,2);
+	if (swap == 2) val = BITSWAP8(val,1,6,4,5,0,3,7,2);
+	if (swap == 3) val = BITSWAP8(val,4,6,7,5,2,3,1,0);
+
+	if (BIT(val,3) || (BIT(param,1) && BIT(val,2)))
+		val = BITSWAP8(val,6,0,7,4,3,2,1,5);
+
+	if (BIT(val,5)) val ^= 0x80;
+	if (BIT(val,6)) val ^= 0x20;
+	if (BIT(val,0)) val ^= 0x40;
+	if (BIT(val,4)) val ^= 0x09;
+	if (BIT(val,1)) val ^= 0x04;
+
+	val ^= 0xf2;
+
+	if (BIT(param,2)) val ^= 0x1f;
+
+	if (BIT(param,3))
+	{
+		if (BIT(param,0))
+			val = BITSWAP8(val,7,6,5,3,4,1,2,0);
+		else
+			val = BITSWAP8(val,7,6,5,1,2,4,3,0);
+	}
+	else if (BIT(param,0))
+	{
+		val = BITSWAP8(val,7,6,5,2,1,3,4,0);
+	}
+
+	return val;
+}
+
+static UINT8 mc8123k_decrypt_type2b(UINT8 val, UINT8 param, unsigned swap)
+{
+	/* only 0x20 possible encryptions for this method - all others have 0x40 */
+	/* this happens because BIT(param,2) cancels the other three */
+
+	if (swap == 0) val = BITSWAP8(val,1,3,4,6,5,7,0,2);
+	if (swap == 1) val = BITSWAP8(val,0,1,5,4,7,3,2,6);
+	if (swap == 2) val = BITSWAP8(val,3,5,4,1,6,2,0,7);
+	if (swap == 3) val = BITSWAP8(val,5,2,3,0,4,7,6,1);
+
+	if (BIT(val,7) && BIT(val,3))
+		val ^= 0x51;
+
+	if (BIT(val,7)) val ^= 0x04;
+	if (BIT(val,5)) val ^= 0x88;
+	if (BIT(val,1)) val ^= 0x20;
+	if (BIT(val,4)) val ^= 0xaa;
+
+	if (BIT(val,7) && BIT(val,5))
+		val ^= 0x11;
+
+	if (BIT(val,5) && BIT(val,1))
+		val ^= 0x11;
+
+	if (BIT(val,6)) val ^= 0xa0;
+	if (BIT(val,3)) val ^= 0xe2;
+	if (BIT(val,2)) val ^= 0x0a;
+
+	val ^= 0x8e;
+
+	if (BIT(param,3)) val ^= 0x4a;
+	if (BIT(param,2)) val ^= 0xee; /* same as the other three combined */
+	if (BIT(param,1)) val ^= 0x80;
+	if (BIT(param,0)) val ^= 0x24;
+
+	return val;
+}
+
+static UINT8 mc8123k_decrypt_type3a(UINT8 val, UINT8 param, unsigned swap)
+{
+	if (swap == 0) val = BITSWAP8(val,5,3,1,7,0,2,6,4);
+	if (swap == 1) val = BITSWAP8(val,3,1,2,5,4,7,0,6);
+	if (swap == 2) val = BITSWAP8(val,5,6,1,2,7,0,4,3);
+	if (swap == 3) val = BITSWAP8(val,5,6,7,0,4,2,1,3);
+
+	if (BIT(val,2)) val ^= 0xb0;
+	if (BIT(val,3)) val ^= 0x01;
+
+	if (BIT(param,0)) val = BITSWAP8(val,7,2,5,4,3,1,0,6);
+
+	if (BIT(val,1)) val ^= 0x41;
+	if (BIT(val,3)) val ^= 0x16;
+
+	if (BIT(param,3)) val ^= 0x18;
+
+	if (BIT(val,3)) val = BITSWAP8(val,5,6,7,4,3,2,1,0);
+
+	if (BIT(val,5)) val ^= 0x06;
+
+	val ^= 0x78;
+
+	if (BIT(param,2)) val ^= 0x80;
+	if (BIT(param,1)) val ^= 0x10;
+	if (BIT(param,0)) val ^= 0x01;
+
+	return val;
+}
+
+static UINT8 mc8123k_decrypt_type3b(UINT8 val, UINT8 param, unsigned swap)
+{
+	if (swap == 0) val = BITSWAP8(val,3,7,5,4,0,6,2,1);
+	if (swap == 1) val = BITSWAP8(val,7,5,4,6,1,2,0,3);
+	if (swap == 2) val = BITSWAP8(val,7,4,3,0,5,1,6,2);
+	if (swap == 3) val = BITSWAP8(val,2,6,4,1,3,7,0,5);
+
+	if (BIT(val,2)) val ^= 0x80;
+
+	if (BIT(val,7)) val = BITSWAP8(val,7,6,3,4,5,2,1,0);
+
+	if (BIT(param,3)) val ^= 0x80;
+
+	if (BIT(val,4)) val ^= 0x40;
+	if (BIT(val,1)) val ^= 0x54;
+
+	if (BIT(val,7) && BIT(val,6))
+		val ^= 0x02;
+
+	if (BIT(val,7)) val ^= 0x02;
+
+	if (BIT(param,3)) val ^= 0x80;
+	if (BIT(param,2)) val ^= 0x01;
+
+	if (BIT(param,3)) val = BITSWAP8(val,4,6,3,2,5,0,1,7);
+
+	if (BIT(val,4)) val ^= 0x02;
+	if (BIT(val,5)) val ^= 0x10;
+	if (BIT(val,7)) val ^= 0x04;
+
+	val ^= 0x2c;
+
+	if (BIT(param,1)) val ^= 0x80;
+	if (BIT(param,0)) val ^= 0x08;
+
+	return val;
+}
+
+static UINT8 mc8123k_decrypt_internal(UINT8 val, UINT8 key, int opcode)
+{
+	unsigned type = 0;
+	unsigned swap = 0;
+	UINT8 param = 0;
+
+	key ^= 0xff;
+
+	/* no encryption */
+	if (key == 0x00)
+		return val;
+
+	type ^= BIT(key,0) << 0;
+	type ^= BIT(key,2) << 0;
+	type ^= BIT(key,0) << 1;
+	type ^= BIT(key,1) << 1;
+	type ^= BIT(key,2) << 1;
+	type ^= BIT(key,4) << 1;
+	type ^= BIT(key,4) << 2;
+	type ^= BIT(key,5) << 2;
+
+	swap ^= BIT(key,0) << 0;
+	swap ^= BIT(key,1) << 0;
+	swap ^= BIT(key,2) << 1;
+	swap ^= BIT(key,3) << 1;
+
+	param ^= BIT(key,0) << 0;
+	param ^= BIT(key,0) << 1;
+	param ^= BIT(key,2) << 1;
+	param ^= BIT(key,3) << 1;
+	param ^= BIT(key,0) << 2;
+	param ^= BIT(key,1) << 2;
+	param ^= BIT(key,6) << 2;
+	param ^= BIT(key,1) << 3;
+	param ^= BIT(key,6) << 3;
+	param ^= BIT(key,7) << 3;
+
+	if (!opcode)
+	{
+		param ^= 0x01;
+		type ^= 0x01;
+	}
+
+	switch (type)
+	{
+		default:
+		case 0: return mc8123k_decrypt_type0(val, param, swap);
+		case 1: return mc8123k_decrypt_type0(val, param, swap);
+		case 2: return mc8123k_decrypt_type1a(val, param, swap);
+		case 3: return mc8123k_decrypt_type1b(val, param, swap);
+		case 4: return mc8123k_decrypt_type2a(val, param, swap);
+		case 5: return mc8123k_decrypt_type2b(val, param, swap);
+		case 6: return mc8123k_decrypt_type3a(val, param, swap);
+		case 7: return mc8123k_decrypt_type3b(val, param, swap);
+	}
+}
+
+
+static UINT8 mc8123k_decrypt(const UINT8 *key, offs_t addr, UINT8 val, int opcode)
+{
+	/* pick the translation table from bits fd57 of the address */
+	offs_t tbl_num =
+		(BIT(addr,15) << 11) | (BIT(addr,14) << 10) | (BIT(addr,13) << 9) | (BIT(addr,12) << 8) |
+		(BIT(addr,11) <<  7) | (BIT(addr,10) <<  6) | (BIT(addr, 8) << 5) | (BIT(addr, 6) << 4) |
+		(BIT(addr, 4) <<  3) | (BIT(addr, 2) <<  2) | (BIT(addr, 1) << 1) |  BIT(addr, 0);
+
+	return mc8123k_decrypt_internal(val, key[tbl_num | (opcode ? 0x0000 : 0x1000)], opcode);
+}
+
+
+/* decode the bytes of 'rom' from offset 'start' up to 'end' (excluded):
+   data is decrypted in place, opcodes are written at the same offsets of
+   'opcodes'. As in MAME, offsets from 0xc000 up are banked ROM, seen by the
+   CPU at 0x8000-0xbfff. */
+void mc8123_decode(UINT8 *rom, UINT8 *opcodes, const UINT8 *key, int start, int end)
+{
+	int i;
+
+	for (i = start; i < end; i++)
+	{
+		offs_t adr = (i >= 0xc000) ? ((i & 0x3fff) | 0x8000) : i;
+		UINT8 src = rom[i];
+
+		/* decode the opcodes */
+		opcodes[i] = mc8123k_decrypt(key, adr, src, 1);
+
+		/* decode the data */
+		rom[i] = mc8123k_decrypt(key, adr, src, 0);
+	}
+}
