@@ -5,7 +5,7 @@
 	The coin-op bootlegs of Mega Drive games, as in current MAME
 	(megadriv_acbl.cpp). Moved here from drivers/segac2.c; the Mega Drive
 	part (68000, sound Z80, I/O, interrupts) is shared with the other Mega
-	Drive based boards (includes/segac2.h), the VDP is in vidhrdw/segavdp.c.
+	Drive based boards (machine/megadriv.c), the VDP is in vidhrdw/segavdp.c.
 
 	With a PIC16C57 for the coins and the DIP switches:
 		Aladdin, Bare Knuckle II (barek2mb), Bare Knuckle III (barek3mba),
@@ -27,7 +27,7 @@
 
 #include "driver.h"
 #include "state.h"
-#include "segac2.h"
+#include "megadriv.h"
 #include "cpu/pic16c5x/pic16c5x.h"
 
 /******************************************************************************
@@ -1322,7 +1322,6 @@ Game does a check @ 1afc00 with work ram fff57c that makes it play like it was i
 	install_mem_read16_handler(0, 0x330000, 0x330001, aladbl_r);
 
 	acbl_config(0x20, 0, -1, 0);
-	init_segac2();
 }
 
 static DRIVER_INIT( barek2ch )
@@ -1343,7 +1342,6 @@ static DRIVER_INIT( barek2ch )
 	cpu_setbank(4, &genesis_68k_ram[0]);
 
 	acbl_config(0x20, 0, -1, 0);
-	init_segac2();
 }
 
 static DRIVER_INIT( barek3 )
@@ -1360,7 +1358,6 @@ static DRIVER_INIT( barek3 )
 	install_mem_read16_handler(0, 0x380078, 0x380079, input_port_3_word_r );
 
 	acbl_config(0x20, 0, -1, 0);
-	init_segac2();
 }
 
 static DRIVER_INIT( sonic2mb )
@@ -1373,7 +1370,6 @@ static DRIVER_INIT( sonic2mb )
 	cpu_setbank(4, &genesis_68k_ram[0]);
 
 	acbl_config(0x20, 0, -1, 0);
-	init_segac2();
 }
 
 static UINT8 prot_cmd;
@@ -1428,7 +1424,6 @@ static DRIVER_INIT( sonic3mb )
 	cpu_setbank(4, &genesis_68k_ram[0]);
 
 	acbl_config(0x20, 0, -1, 0);
-	init_segac2();
 }
 
 static READ16_HANDLER( jparkmb_r )
@@ -1450,7 +1445,6 @@ static DRIVER_INIT( jparkmb )
 	cpu_setbank(4, &genesis_68k_ram[0]);
 
 	acbl_config(0x20, 0, -1, 0);
-	init_segac2();
 }
 
 static READ16_HANDLER( twinktmb_r )
@@ -1483,7 +1477,6 @@ static DRIVER_INIT( twinktmb )
 	cpu_setbank(4, &genesis_68k_ram[0]);
 
 	acbl_config(0x20, 0, -1, 0);
-	init_segac2();
 }
 
 
@@ -1533,14 +1526,12 @@ static DRIVER_INIT( mk3mdb )
 	acbl_install_dsw();
 	acbl_config(0xa0, 1, 2, 6);
 	acbl_iack = 1;
-	init_segac2();
 }
 
 static DRIVER_INIT( ssf2mdb )
 {
 	acbl_config(0x20, 1, 2, 6);
 	acbl_iack = 1;
-	init_segac2();
 }
 
 static DRIVER_INIT( srmdb )
@@ -1566,7 +1557,6 @@ static DRIVER_INIT( srmdb )
 	acbl_install_dsw();
 	acbl_config(0xa0, 0, 2, 0);
 	acbl_iack = 1;
-	init_segac2();
 }
 
 static DRIVER_INIT( barekch )
@@ -1580,7 +1570,6 @@ static DRIVER_INIT( barekch )
 	acbl_install_dsw();
 	acbl_config(0x20, 1, 2, 6);
 	acbl_iack = 1;
-	init_segac2();
 }
 
 static DRIVER_INIT( bk3ssrmb )
@@ -1603,7 +1592,6 @@ static DRIVER_INIT( bk3ssrmb )
 	acbl_install_dsw();
 	acbl_config(0x20, 1, 2, 6);
 	acbl_iack = 1;
-	init_segac2();
 }
 
 static DRIVER_INIT( srssf2mb )
@@ -1626,7 +1614,6 @@ static DRIVER_INIT( srssf2mb )
 	acbl_install_dsw();
 	acbl_config(0x20, 1, 2, 6);
 	acbl_iack = 1;
-	init_segac2();
 }
 
 /* the coins of biohzdmb at 0x770078 */
@@ -1656,7 +1643,6 @@ static DRIVER_INIT( biohzdmb )
 	install_mem_read16_handler(0, 0x770078, 0x770079, biohzdmb_coins_r);
 	acbl_config(0x20, 0, -1, 0);
 	acbl_iack = 1;
-	init_segac2();
 }
 
 static DRIVER_INIT( barek2mb )
@@ -1678,7 +1664,6 @@ static DRIVER_INIT( barek2mb )
 
 	acbl_config(0x20, 0, -1, 0);
 	acbl_iack = 1;
-	init_segac2();
 }
 
 /* missing PIC dump, simulated as in MAME */
@@ -1703,7 +1688,6 @@ static DRIVER_INIT( barek3a )
 
 	acbl_config(0x20, 0, -1, 0);
 	acbl_iack = 1;
-	init_segac2();
 }
 
 /******************************************************************************

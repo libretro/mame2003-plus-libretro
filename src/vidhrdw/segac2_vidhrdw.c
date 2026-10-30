@@ -42,19 +42,21 @@ static int start_vdp(int sp_palbase, int display_enable, int scanbase, int line_
 	intf.line_scale       = line_scale;
 	intf.display_enable   = display_enable;
 	intf.set_visible_area = set_visible_area;
-	intf.irq_update       = segac2_vdp_irq_update;
+	intf.irq_update       = megadriv_vdp_irq_update;
 	return segavdp_start(&intf);
 }
 
 
 VIDEO_START( segac2 )
 {
+	paletteram16 = auto_malloc(0x800 * sizeof(data16_t));
+
 	/* the display is enabled by the board (control_w) */
 	return start_vdp(0x100, 0, 0, 1, 1);
 }
 
 
-VIDEO_START( puckpkmn )
+VIDEO_START( megadriv )
 {
 	paletteram16 = auto_malloc(0x800 * sizeof(data16_t));
 

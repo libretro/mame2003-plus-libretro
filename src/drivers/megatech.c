@@ -9,7 +9,7 @@
 
 	Moved here from drivers/segac2.c, as in current MAME (megatech.cpp);
 	the Mega Drive part (68000, sound Z80, I/O, interrupts) is shared with
-	the other Mega Drive based boards (includes/segac2.h), the VDP is in
+	the other Mega Drive based boards (machine/megadriv.c), the VDP is in
 	vidhrdw/segavdp.c and the video glue in vidhrdw/segac2_vidhrdw.c.
 
 	As in current MAME:
@@ -25,13 +25,21 @@
 
 #include "driver.h"
 #include "state.h"
-#include "segac2.h"
+#include "megadriv.h"
 
 /* the BIOS VDP, in vidhrdw/segasyse_vidhrdw.c */
 extern UINT8 *segae_vdp_vram[];
 extern UINT8 *segae_vdp_regs[];
 extern UINT8 *segae_vdp_cram[];
 extern UINT8 segae_vdp_vrambank[];
+unsigned char segae_vdp_ctrl_r ( UINT8 chip );
+unsigned char segae_vdp_data_r ( UINT8 chip );
+void segae_vdp_ctrl_w ( UINT8 chip, UINT8 data );
+void segae_vdp_data_w ( UINT8 chip, UINT8 data );
+
+/* the BIOS VDP interrupts, in drivers/segasyse.c */
+extern UINT8 vintpending;
+extern UINT8 hintpending;
 
 /******************************************************************************
 	The BIOS
@@ -160,6 +168,40 @@ static WRITE_HANDLER( bios_ctrl_w )
 	bios_ctrl[offset] = data;
 }
 
+/* the BIOS VDP ports (also used by drivers/megaplay.c), from drivers/segasyse.c */
+READ_HANDLER (megatech_bios_port_be_bf_r)
+{
+	UINT8 temp = 0;
+
+	switch (offset)
+	{
+		case 0: /* port 0xbe, VDP 1 DATA Read */
+			temp = segae_vdp_data_r(0); break ;
+		case 1: /* port 0xbf, VDP 1 CTRL Read */
+			temp = segae_vdp_ctrl_r(0); break ;
+	}
+	return temp;
+}
+WRITE_HANDLER (megatech_bios_port_be_bf_w)
+{
+	switch (offset)
+	{
+		case 0: /* port 0xbe, VDP 1 DATA Write */
+			segae_vdp_data_w(0, data); break;
+		case 1: /* port 0xbf, VDP 1 CTRL Write */
+			segae_vdp_ctrl_w(0, data); break;
+	}
+}
+
+/* two SN76489: one in the Mega Drive VDP and one in the BIOS VDP
+   (also used by drivers/megaplay.c) */
+struct SN76496interface megatech_sn76489_intf =
+{
+	2,
+	{ 53693100/15, 53693100/15 },	/* Clock: 3.58 MHz */
+	{ 50, 50 }						/* Volume */
+};
+
 static void megatech_state_register(void)
 {
 	state_save_register_UINT8 ("megatech", 0, "bios_hintcount", &bios_hintcount, 1);
@@ -171,6 +213,8 @@ static void megatech_state_register(void)
 	state_save_register_UINT32("megatech", 0, "bios_port_ctrl", (UINT32 *)&bios_port_ctrl, 1);
 	state_save_register_UINT32("megatech", 0, "bios_ctrl_inputs", (UINT32 *)&bios_ctrl_inputs, 1);
 	state_save_register_UINT8 ("megatech", 0, "bios_ctrl", bios_ctrl, 6);
+	state_save_register_UINT8 ("megatech", 0, "vintpending", &vintpending, 1);
+	state_save_register_UINT8 ("megatech", 0, "hintpending", &hintpending, 1);
 }
 
 
@@ -988,16 +1032,12 @@ INPUT_PORTS_END
 	The BIOS VDP lines
 *******************************************************************************
 
-	As drivers/segac2.c megatech_irq, with the 224 line mode the menu
+	As the Mega Play BIOS interrupt (drivers/megaplay.c), with the 224 line mode the menu
 	uses: the line counter and the VINT follow the active height, and each
 	line is drawn when it's reached, so the scroll and colour changes made
 	during the frame are seen where they happen.
 
 ******************************************************************************/
-
-/* in drivers/segasyse.c */
-extern UINT8 vintpending;
-extern UINT8 hintpending;
 
 
 static int megatech_bios_height(void)
@@ -1531,7 +1571,6 @@ ROM_END
 static DRIVER_INIT( megatech )
 {
 	mt_sms_cart = 0;
-	init_segac2();
 }
 
 static DRIVER_INIT( mt_sms )
@@ -1546,7 +1585,6 @@ static DRIVER_INIT( mt_sms )
 		sms_rom[i] = rom[BYTE_XOR_LE(i)];
 
 	mt_sms_cart = 1;
-	init_segac2();
 }
 
 /* nn */ /* nn is part of the instruction rom name, should there be a game for each number? */

@@ -55,6 +55,13 @@ void segae_drawtilesline(UINT8 *dest, int line, UINT8 chip, UINT8 pri);
 void segae_drawspriteline(UINT8 *dest, UINT8 chip, UINT8 line);
 void segae_drawscanline(int line, int chips, int blank);
 
+/* the 4 bitplane bytes of a tile line, in VRAM order: read byte by byte,
+   so that the bit layout is the same on big endian hosts */
+static INLINE UINT32 segae_tile_line(const UINT8 *p)
+{
+	return p[0] | (p[1] << 8) | (p[2] << 16) | ((UINT32)p[3] << 24);
+}
+
 static void segae_draw8pix_solid16(UINT8 *dest, UINT8 chip, UINT16 tile, UINT8 line, UINT8 flipx, UINT8 col);
 static void segae_draw8pix(UINT8 *dest, UINT8 chip, UINT16 tile, UINT8 line, UINT8 flipx, UINT8 col);
 static void segae_draw8pixsprite(UINT8 *dest, UINT8 chip, UINT16 tile, UINT8 line);
@@ -619,7 +626,7 @@ void segae_drawspriteline(UINT8 *dest, UINT8 chip, UINT8 line)
 static void segae_draw8pix_solid16(UINT8 *dest, UINT8 chip, UINT16 tile, UINT8 line, UINT8 flipx, UINT8 col)
 {
 
-	UINT32 pix8 = *(UINT32 *)&segae_vdp_vram[chip][(32)*tile + (4)*line + (0x4000) * segae_vdp_vrambank[chip]];
+	UINT32 pix8 = segae_tile_line(&segae_vdp_vram[chip][(32)*tile + (4)*line + (0x4000) * segae_vdp_vrambank[chip]]);
 	UINT8  pix, coladd;
 
 	if (!pix8 && !col) return; /*note only the colour 0 of each vdp is transparent NOT colour 16???, fixes sky in HangonJr */
@@ -650,7 +657,7 @@ static void segae_draw8pix_solid16(UINT8 *dest, UINT8 chip, UINT16 tile, UINT8 l
 static void segae_draw8pix(UINT8 *dest, UINT8 chip, UINT16 tile, UINT8 line, UINT8 flipx, UINT8 col)
 {
 
-	UINT32 pix8 = *(UINT32 *)&segae_vdp_vram[chip][(32)*tile + (4)*line + (0x4000) * segae_vdp_vrambank[chip]];
+	UINT32 pix8 = segae_tile_line(&segae_vdp_vram[chip][(32)*tile + (4)*line + (0x4000) * segae_vdp_vrambank[chip]]);
 	UINT8  pix, coladd;
 
 	if (!pix8) return;
@@ -681,7 +688,7 @@ static void segae_draw8pix(UINT8 *dest, UINT8 chip, UINT16 tile, UINT8 line, UIN
 static void segae_draw8pixsprite(UINT8 *dest, UINT8 chip, UINT16 tile, UINT8 line)
 {
 
-	UINT32 pix8 = *(UINT32 *)&segae_vdp_vram[chip][(((32)*tile + (4)*line)&0x3fff) + (0x4000) * segae_vdp_vrambank[chip]];
+	UINT32 pix8 = segae_tile_line(&segae_vdp_vram[chip][(((32)*tile + (4)*line)&0x3fff) + (0x4000) * segae_vdp_vrambank[chip]]);
 	UINT8  pix;
 
 	if (!pix8) return; /*note only the colour 0 of each vdp is transparent NOT colour 16, fixes sky in HangonJr */

@@ -77,6 +77,10 @@ static struct
 	int			bg_palbase;					/* base of background palette */
 	int			sp_palbase;					/* base of sprite palette */
 	int			palbank;					/* global palette bank */
+	UINT8		alt_palette;				/* System C/C2 alternate palette mode */
+	int			bg_pal_lookup[4];			/* palette of each of the 4 bg palettes */
+	int			sp_pal_lookup[4];			/* palette of each of the 4 sprite palettes */
+	int			bd_pal_lookup[4];			/* the backdrop: without the background base */
 	UINT8		display_enable;				/* is the display enabled (board control)? */
 	UINT8		internal_vblank;			/* state of the VBLANK line */
 	UINT8		iack_mode;					/* Mega Play interrupt acknowledge / HBLANK mode */
@@ -106,6 +110,46 @@ static struct
 	UINT32		window_hpos;				/* window X position */
 	UINT8		window_width;				/* window width */
 } vdp;
+
+
+
+/******************************************************************************
+	Palette lookups
+*******************************************************************************
+
+	The palette entry of a pixel is the global palette bank, the base of the
+	background or sprite palettes and the 4 palettes of the VDP. On System
+	C/C2 the EPM5032 can also swizzle the colour RAM address bits (the
+	alternate palette mode of Ribbit! and Twin Squash), as in current MAME.
+	The backdrop colour doesn't take the background base (the title screen
+	of Borench is black in MAME too).
+
+******************************************************************************/
+
+static void recompute_palette_lookups(void)
+{
+	int i;
+
+	for (i = 0; i < 4; i++)
+	{
+		int bgpal = vdp.bg_palbase + i * 0x10;
+		int sppal = vdp.sp_palbase + i * 0x10;
+		int bdpal = i * 0x10;
+
+		if (!vdp.alt_palette)
+		{
+			vdp.bg_pal_lookup[i] = vdp.palbank + bgpal;
+			vdp.sp_pal_lookup[i] = vdp.palbank + sppal;
+			vdp.bd_pal_lookup[i] = vdp.palbank + bdpal;
+		}
+		else
+		{
+			vdp.bg_pal_lookup[i] = vdp.palbank + ((bgpal << 1) & 0x180) + ((~bgpal >> 2) & 0x40) + (bgpal & 0x30);
+			vdp.sp_pal_lookup[i] = vdp.palbank + ((~sppal << 2) & 0x100) + ((sppal << 2) & 0x80) + ((~sppal >> 2) & 0x40) + ((sppal >> 2) & 0x20) + (sppal & 0x10);
+			vdp.bd_pal_lookup[i] = vdp.palbank + ((bdpal << 1) & 0x180) + ((~bdpal >> 2) & 0x40) + (bdpal & 0x30);
+		}
+	}
+}
 
 
 
@@ -167,6 +211,8 @@ int segavdp_start(const struct segavdp_interface *intf)
 	vdp.bg_palbase = intf->bg_palbase;
 	vdp.sp_palbase = intf->sp_palbase;
 	vdp.palbank    = 0;
+	vdp.alt_palette = 0;
+	recompute_palette_lookups();
 	vdp.display_enable = intf->display_enable;
 
 	/* reset VDP (no interrupt callbacks yet: the board is not running) */
@@ -209,6 +255,8 @@ int segavdp_start(const struct segavdp_interface *intf)
 	state_save_register_UINT32("C2_Video", 0, "Window HPos",  &vdp.window_hpos, 1);
 	state_save_register_UINT8("C2_Video", 0, "Window Width",  &vdp.window_width, 1);
 	state_save_register_UINT8("C2_VDP", 0, "VBLANK",  &vdp.internal_vblank, 1);
+	state_save_register_UINT8("C2_Video", 0, "Alt Palette",  &vdp.alt_palette, 1);
+	state_save_register_func_postload(recompute_palette_lookups);
 
 	return 0;
 }
@@ -275,6 +323,7 @@ void segavdp_set_palbases(int bg_palbase, int sp_palbase)
 {
 	vdp.bg_palbase = bg_palbase;
 	vdp.sp_palbase = sp_palbase;
+	recompute_palette_lookups();
 }
 
 int segavdp_get_bg_palbase(void) { return vdp.bg_palbase; }
@@ -283,6 +332,13 @@ int segavdp_get_sp_palbase(void) { return vdp.sp_palbase; }
 void segavdp_set_palbank(int palbank)
 {
 	vdp.palbank = palbank;
+	recompute_palette_lookups();
+}
+
+void segavdp_set_alt_palette(int enable)
+{
+	vdp.alt_palette = enable;
+	recompute_palette_lookups();
 }
 
 int segavdp_get_palbank(void) { return vdp.palbank; }
@@ -894,7 +950,7 @@ static void drawline(UINT16 *bitmap, int line, int bgfill)
 	UINT32 scrolla_tiles[41], scrollb_tiles[41], window_tiles[41];
 	int scrolla_offset, scrollb_offset;
 	UINT8 *lowlist[81], *highlist[81];
-	int bgcolor = bgfill ? bgfill : (vdp.bgcol + vdp.palbank);
+	int bgcolor = bgfill ? bgfill : ((vdp.bgcol & 0x0f) | vdp.bd_pal_lookup[(vdp.bgcol >> 4) & 3]);
 	int window_lclip, window_rclip;
 	int scrolla_lclip, scrolla_rclip;
 	int column, sprite;
@@ -1055,7 +1111,7 @@ static void drawline_tiles(UINT32 *tiles, UINT16 *bmap, int pri, int offset, int
 		/* if the tile is the correct priority, draw it */
 		if (((tile >> 15) & 1) == pri && offset < BITMAP_WIDTH)
 		{
-			int colbase = 16 * ((tile & 0x6000) >> 13) + vdp.bg_palbase + vdp.palbank;
+			int colbase = vdp.bg_pal_lookup[(tile >> 13) & 3];
 			UINT32 *tp = (UINT32 *)&VDP_VRAM_BYTE((tile & 0x7ff) * 32);
 			UINT32 mytile;
 			int col;
@@ -1320,7 +1376,7 @@ static void drawline_sprite(int line, UINT16 *bmap, int priority, UINT8 *spriteb
 	patline    = line - spriteypos;
 
 	/* determine the color base */
-	colbase = 16 * ((spriteattr & 0x6000) >> 13) + vdp.sp_palbase + vdp.palbank;
+	colbase = vdp.sp_pal_lookup[(spriteattr >> 13) & 3];
 
 	/* adjust for the X position */
 	spritewidth >>= 3;
