@@ -3626,9 +3626,9 @@ static DRIVER_INIT ( radr )
 
 static WRITE16_HANDLER( f1en_comms_echo_w )
 {
-	/* pretend that slave is following master op, enables attract mode video with sound */
+	/* pretend the slave is following the master by copying the master's reply byte into the slave's. */
 	if (ACCESSING_LSB)
-		cpu_writemem24lew( 0x810049, data );
+		dual_pcb_comms[0x48/2] = (data & 0x00ff) | ((data & 0x00ff) << 8);
 }
 
 static DRIVER_INIT ( f1en )
@@ -3636,7 +3636,7 @@ static DRIVER_INIT ( f1en )
 	install_io_analog();
 
 	dual_pcb_comms = auto_malloc(sizeof(UINT16)*(0x1000/2));
-	memset(dual_pcb_comms, 0xff, 0x1000/2);
+	memset(dual_pcb_comms, 0, sizeof(UINT16)*(0x1000/2));
 
 	install_mem_read16_handler (0, 0x810000, 0x810fff, dual_pcb_comms_r);
 	install_mem_write16_handler(0, 0x810000, 0x810fff, dual_pcb_comms_w);
