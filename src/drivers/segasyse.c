@@ -3,6 +3,13 @@
 ********************************************************************************
  driver by David Haywood
 
+ Updated from current MAME (segae.cpp, sega315_5124):
+ - MC-8123 key based decryption: Opa Opa (317-0042), Fantasy Zone II (317-0057)
+ - per VDP status, line counter and frame interrupts (only VDP #1 drives the
+   CPU interrupt), output levels of the 315-5124, per-line CRAM and scroll
+   latching, mode 4 sprites (8 per line, overflow, collision)
+ - Sega PSG noise and clock (10.738635 MHz / 3)
+
  Special Thanks to:
 
  Charles Macdonald - for docmentation of the SMS VDP Chip used on this system,
@@ -164,9 +171,17 @@
 
 static UINT8 segae_8000bank;	/* Current VDP Bank Selected for 0x8000 - 0xbfff writes */
 static UINT8 port_fa_last;		/* Last thing written to port 0xfa (control related) */
-static UINT8 hintcount;			/* line interrupt counter, decreased each scanline */
 UINT8 vintpending;				/* vertical interrupt pending flag */
 UINT8 hintpending;				/* scanline interrupt pending flag */
+/* VDP status and interrupts, modelled on the MAME 315-5124 device (at
+   scanline granularity): each VDP has its own frame interrupt flag, line
+   counter and line interrupt flag, but only the Front Layer VDP (1) drives
+   the CPU /INT line, which stays asserted until its status is read.
+   (vintpending / hintpending above are the ones used by megatech.c and
+   segac2.c, which share the VDP code in vidhrdw/segasyse_vidhrdw.c) */
+UINT8 segae_vdp_status[2];			/* 7: frame int, 6: sprite overflow, 5: collision, 4-0: overflow sprite (0x1f if none) */
+static UINT8 segae_vdp_hint[2];		/* line interrupt occurred */
+static UINT8 segae_vdp_linecount[2];	/* line counter */
 
 /*- in (vidhrdw/segasyse.c) -*/
 extern UINT8 segae_vdp_vrambank[];	/* vdp's vram bank */
@@ -198,6 +213,7 @@ void segae_vdp_ctrl_w ( UINT8 chip, UINT8 data );
 void segae_vdp_data_w ( UINT8 chip, UINT8 data );
 
 void segae_drawscanline(int line, int chips, int blank);
+void segae_latch_hscroll(void);
 
 /*******************************************************************************
  Port & Memory Maps
@@ -212,6 +228,15 @@ void segae_drawscanline(int line, int chips, int blank);
 
 static MEMORY_READ_START( segae_readmem )
 	{ 0x0000, 0x7fff, MRA_ROM },				/* Fixed ROM */
+	{ 0x8000, 0xbfff, MRA_BANK1 },				/* Banked ROM */
+	{ 0xc000, 0xffff, MRA_RAM },				/* Main RAM */
+MEMORY_END
+
+/* the MC-8123 games read the fixed ROM through a bank: the memory system maps
+   ROM reads to the same lookup entry as RAM, so without it the opbase handler
+   would not be called when the CPU jumps between ROM and code in main RAM */
+static MEMORY_READ_START( segae_mc8123_readmem )
+	{ 0x0000, 0x7fff, MRA_BANK2 },				/* Fixed ROM */
 	{ 0x8000, 0xbfff, MRA_BANK1 },				/* Banked ROM */
 	{ 0xc000, 0xffff, MRA_RAM },				/* Main RAM */
 MEMORY_END
@@ -285,7 +310,15 @@ static WRITE_HANDLER (segae_mem_8000_w)
 
 ***************************************/
 
+/* each scanline is split in SEGAE_SLICES CPU slices: the VDP line counters and
+   interrupts are handled at the start of the line, the line is drawn after
+   the second slice (hpos 68 of 342, MAME draws it at 63) */
+#define SEGAE_SLICES	5
+#define SEGAE_SLINE()	((262*SEGAE_SLICES - 1 - cpu_getiloops()) / SEGAE_SLICES)
+#define SEGAE_SLICE()	((262*SEGAE_SLICES - 1 - cpu_getiloops()) % SEGAE_SLICES)
+
 UINT8 rombank;
+static UINT8 segae_rombank_mask = 0x07;	/* 0x0f on the boards with 16 ROM banks */
 
 void segae_bankswitch (void)
 {
@@ -294,13 +327,89 @@ void segae_bankswitch (void)
 	cpu_setbank( 1, &RAM[ 0x10000 + ( rombank * 0x4000 ) ] );
 }
 
+/*******************************************************************************
+ MC-8123 encrypted games (Opa Opa, Fantasy Zone II)
+********************************************************************************
+ The Z80 is replaced by a NEC MC-8123: opcodes and data are decrypted with a
+ different table, picked from the battery-backed key RAM (317-xxxx.key).
+ Fantasy Zone II only encrypts the fixed ROM at 0x0000-0x7fff, Opa Opa
+ encrypts the banked ROMs at 0x8000-0xbfff too. Code run from main RAM is not
+ encrypted. The decrypted opcodes are kept in a copy of REGION_CPU1 with the
+ same layout, and the opbase handler points the opcode fetches to it.
+*******************************************************************************/
+
+void mc8123_decode(UINT8 *rom, UINT8 *opcodes, const UINT8 *key, int start, int end);
+
+static UINT8 *segae_decrypted;		/* decrypted opcodes, same layout as REGION_CPU1 */
+static int segae_banked_encrypted;	/* banked ROMs are encrypted too */
+
+static OPBASE_HANDLER( segae_mc8123_opbase )
+{
+	UINT8 *rom = memory_region(REGION_CPU1);
+
+	if (address < 0x8000)
+	{
+		/* fixed ROM */
+		OP_RAM = rom;
+		OP_ROM = segae_decrypted;
+		OP_MEM_MIN = 0x0000;
+		OP_MEM_MAX = 0x7fff;
+	}
+	else if (address < 0xc000)
+	{
+		/* banked ROM */
+		offs_t base = 0x10000 + rombank * 0x4000 - 0x8000;
+
+		OP_RAM = rom + base;
+		OP_ROM = (segae_banked_encrypted ? segae_decrypted : rom) + base;
+		OP_MEM_MIN = 0x8000;
+		OP_MEM_MAX = 0xbfff;
+	}
+	else
+	{
+		/* main RAM, not encrypted */
+		OP_RAM = OP_ROM = rom;
+		OP_MEM_MIN = 0xc000;
+		OP_MEM_MAX = 0xffff;
+	}
+
+	/* the core only calls us again when the PC moves to a region with a
+	   different first level lookup entry */
+	opcode_entry = readmem_lookup[LEVEL1_INDEX(address & 0xffff, 16, 0)];
+	return ~0;
+}
+
+/* recompute the opcode base from the current PC (after a reset or a state
+   load, where the bank or the PC may have changed under our feet) */
+static void segae_mc8123_refresh(void)
+{
+	cpuintrf_push_context(0);
+	opcode_entry = 0xff;
+	activecpu_set_op_base(activecpu_get_pc_byte());
+	cpuintrf_pop_context();
+}
+
+static MACHINE_INIT( segae );
+
+static MACHINE_INIT( segae_mc8123 )
+{
+	machine_init_segae();
+	cpu_setbank(2, memory_region(REGION_CPU1));
+	memory_set_opbase_handler(0, segae_mc8123_opbase);
+
+	/* make the CPU reset go through the opbase handler */
+	cpuintrf_push_context(0);
+	opcode_entry = 0xff;
+	cpuintrf_pop_context();
+}
+
 
 static WRITE_HANDLER (segae_port_f7_w)
 {
 	segae_vdp_vrambank[0] = (data & 0x80) >> 7; /* Back  Layer VDP (0) VRAM Bank */
 	segae_vdp_vrambank[1] = (data & 0x40) >> 6; /* Front Layer VDP (1) VRAM Bank */
 	segae_8000bank		  = (data & 0x20) >> 5; /* 0x8000 Write Select */
-	rombank				  =  data & 0x07;		/* Rom Banking */
+	rombank				  =  data & segae_rombank_mask;	/* Rom Banking */
 
 	segae_bankswitch();
 }
@@ -315,7 +424,7 @@ static READ_HANDLER (segae_port_7e_7f_r)
 	switch (offset)
 	{
 		case 0: /* port 0x7e, Vert Position (in scanlines) */
-			sline = 261 - cpu_getiloops();
+			sline = SEGAE_SLINE();
 			if (sline > 0xDA) sline -= 6;
 			temp = sline-1 ;
 			break;
@@ -328,6 +437,45 @@ static READ_HANDLER (segae_port_7e_7f_r)
 
 /*- VDP Related -*/
 
+/* reading the status clears the frame, sprite overflow, collision and line
+   interrupt flags (and the /INT line for the Front Layer VDP) and resets the
+   command byte latch */
+static UINT8 segae_vdp_status_r(int chip)
+{
+	extern UINT8 segae_vdp_cmdpart[];
+	UINT8 result = segae_vdp_status[chip];
+
+	segae_vdp_status[chip] = 0x1f;
+	segae_vdp_hint[chip] = 0;
+	segae_vdp_cmdpart[chip] = 0;
+	if (chip == 1)
+		cpu_set_irq_line(0, 0, CLEAR_LINE);
+	return result;
+}
+
+static MACHINE_INIT( segae )
+{
+	SN76496_set_segapsg(0);
+	SN76496_set_segapsg(1);
+	segae_vdp_status[0] = segae_vdp_status[1] = 0x1f;
+	segae_vdp_hint[0] = segae_vdp_hint[1] = 0;
+	segae_vdp_linecount[0] = segae_vdp_linecount[1] = 0;
+}
+
+/* called by vidhrdw/segasyse_vidhrdw.c after a write to register 0 or 1 of
+   the Front Layer VDP: enabling an interrupt that already occurred asserts
+   /INT, disabling it clears /INT (as in MAME) */
+void segae_vdp_irq_reg_written(int reg)
+{
+	if ((reg == 0 && segae_vdp_hint[1]) || (reg == 1 && (segae_vdp_status[1] & 0x80)))
+	{
+		if ((reg == 0 && !(segae_vdp_regs[1][0] & 0x10)) || (reg == 1 && !(segae_vdp_regs[1][1] & 0x20)))
+			cpu_set_irq_line(0, 0, CLEAR_LINE);
+		else
+			cpu_set_irq_line(0, 0, ASSERT_LINE);
+	}
+}
+
 static READ_HANDLER (segae_port_ba_bb_r)
 {
 	/* These Addresses access the Back Layer VDP (0) */
@@ -338,7 +486,7 @@ static READ_HANDLER (segae_port_ba_bb_r)
 		case 0: /* port 0xba, VDP 0 DATA Read */
 			temp = segae_vdp_data_r(0); break;
 		case 1: /* port 0xbb, VDP 0 CTRL Read */
-			temp = segae_vdp_ctrl_r(0); break;
+			temp = segae_vdp_status_r(0); break;
 	}
 	return temp;
 }
@@ -353,7 +501,7 @@ static READ_HANDLER (segae_port_be_bf_r)
 		case 0: /* port 0xbe, VDP 1 DATA Read */
 			temp = segae_vdp_data_r(1); break ;
 		case 1: /* port 0xbf, VDP 1 CTRL Read */
-			temp = segae_vdp_ctrl_r(1); break ;
+			temp = segae_vdp_status_r(1); break ;
 	}
 	return temp;
 }
@@ -723,6 +871,58 @@ INPUT_PORTS_START( opaopa )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_UNUSED )
 INPUT_PORTS_END
 
+INPUT_PORTS_START( fantzn2 )
+	PORT_START	/* DSW0 Read from Port 0xf2 */
+	SEGA_COIN_A
+	SEGA_COIN_B
+
+	PORT_START	/* DSW1 Read from Port 0xf3 */
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unused ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0c, 0x0c, DEF_STR( Lives ) )
+	PORT_DIPSETTING(    0x00, "2" )
+	PORT_DIPSETTING(    0x0c, "3" )
+	PORT_DIPSETTING(    0x08, "4" )
+	PORT_DIPSETTING(    0x04, "5" )
+	PORT_DIPNAME( 0x30, 0x30, "Timer" )
+	PORT_DIPSETTING(    0x20, "90" )	/* 210 seconds */
+	PORT_DIPSETTING(    0x30, "80" )	/* 180 seconds */
+	PORT_DIPSETTING(    0x10, "70" )	/* 150 seconds */
+	PORT_DIPSETTING(    0x00, "60" )	/* 120 seconds */
+	PORT_DIPNAME( 0xc0, 0xc0, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(    0x80, "Easy" )
+	PORT_DIPSETTING(    0xc0, "Normal" )
+	PORT_DIPSETTING(    0x40, "Hard" )
+	PORT_DIPSETTING(    0x00, "Hardest" )
+
+	PORT_START	/* Read from Port 0xe0 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW,  IPT_COIN1 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_COIN2 )
+	PORT_BITX(0x04, IP_ACTIVE_LOW,  IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_SERVICE1 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW,  IPT_UNUSED )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW,  IPT_UNUSED )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW,  IPT_START1 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_START2 )
+
+	PORT_START	/* Read from Port 0xe1 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW,  IPT_JOYSTICK_UP    | IPF_8WAY )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_JOYSTICK_DOWN  | IPF_8WAY )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_JOYSTICK_LEFT  | IPF_8WAY )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_JOYSTICK_RIGHT | IPF_8WAY )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW,  IPT_BUTTON1 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW,  IPT_BUTTON2 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW,  IPT_UNUSED )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_UNUSED )
+
+	PORT_START	/* Read from Port 0xe2 */
+	PORT_BIT( 0xff, IP_ACTIVE_LOW,  IPT_UNUSED )
+INPUT_PORTS_END
+
 INPUT_PORTS_START( tetrisse )
 	PORT_START	/* Read from Port 0xf2 */
 	SEGA_COIN_A
@@ -929,45 +1129,45 @@ INPUT_PORTS_END
 
  INTERRUPT_GEN( segae_interrupt )
 {
-	int sline;
-	sline = 261 - cpu_getiloops();
+	int sline = SEGAE_SLINE();
+	int chip;
 
-	if (sline ==0) {
-		hintcount = segae_vdp_regs[1][10];
+	if (SEGAE_SLICE() == 1)
+	{
+		if (sline < 192)
+			segae_drawscanline(sline,1,1);
+		return;
 	}
+	if (SEGAE_SLICE() != 0)
+		return;
 
-	if (sline <= 192) {
+	segae_latch_hscroll();
 
-		if (sline != 192) segae_drawscanline(sline,1,1);
-
-		if (sline == 192)
-			vintpending = 1;
-
-		if (hintcount == 0) {
-			hintcount = segae_vdp_regs[1][10];
-			hintpending = 1;
-
-			if  ((segae_vdp_regs[1][0] & 0x10)) {
-				cpu_set_irq_line(0, 0, HOLD_LINE);
-				return;
-			} else {
-				cpu_set_irq_line(0, 0, CLEAR_LINE);
+	for (chip = 0; chip < 2; chip++)
+	{
+		/* the line counter runs on the 192 active lines and the first line
+		   of the bottom border, and is reloaded on all the other lines */
+		if (sline <= 192)
+		{
+			if (segae_vdp_linecount[chip] == 0)
+			{
+				segae_vdp_linecount[chip] = segae_vdp_regs[chip][10];
+				segae_vdp_hint[chip] = 1;
+				if (chip == 1 && (segae_vdp_regs[1][0] & 0x10))
+					cpu_set_irq_line(0, 0, ASSERT_LINE);
 			}
-
-		} else {
-			hintcount--;
+			else
+				segae_vdp_linecount[chip]--;
 		}
-	}
+		else
+			segae_vdp_linecount[chip] = segae_vdp_regs[chip][10];
 
-	if (sline > 192) {
-		hintcount = segae_vdp_regs[1][10];
-
-		if ( (sline<0xe0) && (vintpending) ) {
-			if (segae_vdp_regs[1][0x1]&0x20) {
-				cpu_set_irq_line(0, 0, HOLD_LINE);
-			} else {
-				cpu_set_irq_line(0, 0, CLEAR_LINE);
-			}
+		/* the frame interrupt fires at the end of the first line of the bottom border */
+		if (sline == 193)
+		{
+			segae_vdp_status[chip] |= 0x80;
+			if (chip == 1 && (segae_vdp_regs[1][1] & 0x20))
+				cpu_set_irq_line(0, 0, ASSERT_LINE);
 		}
 	}
 }
@@ -986,7 +1186,7 @@ INPUT_PORTS_END
 static struct SN76496interface sn76489_intf =
 {
 	2,		/* 2 chips */
-	{ 4000000, 4000000 },	/* 4 MHz? (guess) */
+	{ 10738635/3, 10738635/3 },	/* the PSGs are in the VDPs: VDP clock / 3, as in MAME */
 	{ 50, 50 }
 };
 
@@ -994,10 +1194,11 @@ static struct SN76496interface sn76489_intf =
 static MACHINE_DRIVER_START( segae )
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD(Z80,10738600/2) /* correct for hangonjr, and astroflash/transformer at least  */
+	MDRV_CPU_ADD_TAG("main",Z80,10738600/2) /* correct for hangonjr, and astroflash/transformer at least  */
 	MDRV_CPU_MEMORY(segae_readmem,segae_writemem)
 	MDRV_CPU_PORTS(segae_readport,segae_writeport)
-	MDRV_CPU_VBLANK_INT(segae_interrupt,262)
+	MDRV_CPU_VBLANK_INT(segae_interrupt,262*SEGAE_SLICES)
+	MDRV_MACHINE_INIT(segae)
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
@@ -1015,13 +1216,21 @@ static MACHINE_DRIVER_START( segae )
 	MDRV_SOUND_ADD(SN76496, sn76489_intf)
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( segae_mc8123 )
+	MDRV_IMPORT_FROM( segae )
+	MDRV_CPU_MODIFY("main")
+	MDRV_CPU_MEMORY(segae_mc8123_readmem,segae_writemem)
+	MDRV_MACHINE_INIT( segae_mc8123 )
+MACHINE_DRIVER_END
+
 static MACHINE_DRIVER_START( megrescu )
 
 	/* basic machine hardware */
 	MDRV_CPU_ADD(Z80,10738600/2) /* correct for hangonjr, and astroflash/transformer at least  */
 	MDRV_CPU_MEMORY(segae_readmem,segae_writemem)
 	MDRV_CPU_PORTS(segae_readport,segae_writeport)
-	MDRV_CPU_VBLANK_INT(segae_interrupt,262)
+	MDRV_CPU_VBLANK_INT(segae_interrupt,262*SEGAE_SLICES)
+	MDRV_MACHINE_INIT(segae)
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
@@ -1048,8 +1257,9 @@ MACHINE_DRIVER_END
 static DRIVER_INIT( segasyse )
 {
 	state_save_register_UINT8 ( "SEGASYSE-MAIN", 0, "8000 Write Bank",		&segae_8000bank, 1);
-	state_save_register_UINT8 ( "SEGASYSE-MAIN", 0, "Vertical Int Pending",	&vintpending, 1);
-	state_save_register_UINT8 ( "SEGASYSE-MAIN", 0, "Line Int Pending",		&hintpending, 1);
+	state_save_register_UINT8 ( "SEGASYSE-MAIN", 0, "VDP Status",			segae_vdp_status, 2);
+	state_save_register_UINT8 ( "SEGASYSE-MAIN", 0, "VDP Line Int",			segae_vdp_hint, 2);
+	state_save_register_UINT8 ( "SEGASYSE-MAIN", 0, "VDP Line Counter",		segae_vdp_linecount, 2);
 	state_save_register_UINT8 ( "SEGASYSE-MAIN", 0, "Main Rom Bank",		&rombank, 1);
 	state_save_register_func_postload(segae_bankswitch);
 }
@@ -1076,7 +1286,44 @@ static DRIVER_INIT( ridleofp )
 	install_port_read_handler (0, 0xf8, 0xf8, segae_ridleofp_port_f8_r);
 	install_port_write_handler(0, 0xfa, 0xfa, segae_ridleofp_port_fa_w);
 
+	state_save_register_int   ( "SEGASYSE-ROP", 0, "port_to_read",			&port_to_read);
+	state_save_register_int   ( "SEGASYSE-ROP", 0, "last1",				&last1);
+	state_save_register_int   ( "SEGASYSE-ROP", 0, "last2",				&last2);
+	state_save_register_int   ( "SEGASYSE-ROP", 0, "diff1",				&diff1);
+	state_save_register_int   ( "SEGASYSE-ROP", 0, "diff2",				&diff2);
+
 	init_segasyse();
+}
+
+static void segae_mc8123_init(int banked_encrypted)
+{
+	UINT8 *rom = memory_region(REGION_CPU1);
+	int length = memory_region_length(REGION_CPU1);
+	const UINT8 *key = memory_region(REGION_USER1);
+
+	segae_decrypted = auto_malloc(length);
+	memcpy(segae_decrypted, rom, length);
+
+	/* fixed ROM, then the banked ROMs (0xc000-0xffff of the region is main RAM) */
+	mc8123_decode(rom, segae_decrypted, key, 0x0000, 0x8000);
+	if (banked_encrypted)
+		mc8123_decode(rom, segae_decrypted, key, 0x10000, length);
+
+	segae_banked_encrypted = banked_encrypted;
+	segae_rombank_mask = 0x0f;
+
+	init_segasyse();
+	state_save_register_func_postload(segae_mc8123_refresh);
+}
+
+static DRIVER_INIT( opaopa )
+{
+	segae_mc8123_init(1);
+}
+
+static DRIVER_INIT( fantzn2 )
+{
+	segae_mc8123_init(0);
 }
 
 static DRIVER_INIT( astrofl )
@@ -1095,13 +1342,10 @@ static DRIVER_INIT( astrofl )
  ridleofp - Riddle of Pythagoras (Jp.)
  transfrm - Transformer
  astrofl  - Astro Flash (Jp. Version of Transformer) (was encrypted)
- opaopa   - Opa Opa (Rev A, unprotected)
+ opaopan  - Opa Opa (Rev A, unprotected)
  slapshtr - Slap Shooter
- 
- NOT DECRYPTED
- 
- fantzn2  - Fantasy Zone 2 (set 2) *Rom at IC7 Encrypted*
- opaopa	  - Opa Opa				   *Roms Encrypted/Bad?*
+ opaopa   - Opa Opa (MC-8123 317-0042, fixed and banked ROMs encrypted)
+ fantzn2  - Fantasy Zone II (MC-8123 317-0057, fixed ROM at IC7 encrypted)
 *******************************************************************************/
 
 ROM_START( hangonjr )
@@ -1192,8 +1436,6 @@ ROM_START( megrescu )
 	ROM_LOAD( "v10_30ic.2",   0x28000, 0x08000, CRC(5b74c767) SHA1(dbc82a4e046f01130c72bbd7a81190d7f0ca209c) )
 ROM_END
 
-/* Not Working */
-
 ROM_START( opaopa )
 	ROM_REGION( 0x50000, REGION_CPU1, 0 )
 	ROM_LOAD( "epr-11054.ic7",  0x00000, 0x08000, CRC(024b1244) SHA1(59a522ac3d98982cc4ddb1c81f9584d3da453649) ) /* encrypted */
@@ -1210,11 +1452,16 @@ ROM_END
 
 ROM_START( fantzn2 )
 	ROM_REGION( 0x50000, REGION_CPU1, 0 )
-	ROM_LOAD( "fz2_ic7.rom",	0x00000, 0x08000, CRC(76db7b7b) SHA1(d60e2961fc893dcb4445aed5f67515cbd25b610f) )
-	ROM_LOAD( "fz2_ic5.rom",	0x10000, 0x10000, CRC(57b45681) SHA1(1ae6d0d58352e246a4ec4e1ce02b0417257d5d20) )
-	ROM_LOAD( "fz2_ic4.rom",	0x20000, 0x10000, CRC(6f7a9f5f) SHA1(b53aa2eded781c80466a79b7d81383b9a875d0be) )
-	ROM_LOAD( "fz2_ic3.rom",	0x30000, 0x10000, CRC(a231dc85) SHA1(45b94fdbde28c02e88546178ef3e8f9f3a96ab86) )
-	ROM_LOAD( "fz2_ic2.rom",	0x40000, 0x10000, CRC(b14db5af) SHA1(04c7fb659385438b3d8f9fb66800eb7b6373bda9) )
+	ROM_LOAD( "epr-11416.ic7",  0x00000, 0x08000, CRC(76db7b7b) SHA1(d60e2961fc893dcb4445aed5f67515cbd25b610f) ) /* encrypted */
+
+	/* The following are 16 0x4000 banks that get mapped to reads from 0x8000 - 0xbfff */
+	ROM_LOAD( "epr-11415.ic5",  0x10000, 0x10000, CRC(57b45681) SHA1(1ae6d0d58352e246a4ec4e1ce02b0417257d5d20) )
+	ROM_LOAD( "epr-11413.ic3",  0x20000, 0x10000, CRC(a231dc85) SHA1(45b94fdbde28c02e88546178ef3e8f9f3a96ab86) )
+	ROM_LOAD( "epr-11414.ic4",  0x30000, 0x10000, CRC(6f7a9f5f) SHA1(b53aa2eded781c80466a79b7d81383b9a875d0be) )
+	ROM_LOAD( "epr-11412.ic2",  0x40000, 0x10000, CRC(b14db5af) SHA1(04c7fb659385438b3d8f9fb66800eb7b6373bda9) )
+
+	ROM_REGION( 0x2000, REGION_USER1, 0 ) /* MC8123 key */
+	ROM_LOAD( "317-0057.key",  0x0000, 0x2000, CRC(ee43d0f0) SHA1(72cb75a4d8352fe372db12046a59ea044360d5c3) )
 ROM_END
 
 
@@ -1230,6 +1477,5 @@ GAME( 1987, megrescu, 0,        megrescu, megrescu, ridleofp, ROT90, "Sega / Exa
 GAME( 1987, opaopan,  opaopa,   segae,    opaopa,   segasyse, ROT0,  "Sega", "Opa Opa (Rev A, unprotected)" )
 GAME( 1988, tetrisse, 0,        segae,    tetrisse, segasyse, ROT0,  "Sega", "Tetris (Japan, System E)" )
 
-/* Not Working */
-GAMEX(198?, fantzn2,  0,        segae,    dummy,    segasyse, ROT0,  "????", "Fantasy Zone 2", GAME_NOT_WORKING )	/* encrypted */
-GAMEX(1987, opaopa,   0,        segae,    opaopa,   segasyse, ROT0,  "Sega", "Opa Opa (MC-8123, 317-0042)", GAME_NOT_WORKING ) /* encrypted */
+GAME( 1987, opaopa,   0,        segae_mc8123, opaopa,  opaopa,   ROT0,  "Sega", "Opa Opa (MC-8123, 317-0042)" )
+GAME( 1988, fantzn2,  0,        segae_mc8123, fantzn2, fantzn2,  ROT0,  "Sega", "Fantasy Zone II - The Tears of Opa-Opa (MC-8123, 317-0057)" )

@@ -34,6 +34,7 @@
 
 #include "driver.h"
 #include "sndhrdw/seibu.h"
+#include "state.h"
 
 
 
@@ -212,10 +213,11 @@ enum
 	RST18_CLEAR
 };
 
+static int irq1 = 0xff, irq2 = 0xff;	/* RST10 / RST18 vectors (0xff = clear) */
+static int seibu_bank, seibu_bank_used;	/* sound ROM bank (games using seibu_bank_w) */
+
 static void update_irq_lines(int param)
 {
-	static int irq1,irq2;
-
 	switch(param)
 	{
 		case VECTOR_INIT:
@@ -279,10 +281,14 @@ void seibu_ym2203_irqhandler(int linestate)
 /***************************************************************************/
 
 /* Use this if the sound cpu is cpu 1 */
+static void seibu_sound_state_register(void);
+
 MACHINE_INIT( seibu_sound_1 )
 {
 	sound_cpu=1;
+	seibu_bank = seibu_bank_used = 0;
 	update_irq_lines(VECTOR_INIT);
+	seibu_sound_state_register();
 
 	/* Denjin Makai definitely needs this at start-up, it never writes to the bankswitch */
 	{
@@ -295,7 +301,9 @@ MACHINE_INIT( seibu_sound_1 )
 MACHINE_INIT( seibu_sound_2 )
 {
 	sound_cpu=2;
+	seibu_bank = seibu_bank_used = 0;
 	update_irq_lines(VECTOR_INIT);
+	seibu_sound_state_register();
 }
 
 /***************************************************************************/
@@ -307,7 +315,38 @@ WRITE_HANDLER( seibu_bank_w )
 {
 	UINT8 *rom = memory_region(REGION_CPU1+sound_cpu);
 
-	cpu_setbank(1,rom + 0x10000 + 0x8000 * (data & 1));
+	seibu_bank = data & 1;
+	seibu_bank_used = 1;
+	cpu_setbank(1,rom + 0x10000 + 0x8000 * seibu_bank);
+}
+
+/* save states: the latches, the interrupt vectors and the bank (the IRQ line
+   itself is in the CPU state). Registered from the machine init, which runs
+   before any state is taken; registering again on a reset is ignored. */
+static void seibu_sound_postload(void)
+{
+	UINT8 *rom = memory_region(REGION_CPU1+sound_cpu);
+
+	/* only for the games that bank the sound ROM (bank 1 may be used by others) */
+	if (seibu_bank_used)
+		cpu_setbank(1,rom + 0x10000 + 0x8000 * seibu_bank);
+}
+
+static void seibu_sound_state_register(void)
+{
+	state_save_register_int  ("seibu_sound", 0, "irq1", &irq1);
+	state_save_register_int  ("seibu_sound", 0, "irq2", &irq2);
+	state_save_register_UINT8("seibu_sound", 0, "main2sub", main2sub, 2);
+	state_save_register_UINT8("seibu_sound", 0, "sub2main", sub2main, 2);
+	state_save_register_int  ("seibu_sound", 0, "main2sub_pending", &main2sub_pending);
+	state_save_register_int  ("seibu_sound", 0, "sub2main_pending", &sub2main_pending);
+	state_save_register_int  ("seibu_sound", 0, "bank", &seibu_bank);
+	state_save_register_int  ("seibu_sound", 0, "bank_used", &seibu_bank_used);
+	state_save_register_int  ("seibu_sound", 0, "adpcm_start", &start);
+	state_save_register_int  ("seibu_sound", 0, "adpcm_end", &end);
+	state_save_register_int  ("seibu_sound", 0, "adpcm_start1", &start1);
+	state_save_register_int  ("seibu_sound", 0, "adpcm_end1", &end1);
+	state_save_register_func_postload(seibu_sound_postload);
 }
 
 WRITE_HANDLER( seibu_coin_w )

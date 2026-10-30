@@ -16,4 +16,5 @@ WRITE_HANDLER( SN76496_1_w );
 WRITE_HANDLER( SN76496_2_w );
 WRITE_HANDLER( SN76496_3_w );
 WRITE_HANDLER( SN76496_4_w );
+void SN76496_set_segapsg(int chip);
 #endif
