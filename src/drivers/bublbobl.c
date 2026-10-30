@@ -138,6 +138,7 @@ CPU 3
 #include "driver.h"
 #include "vidhrdw/generic.h"
 #include "cpu/m6805/m6805.h"
+#include "state.h"
 
 static int ddr1, ddr2, ddr3, ddr4;
 static int port1_in, port2_in, port3_in, port4_in;
@@ -169,6 +170,26 @@ WRITE_HANDLER( bublbobl_sound_command_w );
 WRITE_HANDLER( bublbobl_sh_nmi_disable_w );
 WRITE_HANDLER( bublbobl_sh_nmi_enable_w );
 
+
+void bublbobl_save_state(void);
+
+/* save states: the M6801 ports here, the rest in machine/bublbobl_machine.c */
+static void bublbobl_register_state(void)
+{
+	bublbobl_save_state();
+	state_save_register_int("bublbobl", 0, "ddr1", &ddr1);
+	state_save_register_int("bublbobl", 0, "ddr2", &ddr2);
+	state_save_register_int("bublbobl", 0, "ddr3", &ddr3);
+	state_save_register_int("bublbobl", 0, "ddr4", &ddr4);
+	state_save_register_int("bublbobl", 0, "port1_in", &port1_in);
+	state_save_register_int("bublbobl", 0, "port2_in", &port2_in);
+	state_save_register_int("bublbobl", 0, "port3_in", &port3_in);
+	state_save_register_int("bublbobl", 0, "port4_in", &port4_in);
+	state_save_register_int("bublbobl", 0, "port1_out", &port1_out);
+	state_save_register_int("bublbobl", 0, "port2_out", &port2_out);
+	state_save_register_int("bublbobl", 0, "port3_out", &port3_out);
+	state_save_register_int("bublbobl", 0, "port4_out", &port4_out);
+}
 
 READ_HANDLER( bublbobl_mcu_ddr1_r )
 {
@@ -301,6 +322,24 @@ static int mcu_sent = 0,main_sent = 0;
 static unsigned char portA_in,portA_out,ddrA;
 static unsigned char portB_in,portB_out,ddrB;
 static unsigned char portC_in,portC_out,ddrC;
+
+static void tokio_register_state(void)
+{
+	bublbobl_save_state();
+	state_save_register_UINT8("tokio", 0, "from_main", &from_main, 1);
+	state_save_register_UINT8("tokio", 0, "from_mcu", &from_mcu, 1);
+	state_save_register_int  ("tokio", 0, "mcu_sent", &mcu_sent);
+	state_save_register_int  ("tokio", 0, "main_sent", &main_sent);
+	state_save_register_UINT8("tokio", 0, "portA_in", &portA_in, 1);
+	state_save_register_UINT8("tokio", 0, "portA_out", &portA_out, 1);
+	state_save_register_UINT8("tokio", 0, "ddrA", &ddrA, 1);
+	state_save_register_UINT8("tokio", 0, "portB_in", &portB_in, 1);
+	state_save_register_UINT8("tokio", 0, "portB_out", &portB_out, 1);
+	state_save_register_UINT8("tokio", 0, "ddrB", &ddrB, 1);
+	state_save_register_UINT8("tokio", 0, "portC_in", &portC_in, 1);
+	state_save_register_UINT8("tokio", 0, "portC_out", &portC_out, 1);
+	state_save_register_UINT8("tokio", 0, "ddrC", &ddrC, 1);
+}
 
 READ_HANDLER( tokio_68705_portA_r )
 {
@@ -1720,6 +1759,7 @@ static DRIVER_INIT( bublbobl )
 	memcpy(ROM+0x08000,ROM+0x10000,0x4000);
 
 	bublbobl_video_enable = 1;
+	bublbobl_register_state();
 }
 
 static DRIVER_INIT( boblbobl )
@@ -1745,7 +1785,7 @@ static DRIVER_INIT( tokio )
 
 	/* preemptively enable video, the bit is not mapped for this game and */
 	/* I don't know if it even has it. */
-	bublbobl_video_enable = 1;
+	bublbobl_video_enable = 1;	tokio_register_state();
 }
 
 

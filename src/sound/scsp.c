@@ -23,6 +23,7 @@
 #include <string.h>
 #include "driver.h"
 #include "cpuintrf.h"
+#include "state.h"
 
 static signed short *bufferl;
 static signed short *bufferr;
@@ -1095,6 +1096,134 @@ static void SCSP_Update(int num, short **buf, int samples)
 	SCSP_DoMasterSamples(num, samples);
 }
 
+/* Save states: the chip registers, the slots (phase, envelope, LFOs),
+   the effect DSP, the timers, the interrupts and the MIDI FIFOs, so that
+   a state loaded in a new instance goes on exactly as the running one.
+   The pointers (sample base, LFO tables) are kept as offsets. */
+static UINT32 SCSP_ss_base[MAX_SCSP][32];
+static UINT8 SCSP_ss_lfo[MAX_SCSP][32][4];	/* PLFO table, PLFO scale, ALFO table, ALFO scale */
+
+static int SCSP_lfo_table_index(int *table, int alfo)
+{
+	if (alfo)
+	{
+		if (table == ALFO_SQR) return 1;
+		if (table == ALFO_TRI) return 2;
+		if (table == ALFO_NOI) return 3;
+		return 0;
+	}
+	if (table == PLFO_SQR) return 1;
+	if (table == PLFO_TRI) return 2;
+	if (table == PLFO_NOI) return 3;
+	return 0;
+}
+
+static int *SCSP_lfo_table(int index, int alfo)
+{
+	static int *atab[4] = { ALFO_SAW, ALFO_SQR, ALFO_TRI, ALFO_NOI };
+	static int *ptab[4] = { PLFO_SAW, PLFO_SQR, PLFO_TRI, PLFO_NOI };
+	return alfo ? atab[index & 3] : ptab[index & 3];
+}
+
+static void SCSP_presave(void)
+{
+	int i, s;
+	for (i = 0; i < MAX_SCSP; i++)
+		for (s = 0; s < 32; s++)
+		{
+			struct _SLOT *slot = &SCSPs[i].Slots[s];
+			SCSP_ss_base[i][s] = (slot->base && SCSPs[i].SCSPRAM) ? (UINT32)(slot->base - SCSPs[i].SCSPRAM) : 0;
+			SCSP_ss_lfo[i][s][0] = slot->PLFO.table ? SCSP_lfo_table_index(slot->PLFO.table, 0) : 0;
+			SCSP_ss_lfo[i][s][1] = slot->PLFO.scale ? (UINT8)((slot->PLFO.scale - PSCALES[0]) / 256) : 0;
+			SCSP_ss_lfo[i][s][2] = slot->ALFO.table ? SCSP_lfo_table_index(slot->ALFO.table, 1) : 0;
+			SCSP_ss_lfo[i][s][3] = slot->ALFO.scale ? (UINT8)((slot->ALFO.scale - ASCALES[0]) / 256) : 0;
+		}
+}
+
+static void SCSP_postload(void)
+{
+	int i, s;
+	for (i = 0; i < MAX_SCSP; i++)
+		for (s = 0; s < 32; s++)
+		{
+			struct _SLOT *slot = &SCSPs[i].Slots[s];
+			slot->base = SCSPs[i].SCSPRAM ? SCSPs[i].SCSPRAM + SCSP_ss_base[i][s] : NULL;
+			slot->PLFO.table = SCSP_lfo_table(SCSP_ss_lfo[i][s][0], 0);
+			slot->PLFO.scale = PSCALES[SCSP_ss_lfo[i][s][1] & 7];
+			slot->ALFO.table = SCSP_lfo_table(SCSP_ss_lfo[i][s][2], 1);
+			slot->ALFO.scale = ASCALES[SCSP_ss_lfo[i][s][3] & 7];
+		}
+}
+
+static void SCSP_save_state(int num)
+{
+	char buf[32];
+	int i, s;
+
+	for (i = 0; i < num; i++)
+	{
+		struct _SCSP *chip = &SCSPs[i];
+		struct _SCSPDSP *DSP = &chip->DSP;
+
+		state_save_register_UINT16("SCSP", i, "regs",    chip->udata.data, 0x30/2);
+		state_save_register_int   ("SCSP", i, "MvolSet", &chip->MvolSet);
+		for (s = 0; s < 32; s++)
+		{
+			struct _SLOT *slot = &chip->Slots[s];
+			sprintf(buf, "SCSP.slot%d", s);
+			state_save_register_UINT16(buf, i, "regs",       slot->udata.data, 0x10);
+			state_save_register_UINT8 (buf, i, "active",     &slot->active, 1);
+			state_save_register_UINT32(buf, i, "base",       &SCSP_ss_base[i][s], 1);
+			state_save_register_UINT32(buf, i, "cur_addr",   &slot->cur_addr, 1);
+			state_save_register_UINT32(buf, i, "step",       &slot->step, 1);
+			state_save_register_int   (buf, i, "EG.volume",  &slot->EG.volume);
+			state_save_register_int   (buf, i, "EG.state",   (int *)&slot->EG.state);
+			state_save_register_int   (buf, i, "EG.step",    &slot->EG.step);
+			state_save_register_int   (buf, i, "EG.AR",      &slot->EG.AR);
+			state_save_register_int   (buf, i, "EG.D1R",     &slot->EG.D1R);
+			state_save_register_int   (buf, i, "EG.D2R",     &slot->EG.D2R);
+			state_save_register_int   (buf, i, "EG.RR",      &slot->EG.RR);
+			state_save_register_int   (buf, i, "EG.DL",      &slot->EG.DL);
+			state_save_register_UINT8 (buf, i, "EG.EGHOLD",  &slot->EG.EGHOLD, 1);
+			state_save_register_UINT8 (buf, i, "EG.LPLINK",  &slot->EG.LPLINK, 1);
+			state_save_register_UINT16(buf, i, "PLFO.phase", &slot->PLFO.phase, 1);
+			state_save_register_UINT32(buf, i, "PLFO.phase_step", &slot->PLFO.phase_step, 1);
+			state_save_register_UINT16(buf, i, "ALFO.phase", &slot->ALFO.phase, 1);
+			state_save_register_UINT32(buf, i, "ALFO.phase_step", &slot->ALFO.phase_step, 1);
+			state_save_register_UINT8 (buf, i, "LFO.tables", SCSP_ss_lfo[i][s], 4);
+		}
+		state_save_register_UINT32("SCSP.DSP", i, "RBP",    &DSP->RBP, 1);
+		state_save_register_UINT32("SCSP.DSP", i, "RBL",    &DSP->RBL, 1);
+		state_save_register_INT16 ("SCSP.DSP", i, "COEF",   DSP->COEF, 64);
+		state_save_register_UINT16("SCSP.DSP", i, "MADRS",  DSP->MADRS, 32);
+		state_save_register_UINT16("SCSP.DSP", i, "MPRO",   DSP->MPRO, 128*4);
+		state_save_register_INT32 ("SCSP.DSP", i, "TEMP",   DSP->TEMP, 128);
+		state_save_register_INT32 ("SCSP.DSP", i, "MEMS",   DSP->MEMS, 32);
+		state_save_register_UINT32("SCSP.DSP", i, "DEC",    &DSP->DEC, 1);
+		state_save_register_INT32 ("SCSP.DSP", i, "MIXS",   DSP->MIXS, 16);
+		state_save_register_INT16 ("SCSP.DSP", i, "EXTS",   DSP->EXTS, 2);
+		state_save_register_INT16 ("SCSP.DSP", i, "EFREG",  DSP->EFREG, 16);
+		state_save_register_int   ("SCSP.DSP", i, "Stopped",  &DSP->Stopped);
+		state_save_register_int   ("SCSP.DSP", i, "LastStep", &DSP->LastStep);
+	}
+	state_save_register_UINT32("SCSP", 0, "IrqTimA",      &IrqTimA, 1);
+	state_save_register_UINT32("SCSP", 0, "IrqTimBC",     &IrqTimBC, 1);
+	state_save_register_UINT32("SCSP", 0, "IrqMidi",      &IrqMidi, 1);
+	state_save_register_UINT8 ("SCSP", 0, "MidiOutW",     &MidiOutW, 1);
+	state_save_register_UINT8 ("SCSP", 0, "MidiOutR",     &MidiOutR, 1);
+	state_save_register_UINT8 ("SCSP", 0, "MidiStack",    MidiStack, 32);
+	state_save_register_UINT8 ("SCSP", 0, "MidiOutStack", MidiOutStack, 16);
+	state_save_register_UINT8 ("SCSP", 0, "MidiW",        &MidiW, 1);
+	state_save_register_UINT8 ("SCSP", 0, "MidiR",        &MidiR, 1);
+	state_save_register_INT32 ("SCSP", 0, "TimPris",      (INT32 *)TimPris, 3);
+	state_save_register_INT32 ("SCSP", 0, "TimCnt",       (INT32 *)TimCnt, 3);
+	state_save_register_UINT32("SCSP", 0, "dmea",         &scsp_dmea, 1);
+	state_save_register_UINT16("SCSP", 0, "drga",         &scsp_drga, 1);
+	state_save_register_UINT16("SCSP", 0, "dtlg",         &scsp_dtlg, 1);
+	state_save_register_func_presave(SCSP_presave);
+	state_save_register_func_postload(SCSP_postload);
+}
+
 int SCSP_sh_start(const struct MachineSound *msound)
 {
 	char buf[2][40];
@@ -1123,6 +1252,8 @@ int SCSP_sh_start(const struct MachineSound *msound)
 	}
 
 	SCSP = &SCSPs[0];
+
+	SCSP_save_state(intf->num);
 
 	return 0;
 }

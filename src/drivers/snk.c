@@ -216,6 +216,7 @@ Credits (in alphabetical order)
 ***************************************************************************/
 
 #include "driver.h"
+#include "state.h"
 #include "vidhrdw/generic.h"
 #include "cpu/z80/z80.h"
 #include "snk.h"
@@ -288,6 +289,14 @@ static int hard_flags;
 	bit 3:	sound command pending
 */
 static int snk_sound_register;
+
+/* the sound handshake register is part of the save state (the sound CPU
+   went another way after loading a state in a new instance) */
+static MACHINE_INIT( snk )
+{
+	snk_sound_register = 0;
+	state_save_register_int("snk", 0, "sound_register", &snk_sound_register);
+}
 
 /*********************************************************************/
 
@@ -1058,6 +1067,7 @@ static MACHINE_DRIVER_START( tnk3 )
 
 	MDRV_PALETTE_INIT(aso)
 	MDRV_VIDEO_START(snk)
+	MDRV_MACHINE_INIT(snk)
 	MDRV_VIDEO_UPDATE(tnk3)
 
 	/* sound hardware */
@@ -1094,6 +1104,7 @@ static MACHINE_DRIVER_START( athena )
 
 	MDRV_PALETTE_INIT(aso)
 	MDRV_VIDEO_START(snk)
+	MDRV_MACHINE_INIT(snk)
 	MDRV_VIDEO_UPDATE(tnk3)
 
 	/* sound hardware */
@@ -1130,6 +1141,7 @@ static MACHINE_DRIVER_START( ikari )
 
 	MDRV_PALETTE_INIT(snk_3bpp_shadow)
 	MDRV_VIDEO_START(snk)
+	MDRV_MACHINE_INIT(snk)
 	MDRV_VIDEO_UPDATE(ikari)
 
 	/* sound hardware */
@@ -1168,6 +1180,7 @@ static MACHINE_DRIVER_START( victroad )
 
 	MDRV_PALETTE_INIT(snk_3bpp_shadow)
 	MDRV_VIDEO_START(snk)
+	MDRV_MACHINE_INIT(snk)
 	MDRV_VIDEO_UPDATE(ikari)
 
 	/* sound hardware */
@@ -1205,6 +1218,7 @@ static MACHINE_DRIVER_START( gwar )
 
 	MDRV_PALETTE_INIT(RRRR_GGGG_BBBB)
 	MDRV_VIDEO_START(snk)
+	MDRV_MACHINE_INIT(snk)
 	MDRV_VIDEO_UPDATE(gwar)
 
 	/* sound hardware */
@@ -1243,6 +1257,7 @@ static MACHINE_DRIVER_START( bermudat )
 
 	MDRV_PALETTE_INIT(RRRR_GGGG_BBBB)
 	MDRV_VIDEO_START(snk)
+	MDRV_MACHINE_INIT(snk)
 	MDRV_VIDEO_UPDATE(gwar)
 
 	/* sound hardware */
@@ -1280,6 +1295,7 @@ static MACHINE_DRIVER_START( psychos )
 
 	MDRV_PALETTE_INIT(RRRR_GGGG_BBBB)
 	MDRV_VIDEO_START(snk)
+	MDRV_MACHINE_INIT(snk)
 	MDRV_VIDEO_UPDATE(gwar)
 
 	/* sound hardware */
@@ -1317,6 +1333,7 @@ static MACHINE_DRIVER_START( chopper1 )
 
 	MDRV_PALETTE_INIT(RRRR_GGGG_BBBB)
 	MDRV_VIDEO_START(snk)
+	MDRV_MACHINE_INIT(snk)
 	MDRV_VIDEO_UPDATE(gwar)
 
 	/* sound hardware */
@@ -1354,6 +1371,7 @@ static MACHINE_DRIVER_START( tdfever )
 
 	MDRV_PALETTE_INIT(snk_4bpp_shadow)
 	MDRV_VIDEO_START(snk)
+	MDRV_MACHINE_INIT(snk)
 	MDRV_VIDEO_UPDATE(tdfever)
 
 	/* sound hardware */
@@ -1391,6 +1409,7 @@ static MACHINE_DRIVER_START( tdfever2 )
 
 	MDRV_PALETTE_INIT(snk_4bpp_shadow)
 	MDRV_VIDEO_START(snk)
+	MDRV_MACHINE_INIT(snk)
 	MDRV_VIDEO_UPDATE(tdfever)
 
 	/* sound hardware */
@@ -1428,6 +1447,7 @@ static MACHINE_DRIVER_START( ftsoccer )
 
 	MDRV_PALETTE_INIT(snk_4bpp_shadow)
 	MDRV_VIDEO_START(snk)
+	MDRV_MACHINE_INIT(snk)
 	MDRV_VIDEO_UPDATE(tdfever)
 
 	/* sound hardware */

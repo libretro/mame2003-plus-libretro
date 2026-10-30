@@ -1,4 +1,5 @@
 #include "driver.h"
+#include "state.h"
 #include "vidhrdw/generic.h"
 #include "snk.h"
 
@@ -71,9 +72,17 @@ PALETTE_INIT( snk_4bpp_shadow )
 	gfx_drawmode_table[15] = DRAWMODE_NONE;
 }
 
+/* after a state load the tile cache doesn't match the restored video RAM */
+static void snk_postload(void)
+{
+	memset( dirtybuffer, 0xff, MAX_VRAM_SIZE );
+}
+
 VIDEO_START( snk )
 {
 	snk_blink_parity = 0;
+	state_save_register_int("snk", 0, "blink_parity", &snk_blink_parity);
+	state_save_register_func_postload(snk_postload);
 
 	dirtybuffer = auto_malloc( MAX_VRAM_SIZE );
 	if(!dirtybuffer) return 1;

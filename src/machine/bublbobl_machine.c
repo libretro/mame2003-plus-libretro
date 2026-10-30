@@ -10,11 +10,25 @@
 #include "driver.h"
 #include "cpu/z80/z80.h"
 #include "vidhrdw/generic.h"
+#include "state.h"
 
 
 
 unsigned char *bublbobl_sharedram1,*bublbobl_sharedram2;
 extern int bublbobl_video_enable;
+
+/* the ROM bank at 0x8000, -1 until the game selects one */
+static int bublbobl_bank = -1;
+
+static void bublbobl_set_bank(void)
+{
+	unsigned char *ROM = memory_region(REGION_CPU1);
+
+	if (bublbobl_bank >= 0)
+		cpu_setbank(1,&ROM[0x10000 + 0x4000 * bublbobl_bank]);
+	else
+		cpu_setbank(1,&ROM[0x8000]);
+}
 
 
 READ_HANDLER( bublbobl_sharedram1_r )
@@ -41,7 +55,8 @@ WRITE_HANDLER( bublbobl_bankswitch_w )
 	unsigned char *ROM = memory_region(REGION_CPU1);
 
 	/* bits 0-2 select ROM bank */
-	cpu_setbank(1,&ROM[0x10000 + 0x4000 * ((data ^ 4) & 7)]);
+	bublbobl_bank = (data ^ 4) & 7;
+	cpu_setbank(1,&ROM[0x10000 + 0x4000 * bublbobl_bank]);
 
 	/* bit 3 n.c. */
 
@@ -65,7 +80,8 @@ WRITE_HANDLER( tokio_bankswitch_w )
 	unsigned char *ROM = memory_region(REGION_CPU1);
 
 	/* bits 0-2 select ROM bank */
-	cpu_setbank(1,&ROM[0x10000 + 0x4000 * (data & 7)]);
+	bublbobl_bank = data & 7;
+	cpu_setbank(1,&ROM[0x10000 + 0x4000 * bublbobl_bank]);
 
 	/* bits 3-7 unknown */
 }
@@ -256,4 +272,25 @@ log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: 68705 unknown port B bit %02x\n",activecpu
 WRITE_HANDLER( bublbobl_68705_ddrB_w )
 {
 	ddrB = data;
+}
+
+
+/* save states: the ROM bank, the display enable, the sound NMI and the
+   68705 ports of Bubble Bobble and Tokio */
+void bublbobl_save_state(void)
+{
+	bublbobl_bank = -1;
+	state_save_register_int  ("bublbobl", 0, "bank",             &bublbobl_bank);
+	state_save_register_int  ("bublbobl", 0, "video_enable",     &bublbobl_video_enable);
+	state_save_register_int  ("bublbobl", 0, "sound_nmi_enable", &sound_nmi_enable);
+	state_save_register_int  ("bublbobl", 0, "pending_nmi",      &pending_nmi);
+	state_save_register_UINT8("bublbobl", 0, "portA_in",         &portA_in, 1);
+	state_save_register_UINT8("bublbobl", 0, "portA_out",        &portA_out, 1);
+	state_save_register_UINT8("bublbobl", 0, "ddrA",             &ddrA, 1);
+	state_save_register_UINT8("bublbobl", 0, "portB_in",         &portB_in, 1);
+	state_save_register_UINT8("bublbobl", 0, "portB_out",        &portB_out, 1);
+	state_save_register_UINT8("bublbobl", 0, "ddrB",             &ddrB, 1);
+	state_save_register_int  ("bublbobl", 0, "address",          &address);
+	state_save_register_int  ("bublbobl", 0, "latch",            &latch);
+	state_save_register_func_postload(bublbobl_set_bank);
 }

@@ -526,11 +526,27 @@ READ32_HANDLER( model2_copro_status_r )
 static UINT32 fifo_in_save[ FIFO_ALLOC ], fifo_out_save[ FIFO_ALLOC ];
 static int fifo_in_count, fifo_out_count;
 
+static INT32 fifo_waits_save[ 4 ];
+
+static void fifo_wait_load( struct m2_fifo *f, int reader_waits, int writer_waits )
+{
+	f->reader_waits = reader_waits ? 1 : 0;
+	f->writer_waits = writer_waits ? 1 : 0;
+	if( f->reader_waits )
+		cpunum_suspend( f->reader, SUSPEND_REASON_SPIN, 1 );
+	if( f->writer_waits )
+		cpunum_suspend( f->writer, SUSPEND_REASON_SPIN, 1 );
+}
+
 static void copro_presave( void )
 {
 	int i;
 	fifo_in_count = fifo_in.count;
 	fifo_out_count = fifo_out.count;
+	fifo_waits_save[ 0 ] = fifo_in.reader_waits;
+	fifo_waits_save[ 1 ] = fifo_in.writer_waits;
+	fifo_waits_save[ 2 ] = fifo_out.reader_waits;
+	fifo_waits_save[ 3 ] = fifo_out.writer_waits;
 	for( i = 0; i < fifo_in.count; i++ )
 		fifo_in_save[ i ] = fifo_in.data[ ( fifo_in.head + i ) % FIFO_ALLOC ];
 	for( i = 0; i < fifo_out.count; i++ )
@@ -548,6 +564,12 @@ static void copro_postload( void )
 		fifo_out.data[ i ] = fifo_out_save[ i ];
 	fifo_in.count = fifo_in_count;
 	fifo_out.count = fifo_out_count;
+	if( model2_copro_type == MODEL2_COPRO_SHARC )
+		sharc_flags_update();
+	/* the CPUs waiting on a FIFO at the save wait again, so that the
+	   access that ends the wait resumes them */
+	fifo_wait_load( &fifo_in, fifo_waits_save[ 0 ], fifo_waits_save[ 1 ] );
+	fifo_wait_load( &fifo_out, fifo_waits_save[ 2 ], fifo_waits_save[ 3 ] );
 	if( tgp_booted )
 		cpunum_resume( CPU_TGP, SUSPEND_REASON_HALT );
 	else
@@ -585,6 +607,7 @@ void model2_copro_init( void )
 	state_save_register_UINT32( "model2tgp", 0, "fifo_out", fifo_out_save, FIFO_ALLOC );
 	state_save_register_int( "model2tgp", 0, "fifo_in_count", &fifo_in_count );
 	state_save_register_int( "model2tgp", 0, "fifo_out_count", &fifo_out_count );
+	state_save_register_INT32( "model2tgp", 0, "fifo_waits", fifo_waits_save, 4 );
 	state_save_register_func_presave( copro_presave );
 	state_save_register_func_postload( copro_postload );
 }
