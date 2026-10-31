@@ -876,6 +876,31 @@ static UINT16 do_decrypt( void )
 	return ( base[ 0 ] << 8 ) | base[ 1 ];
 }
 
+void sega315_5881_set_addr_low( UINT16 data )
+{
+	prot_cur_address = ( prot_cur_address & 0xffff0000 ) | data;
+	enc_ready = 0;
+}
+
+void sega315_5881_set_addr_high( UINT16 data )
+{
+	prot_cur_address = ( prot_cur_address & 0x0000ffff ) | ( (UINT32)data << 16 );
+	enc_ready = 0;
+	buffer_bit = 7;
+	buffer_bit2 = 15;
+}
+
+void sega315_5881_set_subkey( UINT16 data )
+{
+	subkey = data;
+	enc_ready = 0;
+}
+
+UINT16 sega315_5881_do_decrypt( void )
+{
+	return do_decrypt();
+}
+
 /* little endian read: the decrypted word with its bytes swapped */
 UINT16 sega315_5881_decrypt_r( void )
 {

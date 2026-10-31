@@ -3,6 +3,9 @@ LOCAL_PATH := $(call my-dir)
 ROOT_DIR := $(LOCAL_PATH)/..
 CORE_DIR := $(ROOT_DIR)/src
 
+# threads: in bionic's C library
+HAVE_THREADS := 1
+
 include $(ROOT_DIR)/Makefile.common
 
 COREFLAGS := $(DEFS) $(COREDEFINES) $(CPUDEFS) $(SOUNDDEFS) $(ASMDEFS) $(DBGDEFS) -ffast-math -funroll-loops -DANDROID -DHAVE_ZLIB $(INCFLAGS)

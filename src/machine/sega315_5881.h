@@ -10,4 +10,11 @@ void sega315_5881_addrhi_w( UINT16 data );
 void sega315_5881_subkey_w( UINT16 data );
 UINT16 sega315_5881_decrypt_r( void );
 
+/* ST-V A-Bus interface: the address and sub-key as the cart latches them,
+   and the decrypted stream word by word (big endian) */
+void sega315_5881_set_addr_low( UINT16 data );
+void sega315_5881_set_addr_high( UINT16 data );
+void sega315_5881_set_subkey( UINT16 data );
+UINT16 sega315_5881_do_decrypt( void );
+
 #endif
