@@ -3551,6 +3551,7 @@ Sep.1994 Quiz Ghost Hunter
 	DRIVER( bakubaku )
 	DRIVER( colmns97 )
 	DRIVER( cotton2 )
+	DRIVER( cotton2e )
 	DRIVER( cottonbm )
 	DRIVER( decathlt )
 	DRIVER( diehard )
@@ -3573,6 +3574,7 @@ Sep.1994 Quiz Ghost Hunter
 	DRIVER( pblbeach )
 	DRIVER( prikura )
 	DRIVER( puyosun )
+	DRIVER( puyosune )	/* bootleg, English translation */
 	DRIVER( rsgun )
 	DRIVER( sandor )
 	DRIVER( thunt )
