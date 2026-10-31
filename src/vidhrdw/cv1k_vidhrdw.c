@@ -959,7 +959,28 @@ VIDEO_UPDATE( cv1k )
 	{
 		UINT16 *dst = (UINT16 *)bitmap->line[y];
 		const UINT16 *src = &cv1k_vram[((y + sy) & (VRAM_H - 1)) * VRAM_W];
-		for (x = cliprect->min_x; x <= cliprect->max_x; x++)
-			dst[x] = src[(x + sx) & (VRAM_W - 1)] & 0x7fff;
+
+		/* at most two runs: up to the right edge of the VRAM, then from its left */
+		for (x = cliprect->min_x; x <= cliprect->max_x; )
+		{
+			int srcx = (x + sx) & (VRAM_W - 1);
+			int count = cliprect->max_x - x + 1;
+			UINT16 *d;
+			const UINT16 *s;
+			if (count > VRAM_W - srcx)
+				count = VRAM_W - srcx;
+			d = &dst[x];
+			s = &src[srcx];
+			x += count;
+#if CV1K_SIMD
+			{
+				const v16 v_7fff = V_SET(0x7fff);
+				for (; count >= 8; count -= 8, d += 8, s += 8)
+					V_STORE(d, V_AND(V_LOAD(s), v_7fff));
+			}
+#endif
+			for (; count > 0; count--)
+				*d++ = *s++ & 0x7fff;
+		}
 	}
 }
