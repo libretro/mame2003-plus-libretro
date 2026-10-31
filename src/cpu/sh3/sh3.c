@@ -87,6 +87,19 @@ typedef struct
 	UINT32	ea;
 	UINT32	sleep_mode;
 
+	/* bus timing (first: the fields of every access near the start) */
+	int		cache_timing;
+	UINT32	cache_port_free;
+	UINT32	burst_continuation_remaining_cycles;
+	UINT32	last_access_address;
+	INT32	last_op_rel;		/* see last_op_cycles() */
+	UINT32	wb_address;
+	UINT32	last_area_accessed;
+	UINT32	last_area_accessed_was_write;
+	UINT32	wb_active_cycles;
+	UINT32	last_op_cycles_lo, last_op_cycles_hi;	/* 64-bit cycle counts, saved */
+	UINT32	total_cycles_lo, total_cycles_hi;
+
 	/* interrupts */
 	UINT32	pending_irq;
 	UINT32	test_irq;
@@ -109,26 +122,21 @@ typedef struct
 	UINT8	dma_timer_active[4];
 	void	*dma_timer[4];
 
-	/* cache and bus timing */
-	UINT32	cache_tag[CACHE_BLOCKS][CACHE_ASSOC];
-	UINT8	cache_lru[CACHE_BLOCKS][CACHE_ASSOC];
-	UINT8	cache_dirty[CACHE_BLOCKS][CACHE_ASSOC];
-	UINT32	wb_address;
-	UINT32	last_area_accessed;
-	UINT32	last_area_accessed_was_write;
-	UINT32	wb_active_cycles;
-	UINT32	burst_continuation_remaining_cycles;
-	UINT32	cache_port_free;
-	UINT32	last_access_address;
-	UINT32	last_op_cycles_lo, last_op_cycles_hi;	/* 64-bit cycle counts, saved */
-	UINT32	total_cycles_lo, total_cycles_hi;
-
 	/* configuration */
 	int		cpunum;
-	int		cache_timing;
 	int		pm_clock;
 	data8_t	(*port_r)(int port);
 	void	(*port_w)(int port, data8_t data);
+
+	/* the cache: the most recently used way of each block (the one with
+	   LRU 3) or CACHE_ASSOC, and its tag (CACHE_NO_TAG for no way or a tag
+	   of 0); kept with cache_lru and cache_tag, rebuilt from them when
+	   the cache is cleared or comes from a state */
+	UINT32	cache_mru_tag[CACHE_BLOCKS];
+	UINT8	cache_mru[CACHE_BLOCKS];
+	UINT32	cache_tag[CACHE_BLOCKS][CACHE_ASSOC];
+	UINT8	cache_lru[CACHE_BLOCKS][CACHE_ASSOC];
+	UINT8	cache_dirty[CACHE_BLOCKS][CACHE_ASSOC];
 } SH3;
 
 int sh3_ICount;
@@ -148,6 +156,11 @@ typedef struct
 
 static sh3_fastram fastram[SH3_FASTRAM_MAX];
 static int fastram_count;
+
+/* the region of each 64 KB page of the physical space: its index, -1 for
+   none, -2 for a page that is not all in one region (looked for one by one) */
+#define FASTRAM_PAGE_SHIFT	16
+static INT8 fastram_page[(AM + 1) >> FASTRAM_PAGE_SHIFT];
 
 /* the recompiler (sh3jit.c): where its code comes from in RAM, one byte
    per 4-byte granule of the physical address; a write there flushes it */
@@ -175,15 +188,36 @@ static INLINE UINT64 total_cycles(void)
 	return sh3_exec_base + (sh3_exec_cycles - sh3_ICount);
 }
 
-static INLINE UINT64 last_op_cycles(void)
+/* the cycle count of the last bus access, kept in 32 bits: relative to
+   sh3_exec_base, or LAST_OP_FAR when it is more than 2^30 cycles away from
+   it. The bus timing only compares the cycles elapsed since that access
+   with small counts, so far is the same as any large count. The exact
+   64-bit value is in sh3.last_op_cycles_lo/hi for the save states, and
+   while far. */
+#define LAST_OP_NEAR		(1 << 30)
+#define LAST_OP_FAR			((INT32)0x80000000)
+
+/* the cycles from the last bus access to 'now' (sh3_exec_cycles -
+   sh3_ICount): exact up to 2^30, and at least 2^30 when more (far: 2^31
+   and more) or when the access is ahead */
+static INLINE UINT32 elapsed_since_last_op(INT32 now)
 {
-	return ((UINT64)sh3.last_op_cycles_hi << 32) | sh3.last_op_cycles_lo;
+	return (UINT32)now - (UINT32)sh3.last_op_rel;
 }
 
-static INLINE void set_last_op_cycles(UINT64 c)
+static UINT64 last_op_cycles(void)
 {
+	if (sh3.last_op_rel == LAST_OP_FAR)
+		return ((UINT64)sh3.last_op_cycles_hi << 32) | sh3.last_op_cycles_lo;
+	return sh3_exec_base + (INT64)sh3.last_op_rel;
+}
+
+static void set_last_op_cycles(UINT64 c)
+{
+	INT64 d = (INT64)(c - sh3_exec_base);
 	sh3.last_op_cycles_lo = (UINT32)c;
 	sh3.last_op_cycles_hi = (UINT32)(c >> 32);
+	sh3.last_op_rel = (d < -LAST_OP_NEAR || d > LAST_OP_NEAR) ? LAST_OP_FAR : (INT32)d;
 }
 
 
@@ -471,22 +505,26 @@ static INLINE int is_sdram_region(UINT32 address)
 	return get_area(address) == 3;
 }
 
-/* the most recently used way of each block (the one with LRU 3), or
-   CACHE_ASSOC: derived from cache_lru, rebuilt when cache_mru_valid is 0 */
-static UINT8 cache_mru[CACHE_BLOCKS];
-static int cache_mru_valid;
+#define CACHE_NO_TAG		0xffffffff
+
+static INLINE void cache_set_mru(UINT32 block, UINT32 way)
+{
+	UINT32 tag = sh3.cache_tag[block][way];
+	sh3.cache_mru[block] = way;
+	sh3.cache_mru_tag[block] = tag ? tag : CACHE_NO_TAG;
+}
 
 static void cache_mru_rebuild(void)
 {
 	UINT32 b, i;
 	for (b = 0; b < CACHE_BLOCKS; b++)
 	{
-		cache_mru[b] = CACHE_ASSOC;
+		sh3.cache_mru[b] = CACHE_ASSOC;
+		sh3.cache_mru_tag[b] = CACHE_NO_TAG;
 		for (i = 0; i < CACHE_ASSOC; i++)
 			if (sh3.cache_lru[b][i] == CACHE_ASSOC - 1)
-				cache_mru[b] = i;
+				cache_set_mru(b, i);
 	}
-	cache_mru_valid = 1;
 }
 
 static int cache_access(UINT32 address, int write)
@@ -513,7 +551,7 @@ static int cache_access(UINT32 address, int write)
 					if (sh3.cache_lru[cache_block][j] > sh3.cache_lru[cache_block][i])
 						sh3.cache_lru[cache_block][j]--;
 				sh3.cache_lru[cache_block][i] = CACHE_ASSOC - 1;
-				cache_mru[cache_block] = i;
+				cache_set_mru(cache_block, i);
 			}
 			return 1;
 		}
@@ -528,7 +566,7 @@ static int cache_access(UINT32 address, int write)
 				sh3.wb_address = sh3.cache_tag[cache_block][i] * CACHE_LINE_SIZE;
 			sh3.cache_tag[cache_block][i] = cache_address;
 			sh3.cache_lru[cache_block][i] = CACHE_ASSOC - 1;
-			cache_mru[cache_block] = i;
+			cache_set_mru(cache_block, i);
 			sh3.cache_dirty[cache_block][i] = write;
 			for (j = 0; j < CACHE_ASSOC; j++)
 				if (i != j && sh3.cache_lru[cache_block][j] != 0)
@@ -620,22 +658,22 @@ static void bsc_decode(void)
 	bsc_valid = 1;
 }
 
-static INLINE UINT64 remaining_cycles(UINT64 elapsed, UINT64 cycles)
+static INLINE UINT32 remaining_cycles(UINT32 elapsed, UINT32 cycles)
 {
 	return (elapsed < cycles) ? (cycles - elapsed) : 0;
 }
 
-static UINT32 access_penalty(UINT32 address, int write)
+static UINT32 access_penalty(UINT32 address, int write, INT32 now)
 {
 	int is_in_cache;
-	UINT64 elapsed_cycles;
+	UINT32 elapsed_cycles;
 	UINT32 cpu_penalty = 0;
 	UINT32 area, bus_penalty = 0;
 
 	if (!bsc_valid)
 		bsc_decode();
 	is_in_cache = cache_access(address, write);
-	elapsed_cycles = total_cycles() - last_op_cycles();
+	elapsed_cycles = elapsed_since_last_op(now);
 
 	if (!sh3.cache_port_free)
 		cpu_penalty++;
@@ -674,7 +712,7 @@ static UINT32 access_penalty(UINT32 address, int write)
 	if (area != sh3.last_area_accessed || (!sh3.last_area_accessed_was_write && !is_cacheable(address) && write))
 	{
 		UINT32 wcr1_idle_cycles = bsc_wcr1[area] * 2;
-		UINT64 wcr1_idle_cycles_left = remaining_cycles(elapsed_cycles, wcr1_idle_cycles);
+		UINT32 wcr1_idle_cycles_left = remaining_cycles(elapsed_cycles, wcr1_idle_cycles);
 		cpu_penalty += (UINT32)wcr1_idle_cycles_left;
 		elapsed_cycles -= (elapsed_cycles < wcr1_idle_cycles) ? elapsed_cycles : wcr1_idle_cycles;
 	}
@@ -684,7 +722,7 @@ static UINT32 access_penalty(UINT32 address, int write)
 
 	if (sh3.burst_continuation_remaining_cycles > 0)
 	{
-		UINT64 burst_cycles_left = remaining_cycles(elapsed_cycles, sh3.burst_continuation_remaining_cycles);
+		UINT32 burst_cycles_left = remaining_cycles(elapsed_cycles, sh3.burst_continuation_remaining_cycles);
 		cpu_penalty += (UINT32)burst_cycles_left;
 		elapsed_cycles -= (elapsed_cycles < sh3.burst_continuation_remaining_cycles) ? elapsed_cycles : sh3.burst_continuation_remaining_cycles;
 		sh3.burst_continuation_remaining_cycles = 0;
@@ -692,7 +730,7 @@ static UINT32 access_penalty(UINT32 address, int write)
 
 	if (sh3.wb_active_cycles > 0)
 	{
-		UINT64 wb_cycles_left = remaining_cycles(elapsed_cycles, sh3.wb_active_cycles);
+		UINT32 wb_cycles_left = remaining_cycles(elapsed_cycles, sh3.wb_active_cycles);
 		cpu_penalty += (UINT32)wb_cycles_left;
 		elapsed_cycles -= (elapsed_cycles < sh3.wb_active_cycles) ? elapsed_cycles : sh3.wb_active_cycles;
 		sh3.wb_active_cycles = 0;
@@ -726,24 +764,19 @@ static UINT32 access_penalty(UINT32 address, int write)
    is already the most recent one) and the miss path. A tag of 0 can be in
    more than one way (lines never filled), and cache_access() takes the
    first one: those go through access_penalty(). */
-static INLINE UINT32 access_penalty_fast(UINT32 address, int write)
+static INLINE UINT32 access_penalty_fast(UINT32 address, int write, INT32 now)
 {
 	if (is_cacheable(address))
 	{
 		UINT32 cache_address = (address & AM) / CACHE_LINE_SIZE;
 		UINT32 cache_block = cache_address % CACHE_BLOCKS;
-		UINT32 way;
-
-		if (!cache_mru_valid)
-			cache_mru_rebuild();
-		way = cache_mru[cache_block];
-		if (cache_address != 0 && way < CACHE_ASSOC && sh3.cache_tag[cache_block][way] == cache_address)
+		if (sh3.cache_mru_tag[cache_block] == cache_address)
 		{
-			UINT64 elapsed_cycles = total_cycles() - last_op_cycles();
+			UINT32 elapsed_cycles = elapsed_since_last_op(now);
 			UINT32 cpu_penalty = sh3.cache_port_free ? 0 : 1;
 
 			if (write)
-				sh3.cache_dirty[cache_block][way] = 1;
+				sh3.cache_dirty[cache_block][sh3.cache_mru[cache_block]] = 1;
 			sh3.cache_port_free = !sh3.cache_port_free;
 			if (elapsed_cycles < 6 && sh3.burst_continuation_remaining_cycles >= 6)
 			{
@@ -754,19 +787,26 @@ static INLINE UINT32 access_penalty_fast(UINT32 address, int write)
 			return cpu_penalty;
 		}
 	}
-	return access_penalty(address, write);
+	return access_penalty(address, write, now);
 }
 
 static INLINE void update_access_cycles(UINT32 address, int write)
 {
 	/* the instruction fetch, sampled at the data accesses */
+	INT32 icount = sh3_ICount;
+	INT32 now = sh3_exec_cycles - icount;
+	UINT32 penalty;
 	if (is_cacheable(sh3.pc))
 	{
-		sh3_ICount -= access_penalty_fast(sh3.pc, 0);
-		set_last_op_cycles(total_cycles());
+		penalty = access_penalty_fast(sh3.pc, 0, now);
+		icount -= penalty;
+		now += penalty;
+		sh3.last_op_rel = now;
 	}
-	sh3_ICount -= access_penalty_fast(address, write);
-	set_last_op_cycles(total_cycles());
+	penalty = access_penalty_fast(address, write, now);
+	icount -= penalty;
+	sh3.last_op_rel = now + penalty;
+	sh3_ICount = icount;
 }
 
 void sh3_update_access_cycles(UINT32 address, int write)
@@ -793,7 +833,7 @@ static void sh3_cache_invalidate_penalty(void)
 	memset(sh3.cache_tag, 0, sizeof(sh3.cache_tag));
 	memset(sh3.cache_lru, 0, sizeof(sh3.cache_lru));
 	memset(sh3.cache_dirty, 0, sizeof(sh3.cache_dirty));
-	cache_mru_valid = 0;
+	cache_mru_rebuild();
 	if (sh3.cache_timing)
 	{
 		/* the uncached fetches of the flush loop, as current MAME */
@@ -1385,6 +1425,27 @@ static void internal_write(UINT32 a, UINT32 data, int size)
 	memory accesses
 ***************************************************************************/
 
+static void fastram_build_pages(void)
+{
+	UINT32 p;
+	int i;
+	for (p = 0; p < sizeof(fastram_page); p++)
+	{
+		UINT32 first = p << FASTRAM_PAGE_SHIFT, last = first + (1 << FASTRAM_PAGE_SHIFT) - 1;
+		INT8 v = -1;
+		for (i = 0; i < fastram_count; i++)
+		{
+			if (fastram[i].end < first || fastram[i].start > last)
+				continue;
+			if (v == -1 && fastram[i].start <= first && fastram[i].end >= last)
+				v = (INT8)i;
+			else
+				v = -2;
+		}
+		fastram_page[p] = v;
+	}
+}
+
 void sh3_set_fastram(UINT32 start, UINT32 end, int readonly, data32_t *base)
 {
 	if (fastram_count < SH3_FASTRAM_MAX)
@@ -1395,6 +1456,7 @@ void sh3_set_fastram(UINT32 start, UINT32 end, int readonly, data32_t *base)
 		fastram[fastram_count].base = (UINT8 *)base;
 		fastram_count++;
 	}
+	fastram_build_pages();
 }
 
 /* the regions don't overlap: the one of the previous access first */
@@ -1403,6 +1465,14 @@ static int fastram_last;
 static INLINE sh3_fastram *find_fastram(UINT32 a)
 {
 	int i;
+	if (a <= AM)
+	{
+		i = fastram_page[a >> FASTRAM_PAGE_SHIFT];
+		if (i >= 0)
+			return &fastram[i];
+		if (i == -1)
+			return NULL;
+	}
 	if (fastram_last < fastram_count && a >= fastram[fastram_last].start && a <= fastram[fastram_last].end)
 		return &fastram[fastram_last];
 	for (i = 0; i < fastram_count; i++)
@@ -2771,9 +2841,12 @@ static void execute_one(UINT16 opcode)
 
 int sh3_execute(int cycles)
 {
+	UINT64 last_op = last_op_cycles();
+
 	sh3_ICount = cycles;
 	sh3_exec_cycles = cycles;
 	sh3_exec_base = ((UINT64)sh3.total_cycles_hi << 32) | sh3.total_cycles_lo;
+	set_last_op_cycles(last_op);
 
 	/* asleep with nothing to wake up: the cycles go */
 	if (sh3.sleep_mode == 1 && !sh3.test_irq)
@@ -2818,10 +2891,12 @@ int sh3_execute(int cycles)
 
 	{
 		UINT64 total = sh3_exec_base + (cycles - sh3_ICount);
+		last_op = last_op_cycles();
 		sh3.total_cycles_lo = (UINT32)total;
 		sh3.total_cycles_hi = (UINT32)(total >> 32);
 		sh3_exec_base = total;
 		sh3_exec_cycles = sh3_ICount = 0;
+		set_last_op_cycles(last_op);
 	}
 	return cycles - sh3_ICount;
 }
@@ -2858,11 +2933,17 @@ void sh3_set_irq_callback(int (*callback)(int irqline))
 	sh3.irq_callback = callback;
 }
 
+static void sh3_presave(void)
+{
+	set_last_op_cycles(last_op_cycles());
+}
+
 static void sh3_postload(void)
 {
+	set_last_op_cycles(((UINT64)sh3.last_op_cycles_hi << 32) | sh3.last_op_cycles_lo);
 	fetch_region = NULL;
 	bsc_valid = 0;
-	cache_mru_valid = 0;
+	cache_mru_rebuild();
 	jit_flush_pending = 1;
 }
 
@@ -2872,9 +2953,11 @@ void sh3_init(void)
 	int i;
 
 	memset(&sh3, 0, sizeof(sh3));
-	cache_mru_valid = 0;
+	cache_mru_rebuild();
+	set_last_op_cycles(0);
 	sh3.cpunum = cpu;
 	fastram_count = 0;
+	fastram_build_pages();
 	fetch_region = NULL;
 	build_special_tables();
 
@@ -2927,6 +3010,7 @@ void sh3_init(void)
 	state_save_register_UINT32("sh3", cpu, "last_op_hi", &sh3.last_op_cycles_hi, 1);
 	state_save_register_UINT32("sh3", cpu, "total_lo", &sh3.total_cycles_lo, 1);
 	state_save_register_UINT32("sh3", cpu, "total_hi", &sh3.total_cycles_hi, 1);
+	state_save_register_func_presave(sh3_presave);
 	state_save_register_func_postload(sh3_postload);
 }
 
@@ -2952,7 +3036,7 @@ void sh3_reset(void *param)
 	irq_callback = sh3.irq_callback;
 
 	memset(&sh3, 0, sizeof(sh3));
-	cache_mru_valid = 0;
+	cache_mru_rebuild();
 	for (i = 0; i < 3; i++)
 		sh3.timer[i] = timer[i];
 	for (i = 0; i < 4; i++)
@@ -2961,6 +3045,7 @@ void sh3_reset(void *param)
 	sh3.cpunum = cpunum;
 	sh3.total_cycles_lo = total_lo;
 	sh3.total_cycles_hi = total_hi;
+	set_last_op_cycles(0);
 
 	if (conf)
 	{
@@ -3028,7 +3113,7 @@ void sh3_set_context(void *src)
 		memcpy(&sh3, src, sizeof(sh3));
 	fetch_region = NULL;
 	bsc_valid = 0;
-	cache_mru_valid = 0;
+	cache_mru_rebuild();
 }
 
 unsigned sh3_get_reg(int regnum)
