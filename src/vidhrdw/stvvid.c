@@ -657,6 +657,8 @@ static void BEF_0(void) { vdp1_regs[0x010/2] &= ~0x0001; }
 
 /* bumped at each screen update, see vdp2_get_window0_coordinates */
 static int vdp2_window_cache_gen;
+#define VDP2_WINDOW_LINES	1024
+static struct vdp2_window_coord { int gen, sx, ex, sy, ey; } vdp2_window_coords[2][VDP2_WINDOW_LINES];
 
 /* prototypes */
 static void vdp2_get_window0_coordinates_calc(int *s_x, int *e_x, int *s_y, int *e_y, int y);
@@ -798,12 +800,33 @@ static UINT16 vdp1_regs_r(offs_t offset)
 	return vdp1_regs[offset]; /*TODO: write-only regs should return open bus or zero */
 }
 
+/* n pixels of value v from p, eight bytes at a time where p allows it */
+static void vdp1_fill16(UINT16 *p, int n, UINT16 v)
+{
+	while (n > 0 && ((size_t)p & 7))
+	{
+		*p++ = v;
+		n--;
+	}
+	if (n >= 4)
+	{
+		UINT64 v4 = (UINT64)v * (((UINT64)1 << 48) | ((UINT64)1 << 32) | ((UINT64)1 << 16) | 1);
+		int i, n4 = n >> 2;
+		/* memcpy: no aliasing of the UINT16 frame buffer as UINT64 */
+		for (i = 0; i < n4; i++)
+			memcpy(p + (i << 2), &v4, 8);
+		p += n4 << 2;
+		n &= 3;
+	}
+	while (n-- > 0)
+		*p++ = v;
+}
+
 /* TODO: TVM & 1 is just a kludgy work-around, the VDP1 actually needs to be rewritten from scratch. */
 /* Daisenryaku Strong Style (daisenss) uses it */
 static void vdp1_clear_framebuffer( int which_framebuffer )
 {
 	int y;
-	int x;
 	int start_x, end_x, start_y, end_y;
 
 	start_x = VDP1_EWLR_X1 * ((VDP1_TVM() & 1) ? 16 : 8);
@@ -812,17 +835,31 @@ static void vdp1_clear_framebuffer( int which_framebuffer )
 	end_y = (VDP1_EWRR_Y3+1) * (vdp1.framebuffer_double_interlace+1);
 /*  popmessage("%d %d %d %d %d",VDP1_EWLR_X1,VDP1_EWLR_Y1,VDP1_EWRR_X3,VDP1_EWRR_Y3,vdp1.framebuffer_double_interlace); */
 
-	if(VDP1_TVM() & 1)
+	/* the pixels (x & mask, y & 511) for x in [start_x, end_x): one or two
+	   runs of a row, the same pixels as a loop on x */
 	{
-		for(y=start_y;y<end_y;y++)
-			for(x=start_x;x<end_x;x++)
-				vdp1.framebuffer[ which_framebuffer ][((x&1023)+(y&511)*1024)] = vdp1.ewdr;
-	}
-	else
-	{
-		for(y=start_y;y<end_y;y++)
-			for(x=start_x;x<end_x;x++)
-				vdp1.framebuffer[ which_framebuffer ][((x&511)+(y&511)*512)] = vdp1.ewdr;
+		const int width = (VDP1_TVM() & 1) ? 1024 : 512;
+		const int count = end_x - start_x;
+		const UINT16 value = vdp1.ewdr;
+		int first, second, x0;
+
+		if (count >= width)
+		{
+			x0 = 0; first = width; second = 0;
+		}
+		else
+		{
+			x0 = start_x & (width - 1);
+			first = (count > width - x0) ? width - x0 : count;
+			second = count - first;
+		}
+		if (count > 0)
+			for(y=start_y;y<end_y;y++)
+			{
+				UINT16 *row = vdp1.framebuffer[ which_framebuffer ] + (y&511)*width;
+				vdp1_fill16(row + x0, first, value);
+				vdp1_fill16(row, second, value);
+			}
 	}
 
 	if ( VDP1_LOG ) logerror( "Clearing %d framebuffer\n", vdp1.framebuffer_current_draw );
@@ -5895,6 +5932,96 @@ static VDP2_TLS struct
 	int s1, e1, in1;	/* window 1 */
 } vdp2_wline;
 static void vdp2_window_line(int y, int key);
+static INLINE void vdp2_get_window0_coordinates(int *s_x, int *e_x, int *s_y, int *e_y, int y);
+static INLINE void vdp2_get_window1_coordinates(int *s_x, int *e_x, int *s_y, int *e_y, int y);
+
+/* the runs of pixels a line shows through the windows of the current layer
+   (vdp2_window_process gives 1 inside them), one entry per line, for the
+   settings in 'key': the windows only change at s0, e0 + 1, s1 and e1 + 1.
+   Not thread local, as vdp2_window_coords */
+#define VDP2_SPAN_MIN	(-0x8000)
+#define VDP2_SPAN_MAX	0x8000
+static struct vdp2_window_span { int gen, key, n; int a[5], b[5]; } vdp2_window_spans[VDP2_WINDOW_LINES];
+
+static const struct vdp2_window_span *vdp2_window_spans_get(int y)
+{
+	static struct vdp2_window_span outside;	/* lines past the cache: not cached */
+	const int en0 = current_tilemap.window_control.enabled[0];
+	const int en1 = current_tilemap.window_control.enabled[1];
+	const int out0 = !current_tilemap.window_control.area[0];
+	const int out1 = !current_tilemap.window_control.area[1];
+	const int logic_or = current_tilemap.window_control.logic & 1;
+	const int key = (en0 ? 1 : 0) | (en1 ? 2 : 0) | (out0 ? 4 : 0) | (out1 ? 8 : 0) | (logic_or ? 16 : 0);
+	struct vdp2_window_span *sp;
+	int s0 = 0, e0 = 0, in0 = 0, s1 = 0, e1 = 0, in1 = 0;
+	int bp[6], nb = 0, i, j;
+
+	if (y >= 0 && y < VDP2_WINDOW_LINES)
+	{
+		sp = &vdp2_window_spans[y];
+		if (sp->gen == vdp2_window_cache_gen && sp->key == key)
+			return sp;
+	}
+	else
+		sp = &outside;
+
+	if (en0)
+	{
+		int wsy, wey;
+		vdp2_get_window0_coordinates(&s0, &e0, &wsy, &wey, y);
+		in0 = (y >= wsy && y <= wey);
+	}
+	if (en1)
+	{
+		int wsy, wey;
+		vdp2_get_window1_coordinates(&s1, &e1, &wsy, &wey, y);
+		in1 = (y >= wsy && y <= wey);
+	}
+
+	bp[nb++] = VDP2_SPAN_MIN;
+	if (en0)
+	{
+		if (s0 > VDP2_SPAN_MIN && s0 < VDP2_SPAN_MAX) bp[nb++] = s0;
+		if (e0 + 1 > VDP2_SPAN_MIN && e0 + 1 < VDP2_SPAN_MAX) bp[nb++] = e0 + 1;
+	}
+	if (en1)
+	{
+		if (s1 > VDP2_SPAN_MIN && s1 < VDP2_SPAN_MAX) bp[nb++] = s1;
+		if (e1 + 1 > VDP2_SPAN_MIN && e1 + 1 < VDP2_SPAN_MAX) bp[nb++] = e1 + 1;
+	}
+	for (i = 2; i < nb; i++)
+		for (j = i; j > 1 && bp[j - 1] > bp[j]; j--)
+		{
+			int k = bp[j]; bp[j] = bp[j - 1]; bp[j - 1] = k;
+		}
+	bp[nb++] = VDP2_SPAN_MAX;
+
+	sp->n = 0;
+	for (i = 0; i + 1 < nb; i++)
+	{
+		int a = bp[i], b = bp[i + 1], w0 = 1, w1 = 1;
+		if (a >= b)
+			continue;
+		if (en0)
+			w0 = (in0 && a >= s0 && a <= e0) ^ out0;
+		if (en1)
+			w1 = (in1 && a >= s1 && a <= e1) ^ out1;
+		if (!(logic_or ? (w0 | w1) : (w0 & w1)))
+			continue;
+		/* a run next to the previous one is joined to it */
+		if (sp->n && sp->b[sp->n - 1] == a)
+			sp->b[sp->n - 1] = b;
+		else
+		{
+			sp->a[sp->n] = a;
+			sp->b[sp->n] = b;
+			sp->n++;
+		}
+	}
+	sp->gen = vdp2_window_cache_gen;
+	sp->key = key;
+	return sp;
+}
 
 static void vdp2_drawgfx_transpen(struct mame_bitmap *dest_bmp,const struct rectangle *clip,gfx_element *gfx,
 							UINT32 code,UINT32 color, int flipx,int flipy,int offsx,int offsy,
@@ -5967,6 +6094,28 @@ static void vdp2_drawgfx_transpen(struct mame_bitmap *dest_bmp,const struct rect
 				for (n = 0; n < width; n++, source += xinc)
 					dest[n] = pal[*source];
 			}
+			else if (xinc == 1)
+			{
+				/* four pixels at a time: a group of transparent ones is skipped */
+				for (n = 0; n + 4 <= width; n += 4)
+				{
+					UINT32 four;
+					int c;
+					memcpy(&four, source + n, 4);
+					if (four == 0)
+						continue;
+					c = source[n];     if (c != 0) dest[n] = pal[c];
+					c = source[n + 1]; if (c != 0) dest[n + 1] = pal[c];
+					c = source[n + 2]; if (c != 0) dest[n + 2] = pal[c];
+					c = source[n + 3]; if (c != 0) dest[n + 3] = pal[c];
+				}
+				for (; n < width; n++)
+				{
+					const int c = source[n];
+					if (c != 0)
+						dest[n] = pal[c];
+				}
+			}
 			else
 			{
 				for (n = 0; n < width; n++, source += xinc)
@@ -5981,40 +6130,65 @@ static void vdp2_drawgfx_transpen(struct mame_bitmap *dest_bmp,const struct rect
 		return;
 	}
 
-	/* vdp2_window_process with the line's windows read once per row */
+	/* vdp2_window_process: the runs of pixels a line shows, from the cache of
+	   the line (vdp2_window_spans) */
 	{
-		const int en0 = current_tilemap.window_control.enabled[0];
-		const int en1 = current_tilemap.window_control.enabled[1];
-		const int out0 = !current_tilemap.window_control.area[0];
-		const int out1 = !current_tilemap.window_control.area[1];
-		const int logic_or = current_tilemap.window_control.logic & 1;
-		const int key = (en0 ? 1 : 0) | (en1 ? 2 : 0) | (out0 ? 0 : 4) | (out1 ? 0 : 8);
 		const int opaque = (transparency & STV_TRANSPARENCY_NONE) ? 1 : 0;
 
 		for (y = sy; y < ey; y++)
 		{
 			UINT8 const *const source = source_base + y_index*gfx->width;
 			UINT32 *const dest = BMP32(dest_bmp, y);
-			int x_index = x_index_base;
-			int s0, e0, in0, s1, e1, in1;
+			const struct vdp2_window_span *sp = vdp2_window_spans_get(y);
+			int i;
 
-			if (vdp2_wline.gen != vdp2_window_cache_gen || vdp2_wline.y != y || vdp2_wline.key != key)
-				vdp2_window_line(y, key);
-			s0 = vdp2_wline.s0; e0 = vdp2_wline.e0; in0 = vdp2_wline.in0;
-			s1 = vdp2_wline.s1; e1 = vdp2_wline.e1; in1 = vdp2_wline.in1;
-
-			for (x = sx; x < ex; x++, x_index += xinc)
+			for (i = 0; i < sp->n; i++)
 			{
-				int w0 = 1, w1 = 1, c;
-				if (en0)
-					w0 = (in0 && x >= s0 && x <= e0) ^ out0;
-				if (en1)
-					w1 = (in1 && x >= s1 && x <= e1) ^ out1;
-				if (!(logic_or ? (w0 | w1) : (w0 & w1)))
+				int a = sp->a[i], b = sp->b[i], x_index;
+				if (a < sx) a = sx;
+				if (b > ex) b = ex;
+				if (a >= b)
 					continue;
-				c = source[x_index];
-				if (opaque || c != 0)
-					dest[x] = pal[c];
+				x_index = x_index_base + (a - sx) * xinc;
+				if (opaque)
+				{
+					for (x = a; x < b; x++, x_index += xinc)
+						dest[x] = pal[source[x_index]];
+				}
+				else if (xinc == 1)
+				{
+					/* four pixels at a time: a group of transparent ones is skipped */
+					const UINT8 *s = source + x_index;
+					UINT32 *d = dest + a;
+					int n, count = b - a;
+					for (n = 0; n + 4 <= count; n += 4)
+					{
+						UINT32 four;
+						int c;
+						memcpy(&four, s + n, 4);
+						if (four == 0)
+							continue;
+						c = s[n];     if (c != 0) d[n] = pal[c];
+						c = s[n + 1]; if (c != 0) d[n + 1] = pal[c];
+						c = s[n + 2]; if (c != 0) d[n + 2] = pal[c];
+						c = s[n + 3]; if (c != 0) d[n + 3] = pal[c];
+					}
+					for (; n < count; n++)
+					{
+						const int c = s[n];
+						if (c != 0)
+							d[n] = pal[c];
+					}
+				}
+				else
+				{
+					for (x = a; x < b; x++, x_index += xinc)
+					{
+						const int c = source[x_index];
+						if (c != 0)
+							dest[x] = pal[c];
+					}
+				}
 			}
 			y_index += yinc;
 		}
@@ -7546,6 +7720,8 @@ static void vdp2_copy_roz_bitmap(struct mame_bitmap *bitmap,
 	int co_r = 0, co_g = 0, co_b = 0;
 	UINT8 winmask[1024];
 	int use_winmask;
+	int transparency, fade;
+	UINT8 alpha;
 	/* the plane's pixels without the line table (one dependent load less per pixel) */
 	const UINT32 *rozbase = (const UINT32 *)roz_bitmap->base;
 	const int rozpitch = roz_bitmap->rowpixels;
@@ -7760,6 +7936,10 @@ static void vdp2_copy_roz_bitmap(struct mame_bitmap *bitmap,
 			dys = mul_fixed32( ky, mul_fixed32( dy, 1 << (16-hcnt_shift)));
 
 			use_winmask = vdp2_roz_window_line(winmask, cliprect->min_x, cliprect->max_x, vcnt, current_tilemap.roz_mode3 == 1, iRP - 1);
+			/* the layer settings, read once: the stores to the line could alias them */
+			transparency = current_tilemap.transparency;
+			fade = current_tilemap.fade_control & 1;
+			alpha = current_tilemap.alpha;
 			for (hcnt = cliprect->min_x; hcnt <= cliprect->max_x; xs+=dxs, ys+=dys, hcnt++ )
 			{
 #ifdef __GNUC__
@@ -7774,21 +7954,21 @@ static void vdp2_copy_roz_bitmap(struct mame_bitmap *bitmap,
 					continue;
 
 				pix = rozbase[(y & planerenderedsizey) * rozpitch + (x & planerenderedsizex)];
-				if (current_tilemap.transparency & STV_TRANSPARENCY_ALPHA)
+				if (transparency & STV_TRANSPARENCY_ALPHA)
 				{
-					if ((current_tilemap.transparency & STV_TRANSPARENCY_NONE) || (pix & 0xffffff))
+					if ((transparency & STV_TRANSPARENCY_NONE) || (pix & 0xffffff))
 					{
-						if(current_tilemap.fade_control & 1)
+						if(fade)
 							pix = vdp2_apply_color_offset(pix, co_r, co_g, co_b);
 
-						line[hcnt] = stv_alpha_blend_r32( line[hcnt], pix, current_tilemap.alpha );
+						line[hcnt] = stv_alpha_blend_r32( line[hcnt], pix, alpha );
 					}
 				}
-				else if (current_tilemap.transparency & STV_TRANSPARENCY_ADD_BLEND)
+				else if (transparency & STV_TRANSPARENCY_ADD_BLEND)
 				{
-					if ((current_tilemap.transparency & STV_TRANSPARENCY_NONE) || (pix & 0xffffff))
+					if ((transparency & STV_TRANSPARENCY_NONE) || (pix & 0xffffff))
 					{
-						if(current_tilemap.fade_control & 1)
+						if(fade)
 							pix = vdp2_apply_color_offset(pix, co_r, co_g, co_b);
 
 						line[hcnt] = add_blend_r32( line[hcnt], pix );
@@ -7796,9 +7976,9 @@ static void vdp2_copy_roz_bitmap(struct mame_bitmap *bitmap,
 				}
 				else
 				{
-					if ((current_tilemap.transparency & STV_TRANSPARENCY_NONE) || (pix & 0xffffff))
+					if ((transparency & STV_TRANSPARENCY_NONE) || (pix & 0xffffff))
 					{
-						if(current_tilemap.fade_control & 1)
+						if(fade)
 							pix = vdp2_apply_color_offset(pix, co_r, co_g, co_b);
 
 						line[hcnt] = pix;
@@ -9171,17 +9351,25 @@ static void vdp2_get_window0_coordinates_calc(int *s_x, int *e_x, int *s_y, int 
 }
 
 /* the window of a line doesn't change during a screen update, but the rotation
-   screens ask for it on every pixel */
+   screens ask for it on every pixel and the tiles on each of their lines: one
+   entry per line. Not thread local: with the threaded video a line is only
+   drawn by the thread of its strip, and the generation changes before the
+   strips start */
 static INLINE void vdp2_get_window0_coordinates(int *s_x, int *e_x, int *s_y, int *e_y, int y)
 {
-	static VDP2_TLS int cache_gen = -1, cache_y, c_sx, c_ex, c_sy, c_ey;
-	if (cache_gen != vdp2_window_cache_gen || cache_y != y)
+	struct vdp2_window_coord *c;
+	if (y < 0 || y >= VDP2_WINDOW_LINES)
 	{
-		vdp2_get_window0_coordinates_calc(&c_sx, &c_ex, &c_sy, &c_ey, y);
-		cache_gen = vdp2_window_cache_gen;
-		cache_y = y;
+		vdp2_get_window0_coordinates_calc(s_x, e_x, s_y, e_y, y);
+		return;
 	}
-	*s_x = c_sx; *e_x = c_ex; *s_y = c_sy; *e_y = c_ey;
+	c = &vdp2_window_coords[0][y];
+	if (c->gen != vdp2_window_cache_gen)
+	{
+		vdp2_get_window0_coordinates_calc(&c->sx, &c->ex, &c->sy, &c->ey, y);
+		c->gen = vdp2_window_cache_gen;
+	}
+	*s_x = c->sx; *e_x = c->ex; *s_y = c->sy; *e_y = c->ey;
 }
 
 static void vdp2_get_window1_coordinates_calc(int *s_x, int *e_x, int *s_y, int *e_y, int y)
@@ -9245,17 +9433,25 @@ static void vdp2_get_window1_coordinates_calc(int *s_x, int *e_x, int *s_y, int 
 }
 
 /* the window of a line doesn't change during a screen update, but the rotation
-   screens ask for it on every pixel */
+   screens ask for it on every pixel and the tiles on each of their lines: one
+   entry per line. Not thread local: with the threaded video a line is only
+   drawn by the thread of its strip, and the generation changes before the
+   strips start */
 static INLINE void vdp2_get_window1_coordinates(int *s_x, int *e_x, int *s_y, int *e_y, int y)
 {
-	static VDP2_TLS int cache_gen = -1, cache_y, c_sx, c_ex, c_sy, c_ey;
-	if (cache_gen != vdp2_window_cache_gen || cache_y != y)
+	struct vdp2_window_coord *c;
+	if (y < 0 || y >= VDP2_WINDOW_LINES)
 	{
-		vdp2_get_window1_coordinates_calc(&c_sx, &c_ex, &c_sy, &c_ey, y);
-		cache_gen = vdp2_window_cache_gen;
-		cache_y = y;
+		vdp2_get_window1_coordinates_calc(s_x, e_x, s_y, e_y, y);
+		return;
 	}
-	*s_x = c_sx; *e_x = c_ex; *s_y = c_sy; *e_y = c_ey;
+	c = &vdp2_window_coords[1][y];
+	if (c->gen != vdp2_window_cache_gen)
+	{
+		vdp2_get_window1_coordinates_calc(&c->sx, &c->ex, &c->sy, &c->ey, y);
+		c->gen = vdp2_window_cache_gen;
+	}
+	*s_x = c->sx; *e_x = c->ex; *s_y = c->sy; *e_y = c->ey;
 }
 
 
@@ -9499,7 +9695,18 @@ static void draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cli
 					pix = framebuffer_line[x];
 					/* a zero pixel draws nothing in any pass: it does not mark its priority either */
 					if (pix == 0)
+					{
+						/* in a run of zero pixels, the next four at once */
+						while (x + 4 <= x1)
+						{
+							UINT64 next4;
+							memcpy(&next4, framebuffer_line + x + 1, 8);
+							if (next4 != 0)
+								break;
+							x += 4;
+						}
 						continue;
+					}
 					if(!vdp2_window_process(x,y))
 						continue;
 
@@ -9601,7 +9808,18 @@ static void draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cli
 					pix = framebuffer_line[x];
 					/* a zero pixel draws nothing in any pass: it does not mark its priority either */
 					if (pix == 0)
+					{
+						/* in a run of zero pixels, the next four at once */
+						while (x + 4 <= x1)
+						{
+							UINT64 next4;
+							memcpy(&next4, framebuffer_line + x + 1, 8);
+							if (next4 != 0)
+								break;
+							x += 4;
+						}
 						continue;
+					}
 					if(!vdp2_window_process(x,y))
 						continue;
 
@@ -10524,6 +10742,14 @@ VIDEO_START( stv_vdp2 )
 		return 1;
 	crtc_start();
 	m_vdpdebug_roz = 0;
+	{
+		int w, y;
+		for (w = 0; w < 2; w++)
+			for (y = 0; y < VDP2_WINDOW_LINES; y++)
+				vdp2_window_coords[w][y].gen = -1;
+		for (y = 0; y < VDP2_WINDOW_LINES; y++)
+			vdp2_window_spans[y].gen = -1;
+	}
 
 	/* the screen is drawn here during the frame, then copied */
 	vdp2_screen = auto_bitmap_alloc_depth(704, 512, 32);
