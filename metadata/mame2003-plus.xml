@@ -205345,6 +205345,103 @@
 		</dipswitch>
 		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
 	</game>
+	<game name="cotton2e" sourcefile="stv.c" cloneof="cotton2" romof="cotton2">
+		<description>Cotton 2 (English translation)</description>
+		<year>1997</year>
+		<manufacturer>bootleg</manufacturer>
+		<biosset name="japan" description="Japan (bios epr19730)" default="yes"/>
+		<biosset name="japana" description="Japan (bios mp17951a)"/>
+		<biosset name="us" description="USA (bios mp17952a)"/>
+		<biosset name="japanb" description="Japan (bios 20091)"/>
+		<biosset name="taiwan" description="Taiwan (bios mp17953a)"/>
+		<biosset name="europe" description="Europe (bios mp17954a)"/>
+		<rom name="epr19730.ic8" merge="epr19730.ic8" bios="japan" size="524288" crc="d0e0889d" sha1="fae53107c894e0c41c49e191dbe706c9cd6e50bd" region="cpu1" offset="0"/>
+		<rom name="mp17951a.s" merge="mp17951a.s" bios="japana" size="524288" crc="2672f9d8" sha1="63cf4a6432f6c87952f9cf3ab0f977aed2367303" region="cpu1" offset="0"/>
+		<rom name="mp17952a.s" merge="mp17952a.s" bios="us" size="524288" crc="d1be2adf" sha1="eaf1c3e5d602e1139d2090a78d7e19f04f916794" region="cpu1" offset="0"/>
+		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
+		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
+		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
+		<rom name="c2e20122.7" size="2097152" crc="0b9d225c" sha1="074777cf0d681e334ec7d3819a4e9cd86e258ad1" region="user1" offset="200000"/>
+		<rom name="c2e20117.2" size="4194304" crc="b6e0e634" sha1="cad580d39a7bf666c55794d28788cb0f6503155d" region="user1" offset="400000"/>
+		<rom name="c2e20118.3" size="4194304" crc="645ab039" sha1="648b883451e08efc0ce3383e3af95472ad05fd77" region="user1" offset="800000"/>
+		<rom name="c2e20119.4" size="4194304" crc="c7e0165e" sha1="918df5f590c968370f9df7209dd1c5f3e97157c9" region="user1" offset="c00000"/>
+		<rom name="c2e20120.5" size="4194304" crc="988121dd" sha1="176badb58896cecb5f5c9f31ed9e6fa096aef03f" region="user1" offset="1000000"/>
+		<rom name="c2e20121.6" size="4194304" crc="b1b67426" sha1="9bde1f45f758b70c1c7de61b8eb8e555f2170e66" region="user1" offset="1400000"/>
+		<rom name="c2e20116.1" size="4194304" crc="65207eb8" sha1="e0cbde50ceaf3c8c7162d2e708b0241887166d9a" region="user1" offset="1800000"/>
+		<rom name="c2e20123.8" size="4194304" crc="c33662ba" sha1="fd44fadf41fdde1ba11bd477500bdfe09b066fbf" region="user1" offset="1c00000"/>
+		<chip type="cpu" name="SH-2" clock="28000000"/>
+		<chip type="cpu" name="SH-2" clock="28000000"/>
+		<chip type="cpu" name="68000" clock="12000000"/>
+		<chip type="audio" name="YMF292-F SCSP"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="2"/>
+		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
+		<dipswitch name="PDR1">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="PDR2">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
+	</game>
 	<game name="cottonbm" sourcefile="stv.c" romof="stvbios">
 		<description>Cotton Boomerang</description>
 		<year>1998</year>
@@ -207394,6 +207491,104 @@
 		<rom name="mpr19532.1" size="4194304" crc="985f0c9d" sha1="de1ad42ef3cf3f4f071e9801696407be7ae29d21" region="user1" offset="1800000"/>
 		<rom name="mpr19538.8" size="4194304" crc="915a723e" sha1="96480441a69d6aad3887ed6f46b0a6bebfb752aa" region="user1" offset="1c00000"/>
 		<rom name="mpr19539.9" size="4194304" crc="72a297e5" sha1="679987e62118dd1bf7c074f4b88678e1a1187437" region="user1" offset="2000000"/>
+		<chip type="cpu" name="SH-2" clock="28000000"/>
+		<chip type="cpu" name="SH-2" clock="28000000"/>
+		<chip type="cpu" name="68000" clock="12000000"/>
+		<chip type="audio" name="YMF292-F SCSP"/>
+		<video screen="raster" orientation="horizontal" width="320" height="224" aspectx="4" aspecty="3" refresh="60.000000"/>
+		<sound channels="2"/>
+		<input players="2" control="joy8way" buttons="6" coins="2" service="yes"/>
+		<dipswitch name="PDR1">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="PDR2">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<dipswitch name="Unknown">
+			<dipvalue name="Off" default="yes"/>
+			<dipvalue name="On"/>
+		</dipswitch>
+		<driver status="good" color="good" sound="imperfect" graphic="imperfect" palettesize="2048"/>
+	</game>
+	<game name="puyosune" sourcefile="stv.c" cloneof="puyosun" romof="puyosun">
+		<description>Puyo Puyo Sun (English translation)</description>
+		<year>1996</year>
+		<manufacturer>bootleg</manufacturer>
+		<biosset name="japan" description="Japan (bios epr19730)" default="yes"/>
+		<biosset name="japana" description="Japan (bios mp17951a)"/>
+		<biosset name="us" description="USA (bios mp17952a)"/>
+		<biosset name="japanb" description="Japan (bios 20091)"/>
+		<biosset name="taiwan" description="Taiwan (bios mp17953a)"/>
+		<biosset name="europe" description="Europe (bios mp17954a)"/>
+		<rom name="epr19730.ic8" merge="epr19730.ic8" bios="japan" size="524288" crc="d0e0889d" sha1="fae53107c894e0c41c49e191dbe706c9cd6e50bd" region="cpu1" offset="0"/>
+		<rom name="mp17951a.s" merge="mp17951a.s" bios="japana" size="524288" crc="2672f9d8" sha1="63cf4a6432f6c87952f9cf3ab0f977aed2367303" region="cpu1" offset="0"/>
+		<rom name="mp17952a.s" merge="mp17952a.s" bios="us" size="524288" crc="d1be2adf" sha1="eaf1c3e5d602e1139d2090a78d7e19f04f916794" region="cpu1" offset="0"/>
+		<rom name="20091.bin" merge="20091.bin" bios="japanb" size="524288" crc="59ed40f4" sha1="eff0f54c70bce05ff3a289bf30b1027e1c8cd117" region="cpu1" offset="0"/>
+		<rom name="mp17953a.ic8" merge="mp17953a.ic8" bios="taiwan" size="524288" crc="a4c47570" sha1="9efc73717ec8a13417e65c54344ded9fc25bf5ef" region="cpu1" offset="0"/>
+		<rom name="mp17954a.s" merge="mp17954a.s" bios="europe" size="524288" crc="f7722da3" sha1="af79cff317e5b57d49e463af16a9f616ed1eee08" region="cpu1" offset="0"/>
+		<rom name="pse19531.13" size="524288" crc="e14ff686" sha1="dc370ec338473c5fa3c54831854e0e808e1349f2" region="user1" offset="1"/>
+		<rom name="pse19533.2" size="4194304" crc="6f534729" sha1="84f4545d488d88c689f23cc9ca3f54e4d9668371" region="user1" offset="400000"/>
+		<rom name="pse19534.3" size="4194304" crc="09ddbc17" sha1="c6d028a1b926cd725a6c6c541e57b957935c0674" region="user1" offset="800000"/>
+		<rom name="mpr19535.4" merge="mpr19535.4" size="4194304" crc="94fadfa4" sha1="a7d0727cf601e00f1ea31e6bf3e591349c3f6030" region="user1" offset="c00000"/>
+		<rom name="mpr19536.5" merge="mpr19536.5" size="4194304" crc="5765bc9c" sha1="b217c292e7cc8ed73a39a3ae7009bc9dd031e376" region="user1" offset="1000000"/>
+		<rom name="mpr19537.6" merge="mpr19537.6" size="4194304" crc="8b736686" sha1="aec347c0f3e5dd8646e85f68d71ca9acc3bf62c3" region="user1" offset="1400000"/>
+		<rom name="mpr19532.1" merge="mpr19532.1" size="4194304" crc="985f0c9d" sha1="de1ad42ef3cf3f4f071e9801696407be7ae29d21" region="user1" offset="1800000"/>
+		<rom name="mpr19538.8" merge="mpr19538.8" size="4194304" crc="915a723e" sha1="96480441a69d6aad3887ed6f46b0a6bebfb752aa" region="user1" offset="1c00000"/>
+		<rom name="mpr19539.9" merge="mpr19539.9" size="4194304" crc="72a297e5" sha1="679987e62118dd1bf7c074f4b88678e1a1187437" region="user1" offset="2000000"/>
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="SH-2" clock="28000000"/>
 		<chip type="cpu" name="68000" clock="12000000"/>
