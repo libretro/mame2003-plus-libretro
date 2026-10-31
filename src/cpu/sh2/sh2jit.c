@@ -593,10 +593,12 @@ static void jit_alu(struct sljit_compiler *C, sljit_s32 op, int n, sljit_s32 src
 	sljit_emit_op1(C, SLJIT_MOV32, JREG(n), SLJIT_R0, 0);
 }
 
-/* T = (src1 cmp src2) */
+/* T = (src1 cmp src2). The zero flag is asked with SLJIT_SET_Z: SLJIT_SET(SLJIT_EQUAL)
+   is 0, no flag at all, and the AArch64 back end then does not compare */
 static void jit_cmp(struct sljit_compiler *C, sljit_s32 cond, sljit_s32 src1, sljit_sw src1w, sljit_s32 src2, sljit_sw src2w)
 {
-	sljit_emit_op2u(C, SLJIT_SUB32 | SLJIT_SET(cond & ~1), src1, src1w, src2, src2w);
+	sljit_s32 setf = (cond == SLJIT_EQUAL) ? SLJIT_SET_Z : SLJIT_SET(cond & ~1);
+	sljit_emit_op2u(C, SLJIT_SUB32 | setf, src1, src1w, src2, src2w);
 	jit_set_t(C, cond);
 }
 
