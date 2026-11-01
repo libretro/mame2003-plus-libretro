@@ -17,7 +17,7 @@
 #define POSITION_BEGIN			0
 #define POSITION_AFTER_PORTS	1
 #define POSITION_AFTER_COINS	2
-#define POSITION_AFTER_MIXER	3
+#define POSITION_AFTER_MIXER	3	/* used only by the disabled mixer level code */
 
 
 
@@ -32,6 +32,7 @@ struct cfg_format
 	int (*read_input_port)(mame_file *, struct InputPort *);
 	int (*read_seq)(mame_file *, InputSeq *);
 	int coin_counters;
+	int has_adjusters;		/* 0: a .cfg from before adjusters were input ports */
 };
 
 struct _config_file
@@ -204,8 +205,12 @@ static config_file *config_init(const char *name, int save)
 {
 	static const struct cfg_format formats[] =
 	{
-		/* mame 0.74 with 8 coin counters */
-		{ "MAMECFG\x9",	"MAMEDEF\x7",	input_port_read_ver_8, seq_read_ver_8, 8 },
+		/* mame2003-plus - 8 coin counters, no mixer levels */
+		{ "MAMECFG\xa",	"MAMEDEF\x7",	input_port_read_ver_8, seq_read_ver_8, 8, 1 },
+
+		/* libretro master before the mixer level core options, read only: mixer levels */
+		/* after the coin counters (left unread), and no adjuster ports                  */
+		{ "MAMECFG\x9",	"MAMEDEF\x7",	input_port_read_ver_8, seq_read_ver_8, 8, 0 },
 	};
 
 	config_file *cfg;
@@ -342,17 +347,30 @@ int config_read_ports(config_file *cfg, struct InputPort *input_ports_default, s
 
 	read_input_port = cfg->format->read_input_port;
 
-	/* calculate the size of the array */
+	/* calculate the size of the array, without the adjusters for an older .cfg */
 	total = count_input_ports(input_ports_default);
+	if (!cfg->format->has_adjusters)
+		for (in = input_ports_default; in->type != IPT_END; in++)
+			if ((in->type & ~IPF_MASK) == IPT_ADJUSTER)
+				total--;
 
-	/* read array size */
+	/* read array size: a .cfg saved with a different number of ports is not loaded */
 	if (readint(cfg->file, &saved_total) != 0)
+		return CONFIG_ERROR_CORRUPT;
+	if (saved_total != total)
 		return CONFIG_ERROR_CORRUPT;
 
 	/* read the original settings and compare them with the ones defined in the driver */
 	in = (struct InputPort *) input_ports_default;
 	while (in->type != IPT_END)
 	{
+		/* an older .cfg has no adjuster ports: they keep their driver defaults */
+		if (!cfg->format->has_adjusters && (in->type & ~IPF_MASK) == IPT_ADJUSTER)
+		{
+			in++;
+			continue;
+		}
+
 		if (read_input_port(cfg->file, &saved) != 0)
 			return CONFIG_ERROR_CORRUPT;
 
@@ -371,8 +389,18 @@ int config_read_ports(config_file *cfg, struct InputPort *input_ports_default, s
 	in = input_ports;
 	while (in->type != IPT_END)
 	{
+		if (!cfg->format->has_adjusters && (in->type & ~IPF_MASK) == IPT_ADJUSTER)
+		{
+			in++;
+			continue;
+		}
+
 		if (read_input_port(cfg->file, in) != 0)
 			break;
+
+		/* an adjuster's setting comes from its core option, not the .cfg */
+		if ((in->type & ~IPF_MASK) == IPT_ADJUSTER)
+			in->default_value = input_ports_default[in - input_ports].default_value;
 		in++;
 	}
 
@@ -469,6 +497,7 @@ done:
 
 
 
+#if 0	/* mixing levels are no longer saved in the .cfg */
 /***************************************************************************
 	config_read_mixer_config
 ***************************************************************************/
@@ -487,7 +516,7 @@ int config_read_mixer_config(config_file *cfg, struct mixer_config *mixercfg)
 	cfg->position = POSITION_AFTER_MIXER;
 	return CONFIG_ERROR_SUCCESS;
 }
-
+#endif
 
 
 /***************************************************************************
@@ -551,11 +580,15 @@ int config_write_ports(config_file *cfg, const struct InputPort *input_ports_def
 		in++;
 	}
 
-	/* write the current settings */
+	/* write the current settings, with each adjuster at its driver default: its setting */
+	/* comes from its core option, not the .cfg                                        */
 	in = input_ports;
 	while (in->type != IPT_END)
 	{
-		input_port_write(cfg->file, in);
+		if ((in->type & ~IPF_MASK) == IPT_ADJUSTER)
+			input_port_write(cfg->file, &input_ports_default[in - input_ports]);
+		else
+			input_port_write(cfg->file, in);
 		in++;
 	}
 
@@ -614,6 +647,7 @@ int config_write_coin_and_ticket_counters(config_file *cfg, const unsigned int *
 
 
 
+#if 0	/* mixing levels are no longer saved in the .cfg */
 /***************************************************************************
 	config_write_mixer_config
 ***************************************************************************/
@@ -630,3 +664,4 @@ int config_write_mixer_config(config_file *cfg, const struct mixer_config *mixer
 	cfg->position = POSITION_AFTER_MIXER;
 	return CONFIG_ERROR_SUCCESS;
 }
+#endif

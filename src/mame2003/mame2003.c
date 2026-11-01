@@ -41,6 +41,7 @@ int            orig_samples_per_frame = 0;
 short*         samples_buffer;
 short*         conversion_buffer;
 int            usestereo = 1;
+static int     applied_sound_channel_scale[SOUND_CHANNEL_SCALE_SLOTS]; /* last sound channel scale core option values applied, -1 for none */
 static double  applied_cpu_clock_scale[CPU_CLOCK_SCALE_SLOTS]; /* last CPU clock scale core option values applied, per CPU */
 
 
@@ -244,9 +245,12 @@ bool retro_load_game(const struct retro_game_info *game)
 
   int   driverIndex    = 0;
   int   port_index;
+  int   channel;
   char  *driver_lookup = NULL;
 
   frame_run_since_load = 0;
+  for(channel = 0; channel < SOUND_CHANNEL_SCALE_SLOTS; channel++)
+    applied_sound_channel_scale[channel] = -1;
 
   if(string_is_empty(game->path))
   {
@@ -339,7 +343,10 @@ bool retro_load_game(const struct retro_game_info *game)
   environ_cb(RETRO_ENVIRONMENT_SET_CONTROLLER_INFO, (void*)input_subdevice_ports);
 
   if(!run_game(driverIndex))
+  {
+    update_sound_channel_scale_options(); /* the mixer channels exist once the game has started */
     return true;
+  }
 
   return false;
 }
@@ -389,6 +396,24 @@ void mame_pause(bool pause)
 
 extern UINT8 frameskip_counter;
 
+/* a mixer channel's sound channel scale core option sets its scale, which multiplies the */
+/* mixing level and the volume that the driver sets                                       */
+static void apply_sound_channel_scales(void)
+{
+  int channel, scale;
+
+  for (channel = 0; channel < options.content_flags[CONTENT_MIXER_CHANNEL_COUNT]; channel++)
+  {
+    scale = options.sound_channel_scale[channel];
+    if (scale >= 0 && scale != applied_sound_channel_scale[channel])
+    {
+      log_cb(RETRO_LOG_DEBUG, LOGPRE "changing %s scale from %d to %d percent\n", mixer_get_name(channel), mixer_get_scale(channel), scale);
+      mixer_set_scale(channel, scale);
+      applied_sound_channel_scale[channel] = scale;
+    }
+  }
+}
+
 void retro_run (void)
 {
   bool updated = false;
@@ -418,6 +443,8 @@ void retro_run (void)
       environ_cb(RETRO_ENVIRONMENT_SET_SYSTEM_AV_INFO, &av_info);
     }
   }
+
+  apply_sound_channel_scales();
 
   /* a CPU's clock scale core option sets its overclock, which multiplies the clock scale */
   /* that drivers and CPU cores set.                                                       */
