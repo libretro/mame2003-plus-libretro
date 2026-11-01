@@ -133,6 +133,9 @@ static data32_t* ioga;
 /* the hopper of the medal games (MAME's ticket dispenser, hopper type) */
 static int stv_hopper, hopper_power, hopper_status;
 static int stv_critcrsh;	/* the hammer position on ports A and B */
+static int stv_trackball;	/* the trackball on the port G counters */
+static UINT8 ioga_mode, ioga_portg;
+static UINT16 ioga_count[2];
 static void *hopper_timer;
 static data16_t* scsp_regs;
 
@@ -2373,6 +2376,33 @@ static UINT8 port_ad[] =
 
 static UINT8 port_sel,mux_data;
 
+/* port G in counter mode (bit 7 of the mode register, 0x1d): the trackball
+   counters of the 315-5649, as in MAME. Port G selects the counter (bits 1-2)
+   and the byte (bit 0, 0 = the high one), and each read moves to the next one */
+static UINT8 stv_portg_counter_r(void)
+{
+	int sel = (ioga_portg >> 1) & 3;
+	UINT16 count = 0;
+	UINT8 res;
+
+	if (stv_trackball && sel < 2)
+		count = (readinputport(7 + sel) - ioga_count[sel]) & 0xffff;
+	res = (count >> ((~ioga_portg & 1) * 8)) & 0xff;
+	ioga_portg = (ioga_portg & 0xf8) | ((ioga_portg + 1) & 0x07);
+	return res;
+}
+
+static void stv_portg_w(UINT8 data)
+{
+	if (!(data & 0x80) && stv_trackball)
+	{
+		/* the counters are cleared */
+		ioga_count[0] = readinputport(7);
+		ioga_count[1] = readinputport(8);
+	}
+	ioga_portg = data;
+}
+
 #define HI_WORD_ACCESS (mem_mask & 0x00ff0000) == 0
 #define LO_WORD_ACCESS (mem_mask & 0x000000ff) == 0
 
@@ -2455,6 +2485,8 @@ READ32_HANDLER ( stv_io_r32 )
 		}
 		break;
 		case 3:
+		if ((ioga_mode & 0x80) && !(mem_mask & 0x00ff0000))
+			return (stv_portg_counter_r() << 16) | 0xff00ffff;
 		switch(port_sel)
 		{
 			case 0x60:  return ((ioga[2] & 0xffff) << 16) | 0xffff;
@@ -2514,7 +2546,10 @@ WRITE32_HANDLER ( stv_io_w32 )
 		break;
 		case 3:
 			if(HI_WORD_ACCESS)
+			{
 				ioga[3] = data;
+				stv_portg_w((data >> 16) & 0xff);
+			}
 		break;
 		case 4:
 			if(HI_WORD_ACCESS)
@@ -2523,6 +2558,10 @@ WRITE32_HANDLER ( stv_io_w32 )
 		case 5:
 			if(HI_WORD_ACCESS)
 				ioga[5] = data;
+		break;
+		case 7:
+			if(HI_WORD_ACCESS)
+				ioga_mode = (data >> 16) & 0xff;
 		break;
 	}
 }
@@ -3477,6 +3516,106 @@ INPUT_PORTS_START( stvmedal )
 	#endif
 INPUT_PORTS_END
 
+/* the medal games with a trackball (MAME's patocar inputs) */
+INPUT_PORTS_START( stvtrack )
+	PORT_START
+	PORT_DIPNAME( 0x01, 0x01, "PDR1" )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+	PORT_START
+	PORT_DIPNAME( 0x01, 0x01, "PDR2" )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+	PORT_START	/* port A */
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_BUTTON2 )
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* the hopper */
+	PORT_BIT( 0xfc, IP_ACTIVE_LOW,  IPT_UNUSED )
+
+	PORT_START	/* port B */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW,  IPT_BUTTON3 )
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_BUTTON4 )	/* door switch? */
+	PORT_BIT( 0x0c, IP_ACTIVE_LOW,  IPT_BUTTON5 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW,  IPT_UNUSED )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW,  IPT_COIN3 )	/* medal */
+	PORT_BIT( 0xc0, IP_ACTIVE_LOW,  IPT_UNUSED )
+
+	PORT_START
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_SERVICE, "Test", KEYCODE_F2, IP_JOY_NONE )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE1 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START2 )
+	PORT_BITX(0x40, IP_ACTIVE_LOW, IPT_SERVICE, "1P Push Switch", KEYCODE_7, IP_JOY_NONE )
+	PORT_BITX(0x80, IP_ACTIVE_LOW, IPT_SERVICE, "2P Push Switch", KEYCODE_8, IP_JOY_NONE )
+
+	/*This *might* be unused...*/
+	PORT_START
+	PORT_BIT ( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	/*Extra button layout,used by Power Instinct 3 & Suikoenbu*/
+	PORT_START
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON4  | IPF_PLAYER1 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON5  | IPF_PLAYER1 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON6  | IPF_PLAYER1 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON4  | IPF_PLAYER2 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON5  | IPF_PLAYER2 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON6  | IPF_PLAYER2 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	/* the trackball, on the port G counters */
+	PORT_START
+	PORT_ANALOG( 0xffff, 0x0000, IPT_TRACKBALL_X | IPF_PLAYER1, 500, 100, 0, 0 )
+
+	PORT_START
+	PORT_ANALOG( 0xffff, 0x0000, IPT_TRACKBALL_Y | IPF_PLAYER1, 500, 100, 0, 0 )
+INPUT_PORTS_END
+
 /*Same as the regular one,but with an additional & optional mahjong panel*/
 INPUT_PORTS_START( stvmp )
 	PORT_START
@@ -3709,6 +3848,7 @@ DRIVER_INIT ( stv )
 	cpu_setbank(1,&ROM[0x000000]);
 	stv_hopper = 0;
 	stv_critcrsh = 0;
+	stv_trackball = 0;
 	hopper_timer = NULL;
 	scu_dma_timer[0] = scu_dma_timer[1] = scu_dma_timer[2] = NULL;
 
@@ -3801,6 +3941,8 @@ MACHINE_INIT( stv )
 	hopper_timer = timer_alloc(hopper_tick);
 	timer_adjust(hopper_timer, TIME_NEVER, 0, 0);
 	hopper_power = hopper_status = 0;
+	ioga_mode = ioga_portg = 0;
+	ioga_count[0] = ioga_count[1] = 0;
 	scu_timer0_count = 0;
 	slave_irl = 0;
 	cpu_set_irq_callback(0, stv_master_irq_callback);
@@ -5075,6 +5217,13 @@ static DRIVER_INIT( stvmedal )
 	stv_hopper = 1;
 }
 
+/* the medal games with a trackball (MAME's patocar inputs) */
+static DRIVER_INIT( stvtrack )
+{
+	init_stvmedal();
+	stv_trackball = 1;
+}
+
 static DRIVER_INIT( twcup98 )  { init_ic13(); stv_install_common_protection(0x05200913); }
 
 DRIVER_INIT( sfish2 )
@@ -5296,10 +5445,10 @@ GAMEBX( 1995, critcrsh,  stvbios, stvbios, stv, critcrsh, critcrsh,     ROT0, "S
 GAMEBX( 1995, tatacot,   critcrsh, stvbios, stv, critcrsh, critcrsh,     ROT0, "Sega", 	     "Tatacot (Japan)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS, &generic_ctrl, NULL )
 GAMEBX( 2000, danchiq,   stvbios, stvbios, stv, stv,  ic13,      ROT0, "Altron",     "Danchi de Quiz: Okusan Yontaku Desuyo!", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS, &generic_ctrl, NULL )
 GAMEBX( 1999, micrombc,  stvbios, stvbios, stv, stvmedal, stvmedal,     ROT0, "Sega", 	     "Microman Battle Charge", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS, &generic_ctrl, NULL )
-GAMEBX( 2001, patocar,   stvbios, stvbios, stv, stvmedal, stvmedal,     ROT0, "Sega", 	     "Hashire Patrol Car", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS, &generic_ctrl, NULL )
-GAMEBX( 2000, skychal,   stvbios, stvbios, stv, stvmedal, stvmedal,     ROT0, "Sega", 	     "Sky Challenger", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS, &generic_ctrl, NULL )
-GAMEBX( 1998, supgoal,   stvbios, stvbios, stv, stvmedal, stvmedal,     ROT0, "Sega", 	     "Nerae! Super Goal", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS, &generic_ctrl, NULL )
-GAMEBX( 1997, techbowl,  stvbios, stvbios, stv, stvmedal, stvmedal,     ROT0, "Sega", 	     "Technical Bowling", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS, &generic_ctrl, NULL )
+GAMEBX( 2001, patocar,   stvbios, stvbios, stv, stvtrack, stvtrack,     ROT0, "Sega", 	     "Hashire Patrol Car", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS, &generic_ctrl, NULL )
+GAMEBX( 2000, skychal,   stvbios, stvbios, stv, stvtrack, stvtrack,     ROT0, "Sega", 	     "Sky Challenger", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS, &generic_ctrl, NULL )
+GAMEBX( 1998, supgoal,   stvbios, stvbios, stv, stvtrack, stvtrack,     ROT0, "Sega", 	     "Nerae! Super Goal", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS, &generic_ctrl, NULL )
+GAMEBX( 1997, techbowl,  stvbios, stvbios, stv, stvtrack, stvtrack,     ROT0, "Sega", 	     "Technical Bowling", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS, &generic_ctrl, NULL )
 GAMEBX( 1998, wasafari,  stvbios, stvbios, stv, stv,  ic13,      ROT0, "Sega", 	     "Wanpaku Safari", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING, &generic_ctrl, NULL )
 GAMEBX( 1995, smleague,  stvbios, stvbios, stv, stv,  smleague,     ROT0, "Sega", 	     "Super Major League (US)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS, &generic_ctrl, NULL )
 GAMEBX( 1995, finlarch,  smleague, stvbios, stv, stv,  smleague,     ROT0, "Sega", 	     "Final Arch (Japan)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS, &generic_ctrl, NULL )
