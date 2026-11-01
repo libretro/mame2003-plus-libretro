@@ -2131,6 +2131,24 @@ V-V                           TP-027
 	DRIVER( gngmaidencenh )		/*  Hack */
 	DRIVER( gngmaident )		/*  Hack */
 	DRIVER( gngmaidentenh )		/*  Hack */
+	DRIVER( gngprincess )		/* Hack */
+	DRIVER( gngprincessa )		/* Hack */
+	DRIVER( gngprincessaenh )		/* Hack */
+	DRIVER( gngprincessb )		/* Hack */
+	DRIVER( gngprincessbenh )		/* Hack */
+	DRIVER( gngprincessc )		/* Hack */
+	DRIVER( gngprincesscenh )		/* Hack */
+	DRIVER( gngprincessenh )		/* Hack */
+	DRIVER( gngprincesst )		/* Hack */
+	DRIVER( gngprincesstenh )		/* Hack */
+	DRIVER( makprincess )		/* Hack */
+	DRIVER( makprincessb )		/* Hack */
+	DRIVER( makprincessbenh )		/* Hack */
+	DRIVER( makprincessc )		/* Hack */
+	DRIVER( makprincesscenh )		/* Hack */
+	DRIVER( makprincessenh )		/* Hack */
+	DRIVER( makprincessg )		/* Hack */
+	DRIVER( makprincessgenh )		/* Hack */
 	DRIVER( gngknight )		/*  Hack */
 	DRIVER( gngknightenh )		/*  Hack */
 	DRIVER( gngknighta )		/*  Hack */
