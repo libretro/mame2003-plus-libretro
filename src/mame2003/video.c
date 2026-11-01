@@ -35,6 +35,11 @@ bool video_hw_transpose;
 const rgb_t *video_palette;
 uint16_t *video_buffer;
 
+/* The largest frame the game can show: the default visible area, or for
+   raster games the whole screen, since a driver can grow its visible area
+   up to the screen size while running (ST-V goes from 320x224 to 704x480) */
+static unsigned video_max_width, video_max_height;
+
 /* Possible pixel conversions (see corresponding function far below) */
 enum
 {
@@ -48,8 +53,8 @@ enum
 void mame2003_video_get_geometry(struct retro_game_geometry *geom)
 {
    /* Shorter variable names, for readability */
-   unsigned max_w = video_config.width;
-   unsigned max_h = video_config.height;
+   unsigned max_w = video_max_width;
+   unsigned max_h = video_max_height;
    unsigned vis_w = vis_width > 0 ? vis_width : max_w;
    unsigned vis_h = vis_height > 0 ? vis_height : max_h;
 
@@ -233,6 +238,16 @@ int osd_create_display(
 {
    memcpy(&video_config, params, sizeof(video_config));
 
+   video_max_width = video_config.width;
+   video_max_height = video_config.height;
+   if (!(video_config.video_attributes & VIDEO_TYPE_VECTOR))
+   {
+      if (video_max_width < (unsigned)Machine->drv->screen_width)
+         video_max_width = Machine->drv->screen_width;
+      if (video_max_height < (unsigned)Machine->drv->screen_height)
+         video_max_height = Machine->drv->screen_height;
+   }
+
    mame2003_video_init_orientation();
    mame2003_video_init_conversion(rgb_components);
 
@@ -243,7 +258,7 @@ int osd_create_display(
    /* Allocate an output video buffer, if necessary */
    if (!video_do_bypass)
    {
-      video_buffer = malloc(video_config.width * video_config.height * video_stride_out);
+      video_buffer = malloc(video_max_width * video_max_height * video_stride_out);
       if (!video_buffer)
          return 1;
    }
