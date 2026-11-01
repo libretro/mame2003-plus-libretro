@@ -3792,14 +3792,13 @@ MACHINE_INIT( stv )
 		int level;
 		for (level = 0; level < 3; level++)
 		{
-			if (!scu_dma_timer[level])
-				scu_dma_timer[level] = timer_alloc(scu_dma_end);
+			/* the timers of the machine are freed at each reset: allocated again */
+			scu_dma_timer[level] = timer_alloc(scu_dma_end);
 			timer_adjust(scu_dma_timer[level], TIME_NEVER, 0, 0);
 		}
 		stv_scu[31] = 0;	/* no DMA moving */
 	}
-	if (!hopper_timer)
-		hopper_timer = timer_alloc(hopper_tick);
+	hopper_timer = timer_alloc(hopper_tick);
 	timer_adjust(hopper_timer, TIME_NEVER, 0, 0);
 	hopper_power = hopper_status = 0;
 	scu_timer0_count = 0;
@@ -3807,8 +3806,7 @@ MACHINE_INIT( stv )
 	cpu_set_irq_callback(0, stv_master_irq_callback);
 	en_68k = 0;
 	smpc_ram[0x21] = 0x80;
-	if (!smpc_intback_timer)
-		smpc_intback_timer = timer_alloc(smpc_intback_continue);
+	smpc_intback_timer = timer_alloc(smpc_intback_continue);
 	timer_adjust(smpc_intback_timer, TIME_NEVER, 0, 0);
 	smpc_sr = smpc_intback_stage = smpc_pmode = 0;
 
