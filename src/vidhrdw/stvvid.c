@@ -198,6 +198,8 @@ struct stv_gfx
 	int colors;         /* palette banks */
 	UINT8 *cache;
 	UINT8 *dirty;
+	UINT16 *rows_any;   /* per element, a bit per row: the row has a pixel other than 0 */
+	UINT16 *rows_full;  /* per element, a bit per row: the row has no pixel 0 */
 };
 
 static struct stv_gfx stv_gfx[4];
@@ -217,6 +219,8 @@ static void gfx_setup(struct stv_gfx *g, int width, int height, int bpp, int inc
 	g->cache = auto_malloc(g->elements * width * height);
 	g->dirty = auto_malloc(g->elements);
 	memset(g->dirty, 1, g->elements);
+	g->rows_any = auto_malloc(g->elements * sizeof(UINT16));
+	g->rows_full = auto_malloc(g->elements * sizeof(UINT16));
 }
 
 /* a VRAM byte at addr changed: the elements that contain it are stale */
@@ -238,6 +242,7 @@ static void gfx_decode_element(struct stv_gfx *g, int code)
 {
 	const UINT8 *src = vdp2_gfx_source + code * g->inc;
 	UINT8 *dst = g->cache + code * g->width * g->height;
+	UINT32 any = 0, full = 0;
 	int x, y;
 
 	/* the 16x16 tiles are four 8x8 cells: left top, right top, left bottom, right bottom */
@@ -262,6 +267,21 @@ static void gfx_decode_element(struct stv_gfx *g, int code)
 			}
 			*dst++ = pix;
 		}
+
+	/* which rows have something to draw, and which are drawn whole */
+	dst = g->cache + code * g->width * g->height;
+	for (y = 0; y < g->height; y++, dst += g->width)
+	{
+		int n0 = 0;
+		for (x = 0; x < g->width; x++)
+			n0 += (dst[x] == 0);
+		if (n0 < g->width)
+			any |= 1 << y;
+		if (n0 == 0)
+			full |= 1 << y;
+	}
+	g->rows_any[code] = (UINT16)any;
+	g->rows_full[code] = (UINT16)full;
 }
 
 #ifdef STV_VIDEO_THREADS
@@ -712,6 +732,8 @@ static void vdp2_drawgfxzoom_rgb555( struct mame_bitmap *dest_bmp,const struct r
 static void vdp2_drawgfx_rgb555(struct mame_bitmap *dest_bmp, const struct rectangle *clip, UINT32 code, int flipx, int flipy, int sx, int sy, int transparency, int alpha);
 static void vdp2_drawgfx_rgb888( struct mame_bitmap *dest_bmp, const struct rectangle *clip, UINT32 code, int flipx, int flipy, int sx, int sy, int transparency, int alpha);
 static void vdp2_drawgfx_alpha(struct mame_bitmap *dest_bmp,const struct rectangle *clip,gfx_element *gfx, UINT32 code,UINT32 color, int flipx,int flipy,int offsx,int offsy, int transparency, int alpha);
+static void vdp2_drawgfx_alpha_spans(struct mame_bitmap *dest_bmp, const pen_t *pal, const UINT8 *source_base, int width,
+	int x_index_base, int y_index, int xinc, int yinc, int sx, int sy, int ex, int ey, int opaque, int alpha);
 static void vdp2_drawgfx_transpen(struct mame_bitmap *dest_bmp,const struct rectangle *clip,gfx_element *gfx, UINT32 code,UINT32 color, int flipx,int flipy,int offsx,int offsy, int transparency);
 static void draw_4bpp_bitmap(struct mame_bitmap *bitmap, const struct rectangle *cliprect);
 static void draw_8bpp_bitmap(struct mame_bitmap *bitmap, const struct rectangle *cliprect);
@@ -5901,26 +5923,31 @@ static void vdp2_drawgfx_alpha(struct mame_bitmap *dest_bmp,const struct rectang
 	}
 
 	/* skip if inner loop doesn't draw anything */
-	if (ex > sx)
-	{
-		for (y = sy; y < ey; y++)
-		{
-			UINT8 const *const source = source_base + y_index*gfx->width;
-			UINT32 *const dest = BMP32(dest_bmp, y);
-			int x_index = x_index_base;
-			for (x = sx; x < ex; x++)
-			{
-				if(vdp2_window_process(x,y))
-				{
-					int c = (source[x_index]);
-					if ((transparency & STV_TRANSPARENCY_NONE) || (c != 0))
-						dest[x] = stv_alpha_blend_r32( dest[x], pal[c], alpha );
-				}
+	if (ex <= sx)
+		return;
 
-				x_index += xinc;
-			}
-			y_index += yinc;
+	/* a window on this layer: only the runs of each line it shows */
+	if (current_tilemap.window_control.enabled[0] || current_tilemap.window_control.enabled[1])
+	{
+		vdp2_drawgfx_alpha_spans(dest_bmp, pal, source_base, gfx->width, x_index_base, y_index,
+			xinc, yinc, sx, sy, ex, ey, (transparency & STV_TRANSPARENCY_NONE) ? 1 : 0, alpha);
+		return;
+	}
+
+	for (y = sy; y < ey; y++)
+	{
+		UINT8 const *const source = source_base + y_index*gfx->width;
+		UINT32 *const dest = BMP32(dest_bmp, y);
+		int x_index = x_index_base;
+		for (x = sx; x < ex; x++)
+		{
+			int c = (source[x_index]);
+			if ((transparency & STV_TRANSPARENCY_NONE) || (c != 0))
+				dest[x] = stv_alpha_blend_r32( dest[x], pal[c], alpha );
+
+			x_index += xinc;
 		}
+		y_index += yinc;
 	}
 }
 
@@ -6023,6 +6050,64 @@ static const struct vdp2_window_span *vdp2_window_spans_get(int y)
 	return sp;
 }
 
+/* the settings of the windows of the current layer, as the key of the cache */
+static INLINE int vdp2_window_spans_key(void)
+{
+	return (current_tilemap.window_control.enabled[0] ? 1 : 0)
+		| (current_tilemap.window_control.enabled[1] ? 2 : 0)
+		| (current_tilemap.window_control.area[0] ? 0 : 4)
+		| (current_tilemap.window_control.area[1] ? 0 : 8)
+		| ((current_tilemap.window_control.logic & 1) ? 16 : 0);
+}
+
+/* vdp2_window_spans_get for a line, with the key of the layer worked out by
+   the caller once per tile: the cached line is checked here, inline */
+static INLINE const struct vdp2_window_span *vdp2_window_spans_line(int y, int key)
+{
+	if (y >= 0 && y < VDP2_WINDOW_LINES)
+	{
+		const struct vdp2_window_span *sp = &vdp2_window_spans[y];
+		if (sp->gen == vdp2_window_cache_gen && sp->key == key)
+			return sp;
+	}
+	return vdp2_window_spans_get(y);
+}
+
+/* vdp2_drawgfx_alpha with a window: the runs of pixels each line shows, from
+   the cache of the line, as vdp2_drawgfx_transpen (same pixels as
+   vdp2_window_process for each one) */
+static void vdp2_drawgfx_alpha_spans(struct mame_bitmap *dest_bmp, const pen_t *pal, const UINT8 *source_base, int width,
+	int x_index_base, int y_index, int xinc, int yinc, int sx, int sy, int ex, int ey, int opaque, int alpha)
+{
+	const int key = vdp2_window_spans_key();
+	int x, y;
+
+	for (y = sy; y < ey; y++)
+	{
+		UINT8 const *const source = source_base + y_index*width;
+		UINT32 *const dest = BMP32(dest_bmp, y);
+		const struct vdp2_window_span *sp = vdp2_window_spans_line(y, key);
+		int i;
+
+		for (i = 0; i < sp->n; i++)
+		{
+			int a = sp->a[i], b = sp->b[i], x_index;
+			if (a < sx) a = sx;
+			if (b > ex) b = ex;
+			if (a >= b)
+				continue;
+			x_index = x_index_base + (a - sx) * xinc;
+			for (x = a; x < b; x++, x_index += xinc)
+			{
+				const int c = source[x_index];
+				if (opaque || c != 0)
+					dest[x] = stv_alpha_blend_r32(dest[x], pal[c], alpha);
+			}
+		}
+		y_index += yinc;
+	}
+}
+
 static void vdp2_drawgfx_transpen(struct mame_bitmap *dest_bmp,const struct rectangle *clip,gfx_element *gfx,
 							UINT32 code,UINT32 color, int flipx,int flipy,int offsx,int offsy,
 							int transparency)
@@ -6031,6 +6116,8 @@ static void vdp2_drawgfx_transpen(struct mame_bitmap *dest_bmp,const struct rect
 	int x;
 	const pen_t *pal = &PEN(0 + gfx->granularity * (color % gfx->colors));
 	const UINT8 *source_base = gfx_get_data(gfx, code % gfx->elements);
+	const UINT32 rows_any = gfx->rows_any[code % gfx->elements];
+	const UINT32 rows_full = gfx->rows_full[code % gfx->elements];
 	int x_index_base, y_index, sx, sy, ex, ey;
 	int xinc, yinc;
 
@@ -6076,6 +6163,9 @@ static void vdp2_drawgfx_transpen(struct mame_bitmap *dest_bmp,const struct rect
 	/* skip if inner loop doesn't draw anything */
 	if (ex <= sx)
 		return;
+	/* a tile with nothing but pen 0 draws nothing */
+	if (!(transparency & STV_TRANSPARENCY_NONE) && !rows_any)
+		return;
 
 	/* no window on this layer: plain copy loops (the RBG0 cache is drawn this way) */
 	if (!current_tilemap.window_control.enabled[0] && !current_tilemap.window_control.enabled[1])
@@ -6089,7 +6179,13 @@ static void vdp2_drawgfx_transpen(struct mame_bitmap *dest_bmp,const struct rect
 			UINT32 *dest = BMP32(dest_bmp, y) + sx;
 			int n;
 
-			if (opaque)
+			/* rows of pen 0 only are skipped, rows without it copied whole */
+			if (!opaque && !((rows_any >> y_index) & 1))
+			{
+				y_index += yinc;
+				continue;
+			}
+			if (opaque || ((rows_full >> y_index) & 1))
 			{
 				for (n = 0; n < width; n++, source += xinc)
 					dest[n] = pal[*source];
@@ -6134,13 +6230,23 @@ static void vdp2_drawgfx_transpen(struct mame_bitmap *dest_bmp,const struct rect
 	   the line (vdp2_window_spans) */
 	{
 		const int opaque = (transparency & STV_TRANSPARENCY_NONE) ? 1 : 0;
+		const int key = vdp2_window_spans_key();
 
 		for (y = sy; y < ey; y++)
 		{
 			UINT8 const *const source = source_base + y_index*gfx->width;
 			UINT32 *const dest = BMP32(dest_bmp, y);
-			const struct vdp2_window_span *sp = vdp2_window_spans_get(y);
-			int i;
+			const struct vdp2_window_span *sp;
+			int i, whole;
+
+			/* rows of pen 0 only are skipped, rows without it copied whole */
+			if (!opaque && !((rows_any >> y_index) & 1))
+			{
+				y_index += yinc;
+				continue;
+			}
+			whole = opaque || ((rows_full >> y_index) & 1);
+			sp = vdp2_window_spans_line(y, key);
 
 			for (i = 0; i < sp->n; i++)
 			{
@@ -6150,7 +6256,7 @@ static void vdp2_drawgfx_transpen(struct mame_bitmap *dest_bmp,const struct rect
 				if (a >= b)
 					continue;
 				x_index = x_index_base + (a - sx) * xinc;
-				if (opaque)
+				if (whole)
 				{
 					for (x = a; x < b; x++, x_index += xinc)
 						dest[x] = pal[source[x_index]];
@@ -9675,9 +9781,16 @@ static void draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cli
 	{
 		if ( alpha_enabled == 0 )
 		{
+			/* the window: the runs of each line it shows (vdp2_window_spans), walked
+			   along the line instead of vdp2_window_process for every pixel */
+			const int win = current_tilemap.window_control.enabled[0] || current_tilemap.window_control.enabled[1];
+			const int wkey = vdp2_window_spans_key();
+
 			for ( y = cliprect->min_y; y <= cliprect->max_y; y++ )
 			{
 				int x0 = cliprect->min_x, x1 = cliprect->max_x;
+				const struct vdp2_window_span *wsp;
+				int wi = 0;
 				if ( vdp1_sprite_priorities_usage_valid )
 				{
 					if (vdp1_sprite_priorities_in_fb_line[y][pri] == 0)
@@ -9689,6 +9802,7 @@ static void draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cli
 
 				framebuffer_line = vdp1.framebuffer_display_lines[y];
 				bitmap_line = BMP32(bitmap, y);
+				wsp = win ? vdp2_window_spans_line(y, wkey) : NULL;
 
 				for ( x = x0; x <= x1; x++ )
 				{
@@ -9707,8 +9821,13 @@ static void draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cli
 						}
 						continue;
 					}
-					if(!vdp2_window_process(x,y))
-						continue;
+					if (wsp)
+					{
+						while (wi < wsp->n && x >= wsp->b[wi])
+							wi++;
+						if (wi >= wsp->n || x < wsp->a[wi])
+							continue;
+					}
 
 					/* pukunpa, no alpha no framebuffer bumps */
 					if(sprite_window && pix == 0x8000)

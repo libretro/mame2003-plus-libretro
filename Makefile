@@ -100,7 +100,9 @@ endif
 ifeq ($(platform), unix)
 	TARGET = $(TARGET_NAME)_libretro.so
 	fpic = -fPIC
-	CFLAGS += $(fpic)
+	# only the retro_* entry points (RETRO_API) leave the library: the rest is
+	# reached directly instead of through the GOT and PLT
+	CFLAGS += $(fpic) -fvisibility=hidden
 	LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
 
 # Linux Portable

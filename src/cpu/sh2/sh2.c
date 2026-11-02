@@ -2893,7 +2893,11 @@ READ32_HANDLER( sh2_internal_r )
 	switch( offset )
 	{
 	case 0x04: /* TIER, FTCSR, FRC*/
-		sh2_timer_resync();
+		/* only a read of FRC brings it up to date, as in current MAME (frc_r):
+		   reading TIER or FTCSR does not (a slave CPU waiting for its input
+		   capture flag reads FTCSR tens of thousands of times a frame) */
+		if ((mem_mask & 0xffff) != 0xffff)
+			sh2_timer_resync();
 		return (sh2.m[4] & 0xffff0000) | sh2.frc;
 	case 0x05: /* OCRx, TCR, TOCR*/
 		if(sh2.m[5] & 0x10)

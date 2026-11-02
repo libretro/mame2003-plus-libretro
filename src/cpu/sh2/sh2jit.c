@@ -84,6 +84,7 @@ struct jit_block
 	UINT8		valid;
 	UINT8		len;				/* instructions */
 	UINT8		idle;				/* the SGL idle counting loop starts here (see jit_idle_skip) */
+	UINT8		spin;				/* a polling loop that only reads: see jit_spin_skip */
 	UINT16		op0;				/* first opcode, to retry an untranslatable block once it changes */
 };
 
@@ -1269,10 +1270,17 @@ static void jit_emit_mem_access(struct sljit_compiler *C, UINT16 op, const struc
 */
 static sljit_u32 jit_slow_break;
 
+static int jit_spin_io;	/* a read of the spin check went to a device (see jit_spin_skip) */
+
 static sljit_s32 SLJIT_FUNC jit_slow_read(sljit_u32 ea, sljit_u32 size)
 {
 	int before = sh2_icount;
 	INT32 v;
+
+	/* only TIER and FTCSR read the same all through a timeslice without side
+	   effects; any other device read stops a spin from being skipped */
+	if (!((size == 1 && (ea == 0xfffffe10 || ea == 0xfffffe11)) || (size == 2 && ea == 0xfffffe10)))
+		jit_spin_io = 1;
 
 	jit_in_block = 1;
 	if (size == 1)
@@ -1893,6 +1901,86 @@ static void jit_idle_skip(void)
 	sh2_icount -= k * cost;
 }
 
+/*
+	Polling loops: a block that starts with a short loop back to its own
+	start with BT or BF, which in between only reads memory (no
+	post-increment), moves, tests and compares, for example the Winter Heat
+	slave waiting for its input capture flag:
+
+	loop:	MOV.B	@R1,R0		; FTCSR
+		TST	#0x80,R0
+		BT	loop
+
+	As for the SGL idle loop, nothing it reads can change within a
+	timeslice: if one iteration leaves every register as it found it and
+	read only RAM (or TIER/FTCSR), every later iteration of the timeslice
+	is the same, so they are counted at once. A whole iteration and the
+	part of one that ends the timeslice are left to the code.
+*/
+#define JIT_SPIN_MAX	8
+
+static int jit_spin_op(UINT16 op)
+{
+	switch (op >> 12)
+	{
+	case 0x0: return op == 0x0009;					/* NOP */
+	case 0x2: { int k = op & 15; return k >= 8 && k <= 0xc; }	/* TST AND XOR OR CMP/STR */
+	case 0x3: { int k = op & 15; return k == 0 || k == 2 || k == 3 || k == 6 || k == 7; }	/* CMP/xx */
+	case 0x4: return (op & 0xff) == 0x11 || (op & 0xff) == 0x15;	/* CMP/PZ CMP/PL */
+	case 0x5: return 1;						/* MOV.L @(disp,Rm),Rn */
+	case 0x6: { int k = op & 15; return k <= 3 || k >= 7; }		/* loads, MOV, NOT, SWAP, NEG(C), EXT */
+	case 0x8: { int k = (op >> 8) & 15; return k == 4 || k == 5 || k == 8; }	/* MOV.B/W @(disp,Rm),R0, CMP/EQ #imm */
+	case 0x9: return 1;						/* MOV.W @(disp,PC),Rn */
+	case 0xc: { int k = (op >> 8) & 15; return (k >= 4 && k <= 6) || (k >= 8 && k <= 0xb); }	/* GBR loads, TST AND XOR OR #imm */
+	case 0xd: return 1;						/* MOV.L @(disp,PC),Rn */
+	case 0xe: return 1;						/* MOV #imm,Rn */
+	}
+	return 0;
+}
+
+static int jit_spin_block(const UINT16 *ops, UINT32 count, UINT32 pc)
+{
+	UINT32 i;
+	/* the loop: from the start to a BT or BF back to it; the rest of the
+	   block only runs once the loop is left */
+	for (i = 0; i < count && i < JIT_SPIN_MAX; i++)
+	{
+		UINT16 op = ops[i];
+		if ((op & 0xfd00) == 0x8900)		/* BT or BF, no delay slot */
+			return i > 0 && pc + i * 2 + 4 + (INT8)(op & 0xff) * 2 == pc;
+		if (!jit_spin_op(op))
+			return 0;
+	}
+	return 0;
+}
+
+static struct { UINT32 r[16], sr, gbr, mach, macl, pr; } jit_spin_regs;
+
+static void jit_spin_save(void)
+{
+	memcpy(jit_spin_regs.r, sh2.r, sizeof(jit_spin_regs.r));
+	jit_spin_regs.sr = sh2.sr;
+	jit_spin_regs.gbr = sh2.gbr;
+	jit_spin_regs.mach = sh2.mach;
+	jit_spin_regs.macl = sh2.macl;
+	jit_spin_regs.pr = sh2.pr;
+	jit_spin_io = 0;
+}
+
+/* after one iteration from 'before' cycles: counts the iterations the rest of the timeslice would repeat */
+static void jit_spin_skip(const struct jit_block *block, int before)
+{
+	int cost = before - sh2_icount, k;
+	if (cost <= 0 || jit_spin_io || sh2.pc != block->pc || sh2.delay || sh2.test_irq
+	 || memcmp(jit_spin_regs.r, sh2.r, sizeof(jit_spin_regs.r)) || jit_spin_regs.sr != sh2.sr
+	 || jit_spin_regs.gbr != sh2.gbr || jit_spin_regs.mach != sh2.mach || jit_spin_regs.macl != sh2.macl
+	 || jit_spin_regs.pr != sh2.pr)
+		return;
+	k = (sh2_icount - 1) / cost - 1;
+	if (k > 0)
+		sh2_icount -= k * cost;
+}
+
 static void jit_compile(struct jit_block *block, UINT32 pc)
 {
 	static struct jit_ctx ctx;
@@ -1911,6 +1999,7 @@ static void jit_compile(struct jit_block *block, UINT32 pc)
 	block->code = NULL;
 	block->entry = NULL;
 	block->idle = 0;
+	block->spin = 0;
 	block->op0 = jit_fetch(pc);
 
 	/* code must sit in one fast RAM region, below the special areas */
@@ -1951,6 +2040,7 @@ static void jit_compile(struct jit_block *block, UINT32 pc)
 	}
 	if (count == 0)
 		return;
+	block->spin = jit_spin_block(ops, count, pc);
 
 	/* cycles the block takes before each instruction, and at most in all */
 	ctx.pre[0] = 0;
@@ -2021,7 +2111,7 @@ static void jit_compile(struct jit_block *block, UINT32 pc)
 	{
 		sljit_uw n_entry = sljit_get_label_addr(entry);
 		/* the idle loop goes through the dispatcher, where it is skipped */
-		block->entry = block->idle ? NULL : (void *)n_entry;
+		block->entry = (block->idle || block->spin) ? NULL : (void *)n_entry;
 		jit_code_bytes += sljit_get_generated_code_size(C);
 	}
 	sljit_free_compiler(C);
@@ -2093,11 +2183,15 @@ static INLINE int sh2_jit_run(void)
 		jit_idle_skip();
 	if (block->cost > sh2_icount)
 		return sh2_icount != before;	/* the iterations skipped, if any: the rest steps */
+	if (block->spin)
+		jit_spin_save();
 #ifdef SH2JIT_VERIFY
 	sh2.pc = jit_verify_block(block);
 #else
 	sh2.pc = ((jit_func)block->code)();
 #endif
+	if (block->spin)
+		jit_spin_skip(block, before);
 	if (jit_flush_pending)
 	{
 		jit_flush_pending = 0;
