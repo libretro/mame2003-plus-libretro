@@ -10778,4 +10778,5 @@ VIDEO_UPDATE( stv_vdp2 )
 		set_visible_area(0, vdp2_visarea.max_x, 0, vdp2_visarea.max_y);
 
 	copybitmap(bitmap, vdp2_screen, 0, 0, 0, 0, &vdp2_visarea, TRANSPARENCY_NONE, 0);
+	stv_draw_crosshairs(bitmap, &vdp2_visarea);
 }
