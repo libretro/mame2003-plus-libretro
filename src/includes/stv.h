@@ -31,6 +31,9 @@ VIDEO_START( stv_vdp2 );
 VIDEO_STOP( stv_vdp2 );
 VIDEO_UPDATE( stv_vdp2 );
 
+/* drivers/stv.c: the lightgun crosshairs, over the finished screen */
+void stv_draw_crosshairs(struct mame_bitmap *bitmap, const struct rectangle *clip);
+
 /* frame timing, from the driver's scanline interrupt */
 int stv_vdp2_vblank_start_line(void);	/* the line vblank-in happens on */
 void stv_vdp2_scanline(int line);	/* the start of each line, 0 to 262 */

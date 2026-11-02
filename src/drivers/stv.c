@@ -2463,8 +2463,8 @@ READ32_HANDLER ( stv_io_r32 )
 				{
 					/* the hammer position, with the hit latch */
 					int hit = (readinputport(4) & 0x10) ? 0 : 4;
-					UINT8 x = (BITSWAP8(readinputport(10), 2,3,0,1,6,7,5,4) & 0xf3) | hit;
-					UINT8 y = (BITSWAP8(readinputport(11), 2,3,0,1,6,7,5,4) & 0xf3) | hit;
+					UINT8 x = (BITSWAP8(readinputport(7), 2,3,0,1,6,7,5,4) & 0xf3) | hit;
+					UINT8 y = (BITSWAP8(readinputport(8), 2,3,0,1,6,7,5,4) & 0xf3) | hit;
 					return 0xff00ff00 | (x << 16) | y;
 				}
 				return ((readinputport(2) | (stv_hopper && hopper_status ? 0x02 : 0)) << 16) | (readinputport(3));
@@ -3376,11 +3376,12 @@ INPUT_PORTS_START( critcrsh )
 	PORT_BITX(0x80, IP_ACTIVE_HIGH, 0, "R trig", KEYCODE_S, IP_JOY_NONE )
 	#endif
 
+	/* the default values are the centre: the lightgun moves from there */
 	PORT_START	/* the hammer X */
-	PORT_ANALOG( 0x3f, 0x00, IPT_LIGHTGUN_X, 50, 1, 0, 0x3f )
+	PORT_ANALOG( 0x3f, 0x20, IPT_LIGHTGUN_X, 50, 1, 0, 0x3f )
 
 	PORT_START	/* the hammer Y */
-	PORT_ANALOG( 0x3f, 0x02, IPT_LIGHTGUN_Y, 50, 1, 0x02, 0x2e )
+	PORT_ANALOG( 0x3f, 0x18, IPT_LIGHTGUN_Y, 50, 1, 0x02, 0x2e )
 INPUT_PORTS_END
 
 /* the medal games (MAME's patocar and micrombc inputs), with a hopper */
@@ -5209,6 +5210,22 @@ static DRIVER_INIT( critcrsh )
 {
 	init_ic13();
 	stv_critcrsh = 1;
+}
+
+/* the hammer of critcrsh is a lightgun: its crosshair, on the whole screen as in MAME
+   (X 0x00-0x3f, Y 0x02-0x2e) */
+void stv_draw_crosshairs(struct mame_bitmap *bitmap, const struct rectangle *clip)
+{
+	int w, h, x, y;
+
+	if (!stv_critcrsh)
+		return;
+
+	w = clip->max_x - clip->min_x + 1;
+	h = clip->max_y - clip->min_y + 1;
+	x = clip->min_x + (readinputport(7) & 0x3f) * (w - 1) / 0x3f;
+	y = clip->min_y + ((readinputport(8) & 0x3f) - 0x02) * (h - 1) / (0x2e - 0x02);
+	draw_crosshair(1, bitmap, x, y, clip);
 }
 
 static DRIVER_INIT( stvmedal )
