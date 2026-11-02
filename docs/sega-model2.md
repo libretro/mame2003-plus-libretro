@@ -153,6 +153,22 @@ in ROM, so the interrupt was lost and the main loop waited for the timer
 forever (black screen after "STAND ALONE"). With 32 bytes the commands fit
 and the game plays.
 
+**The MIDI interrupt.** The sound program reads one byte from the queue per
+MIDI interrupt (level 3 on these boards). The interrupt is now dropped when
+the program reads the byte, and raised again only while the queue still has
+bytes, as in current MAME. Before, it could stay raised on an empty queue:
+the sound program then took it again and read a stale byte as part of a
+command. This corrupted the music commands of Dead or Alive (61 extra reads
+in the attract mode) and Manx TT (189), whose music then played wrong or
+stopped. The SCSP timers are now real timers, as in MAME, and each interrupt
+source has its own level, which stays raised until the program acknowledges
+it.
+
+**How it was checked.** Each sound command the i960 sends is read once, with
+no extra reads, in `doa`, `fvipers`, `hotd`, `manxtt`, `rchase2`, `srallyc`
+and `vf2`. In Dead or Alive the sound commands and every slot register write
+between 15 and 25 s of the attract mode are the same as in MAME 0.264.
+
 ## Rail Chase 2: mirrored sample ROMs
 
 Sets: `rchase2`.

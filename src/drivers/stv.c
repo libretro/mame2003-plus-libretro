@@ -100,6 +100,8 @@ Preliminary Memory map:
 #include "machine/sega315_5838.h"
 #include "state.h"
 #include "includes/stv.h"
+#include "cpu/adsp2100/adsp2100.h"
+#include "sndhrdw/acclaim_rax.h"
 #include <time.h>
 
 #define USE_SLAVE 1
@@ -2955,17 +2957,28 @@ READ32_HANDLER( stv_sh2_soundram_r )
 
 }
 
+/* the SCSP is a 16-bit device: a 16-bit access of the SH-2 touches only its half, as
+   in MAME. Reading and writing back the other half had side effects: rewriting slot
+   register 0 processes the key on / key off of all the slots again, and a read of the
+   other half can take a MIDI byte */
 static READ32_HANDLER( stv_scsp_regs_r32 )
 {
+	UINT32 res = 0;
 	offset <<= 1;
-	return (SCSP_0_r(offset+1, 0xffff) | (SCSP_0_r(offset, 0xffff)<<16));
+	if ((mem_mask & 0xffff0000) != 0xffff0000)
+		res |= SCSP_0_r(offset, mem_mask >> 16) << 16;
+	if ((mem_mask & 0x0000ffff) != 0x0000ffff)
+		res |= SCSP_0_r(offset+1, mem_mask & 0xffff);
+	return res;
 }
 
 static WRITE32_HANDLER( stv_scsp_regs_w32 )
 {
 	offset <<= 1;
-	SCSP_0_w(offset, data>>16, mem_mask >> 16);
-	SCSP_0_w(offset+1, data, mem_mask);
+	if ((mem_mask & 0xffff0000) != 0xffff0000)
+		SCSP_0_w(offset, data>>16, mem_mask >> 16);
+	if ((mem_mask & 0x0000ffff) != 0x0000ffff)
+		SCSP_0_w(offset+1, data & 0xffff, mem_mask & 0xffff);
 }
 
 /*
@@ -3998,23 +4011,23 @@ struct sh2_config sh2_conf_slave  = { 1, stv_opcode_read };
 
 static int scsp_last_line = 0;
 
+/* the SCSP raises and drops each level on its own (a negative level drops it);
+   0 drops the last raised level, as in current MAME */
 static void scsp_irq(int irq)
 {
 	/* don't bother the 68k if it's off*/
 	if (!en_68k)
-	{
 		return;
-	}
 
-	if (irq)
+	if (irq > 0)
 	{
 		scsp_last_line = irq;
 		cpu_set_irq_line(2, irq, ASSERT_LINE);
 	}
+	else if (irq < 0)
+		cpu_set_irq_line(2, -irq, CLEAR_LINE);
 	else
-	{
 		cpu_set_irq_line(2, scsp_last_line, CLEAR_LINE);
-	}
 }
 
 static struct SCSPinterface scsp_interface =
@@ -4066,6 +4079,26 @@ static MACHINE_DRIVER_START( stv )
 
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
 	MDRV_SOUND_ADD(SCSP, scsp_interface)
+MACHINE_DRIVER_END
+
+/* Batman Forever: the Acclaim RAX sound board (an ADSP-2181), as in MAME */
+static MACHINE_INIT( batmanfr )
+{
+	machine_init_stv();
+	acclaim_rax_reset();
+	minit_boost = sinit_boost = 0;
+}
+
+static MACHINE_DRIVER_START( batmanfr )
+	MDRV_IMPORT_FROM(stv)
+
+	MDRV_CPU_ADD_TAG("rax", ADSP2181, RAX_CLOCK)
+	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
+	MDRV_CPU_MEMORY(acclaim_rax_readmem, acclaim_rax_writemem)
+
+	MDRV_MACHINE_INIT(batmanfr)
+
+	MDRV_SOUND_ADD(CUSTOM, acclaim_rax_custom_interface)
 MACHINE_DRIVER_END
 
 #define ROM_LOAD16_WORD_SWAP_BIOS(bios,name,offset,length,hash) \
@@ -4939,7 +4972,9 @@ ROM_START( batmanfr )
 	ROM_LOAD16_WORD_SWAP( "gfx5.u15",   0x1800000, 0x0400000, CRC(e201f830) SHA1(5aa22fcc8f2e153d1abc3aa4050c594b3942ee67) )
 	ROM_LOAD16_WORD_SWAP( "gfx6.u18",   0x1c00000, 0x0400000, CRC(c6b381a3) SHA1(46431f1e47c084a0bf85535d35af27471653b008) )
 
-	/* the Acclaim RAX sound board (not emulated): its own region, not over the cart */
+	ROM_REGION( ADSP2100_SIZE, REGION_CPU4, ROMREGION_ERASE00 )	/* the ADSP-2181 internal RAM */
+
+	/* the Acclaim RAX sound board: its own region, not over the cart */
 	ROM_REGION( 0x1000000, REGION_USER4, 0 )
 	ROM_LOAD( "350snda1.u52",  0x000000, 0x080000, CRC(9027e7a0) SHA1(678df530838b078964a044ce734776f391654e6c) )
 	ROM_LOAD( "snd0.u48",      0x400000, 0x200000, CRC(02b1927c) SHA1(08b21d8b31b0f15c59fb5bb7eaf425e6fe04f7b5) )
@@ -5228,6 +5263,21 @@ void stv_draw_crosshairs(struct mame_bitmap *bitmap, const struct rectangle *cli
 	draw_crosshair(1, bitmap, x, y, clip);
 }
 
+/* Batman Forever: the commands to the RAX sound board, in the high word of 0x04800000 */
+static WRITE32_HANDLER( batmanfr_sound_comms_w )
+{
+	if (!(mem_mask & 0xffff0000))
+		acclaim_rax_data_w(data >> 16);
+}
+
+static DRIVER_INIT( batmanfr )
+{
+	init_ic13();
+	install_mem_write32_handler(0, 0x04800000, 0x04800003, batmanfr_sound_comms_w);
+	install_mem_write32_handler(1, 0x04800000, 0x04800003, batmanfr_sound_comms_w);
+	acclaim_rax_init(mame_find_cpu_index("rax"), REGION_USER4);
+}
+
 static DRIVER_INIT( stvmedal )
 {
 	init_ic13();
@@ -5481,7 +5531,7 @@ GAMEBX( 1995, vfremix,   stvbios, stvbios, stv, stv,  ic13,      ROT0, "Sega", 	
 GAMEBX( 1996, stvbios,   0,       stvbios, stv, stv,  stv,       ROT0, "Sega",       "ST-V Bios", NOT_A_DRIVER, &generic_ctrl, NULL )
 
 GAMEBX( 1998, astrass,   stvbios, stvbios, stv, stv,  astrass,      ROT0, "Sunsoft",    "Astra SuperStars", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS, &generic_ctrl, NULL )
-GAMEBX( 1996, batmanfr,  stvbios, stvbios, stv, stv,  ic13,      ROT0, "Acclaim",    "Batman Forever", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS, &generic_ctrl, NULL )
+GAMEBX( 1996, batmanfr,  stvbios, stvbios, batmanfr, stv,  batmanfr,      ROT0, "Acclaim",    "Batman Forever", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS, &generic_ctrl, NULL )
 GAMEBX( 1996, decathlt,  stvbios, stvbios, stv, stv,  decathlt,  ROT0, "Sega", 	     "Decathlete", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS, &generic_ctrl, NULL )
 GAMEBX( 1999, ffreveng,  stvbios, stvbios, stv, stv,  ffreveng,       ROT0, "Capcom",     "Final Fight Revenge", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS, &generic_ctrl, NULL )
 GAMEBX( 1996, findlove,  stvbios, stvbios, stv, stv,  ic13,      ROT0, "Daiki",	     "Find Love", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS, &generic_ctrl, NULL )

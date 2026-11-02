@@ -47,7 +47,7 @@ void LFO_Init(void)
 		if(i<128)
 			p=i;
 		else
-			p=255-i;    
+			p=i-256;	/* current MAME */
 		ALFO_SAW[i]=a;
 		PLFO_SAW[i]=p;
 	
@@ -130,7 +130,7 @@ static INLINE signed int ALFO_Step(struct _LFO *LFO)
 
 void LFO_ComputeStep(struct _LFO *LFO,data32_t LFOF,data32_t LFOWS,data32_t LFOS,int ALFO)
 {
-    float step=(float) LFOFreq[LFOF]*256.0/(float)Machine->sample_rate;
+    float step=(float) LFOFreq[LFOF]*256.0/44100.0;	/* the SCSP runs at 44100 Hz */
     LFO->phase_step=(unsigned int) ((float) (1<<LFO_SHIFT)*step);
     if(ALFO)
     {

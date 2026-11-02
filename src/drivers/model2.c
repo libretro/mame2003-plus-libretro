@@ -918,17 +918,14 @@ static MEMORY_WRITE16_START( model2_snd_writemem )
 	{ 0x400000, 0x400001, model2snd_ctrl_w },
 MEMORY_END
 
-static int scsp_last_line = 0;
-
+/* the SCSP raises and drops each level on its own (a negative level drops it,
+   0 means nothing to do here) */
 static void scsp_irq( int irq )
 {
-	if( irq )
-	{
-		scsp_last_line = irq;
+	if( irq > 0 )
 		cpu_set_irq_line( 2, irq, ASSERT_LINE );
-	}
-	else
-		cpu_set_irq_line( 2, scsp_last_line, CLEAR_LINE );
+	else if( irq < 0 )
+		cpu_set_irq_line( 2, -irq, CLEAR_LINE );
 }
 
 static struct SCSPinterface scsp_interface =
@@ -1881,7 +1878,6 @@ static DRIVER_INIT( model2a )
 	state_save_register_UINT8( "model2comm", 0, "zfg", &m2comm_zfg, 1 );
 	state_save_register_UINT8( "model2", 0, "io_analog_channel", &io_analog_channel, 1 );
 	state_save_register_UINT8( "model2", 0, "lightgun_mux", &m_lightgun_mux, 1 );
-	state_save_register_int( "model2", 0, "scsp_last_line", &scsp_last_line );
 	state_save_register_func_postload( model2_postload );
 }
 
