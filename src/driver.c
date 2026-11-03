@@ -3571,6 +3571,7 @@ Sep.1994 Quiz Ghost Hunter
 	DRIVER( cotton2 )
 	DRIVER( cotton2e )
 	DRIVER( cottonbm )
+	DRIVER( cottonbme )	/* bootleg (English translation) */
 	DRIVER( decathlt )
 	DRIVER( diehard )
 	DRIVER( dnmtdeka )
