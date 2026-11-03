@@ -11,6 +11,8 @@
 extern data32_t *model2_bufferram;
 extern data32_t *model2_textureram0;
 extern data32_t *model2_textureram1;
+extern UINT8 *model2_texdec0;	/* the sheets one byte per texel, y * 2048 + x */
+extern UINT8 *model2_texdec1;
 extern data16_t *model2_palram;
 extern data16_t *model2_colorxlat;
 extern UINT8 *model2_lumaram;

@@ -36,6 +36,19 @@ struct _SCSPDSP
 
 	int Stopped;
 	int LastStep;
+
+	/* port: the steps that only multiply and accumulate (no write to TEMP,
+	   MEMS, FRC, Y, ADRS, EFREG or the delay RAM), decoded from MPRO when
+	   it changes (Dirty) and run by a short path in SCSPDSP_Step */
+	int Dirty;
+	struct
+	{
+		UINT8 mac;		/* the step is one of them */
+		UINT8 tra, ira, coef;
+		UINT8 xsel, ysel;
+		UINT8 bsel;		/* 0: zero, 1: ACC, 2: TEMP */
+		UINT8 negb;
+	} MAC[128];
 };
 
 /* sign-extend the low "bits" bits of v */
@@ -53,22 +66,29 @@ static INLINE INT32 SCSPDSP_clamp24( INT32 v )
 	return v;
 }
 
+/* port: leading zeros of a 12-bit value (12 for 0), for SCSPDSP_PACK */
+static UINT8 SCSPDSP_lz12[ 4096 ];
+
+static void SCSPDSP_InitTables( void )
+{
+	int i;
+	for( i = 0; i < 4096; i++ )
+	{
+		int n = 0;
+		while( n < 12 && !( i & ( 0x800 >> n ) ) )
+			n++;
+		SCSPDSP_lz12[ i ] = n;
+	}
+}
+
 /* 24 bit value to the 16 bit floating point format of the delay RAM */
 static UINT16 SCSPDSP_PACK( INT32 val )
 {
 	UINT32 uval = (UINT32)val;
 	UINT32 sign = ( uval >> 23 ) & 1;
 	UINT32 temp = ( uval ^ ( uval << 1 ) ) & 0xffffff;
-	UINT32 exponent = 0;
-	int k;
-
-	for( k = 0; k < 12; k++ )
-	{
-		if( temp & 0x800000 )
-			break;
-		temp <<= 1;
-		exponent += 1;
-	}
+	/* the leading zeros of bits 23-12, up to 12 */
+	UINT32 exponent = SCSPDSP_lz12[ temp >> 12 ];
 	if( exponent < 12 )
 		uval = ( uval << exponent ) & 0x3fffff;
 	else
@@ -103,11 +123,45 @@ static INT32 SCSPDSP_UNPACK( UINT16 val )
 
 static void SCSPDSP_Init( struct _SCSPDSP *DSP, UINT16 *ram, UINT32 ramsize )
 {
+	SCSPDSP_InitTables();
 	memset( DSP, 0, sizeof( *DSP ) );
 	DSP->RAM = ram;
 	DSP->RAMmask = ( ramsize / 2 ) - 1;
 	DSP->RBL = 8 * 1024;
 	DSP->Stopped = 1;
+	DSP->Dirty = 1;
+}
+
+static void SCSPDSP_Decode( struct _SCSPDSP *DSP )
+{
+	int step;
+
+	for( step = 0; step < 128; ++step )
+	{
+		UINT16 *IPtr = DSP->MPRO + ( step * 4 );
+		UINT32 TWT   = ( IPtr[0] >>  7 ) & 0x01;
+		UINT32 IRA   = ( IPtr[1] >>  6 ) & 0x3f;
+		UINT32 IWT   = ( IPtr[1] >>  5 ) & 0x01;
+		UINT32 MWT   = ( IPtr[2] >> 14 ) & 0x01;
+		UINT32 MRD   = ( IPtr[2] >> 13 ) & 0x01;
+		UINT32 EWT   = ( IPtr[2] >> 12 ) & 0x01;
+		UINT32 ADRL  = ( IPtr[2] >>  7 ) & 0x01;
+		UINT32 FRCL  = ( IPtr[2] >>  6 ) & 0x01;
+		UINT32 YRL   = ( IPtr[2] >>  3 ) & 0x01;
+		UINT32 ZERO  = ( IPtr[2] >>  1 ) & 0x01;
+		UINT32 BSEL  = ( IPtr[2] >>  0 ) & 0x01;
+
+		DSP->MAC[step].mac = !TWT && !IWT && !EWT && !ADRL && !FRCL && !YRL && IRA <= 0x31 &&
+			!( ( MRD || MWT ) && ( step & 1 ) );
+		DSP->MAC[step].tra = ( IPtr[0] >> 8 ) & 0x7f;
+		DSP->MAC[step].ira = IRA;
+		DSP->MAC[step].coef = ( IPtr[3] >> 9 ) & 0x3f;
+		DSP->MAC[step].xsel = ( IPtr[1] >> 15 ) & 0x01;
+		DSP->MAC[step].ysel = ( IPtr[1] >> 13 ) & 0x03;
+		DSP->MAC[step].bsel = ZERO ? 0 : BSEL ? 1 : 2;
+		DSP->MAC[step].negb = ( IPtr[2] >> 2 ) & 0x01;
+	}
+	DSP->Dirty = 0;
 }
 
 static void SCSPDSP_Step( struct _SCSPDSP *DSP )
@@ -130,8 +184,59 @@ static void SCSPDSP_Step( struct _SCSPDSP *DSP )
 
 	memset( DSP->EFREG, 0, sizeof( DSP->EFREG ) );
 
+	if( DSP->Dirty )
+		SCSPDSP_Decode( DSP );
+
 	for( step = 0; step < DSP->LastStep; ++step )
 	{
+		if( DSP->MAC[step].mac )
+		{
+			/* the same as below for such a step: the shifter output and
+			   INPUTS are not used */
+			INT32 TEMPV = 0;
+			UINT32 ysel = DSP->MAC[step].ysel;
+
+			if( !DSP->MAC[step].xsel || DSP->MAC[step].bsel == 2 )
+				TEMPV = SCSPDSP_sext( DSP->TEMP[( DSP->MAC[step].tra + DSP->DEC ) & 0x7f], 24 );
+
+			if( DSP->MAC[step].xsel )
+			{
+				UINT32 IRA = DSP->MAC[step].ira;
+				if( IRA <= 0x1f )
+					X = DSP->MEMS[IRA];
+				else if( IRA <= 0x2f )
+					X = DSP->MIXS[IRA - 0x20] << 4;
+				else
+					X = DSP->EXTS[IRA - 0x30] << 8;
+				X = SCSPDSP_sext( X, 24 );
+			}
+			else
+				X = TEMPV;
+
+			if( DSP->MAC[step].bsel == 0 )
+				B = 0;
+			else
+			{
+				B = DSP->MAC[step].bsel == 1 ? ACC : TEMPV;
+				if( DSP->MAC[step].negb )
+					B = 0 - B;
+			}
+
+			if( ysel == 0 )
+				Y = FRC_REG;
+			else if( ysel == 1 )
+				Y = DSP->COEF[DSP->MAC[step].coef] >> 3;
+			else if( ysel == 2 )
+				Y = ( Y_REG >> 11 ) & 0x1fff;
+			else
+				Y = ( Y_REG >> 4 ) & 0x0fff;
+			Y = SCSPDSP_sext( Y, 13 );
+
+			ACC = (INT32)( ( ( (INT64)X * (INT64)Y ) >> 12 ) + B );
+			continue;
+		}
+
+		{
 		UINT16 *IPtr = DSP->MPRO + ( step * 4 );
 
 		UINT32 TRA   = ( IPtr[0] >>  8 ) & 0x7f;
@@ -284,6 +389,7 @@ static void SCSPDSP_Step( struct _SCSPDSP *DSP )
 
 		if( EWT )
 			DSP->EFREG[EWA] += SHIFTED >> 8;
+		}
 	}
 	--DSP->DEC;
 	memset( DSP->MIXS, 0, sizeof( DSP->MIXS ) );
@@ -301,4 +407,5 @@ static void SCSPDSP_Start( struct _SCSPDSP *DSP )
 			break;
 	}
 	DSP->LastStep = i + 1;
+	DSP->Dirty = 1;
 }

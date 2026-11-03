@@ -2285,6 +2285,8 @@ void model2_geo_parse( void )
 /* drawn pixels carry an opaque marker in the top byte (the alpha of rgb_t in
    MAME), so a black pixel (dark shadows) is not taken as transparent */
 #define M2_PIXEL_OPAQUE 0xff000000
+/* a pixel is kept as the 15-bit colour of the bitmap, from 8-bit components */
+#define M2_PIXEL( r, g, b )	( M2_PIXEL_OPAQUE | ( ( (r) >> 3 ) << 10 ) | ( ( (g) >> 3 ) << 5 ) | ( (b) >> 3 ) )
 
 /* the 3D frame. A drawn pixel is never 0 (M2_PIXEL_OPAQUE), so the buffer
    is its own fill map: polygons are drawn front to back and the first one
@@ -2298,8 +2300,11 @@ static int m_dirty_minx, m_dirty_maxx, m_dirty_miny, m_dirty_maxy;	/* empty: min
 typedef struct
 {
 	const UINT32 *sheet;
+	const UINT8 *dsheet;	/* the same sheet one byte per texel (model2_texdec0/1) */
 	UINT32 width, height;	/* in texels, powers of two */
 	UINT32 x, y;			/* position in the texture sheet */
+	int inside;				/* the whole level is inside the sheet */
+	const UINT8 *dbase;		/* inside, at an even x and y: its texel (0, 0) in dsheet */
 } m2_tex_level;
 
 typedef struct
@@ -2318,9 +2323,39 @@ typedef struct
 	m2_tex_level level[ 16 ];	/* 0: the microtexture, 1 + n: mipmap level n */
 } m2_poly_extra_data;
 
+/* the texel fetch and the textured span are inlined in the opaque and the
+   translucent spans */
+#if defined(__GNUC__)
+#define M2_ALWAYS_INLINE	__attribute__((always_inline))
+#else
+#define M2_ALWAYS_INLINE
+#endif
+
+/* two neighbouring texels of a translucent texture, 4 bits each (index:
+   first << 4 | second), as the filtering takes them: the alpha component
+   (0x80 when not transparent, value 15) packed into the upper 16 bits,
+   and a transparent texel taking the luma of the other one, the first
+   one done first */
+static UINT32 m2_tex_pair[ 256 ][ 2 ];
+
+static void m2_tex_pair_init( void )
+{
+	int i;
+	for( i = 0; i < 256; i++ )
+	{
+		UINT32 a = ( i >> 4 ) << 4, b = ( i & 15 ) << 4;
+		if( a != 0xf0 ) a |= 0x00800000;
+		if( b != 0xf0 ) b |= 0x00800000;
+		if( a == 0x000000f0 ) a = b & 0xff;
+		if( b == 0x000000f0 ) b = a & 0xff;
+		m2_tex_pair[ i ][ 0 ] = a;
+		m2_tex_pair[ i ][ 1 ] = b;
+	}
+}
+
 #define LERP( x, y, a )	( ( (x) + ( ( ( (y) - (x) ) * (a) ) >> 8 ) ) & 0x00ff00ff )
 
-static UINT32 fetch_bilinear_texel( const m2_poly_extra_data *object, int translucent, INT32 miplevel, INT32 u, INT32 v )
+static INLINE M2_ALWAYS_INLINE UINT32 fetch_bilinear_texel( const m2_poly_extra_data *object, int translucent, INT32 miplevel, INT32 u, INT32 v )
 {
 	UINT32 tex_wrap_x = object->texwrapx;
 	UINT32 tex_wrap_y = object->texwrapy;
@@ -2378,6 +2413,32 @@ static UINT32 fetch_bilinear_texel( const m2_poly_extra_data *object, int transl
 			v1 = v0, v0--, vfrac = 0x100;
 	}
 
+	/* the four texels from the sheet taken apart (model2_tex_decode), when
+	   none of them is past the sheet: the columns with the parity of the
+	   texture coordinate, as the word layout below */
+	if( level->dbase )
+	{
+		/* at an even position the columns and rows are in order */
+		const UINT8 *r0 = level->dbase + v0 * 2048;
+		const UINT8 *r1 = level->dbase + v1 * 2048;
+		tex00 = r0[ u0 ] << 4;
+		tex01 = r0[ u1 ] << 4;
+		tex10 = r1[ u0 ] << 4;
+		tex11 = r1[ u1 ] << 4;
+	}
+	else if( level->inside || ( tex_x + u1 < 2048 && tex_x + u0 < 2048 && tex_y + v0 < 1024 && tex_y + v1 < 1024 ) )
+	{
+		const UINT8 *d = level->dsheet;
+		UINT32 xc0 = ( ( tex_x + u0 ) & ~1 ) | ( u0 & 1 );
+		UINT32 xc1 = ( ( tex_x + u1 ) & ~1 ) | ( u1 & 1 );
+		UINT32 yr0 = ( ( ( tex_y + v0 ) & ~1 ) | ( v0 & 1 ) ) * 2048;
+		UINT32 yr1 = ( ( ( tex_y + v1 ) & ~1 ) | ( v1 & 1 ) ) * 2048;
+		tex00 = d[ yr0 + xc0 ] << 4;
+		tex01 = d[ yr0 + xc1 ] << 4;
+		tex10 = d[ yr1 + xc0 ] << 4;
+		tex11 = d[ yr1 + xc1 ] << 4;
+	}
+	else
 	/* the four 4-bit texels. Texture sheets are mapped as 2048x1024 but
 	   stored in RAM as 1024x2048: past column 1024 a texel is in the other
 	   half of the rows. A 32-bit word holds two 2x2 blocks: bit 1 of the
@@ -2409,17 +2470,16 @@ static UINT32 fetch_bilinear_texel( const m2_poly_extra_data *object, int transl
 		if( ( tex00 & tex01 & tex10 & tex11 ) == 0xf0 )
 			return 0x000000f0;
 
-		/* pack the alpha components into the upper 16 bits */
-		if( tex00 != 0xf0 ) tex00 |= 0x00800000;
-		if( tex01 != 0xf0 ) tex01 |= 0x00800000;
-		if( tex10 != 0xf0 ) tex10 |= 0x00800000;
-		if( tex11 != 0xf0 ) tex11 |= 0x00800000;
-
-		/* a transparent texel takes the luma of the neighbouring texel */
-		if( tex00 == 0x000000f0 ) tex00 = tex01 & 0xff;
-		if( tex01 == 0x000000f0 ) tex01 = tex00 & 0xff;
-		if( tex10 == 0x000000f0 ) tex10 = tex11 & 0xff;
-		if( tex11 == 0x000000f0 ) tex11 = tex10 & 0xff;
+		/* the alpha components packed into the upper 16 bits, a transparent
+		   texel taking the luma of its neighbour: m2_tex_pair, per pair */
+		{
+			const UINT32 *q0 = m2_tex_pair[ tex00 | ( tex01 >> 4 ) ];
+			const UINT32 *q1 = m2_tex_pair[ tex10 | ( tex11 >> 4 ) ];
+			tex00 = q0[ 0 ];
+			tex01 = q0[ 1 ];
+			tex10 = q1[ 0 ];
+			tex11 = q1[ 1 ];
+		}
 	}
 
 	tex0x = LERP( tex00, tex01, ufrac );
@@ -2490,7 +2550,7 @@ static void draw_scanline_solid( int scanline, int startx, int stopx, const m2_p
 	tr = model2_gamma_table[ colortable_r[ luma ] & 0xff ];
 	tg = model2_gamma_table[ colortable_g[ luma ] & 0xff ];
 	tb = model2_gamma_table[ colortable_b[ luma ] & 0xff ];
-	color = M2_PIXEL_OPAQUE | ( tr << 16 ) | ( tg << 8 ) | tb;
+	color = M2_PIXEL( tr, tg, tb );
 
 	x = startx;
 	dx = object->checker ? 2 : 1;
@@ -2504,7 +2564,13 @@ static void draw_scanline_solid( int scanline, int startx, int stopx, const m2_p
 	}
 }
 
-static void draw_scanline_tex( int scanline, int startx, int stopx, float ooz, float uoz, float voz,
+/* the pixels of the texels of the last colours drawn (0: not worked out
+   yet; a pixel always has M2_PIXEL_OPAQUE). Cleared at every frame, since
+   the luma RAM, the colour tables and the gamma can change between frames */
+static UINT32 m_texcolor[ 128 ];
+static UINT32 m_texcolor_key[ 3 ];
+
+static INLINE M2_ALWAYS_INLINE void draw_scanline_tex( int scanline, int startx, int stopx, float ooz, float uoz, float voz,
 	float dooz, float duoz, float dvoz, const m2_poly_extra_data *object, int translucent )
 {
 	UINT32 *p = &m_destmap[ scanline * DEST_W ];
@@ -2515,9 +2581,18 @@ static void draw_scanline_tex( int scanline, int startx, int stopx, float ooz, f
 	UINT32 lumabase = object->lumabase;
 	INT32 max_level = object->max_level;
 	UINT32 obj_luma = object->luma;
+	INT32 texlod = object->texlod;
+	int utex = object->utex, utexminlod = object->utexminlod;
 	int x, dx;
 
 	colorbase = model2_palram[ ( colorbase + 0x1000 ) & 0x1fff ] & 0x7fff;
+	if( colorbase != m_texcolor_key[ 0 ] || lumabase != m_texcolor_key[ 1 ] || obj_luma != m_texcolor_key[ 2 ] )
+	{
+		memset( m_texcolor, 0, sizeof( m_texcolor ) );
+		m_texcolor_key[ 0 ] = colorbase;
+		m_texcolor_key[ 1 ] = lumabase;
+		m_texcolor_key[ 2 ] = obj_luma;
+	}
 	colortable_r += ( ( colorbase >> 0 ) & 0x1f ) << 8;
 	colortable_g += ( ( colorbase >> 5 ) & 0x1f ) << 8;
 	colortable_b += ( ( colorbase >> 10 ) & 0x1f ) << 8;
@@ -2550,7 +2625,7 @@ static void draw_scanline_tex( int scanline, int startx, int stopx, float ooz, f
 			continue;
 
 		z = 1.0f / ooz;
-		mml = -object->texlod + fast_log2( z );
+		mml = -texlod + fast_log2( z );
 		level = mml >> 7;
 		if( level < 0 ) level = 0;
 		if( level > max_level ) level = max_level;
@@ -2562,17 +2637,23 @@ static void draw_scanline_tex( int scanline, int startx, int stopx, float ooz, f
 
 		if( mml > 0 && level < max_level )
 		{
-			UINT32 t2 = fetch_bilinear_texel( object, translucent, level + 1, u, v );
+			UINT32 t2;
 			INT32 frac = ( mml & 127 ) << 1;
+			/* translucent, four transparent texels and less than half of the
+			   next level: under 50% whatever that one gives (its alpha is at
+			   most 0x80), discarded below */
+			if( translucent && t == 0x000000f0 && frac < 128 )
+				continue;
+			t2 = fetch_bilinear_texel( object, translucent, level + 1, u, v );
 			t = LERP( t, t2, frac );
 		}
-		else if( object->utex && mml < 0 && ( !translucent || t >= 0x00010000 ) )
+		else if( utex && mml < 0 && ( !translucent || t >= 0x00010000 ) )
 		{
 			/* (with no alpha, a translucent texel stays under 50% after this
 			   blend, and is discarded below) */
 			/* microtexture; blend up to almost 50% */
 			UINT32 t2 = fetch_bilinear_texel( object, translucent, -1, u, v );
-			INT32 frac = -mml >> object->utexminlod;
+			INT32 frac = -mml >> utexminlod;
 			if( frac > 127 ) frac = 127;
 			t = LERP( t, t2, frac );
 		}
@@ -2585,17 +2666,39 @@ static void draw_scanline_tex( int scanline, int startx, int stopx, float ooz, f
 			t &= 0xff;
 		}
 
-		/* 8 bits of filtered texel, 128 entries in the translator map */
-		luma = (UINT8)( ( (UINT32)model2_lumaram[ ( lumabase + ( t >> 1 ) ) & 0x7fff ] * obj_luma ) >> 8 );
-		if( luma > 0x3f )
-			luma = 0x3f;
+		/* 8 bits of filtered texel, 128 entries in the translator map; the
+		   pixel of each entry is worked out once for the polygon's colours */
+		{
+			UINT32 c = m_texcolor[ t >> 1 ];
+			if( !c )
+			{
+				luma = (UINT8)( ( (UINT32)model2_lumaram[ ( lumabase + ( t >> 1 ) ) & 0x7fff ] * obj_luma ) >> 8 );
+				if( luma > 0x3f )
+					luma = 0x3f;
 
-		tr = model2_gamma_table[ colortable_r[ luma ] & 0xff ];
-		tg = model2_gamma_table[ colortable_g[ luma ] & 0xff ];
-		tb = model2_gamma_table[ colortable_b[ luma ] & 0xff ];
+				tr = model2_gamma_table[ colortable_r[ luma ] & 0xff ];
+				tg = model2_gamma_table[ colortable_g[ luma ] & 0xff ];
+				tb = model2_gamma_table[ colortable_b[ luma ] & 0xff ];
 
-		p[ x ] = M2_PIXEL_OPAQUE | ( tr << 16 ) | ( tg << 8 ) | tb;
+				c = M2_PIXEL( tr, tg, tb );
+				m_texcolor[ t >> 1 ] = c;
+			}
+			p[ x ] = c;
+		}
 	}
+}
+
+/* the opaque and the translucent spans, each with the texel fetches inlined */
+static void draw_scanline_tex_opaque( int scanline, int startx, int stopx, float ooz, float uoz, float voz,
+	float dooz, float duoz, float dvoz, const m2_poly_extra_data *object )
+{
+	draw_scanline_tex( scanline, startx, stopx, ooz, uoz, voz, dooz, duoz, dvoz, object, 0 );
+}
+
+static void draw_scanline_tex_trans( int scanline, int startx, int stopx, float ooz, float uoz, float voz,
+	float dooz, float duoz, float dvoz, const m2_poly_extra_data *object )
+{
+	draw_scanline_tex( scanline, startx, stopx, ooz, uoz, voz, dooz, duoz, dvoz, object, 1 );
 }
 
 /* scanline rasterization of a convex polygon, pixel centres at +0.5 */
@@ -2680,9 +2783,9 @@ static void rasterize_polygon( const poly_vertex *v, int n, int minx, int maxx, 
 		if( textured )
 		{
 			float off = ( startx + 0.5f ) - xl;
-			draw_scanline_tex( y, startx, stopx,
+			( translucent ? draw_scanline_tex_trans : draw_scanline_tex_opaque )( y, startx, stopx,
 				pl[ 0 ] + dpdx[ 0 ] * off, pl[ 1 ] + dpdx[ 1 ] * off, pl[ 2 ] + dpdx[ 2 ] * off,
-				dpdx[ 0 ], dpdx[ 1 ], dpdx[ 2 ], extra, translucent );
+				dpdx[ 0 ], dpdx[ 1 ], dpdx[ 2 ], extra );
 		}
 		else
 			draw_scanline_solid( y, startx, stopx, extra, translucent );
@@ -2743,18 +2846,24 @@ static void model2_3d_render( polygon *poly, const struct rectangle *cliprect )
 			int level;
 			extra.max_level = 30 - count_leading_zeros32( minwh );
 			extra.level[ 0 ].sheet = extra.texsheet[ 1 ];
+			extra.level[ 0 ].dsheet = ( extra.texsheet[ 1 ] == model2_textureram0 ) ? model2_texdec0 : model2_texdec1;
 			extra.level[ 0 ].width = 128;
 			extra.level[ 0 ].height = 128;
 			extra.level[ 0 ].x = extra.utexx;
 			extra.level[ 0 ].y = extra.utexy;
+			extra.level[ 0 ].inside = 1;
+			extra.level[ 0 ].dbase = extra.level[ 0 ].dsheet + extra.utexy * 2048 + extra.utexx;
 			for( level = 0; level <= extra.max_level; level++ )
 			{
 				m2_tex_level *l = &extra.level[ level + 1 ];
 				l->sheet = extra.texsheet[ level & 1 ];
+				l->dsheet = ( l->sheet == model2_textureram0 ) ? model2_texdec0 : model2_texdec1;
 				l->width = extra.texwidth >> level;
 				l->height = extra.texheight >> level;
 				l->x = ( ( extra.texx - 2048 ) >> level ) & 2047;
 				l->y = ( ( extra.texy - 1024 ) >> level ) & 1023;
+				l->inside = l->x + l->width <= 2048 && l->y + l->height <= 1024;
+				l->dbase = ( l->inside && !( ( l->x | l->y ) & 1 ) ) ? l->dsheet + l->y * 2048 + l->x : NULL;
 			}
 		}
 
@@ -2791,11 +2900,14 @@ static void composite_3d( struct mame_bitmap *bitmap, const struct rectangle *cl
 	{
 		UINT16 *dst = (UINT16 *)bitmap->line[ y ];
 		const UINT32 *src = &m_destmap[ y * DEST_W ];
+		const UINT8 *pri = (const UINT8 *)priority_bitmap->line[ y ];
 		for( x = minx; x <= maxx; x++ )
 		{
 			UINT32 c = src[ x ];
-			if( c )
-				dst[ x ] = ( ( c >> 9 ) & 0x7c00 ) | ( ( c >> 6 ) & 0x03e0 ) | ( ( c >> 3 ) & 0x001f );
+			/* not over a tile pixel in front of the polygons: the highest
+			   bit of its priority value is odd (see VIDEO_UPDATE) */
+			if( c && ( pri[ x ] & 0xaa ) <= ( pri[ x ] & 0x55 ) )
+				dst[ x ] = (UINT16)c;
 		}
 	}
 }
@@ -2822,6 +2934,7 @@ static void render_polygons( struct mame_bitmap *bitmap, const struct rectangle 
 			memset( &m_destmap[ y * DEST_W + m_dirty_minx ], 0, ( m_dirty_maxx - m_dirty_minx + 1 ) * sizeof( UINT32 ) );
 	m_dirty_minx = m_dirty_miny = DEST_W;
 	m_dirty_maxx = m_dirty_maxy = -1;
+	memset( m_texcolor, 0, sizeof( m_texcolor ) );
 
 	for( window = raster->cur_window; window >= 0; window-- )
 	{
@@ -2862,8 +2975,6 @@ READ32_HANDLER( model2_polygon_count_r )
 }
 
 /* the tile layers, mixed (see VIDEO_UPDATE) */
-static struct mame_bitmap *m_tilemap;	/* the tile layers, mixed */
-static UINT8 m_tile_front[ 256 ];
 
 /* light gun crosshairs (Virtua Cop, Virtua Cop 2, The House of the Dead):
    the gun ports span the whole screen, as PORT_CROSSHAIR( X/Y, 1.0, 0.0 )
@@ -2921,22 +3032,10 @@ static void draw_gun_crosshairs( struct mame_bitmap *bitmap, const struct rectan
 
 VIDEO_START( model2 )
 {
-	int i;
+	m2_tex_pair_init();
 
 	if( sys24_tile_vh_start( 0x3fff ) )
 		return 1;
-
-	m_tilemap = auto_bitmap_alloc( Machine->drv->screen_width, Machine->drv->screen_height );
-	if( !m_tilemap )
-		return 1;
-	/* priority bitmap value -> the winning tile pixel is in front of the polygons */
-	for( i = 0; i < 256; i++ )
-	{
-		int b = 7;
-		while( b > 0 && !( i & ( 1 << b ) ) )
-			b--;
-		m_tile_front[ i ] = b & 1;
-	}
 
 	m_raster = auto_malloc( sizeof( raster_state ) );
 	m_geo = auto_malloc( sizeof( geo_state ) );
@@ -3006,25 +3105,13 @@ VIDEO_START( model2 )
 	A: on the Virtua Cop 2 stage select the city map (B, priority set) hid
 	"SHOOT TO SELECT" (A).
 
-	The tiles are drawn back to front into m_tilemap, each layer and
-	priority setting its own bit in the priority bitmap: bit 2*depth+prio,
-	with depth 0 for the back layer. The highest bit set gives the winning
-	pixel and its priority.
+	The tiles are drawn back to front straight into the bitmap, each
+	layer and priority setting its own bit in the priority bitmap: bit
+	2*depth+prio, with depth 0 for the back layer. The highest bit set
+	gives the winning pixel and its priority: the polygons are then drawn
+	where it is even (behind them) or there is no tile pixel. A highest bit
+	odd is the same as the odd bits above the even ones.
 */
-static void copy_tiles( struct mame_bitmap *bitmap, const struct rectangle *cliprect, int front )
-{
-	int x, y;
-	for( y = cliprect->min_y; y <= cliprect->max_y; y++ )
-	{
-		UINT16 *dst = (UINT16 *)bitmap->line[ y ];
-		const UINT16 *src = (const UINT16 *)m_tilemap->line[ y ];
-		const UINT8 *pri = (const UINT8 *)priority_bitmap->line[ y ];
-		for( x = cliprect->min_x; x <= cliprect->max_x; x++ )
-			if( pri[ x ] && m_tile_front[ pri[ x ] ] == front )
-				dst[ x ] = src[ x ];
-	}
-}
-
 VIDEO_UPDATE( model2 )
 {
 	int layer;
@@ -3039,13 +3126,12 @@ VIDEO_UPDATE( model2 )
 	for( layer = 3; layer >= 0; layer-- )
 	{
 		int depth = 3 - layer;
-		sys24_tile_draw( m_tilemap, cliprect, layer << 1, depth * 2, 0 );
-		sys24_tile_draw( m_tilemap, cliprect, ( layer << 1 ) | 1, depth * 2 + 1, 0 );
+		sys24_tile_draw( bitmap, cliprect, layer << 1, depth * 2, 0 );
+		sys24_tile_draw( bitmap, cliprect, ( layer << 1 ) | 1, depth * 2 + 1, 0 );
 	}
 
-	copy_tiles( bitmap, cliprect, 0 );
+	/* the polygons go over the tile pixels behind them only */
 	render_polygons( bitmap, cliprect );
-	copy_tiles( bitmap, cliprect, 1 );
 
 	draw_gun_crosshairs( bitmap, cliprect );
 }

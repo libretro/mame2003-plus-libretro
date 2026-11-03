@@ -778,6 +778,53 @@ void *memory_get_read_ptr(int cpunum, offs_t offset)
 
 
 /*-------------------------------------------------
+	memory_get_read_range - like memory_get_read_ptr,
+	also giving the range of addresses around the
+	offset read from the same memory (*start, *len,
+	masked addresses); NULL when the offset is not
+	plain memory
+-------------------------------------------------*/
+
+void *memory_get_read_range(int cpunum, offs_t offset, offs_t *start, offs_t *len)
+{
+	struct memport_data *memport = &cpudata[cpunum].mem;
+	struct handler_data *handlist = (memport->dbits == 32) ? rmemhandler32 : (memport->dbits == 16) ? rmemhandler16 : rmemhandler8;
+	UINT8 minbits = memport->abits - memport->ebits;
+	int l2bits = LEVEL2_BITS(memport->abits - minbits);
+	UINT8 entry;
+	offs_t first, last;
+
+	offset &= memport->mask;
+	entry = memport->read.table[LEVEL1_INDEX(offset, memport->abits, minbits)];
+	if (entry >= SUBTABLE_BASE)
+	{
+		/* the run of the same entry in the subtable, at most 4 KB each side */
+		UINT8 sub = entry;
+		offs_t base = offset & ~(((offs_t)1 << (l2bits + minbits)) - 1);
+		offs_t i = (offset - base) >> minbits, n = (offs_t)1 << l2bits, j;
+		offs_t lim = 0x1000 >> minbits;
+		entry = memport->read.table[LEVEL2_INDEX(sub, offset, memport->abits, minbits)];
+		for (j = i; j > 0 && i - j < lim && memport->read.table[LEVEL2_INDEX(sub, base + ((j - 1) << minbits), memport->abits, minbits)] == entry; j--) ;
+		first = base + (j << minbits);
+		for (j = i; j + 1 < n && j - i < lim && memport->read.table[LEVEL2_INDEX(sub, base + ((j + 1) << minbits), memport->abits, minbits)] == entry; j++) ;
+		last = base + (j << minbits) + (((offs_t)1 << minbits) - 1);
+	}
+	else
+	{
+		first = offset & ~(((offs_t)1 << (l2bits + minbits)) - 1);
+		last = first + (((offs_t)1 << (l2bits + minbits)) - 1);
+	}
+
+	/* 8-bit case: RAM/ROM/RAMROM */
+	if (entry > STATIC_RAM || (minbits == 0 && entry != STATIC_RAM))
+		return NULL;
+	*start = first;
+	*len = last - first + 1;
+	return &cpu_bankbase[entry][first - handlist[entry].offset];
+}
+
+
+/*-------------------------------------------------
 	memory_get_write_ptr - return a pointer to the
 	base of RAM associated with the given CPU
 	and offset

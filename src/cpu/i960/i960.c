@@ -120,9 +120,33 @@ static INLINE int i960_is_burst( UINT32 address )
 	return i960_burst_cb == NULL || i960_burst_cb( address );
 }
 
+/* port: the opcodes are read straight from the memory block of the last
+   fetch (ROM, RAM or a bank: what cpu_readmem32ledw_dword reads there);
+   anything else goes through the memory system. Forgotten at every
+   timeslice, as the banks are only set up between them */
+static UINT32 i960_fetch_start, i960_fetch_len;
+static const UINT8 *i960_fetch_ptr;
+
+static UINT32 i960_readop_slow( UINT32 address )
+{
+	offs_t start, len;
+	const UINT8 *p = (const UINT8 *)memory_get_read_range( cpu_getactivecpu(), address, &start, &len );
+	if( p != NULL )
+	{
+		/* the block in the CPU's addresses (the mask only drops high bits) */
+		i960_fetch_start = address - ( ( address & mem_amask ) - start );
+		i960_fetch_len = len;
+		i960_fetch_ptr = p;
+	}
+	return cpu_readmem32ledw_dword( address );
+}
+
 static INLINE UINT32 i960_readop( UINT32 address )
 {
-	return cpu_readmem32ledw_dword( address );
+	UINT32 off = address - i960_fetch_start;
+	if( off < i960_fetch_len )
+		return *(const data32_t *)( i960_fetch_ptr + ( off & ~3 ) );
+	return i960_readop_slow( address );
 }
 
 static void i960_fatal( const char *fmt, ... )
@@ -880,7 +904,14 @@ static void execute_burst_stall_op(UINT32 opcode)
 	check_immediate_irqs();
 }
 
-static void execute_op(UINT32 opcode)
+/* port: inlined in its only caller, the i960_execute loop: as a function,
+   saving and restoring its registers on every instruction cost a fifth of
+   the time spent in the CPU */
+#if defined(__GNUC__)
+static INLINE __attribute__((always_inline)) void execute_op(UINT32 opcode)
+#else
+static INLINE void execute_op(UINT32 opcode)
+#endif
 {
 	UINT32 t1, t2;
 	double t1f, t2f;
@@ -2521,6 +2552,7 @@ int i960_execute( int cycles )
 	UINT32 opcode;
 
 	i960_icount = cycles;
+	i960_fetch_len = 0;
 
 	/* delay checking irqs if we are in burst stall mode */
 	if( m_stall_state.burst_mode == 0 )
