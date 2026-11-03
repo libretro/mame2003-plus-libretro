@@ -368,6 +368,25 @@ static void sys24_tile_draw_rect(struct mame_bitmap *bm, struct mame_bitmap *tm,
    find the topmost tile layer of each pixel.
 */
 
+/* eight bytes of the transparency bitmap at once: nonzero when one of them is
+   the byte repeated in every lane of 'pat' (the usual zero byte test) */
+static INLINE int sys24_trans8_has(const UINT8 *p, UINT64 pat)
+{
+	const UINT64 ones = ((UINT64)0x01010101 << 32) | 0x01010101;
+	UINT64 w;
+	memcpy(&w, p, 8);
+	w ^= pat;
+	return ((w - ones) & ~w & (ones << 7)) != 0;
+}
+
+/* eight bytes of the transparency bitmap all the byte of 'pat' */
+static INLINE int sys24_trans8_all(const UINT8 *p, UINT64 pat)
+{
+	UINT64 w;
+	memcpy(&w, p, 8);
+	return w == pat;
+}
+
 static void sys24_tile_draw_rect_rgb(struct mame_bitmap *bm, struct mame_bitmap *tm, struct mame_bitmap *dm, const UINT16 *mask,
 									 UINT16 tpri, UINT8 lpri, int win, int sx, int sy, int xx1, int yy1, int xx2, int yy2)
 {
@@ -377,8 +396,11 @@ static void sys24_tile_draw_rect_rgb(struct mame_bitmap *bm, struct mame_bitmap 
 	UINT16       *dest = dm->base;
 	UINT8        *prib = priority_bitmap->base;
 	pen_t        *pens   = Machine->pens;
+	UINT64       tpat;
 
 	tpri |= TILE_FLAG_FG_OPAQUE;
+	/* tpri in every byte (a value over 0xff never matches: no group is skipped) */
+	tpat = (((UINT64)0x01010101 << 32) | 0x01010101) * (tpri & 0xff);
 
 	dest += yy1*dm->rowpixels + xx1;
 	prib += yy1*priority_bitmap->rowpixels + xx1;
@@ -410,14 +432,26 @@ static void sys24_tile_draw_rect_rgb(struct mame_bitmap *bm, struct mame_bitmap 
 				/* Fast paths for the 128-pixels without side clipping case */
 
 				if(!m) {
-					/* 1- 128 pixels from this layer */
+					/* 1- 128 pixels from this layer, eight at a time: a group
+					   with no pixel of this priority is skipped */
 					int x;
-					for(x=0; x<128; x++) {
-						if(*srct++ == tpri)
-							{ *dst = pens[*src]; *pr |= lpri; }
-						src++;
-						dst++;
-						pr++;
+					for(x=0; x<128; x+=8) {
+						if(tpri > 0xff || sys24_trans8_has(srct, tpat)) {
+							int xx;
+							if(tpri <= 0xff && sys24_trans8_all(srct, tpat)) {
+								/* eight pixels of this priority */
+								for(xx=0; xx<8; xx++)
+									{ dst[xx] = pens[src[xx]]; pr[xx] |= lpri; }
+							} else {
+								for(xx=0; xx<8; xx++)
+									if(srct[xx] == tpri)
+										{ dst[xx] = pens[src[xx]]; pr[xx] |= lpri; }
+							}
+						}
+						src += 8;
+						srct += 8;
+						dst += 8;
+						pr += 8;
 					}
 
 				} else if(m == 0xffff) {
@@ -431,11 +465,17 @@ static void sys24_tile_draw_rect_rgb(struct mame_bitmap *bm, struct mame_bitmap 
 					/* 3- 128 pixels from both layers */
 					int x;
 					for(x=0; x<128; x+=8) {
-						if(!(m & 0x8000)) {
+						if(!(m & 0x8000) && (tpri > 0xff || sys24_trans8_has(srct, tpat))) {
 							int xx;
-							for(xx=0; xx<8; xx++)
-								if(srct[xx] == tpri)
-								   { dst[xx] = pens[src[xx]]; pr[xx] |= lpri; }
+							if(tpri <= 0xff && sys24_trans8_all(srct, tpat)) {
+								/* eight pixels of this priority */
+								for(xx=0; xx<8; xx++)
+									{ dst[xx] = pens[src[xx]]; pr[xx] |= lpri; }
+							} else {
+								for(xx=0; xx<8; xx++)
+									if(srct[xx] == tpri)
+										{ dst[xx] = pens[src[xx]]; pr[xx] |= lpri; }
+							}
 						}
 						src += 8;
 						srct += 8;
@@ -448,7 +488,30 @@ static void sys24_tile_draw_rect_rgb(struct mame_bitmap *bm, struct mame_bitmap 
 				/* Clipped path */
 				int llx1 = llx >= 128 ? 128 : llx;
 
-				if(!m) {
+				if(!m && !cur_x && !(llx1 & 7)) {
+					/* 1- the last pixels of the line from this layer, a
+					   whole number of groups of eight: as the fast path */
+					int x;
+					for(x=0; x<llx1; x+=8) {
+						if(tpri > 0xff || sys24_trans8_has(srct, tpat)) {
+							int xx;
+							if(tpri <= 0xff && sys24_trans8_all(srct, tpat)) {
+								/* eight pixels of this priority */
+								for(xx=0; xx<8; xx++)
+									{ dst[xx] = pens[src[xx]]; pr[xx] |= lpri; }
+							} else {
+								for(xx=0; xx<8; xx++)
+									if(srct[xx] == tpri)
+										{ dst[xx] = pens[src[xx]]; pr[xx] |= lpri; }
+							}
+						}
+						src += 8;
+						srct += 8;
+						dst += 8;
+						pr += 8;
+					}
+
+				} else if(!m) {
 					/* 1- 128 pixels from this layer */
 					int x;
 					for(x = cur_x; x<llx1; x++) {

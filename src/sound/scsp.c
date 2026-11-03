@@ -815,6 +815,7 @@ static void SCSP_w16(unsigned int addr,unsigned short val)
 		else if(addr>=0x800)
 		{
 			SCSP->DSP.MPRO[(addr-0x800)/2]=val;
+			SCSP->DSP.Dirty=1;
 			if(addr==0xbf0)
 				SCSPDSP_Start(&SCSP->DSP);
 		}
@@ -1209,6 +1210,8 @@ static void SCSP_presave(void)
 	for (i = 0; i < 3; i++)
 		SCSP_timer_left[i] = SCSP_timer[i] ? timer_timeleft(SCSP_timer[i]) : TIME_NEVER;
 	for (i = 0; i < MAX_SCSP; i++)
+		SCSPs[i].DSP.Dirty = 1;	/* MPRO was loaded */
+	for (i = 0; i < MAX_SCSP; i++)
 		for (s = 0; s < 32; s++)
 		{
 			struct _SLOT *slot = &SCSPs[i].Slots[s];
@@ -1230,6 +1233,8 @@ static void SCSP_postload(void)
 			else
 				timer_adjust(SCSP_timer[i], TIME_NEVER, i, 0);
 		}
+	for (i = 0; i < MAX_SCSP; i++)
+		SCSPs[i].DSP.Dirty = 1;	/* MPRO was loaded */
 	for (i = 0; i < MAX_SCSP; i++)
 		for (s = 0; s < 32; s++)
 		{

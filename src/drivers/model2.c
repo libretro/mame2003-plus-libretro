@@ -37,6 +37,42 @@ data32_t *model2_bufferram;
 static data32_t *model2_backup1;
 data32_t *model2_textureram0;
 data32_t *model2_textureram1;
+UINT8 *model2_texdec0;
+UINT8 *model2_texdec1;
+
+/*
+	The texture sheets taken apart, one byte per texel, for the renderer
+	(fetch_bilinear_texel): a 32-bit word of texture RAM holds two 2x2
+	blocks of 4-bit texels. Its texels are at x = xbase + 0..3 and
+	y = ybase + 0..1 of the 2048x1024 sheet, the rows of the columns past
+	1024 being folded into the upper half of the RAM; within the word, bit 1
+	of x picks the block and the parity of x and y the texel. The byte array
+	is indexed y * 2048 + x and is rebuilt with every write.
+*/
+static void model2_tex_decode( UINT8 *dec, UINT32 index, UINT32 word )
+{
+	UINT32 r = ( index >> 8 ) & 0x3ff, xa = index & 0xff;
+	UINT32 xbase = ( r < 512 ) ? xa * 4 : 1024 + xa * 4;
+	UINT32 ybase = ( r < 512 ) ? r * 2 : r * 2 - 1024;
+	int j, k;
+	for( j = 0; j < 2; j++ )
+		for( k = 0; k < 4; k++ )
+		{
+			UINT32 x = xbase + k, y = ybase + j;
+			UINT32 shift = ( ( x & 2 ) << 3 ) | ( ( ~x & 1 ) << 2 ) | ( ( ~y & 1 ) << 3 );
+			dec[ y * 2048 + x ] = ( word >> shift ) & 0x0f;
+		}
+}
+
+static void model2_tex_decode_all( void )
+{
+	UINT32 i;
+	for( i = 0; i < 0x40000; i++ )
+	{
+		model2_tex_decode( model2_texdec0, i, model2_textureram0[ i ] );
+		model2_tex_decode( model2_texdec1, i, model2_textureram1[ i ] );
+	}
+}
 data16_t *model2_palram;
 data16_t *model2_colorxlat;
 UINT8 *model2_lumaram;
@@ -637,6 +673,7 @@ static WRITE32_HANDLER( tex0_w )
 		model2_textureram0[ offset >> 1 ] = ( model2_textureram0[ offset >> 1 ] & 0xffff0000 ) | ( data & 0xffff );
 	else
 		model2_textureram0[ offset >> 1 ] = ( model2_textureram0[ offset >> 1 ] & 0x0000ffff ) | ( ( data & 0xffff ) << 16 );
+	model2_tex_decode( model2_texdec0, offset >> 1, model2_textureram0[ offset >> 1 ] );
 }
 
 static WRITE32_HANDLER( tex1_w )
@@ -646,6 +683,7 @@ static WRITE32_HANDLER( tex1_w )
 		model2_textureram1[ offset >> 1 ] = ( model2_textureram1[ offset >> 1 ] & 0xffff0000 ) | ( data & 0xffff );
 	else
 		model2_textureram1[ offset >> 1 ] = ( model2_textureram1[ offset >> 1 ] & 0x0000ffff ) | ( ( data & 0xffff ) << 16 );
+	model2_tex_decode( model2_texdec1, offset >> 1, model2_textureram1[ offset >> 1 ] );
 }
 
 static READ32_HANDLER( tex0_r )
@@ -672,6 +710,7 @@ static WRITE32_HANDLER( tex2b_w )
 {
 	data32_t *ram = ( offset & 0x80000 ) ? model2_textureram1 : model2_textureram0;
 	COMBINE_DATA( &ram[ offset & 0x3ffff ] );
+	model2_tex_decode( ( offset & 0x80000 ) ? model2_texdec1 : model2_texdec0, offset & 0x3ffff, ram[ offset & 0x3ffff ] );
 }
 
 static READ32_HANDLER( luma2b_r )
@@ -1750,6 +1789,7 @@ static void model2_postload( void )
 {
 	int i;
 	model2_sound_postload();
+	model2_tex_decode_all();
 	m_palette_dirty = 1;
 	model2_palette_refresh();
 	for( i = 0; i < 4; i++ )
@@ -1779,6 +1819,8 @@ static DRIVER_INIT( model2a )
 	model2_backup1 = auto_malloc( 0x4000 );
 	model2_textureram0 = auto_malloc( 0x100000 );
 	model2_textureram1 = auto_malloc( 0x100000 );
+	model2_texdec0 = auto_malloc( 2048 * 1024 );
+	model2_texdec1 = auto_malloc( 2048 * 1024 );
 	model2_palram = auto_malloc( 0x4000 );
 	model2_colorxlat = auto_malloc( 0xc000 );
 	model2_lumaram = auto_malloc( 0x8000 );
@@ -1786,6 +1828,8 @@ static DRIVER_INIT( model2a )
 	memset( model2_ram2, 0, 0x40000 );
 	memset( model2_textureram0, 0, 0x100000 );
 	memset( model2_textureram1, 0, 0x100000 );
+	memset( model2_texdec0, 0, 2048 * 1024 );
+	memset( model2_texdec1, 0, 2048 * 1024 );
 	memset( model2_palram, 0, 0x4000 );
 	memset( model2_colorxlat, 0, 0xc000 );
 	memset( model2_lumaram, 0, 0x8000 );

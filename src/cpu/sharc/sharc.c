@@ -1188,7 +1188,8 @@ int sharc_execute(int cycles)
 			}
 		}
 
-		if (!m_core->write_stalled)
+		/* port: no call when channels 6 and 7 are idle (most instructions) */
+		if (!m_core->write_stalled && (m_core->dma_status & ((1 << 6) | (1 << 7))))
 		{
 			dma_stalled = dma_run_cycle(6);
 			dma_stalled |= dma_run_cycle(7);
