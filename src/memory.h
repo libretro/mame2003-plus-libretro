@@ -808,6 +808,7 @@ DECLARE_PORT_HANDLERS_32BIT_LE(32)
 int			memory_init(void);
 void		memory_shutdown(void);
 void		memory_set_context(int activecpu);
+void		memory_register_banks(void);
 void		memory_set_unmap_value(data32_t value);
 
 /* ----- dynamic bank handlers ----- */

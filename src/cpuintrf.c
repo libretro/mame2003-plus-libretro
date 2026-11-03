@@ -1286,6 +1286,15 @@ void *cpunum_get_context_ptr(int cpunum)
 	return (cpu_active_context[cpu[cpunum].family] == cpunum) ? NULL : cpu[cpunum].context;
 }
 
+/* the context buffer of a CPU, also from its init function (when the CPU
+   does not count in totalcpu yet), whether it is active or not */
+void *cpunum_get_context_buffer(int cpunum)
+{
+	if (cpunum < 0 || cpunum >= MAX_CPU)
+		return NULL;
+	return cpu[cpunum].context;
+}
+
 
 /*--------------------------
  	Get/set cycle table

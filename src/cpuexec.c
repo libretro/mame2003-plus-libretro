@@ -189,6 +189,9 @@ static UINT32 saved_cycles[MAX_CPU * 2];
 #define EXACT_PER_CPU	7
 static INT32 saved_exact[MAX_CPU * EXACT_PER_CPU];
 static INT32 saved_exact_globals[3];
+/* the triggers of cpu_spinuntil_time() and cpu_yielduntil_time(): numbered in
+   turn, the number is in the state (the CPU waits on it, a timer pulls it) */
+static INT32 spin_timetrig, yield_timetrig;
 static int vblank;
 static int current_frame;
 static int vblank_countdown;
@@ -363,6 +366,9 @@ int cpu_init(void)
 	state_save_register_UINT32("cpu", 0, "totalcycles", saved_cycles, cpu_gettotalcpu() * 2);
 	state_save_register_INT32("cpu", 0, "exact", saved_exact, cpu_gettotalcpu() * EXACT_PER_CPU);
 	state_save_register_INT32("cpu", 0, "exact globals", saved_exact_globals, 3);
+	spin_timetrig = yield_timetrig = 0;
+	state_save_register_INT32("cpu", 0, "spin timetrig", &spin_timetrig, 1);
+	state_save_register_INT32("cpu", 0, "yield timetrig", &yield_timetrig, 1);
 	state_save_register_func_presave(cpu_suspend_presave);
 	state_save_register_func_postload(cpu_suspend_postload);
 
@@ -1470,21 +1476,17 @@ void cpu_yield(void)
 
 void cpu_spinuntil_time(double duration)
 {
-	static int timetrig = 0;
-
-	cpu_spinuntil_trigger(TRIGGER_SUSPENDTIME + timetrig);
-	cpu_triggertime(duration, TRIGGER_SUSPENDTIME + timetrig);
-	timetrig = (timetrig + 1) & 255;
+	cpu_spinuntil_trigger(TRIGGER_SUSPENDTIME + spin_timetrig);
+	cpu_triggertime(duration, TRIGGER_SUSPENDTIME + spin_timetrig);
+	spin_timetrig = (spin_timetrig + 1) & 255;
 }
 
 
 void cpu_yielduntil_time(double duration)
 {
-	static int timetrig = 0;
-
-	cpu_yielduntil_trigger(TRIGGER_YIELDTIME + timetrig);
-	cpu_triggertime(duration, TRIGGER_YIELDTIME + timetrig);
-	timetrig = (timetrig + 1) & 255;
+	cpu_yielduntil_trigger(TRIGGER_YIELDTIME + yield_timetrig);
+	cpu_triggertime(duration, TRIGGER_YIELDTIME + yield_timetrig);
+	yield_timetrig = (yield_timetrig + 1) & 255;
 }
 
 

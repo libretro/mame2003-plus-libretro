@@ -85,6 +85,7 @@ struct jit_block
 	UINT8		len;				/* instructions */
 	UINT8		idle;				/* the SGL idle counting loop starts here (see jit_idle_skip) */
 	UINT8		spin;				/* a polling loop that only reads: see jit_spin_skip */
+	UINT16		spincost;			/* cycles of one iteration of that loop */
 	UINT16		op0;				/* first opcode, to retry an untranslatable block once it changes */
 };
 
@@ -1942,12 +1943,13 @@ static int jit_spin_block(const UINT16 *ops, UINT32 count, UINT32 pc)
 {
 	UINT32 i;
 	/* the loop: from the start to a BT or BF back to it; the rest of the
-	   block only runs once the loop is left */
+	   block only runs once the loop is left. Returns the instructions of
+	   the loop, 0 if the block does not start with one */
 	for (i = 0; i < count && i < JIT_SPIN_MAX; i++)
 	{
 		UINT16 op = ops[i];
 		if ((op & 0xfd00) == 0x8900)		/* BT or BF, no delay slot */
-			return i > 0 && pc + i * 2 + 4 + (INT8)(op & 0xff) * 2 == pc;
+			return (i > 0 && pc + i * 2 + 4 + (INT8)(op & 0xff) * 2 == pc) ? (int)i + 1 : 0;
 		if (!jit_spin_op(op))
 			return 0;
 	}
@@ -1971,7 +1973,9 @@ static void jit_spin_save(void)
 static void jit_spin_skip(const struct jit_block *block, int before)
 {
 	int cost = before - sh2_icount, k;
-	if (cost <= 0 || jit_spin_io || sh2.pc != block->pc || sh2.delay || sh2.test_irq
+	/* only one turn of the loop itself: a block chained after it may come
+	   back to the start with the same registers, having done anything */
+	if (cost != block->spincost || jit_spin_io || sh2.pc != block->pc || sh2.delay || sh2.test_irq
 	 || memcmp(jit_spin_regs.r, sh2.r, sizeof(jit_spin_regs.r)) || jit_spin_regs.sr != sh2.sr
 	 || jit_spin_regs.gbr != sh2.gbr || jit_spin_regs.mach != sh2.mach || jit_spin_regs.macl != sh2.macl
 	 || jit_spin_regs.pr != sh2.pr)
@@ -2000,6 +2004,7 @@ static void jit_compile(struct jit_block *block, UINT32 pc)
 	block->entry = NULL;
 	block->idle = 0;
 	block->spin = 0;
+	block->spincost = 0;
 	block->op0 = jit_fetch(pc);
 
 	/* code must sit in one fast RAM region, below the special areas */
@@ -2049,6 +2054,8 @@ static void jit_compile(struct jit_block *block, UINT32 pc)
 		ctx.pre[i + 1] = ctx.pre[i] + dec[i].acct;
 		cost += dec[i].cost;
 	}
+	/* the loop branch taken: 3 cycles */
+	block->spincost = block->spin ? ctx.pre[block->spin - 1] + 3 : 0;
 
 	C = sljit_create_compiler(NULL);
 	if (!C)

@@ -404,7 +404,17 @@ static void SCSP_StartSlot(struct _SLOT *slot)
 static void SCSP_StopSlot(struct _SLOT *slot,int keyoff)
 {
 	if(keyoff)
+	{
 		slot->EG.state=RELEASE;
+		/* a slot that already stopped (a one-shot sample past its end) no longer
+		   updates its envelope: its release is over at once. Left at the level
+		   it stopped at, the monitor (0x408) showed it as still sounding, the
+		   sound drivers took it for busy and, after a while, put every new note
+		   on the one slot left (the Cotton Boomerang boss music lost all but the
+		   drums, the Winter Heat voices cut each other from the first demo on) */
+		if(!slot->active)
+			slot->EG.volume=0;
+	}
 	else
 		slot->active=0;
 	slot->udata.data[0]&=~0x800;

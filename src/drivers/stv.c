@@ -156,6 +156,7 @@ int minit_boost,sinit_boost;
 
 
 static int scanline;
+static int scsp_last_line = 0;	/* the SCSP interrupt level last raised on the 68000 */
 
 
 /**************************************************************************************/
@@ -1863,23 +1864,70 @@ static void smpc_intback_continue(int param)
 	smpc_ram[0x63] = 0x00;
 }
 
-static void smpc_intback_resolve(int param)
+/*
+	The RTC: the local date and time of the host when the machine started,
+	moved on by the emulated time (not the host clock: a save state, the
+	run-ahead and the netplay peers must read the same time)
+*/
+static INT32 smpc_rtc_days;	/* days from 1970-01-01 */
+static INT32 smpc_rtc_secs;	/* seconds of that day */
+
+static INT32 smpc_days_from_civil(int y, int m, int d)
+{
+	int era, yoe, doy, doe;
+	y -= m <= 2;
+	era = (y >= 0 ? y : y - 399) / 400;
+	yoe = y - era * 400;
+	doy = (153 * (m + (m > 2 ? -3 : 9)) + 2) / 5 + d - 1;
+	doe = yoe * 365 + yoe / 4 - yoe / 100 + doy;
+	return era * 146097 + doe - 719468;
+}
+
+static void smpc_rtc_start(void)
 {
 	time_t ltime;
 	struct tm *today;
 	time(&ltime);
 	today = localtime(&ltime);
+	smpc_rtc_days = smpc_days_from_civil(today->tm_year + 1900, today->tm_mon + 1, today->tm_mday);
+	smpc_rtc_secs = today->tm_hour * 3600 + today->tm_min * 60 + today->tm_sec;
+}
 
+static void smpc_rtc_fill(void)
+{
+	double now = timer_get_time();
+	INT32 total = smpc_rtc_secs + (INT32)now;
+	INT32 days = smpc_rtc_days + total / 86400;
+	INT32 secs = total % 86400;
+	int era, doe, yoe, y, doy, mp, d, m;
+
+	/* civil from days (H. Hinnant) */
+	days += 719468;
+	era = (days >= 0 ? days : days - 146096) / 146097;
+	doe = days - era * 146097;
+	yoe = (doe - doe / 1460 + doe / 36524 - doe / 146096) / 365;
+	y = yoe + era * 400;
+	doy = doe - (365 * yoe + yoe / 4 - yoe / 100);
+	mp = (5 * doy + 2) / 153;
+	d = doy - (153 * mp + 2) / 5 + 1;
+	m = mp + (mp < 10 ? 3 : -9);
+	y += m <= 2;
+
+	smpc_ram[0x23] = DectoBCD(y / 100);
+	smpc_ram[0x25] = DectoBCD(y % 100);
+	smpc_ram[0x27] = (((days - 719468 + 4) % 7) << 4) | m;	/* 1970-01-01 was a Thursday */
+	smpc_ram[0x29] = DectoBCD(d);
+	smpc_ram[0x2b] = DectoBCD(secs / 3600);
+	smpc_ram[0x2d] = DectoBCD((secs / 60) % 60);
+	smpc_ram[0x2f] = DectoBCD(secs % 60);
+}
+
+static void smpc_intback_resolve(int param)
+{
 	if (smpc_intback_buf[0] != 0)
 	{
 		smpc_ram[0x21]=0x80;
-		smpc_ram[0x23] = DectoBCD((today->tm_year + 1900)/100);
-		smpc_ram[0x25] = DectoBCD((today->tm_year + 1900)%100);
-		smpc_ram[0x27] = (today->tm_wday << 4) | (today->tm_mon+1);
-		smpc_ram[0x29] = DectoBCD(today->tm_mday);
-		smpc_ram[0x2b] = DectoBCD(today->tm_hour);
-		smpc_ram[0x2d] = DectoBCD(today->tm_min);
-		smpc_ram[0x2f] = DectoBCD(today->tm_sec);
+		smpc_rtc_fill();
 		smpc_ram[0x31]=0x00;
 		smpc_ram[0x35]=0x00;
 		smpc_ram[0x37]=0x00;
@@ -3850,14 +3898,46 @@ static READ32_HANDLER( stv_cart_unmapped_r )
 	return 0xffffffff;
 }
 
+/* the state of the board around the CPUs: SMPC, SCU (its registers, the
+   interrupts, the DSP), the I/O chip and the sound CPU control */
+static void stv_state_save_register(void)
+{
+	state_save_register_UINT8 ("stv", 0, "smpc_ram", smpc_ram, 0x80);
+	state_save_register_UINT8 ("stv", 0, "smpc_sr", &smpc_sr, 1);
+	state_save_register_UINT8 ("stv", 0, "smpc_intback_stage", &smpc_intback_stage, 1);
+	state_save_register_UINT8 ("stv", 0, "smpc_intback_buf", smpc_intback_buf, 3);
+	state_save_register_UINT8 ("stv", 0, "smpc_pmode", &smpc_pmode, 1);
+	state_save_register_INT32 ("stv", 0, "smpc_rtc_days", &smpc_rtc_days, 1);
+	state_save_register_INT32 ("stv", 0, "smpc_rtc_secs", &smpc_rtc_secs, 1);
+	state_save_register_UINT8 ("stv", 0, "IOSEL1", &IOSEL1, 1);
+	state_save_register_UINT8 ("stv", 0, "IOSEL2", &IOSEL2, 1);
+	state_save_register_UINT8 ("stv", 0, "EXLE1", &EXLE1, 1);
+	state_save_register_UINT8 ("stv", 0, "EXLE2", &EXLE2, 1);
+	state_save_register_UINT8 ("stv", 0, "PDR1", &PDR1, 1);
+	state_save_register_UINT8 ("stv", 0, "PDR2", &PDR2, 1);
+	state_save_register_UINT32("stv", 0, "scu", stv_scu, 0x100 / 4);
+	state_save_register_UINT32("stv", 0, "scu_ist", &scu_ist, 1);
+	state_save_register_int   ("stv", 0, "scu_irq_level", &scu_irq_level);
+	state_save_register_int   ("stv", 0, "scu_irq_vector", &scu_irq_vector);
+	state_save_register_int   ("stv", 0, "scu_timer0_count", &scu_timer0_count);
+	state_save_register_int   ("stv", 0, "slave_irl", &slave_irl);
+	state_save_register_UINT8 ("stv", 0, "port_sel", &port_sel, 1);
+	state_save_register_UINT8 ("stv", 0, "mux_data", &mux_data, 1);
+	state_save_register_UINT8 ("stv", 0, "ioga_mode", &ioga_mode, 1);
+	state_save_register_UINT8 ("stv", 0, "ioga_portg", &ioga_portg, 1);
+	state_save_register_UINT16("stv", 0, "ioga_count", ioga_count, 2);
+	state_save_register_int   ("stv", 0, "hopper_power", &hopper_power);
+	state_save_register_int   ("stv", 0, "hopper_status", &hopper_status);
+	state_save_register_UINT8 ("stv", 0, "SCSP_reset", &SCSP_reset, 1);
+	state_save_register_UINT8 ("stv", 0, "en_68k", &en_68k, 1);
+	state_save_register_int   ("stv", 0, "scsp_last_line", &scsp_last_line);
+	scudsp_state_save_register();
+	stvcd_state_save_register();
+}
+
 DRIVER_INIT ( stv )
 {
 	unsigned char *ROM = memory_region(REGION_USER1);
-
-	time_t ltime;
-	struct tm *today;
-	time(&ltime);
-	today = localtime(&ltime);
 
 	cpu_setbank(1,&ROM[0x000000]);
 	stv_hopper = 0;
@@ -3879,6 +3959,8 @@ DRIVER_INIT ( stv )
 	cpu_setbank(3,&stv_workram_h[0x000000]);
 	cpu_setbank(4,&stv_workram_l[0x000000]);
 	cpu_setbank(5,&stv_backupram[0x000000]);
+
+	stv_state_save_register();
 
 	/* the SH-2 recompiler runs code from, and accesses directly, the BIOS */
 	/* and the work RAMs (the handlers a game installs there stay in use) */
@@ -3915,13 +3997,8 @@ DRIVER_INIT ( stv )
 	install_mem_write32_handler(1, 0x60ffc44, 0x60ffc47, w60ffc44_write );
 	install_mem_write32_handler(1, 0x60ffc48, 0x60ffc4b, w60ffc48_write );
 
-  	smpc_ram[0x23] = DectoBCD((today->tm_year + 1900)/100);
-    smpc_ram[0x25] = DectoBCD((today->tm_year + 1900)%100);
-    smpc_ram[0x27] = (today->tm_wday << 4) | (today->tm_mon+1);
-    smpc_ram[0x29] = DectoBCD(today->tm_mday);
-    smpc_ram[0x2b] = DectoBCD(today->tm_hour);
-    smpc_ram[0x2d] = DectoBCD(today->tm_min);
-    smpc_ram[0x2f] = DectoBCD(today->tm_sec);
+	smpc_rtc_start();
+	smpc_rtc_fill();
     smpc_ram[0x31] = 0x00; /*CTG1=0 CTG0=0 (correct??)*/
 /*  smpc_ram[0x33] = readinputport(7);*/
  	smpc_ram[0x5f] = 0x10;
@@ -4009,7 +4086,6 @@ static data16_t stv_opcode_read(offs_t pc)
 struct sh2_config sh2_conf_master = { 0, stv_opcode_read };
 struct sh2_config sh2_conf_slave  = { 1, stv_opcode_read };
 
-static int scsp_last_line = 0;
 
 /* the SCSP raises and drops each level on its own (a negative level drops it);
    0 drops the last raised level, as in current MAME */

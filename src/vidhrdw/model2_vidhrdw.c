@@ -3093,6 +3093,11 @@ VIDEO_START( model2 )
 	state_save_register_float( "model2video", 0, "texture_parameters", &m_geo->texture_parameters[ 0 ].diffuse, sizeof( m_geo->texture_parameters ) / ( sizeof( float ) ) );	/* all 32-bit fields */
 	state_save_register_UINT32( "model2video", 0, "polygon_ram0", m_geo->polygon_ram0, 0x8000 );
 	state_save_register_UINT32( "model2video", 0, "polygon_ram1", m_geo->polygon_ram1, 0x8000 );
+	/* the polygons of the last display list: their count is read by the games
+	   (model2_polygon_count_r); the list itself has been drawn when the frame
+	   ends, the next display list starts a new one */
+	state_save_register_UINT32( "model2video", 0, "poly_list_index", &m_raster->poly_list_index, 1 );
+	state_save_register_int( "model2video", 0, "render_done", &m_render_done );
 	return 0;
 }
 

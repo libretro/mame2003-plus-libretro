@@ -636,6 +636,7 @@ void cpunum_write_bytes(int cpunum, offs_t address, const UINT8 *data, UINT32 co
 /* return a pointer to the saved context of a given CPU, or NULL if the
    context is active (and contained within the CPU core */
 void *cpunum_get_context_ptr(int cpunum);
+void *cpunum_get_context_buffer(int cpunum);
 
 /* return a pointer to the active cycle count table for a given CPU */
 const void *cpunum_get_cycle_table(int cpunum, int which);

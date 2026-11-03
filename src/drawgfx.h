@@ -272,6 +272,7 @@ void mdrawgfxzoom( struct mame_bitmap *dest_bmp,const struct GfxElement *gfx,
 
 void drawgfx_toggle_crosshair(void);
 void draw_crosshair(int player_number, struct mame_bitmap *bitmap,int x,int y,const struct rectangle *clip);
+void crosshair_state_save_register(void);
 
 static INLINE void sect_rect(struct rectangle *dst, const struct rectangle *src)
 {
