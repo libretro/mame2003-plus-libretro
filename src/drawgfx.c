@@ -1,6 +1,7 @@
 #ifndef DECLARE
 
 #include "driver.h"
+#include "state.h"
 
 
 #ifdef MSB_FIRST
@@ -3516,11 +3517,20 @@ static INLINE void plotclip(struct mame_bitmap *bitmap,int x,int y,int pen,const
 		plot_pixel(bitmap,x,y,pen);
 }
 
+/* where each crosshair was and since which frame: in the save states, so a
+   crosshair hides at the same frame after a load or a run-ahead rewind */
+static INT32 inactive_xy [MAX_PLAYER_COUNT][3];
+
+void crosshair_state_save_register(void)
+{
+	memset(inactive_xy, 0, sizeof(inactive_xy));
+	state_save_register_INT32("crosshair", 0, "inactive", &inactive_xy[0][0], MAX_PLAYER_COUNT * 3);
+}
+
 void draw_crosshair(int player_number, struct mame_bitmap *bitmap,int x,int y,const struct rectangle *clip)
 {
 	unsigned long color,black,white;
 	int i;
-	static int inactive_xy [MAX_PLAYER_COUNT][3];
 
 	if (!options.crosshair_enable)
 	{

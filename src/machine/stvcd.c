@@ -12,6 +12,7 @@
 ***************************************************************************/
 
 #include "driver.h"
+#include "state.h"
 #include "machine/stvcd.h"
 #include <stdio.h>
 
@@ -1064,4 +1065,97 @@ void CD_com_update(UINT32 count){
 		CR1 |= CDB_STAT_PERI << 8; /* periodic response*/
 	}
 	log_cb(RETRO_LOG_DEBUG, LOGPRE "CD block update\n");
+}
+
+
+/*
+	The save state of the CD block: its registers and the state of the
+	commands. ST-V has no CD drive (Sports Fishing 2 needs one and isn't
+	dumped completely): the games only reach the registers, so the sector
+	buffer and the disc are left out. The info transfer pointer goes as
+	the buffer it points into.
+*/
+static INT32 cd_ss_info_buf;
+
+static void stvcd_presave(void)
+{
+	if (CD_info_ptr == CD_sat_toc) cd_ss_info_buf = 1;
+	else if (CD_info_ptr == CD_sat_subq) cd_ss_info_buf = 2;
+	else if (CD_info_ptr == CD_sat_subrw) cd_ss_info_buf = 3;
+	else if (CD_info_ptr == cdb_sat_file_info) cd_ss_info_buf = 4;
+	else cd_ss_info_buf = 0;
+}
+
+static void stvcd_postload(void)
+{
+	switch (cd_ss_info_buf)
+	{
+		case 1: CD_info_ptr = CD_sat_toc; break;
+		case 2: CD_info_ptr = CD_sat_subq; break;
+		case 3: CD_info_ptr = CD_sat_subrw; break;
+		case 4: CD_info_ptr = cdb_sat_file_info; break;
+		default: CD_info_ptr = NULL; break;
+	}
+}
+
+void stvcd_state_save_register(void)
+{
+	state_save_register_UINT8 ("stvcd", 0, "cr_first", &CD_cr_first, 1);
+	state_save_register_UINT8 ("stvcd", 0, "cr_writing", &CD_cr_writing, 1);
+	state_save_register_UINT16("stvcd", 0, "CR1", &CR1, 1);
+	state_save_register_UINT16("stvcd", 0, "CR2", &CR2, 1);
+	state_save_register_UINT16("stvcd", 0, "CR3", &CR3, 1);
+	state_save_register_UINT16("stvcd", 0, "CR4", &CR4, 1);
+	state_save_register_UINT16("stvcd", 0, "hirq", &CD_hirq, 1);
+	state_save_register_UINT16("stvcd", 0, "hirq_i", &CD_hirq_i, 1);
+	state_save_register_UINT16("stvcd", 0, "mask", &CD_mask, 1);
+	state_save_register_UINT8 ("stvcd", 0, "status", &CD_status, 1);
+	state_save_register_UINT32("stvcd", 0, "fad", &CD_fad, 1);
+	state_save_register_UINT8 ("stvcd", 0, "track", &CD_track, 1);
+	state_save_register_UINT8 ("stvcd", 0, "control", &CD_control, 1);
+	state_save_register_UINT8 ("stvcd", 0, "index", &CD_index, 1);
+	state_save_register_UINT32("stvcd", 0, "fn", &fn, 1);
+	state_save_register_INT32 ("stvcd", 0, "com", &CD_com, 1);
+	state_save_register_INT32 ("stvcd", 0, "com_play", &CD_com_play, 1);
+	state_save_register_UINT8 ("stvcd", 0, "stat", &CD_stat, 1);
+	state_save_register_UINT8 ("stvcd", 0, "flag", &CD_flag, 1);
+	state_save_register_UINT32("stvcd", 0, "last_part", &CD_last_part, 1);
+	state_save_register_UINT32("stvcd", 0, "play_fad", &CD_play_fad, 1);
+	state_save_register_UINT32("stvcd", 0, "play_range", &CD_play_range, 1);
+	state_save_register_UINT32("stvcd", 0, "seek_target", &CD_seek_target, 1);
+	state_save_register_UINT8 ("stvcd", 0, "scan_dir", &CD_scan_dir, 1);
+	state_save_register_UINT32("stvcd", 0, "search_pn", &CD_search_pn, 1);
+	state_save_register_UINT32("stvcd", 0, "search_sp", &CD_search_sp, 1);
+	state_save_register_UINT32("stvcd", 0, "search_fad", &CD_search_fad, 1);
+	state_save_register_UINT32("stvcd", 0, "file_scope_first", &CD_file_scope_first, 1);
+	state_save_register_UINT32("stvcd", 0, "file_scope_last", &CD_file_scope_last, 1);
+	state_save_register_UINT32("stvcd", 0, "data_pn", &CD_data_pn, 1);
+	state_save_register_UINT32("stvcd", 0, "data_sp", &CD_data_sp, 1);
+	state_save_register_UINT32("stvcd", 0, "data_sn", &CD_data_sn, 1);
+	state_save_register_UINT32("stvcd", 0, "data_count", &CD_data_count, 1);
+	state_save_register_UINT32("stvcd", 0, "data_delete", &CD_data_delete, 1);
+	state_save_register_UINT32("stvcd", 0, "data_size", &CD_data_size, 1);
+	state_save_register_INT32 ("stvcd", 0, "info_buf", &cd_ss_info_buf, 1);
+	state_save_register_UINT32("stvcd", 0, "info_count", &CD_info_count, 1);
+	state_save_register_UINT32("stvcd", 0, "info_size", &CD_info_size, 1);
+	state_save_register_UINT32("stvcd", 0, "trans_type", &CD_trans_type, 1);
+	state_save_register_UINT32("stvcd", 0, "actual_size", &CD_actual_size, 1);
+	state_save_register_UINT32("stvcd", 0, "free_space", &CD_free_space, 1);
+	state_save_register_UINT8 ("stvcd", 0, "filt_num", &CD_filt_num, 1);
+	state_save_register_UINT8 ("stvcd", 0, "mpeg_filt_num", &CD_mpeg_filt_num, 1);
+	state_save_register_UINT32("stvcd", 0, "cur_fad", &CD_cur_fad, 1);
+	state_save_register_UINT32("stvcd", 0, "cur_track", &CD_cur_track, 1);
+	state_save_register_UINT32("stvcd", 0, "cur_ctrl", &CD_cur_ctrl, 1);
+	state_save_register_UINT32("stvcd", 0, "cur_idx", &CD_cur_idx, 1);
+	state_save_register_UINT32("stvcd", 0, "cur_fid", &CD_cur_fid, 1);
+	state_save_register_UINT8 ("stvcd", 0, "init_flag", &CD_init_flag, 1);
+	state_save_register_UINT32("stvcd", 0, "repeat", &CD_repeat, 1);
+	state_save_register_UINT32("stvcd", 0, "standby", &CD_standby, 1);
+	state_save_register_UINT32("stvcd", 0, "repeat_max", &CD_repeat_max, 1);
+	state_save_register_UINT8 ("stvcd", 0, "ecc", &CD_ecc, 1);
+	state_save_register_UINT32("stvcd", 0, "drive_speed", &CD_drive_speed, 1);
+	state_save_register_UINT32("stvcd", 0, "get_sect_size", &cdb_get_sect_size, 1);
+	state_save_register_UINT32("stvcd", 0, "put_sect_size", &cdb_put_sect_size, 1);
+	state_save_register_func_presave(stvcd_presave);
+	state_save_register_func_postload(stvcd_postload);
 }

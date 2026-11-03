@@ -259,7 +259,8 @@ int memory_init(void)
 	if (!populate_ports())
 		return 0;
 
-	register_banks();
+	/* the banks are registered for the save states by memory_register_banks(),
+	   after the driver init: a driver often points them at its own RAM there */
 
 #ifdef MEM_DUMP
 	/* dump the final memory configuration */
@@ -3136,3 +3137,11 @@ static void verify_masks(void)
 	log_cb(RETRO_LOG_INFO, LOGPRE "mame-memory: Busted entries that are static = %d\n", static_count);
 }
 #endif
+
+
+/* the save state entries of the memory banks, once the driver init has
+   pointed them where it wants them (see memory_init) */
+void memory_register_banks(void)
+{
+	register_banks();
+}

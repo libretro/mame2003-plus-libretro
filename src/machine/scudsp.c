@@ -1,4 +1,5 @@
 #include "driver.h"
+#include "state.h"
 #include "machine/scudsp.h"
 #include "cpu/sh2/sh2.h"
 
@@ -268,6 +269,55 @@ static UINT32 dsp_get_mem_source_dma( UINT32 memcode, UINT32 counter )
 			return dsp_reg.md3[ (dsp_reg.ct3 + counter) & 0x3f ];
 	}
 	return 0;
+}
+
+/* the save state: the 48-bit MUL and ALU go as two 32-bit halves */
+static UINT32 dsp_ss_mul[2], dsp_ss_alu[2];
+
+static void scudsp_presave(void)
+{
+	dsp_ss_mul[0] = (UINT32)(dsp_reg.mul >> 32);
+	dsp_ss_mul[1] = (UINT32)dsp_reg.mul;
+	dsp_ss_alu[0] = (UINT32)(dsp_reg.alu >> 32);
+	dsp_ss_alu[1] = (UINT32)dsp_reg.alu;
+}
+
+static void scudsp_postload(void)
+{
+	dsp_reg.mul = ((UINT64)dsp_ss_mul[0] << 32) | dsp_ss_mul[1];
+	dsp_reg.alu = ((UINT64)dsp_ss_alu[0] << 32) | dsp_ss_alu[1];
+}
+
+void scudsp_state_save_register(void)
+{
+	state_save_register_UINT8 ("scudsp", 0, "pc", &dsp_reg.pc, 1);
+	state_save_register_UINT8 ("scudsp", 0, "delay", &dsp_reg.delay, 1);
+	state_save_register_UINT8 ("scudsp", 0, "top", &dsp_reg.top, 1);
+	state_save_register_UINT16("scudsp", 0, "lop", &dsp_reg.lop, 1);
+	state_save_register_UINT8 ("scudsp", 0, "ct0", &dsp_reg.ct0, 1);
+	state_save_register_UINT8 ("scudsp", 0, "ct1", &dsp_reg.ct1, 1);
+	state_save_register_UINT8 ("scudsp", 0, "ct2", &dsp_reg.ct2, 1);
+	state_save_register_UINT8 ("scudsp", 0, "ct3", &dsp_reg.ct3, 1);
+	state_save_register_UINT32("scudsp", 0, "md0", dsp_reg.md0, 0x40);
+	state_save_register_UINT32("scudsp", 0, "md1", dsp_reg.md1, 0x40);
+	state_save_register_UINT32("scudsp", 0, "md2", dsp_reg.md2, 0x40);
+	state_save_register_UINT32("scudsp", 0, "md3", dsp_reg.md3, 0x40);
+	state_save_register_UINT8 ("scudsp", 0, "ra", &dsp_reg.ra, 1);
+	state_save_register_UINT32("scudsp", 0, "rx", &dsp_reg.rx, 1);
+	state_save_register_UINT32("scudsp", 0, "mul", dsp_ss_mul, 2);
+	state_save_register_UINT32("scudsp", 0, "ry", &dsp_reg.ry, 1);
+	state_save_register_UINT32("scudsp", 0, "alu", dsp_ss_alu, 2);
+	state_save_register_UINT16("scudsp", 0, "ph", &dsp_reg.ph, 1);
+	state_save_register_UINT32("scudsp", 0, "pl", &dsp_reg.pl, 1);
+	state_save_register_UINT16("scudsp", 0, "ach", &dsp_reg.ach, 1);
+	state_save_register_UINT32("scudsp", 0, "acl", &dsp_reg.acl, 1);
+	state_save_register_UINT32("scudsp", 0, "ra0", &dsp_reg.ra0, 1);
+	state_save_register_UINT32("scudsp", 0, "wa0", &dsp_reg.wa0, 1);
+	state_save_register_UINT32("scudsp", 0, "internal_prg", dsp_reg.internal_prg, 0x100);
+	state_save_register_UINT32("scudsp", 0, "opcode", &opcode, 1);
+	state_save_register_UINT8 ("scudsp", 0, "update_mul", &update_mul, 1);
+	state_save_register_func_presave(scudsp_presave);
+	state_save_register_func_postload(scudsp_postload);
 }
 
 void dsp_prg_ctrl(UINT32 data)

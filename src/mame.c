@@ -370,6 +370,10 @@ static int init_machine(void)
 	if (gamedrv->driver_init)
 		(*gamedrv->driver_init)();
 
+	/* the memory banks in the save states, where the driver init left them */
+	memory_register_banks();
+	crosshair_state_save_register();
+
 	return 0;
 
 cant_init_memory:

@@ -3154,7 +3154,7 @@ void sh2_init(void)
 	int cpu = cpu_getactivecpu();
 
 	/* this CPU's buffer from now on (the core allocated it before the init) */
-	sh2p = (SH2 *)cpunum_get_context_ptr(cpu);
+	sh2p = (SH2 *)cpunum_get_context_buffer(cpu);
 	if (!sh2p)
 		sh2p = &sh2_boot;
 	memset(sh2p, 0, sizeof(SH2));
@@ -3199,5 +3199,29 @@ void sh2_init(void)
 	state_save_register_UINT32("sh2", cpu, "R13", &sh2.r[13], 1);
 	state_save_register_UINT32("sh2", cpu, "R14", &sh2.r[14], 1);
 	state_save_register_UINT32("sh2", cpu, "EA", &sh2.ea, 1);
+	/* the rest of the CPU: the delay slot, the divider, the interrupts and
+	   the on-chip modules (their registers, the free running timer, the DMA) */
+	state_save_register_UINT32("sh2", cpu, "PPC", &sh2.ppc, 1);
+	state_save_register_UINT32("sh2", cpu, "delay", &sh2.delay, 1);
+	state_save_register_UINT32("sh2", cpu, "cpu_off", &sh2.cpu_off, 1);
+	state_save_register_UINT32("sh2", cpu, "dvsr", &sh2.dvsr, 1);
+	state_save_register_UINT32("sh2", cpu, "dvdnth", &sh2.dvdnth, 1);
+	state_save_register_UINT32("sh2", cpu, "dvdntl", &sh2.dvdntl, 1);
+	state_save_register_UINT32("sh2", cpu, "dvcr", &sh2.dvcr, 1);
+	state_save_register_UINT32("sh2", cpu, "pending_irq", &sh2.pending_irq, 1);
+	state_save_register_UINT32("sh2", cpu, "test_irq", &sh2.test_irq, 1);
+	state_save_register_INT32("sh2", cpu, "irq_queue", (INT32 *)sh2.irq_queue, 16 * 2);
+	state_save_register_INT8("sh2", cpu, "irq_line_state", sh2.irq_line_state, 16);
+	state_save_register_INT8("sh2", cpu, "nmi_line_state", &sh2.nmi_line_state, 1);
+	state_save_register_UINT32("sh2", cpu, "m", sh2.m, 0x200 / 4);
+	state_save_register_UINT16("sh2", cpu, "frc", &sh2.frc, 1);
+	state_save_register_UINT16("sh2", cpu, "ocra", &sh2.ocra, 1);
+	state_save_register_UINT16("sh2", cpu, "ocrb", &sh2.ocrb, 1);
+	state_save_register_UINT16("sh2", cpu, "icr", &sh2.icr, 1);
+	state_save_register_UINT32("sh2", cpu, "frc_base", &sh2.frc_base, 1);
+	state_save_register_int("sh2", cpu, "frt_input", &sh2.frt_input);
+	state_save_register_int("sh2", cpu, "internal_irq_level", &sh2.internal_irq_level);
+	state_save_register_int("sh2", cpu, "internal_irq_vector", &sh2.internal_irq_vector);
+	state_save_register_INT32("sh2", cpu, "dma_timer_active", (INT32 *)sh2.dma_timer_active, 2);
 	return;
 }

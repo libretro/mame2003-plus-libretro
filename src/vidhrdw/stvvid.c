@@ -2909,6 +2909,16 @@ static int vdp1_start(void)
 	state_save_register_UINT16("stv_vdp1", 0, "lopr", &vdp1.lopr, 1);
 	state_save_register_UINT16("stv_vdp1", 0, "copr", &vdp1.copr, 1);
 	state_save_register_UINT16("stv_vdp1", 0, "ewdr", &vdp1.ewdr, 1);
+	/* the clipping set by the command lists: a list without clipping
+	   commands keeps the last one */
+	state_save_register_int("stv_vdp1", 0, "system_clip_min_x", &vdp1.system_cliprect.min_x);
+	state_save_register_int("stv_vdp1", 0, "system_clip_max_x", &vdp1.system_cliprect.max_x);
+	state_save_register_int("stv_vdp1", 0, "system_clip_min_y", &vdp1.system_cliprect.min_y);
+	state_save_register_int("stv_vdp1", 0, "system_clip_max_y", &vdp1.system_cliprect.max_y);
+	state_save_register_int("stv_vdp1", 0, "user_clip_min_x", &vdp1.user_cliprect.min_x);
+	state_save_register_int("stv_vdp1", 0, "user_clip_max_x", &vdp1.user_cliprect.max_x);
+	state_save_register_int("stv_vdp1", 0, "user_clip_min_y", &vdp1.user_cliprect.min_y);
+	state_save_register_int("stv_vdp1", 0, "user_clip_max_y", &vdp1.user_cliprect.max_y);
 	state_save_register_func_postload(vdp1_state_save_postload);
 	return 0;
 }
@@ -10695,7 +10705,10 @@ static void crtc_regs_w(int offset, UINT16 data, UINT16 mem_mask)
 
 static void crtc_state_save_postload(void)
 {
+	/* the resolution again, not a resolution change: the field is the saved one */
+	int odd_bit = crtc.odd_bit;
 	crtc_reconfigure();
+	crtc.odd_bit = odd_bit;
 }
 
 static void crtc_start(void)
@@ -10727,6 +10740,9 @@ static void crtc_start(void)
 	state_save_register_UINT16("stv_crtc", 0, "hcnt", &crtc.hcounter_latch, 1);
 	state_save_register_UINT16("stv_crtc", 0, "vcnt", &crtc.vcounter_latch, 1);
 	state_save_register_int("stv_crtc", 0, "vramsz", &crtc.vramsz);
+	/* the current line and when it started: the H and V counters */
+	state_save_register_int("stv_crtc", 0, "line", &crtc_line);
+	state_save_register_double("stv_crtc", 0, "line_time", &crtc_line_time, 1);
 	state_save_register_func_postload(crtc_state_save_postload);
 }
 
