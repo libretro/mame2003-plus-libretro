@@ -231,7 +231,7 @@ static struct GfxLayout sprite_layout =
 	16*16
 };
 
-static struct GfxDecode gfxdecodeinfo[] =
+static struct GfxDecodeInfo gfxdecodeinfo[] =
 {
 	{ REGION_GFX1, 0, &tile_layout, 0, 16 },
 	{ REGION_GFX2, 0, &sprite_layout, 0, 16 },
