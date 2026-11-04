@@ -3621,7 +3621,7 @@ static DRIVER_INIT ( radr )
 	system32_use_default_eeprom = EEPROM_RADR;
 	install_io_analog();
 
-	opaquey_hack = true;
+	//opaquey_hack = true;
 }
 
 static WRITE16_HANDLER( f1en_comms_echo_w )
@@ -3692,7 +3692,7 @@ static DRIVER_INIT( darkedge )
 	install_mem_write16_handler(0, 0xa00000, 0xa7ffff, darkedge_protection_w);
 	system32_prot_vblank = darkedge_fd1149_vblank;
 
-	opaquey_hack = true;
+	//opaquey_hack = true;
 }
 
 static DRIVER_INIT( jleague )
@@ -3709,8 +3709,8 @@ static DRIVER_INIT( dbzvrvs )
 static DRIVER_INIT( titlef )
 {
 	install_port_write_handler(1,  0xb0, 0xbf, scross_bank_w);
-	titlef_kludge = true;
-	opaquey_hack = true;
+	//titlef_kludge = true;
+	//opaquey_hack = true;
 }
 
 static DRIVER_INIT( scross )
