@@ -151,6 +151,8 @@ Notes:
 #include "cpu/i8039/i8039.h"
 #include "system16.h"
 #include "machine/fd1089.h"
+#include "machine/fd1094.h"
+#include "state.h"
 #include "ost_samples.h"
 extern void mc8123_decrypt_0066(void);
 
@@ -3060,6 +3062,9 @@ ROM_START( goldnaxj )
 	ROM_LOAD16_BYTE( "epr12521.a8", 0x80000, 0x20000, CRC(5001d713) SHA1(68cf3f48d6e440e5b800503a211adda02107d956) )
 	ROM_LOAD16_BYTE( "epr12519.a6", 0x80001, 0x20000, CRC(4438ca8e) SHA1(0af53d64f06abf41f4c46540d28d5f008a4835a3) )
 
+	ROM_REGION( 0x2000, REGION_USER2, 0 ) /* FD1094 decryption key */
+	ROM_LOAD( "317-0121.key", 0x0000, 0x2000, CRC(72afed01) SHA1(3967390fde63fa5961e71ab49b6e71c4be2ac96f) )
+
 	ROM_REGION( 0x60000, REGION_GFX1, ROMREGION_DISPOSE ) /* tiles */
 	ROM_LOAD( "epr12385", 0x00000, 0x20000, CRC(b8a4e7e0) SHA1(9b36f50209d45a835ded53eb045f63c649b02fc9) )
 	ROM_LOAD( "epr12386", 0x20000, 0x20000, CRC(25d7d779) SHA1(2de14a76a5176d5abc7e7f7f723146c620927610) )
@@ -3174,7 +3179,7 @@ static MEMORY_WRITE16_START( goldnaxe_writemem )
 	{ 0x1f0000, 0x1f0003, SYS16_MWA16_EXTRAM, &sys16_extraram },
 	{ 0x200000, 0x200fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
 	{ 0xc40000, 0xc40001, sys16_coinctrl_w },
-	{ 0xc43000, 0xc43001, MWA16_NOP }, /* ? */
+	{ 0xc43000, 0xc43fff, MWA16_NOP }, /* ? */
 /*	{ 0xfe0006, 0xfe0007, MWA16_NOP }, I think this is the real sound out */
 	{ 0xffec1c, 0xffec1d, goldnaxe_prot_w },/* how does this really work? */
 	{ 0xffecfc, 0xffecfd, ga_sound_command_w },/* probably just a buffer */
@@ -3289,6 +3294,9 @@ ROM_START( goldnaxb )
 	ROM_LOAD16_BYTE( "epr12389.a2", 0x00000, 0x40000, CRC(35d5fa77) SHA1(b16b312eb1c91c412fee61002599812e30e321ee) )
 	ROM_LOAD16_BYTE( "epr12388.a1", 0x00001, 0x40000, CRC(72952a93) SHA1(b31888429ad81388a96333dc0b2c7e2223134834) )
 
+	ROM_REGION( 0x2000, REGION_USER2, 0 ) /* FD1094 decryption key */
+	ROM_LOAD( "317-0110.key", 0x0000, 0x2000, CRC(cd517dc6) SHA1(db95adac8c089758832897854a9cb4d611974dee) )
+
 	ROM_REGION( 0x60000, REGION_GFX1, ROMREGION_DISPOSE ) /* tiles */
 	ROM_LOAD( "epr12385", 0x00000, 0x20000, CRC(b8a4e7e0) SHA1(9b36f50209d45a835ded53eb045f63c649b02fc9) )
 	ROM_LOAD( "epr12386", 0x20000, 0x20000, CRC(25d7d779) SHA1(2de14a76a5176d5abc7e7f7f723146c620927610) )
@@ -3312,6 +3320,9 @@ ROM_START( goldnaxc )
 /* Custom 68000 ver 317-0122 */
 	ROM_LOAD16_BYTE( "epr12543.a2", 0x00000, 0x40000, CRC(b0df9ca4) SHA1(240f3c2998f969569d992f796e006f5ea4434e55) )
 	ROM_LOAD16_BYTE( "epr12542.a1", 0x00001, 0x40000, CRC(b7994d3c) SHA1(87570f23826922fca465c69df6b892c59f14e103) )
+
+	ROM_REGION( 0x2000, REGION_USER2, 0 ) /* FD1094 decryption key */
+	ROM_LOAD( "317-0122.key", 0x0000, 0x2000, CRC(f123c2fb) SHA1(83463a6918afde0a6f7d919e00127ffdc563efd1) )
 
 	ROM_REGION( 0x60000, REGION_GFX1, ROMREGION_DISPOSE ) /* tiles */
 	ROM_LOAD( "epr12385", 0x00000, 0x20000, CRC(b8a4e7e0) SHA1(9b36f50209d45a835ded53eb045f63c649b02fc9) )
@@ -3441,6 +3452,163 @@ static MACHINE_DRIVER_START( goldnaxa )
 	MDRV_CPU_MEMORY(goldnaxa_readmem,goldnaxa_writemem)
 
 	MDRV_MACHINE_INIT(goldnaxa)
+MACHINE_DRIVER_END
+
+/*
+	The FD1094 sets of the 171-5797 ROM board (goldnaxb, goldnaxc): no 8751,
+	the program reads the I/O and sends the sound commands itself, through
+	the 315-5195 memory mapper. Same memory map as goldnaxa, without the
+	handlers that stand in for the 8751 in the work RAM.
+	Every frame the program writes the mapper regions again from a table of
+	8 (0x36f6 in goldnaxb), which only differ in the base of the sprite RAM:
+	0x200000 to 0x900000 in turn, and the sprite list goes to the new base.
+	Writes that hit no device go to the mapper: register 3 is the sound
+	command, 0x19 the base of the sprite RAM (region 4).
+*/
+static UINT8 ga_mapper_regs[0x20];
+
+static void ga_mapper_w( offs_t offset, data16_t data, data16_t mem_mask )
+{
+	int reg = offset & 0x1f;
+	if( !ACCESSING_LSB )
+		return;
+	ga_mapper_regs[reg] = data & 0xff;
+	if( reg == 3 ){
+		soundlatch_w( 0, data & 0xff );
+		cpu_set_irq_line( 1, 0, HOLD_LINE );
+	}
+}
+
+static WRITE16_HANDLER( ga_fd1094_mapper_w )
+{
+	ga_mapper_w( offset, data, mem_mask );
+}
+
+/* the sprite RAM (2KB, mirrored in its 64KB region) where the mapper puts it */
+static int ga_sprite_window( offs_t address )
+{
+	return ((address >> 16) & 0xff) == ga_mapper_regs[0x19];
+}
+
+static READ16_HANDLER( ga_fd1094_sprite_r )
+{
+	offs_t address = 0x200000 + offset * 2;
+	if( ga_sprite_window( address ) )
+		return sys16_spriteram[(address & 0x7ff) / 2];
+	return 0xffff;
+}
+
+static WRITE16_HANDLER( ga_fd1094_sprite_w )
+{
+	offs_t address = 0x200000 + offset * 2;
+	if( ga_sprite_window( address ) )
+		COMBINE_DATA( &sys16_spriteram[(address & 0x7ff) / 2] );
+	else
+		ga_mapper_w( offset, data, mem_mask );
+}
+
+static WRITE16_HANDLER( ga_fd1094_sprite2_w )
+{
+	ga_fd1094_sprite_w( offset + 0x1000 / 2, data, mem_mask );
+}
+
+static MEMORY_READ16_START( goldnaxa_fd1094_readmem )
+	{ 0x000000, 0x07ffff, MRA16_ROM },
+	{ 0x100000, 0x10ffff, SYS16_MRA16_TILERAM },
+	{ 0x110000, 0x110fff, SYS16_MRA16_TEXTRAM },
+	{ 0x140000, 0x140fff, SYS16_MRA16_PALETTERAM },
+	{ 0x1e0008, 0x1e0009, ga_hardware_collision_r },
+	{ 0x1f0000, 0x1f0007, ga_hardware_multiplier_r },
+	{ 0x1f1008, 0x1f1009, ga_hardware_collision_r },
+	{ 0x1f2000, 0x1f2003, SYS16_MRA16_EXTRAM },
+	{ 0x200000, 0x9fffff, ga_fd1094_sprite_r },
+	{ 0xc41002, 0xc41003, input_port_0_word_r }, /* player1 */
+	{ 0xc41006, 0xc41007, input_port_1_word_r }, /* player2 */
+	{ 0xc41000, 0xc41001, input_port_2_word_r }, /* service */
+	{ 0xc42002, 0xc42003, input_port_3_word_r }, /* dip1 */
+	{ 0xc42000, 0xc42001, input_port_4_word_r }, /* dip2 */
+	{ 0xffc000, 0xffffff, SYS16_MRA16_WORKINGRAM },
+MEMORY_END
+
+static MEMORY_WRITE16_START( goldnaxa_fd1094_writemem )
+	{ 0x000000, 0x07ffff, MWA16_ROM },
+	{ 0x100000, 0x10ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
+	{ 0x110000, 0x110fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
+	{ 0x140000, 0x140fff, SYS16_MWA16_PALETTERAM, &paletteram16 },
+	{ 0x1e0000, 0x1e0009, ga_hardware_collision_w },
+	{ 0x1f0000, 0x1f0003, ga_hardware_multiplier_w },
+	{ 0x1f1000, 0x1f1009, ga_hardware_collision_w },
+	{ 0x1f2000, 0x1f2003, SYS16_MWA16_EXTRAM, &sys16_extraram },
+	{ 0x200000, 0x200fff, ga_fd1094_sprite_w, &sys16_spriteram },
+	{ 0x201000, 0x9fffff, ga_fd1094_sprite2_w },
+	{ 0xc40000, 0xc40001, sys16_coinctrl_w },
+	{ 0xc43000, 0xc43fff, MWA16_NOP },
+	{ 0xfe0000, 0xfeffff, ga_fd1094_mapper_w },
+	{ 0xffc000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
+MEMORY_END
+
+static MACHINE_INIT( goldnaxa_fd1094 ){
+	static int bank[16] = {
+		0,1,4,5,
+		8,9,0,0,
+		2,3,6,7,
+		10,11,0,0
+	};
+	sys16_obj_bank = bank;
+	/* the tile banks: the program keeps them in the work RAM, as goldnaxa */
+	sys16_update_proc = goldnaxe_update_proc;
+	memset(ga_mapper_regs, 0, sizeof(ga_mapper_regs));
+	ga_mapper_regs[0x19] = 0x20;
+	fd1094_machine_init();
+}
+
+static DRIVER_INIT( goldnaxa_fd1094 ){
+	fd1094_driver_init(0, REGION_USER2);
+	state_save_register_UINT8("goldnaxa_fd1094", 0, "mapper", ga_mapper_regs, 0x20);
+}
+
+static MACHINE_DRIVER_START( goldnaxa_fd1094 )
+	MDRV_IMPORT_FROM(goldnaxa)
+	MDRV_CPU_MODIFY("main")
+	MDRV_CPU_MEMORY(goldnaxa_fd1094_readmem,goldnaxa_fd1094_writemem)
+	MDRV_MACHINE_INIT(goldnaxa_fd1094)
+MACHINE_DRIVER_END
+
+/* goldnaxj: the FD1094 set of the 171-5704 ROM board, the memory map of goldnaxe */
+static MEMORY_READ16_START( goldnaxe_fd1094_readmem )
+	{ 0x000000, 0x0bffff, MRA16_ROM },
+	{ 0x100000, 0x10ffff, SYS16_MRA16_TILERAM },
+	{ 0x110000, 0x110fff, SYS16_MRA16_TEXTRAM },
+	{ 0x140000, 0x140fff, SYS16_MRA16_PALETTERAM },
+	{ 0x1f0000, 0x1f0003, SYS16_MRA16_EXTRAM },
+	{ 0x200000, 0x9fffff, ga_fd1094_sprite_r },
+	{ 0xc41002, 0xc41003, input_port_0_word_r }, /* player1 */
+	{ 0xc41006, 0xc41007, input_port_1_word_r }, /* player2 */
+	{ 0xc41000, 0xc41001, input_port_2_word_r }, /* service */
+	{ 0xc42002, 0xc42003, input_port_3_word_r }, /* dip1 */
+	{ 0xc42000, 0xc42001, input_port_4_word_r }, /* dip2 */
+	{ 0xffc000, 0xffffff, SYS16_MRA16_WORKINGRAM },
+MEMORY_END
+
+static MEMORY_WRITE16_START( goldnaxe_fd1094_writemem )
+	{ 0x000000, 0x0bffff, MWA16_ROM },
+	{ 0x100000, 0x10ffff, SYS16_MWA16_TILERAM, &sys16_tileram },
+	{ 0x110000, 0x110fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
+	{ 0x140000, 0x140fff, SYS16_MWA16_PALETTERAM, &paletteram16 },
+	{ 0x1f0000, 0x1f0003, SYS16_MWA16_EXTRAM, &sys16_extraram },
+	{ 0x200000, 0x200fff, ga_fd1094_sprite_w, &sys16_spriteram },
+	{ 0x201000, 0x9fffff, ga_fd1094_sprite2_w },
+	{ 0xc40000, 0xc40001, sys16_coinctrl_w },
+	{ 0xc43000, 0xc43fff, MWA16_NOP },
+	{ 0xfe0000, 0xfeffff, ga_fd1094_mapper_w },
+	{ 0xffc000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
+MEMORY_END
+
+static MACHINE_DRIVER_START( goldnaxe_fd1094 )
+	MDRV_IMPORT_FROM(goldnaxe)
+	MDRV_CPU_MODIFY("main")
+	MDRV_CPU_MEMORY(goldnaxe_fd1094_readmem,goldnaxe_fd1094_writemem)
+	MDRV_MACHINE_INIT(goldnaxa_fd1094)
 MACHINE_DRIVER_END
 
 /***************************************************************************/
@@ -5124,7 +5292,7 @@ static MEMORY_WRITE16_START( shinobi_writemem )
 	{ 0x440000, 0x440fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
 	{ 0x840000, 0x840fff, SYS16_MWA16_PALETTERAM, &paletteram16 },
 	{ 0xc40000, 0xc40001, sys16_coinctrl_w },
-	{ 0xc43000, 0xc43001, MWA16_NOP },
+	{ 0xc43000, 0xc43fff, MWA16_NOP },
 	{ 0xfe0006, 0xfe0007, sound_command_w },
 	{ 0xffc000, 0xffffff, SYS16_MWA16_WORKINGRAM, &sys16_workingram },
 MEMORY_END
@@ -6906,11 +7074,11 @@ GAME( 1989, fpointbl,  fpoint,   fpointbl, fpoint,   fpointbl, ROT0,   "bootleg"
 GAME( 1989, fpointbj,  fpoint,   fpointbl, fpointbj, fpointbl, ROT0,   "bootleg", "Flash Point (Japan, bootleg)" )
 
 GAME( 1989, goldnaxe,  0,        goldnaxe, goldnaxe, 0,        ROT0,   "Sega",    "Golden Axe (Version 1)" )
-GAMEX(1989, goldnaxj,  goldnaxe, goldnaxe, goldnaxe, 0,        ROT0,   "Sega",    "Golden Axe (Version 1, Japan)", GAME_NOT_WORKING )
+GAME( 1989, goldnaxj,  goldnaxe, goldnaxe_fd1094, goldnaxe, goldnaxa_fd1094, ROT0, "Sega", "Golden Axe (set 4, Japan) (FD1094 317-0121)" )
 GAMEX(1989, goldnabl,  goldnaxe, goldnaxe, goldnaxe, goldnabl, ROT0,   "bootleg", "Golden Axe (bootleg)", GAME_NOT_WORKING )
 GAME( 1989, goldnaxa,  goldnaxe, goldnaxa, goldnaxe, 0,        ROT0,   "Sega",    "Golden Axe (set 6, US) (8751 317-123A)" )
-GAMEX(1989, goldnaxb,  goldnaxe, goldnaxa, goldnaxe, 0,        ROT0,   "Sega",    "Golden Axe (Version 2 317-0110)", GAME_NOT_WORKING )
-GAMEX(1989, goldnaxc,  goldnaxe, goldnaxa, goldnaxe, 0,        ROT0,   "Sega",    "Golden Axe (Version 2 317-0122)", GAME_NOT_WORKING )
+GAME( 1989, goldnaxb,  goldnaxe, goldnaxa_fd1094, goldnaxe, goldnaxa_fd1094, ROT0, "Sega", "Golden Axe (set 1, World) (FD1094 317-0110)" )
+GAME( 1989, goldnaxc,  goldnaxe, goldnaxa_fd1094, goldnaxe, goldnaxa_fd1094, ROT0, "Sega", "Golden Axe (set 5, US) (FD1094 317-0122)" )
 GAME( 1987, hwchamp,   0,        hwchamp,  hwchamp,  0,        ROT0,   "Sega",    "Heavyweight Champ" )
 GAMEX(19??, mvp,       0,        s16dummy, s16dummy, 0,        ROT0,   "Sega",    "MVP", GAME_NOT_WORKING )
 GAMEX(1988, passsht,   0,        passsht,  passsht,  0,        ROT270, "Sega",    "Passing Shot (2 Players)", GAME_NOT_WORKING )
