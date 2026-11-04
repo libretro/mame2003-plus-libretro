@@ -149,18 +149,8 @@ static NVRAM_HANDLER( akkaarrh )
 		memset(earom, 0xff, sizeof(earom));
 }
 
-static MACHINE_INIT( akkaarrh )
-{
-//	state_save_register_global(video_mirror);
-//	state_save_register_global_array(earom);
-//	state_save_register_global(earom_address);
-//	state_save_register_global(earom_data);
-//	state_save_register_global(earom_control);
-	return 0;
-}
-
 static MEMORY_READ_START( akkaarrh_readmem )
-    { 0x0000, 0x07ff, MRA_RAM },
+  { 0x0000, 0x07ff, MRA_RAM },
 	{ 0x1000, 0x10ff, MRA_RAM },
 	{ 0x2000, 0x27ff, MRA_RAM },
 	{ 0x3000, 0x30ff, MRA_RAM },
@@ -176,7 +166,7 @@ static MEMORY_READ_START( akkaarrh_readmem )
 MEMORY_END
 
 static MEMORY_WRITE_START( akkaarrh_writemem )
-	{ 0x0000, 0x07ff, MWA_RAM
+	{ 0x0000, 0x07ff, MWA_RAM },
 	{ 0x1000, 0x10ff, MWA_RAM, &akkaarrh_spriteram },
 	{ 0x2000, 0x27ff, akkaarrh_videoram_w, &akkaarrh_videoram },
 	{ 0x3000, 0x30ff, akkaarrh_palette_w, &paletteram },
@@ -272,8 +262,6 @@ static MACHINE_DRIVER_START( akkaarrh )
 	/* The interrupt handler must sample VBLANK once per group of four IRQs. */
 	MDRV_CPU_VBLANK_INT(irq0_line_assert, 4)
 	
-	MDRV_MACHINE_INIT(akkaarrh)
-	MDRV_NVRAM_HANDLER(akkaarrh)
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION((int)(1000000.0 * 22 / (60 * 262)))
 	
@@ -282,6 +270,8 @@ static MACHINE_DRIVER_START( akkaarrh )
 	MDRV_VISIBLE_AREA(0, 255, 0, 239)
 	MDRV_GFXDECODE(gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(256)
+
+  MDRV_NVRAM_HANDLER(akkaarrh)
 	
 	MDRV_VIDEO_START(akkaarrh)
 	MDRV_VIDEO_UPDATE(akkaarrh)
