@@ -4650,6 +4650,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( foodf )		/* 136020			(c) 1982 */	/* made by Gencomp */
 	DRIVER( foodf2 )	/* 136020			(c) 1982 */	/* made by Gencomp */
 	DRIVER( foodfc )	/* 136020			(c) 1982 */	/* made by Gencomp */
+  DRIVER( akkaarrh )
 	DRIVER( ccastles )	/* 136022			(c) 1983 */
 	DRIVER( ccastle3 )	/* 136022			(c) 1983 */
 	DRIVER( ccastle2 )	/* 136022			(c) 1983 */
