@@ -4339,6 +4339,21 @@ ROM_START( cottonbm )
 	ROM_LOAD16_WORD_SWAP( "mpr21069.1",    0x1800000, 0x0400000, CRC(6a28e3c5) SHA1(60454b71db49b872e0cb89fae2259fed601588bd) ) /* good */
 ROM_END
 
+/* English translation (bootleg): the stage result lines and the character
+   select panels in English, see github.com/zanac/cottonbm */
+ROM_START( cottonbme )
+	STV_BIOS
+
+	ROM_REGION32_BE( 0x1c00000, REGION_USER1, ROMREGION_ERASEFF )
+	ROM_LOAD16_WORD_SWAP( "cbe21075.7",    0x0200000, 0x0200000, CRC(2d81e396) SHA1(4a4f6464641c9551e1b4595fbda46f23098c397f) )
+	ROM_LOAD16_WORD_SWAP( "cbe21070.2",    0x0400000, 0x0400000, CRC(5b83ae2b) SHA1(04b8d5f3c27aa30a3421f2557b66a3074a490b5a) )
+	ROM_LOAD16_WORD_SWAP( "mpr21071.3",    0x0800000, 0x0400000, CRC(2bb18df2) SHA1(e900adb94ad3f48be00a4ce33e915147dc6a8737) )
+	ROM_LOAD16_WORD_SWAP( "mpr21072.4",    0x0c00000, 0x0400000, CRC(7c7cb977) SHA1(376dfb8014050605b00b6545520bd544768f5828) )
+	ROM_LOAD16_WORD_SWAP( "cbe21073.5",    0x1000000, 0x0400000, CRC(a93744a2) SHA1(1bbc5befefea90d41991cce30f985f94240a20d6) )
+	ROM_LOAD16_WORD_SWAP( "mpr21074.6",    0x1400000, 0x0400000, CRC(6a7e7a7b) SHA1(a0b1e7a85e623b59886b28797281df1d65b8a5aa) )
+	ROM_LOAD16_WORD_SWAP( "cbe21069.1",    0x1800000, 0x0400000, CRC(22f57a74) SHA1(0a7923c3d8c6896674344659cf41dd7f6d81d736) )
+ROM_END
+
 ROM_START( decathlt )
 	STV_BIOS
 
@@ -5561,6 +5576,7 @@ GAMEBX( 1996, puyosune,  puyosun, stvbios, stv, stv,  puyosun,   ROT0,   "bootle
 GAMEBX( 1997, cotton2,   stvbios, stvbios, stv, stv,  cotton2,   ROT0,   "Success",  "Cotton 2", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS, &generic_ctrl, NULL )
 GAMEBX( 1997, cotton2e,  cotton2, stvbios, stv, stv,  cotton2,   ROT0,   "bootleg",  "Cotton 2 (English translation)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS, &generic_ctrl, NULL )
 GAMEBX( 1998, cottonbm,  stvbios, stvbios, stv, stv,  cottonbm,  ROT0,   "Success",  "Cotton Boomerang", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS, &generic_ctrl, NULL )
+GAMEBX( 1998, cottonbme, cottonbm, stvbios, stv, stv,  cottonbm,  ROT0,   "bootleg",  "Cotton Boomerang (English bootleg)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS, &generic_ctrl, NULL )
 GAMEBX( 1996, vfkids,    stvbios, stvbios, stv, stv,  ic13,      ROT0,   "Sega", 	 "Virtua Fighter Kids", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS, &generic_ctrl, NULL )
 GAMEBX( 1995, ejihon,    stvbios, stvbios, stv, stv,  ic13,      ROT0,   "Sega", 	 "Ejihon Tantei Jimusyo", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS, &generic_ctrl, NULL )
 GAMEBX( 1996, colmns97,  stvbios, stvbios, stv, stv,  ic13,      ROT0,   "Sega", 	 "Columns 97", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS, &generic_ctrl, NULL )
