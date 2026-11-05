@@ -124,6 +124,9 @@
 #if (HAS_TMS32025)
 #include "cpu/tms32025/tms32025.h"
 #endif
+#if (HAS_NAMCOC71)
+#include "cpu/namcoc71/c71.h"
+#endif
 #if (HAS_I960)
 #include "cpu/i960/i960.h"
 #endif
@@ -572,6 +575,10 @@ const struct cpu_interface cpuintrf[] =
 #endif
 #if (HAS_TMS32025)
 	CPU3(TMS32025,tms32025,  3,  0,1.00,16,18bew, -1,18,BE,2, 4	),
+#endif
+#if (HAS_NAMCOC71)
+	#define c71_ICount c71_icount
+	CPU0(NAMCOC71, c71,      6,  0,1.00,16,16bew, -1,16,BE,2, 4	),
 #endif
 #if (HAS_TMS32031)
 	#define tms32031_ICount tms32031_icount

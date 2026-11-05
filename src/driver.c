@@ -748,18 +748,49 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( cybsled )	/* (c) 1993 */
 
 	/* Namco System 22 games */
+	DRIVER( namcoc74 )	/* C74 BIOS */
+	DRIVER( ridgerac )	/* (c) 1993 */
+	DRIVER( ridgeraca )	/* (c) 1993 */
+	DRIVER( ridgeracb )	/* (c) 1993 */
+	DRIVER( ridgeracc )	/* (c) 1993 */
+	DRIVER( ridgeracj )	/* (c) 1993 */
+	DRIVER( ridgera2 )	/* (c) 1994 */
+	DRIVER( ridgera2j )	/* (c) 1994 */
+	DRIVER( ridgera2ja )	/* (c) 1994 */
+	DRIVER( ridgera28 )	/* (c) 1994 */
+	DRIVER( cybrcomm )	/* (c) 1994 */
+	DRIVER( raverace )	/* (c) 1995 */
+	DRIVER( raveracej )	/* (c) 1995 */
+	DRIVER( raveraceja )	/* (c) 1995 */
+	DRIVER( acedrive )	/* (c) 1994 */
+	DRIVER( victlap )	/* (c) 1996 */
+	DRIVER( victlapa )	/* (c) 1996 */
+	DRIVER( victlapj )	/* (c) 1996 */
+
+	/* Namco Super System 22 games */
 	DRIVER( alpinerd )	/* (c) 1994 */
 	DRIVER( alpinerc )	/* (c) 1994 */
-	DRIVER( raveracw )	/* (c) 1995 */
-	DRIVER( ridgeraj )
-	DRIVER( ridger2j )
-	DRIVER( acedrvrw )
-	DRIVER( victlapw )
-	DRIVER( cybrcomm )
-	DRIVER( airco22b )
-	DRIVER( cybrcycc )
-	DRIVER( timecrsa )
+	DRIVER( alpinerjc )	/* (c) 1994 */
+	DRIVER( airco22b )	/* (c) 1995 */
+	DRIVER( cybrcycc )	/* (c) 1995 */
+	DRIVER( cybrcyccj )	/* (c) 1995 */
+	DRIVER( dirtdash )	/* (c) 1995 */
+	DRIVER( dirtdasha )	/* (c) 1995 */
+	DRIVER( dirtdashb )	/* (c) 1995 */
+	DRIVER( dirtdashj )	/* (c) 1995 */
+	DRIVER( timecris )	/* (c) 1996 */
+	DRIVER( timecrisa )	/* (c) 1996 */
+	DRIVER( timecrisj )	/* (c) 1996 */
 	DRIVER( propcycl )	/* (c) 1996 */
+	DRIVER( propcyclj )	/* (c) 1996 */
+	DRIVER( alpines )	/* (c) 1996 */
+	DRIVER( tokyowar )	/* (c) 1996 */
+	DRIVER( tokyowarj )	/* (c) 1996 */
+	DRIVER( aquajet )	/* (c) 1996 */
+	DRIVER( alpinr2b )	/* (c) 1996 */
+	DRIVER( alpinr2a )	/* (c) 1996 */
+	DRIVER( adillor )	/* (c) 1997 */
+	DRIVER( adillorj )	/* (c) 1997 */
 
 
 	/* Universal games */

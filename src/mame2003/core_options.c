@@ -817,9 +817,9 @@ static struct retro_core_option_v2_definition option_def_sh2_dynarec = {
 
 static struct retro_core_option_v2_definition option_def_stv_video_threads = {
    APPNAME"_stv_video_threads",
-   "ST-V Threaded Video",
+   "Threaded Video",
    NULL,
-   "Draw the ST-V screen in horizontal bands on several threads (same picture, faster on multi-core hosts).",
+   "ST-V and Namco System 22: draw the screen in horizontal bands on several threads (same picture, faster on multi-core hosts).",
    NULL,
    NULL,
    {
@@ -1651,6 +1651,13 @@ void set_content_flags(void)
   {
     extern int stv_video_threads_available(void);
     if (game_driver->source_file && strstr(game_driver->source_file, "stv.c") && stv_video_threads_available())
+      options.content_flags[CONTENT_STV_VIDEO_THREADS] = true;
+  }
+#endif
+#if (HAS_NAMCOC71)
+  {
+    extern int namcos22_video_threads_available(void);
+    if (game_driver->source_file && strstr(game_driver->source_file, "namcos22.c") && namcos22_video_threads_available())
       options.content_flags[CONTENT_STV_VIDEO_THREADS] = true;
   }
 #endif
