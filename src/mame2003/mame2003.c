@@ -1809,16 +1809,41 @@ static void configure_cyclone_mode (int driverIndex)
     }
   }
 
-  /* Replace Z80 with DRZ80 only for sound CPUs */
+  /* Replace Z80 with DRZ80 only for sound CPUs: the ones flagged
+     CPU_AUDIO_CPU and, on a board with no flagged CPU whose first CPU
+     is not a Z80 (68000, 6809, V30...), its first Z80: the sound CPU
+     of many drivers not flagged, such as CPS2, Taito, Toaplan and the
+     Mega Drive based boards. Not when DrZ80 can't run that Z80:
+     - one with a daisy chain (Z80 CTC, PIO...): DrZ80 has none;
+     - the CPS1 QSound Z80: its opcodes are encrypted (Kabuki), and
+       DrZ80 reads the operands from the decrypted opcodes;
+     - the Tatsumi sound Z80 (Round Up 5): with DrZ80 the game hangs */
   if (use_drz80_snd)
   {
+    int guess_sound_z80 = (Machine->drv->cpu[0].cpu_type != CPU_Z80)
+      && !strstr(drivers[driverIndex]->source_file, "cps1.c")
+      && !strstr(drivers[driverIndex]->source_file, "tatsumi.c");
+
+    for (i=0;i<MAX_CPU;i++)
+      if (Machine->drv->cpu[i].cpu_flags & CPU_AUDIO_CPU)
+        guess_sound_z80 = 0;
+
     for (i=0;i<MAX_CPU;i++)
     {
      unsigned int *type=(unsigned int *)&(Machine->drv->cpu[i].cpu_type);
-     if (*type==CPU_Z80 && Machine->drv->cpu[i].cpu_flags&CPU_AUDIO_CPU)
+     if (*type==CPU_Z80)
       {
-        *type=CPU_DRZ80;
-        log_cb(RETRO_LOG_INFO, LOGPRE "Replaced Z80 sound\n");
+        if ((Machine->drv->cpu[i].cpu_flags & CPU_AUDIO_CPU) || (guess_sound_z80 && !Machine->drv->cpu[i].reset_param))
+        {
+          *type=CPU_DRZ80;
+          guess_sound_z80 = 0;
+          log_cb(RETRO_LOG_INFO, LOGPRE "Replaced Z80 sound (CPU %d)\n", i);
+        }
+        else
+        {
+          guess_sound_z80 = 0;
+          log_cb(RETRO_LOG_INFO, LOGPRE "Z80 (CPU %d) kept on the C core\n", i);
+        }
       }
     }
   }
