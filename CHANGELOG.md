@@ -19,6 +19,7 @@ The list of direct contributors to the MAME 2003-Plus github repository can be f
 * Adventure Canoe
 * Air Attack
 * Air Rescue
+* Akka Arrh (prototype)
 * Aladdin (bootleg of Megadrive version)
 * Angler Dangler (Deco Cassette)
 * Argus (Gottlieb, prototype)
@@ -1288,3 +1289,4 @@ could crash on the score calc between levels is sorted [amadvance, arcadez]
 * Added support for the hvyunit.c driver ported across from my xbox project [arcadez, mistydreams, vanni and claude]
 * Added Sky Robo / Tatakae! Big Fighter to armedf.c and hooked it up to the new mcs51 cpu
 [arcadez, grant2258, AdvanceMAME, Zanac]
+* Ported a driver for Atari's Akka Arrh across from AdvanceMAME [arcadez, AdvanceMAME]
