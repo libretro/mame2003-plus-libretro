@@ -18,7 +18,8 @@
 
     mame2003-plus: backported from current MAME (c352.cpp) to the 0.78
     sound interface.  Only the front (L/R) outputs are mixed, as on
-    System 12 where the second DAC is not populated.
+    System 12 where the second DAC is not populated, unless the driver
+    asks for a routing of the four outputs (c352_set_routing).
 */
 
 #include <stddef.h>
@@ -177,11 +178,93 @@ static INLINE INT16 c352_clamp(int val)
 	return val;
 }
 
+/* optional four output routing (see c352.h); set before the sound starts */
+static int c352_route_pending[4][2];
+static int c352_routed;
+static int c352_route[4][2];
+static int c352_gain[4];
+
+void c352_set_routing(const int route[4][2])
+{
+	memcpy(c352_route_pending, route, sizeof(c352_route_pending));
+}
+
+void c352_set_output_gain(int output, int gain)
+{
+	if (output < 0 || output > 3)
+		return;
+	if (c352.stream)
+		stream_update(c352.stream, 0);
+	c352_gain[output] = gain;
+}
+
+static void c352_update_routed(INT16 **buffer, int length)
+{
+	INT16 *bufl = buffer[0];
+	INT16 *bufr = buffer[1];
+	int i, j, n;
+
+	for (i = 0; i < length; i++)
+	{
+		int out[4] = { 0, 0, 0, 0 };
+		int l = 0, r = 0;
+
+		for (j = 0; j < 32; j++)
+		{
+			c352_voice_t *v = &c352.v[j];
+			INT16 s = 0;
+
+			if (V_FLAGS(v) & C352_FLG_BUSY)
+			{
+				INT32 next_counter = v->counter + V_FREQ(v);
+
+				if (next_counter & 0x10000)
+					c352_fetch_sample(v);
+
+				if ((next_counter ^ v->counter) & 0x18000)
+				{
+					c352_ramp_volume(v, 0, V_VOL_F(v) >> 8);
+					c352_ramp_volume(v, 1, V_VOL_F(v) & 0xff);
+					c352_ramp_volume(v, 2, V_VOL_R(v) >> 8);
+					c352_ramp_volume(v, 3, V_VOL_R(v) & 0xff);
+				}
+
+				v->counter = next_counter & 0xffff;
+
+				s = v->sample;
+
+				if ((V_FLAGS(v) & C352_FLG_FILTER) == 0)
+					s = v->last_sample + (INT32)(((INT64)v->counter * (v->sample - v->last_sample)) >> 16);
+			}
+
+			out[0] += (((V_FLAGS(v) & C352_FLG_PHASEFL) ? -s : s) * v->curr_vol[0]) >> 8;
+			out[2] += (((V_FLAGS(v) & C352_FLG_PHASERL) ? -s : s) * v->curr_vol[2]) >> 8;
+			out[1] += (((V_FLAGS(v) & C352_FLG_PHASEFR) ? -s : s) * v->curr_vol[1]) >> 8;
+			out[3] += (((V_FLAGS(v) & C352_FLG_PHASEFR) ? -s : s) * v->curr_vol[3]) >> 8;
+		}
+
+		for (n = 0; n < 4; n++)
+		{
+			int o = (c352_clamp(out[n] >> 3) * c352_gain[n]) >> 8;
+			l += o * c352_route[n][0];
+			r += o * c352_route[n][1];
+		}
+		bufl[i] = c352_clamp(l >> 8);
+		bufr[i] = c352_clamp(r >> 8);
+	}
+}
+
 static void c352_update(int param, INT16 **buffer, int length)
 {
 	INT16 *bufl = buffer[0];
 	INT16 *bufr = buffer[1];
 	int i, j;
+
+	if (c352_routed)
+	{
+		c352_update_routed(buffer, length);
+		return;
+	}
 
 	for (i = 0; i < length; i++)
 	{
@@ -300,6 +383,17 @@ int C352_sh_start(const struct MachineSound *msound)
 	char buf[32];
 
 	memset(&c352, 0, sizeof(c352));
+
+	/* the routing asked by this driver, if any; the next game starts without */
+	memcpy(c352_route, c352_route_pending, sizeof(c352_route));
+	memset(c352_route_pending, 0, sizeof(c352_route_pending));
+	c352_routed = 0;
+	for (i = 0; i < 4; i++)
+	{
+		c352_gain[i] = 0x100;
+		if (c352_route[i][0] || c352_route[i][1])
+			c352_routed = 1;
+	}
 
 	vol[0] = MIXER(intf->mixing_level, MIXER_PAN_LEFT);
 	vol[1] = MIXER(intf->mixing_level, MIXER_PAN_RIGHT);

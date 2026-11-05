@@ -235,6 +235,9 @@ enum
 #if (HAS_TMS32025)
 	CPU_TMS32025,
 #endif
+#if (HAS_NAMCOC71)
+	CPU_NAMCOC71,
+#endif
 #if (HAS_TMS32031)
 	CPU_TMS32031,
 #endif

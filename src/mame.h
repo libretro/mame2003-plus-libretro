@@ -229,7 +229,7 @@ struct GameOptions
   bool     sh3_dynarec;	       /* 1 to let drivers enable the SH-3 recompiler */
   int      tx1_screens;	       /* TX-1 / Buggy Boy: 3 screens side by side, or 1 (the middle one) */
   bool     sh2_dynarec;	       /* 1 to let drivers enable the SH-2 recompiler */
-  int      stv_video_threads;    /* ST-V: threads drawing the VDP2 screen in bands (0 or 1 = the main thread only) */
+  int      stv_video_threads;    /* ST-V, Namco System 22: threads drawing the screen in bands (0 or 1 = the main thread only) */
   bool     use_alt_sound;	       /* 1 to enable alternate ost samples */
 
   float	   brightness;		       /* brightness of the display */

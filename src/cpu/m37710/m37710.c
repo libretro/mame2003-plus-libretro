@@ -413,6 +413,9 @@ static void m37710_timer_b2_cb(int param)
 	cpuintrf_pop_context();
 }
 
+/* timer A output pins (set by the driver just before it clocks the timer, not saved) */
+static int m37710_timer_out[5];
+
 static void m37710_external_tick(int timer, int state)
 {
 	/* we only care if the state is "on" */
@@ -426,15 +429,22 @@ static void m37710_external_tick(int timer, int state)
 	{
 		if ((m37710i_cpu.m37710_regs[0x56+timer] & 0x3) == 1)
 		{
-			if (m37710i_cpu.m37710_regs[0x46+(timer*2)] == 0xff)
+			/* the count direction, as current MAME: timer B counts down; timer A
+			   follows its output pin (mode bit 4) or the up/down register */
+			int upcount = 0;
+			UINT16 count = m37710i_cpu.m37710_regs[0x46+(timer*2)] | (m37710i_cpu.m37710_regs[0x46+(timer*2)+1] << 8);
+
+			if (timer <= 4)
 			{
-				m37710i_cpu.m37710_regs[0x46+(timer*2)] = 0;
-				m37710i_cpu.m37710_regs[0x46+(timer*2)+1]++;
+				if (m37710i_cpu.m37710_regs[0x56+timer] & 0x10)
+					upcount = m37710_timer_out[timer];
+				else
+					upcount = (m37710i_cpu.m37710_regs[0x44] >> timer) & 1;
 			}
-			else
-			{
-				m37710i_cpu.m37710_regs[0x46+(timer*2)]++;
-			}
+
+			count = upcount ? count + 1 : count - 1;
+			m37710i_cpu.m37710_regs[0x46+(timer*2)] = count & 0xff;
+			m37710i_cpu.m37710_regs[0x46+(timer*2)+1] = count >> 8;
 		}
 		else
 		{
@@ -1084,6 +1094,11 @@ void m37710_set_irq_line(int line, int state)
 	if (line >= M37710_LINE_TIMERA0TICK && line <= M37710_LINE_TIMERB2TICK)
 	{
 		m37710_external_tick(line - M37710_LINE_TIMERA0TICK, state);
+		return;
+	}
+	if (line >= M37710_LINE_TIMERA0OUT && line <= M37710_LINE_TIMERA4OUT)
+	{
+		m37710_timer_out[line - M37710_LINE_TIMERA0OUT] = (state != CLEAR_LINE);
 		return;
 	}
 	FTABLE_SET_LINE(line, state);

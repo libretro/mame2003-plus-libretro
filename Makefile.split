@@ -1821,6 +1821,15 @@ else
 CPUDEFS += -DHAS_TMS32010=0
 endif
 
+CPU=$(strip $(findstring NAMCOC71@,$(CPUS)))
+ifneq ($(CPU),)
+OBJDIRS += $(CORE_DIR)/cpu/namcoc71
+CPUDEFS += -DHAS_NAMCOC71=1
+SOURCES_C += $(CORE_DIR)/cpu/namcoc71/c71.c
+else
+CPUDEFS += -DHAS_NAMCOC71=0
+endif
+
 CPU=$(strip $(findstring TMS32025@,$(CPUS)))
 ifneq ($(CPU),)
 OBJDIRS += $(CORE_DIR)/cpu/tms32025

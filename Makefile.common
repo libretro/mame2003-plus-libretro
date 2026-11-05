@@ -172,6 +172,7 @@ CPUS+=TMS9995@
 CPUS+=Z8000@
 CPUS+=TMS32010@
 CPUS+=TMS32025@
+CPUS+=NAMCOC71@
 CPUS+=TMS32031@
 CPUS+=I960@
 CPUS+=MB86233@
@@ -1864,6 +1865,15 @@ SOURCES_C += $(CORE_DIR)/cpu/tms32010/32010dsm.c
 endif
 else
 CPUDEFS += -DHAS_TMS32010=0
+endif
+
+CPU=$(strip $(findstring NAMCOC71@,$(CPUS)))
+ifneq ($(CPU),)
+OBJDIRS += $(CORE_DIR)/cpu/namcoc71
+CPUDEFS += -DHAS_NAMCOC71=1
+SOURCES_C += $(CORE_DIR)/cpu/namcoc71/c71.c
+else
+CPUDEFS += -DHAS_NAMCOC71=0
 endif
 
 CPU=$(strip $(findstring TMS32025@,$(CPUS)))
