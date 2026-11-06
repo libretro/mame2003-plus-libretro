@@ -2928,6 +2928,7 @@ VIDEO_UPDATE( namcos22s )
 	if (fj.layer & 2) draw_sprites();
 	if (fj.layer & 1) draw_polygons();
 	render_frame(ss22_frame_rows);
+	namcos22_draw_crosshairs(bitmap, cliprect);
 }
 
 VIDEO_START( namcos22 )
