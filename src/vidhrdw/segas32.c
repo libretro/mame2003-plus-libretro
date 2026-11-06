@@ -259,7 +259,7 @@ UINT16 system32_displayenable[2];
 UINT16 system32_tilebank_external;
 
 bool opaque_blend  = true;
-bool titlef_kludge = true;
+bool titlef_kludge = false;
 
 
 
