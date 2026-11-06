@@ -3602,12 +3602,21 @@ static DRIVER_INIT ( sonic )
 	install_mem_read16_handler (0, 0xc00040, 0xc00055, sonic_track_r);
 
   install_mem_write16_handler(0, 0x20E5C4, 0x20E5C5, sonic_level_load_protection);
+
+  opaque_blend = false;
 }
 
 static DRIVER_INIT ( sonicp )
 {
 	install_mem_write16_handler(0, 0xc00040, 0xc00055, sonic_track_reset_w);
 	install_mem_read16_handler (0, 0xc00040, 0xc00055, sonic_track_r);
+
+	opaque_blend = false;
+}
+
+static DRIVER_INIT ( harddunk )
+{
+	opaque_blend = false;
 }
 
 static DRIVER_INIT ( radm )
@@ -3620,8 +3629,6 @@ static DRIVER_INIT ( radr )
 {
 	system32_use_default_eeprom = EEPROM_RADR;
 	install_io_analog();
-
-	//opaquey_hack = true;
 }
 
 static WRITE16_HANDLER( f1en_comms_echo_w )
@@ -3691,8 +3698,6 @@ static DRIVER_INIT( darkedge )
 	install_mem_read16_handler (0, 0xa00000, 0xa7ffff, darkedge_protection_r);
 	install_mem_write16_handler(0, 0xa00000, 0xa7ffff, darkedge_protection_w);
 	system32_prot_vblank = darkedge_fd1149_vblank;
-
-	//opaquey_hack = true;
 }
 
 static DRIVER_INIT( jleague )
@@ -3709,8 +3714,7 @@ static DRIVER_INIT( dbzvrvs )
 static DRIVER_INIT( titlef )
 {
 	install_port_write_handler(1,  0xb0, 0xbf, scross_bank_w);
-	//titlef_kludge = true;
-	//opaquey_hack = true;
+	titlef_kludge = true;
 }
 
 static DRIVER_INIT( scross )
@@ -3748,8 +3752,8 @@ GAMEX(1995, slipstrh, slipstrm, system32,     slipstrm, slipstrm, ROT0, "Capcom"
 
 /* Multi32 games */
 GAMEX(1992, orunners, 0,        multi32,      orunners, 0,        ROT0, "Sega", "Outrunners (US)", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1994, harddunk, 0,        multi32,      harddunk, 0,        ROT0, "Sega", "Hard Dunk (World)", GAME_IMPERFECT_GRAPHICS )
-GAMEX(1994, harddunj, harddunk, multi32,      harddunk, 0,        ROT0, "Sega", "Hard Dunk (Japan)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1994, harddunk, 0,        multi32,      harddunk, harddunk, ROT0, "Sega", "Hard Dunk (World)", GAME_IMPERFECT_GRAPHICS )
+GAMEX(1994, harddunj, harddunk, multi32,      harddunk, harddunk, ROT0, "Sega", "Hard Dunk (Japan)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1992, scross,   0,        multi32,      scross,   scross,   ROT0, "Sega", "Stadium Cross (World)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1992, scrossa,  scross,   multi32,      scross,   scross,   ROT0, "Sega", "Stadium Cross (World, linkable)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1992, scrossu,  scross,   multi32,      scross,   scross,   ROT0, "Sega", "Stadium Cross (US)", GAME_IMPERFECT_GRAPHICS )
