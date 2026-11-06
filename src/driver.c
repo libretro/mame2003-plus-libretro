@@ -5709,6 +5709,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( fromancr )	/* (c) 1995 Video System Co. (Japan) */
 	DRIVER( fromanc4 )	/* (c) 1998 Video System Co. (Japan) */
 	DRIVER( inufuku )	/* (c) 1998 Video System Co. (Japan) */
+	DRIVER( 3on3dunk )	/* (c) 1996 Video System Co. ( US ) */
 
 	/* Psikyo games */
 	DRIVER( samuraia )	/* (c) 1993 (World) */
