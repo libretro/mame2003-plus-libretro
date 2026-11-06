@@ -60,6 +60,7 @@ extern INT32 namcos22_point_read(offs_t offs);
 extern void namcos22_pdp_handle_commands(UINT16 offs);
 extern UINT8 namcos22_syscontrol[0x20];
 extern int namcos22_irq_enabled, namcos22_irq_state;
+void namcos22_draw_crosshairs(struct mame_bitmap *bitmap, const struct rectangle *cliprect);
 
 /* vidhrdw/namcos22_vidhrdw.c */
 VIDEO_START( namcos22s );

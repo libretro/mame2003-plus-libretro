@@ -1117,20 +1117,21 @@ static void trackball_update(int param)
 ***************************************************************************/
 
 /* MAME's light gun ranges (tuned for CRT): X 68-694, Y 43-284; the screen edges mean off-screen */
+#define TIMECRIS_GUN_X_MIN	68
+#define TIMECRIS_GUN_X_MAX	(68 + 626)
+#define TIMECRIS_GUN_Y_MIN	43
+#define TIMECRIS_GUN_Y_MAX	(43 + 241)
+
 static READ32_HANDLER( timecris_gun_r )
 {
-	int gx = readinputport(PORT_ADC0) & 0xff;
-	int gy = readinputport(PORT_ADC0 + 1) & 0xff;
-	UINT16 xpos, ypos;
+	UINT16 xpos = readinputport(PORT_ADC0);
+	UINT16 ypos = readinputport(PORT_ADC0 + 1);
 
-	if (gx == 0 || gx == 0xff || gy == 0 || gy == 0xff)
+	/* the screen edges are off screen (MAME) */
+	if (xpos <= TIMECRIS_GUN_X_MIN || xpos >= TIMECRIS_GUN_X_MAX || ypos <= TIMECRIS_GUN_Y_MIN || ypos >= TIMECRIS_GUN_Y_MAX)
 		xpos = ypos = 0;
-	else
-	{
-		xpos = 68 + gx * 626 / 0xff;
-		ypos = 43 + gy * 241 / 0xff;
-	}
 
+	/* 430004 and 430008 both give y: the game adds them */
 	switch (offset)
 	{
 		case 0: return xpos << 16;
@@ -1138,6 +1139,21 @@ static READ32_HANDLER( timecris_gun_r )
 		case 2: return ypos << 16;
 	}
 	return 0;
+}
+
+/* the gun crosshair, on the whole screen as MAME's PORT_CROSSHAIR(X/Y, 1.0, 0.0, 0) */
+void namcos22_draw_crosshairs(struct mame_bitmap *bitmap, const struct rectangle *cliprect)
+{
+	const struct rectangle *visible = &Machine->visible_area;
+	int x, y;
+
+	if (namcos22_gametype != NAMCOS22_TIME_CRISIS)
+		return;
+	x = readinputport(PORT_ADC0) - TIMECRIS_GUN_X_MIN;
+	y = readinputport(PORT_ADC0 + 1) - TIMECRIS_GUN_Y_MIN;
+	x = visible->min_x + x * (visible->max_x - visible->min_x) / (TIMECRIS_GUN_X_MAX - TIMECRIS_GUN_X_MIN);
+	y = visible->min_y + y * (visible->max_y - visible->min_y) / (TIMECRIS_GUN_Y_MAX - TIMECRIS_GUN_Y_MIN);
+	draw_crosshair(1, bitmap, x, y, cliprect);
 }
 
 
@@ -1621,10 +1637,12 @@ INPUT_PORTS_START( timecris )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START	/* gun X */
-	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_X | IPF_PLAYER1, 50, 15, 1, 0xfe )
-	PORT_START	/* gun Y */
-	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER1, 50, 15, 1, 0xfe )
+	/* the gun position as the game reads it (MAME's ranges, tuned for a CRT);
+	   the edges are off screen, to reload */
+	PORT_START	/* OPT.0: gun X */
+	PORT_ANALOG( 0xffff, TIMECRIS_GUN_X_MIN + 626 / 2, IPT_LIGHTGUN_X | IPF_PLAYER1, 48, 10, TIMECRIS_GUN_X_MIN, TIMECRIS_GUN_X_MAX )
+	PORT_START	/* OPT.1: gun Y */
+	PORT_ANALOG( 0xffff, TIMECRIS_GUN_Y_MIN + 241 / 2, IPT_LIGHTGUN_Y | IPF_PLAYER1, 64, 4, TIMECRIS_GUN_Y_MIN, TIMECRIS_GUN_Y_MAX )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( propcycl )
