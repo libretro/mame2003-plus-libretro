@@ -16,6 +16,8 @@
 
 
 extern data16_t *inufuku_spriteram1;
+extern int inufuku_is_dunk;
+static UINT16 *dunk_sprite_buffer;
 extern data16_t *inufuku_spriteram2;
 extern size_t inufuku_spriteram1_size;
 
@@ -69,9 +71,64 @@ WRITE16_HANDLER( inufuku_scrollreg_w )
 
 ******************************************************************************/
 
+static void dunk_draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cliprect)
+{
+	int end, offs;
+	UINT16 *ram = dunk_sprite_buffer;
+	for (end = 0; end < 0x200; ++end)
+		if (ram[end] & 0x4000) break;
+
+	/* Priority drawing walks the sorting list backwards and stops at its terminator. */
+	for (offs = end - 1; offs >= 0; --offs)
+	{
+		UINT16 *attr;
+		int ox, oy, width, height, zx, zy, fx, fy, color, mask;
+		int x, y, map;
+		static const int masks[4] = { 0x00, 0xf0, 0xfc, 0xfe };
+		if (ram[offs] & 0x8000) continue;
+		attr = &ram[(ram[offs] & 0x3ff) * 4];
+		ox = attr[1] & 0x1ff;
+		oy = (attr[0] & 0x1ff) + 1;
+		width = (attr[1] >> 9) & 7;
+		height = (attr[0] >> 9) & 7;
+		zx = 32 - (attr[1] >> 12);
+		zy = 32 - (attr[0] >> 12);
+		fx = attr[2] & 0x4000;
+		fy = attr[2] & 0x8000;
+		color = (attr[2] >> 8) & 0x3f;
+		mask = masks[color >> 4];
+		map = attr[3] | ((attr[2] & 1) << 16);
+		for (y = 0; y <= height; ++y)
+			for (x = 0; x <= width; ++x)
+			{
+				int index = (map++ * 2) & 0xffff;
+				int code = ((inufuku_spriteram2[index] & 7) << 16) | inufuku_spriteram2[index + 1];
+				int sx = (ox + (fx ? width - x : x) * zx / 2) & 0x1ff;
+				int sy = (oy + (fy ? height - y : y) * zy / 2) & 0x1ff;
+				int wrapx, wrapy;
+				for (wrapy = 0; wrapy <= 1; ++wrapy)
+					for (wrapx = 0; wrapx <= 1; ++wrapx)
+						pdrawgfxzoom(bitmap, Machine->gfx[2], code, color, fx, fy,
+							sx - wrapx * 512, sy - wrapy * 512, cliprect,
+							TRANSPARENCY_PEN, 15, zx << 11, zy << 11, mask);
+			}
+	}
+}
+
+void dunk_buffer_sprites(void)
+{
+	/* The display consumes the completed attribute list from the preceding frame. */
+	memcpy(dunk_sprite_buffer, inufuku_spriteram1, 0x2000);
+}
+
 static void inufuku_draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cliprect)
 {
 	int offs;
+	if (inufuku_is_dunk)
+	{
+		dunk_draw_sprites(bitmap, cliprect);
+		return;
+	}
 
 	for (offs = (inufuku_spriteram1_size / 16) - 1; offs >= 0; offs--) {
 
@@ -227,6 +284,8 @@ WRITE16_HANDLER( inufuku_text_videoram_w )
 
 VIDEO_START( inufuku )
 {
+	dunk_sprite_buffer = auto_malloc(0x2000);
+	memset(dunk_sprite_buffer, 0, 0x2000);
 	inufuku_bg_tilemap = tilemap_create(get_inufuku_bg_tile_info, tilemap_scan_rows, TILEMAP_TRANSPARENT, 8, 8, 64, 64);
 	inufuku_text_tilemap = tilemap_create(get_inufuku_text_tile_info, tilemap_scan_rows, TILEMAP_TRANSPARENT, 8, 8, 64, 64);
 
@@ -254,7 +313,7 @@ VIDEO_UPDATE( inufuku )
 
 	if (inufuku_bg_raster) {
 		tilemap_set_scroll_rows(inufuku_bg_tilemap, 512);
-		for (i = 0; i < 256; i++) tilemap_set_scrollx(inufuku_bg_tilemap, (inufuku_bg_scrolly + i) & 0x1ff, inufuku_bg_rasterram[i]);
+		for (i = 0; i < 256; i++) tilemap_set_scrollx(inufuku_bg_tilemap, (inufuku_bg_scrolly + i) & 0x1ff, inufuku_bg_rasterram[i] + (inufuku_is_dunk ? inufuku_bg_scrollx : 0));
 	}
 	else {
 		tilemap_set_scroll_rows(inufuku_bg_tilemap, 1);
