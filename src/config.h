@@ -63,8 +63,10 @@ int config_read_default_ports(config_file *cfg, struct ipd *input_ports_default)
 int config_read_coin_and_ticket_counters(config_file *file, unsigned int *coins, unsigned int *lastcoin,
 	unsigned int *coinlockedout, unsigned int *dispensed_tickets);
 
+#if 0	/* mixing levels are no longer saved in the .cfg */
 /* reads mixer configuration */
 int config_read_mixer_config(config_file *file, struct mixer_config *mixercfg);
+#endif
 
 /* writes inputports out of a configuration file */
 int config_write_ports(config_file *file, const struct InputPort *input_ports_default, const struct InputPort *input_ports);
@@ -76,7 +78,9 @@ int config_write_default_ports(config_file *cfg, const struct ipd *input_ports_d
 int config_write_coin_and_ticket_counters(config_file *file, const unsigned int *coins, const unsigned int *lastcoin,
 	const unsigned int *coinlockedout, unsigned int dispensed_tickets);
 
+#if 0	/* mixing levels are no longer saved in the .cfg */
 /* writes mixer configuration */
 int config_write_mixer_config(config_file *file, const struct mixer_config *mixercfg);
+#endif
 
 #endif /* CONFIG_H */
