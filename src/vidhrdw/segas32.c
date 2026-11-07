@@ -258,7 +258,7 @@ UINT16 *system32_paletteram[2];
 UINT16 system32_displayenable[2];
 UINT16 system32_tilebank_external;
 
-bool opaquey_hack  = false; /* dink */
+bool opaque_blend  = true;
 bool titlef_kludge = false;
 
 
@@ -1156,7 +1156,7 @@ static void update_tilemap_zoom(struct layer_info *layer, const struct rectangle
 	get_tilemaps(bgnum, tilemaps);
 
 	/* configure the layer */
-	opaque = (opaquey_hack) ? BIT(system32_videoram[0x1ff8e/2], (8 + bgnum)) : 0;
+	opaque = (opaque_blend) ? BIT(system32_videoram[0x1ff8e/2], (8 + bgnum)) : 0;
 
 	/* determine flipping */
 	compute_tilemap_flips(bgnum, &flipx, &flipy);
@@ -1320,7 +1320,7 @@ static void update_tilemap_rowscroll(struct layer_info *layer, const struct rect
 	get_tilemaps(bgnum, tilemaps);
 
 	/* configure the layer */
-	opaque = (opaquey_hack) ? BIT(system32_videoram[0x1ff8e/2], (8 + bgnum)) : 0;
+	opaque = (opaque_blend) ? BIT(system32_videoram[0x1ff8e/2], (8 + bgnum)) : 0;
 
 	/* determine flipping */
 	compute_tilemap_flips(bgnum, &flipx, &flipy);
