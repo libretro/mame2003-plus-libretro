@@ -36,6 +36,7 @@ static char cpu_clock_scale_info[CPU_CLOCK_SCALE_SLOTS][128];
 ******************************************************************************/
 
 static void   set_variables(void);
+static void   set_all_variables(void);
 static void   determine_core_options_version(struct retro_core_options_v2 *core_options_us);
 static void   format_cpu_clock(char *buf, int hz);
 static void   describe_cpu(char *buf, int cpu);
@@ -973,7 +974,7 @@ struct retro_core_options_v2 options_us = {
 };
 
 
-void init_core_options(void)
+void init_core_options(bool content_loaded)
 {
   int cpu;
 
@@ -1031,7 +1032,10 @@ void init_core_options(void)
   default_options[OPT_CYCLONE_MODE]              = option_def_cyclone_mode;
 #endif
   default_options[OPT_end]                       = option_def_null;
-  set_variables();
+  if(content_loaded)
+    set_variables();
+  else
+    set_all_variables();
 }
 
 
@@ -1131,6 +1135,25 @@ static void set_variables(void)
 
     effective_defaults[effective_options_count] = default_options[option_index];
     effective_options_count++;
+  }
+
+  determine_core_options_version( &options_us );
+}
+
+
+/* Before any content is loaded, every option is offered, so that a frontend
+ * reading them then (Kodi builds each core's settings page that way) sees them
+ * all. The CPU clock scales are left out: they are named after the loaded game. */
+static void set_all_variables(void)
+{
+  unsigned effective_options_count = 0;
+  int option_index;
+
+  for(option_index = 0; option_index < (OPT_end + 1); option_index++)
+  {
+    if(option_index >= OPT_CPU_CLOCK_SCALE && option_index < OPT_CPU_CLOCK_SCALE + CPU_CLOCK_SCALE_SLOTS)
+      continue;
+    effective_defaults[effective_options_count++] = default_options[option_index];
   }
 
   determine_core_options_version( &options_us );
