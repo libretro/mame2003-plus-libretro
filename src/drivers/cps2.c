@@ -836,6 +836,61 @@ INPUT_PORTS_START( cps2_2p2b )
     PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNUSED )
 INPUT_PORTS_END
 
+/* Super Puzzle Fighter II Turbo X" (spf2enh): cps2_2p2b plus buttons 3 and 4,
+   wired as on the 6-button harness (cps2_2p6b); the hack steps through the
+   Versus stage selector with them (button 3 next, button 4 previous) */
+INPUT_PORTS_START( spf2enh )
+    PORT_START      /* IN0 (0x00) */
+    PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1 )
+    PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER1 )
+    PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER1 )
+    PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER1 )
+    PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
+    PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )
+    PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1 )
+    PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNUSED )
+    PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER2 )
+    PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER2 )
+    PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER2 )
+    PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER2 )
+    PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
+    PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
+    PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
+    PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNUSED )
+
+    PORT_START      /* IN1 (0x10) */
+    PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER1 )
+    PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_UNUSED )
+    PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_UNUSED )
+    PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_UNUSED )
+    PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER2 )
+    PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_UNUSED )
+    PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNUSED )
+    PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNUSED )
+    PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_UNUSED )
+    PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_UNUSED )
+    PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_UNUSED )
+    PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_UNUSED )
+    PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_UNUSED )
+    PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_UNUSED )
+    PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNUSED )
+    PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNUSED )
+
+    PORT_START      /* IN2 (0x20) */
+    PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_SPECIAL )   /* EEPROM bit */
+	PORT_BITX(0x0002, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
+    PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
+    PORT_BIT( 0x00f8, IP_ACTIVE_LOW, IPT_UNUSED )
+    PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_START1 )
+    PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_START2 )
+    PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_UNUSED )
+    PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_UNUSED )
+    PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_COIN1 )
+    PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_COIN2 )
+    PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNUSED )
+    PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNUSED )
+INPUT_PORTS_END
+
 INPUT_PORTS_START( cybots )
     PORT_START      /* IN0 (0x00) */
     PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1 )
@@ -8284,6 +8339,41 @@ ROM_START( spf2xpri )
 	ROM_LOAD( "spf2t.key",    0x000000, 0x000014, CRC(4c4dc7e3) SHA1(db4f257f6006b2f3cfa7cc70917228d639324513) )
 ROM_END
 
+/* Super Puzzle Fighter 2 Turbo X" - hack by Vanni Brutto (zanac), built on X' (spf2xpri)
+   with Zangief and Ibuki from Super Gem Fighter Mini Mix. The set is built by the user from spf2t and sgemf:
+   https://github.com/zanac/psx-puzzle-fighter-x-prime
+   The pzfen files have no fixed CRCs (each build can differ): the core loads them with a
+   non-blocking checksum notice; the original pzf.11m/pzf.12m samples and the key keep their CRCs */
+ROM_START( spf2enh )
+	ROM_REGION(CODE_SIZE, REGION_CPU1, 0 )  /* 68000 code */
+	ROM_LOAD16_WORD_SWAP( "pzfen.03", 0x000000, 0x80000, CRC(00000000) )
+	ROM_LOAD16_WORD_SWAP( "pzfen.04", 0x080000, 0x80000, CRC(00000000) )
+
+	ROM_REGION( 0x1000000, REGION_GFX1, 0 )
+	ROM_FILL(             0x000000, 0x800000, 0x00 )
+	ROM_LOAD64_WORD( "pzfen.14m", 0x800000, 0x100000, CRC(00000000) )
+	ROM_LOAD64_WORD( "pzfen.16m", 0x800002, 0x100000, CRC(00000000) )
+	ROM_LOAD64_WORD( "pzfen.18m", 0x800004, 0x100000, CRC(00000000) )
+	ROM_LOAD64_WORD( "pzfen.20m", 0x800006, 0x100000, CRC(00000000) )
+	ROM_LOAD64_WORD( "pzfen.13m", 0xC00000, 0x100000, CRC(00000000) )	/* the guests: Zangief, Ibuki */
+	ROM_LOAD64_WORD( "pzfen.15m", 0xC00002, 0x100000, CRC(00000000) )
+	ROM_LOAD64_WORD( "pzfen.17m", 0xC00004, 0x100000, CRC(00000000) )
+	ROM_LOAD64_WORD( "pzfen.19m", 0xC00006, 0x100000, CRC(00000000) )
+
+	ROM_REGION(QSOUND_SIZE, REGION_CPU2, 0 )  /* 64k for the audio CPU (+banks) */
+	ROM_LOAD( "pzfen.01",   0x00000, 0x08000, CRC(00000000) )
+	ROM_CONTINUE(         0x10000, 0x18000 )
+	ROM_LOAD( "pzfen.02",   0x28000, 0x20000, CRC(00000000) )
+
+	ROM_REGION( 0x800000, REGION_SOUND1, 0 )  /* QSound samples */
+	ROM_LOAD16_WORD_SWAP( "pzf.11m",   0x000000, 0x200000, CRC(78442743) SHA1(b61190bb586871de6d54af580e3e1d9cc0de0acb) )
+	ROM_LOAD16_WORD_SWAP( "pzf.12m",   0x200000, 0x200000, CRC(399d2c7b) SHA1(e849dea97b8d16540415c0d9bbc4f9f4eb755ec4) )
+	ROM_LOAD16_WORD_SWAP( "pzfen.13s", 0x400000, 0x400000, CRC(00000000) )	/* the guests: Pocket Fighter's samples */
+
+	ROM_REGION( 0x20, REGION_USER5, 0 )
+	ROM_LOAD( "spf2t.key",    0x000000, 0x000014, CRC(4c4dc7e3) SHA1(db4f257f6006b2f3cfa7cc70917228d639324513) )
+ROM_END
+
 ROM_START( ssf2 )
 	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )  /* 68000 code */
 	ROM_LOAD16_WORD_SWAP( "ssfe-03b", 0x000000, 0x80000, CRC(af654792) SHA1(a8e84154a639c036413f1423aaf2312a5affa55a) )
@@ -12343,6 +12433,7 @@ GAME( 1996, spf2xj,     spf2t,    cps2,     cps2_2p2b,  my_cps2,     ROT0,   "Ca
 GAME( 1996, spf2ta,     spf2t,    cps2,     cps2_2p2b,  my_cps2,     ROT0,   "Capcom", "Super Puzzle Fighter II Turbo (Asia 960529)")
 GAME( 1996, spf2th,     spf2t,    cps2,     cps2_2p2b,  my_cps2,     ROT0,   "Capcom", "Super Puzzle Fighter II Turbo (Hispanic 960531)")
 GAME( 2021, spf2xpri,   spf2t,    cps2,     cps2_2p2b,  my_cps2,     ROT0,   "hack",   "Super Puzzle Fighter 2 X'")
+GAME( 2026, spf2enh,    spf2t,    cps2,     spf2enh,    my_cps2,     ROT0,   "hack",   "Super Puzzle Fighter 2 Turbo X\"")
 GAME( 1996, megaman2,   0,        cps2,     cps2_2p3b,  my_cps2,     ROT0,   "Capcom", "Mega Man 2: The Power Fighters (USA 960708)")
 GAME( 1996, megaman2a,  megaman2, cps2,     cps2_2p3b,  my_cps2,     ROT0,   "Capcom", "Mega Man 2: The Power Fighters (Asia 960708)")
 GAME( 1996, rockman2j,  megaman2, cps2,     cps2_2p3b,  my_cps2,     ROT0,   "Capcom", "Rockman 2: The Power Fighters (Japan 960708)")
