@@ -48,6 +48,7 @@ static int spriteram2_present;
 static int flip_screen_x;
 static int flip_screen_y;
 static int color_mask;
+static int sega119_video;	/* 119: sprite banking and flip offsets of its board */
 static void (*modify_charcode)(UINT16 *code,UINT8 x);		/* function to call to do character banking */
 static void  gmgalax_modify_charcode(UINT16 *code,UINT8 x);
 static void mooncrst_modify_charcode(UINT16 *code,UINT8 x);
@@ -524,6 +525,7 @@ static int video_start_common(UINT32 (*get_memory_offset)(UINT32,UINT32,UINT32,U
 	flip_screen_y = 0;
 
 	spriteram2_present = 0;
+	sega119_video = 0;
 
 	spritevisiblearea      = &_spritevisiblearea;
 	spritevisibleareaflipx = &_spritevisibleareaflipx;
@@ -1907,6 +1909,14 @@ static void draw_sprites(struct mame_bitmap *bitmap, data8_t *spriteram, size_t 
 		code = spriteram[offs + 1] & 0x3f;
 		color = spriteram[offs + 2] & color_mask;
 
+		if (sega119_video)
+		{
+			/* the sprites are in the upper half of the 256 codes, bank selected by bit 2 */
+			code |= (gfxbank[0] & 4) ? 0xc0 : 0x40;
+			if (flip_screen_x)
+				sx -= 2;
+		}
+
 		if (modify_spritecode)
 		{
 			modify_spritecode(spriteram, &code, &flipx, &flipy, offs);
@@ -1943,7 +1953,13 @@ static void draw_sprites(struct mame_bitmap *bitmap, data8_t *spriteram, size_t 
 		/* Note that the adjustment must be done AFTER handling flipscreen, thus */
 		/* proving that this is a hardware related "feature" */
 
-		if (offs < 3*4)  sy++;
+		if (offs < 3*4)
+		{
+			if (sega119_video && flip_screen_y)
+				sy--;
+			else
+				sy++;
+		}
 
 
 		drawgfx(bitmap,Machine->gfx[1],
@@ -1981,4 +1997,38 @@ VIDEO_UPDATE( galaxian )
 	{
 		draw_sprites(bitmap, galaxian_spriteram2, galaxian_spriteram2_size);
 	}
+}
+
+
+/* 119 (Coreland / Sega): galaxian video with 3 bitplanes. One control register selects
+   the character bank (bit 3), the sprite bank (bit 2) and flips the screen (bits 0, 1). */
+
+static void sega119_modify_charcode(UINT16 *code, UINT8 x)
+{
+	if (gfxbank[0] & 8)
+		*code |= 0x200;
+}
+
+WRITE_HANDLER( sega119_video_control_w )
+{
+	galaxian_gfxbank_w(0, data);
+	galaxian_flip_screen_x_w(0, data & 1);
+	galaxian_flip_screen_y_w(0, (data >> 1) & 1);
+}
+
+VIDEO_START( sega119 )
+{
+	/* sprites must not overlap the side panel, even when the screen is flipped */
+	static struct rectangle sega119_spritearea      = { 0, 191, 16, 239 };
+	static struct rectangle sega119_spriteareaflipx = { 64, 255, 16, 239 };
+	int ret = video_start_galaxian_plain();
+
+	sega119_video = 1;
+	gfxbank[0] = 0;
+	modify_charcode = sega119_modify_charcode;
+	draw_bullets = galaxian_draw_bullets;
+	spritevisiblearea      = &sega119_spritearea;
+	spritevisibleareaflipx = &sega119_spriteareaflipx;
+
+	return ret;
 }

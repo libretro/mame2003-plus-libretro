@@ -75,6 +75,7 @@ WRITE_HANDLER( hotshock_flip_screen_w );
 WRITE_HANDLER( darkplnt_bullet_color_w );
 
 VIDEO_START( galaxian_plain );
+VIDEO_START( sega119 );
 VIDEO_START( galaxian );
 VIDEO_START( gmgalax );
 VIDEO_START( mooncrst );
@@ -108,6 +109,7 @@ VIDEO_START( drivfrcg );
 VIDEO_UPDATE( galaxian );
 
 WRITE_HANDLER( galaxian_gfxbank_w );
+WRITE_HANDLER( sega119_video_control_w );
 WRITE_HANDLER( galaxian_nmi_enable_w );
 WRITE_HANDLER( galaxian_flip_screen_x_w );
 WRITE_HANDLER( galaxian_flip_screen_y_w );
