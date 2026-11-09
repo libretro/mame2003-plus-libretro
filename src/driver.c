@@ -221,6 +221,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( checkmaj )	/* (c) 1982 Jaleco (Zenitone/Zilec in ROM CM4, and the programmer names) */
 	DRIVER( dingo )		/* (c) 1983 Ashby Computers and Graphics LTD. + Jaleco license */
 	DRIVER( blkhole )	/* TDS (Tokyo Denshi Sekkei) */
+	DRIVER( 119 )		/* (c) 1986 Coreland / Sega */
 	DRIVER( kingball )	/* (c) 1980 Namco */
 	DRIVER( kingbalj )	/* (c) 1980 Namco */
 	DRIVER( scorpnmc )	/* bootleg */
