@@ -4112,6 +4112,27 @@ ROM_START( mslug )
 	ROM_CONTINUE(      			   0x800001, 0x200000 )
 ROM_END
 
+/* Super Puzzle Fighter II Turbo X" for the Neo Geo (homebrew, github zanac/psx-puzzle-fighter-x-prime,
+   branch neogeo): built from your own arcade set (spf2enh) by its builder: no fixed CRCs (the build machine may round the sounds differently) */
+ROM_START( spf2ng )
+	ROM_REGION( 0x500000, REGION_CPU1, 0 )
+	ROM_LOAD16_WORD_SWAP( "spf2ng.p1", 0x000000, 0x100000, CRC(00000000) )
+	ROM_LOAD16_WORD_SWAP( "spf2ng.p2", 0x100000, 0x400000, CRC(00000000) ) /* 4 banks at 0x200000 */
+
+	NEO_SFIX_128K( "spf2ng.s1", CRC(00000000) )
+
+	NEO_BIOS_SOUND_256K( "spf2ng.m1", CRC(00000000) )
+
+	ROM_REGION( 0x800000, REGION_SOUND1, ROMREGION_SOUNDONLY )
+	ROM_LOAD( "spf2ng.v1", 0x000000, 0x800000, CRC(00000000) )
+
+	NO_DELTAT_REGION
+
+	ROM_REGION( 0x2000000, REGION_GFX3, 0 )
+	ROM_LOAD16_BYTE( "spf2ng.c1", 0x0000000, 0x1000000, CRC(00000000) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "spf2ng.c2", 0x0000001, 0x1000000, CRC(00000000) ) /* Plane 2,3 */
+ROM_END
+
 ROM_START( puzzledp )
 	ROM_REGION( 0x100000, REGION_CPU1, 0 )
 	ROM_LOAD16_WORD_SWAP( "202-p1.bin", 0x000000, 0x080000, CRC(2b61415b) SHA1(0e3e4faf2fd6e63407425e1ac788003e75aeeb4f) )
@@ -8335,6 +8356,7 @@ GAMEB( 2003, samsh5sp, neogeo,	 neogeo, neogeo, neogeo,  samsh5sp, ROT0, "Yuki E
 /* Visco */
 GAMEB( 1992, androdun, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Visco", "Andro Dunos", &neogeo_ctrl, NULL )
 GAMEB( 1995, puzzledp, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Taito (Visco license)", "Puzzle De Pon!", &neogeo_ctrl, NULL )
+GAMEB( 2026, spf2ng,   neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "hack", "Super Puzzle Fighter 2 Turbo X\" (Neo Geo)", &neogeo_ctrl, NULL )
 GAMEB( 1996, neomrdo,  neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Visco", "Neo Mr. Do!", &neogeo_ctrl, NULL )
 GAMEB( 1995, goalx3,   neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Visco", "Goal! Goal! Goal!", &neogeo_ctrl, NULL )
 GAMEB( 1996, neodrift, neogeo,   neogeo, raster, neogeo,  neogeo,   ROT0, "Visco", "Neo Drift Out - New Technology", &neogeo_ctrl, NULL )
