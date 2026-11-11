@@ -57,8 +57,9 @@ struct mixer_channel_data
 	/* mixing levels */
 	unsigned mixing_level;
 	unsigned default_mixing_level;
-	unsigned config_mixing_level;
-	unsigned config_default_mixing_level;
+	int scale;							/* percent, from the sound channel scale core options, applied on top of mixing_level */
+	/* unsigned config_mixing_level; */			/* mixing levels are no longer saved in the .cfg */
+	/* unsigned config_default_mixing_level; */
 
 	/* current playback positions */
 	unsigned samples_available;
@@ -91,10 +92,10 @@ struct mixer_channel_data
 
 /* channel data */
 static struct mixer_channel_data mixer_channel[MIXER_MAX_CHANNELS];
-static unsigned config_mixing_level[MIXER_MAX_CHANNELS];
-static unsigned config_default_mixing_level[MIXER_MAX_CHANNELS];
+/* static unsigned config_mixing_level[MIXER_MAX_CHANNELS]; */			/* mixing levels are no longer saved in the .cfg */
+/* static unsigned config_default_mixing_level[MIXER_MAX_CHANNELS]; */
 static int first_free_channel = 0;
-static int is_config_invalid;
+/* static int is_config_invalid; */
 static int is_stereo;
 
 /* 32-bit accumulators */
@@ -632,8 +633,8 @@ void mix_sample_8(struct mixer_channel_data *channel, int samples_to_generate)
 	/* compute the overall mixing volume */
 	if (mixer_sound_enabled)
 	{
-		mixing_volume[0] = ((channel->left_volume * channel->mixing_level * 256) << channel->gain) / (100*100);
-		mixing_volume[1] = ((channel->right_volume * channel->mixing_level * 256) << channel->gain) / (100*100);
+		mixing_volume[0] = (((channel->left_volume * channel->mixing_level * 256) << channel->gain) / (100*100)) * channel->scale / 100;
+		mixing_volume[1] = (((channel->right_volume * channel->mixing_level * 256) << channel->gain) / (100*100)) * channel->scale / 100;
 	} else {
 		mixing_volume[0] = 0;
 		mixing_volume[1] = 0;
@@ -681,8 +682,8 @@ void mix_sample_16(struct mixer_channel_data *channel, int samples_to_generate)
 	/* compute the overall mixing volume */
 	if (mixer_sound_enabled)
 	{
-		mixing_volume[0] = ((channel->left_volume * channel->mixing_level * 256) << channel->gain) / (100*100);
-		mixing_volume[1] = ((channel->right_volume * channel->mixing_level * 256) << channel->gain) / (100*100);
+		mixing_volume[0] = (((channel->left_volume * channel->mixing_level * 256) << channel->gain) / (100*100)) * channel->scale / 100;
+		mixing_volume[1] = (((channel->right_volume * channel->mixing_level * 256) << channel->gain) / (100*100)) * channel->scale / 100;
 	} else {
 		mixing_volume[0] = 0;
 		mixing_volume[1] = 0;
@@ -770,8 +771,9 @@ int mixer_sh_start(void)
 	{
 		channel->mixing_level 					= 0xff;
 		channel->default_mixing_level 			= 0xff;
-		channel->config_mixing_level 			= config_mixing_level[i];
-		channel->config_default_mixing_level 	= config_default_mixing_level[i];
+		channel->scale 							= 100;
+		/* channel->config_mixing_level 			= config_mixing_level[i]; */
+		/* channel->config_default_mixing_level 	= config_default_mixing_level[i]; */
 
 		channel->left = filter_state_alloc();
 		channel->right = filter_state_alloc();
@@ -943,7 +945,8 @@ int mixer_allocate_channel(int default_mixing_level)
 
 int mixer_allocate_channels(int channels, const int *default_mixing_levels)
 {
-	int i, j;
+	int i;
+	/* int j; */	/* used only by the .cfg mixing level loading below, now #if 0 */
 
 	mixerlogerror(("Mixer:mixer_allocate_channels(%d)\n",channels));
 
@@ -972,6 +975,7 @@ int mixer_allocate_channels(int channels, const int *default_mixing_levels)
 
 		/* attempt to load in the configuration data for this channel */
 		channel->mixing_level = channel->default_mixing_level;
+#if 0	/* mixing levels are no longer read from the .cfg */
 		if (!is_config_invalid)
 		{
 			/* if the defaults match, set the mixing level from the config */
@@ -986,6 +990,7 @@ int mixer_allocate_channels(int channels, const int *default_mixing_levels)
 					mixer_set_mixing_level(j, mixer_channel[j].default_mixing_level);
 			}
 		}
+#endif
 
 		/* set the default name */
 		mixer_set_name(first_free_channel + i, 0);
@@ -1074,6 +1079,33 @@ void mixer_set_mixing_level(int ch, int level)
 
 
 /***************************************************************************
+	mixer_set_scale
+***************************************************************************/
+
+void mixer_set_scale(int ch, int percent)
+{
+	struct mixer_channel_data *channel = &mixer_channel[ch];
+
+	mixer_update_channel(channel, sound_scalebufferpos(samples_this_frame));
+	if (percent < 0)
+		percent = 0;
+	if (percent > MIXER_MAX_SCALE)
+		percent = MIXER_MAX_SCALE;
+	channel->scale = percent;
+}
+
+/***************************************************************************
+	mixer_get_scale
+***************************************************************************/
+
+int mixer_get_scale(int ch)
+{
+	struct mixer_channel_data *channel = &mixer_channel[ch];
+	return channel->scale;
+}
+
+
+/***************************************************************************
 	mixer_set_stereo_volume
 ***************************************************************************/
 void mixer_set_stereo_volume(int ch, int l_vol, int r_vol )
@@ -1107,6 +1139,7 @@ int mixer_get_default_mixing_level(int ch)
 }
 
 
+#if 0	/* mixing levels are no longer saved in the .cfg */
 /***************************************************************************
 	mixer_load_config
 ***************************************************************************/
@@ -1171,6 +1204,7 @@ void mixer_write_config(mame_file *f)
 	mame_fwrite(f, config.default_levels, MIXER_MAX_CHANNELS);
 	mame_fwrite(f, config.mixing_levels, MIXER_MAX_CHANNELS);
 }
+#endif
 
 
 /***************************************************************************
@@ -1193,8 +1227,8 @@ void mixer_play_streamed_sample_16(int ch, INT16 *data, int len, int freq)
 
 	/* compute the overall mixing volume */
 	if (mixer_sound_enabled) {
-		mixing_volume[0] = ((channel->left_volume * channel->mixing_level * 256) << channel->gain) / (100*100);
-		mixing_volume[1] = ((channel->right_volume * channel->mixing_level * 256) << channel->gain) / (100*100);
+		mixing_volume[0] = (((channel->left_volume * channel->mixing_level * 256) << channel->gain) / (100*100)) * channel->scale / 100;
+		mixing_volume[1] = (((channel->right_volume * channel->mixing_level * 256) << channel->gain) / (100*100)) * channel->scale / 100;
 	} else {
 		mixing_volume[0] = 0;
 		mixing_volume[1] = 0;
