@@ -100,6 +100,10 @@ enum { IPT_END=1,IPT_PORT,
 	/* 8 player support */
 	IPT_START5, IPT_START6, IPT_START7, IPT_START8,
 	IPT_COIN5, IPT_COIN6, IPT_COIN7, IPT_COIN8,
+
+	/* a 0-100 setting set by a core option, read by DISCRETE_ADJUSTMENT nodes. */
+	/* It goes last because .cfg files store these type numbers. */
+	IPT_ADJUSTER,
 	__ipt_max
 };
 
@@ -246,7 +250,10 @@ enum { IPT_END=1,IPT_PORT,
 
 #define MAX_DEFSTR_LEN 20
 extern const char ipdn_defaultstrings[][MAX_DEFSTR_LEN];
-#define PORT_ADJUSTER(default,name)
+
+/* adjuster: the whole port holds a 0-100 setting, set by a core option */
+#define PORT_ADJUSTER(default,name) \
+	PORT_BIT_NAME(0xff, default, IPT_ADJUSTER, name)
 
 /* this must match the ipdn_defaultstrings list in inptport.c */
 enum {

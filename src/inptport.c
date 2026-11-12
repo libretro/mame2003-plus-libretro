@@ -1688,6 +1688,7 @@ struct InputPort* input_port_allocate(const struct InputPortTiny *src)
 			case IPT_PORT :
 			case IPT_DIPSWITCH_NAME :
 			case IPT_DIPSWITCH_SETTING :
+			case IPT_ADJUSTER :
 				seq_default = CODE_NONE;
 			break;
 			default:
