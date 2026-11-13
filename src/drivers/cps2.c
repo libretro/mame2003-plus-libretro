@@ -8339,6 +8339,31 @@ ROM_START( spf2xpri )
 	ROM_LOAD( "spf2t.key",    0x000000, 0x000014, CRC(4c4dc7e3) SHA1(db4f257f6006b2f3cfa7cc70917228d639324513) )
 ROM_END
 
+/* Fix-It Felix Jr. (CPS2) - homebrew by Vanni Brutto (zanac): a faithful conversion of the
+   Fix-It Felix Jr. cabinet game to CPS2 hardware (vertical screen), with an operator menu and a
+   2-player co-op mode. Unencrypted program with a dead board key.
+   https://zanac79.itch.io/fix-it-felix-jr-arcade-edition */
+ROM_START( fixfelc2 )
+	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )  /* 68000 code */
+	ROM_LOAD16_WORD_SWAP( "ffc2.03",      0x000000, 0x080000, CRC(8f71b72c) )
+
+	ROM_REGION( 0xc00000, REGION_GFX1, 0 )
+	ROM_LOAD64_WORD( "ffc2.13m",  0x000000, 0x300000, CRC(b3271d50) )
+	ROM_LOAD64_WORD( "ffc2.15m",  0x000002, 0x300000, CRC(81259fd2) )
+	ROM_LOAD64_WORD( "ffc2.17m",  0x000004, 0x300000, CRC(d2e18d6c) )
+	ROM_LOAD64_WORD( "ffc2.19m",  0x000006, 0x300000, CRC(9df91c33) )
+
+	ROM_REGION( QSOUND_SIZE, REGION_CPU2, 0 )  /* 64k for the audio CPU (+banks) */
+	ROM_LOAD( "ffc2.01",   0x00000, 0x08000, CRC(90990a4c) )
+	ROM_CONTINUE(          0x10000, 0x18000 )
+
+	ROM_REGION( 0x400000, REGION_SOUND1, 0 )  /* QSound samples */
+	ROM_LOAD16_WORD_SWAP( "ffc2.11m",   0x000000, 0x400000, CRC(7a0d6f51) )
+
+	ROM_REGION( 0x20, REGION_USER5, 0 )  /* a dead board key: no encrypted range in the ROM */
+	ROM_LOAD( "fixfelc2.key", 0x000000, 0x000014, CRC(2cf772b0) )
+ROM_END
+
 /* Super Puzzle Fighter 2 Turbo X" - hack by Vanni Brutto (zanac), built on X' (spf2xpri)
    with Zangief and Ibuki from Super Gem Fighter Mini Mix. The set is built by the user from spf2t and sgemf:
    https://github.com/zanac/psx-puzzle-fighter-x-prime
@@ -12434,6 +12459,7 @@ GAME( 1996, spf2ta,     spf2t,    cps2,     cps2_2p2b,  my_cps2,     ROT0,   "Ca
 GAME( 1996, spf2th,     spf2t,    cps2,     cps2_2p2b,  my_cps2,     ROT0,   "Capcom", "Super Puzzle Fighter II Turbo (Hispanic 960531)")
 GAME( 2021, spf2xpri,   spf2t,    cps2,     cps2_2p2b,  my_cps2,     ROT0,   "hack",   "Super Puzzle Fighter 2 X'")
 GAME( 2026, spf2enh,    spf2t,    cps2,     spf2enh,    my_cps2,     ROT0,   "hack",   "Super Puzzle Fighter 2 Turbo X\"")
+GAME( 2026, fixfelc2,   0,        cps2,     cps2_2p2b,  my_cps2,     ROT270, "hack",    "Fix-It Felix Jr. (CPS2)")
 GAME( 1996, megaman2,   0,        cps2,     cps2_2p3b,  my_cps2,     ROT0,   "Capcom", "Mega Man 2: The Power Fighters (USA 960708)")
 GAME( 1996, megaman2a,  megaman2, cps2,     cps2_2p3b,  my_cps2,     ROT0,   "Capcom", "Mega Man 2: The Power Fighters (Asia 960708)")
 GAME( 1996, rockman2j,  megaman2, cps2,     cps2_2p3b,  my_cps2,     ROT0,   "Capcom", "Rockman 2: The Power Fighters (Japan 960708)")

@@ -4112,6 +4112,28 @@ ROM_START( mslug )
 	ROM_CONTINUE(      			   0x800001, 0x200000 )
 ROM_END
 
+/* Fix-It Felix Jr. (NEO GEO) - homebrew by Vanni Brutto (zanac): a faithful conversion of the
+   Fix-It Felix Jr. cabinet game to the Neo Geo MVS (vertical screen, all 320 columns), settings as
+   BIOS soft DIPs, high scores in the backup RAM, a 2-player co-op mode.
+   https://zanac79.itch.io/fix-it-felix-jr-arcade-edition */
+ROM_START( fixfelng )
+	ROM_REGION( 0x100000, REGION_CPU1, 0 )
+	ROM_LOAD16_WORD_SWAP( "fixfelng.p1", 0x000000, 0x100000, CRC(fc6a476e) )
+
+	NEO_SFIX_128K( "fixfelng.s1", CRC(a26d5bf1) )
+
+	NEO_BIOS_SOUND_128K( "fixfelng.m1", CRC(4d5dae43) )
+
+	ROM_REGION( 0x200000, REGION_SOUND1, ROMREGION_SOUNDONLY )
+	ROM_LOAD( "fixfelng.v1", 0x000000, 0x200000, CRC(155e48bc) )
+
+	NO_DELTAT_REGION
+
+	ROM_REGION( 0x200000, REGION_GFX3, 0 )
+	ROM_LOAD16_BYTE( "fixfelng.c1", 0x000000, 0x100000, CRC(7a877af9) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "fixfelng.c2", 0x000001, 0x100000, CRC(00281fba) ) /* Plane 2,3 */
+ROM_END
+
 /* Super Puzzle Fighter II Turbo X" for the Neo Geo (homebrew, github zanac/psx-puzzle-fighter-x-prime,
    branch neogeo): built from your own arcade set (spf2enh) by its builder: no fixed CRCs (the build machine may round the sounds differently) */
 ROM_START( spf2ng )
@@ -8357,6 +8379,7 @@ GAMEB( 2003, samsh5sp, neogeo,	 neogeo, neogeo, neogeo,  samsh5sp, ROT0, "Yuki E
 GAMEB( 1992, androdun, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Visco", "Andro Dunos", &neogeo_ctrl, NULL )
 GAMEB( 1995, puzzledp, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Taito (Visco license)", "Puzzle De Pon!", &neogeo_ctrl, NULL )
 GAMEB( 2026, spf2ng,   neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "hack", "Super Puzzle Fighter 2 Turbo X\" (Neo Geo)", &neogeo_ctrl, NULL )
+GAMEB( 2026, fixfelng, neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT270, "hack", "Fix-It Felix Jr. (NEO GEO)", &neogeo_ctrl, NULL )
 GAMEB( 1996, neomrdo,  neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Visco", "Neo Mr. Do!", &neogeo_ctrl, NULL )
 GAMEB( 1995, goalx3,   neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Visco", "Goal! Goal! Goal!", &neogeo_ctrl, NULL )
 GAMEB( 1996, neodrift, neogeo,   neogeo, raster, neogeo,  neogeo,   ROT0, "Visco", "Neo Drift Out - New Technology", &neogeo_ctrl, NULL )
