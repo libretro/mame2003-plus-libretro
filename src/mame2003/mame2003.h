@@ -192,7 +192,7 @@ extern int vector_resize_pending;
 
 ******************************************************************************/
 void set_content_flags(void);
-void init_core_options(void);
+void init_core_options(bool content_loaded);
 void update_variables(bool first_time);
 
 enum CORE_OPTIONS  /* controls the order in which core options appear. common, important, and content-specific options should go earlier on the list */
