@@ -695,6 +695,13 @@ START_TEST (test_linked_list_remove_first_matching_null)
    ck_assert_ptr_null(linked_list_remove_first_matching(NULL, &_match_value_1));
 }
 END_TEST
+START_TEST (test_linked_list_remove_first_matching_function_null)
+{
+   linked_list_t *list = linked_list_new();
+   ck_assert_ptr_null(linked_list_remove_first_matching(list, NULL));
+
+   linked_list_free(list, NULL);
+}
 
 START_TEST (test_linked_list_remove_first_matching_empty)
 {
@@ -798,6 +805,14 @@ START_TEST (test_linked_list_remove_last_matching_null)
    ck_assert_ptr_null(linked_list_remove_last_matching(NULL, &_match_value_1));
 }
 END_TEST
+START_TEST (test_linked_list_remove_last_matching_function_null)
+{
+   linked_list_t *list = linked_list_new();
+   ck_assert_ptr_null(linked_list_remove_last_matching(list, NULL));
+
+   linked_list_free(list, NULL);
+}
+END_TEST
 
 START_TEST (test_linked_list_remove_last_matching_empty)
 {
@@ -899,6 +914,15 @@ END_TEST
 START_TEST (test_linked_list_remove_all_matching_null)
 {
    linked_list_remove_all_matching(NULL, &_match_value_1);
+}
+END_TEST
+
+START_TEST (test_linked_list_remove_all_matching_function_null)
+{
+   linked_list_t *list = linked_list_new();
+   linked_list_remove_all_matching(list, NULL);
+
+   linked_list_free(list, NULL);
 }
 END_TEST
 
@@ -1246,6 +1270,7 @@ Suite *create_suite(void)
    tcase_add_test(tc_core, test_linked_list_remove_all_only);
    tcase_add_test(tc_core, test_linked_list_remove_all_multiple);
    tcase_add_test(tc_core, test_linked_list_remove_first_matching_null);
+   tcase_add_test(tc_core, test_linked_list_remove_first_matching_function_null);
    tcase_add_test(tc_core, test_linked_list_remove_first_matching_empty);
    tcase_add_test(tc_core, test_linked_list_remove_first_matching_not_found);
    tcase_add_test(tc_core, test_linked_list_remove_first_matching_first);
@@ -1254,7 +1279,9 @@ Suite *create_suite(void)
    tcase_add_test(tc_core, test_linked_list_remove_first_matching_only);
    tcase_add_test(tc_core, test_linked_list_remove_first_matching_multiple);
    tcase_add_test(tc_core, test_linked_list_remove_last_matching_null);
+   tcase_add_test(tc_core, test_linked_list_remove_all_matching_function_null);
    tcase_add_test(tc_core, test_linked_list_remove_last_matching_empty);
+   tcase_add_test(tc_core, test_linked_list_remove_last_matching_function_null);
    tcase_add_test(tc_core, test_linked_list_remove_last_matching_not_found);
    tcase_add_test(tc_core, test_linked_list_remove_last_matching_first);
    tcase_add_test(tc_core, test_linked_list_remove_last_matching_middle);

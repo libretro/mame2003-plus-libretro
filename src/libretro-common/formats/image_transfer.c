@@ -22,6 +22,7 @@
 
 #include <stdint.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include <boolean.h>
 
@@ -34,11 +35,135 @@
 #ifdef HAVE_RTGA
 #include <formats/rtga.h>
 #endif
+#ifdef HAVE_RGIF
+#include <formats/rgif.h>
+#endif
 #ifdef HAVE_RBMP
 #include <formats/rbmp.h>
 #endif
+#ifdef HAVE_RWEBP
+#include <formats/rwebp.h>
+#endif
+
+#ifdef HAVE_RWEBM
+#include <formats/rwebm_video.h>
+#endif
+#ifdef HAVE_RMP4
+#include <formats/rmp4_video.h>
+#endif
+#ifdef HAVE_RDDS
+#include <formats/rdds.h>
+#endif
 
 #include <formats/image.h>
+
+/* Per-type dispatch for the still/animation decode front end.  Every
+ * entry point below is a switch over enum image_type_enum that forwards
+ * to one of the r<fmt> backends, so a caller can drive any supported
+ * format through one API and read an unsupported combination off the
+ * return value instead of testing the type itself.
+ *
+ * Each backend sits behind its own HAVE_R<FMT> build guard.  With the
+ * guard off, image_transfer_new() returns NULL for that type and the
+ * rest of the entry points degrade to the unsupported answer (NULL /
+ * false / 0 / no-op), so no caller needs a compile-time type list.
+ *
+ * Y = forwarded to the backend, . = returns the unsupported answer,
+ * s = constant stub (see the notes below):
+ *
+ *                                   PNG JPG BMP TGA WBP DDS WBM MP4 GIF
+ *   new / free / set_buf_ptr        Y   Y   Y   Y   Y   Y   Y   Y   Y
+ *   start                           Y   Y   s   s   s   s   s   s   s
+ *   is_valid                        Y   Y   s   s   s   s   s   s   s
+ *   process                         Y   Y   Y   Y   Y   Y   Y   Y   Y
+ *   process slices (returns NEXT)   Y   Y   Y   Y   Y   Y   Y   Y   .
+ *   iterate                         Y   Y   .   .   .   .   .   .   .
+ *   need_more                       Y   Y   .   .   .   .   .   .   .
+ *   set_avail                       Y   Y   .   .   .   .   Y   Y   Y
+ *   get_gpu_layout                  .   .   .   .   .   Y   .   .   .
+ *   set_want_10bit / is_10bit       Y   .   .   .   .   .   Y   Y   .
+ *   detach_anim_stream              .   .   .   .   .   .   Y   Y   .
+ *   anim_* (whole buffer)           .   .   .   .   Y   .   .   .   .
+ *   anim_stream_new                 Y   .   .   .   Y   .   Y   Y   .
+ *   anim_stream_new_avail           Y   .   .   .   .   .   Y   Y   .
+ *   anim_stream_free / _get_info /
+ *     _next / _rewind / _set_argb   Y   .   .   .   Y   .   Y   Y   .
+ *   anim_stream_set_avail           Y   .   .   .   .   .   Y   Y   .
+ *   anim_stream_media_floor /
+ *     _consumed                     .   .   .   .   .   .   Y   Y   .
+ *   anim_stream_complete_scan       .   .   .   .   .   .   Y   .   .
+ *
+ * The gaps, in the order a caller runs into them:
+ *
+ * - start / is_valid are header probes.  Only PNG and JPEG parse a
+ *   header incrementally and can therefore fail before decoding; the
+ *   other backends validate inside their one-shot process step, so the
+ *   stubs answer true and let process() report the failure.  Each stub
+ *   is behind its format's HAVE_ guard like every other case, so a
+ *   type compiled out answers false here as well.
+ *
+ * - there are two independent slicing mechanisms here, and the matrix
+ *   rows for them do not line up.  iterate() is the incremental
+ *   *parse* loop - walking chunk or marker structure before any pixels
+ *   exist - and only PNG and JPEG have one; need_more() tells an
+ *   iterate() that stalled at the resident-byte wall apart from one
+ *   that finished.  Decode-phase slicing is the separate business of
+ *   process() returning IMAGE_PROCESS_NEXT until the surface is
+ *   complete, and every type does that.  So a false from iterate() does
+ *   NOT mean the type decodes in one go - no type produces a whole
+ *   surface from a single process() call any more, and the ones that
+ *   answer false to iterate() are simply the ones with nothing to parse
+ *   incrementally before the pixels start.
+ *
+ * - set_avail (the still-image byte wall) is honoured by PNG and JPEG,
+ *   where it surfaces as need_more(), and by TGA, WEBM and MP4, where
+ *   it surfaces as IMAGE_PROCESS_WAIT out of process(), and by BMP the
+ *   same way. GIF waits the same way, but for the whole file: it
+ *   decodes its first image in one process() call once it is all in.  WEBP and DDS have no partial-buffer decode and must be
+ *   handed fully resident data: a WEBP still is a VP8 keyframe, which
+ *   cannot be decoded in part at all.
+ *
+ * - 10-bit output is a property of the source, not of this layer: PNG
+ *   (from 16-bit-per-channel RGB) and the two video types (from 10-bit
+ *   HDR) can pack XRGB2101010.  JPEG is 8-bit by construction; BMP,
+ *   TGA, WEBP and DDS are not wired for it.
+ *
+ * - get_gpu_layout is DDS only, and only for part of it - see
+ *   rdds_get_gpu_layout() for the payloads it declines and hands back
+ *   to the CPU decode path.
+ *
+ * - animation splits two ways.  Animated WEBP is the only type with
+ *   the whole-buffer anim_* handle (decode everything, then index
+ *   frames); APNG, animated WEBP, WEBM and MP4 all have the streaming
+ *   form, and all four have the partial open (anim_stream_new_avail),
+ *   the byte wall (anim_stream_set_avail) and the byte cursor
+ *   (media_floor / consumed), so all four can be windowed.  APNG and
+ *   WEBP index frames and can also name the next frame's byte span
+ *   (next_span) for a feeder; WEBM names a blocked complete element,
+ *   and MP4 names its next packet. Only WEBM and MP4 can be adopted
+ *   from a still whose read is still in flight (detach_anim_stream).
+ *   complete_scan() is WEBM only because
+ *   only its timestamp pre-scan can be truncated by the wall.
+ *
+ * Deliberately not dispatched here:
+ *
+ * - Encoding.  rpng_save_image_*() and rbmp_save_image() are called
+ *   directly by their users; there is no image_transfer_save().
+ *
+ * - Type sniffing.  image_texture_get_type() derives the enum from the
+ *   path extension; nothing here inspects magic bytes.
+ *
+ * - The pre-decode readiness probes (rpng_header_ready,
+ *   rjpeg_header_ready, rwebp_still_ready, rpng_is_apng).  They take a
+ *   raw buffer rather than a handle, so tasks/task_image.c calls them
+ *   before there is anything to dispatch on.
+ *
+ * - Format-specific side channels with no cross-type meaning, such as
+ *   rpng_get_hdr_metadata() and the player-grade MP4 controls
+ *   (rmp4_video_stream_seek_ms / _skip / _render / _span_ms), which
+ *   exist for the WEBM core - it holds the concrete stream type and
+ *   does not need this layer.
+ */
 
 void image_transfer_free(void *data, enum image_type_enum type)
 {
@@ -47,6 +172,11 @@ void image_transfer_free(void *data, enum image_type_enum type)
       case IMAGE_TYPE_TGA:
 #ifdef HAVE_RTGA
          rtga_free((rtga_t*)data);
+#endif
+         break;
+      case IMAGE_TYPE_GIF:
+#ifdef HAVE_RGIF
+         rgif_free((rgif_t*)data);
 #endif
          break;
       case IMAGE_TYPE_PNG:
@@ -66,6 +196,26 @@ void image_transfer_free(void *data, enum image_type_enum type)
       case IMAGE_TYPE_BMP:
 #ifdef HAVE_RBMP
          rbmp_free((rbmp_t*)data);
+#endif
+         break;
+      case IMAGE_TYPE_WEBP:
+#ifdef HAVE_RWEBP
+         rwebp_free((rwebp_t*)data);
+#endif
+         break;
+      case IMAGE_TYPE_WEBM:
+#ifdef HAVE_RWEBM
+         rwebm_video_free((rwebm_video_t*)data);
+#endif
+         break;
+      case IMAGE_TYPE_MP4:
+#ifdef HAVE_RMP4
+         rmp4_video_free((rmp4_video_t*)data);
+#endif
+         break;
+      case IMAGE_TYPE_DDS:
+#ifdef HAVE_RDDS
+         rdds_free((rdds_t*)data);
 #endif
          break;
       case IMAGE_TYPE_NONE:
@@ -95,9 +245,39 @@ void *image_transfer_new(enum image_type_enum type)
 #else
          break;
 #endif
+      case IMAGE_TYPE_GIF:
+#ifdef HAVE_RGIF
+         return rgif_new();
+#else
+         break;
+#endif
       case IMAGE_TYPE_BMP:
 #ifdef HAVE_RBMP
          return rbmp_alloc();
+#else
+         break;
+#endif
+      case IMAGE_TYPE_WEBP:
+#ifdef HAVE_RWEBP
+         return rwebp_alloc();
+#else
+         break;
+#endif
+      case IMAGE_TYPE_WEBM:
+#ifdef HAVE_RWEBM
+         return rwebm_video_alloc();
+#else
+         break;
+#endif
+      case IMAGE_TYPE_MP4:
+#ifdef HAVE_RMP4
+         return rmp4_video_alloc();
+#else
+         break;
+#endif
+      case IMAGE_TYPE_DDS:
+#ifdef HAVE_RDDS
+         return rdds_alloc();
 #else
          break;
 #endif
@@ -123,6 +303,8 @@ bool image_transfer_start(void *data, enum image_type_enum type)
 #endif
       case IMAGE_TYPE_JPEG:
 #ifdef HAVE_RJPEG
+         if (!rjpeg_start((rjpeg_t*)data))
+            break;
          return true;
 #else
          break;
@@ -133,8 +315,42 @@ bool image_transfer_start(void *data, enum image_type_enum type)
 #else
          break;
 #endif
-      case IMAGE_TYPE_BMP:
+      case IMAGE_TYPE_GIF:
+#ifdef HAVE_RGIF
          return true;
+#else
+         break;
+#endif
+      case IMAGE_TYPE_BMP:
+#ifdef HAVE_RBMP
+         return true;
+#else
+         break;
+#endif
+      case IMAGE_TYPE_WEBP:
+#ifdef HAVE_RWEBP
+         return true;
+#else
+         break;
+#endif
+      case IMAGE_TYPE_WEBM:
+#ifdef HAVE_RWEBM
+         return true;
+#else
+         break;
+#endif
+      case IMAGE_TYPE_MP4:
+#ifdef HAVE_RMP4
+         return true;
+#else
+         break;
+#endif
+      case IMAGE_TYPE_DDS:
+#ifdef HAVE_RDDS
+         return true;
+#else
+         break;
+#endif
       case IMAGE_TYPE_NONE:
          break;
    }
@@ -156,7 +372,7 @@ bool image_transfer_is_valid(
 #endif
       case IMAGE_TYPE_JPEG:
 #ifdef HAVE_RJPEG
-         return true;
+         return rjpeg_is_valid((rjpeg_t*)data);
 #else
          break;
 #endif
@@ -166,8 +382,42 @@ bool image_transfer_is_valid(
 #else
          break;
 #endif
-      case IMAGE_TYPE_BMP:
+      case IMAGE_TYPE_GIF:
+#ifdef HAVE_RGIF
          return true;
+#else
+         break;
+#endif
+      case IMAGE_TYPE_BMP:
+#ifdef HAVE_RBMP
+         return true;
+#else
+         break;
+#endif
+      case IMAGE_TYPE_WEBP:
+#ifdef HAVE_RWEBP
+         return true;
+#else
+         break;
+#endif
+      case IMAGE_TYPE_WEBM:
+#ifdef HAVE_RWEBM
+         return true;
+#else
+         break;
+#endif
+      case IMAGE_TYPE_MP4:
+#ifdef HAVE_RMP4
+         return true;
+#else
+         break;
+#endif
+      case IMAGE_TYPE_DDS:
+#ifdef HAVE_RDDS
+         return true;
+#else
+         break;
+#endif
       case IMAGE_TYPE_NONE:
          break;
    }
@@ -190,7 +440,7 @@ void image_transfer_set_buffer_ptr(
          break;
       case IMAGE_TYPE_JPEG:
 #ifdef HAVE_RJPEG
-         rjpeg_set_buf_ptr((rjpeg_t*)data, (uint8_t*)ptr);
+         rjpeg_set_buf_ptr((rjpeg_t*)data, (uint8_t*)ptr, len);
 #endif
          break;
       case IMAGE_TYPE_TGA:
@@ -198,9 +448,34 @@ void image_transfer_set_buffer_ptr(
          rtga_set_buf_ptr((rtga_t*)data, (uint8_t*)ptr);
 #endif
          break;
+      case IMAGE_TYPE_GIF:
+#ifdef HAVE_RGIF
+         rgif_set_buf_ptr((rgif_t*)data, (uint8_t*)ptr, len);
+#endif
+         break;
       case IMAGE_TYPE_BMP:
 #ifdef HAVE_RBMP
          rbmp_set_buf_ptr((rbmp_t*)data, (uint8_t*)ptr);
+#endif
+         break;
+      case IMAGE_TYPE_WEBP:
+#ifdef HAVE_RWEBP
+         rwebp_set_buf_ptr((rwebp_t*)data, (uint8_t*)ptr, len);
+#endif
+         break;
+      case IMAGE_TYPE_WEBM:
+#ifdef HAVE_RWEBM
+         rwebm_video_set_buf_ptr((rwebm_video_t*)data, (uint8_t*)ptr, len);
+#endif
+         break;
+      case IMAGE_TYPE_MP4:
+#ifdef HAVE_RMP4
+         rmp4_video_set_buf_ptr((rmp4_video_t*)data, (uint8_t*)ptr, len);
+#endif
+         break;
+      case IMAGE_TYPE_DDS:
+#ifdef HAVE_RDDS
+         rdds_set_buf_ptr((rdds_t*)data, (uint8_t*)ptr);
 #endif
          break;
       case IMAGE_TYPE_NONE:
@@ -212,36 +487,83 @@ int image_transfer_process(
       void *data,
       enum image_type_enum type,
       uint32_t **buf, size_t len,
-      unsigned *width, unsigned *height)
+      unsigned *width, unsigned *height,
+      bool supports_rgba)
 {
+   int ret = 0;
+
    switch (type)
    {
       case IMAGE_TYPE_PNG:
 #ifdef HAVE_RPNG
-         return rpng_process_image(
+         ret = rpng_process_image(
                (rpng_t*)data,
-               (void**)buf, len, width, height);
+               (void**)buf, len, width, height, supports_rgba);
+         break;
 #else
          break;
 #endif
       case IMAGE_TYPE_JPEG:
 #ifdef HAVE_RJPEG
-         return rjpeg_process_image((rjpeg_t*)data,
-               (void**)buf, len, width, height);
+         ret = rjpeg_process_image((rjpeg_t*)data,
+               (void**)buf, len, width, height, supports_rgba);
+         break;
 #else
          break;
 #endif
       case IMAGE_TYPE_TGA:
 #ifdef HAVE_RTGA
-         return rtga_process_image((rtga_t*)data,
-               (void**)buf, len, width, height);
+         ret = rtga_process_image((rtga_t*)data,
+               (void**)buf, len, width, height, supports_rgba);
+         break;
+#else
+         break;
+#endif
+      case IMAGE_TYPE_GIF:
+#ifdef HAVE_RGIF
+         ret = rgif_process_image((rgif_t*)data,
+               (void**)buf, len, width, height, supports_rgba);
+         break;
 #else
          break;
 #endif
       case IMAGE_TYPE_BMP:
 #ifdef HAVE_RBMP
-         return rbmp_process_image((rbmp_t*)data,
-               (void**)buf, len, width, height);
+         ret = rbmp_process_image((rbmp_t*)data,
+               (void**)buf, len, width, height, supports_rgba);
+         break;
+#else
+         break;
+#endif
+      case IMAGE_TYPE_WEBP:
+#ifdef HAVE_RWEBP
+         ret = rwebp_process_image((rwebp_t*)data,
+               (void**)buf, len, width, height, supports_rgba);
+         break;
+#else
+         break;
+#endif
+      case IMAGE_TYPE_WEBM:
+#ifdef HAVE_RWEBM
+         ret = rwebm_video_process_image((rwebm_video_t*)data,
+               (void**)buf, len, width, height, supports_rgba);
+         break;
+#else
+         break;
+#endif
+      case IMAGE_TYPE_MP4:
+#ifdef HAVE_RMP4
+         ret = rmp4_video_process_image((rmp4_video_t*)data,
+               (void**)buf, len, width, height, supports_rgba);
+         break;
+#else
+         break;
+#endif
+      case IMAGE_TYPE_DDS:
+#ifdef HAVE_RDDS
+         ret = rdds_process_image((rdds_t*)data,
+               (void**)buf, len, width, height, supports_rgba);
+         break;
 #else
          break;
 #endif
@@ -249,7 +571,147 @@ int image_transfer_process(
          break;
    }
 
-   return 0;
+   return ret;
+}
+
+bool image_transfer_get_gpu_layout(
+      void *data,
+      enum image_type_enum type,
+      size_t len,
+      struct image_gpu_layout *out)
+{
+   switch (type)
+   {
+      case IMAGE_TYPE_DDS:
+#ifdef HAVE_RDDS
+         return rdds_get_gpu_layout((rdds_t*)data, len, out);
+#else
+         break;
+#endif
+      default:
+         break;
+   }
+   return false;
+}
+
+/* Ask a decoder to emit packed XRGB2101010 instead of 8-bit RGBA.
+ * Honoured by PNG (16-bit-per-channel RGB sources) and by the two video
+ * types (10-bit HDR sources); a no-op for every other type, and for an
+ * 8-bit source of an honouring type. */
+void image_transfer_set_want_10bit(void *data, enum image_type_enum type,
+      int want)
+{
+   switch (type)
+   {
+#ifdef HAVE_RPNG
+      case IMAGE_TYPE_PNG:
+         rpng_set_want_10bit((rpng_t*)data, want);
+         break;
+#endif
+#ifdef HAVE_RWEBM
+      case IMAGE_TYPE_WEBM:
+         rwebm_video_set_want_10bit((rwebm_video_t*)data, want);
+         break;
+#endif
+#ifdef HAVE_RMP4
+      case IMAGE_TYPE_MP4:
+         rmp4_video_set_want_10bit((rmp4_video_t*)data, want);
+         break;
+#endif
+      default:
+         break;
+   }
+}
+
+
+/* Ask a video still for linear scRGB half floats from an HDR (PQ or
+ * HLG) source, 8 bytes a pixel in the frame process hands out; a no-op
+ * for every other type, and for an SDR source of these. */
+void image_transfer_set_want_fp16(void *data, enum image_type_enum type,
+      bool want)
+{
+   switch (type)
+   {
+#ifdef HAVE_RWEBM
+      case IMAGE_TYPE_WEBM:
+         rwebm_video_set_want_fp16((rwebm_video_t*)data, want);
+         break;
+#endif
+#ifdef HAVE_RMP4
+      case IMAGE_TYPE_MP4:
+         rmp4_video_set_want_fp16((rmp4_video_t*)data, want);
+         break;
+#endif
+      default:
+         break;
+   }
+}
+
+/* Whether the last processed frame came out as half floats. */
+bool image_transfer_is_fp16(void *data, enum image_type_enum type)
+{
+   switch (type)
+   {
+#ifdef HAVE_RWEBM
+      case IMAGE_TYPE_WEBM:
+         return rwebm_video_is_fp16((const rwebm_video_t*)data);
+#endif
+#ifdef HAVE_RMP4
+      case IMAGE_TYPE_MP4:
+         return rmp4_video_is_fp16((const rmp4_video_t*)data);
+#endif
+      default:
+         break;
+   }
+   return false;
+}
+
+/* Report whether the last processed frame was actually written as
+ * packed XRGB2101010 rather than 8-bit RGBA, i.e. 10-bit was requested
+ * and the source could supply it.  False for every type that cannot
+ * produce it - see image_transfer_set_want_10bit above. */
+bool image_transfer_is_10bit(void *data, enum image_type_enum type)
+{
+   switch (type)
+   {
+#ifdef HAVE_RPNG
+      case IMAGE_TYPE_PNG:
+         return rpng_is_10bit((const rpng_t*)data);
+#endif
+#ifdef HAVE_RWEBM
+      case IMAGE_TYPE_WEBM:
+         return rwebm_video_is_10bit((const rwebm_video_t*)data);
+#endif
+#ifdef HAVE_RMP4
+      case IMAGE_TYPE_MP4:
+         return rmp4_video_is_10bit((const rmp4_video_t*)data);
+#endif
+      default:
+         break;
+   }
+   return false;
+}
+
+bool image_transfer_need_more(void *data, enum image_type_enum type)
+{
+   switch (type)
+   {
+      case IMAGE_TYPE_PNG:
+#ifdef HAVE_RPNG
+         return rpng_need_more((const rpng_t*)data);
+#else
+         break;
+#endif
+      case IMAGE_TYPE_JPEG:
+#ifdef HAVE_RJPEG
+         return rjpeg_need_more((const rjpeg_t*)data);
+#else
+         break;
+#endif
+      default:
+         break;
+   }
+   return false;
 }
 
 bool image_transfer_iterate(void *data, enum image_type_enum type)
@@ -260,26 +722,1107 @@ bool image_transfer_iterate(void *data, enum image_type_enum type)
       case IMAGE_TYPE_PNG:
 #ifdef HAVE_RPNG
          if (!rpng_iterate_image((rpng_t*)data))
-            return false;
+            break;
+         return true;
+#else
+         break;
+#endif
+      case IMAGE_TYPE_JPEG:
+#ifdef HAVE_RJPEG
+         if (!rjpeg_iterate_image((rjpeg_t*)data))
+            break;
+         return true;
+#else
+         break;
+#endif
+      /* One-shot decoders: nothing to iterate, the whole image is
+       * produced by image_transfer_process(). */
+      case IMAGE_TYPE_TGA:
+      case IMAGE_TYPE_BMP:
+      case IMAGE_TYPE_WEBP:
+      case IMAGE_TYPE_DDS:
+      case IMAGE_TYPE_WEBM:
+      case IMAGE_TYPE_MP4:
+      case IMAGE_TYPE_GIF:
+      case IMAGE_TYPE_NONE:
+         break;
+   }
+
+   return false;
+}
+
+void image_transfer_set_rgba(void *data, enum image_type_enum type,
+      bool rgba)
+{
+   switch (type)
+   {
+      case IMAGE_TYPE_JPEG:
+#ifdef HAVE_RJPEG
+         rjpeg_set_out_rgba((rjpeg_t*)data, rgba);
+#endif
+         break;
+      default:
+         /* Only the JPEG decoder emits final pixels during the
+          * transfer phase; the others take the order at process
+          * time. */
+         break;
+   }
+}
+
+void image_transfer_set_avail(void *data, enum image_type_enum type,
+      size_t avail)
+{
+   switch (type)
+   {
+      case IMAGE_TYPE_PNG:
+#ifdef HAVE_RPNG
+         rpng_set_avail((rpng_t*)data, avail);
 #endif
          break;
       case IMAGE_TYPE_JPEG:
 #ifdef HAVE_RJPEG
-         return false;
-#else
-         break;
+         rjpeg_set_avail((rjpeg_t*)data, avail);
 #endif
+         break;
       case IMAGE_TYPE_TGA:
 #ifdef HAVE_RTGA
-         return false;
+         rtga_set_avail((rtga_t*)data, avail);
+#endif
+         break;
+      case IMAGE_TYPE_GIF:
+#ifdef HAVE_RGIF
+         rgif_set_avail((rgif_t*)data, avail);
+#endif
+         break;
+      case IMAGE_TYPE_BMP:
+#ifdef HAVE_RBMP
+         rbmp_set_avail((rbmp_t*)data, avail);
+#endif
+         break;
+      case IMAGE_TYPE_WEBM:
+#ifdef HAVE_RWEBM
+         rwebm_video_set_avail((rwebm_video_t*)data, avail);
+#endif
+         break;
+      case IMAGE_TYPE_MP4:
+#ifdef HAVE_RMP4
+         rmp4_video_set_avail((rmp4_video_t*)data, avail);
+#endif
+         break;
+      default:
+         break;
+   }
+}
+
+void image_transfer_anim_stream_set_avail(void *stream,
+      enum image_type_enum type, size_t avail)
+{
+   switch (type)
+   {
+      case IMAGE_TYPE_PNG:
+#ifdef HAVE_RPNG
+         rpng_apng_stream_set_avail((rpng_apng_stream_t*)stream, avail);
+#endif
+         break;
+      case IMAGE_TYPE_WEBP:
+#ifdef HAVE_RWEBP
+         rwebp_anim_stream_set_avail((rwebp_anim_stream_t*)stream, avail);
+#endif
+         break;
+      case IMAGE_TYPE_WEBM:
+#ifdef HAVE_RWEBM
+         rwebm_video_stream_set_avail((rwebm_video_stream_t*)stream,
+               avail);
+#endif
+         break;
+      case IMAGE_TYPE_MP4:
+#ifdef HAVE_RMP4
+         rmp4_video_stream_set_avail((rmp4_video_stream_t*)stream,
+               avail);
+#endif
+         break;
+      default:
+         break;
+   }
+}
+
+size_t image_transfer_anim_stream_media_floor(void *stream,
+      enum image_type_enum type)
+{
+   switch (type)
+   {
+      case IMAGE_TYPE_PNG:
+#ifdef HAVE_RPNG
+         return rpng_apng_stream_media_floor(
+               (const rpng_apng_stream_t*)stream);
 #else
          break;
 #endif
-      case IMAGE_TYPE_BMP:
-         return false;
-      case IMAGE_TYPE_NONE:
-         return false;
+      case IMAGE_TYPE_WEBP:
+#ifdef HAVE_RWEBP
+         return rwebp_anim_stream_media_floor(
+               (const rwebp_anim_stream_t*)stream);
+#else
+         break;
+#endif
+      case IMAGE_TYPE_WEBM:
+#ifdef HAVE_RWEBM
+         return rwebm_video_stream_media_floor(
+               (rwebm_video_stream_t*)stream);
+#else
+         break;
+#endif
+      case IMAGE_TYPE_MP4:
+#ifdef HAVE_RMP4
+         return rmp4_video_stream_media_floor(
+               (rmp4_video_stream_t*)stream);
+#else
+         break;
+#endif
+      default:
+         break;
    }
+   return 0;
+}
 
-   return true;
+int64_t image_transfer_anim_stream_duration_ns(void *stream,
+      enum image_type_enum type)
+{
+   switch (type)
+   {
+      case IMAGE_TYPE_WEBM:
+#ifdef HAVE_RWEBM
+         return rwebm_video_stream_duration_ns(
+               (rwebm_video_stream_t*)stream);
+#else
+         break;
+#endif
+      case IMAGE_TYPE_MP4:
+#ifdef HAVE_RMP4
+         return rmp4_video_stream_duration_ns(
+               (rmp4_video_stream_t*)stream);
+#else
+         break;
+#endif
+      default:
+         break;
+   }
+   return 0;
+}
+
+size_t image_transfer_anim_stream_consumed(void *stream,
+      enum image_type_enum type)
+{
+   switch (type)
+   {
+      case IMAGE_TYPE_PNG:
+#ifdef HAVE_RPNG
+         return rpng_apng_stream_consumed(
+               (const rpng_apng_stream_t*)stream);
+#else
+         break;
+#endif
+      case IMAGE_TYPE_WEBP:
+#ifdef HAVE_RWEBP
+         return rwebp_anim_stream_consumed(
+               (const rwebp_anim_stream_t*)stream);
+#else
+         break;
+#endif
+      case IMAGE_TYPE_WEBM:
+#ifdef HAVE_RWEBM
+         return rwebm_video_stream_consumed(
+               (rwebm_video_stream_t*)stream);
+#else
+         break;
+#endif
+      case IMAGE_TYPE_MP4:
+#ifdef HAVE_RMP4
+         return rmp4_video_stream_consumed(
+               (rmp4_video_stream_t*)stream);
+#else
+         break;
+#endif
+      default:
+         break;
+   }
+   return 0;
+}
+
+size_t image_transfer_anim_stream_feed_frontier(void *stream, enum image_type_enum type)
+{
+#ifdef HAVE_RWEBM
+   if (type == IMAGE_TYPE_WEBM)
+      return rwebm_video_stream_feed_frontier((rwebm_video_stream_t*)stream);
+#endif
+   return image_transfer_anim_stream_consumed(stream, type);
+}
+
+void image_transfer_anim_stream_pin_span(void *stream, enum image_type_enum type,
+      size_t *lo, size_t *hi)
+{
+   if (lo) *lo = 0;
+   if (hi) *hi = 0;
+   if (!lo || !hi) return;
+#ifdef HAVE_RWEBM
+   if (type == IMAGE_TYPE_WEBM)
+      rwebm_video_stream_pin_span((rwebm_video_stream_t*)stream, lo, hi);
+#endif
+   (void)stream; (void)type;
+}
+
+int image_transfer_anim_stream_seek_span(void *stream,
+      enum image_type_enum type, size_t *lo, size_t *hi)
+{
+#ifdef HAVE_RWEBM
+   if (type == IMAGE_TYPE_WEBM)
+      return rwebm_video_stream_seek_span((rwebm_video_stream_t*)stream, lo, hi);
+#endif
+#ifdef HAVE_RMP4
+   if (type == IMAGE_TYPE_MP4)
+      return rmp4_video_stream_seek_span((rmp4_video_stream_t*)stream, lo, hi);
+#endif
+   (void)stream; (void)type; (void)lo; (void)hi;
+   return 0;
+}
+
+void image_transfer_anim_stream_next_span(void *stream,
+      enum image_type_enum type, size_t *lo, size_t *hi)
+{
+   if (lo)
+      *lo = 0;
+   if (hi)
+      *hi = 0;
+   switch (type)
+   {
+      case IMAGE_TYPE_MP4:
+#ifdef HAVE_RMP4
+         rmp4_video_stream_read_span((rmp4_video_stream_t*)stream, lo, hi);
+#endif
+         break;
+      case IMAGE_TYPE_WEBM:
+#ifdef HAVE_RWEBM
+         rwebm_video_stream_read_span((rwebm_video_stream_t*)stream, lo, hi);
+#endif
+         break;
+      case IMAGE_TYPE_PNG:
+#ifdef HAVE_RPNG
+         rpng_apng_stream_next_span((const rpng_apng_stream_t*)stream,
+               lo, hi);
+#endif
+         break;
+      case IMAGE_TYPE_WEBP:
+#ifdef HAVE_RWEBP
+         rwebp_anim_stream_next_span((const rwebp_anim_stream_t*)stream,
+               lo, hi);
+#endif
+         break;
+      default:
+         break;
+   }
+}
+
+void image_transfer_anim_stream_complete_scan(void *stream,
+      enum image_type_enum type, const void *buf, size_t len){
+   switch (type)
+   {
+      case IMAGE_TYPE_WEBM:
+#ifdef HAVE_RWEBM
+         rwebm_video_stream_complete_scan((rwebm_video_stream_t*)stream,
+               (const uint8_t*)buf, len);
+#endif
+         break;
+      case IMAGE_TYPE_MP4:
+         /* The MP4 pre-scan reads the moov sample tables, which need
+          * no media bytes: it is never truncated by the wall. */
+         break;
+      default:
+         break;
+   }
+}
+
+void *image_transfer_anim_stream_h265(void *stream, enum image_type_enum type)
+{
+#ifdef HAVE_RWEBM
+   if (stream && type == IMAGE_TYPE_WEBM)
+      return rwebm_video_stream_h265((rwebm_video_stream_t*)stream);
+#endif
+#ifdef HAVE_RMP4
+   if (stream && type == IMAGE_TYPE_MP4)
+      return rmp4_video_stream_h265((rmp4_video_stream_t*)stream);
+#endif
+   (void)stream; (void)type;
+   return NULL;
+}
+
+void *image_transfer_anim_stream_h264(void *stream, enum image_type_enum type)
+{
+#ifdef HAVE_RWEBM
+   if (stream && type == IMAGE_TYPE_WEBM)
+      return rwebm_video_stream_h264((rwebm_video_stream_t*)stream);
+#endif
+#ifdef HAVE_RMP4
+   if (stream && type == IMAGE_TYPE_MP4)
+      return rmp4_video_stream_h264((rmp4_video_stream_t*)stream);
+#endif
+   (void)stream; (void)type;
+   return NULL;
+}
+
+void image_transfer_anim_stream_set_catchup(void *stream,
+      enum image_type_enum type, int behind)
+{
+   if (!stream)
+      return;
+   switch (type)
+   {
+#ifdef HAVE_RMP4
+      case IMAGE_TYPE_MP4:
+         rmp4_video_stream_set_catchup((rmp4_video_stream_t*)stream, behind);
+         break;
+#endif
+      default:
+         /* WEBM (VP8/VP9), APNG, WEBP: every frame here is a
+          * reference for the next, so there is nothing to drop. */
+         (void)behind;
+         break;
+   }
+}
+
+bool image_transfer_anim_stream_set_hw(void *stream,
+      enum image_type_enum type, bool enable)
+{
+   if (!stream)
+      return false;
+   switch (type)
+   {
+#ifdef HAVE_RWEBM
+      case IMAGE_TYPE_WEBM:
+         return rwebm_video_stream_set_hw((rwebm_video_stream_t*)stream,
+               enable ? 1 : 0) != 0;
+#endif
+#ifdef HAVE_RMP4
+      case IMAGE_TYPE_MP4:
+         return rmp4_video_stream_set_hw((rmp4_video_stream_t*)stream,
+               enable ? 1 : 0) != 0;
+#endif
+      default:
+         break;
+   }
+   return false;
+}
+
+bool image_transfer_anim_stream_stop_hw(void *stream, enum image_type_enum type)
+{
+   if (!stream)
+      return false;
+   switch (type)
+   {
+#ifdef HAVE_RWEBM
+   case IMAGE_TYPE_WEBM:
+      rwebm_video_stream_stop_hw((rwebm_video_stream_t *)stream);
+      return !rwebm_video_stream_set_hw((rwebm_video_stream_t *)stream, 0);
+#endif
+#ifdef HAVE_RMP4
+   case IMAGE_TYPE_MP4:
+      rmp4_video_stream_stop_hw((rmp4_video_stream_t *)stream);
+      return !rmp4_video_stream_set_hw((rmp4_video_stream_t *)stream, 0);
+#endif
+   default:
+      break;
+   }
+   return false;
+}
+
+bool image_transfer_anim_stream_hw_frame(void *stream,
+      enum image_type_enum type, video_hw_frame_t *out)
+{
+   if (!stream)
+      return false;
+   switch (type)
+   {
+#ifdef HAVE_RWEBM
+      case IMAGE_TYPE_WEBM:
+         return rwebm_video_stream_hw_frame((rwebm_video_stream_t*)stream, out) != 0;
+#endif
+#ifdef HAVE_RMP4
+      case IMAGE_TYPE_MP4:
+         return rmp4_video_stream_hw_frame((rmp4_video_stream_t*)stream,
+               out) != 0;
+#endif
+      default:
+         break;
+   }
+   return false;
+}
+
+bool image_transfer_anim_stream_set_output_stride(void *stream,
+      enum image_type_enum type, uint32_t *out, unsigned stride)
+{
+   switch (type)
+   {
+      case IMAGE_TYPE_WEBM:
+#ifdef HAVE_RWEBM
+         return rwebm_video_stream_set_output_stride(
+               (rwebm_video_stream_t*)stream, out, stride) != 0;
+#else
+         break;
+#endif
+      case IMAGE_TYPE_MP4:
+#ifdef HAVE_RMP4
+         return rmp4_video_stream_set_output_stride(
+               (rmp4_video_stream_t*)stream, out, stride) != 0;
+#else
+         break;
+#endif
+      default:
+         /* APNG and WEBP compose each frame on a persistent canvas
+          * that the next frame is built from: their frames come out
+          * of the canvas. */
+         break;
+   }
+   return false;
+}
+
+bool image_transfer_anim_stream_set_output(void *stream,
+      enum image_type_enum type, uint32_t *out)
+{
+   return image_transfer_anim_stream_set_output_stride(stream, type, out, 0);
+}
+
+/* The video streams give an HDR source as linear scRGB half floats
+ * into the caller's frame; nothing else has a source that is HDR. */
+void image_transfer_anim_stream_set_want_fp16(void *stream,
+      enum image_type_enum type, bool want)
+{
+   switch (type)
+   {
+      case IMAGE_TYPE_WEBM:
+#ifdef HAVE_RWEBM
+         rwebm_video_stream_set_want_fp16((rwebm_video_stream_t*)stream,
+               want);
+#endif
+         break;
+      case IMAGE_TYPE_MP4:
+#ifdef HAVE_RMP4
+         rmp4_video_stream_set_want_fp16((rmp4_video_stream_t*)stream,
+               want);
+#endif
+         break;
+      default:
+         break;
+   }
+}
+
+bool image_transfer_anim_stream_is_fp16(const void *stream,
+      enum image_type_enum type)
+{
+   switch (type)
+   {
+      case IMAGE_TYPE_WEBM:
+#ifdef HAVE_RWEBM
+         return rwebm_video_stream_is_fp16(
+               (const rwebm_video_stream_t*)stream) != 0;
+#else
+         break;
+#endif
+      case IMAGE_TYPE_MP4:
+#ifdef HAVE_RMP4
+         return rmp4_video_stream_is_fp16(
+               (const rmp4_video_stream_t*)stream) != 0;
+#else
+         break;
+#endif
+      default:
+         break;
+   }
+   return false;
+}
+
+bool image_transfer_anim_stream_is_hdr(const void *stream,
+      enum image_type_enum type)
+{
+   switch (type)
+   {
+      case IMAGE_TYPE_WEBM:
+#ifdef HAVE_RWEBM
+         return rwebm_video_stream_is_hdr(
+               (const rwebm_video_stream_t*)stream) != 0;
+#else
+         break;
+#endif
+      case IMAGE_TYPE_MP4:
+#ifdef HAVE_RMP4
+         return rmp4_video_stream_is_hdr(
+               (const rmp4_video_stream_t*)stream) != 0;
+#else
+         break;
+#endif
+      default:
+         break;
+   }
+   return false;
+}
+
+bool image_transfer_anim_stream_set_blit_pool(void *stream,
+      enum image_type_enum type, void *pool, unsigned bands)
+{
+   switch (type)
+   {
+      case IMAGE_TYPE_WEBM:
+#ifdef HAVE_RWEBM
+         rwebm_video_stream_set_blit_pool((rwebm_video_stream_t*)stream,
+               pool, bands);
+         return true;
+#else
+         break;
+#endif
+      case IMAGE_TYPE_MP4:
+#ifdef HAVE_RMP4
+         rmp4_video_stream_set_blit_pool((rmp4_video_stream_t*)stream,
+               pool, bands);
+         return true;
+#else
+         break;
+#endif
+      default:
+         break;
+   }
+   return false;
+}
+
+bool image_transfer_anim_stream_set_argb(void *stream,
+      enum image_type_enum type, int argb)
+{
+   switch (type)
+   {
+      case IMAGE_TYPE_PNG:
+#ifdef HAVE_RPNG
+         return rpng_apng_stream_set_argb((rpng_apng_stream_t*)stream, argb);
+#else
+         break;
+#endif
+      case IMAGE_TYPE_WEBP:
+#ifdef HAVE_RWEBP
+         rwebp_anim_stream_set_argb((rwebp_anim_stream_t*)stream, argb);
+         return true;
+#else
+         break;
+#endif
+      case IMAGE_TYPE_WEBM:
+#ifdef HAVE_RWEBM
+         rwebm_video_stream_set_argb((rwebm_video_stream_t*)stream, argb);
+         return true;
+#else
+         break;
+#endif
+      case IMAGE_TYPE_MP4:
+#ifdef HAVE_RMP4
+         rmp4_video_stream_set_argb((rmp4_video_stream_t*)stream, argb);
+         return true;
+#else
+         break;
+#endif
+      default:
+         break;
+   }
+   return false;
+}
+
+void *image_transfer_detach_anim_stream(void *data,
+      enum image_type_enum type)
+{
+   switch (type)
+   {
+      case IMAGE_TYPE_WEBM:
+#ifdef HAVE_RWEBM
+         return rwebm_video_detach_stream((rwebm_video_t*)data);
+#else
+         break;
+#endif
+      case IMAGE_TYPE_MP4:
+#ifdef HAVE_RMP4
+         return rmp4_video_detach_stream((rmp4_video_t*)data);
+#else
+         break;
+#endif
+      default:
+         break;
+   }
+   return NULL;
+}
+
+/* ===== Animation ===== *
+ * Animated WEBP is the only type with the whole-buffer form directly
+ * below; APNG, animated WEBP, WEBM and MP4 all have the streaming form
+ * further down.  Both sets return NULL / false / 0 for every other
+ * image type, so callers may attempt animation unconditionally and
+ * fall back to the still-image path. */
+
+void *image_transfer_anim_new(void *buf, size_t len,
+      enum image_type_enum type)
+{
+   switch (type)
+   {
+      case IMAGE_TYPE_WEBP:
+#ifdef HAVE_RWEBP
+         return rwebp_anim_decode((const uint8_t*)buf, len);
+#else
+         break;
+#endif
+      default:
+         break;
+   }
+   return NULL;
+}
+
+void image_transfer_anim_free(void *anim, enum image_type_enum type)
+{
+   switch (type)
+   {
+      case IMAGE_TYPE_WEBP:
+#ifdef HAVE_RWEBP
+         rwebp_anim_free((rwebp_anim_t*)anim);
+#endif
+         break;
+      default:
+         break;
+   }
+}
+
+int image_transfer_anim_num_frames(void *anim, enum image_type_enum type)
+{
+   switch (type)
+   {
+      case IMAGE_TYPE_WEBP:
+#ifdef HAVE_RWEBP
+         return rwebp_anim_num_frames((const rwebp_anim_t*)anim);
+#else
+         break;
+#endif
+      default:
+         break;
+   }
+   return 0;
+}
+
+void image_transfer_anim_get_info(void *anim, enum image_type_enum type,
+      unsigned *width, unsigned *height, int *loop_count)
+{
+   switch (type)
+   {
+      case IMAGE_TYPE_WEBP:
+#ifdef HAVE_RWEBP
+         rwebp_anim_get_info((const rwebp_anim_t*)anim,
+               width, height, loop_count);
+#endif
+         break;
+      default:
+         break;
+   }
+}
+
+const uint32_t *image_transfer_anim_get_frame(void *anim,
+      enum image_type_enum type, int index, int *duration_ms)
+{
+   switch (type)
+   {
+      case IMAGE_TYPE_WEBP:
+#ifdef HAVE_RWEBP
+         return rwebp_anim_get_frame((const rwebp_anim_t*)anim,
+               index, duration_ms);
+#else
+         break;
+#endif
+      default:
+         break;
+   }
+   return NULL;
+}
+
+/* ---- Streaming animation ---- */
+
+void *image_transfer_anim_stream_new(void *buf, size_t len,
+      enum image_type_enum type)
+{
+   switch (type)
+   {
+      case IMAGE_TYPE_PNG:
+#ifdef HAVE_RPNG
+         /* APNG: returns NULL for a still PNG, which the caller reads
+          * as "not animated" and keeps its static path. */
+         return rpng_apng_stream_open((const uint8_t*)buf, len);
+#else
+         break;
+#endif
+      case IMAGE_TYPE_WEBP:
+#ifdef HAVE_RWEBP
+         return rwebp_anim_stream_open((const uint8_t*)buf, len);
+#else
+         break;
+#endif
+      case IMAGE_TYPE_WEBM:
+#ifdef HAVE_RWEBM
+         return rwebm_video_stream_open((const uint8_t*)buf, len);
+#else
+         break;
+#endif
+      case IMAGE_TYPE_MP4:
+#ifdef HAVE_RMP4
+         return rmp4_video_stream_open((const uint8_t*)buf, len);
+#else
+         break;
+#endif
+      default:
+         break;
+   }
+   return NULL;
+}
+
+void *image_transfer_anim_stream_new_avail(void *buf, size_t len,
+      size_t avail, enum image_type_enum type, int *need_more,
+      size_t *need_lo, size_t *need_hi)
+{
+   if (need_more)
+      *need_more = 0;
+   if (need_lo)
+      *need_lo = 0;
+   if (need_hi)
+      *need_hi = 0;
+   switch (type)
+   {
+      case IMAGE_TYPE_PNG:
+#ifdef HAVE_RPNG
+         return rpng_apng_stream_open_avail((const uint8_t*)buf, len,
+               avail, need_more);
+#else
+         break;
+#endif
+      case IMAGE_TYPE_WEBM:
+#ifdef HAVE_RWEBM
+         return rwebm_video_stream_open_avail((const uint8_t*)buf, len,
+               avail, need_more);
+#else
+         break;
+#endif
+      case IMAGE_TYPE_MP4:
+#ifdef HAVE_RMP4
+         return rmp4_video_stream_open_avail((const uint8_t*)buf, len,
+               avail, need_more, need_lo, need_hi);
+#else
+         break;
+#endif
+      case IMAGE_TYPE_WEBP:
+#ifdef HAVE_RWEBP
+         return rwebp_anim_stream_open_avail((const uint8_t*)buf, len,
+               avail, need_more);
+#else
+         break;
+#endif
+      default:
+         break;
+   }
+   return NULL;
+}
+
+static void *image_transfer_anim_stream_new_hw_internal(void *buf, size_t len,
+      size_t avail, enum image_type_enum type, int *need_more,
+      size_t *need_lo, size_t *need_hi, bool deferred)
+{
+   int more = 0;
+   void *stream = image_transfer_anim_stream_new_avail(buf, len, avail,
+         type, &more, need_lo, need_hi);
+   (void)deferred;
+   if (need_more)
+      *need_more = more;
+   if (stream || more)
+      return stream;
+#if defined(HAVE_RMP4) && defined(HAVE_RAV1)
+   if (type == IMAGE_TYPE_MP4)
+   {
+      rmp4_video_stream_t *mp4 = rmp4_video_stream_open_hw_avail(
+            (const uint8_t*)buf, len, avail, need_more, need_lo, need_hi);
+      if (mp4 && !deferred && !rmp4_video_stream_set_hw(mp4, 1))
+      {
+         rmp4_video_stream_close(mp4);
+         return NULL;
+      }
+      return mp4;
+   }
+#endif
+#if defined(HAVE_RWEBM) && defined(HAVE_RAV1)
+   if (type == IMAGE_TYPE_WEBM)
+   {
+      rwebm_video_stream_t *webm = rwebm_video_stream_open_hw_avail(
+            (const uint8_t*)buf, len, avail, need_more);
+      if (webm && !deferred && !rwebm_video_stream_set_hw(webm, 1))
+      {
+         rwebm_video_stream_close(webm);
+         return NULL;
+      }
+      return webm;
+   }
+#endif
+   return NULL;
+}
+
+void *image_transfer_anim_stream_new_hw_avail(void *buf, size_t len,
+      size_t avail, enum image_type_enum type, int *need_more,
+      size_t *need_lo, size_t *need_hi)
+{
+   return image_transfer_anim_stream_new_hw_internal(buf, len, avail, type,
+         need_more, need_lo, need_hi, false);
+}
+
+void *image_transfer_anim_stream_new_hw_deferred_avail(void *buf, size_t len,
+      size_t avail, enum image_type_enum type, int *need_more,
+      size_t *need_lo, size_t *need_hi)
+{
+   return image_transfer_anim_stream_new_hw_internal(buf, len, avail, type,
+         need_more, need_lo, need_hi, true);
+}
+
+bool image_transfer_anim_stream_waiting(const void *stream,
+      enum image_type_enum type)
+{
+#ifdef HAVE_RWEBM
+   if (type == IMAGE_TYPE_WEBM)
+      return rwebm_video_stream_waiting((const rwebm_video_stream_t*)stream) != 0;
+#endif
+#ifdef HAVE_RMP4
+   if (type == IMAGE_TYPE_MP4)
+      return rmp4_video_stream_waiting((const rmp4_video_stream_t*)stream) != 0;
+#endif
+   (void)stream;
+   (void)type;
+   return false;
+}
+
+void image_transfer_anim_stream_free(void *stream,
+      enum image_type_enum type){
+   switch (type)
+   {
+      case IMAGE_TYPE_PNG:
+#ifdef HAVE_RPNG
+         rpng_apng_stream_close((rpng_apng_stream_t*)stream);
+#endif
+         break;
+      case IMAGE_TYPE_WEBP:
+#ifdef HAVE_RWEBP
+         rwebp_anim_stream_close((rwebp_anim_stream_t*)stream);
+#endif
+         break;
+      case IMAGE_TYPE_WEBM:
+#ifdef HAVE_RWEBM
+         rwebm_video_stream_close((rwebm_video_stream_t*)stream);
+#endif
+         break;
+      case IMAGE_TYPE_MP4:
+#ifdef HAVE_RMP4
+         rmp4_video_stream_close((rmp4_video_stream_t*)stream);
+#endif
+         break;
+      default:
+         break;
+   }
+}
+
+void image_transfer_anim_stream_get_info(void *stream,
+      enum image_type_enum type,
+      unsigned *width, unsigned *height, int *num_frames, int *loop_count)
+{
+   switch (type)
+   {
+      case IMAGE_TYPE_PNG:
+#ifdef HAVE_RPNG
+         rpng_apng_stream_get_info((const rpng_apng_stream_t*)stream,
+               width, height, num_frames, loop_count);
+#endif
+         break;
+      case IMAGE_TYPE_WEBP:
+#ifdef HAVE_RWEBP
+         rwebp_anim_stream_get_info((const rwebp_anim_stream_t*)stream,
+               width, height, num_frames, loop_count);
+#endif
+         break;
+      case IMAGE_TYPE_WEBM:
+#ifdef HAVE_RWEBM
+         rwebm_video_stream_get_info((const rwebm_video_stream_t*)stream,
+               width, height, num_frames, loop_count);
+#endif
+         break;
+      case IMAGE_TYPE_MP4:
+#ifdef HAVE_RMP4
+         rmp4_video_stream_get_info((const rmp4_video_stream_t*)stream,
+               width, height, num_frames, loop_count);
+#endif
+         break;
+      default:
+         break;
+   }
+}
+
+const uint32_t *image_transfer_anim_stream_next(void *stream,
+      enum image_type_enum type, int *duration_ms)
+{
+   switch (type)
+   {
+      case IMAGE_TYPE_PNG:
+#ifdef HAVE_RPNG
+         return rpng_apng_stream_next((rpng_apng_stream_t*)stream,
+               duration_ms);
+#else
+         break;
+#endif
+      case IMAGE_TYPE_WEBP:
+#ifdef HAVE_RWEBP
+         return rwebp_anim_stream_next((rwebp_anim_stream_t*)stream,
+               duration_ms);
+#else
+         break;
+#endif
+      case IMAGE_TYPE_WEBM:
+#ifdef HAVE_RWEBM
+         return rwebm_video_stream_next((rwebm_video_stream_t*)stream,
+               duration_ms);
+#else
+         break;
+#endif
+      case IMAGE_TYPE_MP4:
+#ifdef HAVE_RMP4
+         return rmp4_video_stream_next((rmp4_video_stream_t*)stream,
+               duration_ms);
+#else
+         break;
+#endif
+      default:
+         break;
+   }
+   return NULL;
+}
+
+int64_t image_transfer_anim_stream_start_ns(void *stream, enum image_type_enum type)
+{
+#ifdef HAVE_RWEBM
+   if (type == IMAGE_TYPE_WEBM)
+      return rwebm_video_stream_start_ns((rwebm_video_stream_t*)stream);
+#endif
+   (void)stream; (void)type;
+   return 0;
+}
+
+int64_t image_transfer_anim_stream_frame_time_ns(void *stream, enum image_type_enum type)
+{
+#ifdef HAVE_RWEBM
+   if (type == IMAGE_TYPE_WEBM)
+      return rwebm_video_stream_frame_time_ns((rwebm_video_stream_t*)stream);
+#endif
+#ifdef HAVE_RMP4
+   if (type == IMAGE_TYPE_MP4)
+      return rmp4_video_stream_frame_time_ns((rmp4_video_stream_t*)stream);
+#endif
+   (void)stream; (void)type;
+   return -1;
+}
+
+bool image_transfer_anim_stream_seekable(void *stream, enum image_type_enum type)
+{
+   if (!stream) return false;
+#ifdef HAVE_RMP4
+   if (type == IMAGE_TYPE_MP4) return true;
+#endif
+#ifdef HAVE_RWEBM
+   if (type == IMAGE_TYPE_WEBM)
+      return rwebm_video_stream_seekable((rwebm_video_stream_t*)stream) != 0;
+#endif
+   (void)type;
+   return false;
+}
+
+bool image_transfer_anim_stream_seek_begin(void *stream,
+      enum image_type_enum type, int64_t target_us)
+{
+#if defined(HAVE_RMP4) || defined(HAVE_RWEBM)
+   const int64_t maximum = (int64_t)((~(uint64_t)0) >> 1);
+   if (target_us < 0) target_us = 0;
+   if (target_us > maximum / 1000) target_us = maximum / 1000;
+#endif
+#ifdef HAVE_RMP4
+   if (type == IMAGE_TYPE_MP4)
+      return rmp4_video_stream_seek_movie_begin_ns((rmp4_video_stream_t*)stream,
+            target_us * 1000) != 0;
+#endif
+#ifdef HAVE_RWEBM
+   if (type == IMAGE_TYPE_WEBM)
+      return rwebm_video_stream_seek_movie_begin_ns((rwebm_video_stream_t*)stream,
+            target_us * 1000) != 0;
+#endif
+   (void)stream; (void)type; (void)target_us;
+   return false;
+}
+
+int image_transfer_anim_stream_seek_step(void *stream,
+      enum image_type_enum type, int64_t *position_us)
+{
+#ifdef HAVE_RMP4
+   if (type == IMAGE_TYPE_MP4)
+      return rmp4_video_stream_seek_movie_step((rmp4_video_stream_t*)stream, position_us);
+#endif
+#ifdef HAVE_RWEBM
+   if (type == IMAGE_TYPE_WEBM)
+      return rwebm_video_stream_seek_movie_step((rwebm_video_stream_t*)stream, position_us);
+#endif
+   (void)stream; (void)type;
+   if (position_us) *position_us = 0;
+   return -1;
+}
+
+bool image_transfer_anim_stream_completed(const void *stream,
+      enum image_type_enum type)
+{
+   if (!stream) return false;
+   switch (type)
+   {
+#ifdef HAVE_RMP4
+      case IMAGE_TYPE_MP4:
+         return rmp4_video_stream_completed((const rmp4_video_stream_t*)stream) != 0;
+#endif
+#ifdef HAVE_RWEBM
+      case IMAGE_TYPE_WEBM:
+         return rwebm_video_stream_completed((const rwebm_video_stream_t*)stream) != 0;
+#endif
+      default:
+         break;
+   }
+   return false;
+}
+
+void image_transfer_anim_stream_rewind(void *stream,
+      enum image_type_enum type)
+{
+   switch (type)
+   {
+      case IMAGE_TYPE_PNG:
+#ifdef HAVE_RPNG
+         rpng_apng_stream_rewind((rpng_apng_stream_t*)stream);
+#endif
+         break;
+      case IMAGE_TYPE_WEBP:
+#ifdef HAVE_RWEBP
+         rwebp_anim_stream_rewind((rwebp_anim_stream_t*)stream);
+#endif
+         break;
+      case IMAGE_TYPE_WEBM:
+#ifdef HAVE_RWEBM
+         rwebm_video_stream_rewind((rwebm_video_stream_t*)stream);
+#endif
+         break;
+      case IMAGE_TYPE_MP4:
+#ifdef HAVE_RMP4
+         rmp4_video_stream_rewind((rmp4_video_stream_t*)stream);
+#endif
+         break;
+      default:
+         break;
+   }
 }

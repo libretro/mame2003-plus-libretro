@@ -20,6 +20,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/* retro_environment.h spells MSVC's SSE/SSE2 targets as __SSE__/__SSE2__,
+ * which the SIMD paths below test. */
+#include <retro_environment.h>
+
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -31,6 +35,16 @@
 
 #if _MSC_VER && _MSC_VER <= 1800
 #define SCALER_NO_SIMD
+#endif
+
+/* Byte order, for conv_bgr24_argb8888's word loads.  Unknown hosts get
+ * the byte-at-a-time loop, which is right on either order. */
+#if (defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__) \
+      || defined(_M_IX86) || defined(_M_X64) || defined(_M_ARM) \
+      || defined(_M_ARM64)
+#define PIXCONV_LITTLE_ENDIAN 1
+#else
+#define PIXCONV_LITTLE_ENDIAN 0
 #endif
 
 #ifdef SCALER_NO_SIMD
@@ -50,13 +64,15 @@ void conv_rgb565_0rgb1555(void *output_, const void *input_,
       int out_stride, int in_stride)
 {
    int h;
-   const uint16_t *input = (const uint16_t*)input_;
-   uint16_t *output = (uint16_t*)output_;
+   const uint16_t *input   = (const uint16_t*)input_;
+   uint16_t *output        = (uint16_t*)output_;
 
 #if defined(__SSE2__)
    int max_width           = width - 7;
    const __m128i hi_mask   = _mm_set1_epi16(0x7fe0);
    const __m128i lo_mask   = _mm_set1_epi16(0x1f);
+#elif (defined(__ARM_NEON__) || defined(__ARM_NEON))
+   int max_width           = width - 7;
 #endif
 
    for (h = 0; h < height;
@@ -67,9 +83,17 @@ void conv_rgb565_0rgb1555(void *output_, const void *input_,
       for (; w < max_width; w += 8)
       {
          const __m128i in = _mm_loadu_si128((const __m128i*)(input + w));
-         __m128i hi = _mm_and_si128(_mm_slli_epi16(in, 1), hi_mask);
+         __m128i hi = _mm_and_si128(_mm_srli_epi16(in, 1), hi_mask);
          __m128i lo = _mm_and_si128(in, lo_mask);
          _mm_storeu_si128((__m128i*)(output + w), _mm_or_si128(hi, lo));
+      }
+#elif (defined(__ARM_NEON__) || defined(__ARM_NEON))
+      for (; w < max_width; w += 8)
+      {
+         uint16x8_t in = vld1q_u16(input + w);
+         /* Low five bits from the input, the rest shifted down one. */
+         vst1q_u16(output + w,
+               vbslq_u16(vdupq_n_u16(0x1f), in, vshrq_n_u16(in, 1)));
       }
 #endif
 
@@ -98,6 +122,8 @@ void conv_0rgb1555_rgb565(void *output_, const void *input_,
          (int16_t)((0x1f << 11) | (0x1f << 6)));
    const __m128i lo_mask   = _mm_set1_epi16(0x1f);
    const __m128i glow_mask = _mm_set1_epi16(1 << 5);
+#elif (defined(__ARM_NEON__) || defined(__ARM_NEON))
+   int max_width           = width - 7;
 #endif
 
    for (h = 0; h < height;
@@ -114,6 +140,15 @@ void conv_0rgb1555_rgb565(void *output_, const void *input_,
          _mm_storeu_si128((__m128i*)(output + w),
                _mm_or_si128(rg, _mm_or_si128(b, glow)));
       }
+#elif (defined(__ARM_NEON__) || defined(__ARM_NEON))
+      for (; w < max_width; w += 8)
+      {
+         uint16x8_t in   = vld1q_u16(input + w);
+         uint16x8_t rg   = vandq_u16(vshlq_n_u16(in, 1), vdupq_n_u16(0xffc0));
+         uint16x8_t b    = vandq_u16(in, vdupq_n_u16(0x001f));
+         uint16x8_t glow = vandq_u16(vshrq_n_u16(in, 4), vdupq_n_u16(0x0020));
+         vst1q_u16(output + w, vorrq_u16(rg, vorrq_u16(b, glow)));
+      }
 #endif
 
       for (; w < width; w++)
@@ -126,6 +161,259 @@ void conv_0rgb1555_rgb565(void *output_, const void *input_,
       }
    }
 }
+
+/* AVX2 and AVX-512BW forms of the 16-bit -> 32-bit converters the video
+ * drivers run every frame (RGB565 -> ARGB/ABGR, 0RGB1555 -> ARGB). They
+ * are built per function, whatever the build's baseline, and chosen at
+ * run time, so older CPUs keep the SSE2 path and older compilers simply
+ * leave them out. Only RetroArch's own build (RARCH_INTERNAL), or one
+ * that asks with PIXCONV_RUNTIME_SIMD, compiles them: the choice reads
+ * cpu_features_get(), and cores that carry pixconv.c need not link
+ * features_cpu.c. */
+#if !defined(SCALER_NO_SIMD) && defined(__SSE2__) \
+   && (defined(RARCH_INTERNAL) || defined(PIXCONV_RUNTIME_SIMD)) \
+   && (defined(__x86_64__) || defined(__i386__) \
+      || defined(_M_X64) || defined(_M_IX86))
+#if defined(_MSC_VER) && !defined(__clang__)
+#if _MSC_VER >= 1911
+#define PIXCONV_HAVE_WIDE 1
+#define PIXCONV_HAVE_AVX512 1
+#define PIXCONV_TARGET_AVX2
+#define PIXCONV_TARGET_AVX512
+#endif
+#elif defined(__clang__) && (defined(__SCE__) || defined(_MSC_VER))
+/* Clang's immintrin.h for PlayStation and clang-cl only declares the
+ * intrinsics of ISAs enabled for the whole build, so per-function
+ * targets cannot reach them; build a tier only when the baseline has
+ * it (PS5's Zen 2 keeps AVX2, PS4's Jaguar has neither). */
+#ifdef __AVX2__
+#define PIXCONV_HAVE_WIDE 1
+#define PIXCONV_TARGET_AVX2
+#if defined(__AVX512F__) && defined(__AVX512BW__)
+#define PIXCONV_HAVE_AVX512 1
+#define PIXCONV_TARGET_AVX512
+#endif
+#endif
+#elif (defined(__clang__) && __clang_major__ >= 4) \
+   || (defined(__GNUC__) && !defined(__clang__) && __GNUC__ >= 5)
+#define PIXCONV_HAVE_WIDE 1
+#define PIXCONV_HAVE_AVX512 1
+#define PIXCONV_TARGET_AVX2   __attribute__((target("avx2")))
+#define PIXCONV_TARGET_AVX512 __attribute__((target("avx512f,avx512bw")))
+#endif
+#endif
+
+#ifdef PIXCONV_HAVE_WIDE
+#include <immintrin.h>
+#include <retro_atomic.h>
+#include <features/features_cpu.h>
+
+enum pixconv_16to32
+{
+   PIXCONV_565_ARGB = 0,
+   PIXCONV_565_ABGR,
+   PIXCONV_1555_ARGB
+};
+
+/* MSVC leaves the upper vector halves dirty on return; GCC and Clang
+ * clear them themselves for target functions. */
+#if defined(_MSC_VER) && !defined(__clang__)
+#define PIXCONV_ZEROUPPER() _mm256_zeroupper()
+#else
+#define PIXCONV_ZEROUPPER()
+#endif
+
+/* 0 = SSE2 path, 1 = AVX2, 2 = AVX-512BW. Several threads convert
+ * (video, recording, menu), so the one-time answer is published with
+ * an atomic store; racing first calls compute the same value. */
+static retro_atomic_int_t pixconv_tier_cached;
+
+#ifdef PIXCONV_TEST_HOOKS
+/* -1 picks by CPU; otherwise caps the tier for a test. */
+int pixconv_tier_cap = -1;
+#endif
+
+static int pixconv_simd_tier(void)
+{
+   int tier = retro_atomic_load_acquire_int(&pixconv_tier_cached);
+   if (tier & 4)
+      tier &= 3;
+   else
+   {
+      uint64_t cpu = cpu_features_get();
+      tier = 0;
+      if (cpu & RETRO_SIMD_AVX2)
+         tier = 1;
+#ifdef PIXCONV_HAVE_AVX512
+      if (cpu & RETRO_SIMD_AVX512)
+         tier = 2;
+#endif
+      retro_atomic_store_release_int(&pixconv_tier_cached, 4 | tier);
+   }
+#ifdef PIXCONV_TEST_HOOKS
+   if (pixconv_tier_cap >= 0 && tier > pixconv_tier_cap)
+      tier = pixconv_tier_cap;
+#endif
+   return tier;
+}
+
+static INLINE uint32_t pixconv_16to32_px(uint16_t c, int fmt)
+{
+   switch (fmt)
+   {
+      case PIXCONV_565_ABGR:
+         return 0xff000000u | pixconv_rgb565_to_xbgr8888(c);
+      case PIXCONV_1555_ARGB:
+         return 0xff000000u | pixconv_0rgb1555_to_xrgb8888(c);
+      default:
+         break;
+   }
+   return 0xff000000u | pixconv_rgb565_to_xrgb8888(c);
+}
+
+/* The SSE2 arithmetic at a wider width: each channel masked to the top
+ * of a 16-bit lane and multiplied so the high half holds it expanded to
+ * 8 bits, then the bytes interleaved into pixels. 565 and 1555 differ
+ * only in red's shift and green's mask and multiplier; ARGB and ABGR
+ * only in which of red and blue pairs with green. */
+#define PIXCONV_16TO32_CONSTS(fmt) \
+   int      r_shift = ((fmt) == PIXCONV_1555_ARGB) ? 0 : 1; \
+   int16_t  g_mask  = ((fmt) == PIXCONV_1555_ARGB) \
+      ? (int16_t)(0x1f << 5) : (int16_t)(0x3f << 5); \
+   int16_t  g_mul   = ((fmt) == PIXCONV_1555_ARGB) \
+      ? (int16_t)0x4200 : (int16_t)0x2080; \
+   int      swap_rb = ((fmt) == PIXCONV_565_ABGR)
+
+PIXCONV_TARGET_AVX2
+static void pixconv_16to32_avx2(uint32_t *output, const uint16_t *input,
+      int width, int height, int out_stride, int in_stride, int fmt)
+{
+   int h;
+   PIXCONV_16TO32_CONSTS(fmt);
+   const __m128i rs     = _mm_cvtsi32_si128(r_shift);
+   const __m256i mask_r = _mm256_set1_epi16(0x1f << 10);
+   const __m256i mask_g = _mm256_set1_epi16(g_mask);
+   const __m256i mask_b = _mm256_set1_epi16(0x1f << 5);
+   const __m256i mul_r  = _mm256_set1_epi16(0x0210);
+   const __m256i mul_g  = _mm256_set1_epi16(g_mul);
+   const __m256i mul_b  = _mm256_set1_epi16(0x4200);
+   const __m256i a      = _mm256_set1_epi16(0x00ff);
+
+   for (h = 0; h < height;
+         h++, output += out_stride >> 2, input += in_stride >> 1)
+   {
+      int w = 0;
+      for (; w + 16 <= width; w += 16)
+      {
+         __m256i lo, hi, c0, c2;
+         const __m256i in = _mm256_loadu_si256((const __m256i*)(input + w));
+         __m256i r = _mm256_mulhi_epi16(_mm256_and_si256(
+                  _mm256_srl_epi16(in, rs), mask_r), mul_r);
+         __m256i g = _mm256_mulhi_epi16(_mm256_and_si256(in, mask_g), mul_g);
+         __m256i b = _mm256_mulhi_epi16(_mm256_and_si256(
+                  _mm256_slli_epi16(in, 5), mask_b), mul_b);
+         c0 = swap_rb ? r : b;
+         c2 = swap_rb ? b : r;
+         /* unpack works per 128-bit lane: lo holds pixels 0-3 and 8-11,
+          * hi 4-7 and 12-15; the permutes put them back in order. */
+         lo = _mm256_or_si256(_mm256_unpacklo_epi8(c0, g),
+               _mm256_slli_si256(_mm256_unpacklo_epi8(c2, a), 2));
+         hi = _mm256_or_si256(_mm256_unpackhi_epi8(c0, g),
+               _mm256_slli_si256(_mm256_unpackhi_epi8(c2, a), 2));
+         _mm256_storeu_si256((__m256i*)(output + w),
+               _mm256_permute2x128_si256(lo, hi, 0x20));
+         _mm256_storeu_si256((__m256i*)(output + w + 8),
+               _mm256_permute2x128_si256(lo, hi, 0x31));
+      }
+      for (; w < width; w++)
+         output[w] = pixconv_16to32_px(input[w], fmt);
+   }
+   PIXCONV_ZEROUPPER();
+}
+
+#ifdef PIXCONV_HAVE_AVX512
+PIXCONV_TARGET_AVX512
+static void pixconv_16to32_avx512(uint32_t *output, const uint16_t *input,
+      int width, int height, int out_stride, int in_stride, int fmt)
+{
+   int h;
+   PIXCONV_16TO32_CONSTS(fmt);
+   const __m128i rs     = _mm_cvtsi32_si128(r_shift);
+   const __m512i mask_r = _mm512_set1_epi16(0x1f << 10);
+   const __m512i mask_g = _mm512_set1_epi16(g_mask);
+   const __m512i mask_b = _mm512_set1_epi16(0x1f << 5);
+   const __m512i mul_r  = _mm512_set1_epi16(0x0210);
+   const __m512i mul_g  = _mm512_set1_epi16(g_mul);
+   const __m512i mul_b  = _mm512_set1_epi16(0x4200);
+   const __m512i a      = _mm512_set1_epi16(0x00ff);
+   /* unpack leaves 128-bit lanes of four pixels as lo 0,2,4,6 and
+    * hi 1,3,5,7 (in blocks of four); these put the eight in order. */
+   const __m512i first  = _mm512_set_epi64(11, 10, 3, 2, 9, 8, 1, 0);
+   const __m512i second = _mm512_set_epi64(15, 14, 7, 6, 13, 12, 5, 4);
+
+   for (h = 0; h < height;
+         h++, output += out_stride >> 2, input += in_stride >> 1)
+   {
+      int w = 0;
+      /* The last block takes the row's tail through masks: loads and
+       * stores past the row are suppressed, not issued. */
+      for (; w < width; w += 32)
+      {
+         __m512i lo, hi, c0, c2, in, r, g, b;
+         int left         = width - w;
+         __mmask32 m_in   = (left >= 32) ? (__mmask32)0xffffffffu
+            : (__mmask32)((1u << left) - 1u);
+         __mmask16 m_out0 = (left >= 16) ? (__mmask16)0xffff
+            : (__mmask16)((1u << left) - 1u);
+         __mmask16 m_out1 = (left >= 32) ? (__mmask16)0xffff
+            : (left > 16) ? (__mmask16)((1u << (left - 16)) - 1u)
+            : (__mmask16)0;
+         in = _mm512_maskz_loadu_epi16(m_in, input + w);
+         r  = _mm512_mulhi_epi16(_mm512_and_si512(
+                  _mm512_srl_epi16(in, rs), mask_r), mul_r);
+         g  = _mm512_mulhi_epi16(_mm512_and_si512(in, mask_g), mul_g);
+         b  = _mm512_mulhi_epi16(_mm512_and_si512(
+                  _mm512_slli_epi16(in, 5), mask_b), mul_b);
+         c0 = swap_rb ? r : b;
+         c2 = swap_rb ? b : r;
+         lo = _mm512_or_si512(_mm512_unpacklo_epi8(c0, g),
+               _mm512_bslli_epi128(_mm512_unpacklo_epi8(c2, a), 2));
+         hi = _mm512_or_si512(_mm512_unpackhi_epi8(c0, g),
+               _mm512_bslli_epi128(_mm512_unpackhi_epi8(c2, a), 2));
+         _mm512_mask_storeu_epi32(output + w, m_out0,
+               _mm512_permutex2var_epi64(lo, first, hi));
+         _mm512_mask_storeu_epi32(output + w + 16, m_out1,
+               _mm512_permutex2var_epi64(lo, second, hi));
+      }
+   }
+   PIXCONV_ZEROUPPER();
+}
+
+#endif
+
+/* Runs the conversion wide and returns 1, or returns 0 for the caller's
+ * own SSE2 path. */
+static int pixconv_16to32_wide(void *output, const void *input,
+      int width, int height, int out_stride, int in_stride, int fmt)
+{
+   switch (pixconv_simd_tier())
+   {
+#ifdef PIXCONV_HAVE_AVX512
+      case 2:
+         pixconv_16to32_avx512((uint32_t*)output, (const uint16_t*)input,
+               width, height, out_stride, in_stride, fmt);
+         return 1;
+#endif
+      case 1:
+         pixconv_16to32_avx2((uint32_t*)output, (const uint16_t*)input,
+               width, height, out_stride, in_stride, fmt);
+         return 1;
+      default:
+         break;
+   }
+   return 0;
+}
+#endif
 
 void conv_0rgb1555_argb8888(void *output_, const void *input_,
       int width, int height,
@@ -143,6 +431,14 @@ void conv_0rgb1555_argb8888(void *output_, const void *input_,
    const __m128i a           = _mm_set1_epi16(0x00ff);
 
    int max_width = width - 7;
+#elif (defined(__ARM_NEON__) || defined(__ARM_NEON))
+   int max_width = width - 7;
+#endif
+
+#ifdef PIXCONV_HAVE_WIDE
+   if (pixconv_16to32_wide(output_, input_, width, height,
+            out_stride, in_stride, PIXCONV_1555_ARGB))
+      return;
 #endif
 
    for (h = 0; h < height;
@@ -177,20 +473,29 @@ void conv_0rgb1555_argb8888(void *output_, const void *input_,
          _mm_storeu_si128((__m128i*)(output + w + 0), res_lo);
          _mm_storeu_si128((__m128i*)(output + w + 4), res_hi);
       }
+#elif (defined(__ARM_NEON__) || defined(__ARM_NEON))
+      /* Each channel is shifted to the top of its lane with its own top
+       * bits inserted below, so narrowing yields the replicated 8-bit
+       * value; blue sits at the bottom and narrows from bit 2. */
+      for (; w < max_width; w += 8)
+      {
+         uint16x8_t in = vld1q_u16(input + w);
+         uint16x8_t rt = vshlq_n_u16(in, 1);
+         uint16x8_t gt = vshlq_n_u16(in, 6);
+         uint16x8_t r  = vsriq_n_u16(rt, rt, 5);
+         uint16x8_t g  = vsriq_n_u16(gt, gt, 5);
+         uint16x8_t b  = vsliq_n_u16(in, in, 5);
+         uint8x8x4_t res;
+         res.val[3] = vdup_n_u8(0xffu);
+         res.val[2] = vshrn_n_u16(r, 8);
+         res.val[1] = vshrn_n_u16(g, 8);
+         res.val[0] = vshrn_n_u16(b, 2);
+         vst4_u8((uint8_t*)(output + w), res);
+      }
 #endif
 
       for (; w < width; w++)
-      {
-         uint32_t col = input[w];
-         uint32_t r   = (col >> 10) & 0x1f;
-         uint32_t g   = (col >>  5) & 0x1f;
-         uint32_t b   = (col >>  0) & 0x1f;
-         r            = (r << 3) | (r >> 2);
-         g            = (g << 3) | (g >> 2);
-         b            = (b << 3) | (b >> 2);
-
-         output[w]    = (0xffu << 24) | (r << 16) | (g << 8) | (b << 0);
-      }
+         output[w] = 0xff000000u | pixconv_0rgb1555_to_xrgb8888(input[w]);
    }
 }
 
@@ -226,6 +531,12 @@ void conv_rgb565_argb8888(void *output_, const void *input_,
    int max_width            = width - 7;
 #endif
 
+#ifdef PIXCONV_HAVE_WIDE
+   if (pixconv_16to32_wide(output_, input_, width, height,
+            out_stride, in_stride, PIXCONV_565_ARGB))
+      return;
+#endif
+
    for (h = 0; h < height;
          h++, output += out_stride >> 2, input += in_stride >> 1)
    {
@@ -260,12 +571,14 @@ void conv_rgb565_argb8888(void *output_, const void *input_,
 #elif defined(__MMX__)
       for (; w < max_width; w += 4)
       {
+         __m64 in, r, g, b;
          __m64 res_lo, res_hi;
          __m64 res_lo_bg, res_hi_bg, res_lo_ra, res_hi_ra;
-         const __m64 in = *((__m64*)(input + w));
-         __m64          r = _mm_and_si64(_mm_srli_pi16(in, 1), pix_mask_r);
-         __m64          g = _mm_and_si64(in, pix_mask_g);
-         __m64          b = _mm_and_si64(_mm_slli_pi16(in, 5), pix_mask_b);
+         /* __m64 needs 8-byte alignment; rows need not have it. */
+         memcpy(&in, input + w, sizeof(in));
+         r = _mm_and_si64(_mm_srli_pi16(in, 1), pix_mask_r);
+         g = _mm_and_si64(in, pix_mask_g);
+         b = _mm_and_si64(_mm_slli_pi16(in, 5), pix_mask_b);
 
          r                = _mm_mulhi_pi16(r, mul16_r);
          g                = _mm_mulhi_pi16(g, mul16_g);
@@ -281,8 +594,8 @@ void conv_rgb565_argb8888(void *output_, const void *input_,
          res_hi           = _mm_or_si64(res_hi_bg,
                _mm_slli_si64(res_hi_ra, 16));
 
-         *((__m64*)(output + w + 0)) = res_lo;
-         *((__m64*)(output + w + 2)) = res_hi;
+         memcpy(output + w + 0, &res_lo, sizeof(res_lo));
+         memcpy(output + w + 2, &res_hi, sizeof(res_hi));
       }
 
       _mm_empty();
@@ -306,17 +619,7 @@ void conv_rgb565_argb8888(void *output_, const void *input_,
 #endif
 
       for (; w < width; w++)
-      {
-         uint32_t col = input[w];
-         uint32_t r   = (col >> 11) & 0x1f;
-         uint32_t g   = (col >>  5) & 0x3f;
-         uint32_t b   = (col >>  0) & 0x1f;
-         r            = (r << 3) | (r >> 2);
-         g            = (g << 2) | (g >> 4);
-         b            = (b << 3) | (b >> 2);
-
-         output[w]    = (0xffu << 24) | (r << 16) | (g << 8) | (b << 0);
-      }
+         output[w] = 0xff000000u | pixconv_rgb565_to_xrgb8888(input[w]);
    }
 }
 
@@ -339,7 +642,13 @@ void conv_rgb565_abgr8888(void *output_, const void *input_,
 #elif (defined(__ARM_NEON__) || defined(__ARM_NEON))
    int max_width            = width - 7;
 #endif
-    for (h = 0; h < height;
+ #ifdef PIXCONV_HAVE_WIDE
+   if (pixconv_16to32_wide(output_, input_, width, height,
+            out_stride, in_stride, PIXCONV_565_ABGR))
+      return;
+#endif
+
+   for (h = 0; h < height;
          h++, output += out_stride >> 2, input += in_stride >> 1)
    {
       int w = 0;
@@ -347,7 +656,7 @@ void conv_rgb565_abgr8888(void *output_, const void *input_,
       for (; w < max_width; w += 8)
       {
          __m128i res_lo, res_hi;
-         __m128i res_lo_bg, res_hi_bg, res_lo_ra, res_hi_ra;
+         __m128i res_lo_rg, res_hi_rg, res_lo_ba, res_hi_ba;
          const __m128i in = _mm_loadu_si128((const __m128i*)(input + w));
          __m128i        r = _mm_and_si128(_mm_srli_epi16(in, 1), pix_mask_r);
          __m128i        g = _mm_and_si128(in, pix_mask_g);
@@ -355,14 +664,18 @@ void conv_rgb565_abgr8888(void *output_, const void *input_,
          r                = _mm_mulhi_epi16(r, mul16_r);
          g                = _mm_mulhi_epi16(g, mul16_g);
          b                = _mm_mulhi_epi16(b, mul16_b);
-         res_lo_bg        = _mm_unpacklo_epi8(b, g);
-         res_hi_bg        = _mm_unpackhi_epi8(b, g);
-         res_lo_ra        = _mm_unpacklo_epi8(r, a);
-         res_hi_ra        = _mm_unpackhi_epi8(r, a);
-         res_lo           = _mm_or_si128(res_lo_bg,
-               _mm_slli_si128(res_lo_ra, 2));
-         res_hi           = _mm_or_si128(res_hi_bg,
-               _mm_slli_si128(res_hi_ra, 2));
+         /* Output byte order [r g b a] per pixel == ABGR uint32 LE,
+          * matching the scalar fallback below.  Pair (r,g) into the
+          * low half and (b,a) into the high half (shifted up 2 bytes),
+          * not (b,g) and (r,a) which would produce ARGB byte order. */
+         res_lo_rg        = _mm_unpacklo_epi8(r, g);
+         res_hi_rg        = _mm_unpackhi_epi8(r, g);
+         res_lo_ba        = _mm_unpacklo_epi8(b, a);
+         res_hi_ba        = _mm_unpackhi_epi8(b, a);
+         res_lo           = _mm_or_si128(res_lo_rg,
+               _mm_slli_si128(res_lo_ba, 2));
+         res_hi           = _mm_or_si128(res_hi_rg,
+               _mm_slli_si128(res_hi_ba, 2));
          _mm_storeu_si128((__m128i*)(output + w + 0), res_lo);
          _mm_storeu_si128((__m128i*)(output + w + 4), res_hi);
       }
@@ -384,17 +697,8 @@ void conv_rgb565_abgr8888(void *output_, const void *input_,
          vst4_u8((uint8_t*)(output + w), res);
       }
 #endif
-       for (; w < width; w++)
-      {
-         uint32_t col = input[w];
-         uint32_t r   = (col >> 11) & 0x1f;
-         uint32_t g   = (col >>  5) & 0x3f;
-         uint32_t b   = (col >>  0) & 0x1f;
-         r            = (r << 3) | (r >> 2);
-         g            = (g << 2) | (g >> 4);
-         b            = (b << 3) | (b >> 2);
-         output[w]    = (0xffu << 24) | (b << 16) | (g << 8) | (r << 0);
-      }
+      for (; w < width; w++)
+         output[w] = 0xff000000u | pixconv_rgb565_to_xbgr8888(input[w]);
    }
 }
 
@@ -407,21 +711,47 @@ void conv_argb8888_rgba4444(void *output_, const void *input_,
    uint16_t *output      = (uint16_t*)output_;
 
    for (h = 0; h < height;
-         h++, output += out_stride >> 2, input += in_stride >> 1)
+         h++, output += out_stride >> 1, input += in_stride >> 2)
    {
-      for (w = 0; w < width; w++)
+      w = 0;
+#if (defined(__ARM_NEON__) || defined(__ARM_NEON))
+      for (; w + 8 <= width; w += 8)
+      {
+         uint8x8x4_t in = vld4_u8((const uint8_t*)(input + w));
+         uint16x8_t  r  = vshll_n_u8(vand_u8(in.val[2], vdup_n_u8(0xf0)), 8);
+         uint16x8_t  g  = vshll_n_u8(vand_u8(in.val[1], vdup_n_u8(0xf0)), 4);
+         uint16x8_t  b  = vmovl_u8(vand_u8(in.val[0], vdup_n_u8(0xf0)));
+         uint16x8_t  a  = vmovl_u8(vshr_n_u8(in.val[3], 4));
+         vst1q_u16(output + w, vorrq_u16(vorrq_u16(r, g), vorrq_u16(b, a)));
+      }
+#elif defined(__SSE2__)
+      for (; w + 8 <= width; w += 8)
+      {
+         const __m128i hi = _mm_set1_epi32(0xf000);
+         const __m128i mi = _mm_set1_epi32(0x0f00);
+         const __m128i lo = _mm_set1_epi32(0x00f0);
+         __m128i x0 = _mm_loadu_si128((const __m128i*)(input + w));
+         __m128i x1 = _mm_loadu_si128((const __m128i*)(input + w + 4));
+         x0 = _mm_or_si128(
+               _mm_or_si128(_mm_and_si128(_mm_srli_epi32(x0, 8), hi),
+                            _mm_and_si128(_mm_srli_epi32(x0, 4), mi)),
+               _mm_or_si128(_mm_and_si128(x0, lo), _mm_srli_epi32(x0, 28)));
+         x1 = _mm_or_si128(
+               _mm_or_si128(_mm_and_si128(_mm_srli_epi32(x1, 8), hi),
+                            _mm_and_si128(_mm_srli_epi32(x1, 4), mi)),
+               _mm_or_si128(_mm_and_si128(x1, lo), _mm_srli_epi32(x1, 28)));
+         /* Sign-extend each 16-bit result so the signed pack keeps it
+          * exact; a value over 0x7fff would otherwise saturate. */
+         x0 = _mm_srai_epi32(_mm_slli_epi32(x0, 16), 16);
+         x1 = _mm_srai_epi32(_mm_slli_epi32(x1, 16), 16);
+         _mm_storeu_si128((__m128i*)(output + w), _mm_packs_epi32(x0, x1));
+      }
+#endif
+      for (; w < width; w++)
       {
          uint32_t col = input[w];
-         uint32_t r   = (col >> 16) & 0xf;
-         uint32_t g   = (col >>  8) & 0xf;
-         uint32_t b   = (col) & 0xf;
-         uint32_t a   = (col >>  24) & 0xf;
-         r            = (r >> 4) | r;
-         g            = (g >> 4) | g;
-         b            = (b >> 4) | b;
-         a            = (a >> 4) | a;
-
-         output[w]    = (r << 12) | (g << 8) | (b << 4) | a;
+         output[w]    = (uint16_t)(((col >> 8) & 0xf000)
+               | ((col >> 4) & 0x0f00) | (col & 0x00f0) | (col >> 28));
       }
    }
 }
@@ -434,35 +764,89 @@ void conv_rgba4444_argb8888(void *output_, const void *input_,
    const uint16_t *input = (const uint16_t*)input_;
    uint32_t *output      = (uint32_t*)output_;
 
-#if defined(__MMX__)
+#if defined(__SSE2__)
+   const __m128i pix_mask_r = _mm_set1_epi16(0xf << 10);
+   const __m128i pix_mask_g = _mm_set1_epi16(0xf << 8);
+   const __m128i pix_mask_b = _mm_set1_epi16(0xf << 8);
+   const __m128i pix_mask_a = _mm_set1_epi16(0x000f);
+   const __m128i mul16_r    = _mm_set1_epi16(0x0440);
+   const __m128i mul16_g    = _mm_set1_epi16(0x1100);
+   const __m128i mul16_b    = _mm_set1_epi16(0x1100);
+   const __m128i mul_a      = _mm_set1_epi16(0x0011);
+
+   int max_width            = width - 7;
+#elif defined(__MMX__)
    const __m64 pix_mask_r = _mm_set1_pi16(0xf << 10);
    const __m64 pix_mask_g = _mm_set1_pi16(0xf << 8);
    const __m64 pix_mask_b = _mm_set1_pi16(0xf << 8);
+   const __m64 pix_mask_a = _mm_set1_pi16(0x000f);
    const __m64 mul16_r    = _mm_set1_pi16(0x0440);
    const __m64 mul16_g    = _mm_set1_pi16(0x1100);
    const __m64 mul16_b    = _mm_set1_pi16(0x1100);
-   const __m64 a          = _mm_set1_pi16(0x00ff);
+   const __m64 mul_a      = _mm_set1_pi16(0x0011);
 
    int max_width            = width - 3;
+#elif (defined(__ARM_NEON__) || defined(__ARM_NEON))
+   int max_width            = width - 7;
 #endif
 
    for (h = 0; h < height;
          h++, output += out_stride >> 2, input += in_stride >> 1)
    {
       int w = 0;
-#if defined(__MMX__)
+#if defined(__SSE2__)
+      for (; w < max_width; w += 8)
+      {
+         __m128i res_lo, res_hi;
+         __m128i res_lo_bg, res_hi_bg, res_lo_ra, res_hi_ra;
+         const __m128i in = _mm_loadu_si128(
+               (const __m128i*)(const void*)(input + w));
+         __m128i         r = _mm_and_si128(_mm_srli_epi16(in, 2), pix_mask_r);
+         __m128i         g = _mm_and_si128(in, pix_mask_g);
+         __m128i         b = _mm_and_si128(_mm_slli_epi16(in, 4), pix_mask_b);
+         /* Source is rgba4444 -- alpha is the low nibble of each 16-bit
+          * input word.  Expand 4-bit -> 8-bit via a*0x11 (== a<<4 | a),
+          * matching the scalar fallback. */
+         __m128i         a = _mm_and_si128(in, pix_mask_a);
+
+         r                 = _mm_mulhi_epi16(r, mul16_r);
+         g                 = _mm_mulhi_epi16(g, mul16_g);
+         b                 = _mm_mulhi_epi16(b, mul16_b);
+         a                 = _mm_mullo_epi16(a, mul_a);
+
+         res_lo_bg         = _mm_unpacklo_epi8(b, g);
+         res_hi_bg         = _mm_unpackhi_epi8(b, g);
+         res_lo_ra         = _mm_unpacklo_epi8(r, a);
+         res_hi_ra         = _mm_unpackhi_epi8(r, a);
+
+         res_lo            = _mm_or_si128(res_lo_bg,
+               _mm_slli_si128(res_lo_ra, 2));
+         res_hi            = _mm_or_si128(res_hi_bg,
+               _mm_slli_si128(res_hi_ra, 2));
+
+         _mm_storeu_si128((__m128i*)(void*)(output + w + 0), res_lo);
+         _mm_storeu_si128((__m128i*)(void*)(output + w + 4), res_hi);
+      }
+#elif defined(__MMX__)
       for (; w < max_width; w += 4)
       {
+         __m64 in, r, g, b, a;
          __m64 res_lo, res_hi;
          __m64 res_lo_bg, res_hi_bg, res_lo_ra, res_hi_ra;
-         const __m64 in = *((__m64*)(input + w));
-         __m64          r = _mm_and_si64(_mm_srli_pi16(in, 2), pix_mask_r);
-         __m64          g = _mm_and_si64(in, pix_mask_g);
-         __m64          b = _mm_and_si64(_mm_slli_pi16(in, 4), pix_mask_b);
+         /* __m64 needs 8-byte alignment; rows need not have it. */
+         memcpy(&in, input + w, sizeof(in));
+         r = _mm_and_si64(_mm_srli_pi16(in, 2), pix_mask_r);
+         g = _mm_and_si64(in, pix_mask_g);
+         b = _mm_and_si64(_mm_slli_pi16(in, 4), pix_mask_b);
+         /* Source is rgba4444 -- alpha is the low nibble of each 16-bit
+          * input word.  Expand 4-bit -> 8-bit via a*0x11 (== a<<4 | a),
+          * matching the scalar fallback. */
+         a = _mm_and_si64(in, pix_mask_a);
 
          r                = _mm_mulhi_pi16(r, mul16_r);
          g                = _mm_mulhi_pi16(g, mul16_g);
          b                = _mm_mulhi_pi16(b, mul16_b);
+         a                = _mm_mullo_pi16(a, mul_a);
 
          res_lo_bg        = _mm_unpacklo_pi8(b, g);
          res_hi_bg        = _mm_unpackhi_pi8(b, g);
@@ -474,27 +858,29 @@ void conv_rgba4444_argb8888(void *output_, const void *input_,
          res_hi           = _mm_or_si64(res_hi_bg,
                _mm_slli_si64(res_hi_ra, 16));
 
-         *((__m64*)(output + w + 0)) = res_lo;
-         *((__m64*)(output + w + 2)) = res_hi;
+         memcpy(output + w + 0, &res_lo, sizeof(res_lo));
+         memcpy(output + w + 2, &res_hi, sizeof(res_hi));
       }
 
       _mm_empty();
+#elif (defined(__ARM_NEON__) || defined(__ARM_NEON))
+      /* Nibbles are duplicated into both halves of each byte. */
+      for (; w < max_width; w += 8)
+      {
+         uint16x8_t in = vld1q_u16(input + w);
+         uint8x8_t  hi = vshrn_n_u16(in, 8);
+         uint8x8_t  lo = vmovn_u16(in);
+         uint8x8x4_t res;
+         res.val[3] = vsli_n_u8(lo, lo, 4);
+         res.val[2] = vsri_n_u8(hi, hi, 4);
+         res.val[1] = vsli_n_u8(hi, hi, 4);
+         res.val[0] = vsri_n_u8(lo, lo, 4);
+         vst4_u8((uint8_t*)(output + w), res);
+      }
 #endif
 
       for (; w < width; w++)
-      {
-         uint32_t col = input[w];
-         uint32_t r   = (col >> 12) & 0xf;
-         uint32_t g   = (col >>  8) & 0xf;
-         uint32_t b   = (col >>  4) & 0xf;
-         uint32_t a   = (col >>  0) & 0xf;
-         r            = (r << 4) | r;
-         g            = (g << 4) | g;
-         b            = (b << 4) | b;
-         a            = (a << 4) | a;
-
-         output[w]    = (a << 24) | (r << 16) | (g << 8) | (b << 0);
-      }
+         output[w] = pixconv_rgba4444_to_argb8888(input[w]);
    }
 }
 
@@ -509,14 +895,32 @@ void conv_rgba4444_rgb565(void *output_, const void *input_,
    for (h = 0; h < height;
          h++, output += out_stride >> 1, input += in_stride >> 1)
    {
-      for (w = 0; w < width; w++)
+      w = 0;
+#if (defined(__ARM_NEON__) || defined(__ARM_NEON))
+      for (; w + 8 <= width; w += 8)
+      {
+         uint16x8_t in = vld1q_u16(input + w);
+         uint16x8_t r  = vandq_u16(in, vdupq_n_u16(0xf000));
+         uint16x8_t g  = vandq_u16(vshrq_n_u16(in, 1), vdupq_n_u16(0x0780));
+         uint16x8_t b  = vandq_u16(vshrq_n_u16(in, 3), vdupq_n_u16(0x001e));
+         vst1q_u16(output + w, vorrq_u16(r, vorrq_u16(g, b)));
+      }
+#elif defined(__SSE2__)
+      for (; w + 8 <= width; w += 8)
+      {
+         __m128i in = _mm_loadu_si128((const __m128i*)(input + w));
+         __m128i r  = _mm_and_si128(in, _mm_set1_epi16((short)0xf000));
+         __m128i g  = _mm_and_si128(_mm_srli_epi16(in, 1), _mm_set1_epi16(0x0780));
+         __m128i b  = _mm_and_si128(_mm_srli_epi16(in, 3), _mm_set1_epi16(0x001e));
+         _mm_storeu_si128((__m128i*)(output + w),
+               _mm_or_si128(r, _mm_or_si128(g, b)));
+      }
+#endif
+      for (; w < width; w++)
       {
          uint32_t col = input[w];
-         uint32_t r   = (col >> 12) & 0xf;
-         uint32_t g   = (col >>  8) & 0xf;
-         uint32_t b   = (col >>  4) & 0xf;
-
-         output[w]    = (r << 12) | (g << 7) | (b << 1);
+         output[w]    = (uint16_t)((col & 0xf000)
+               | ((col >> 1) & 0x0780) | ((col >> 3) & 0x001e));
       }
    }
 }
@@ -584,6 +988,8 @@ void conv_0rgb1555_bgr24(void *output_, const void *input_,
    const __m128i a           = _mm_set1_epi16(0x00ff);
 
    int max_width             = width - 15;
+#elif (defined(__ARM_NEON__) || defined(__ARM_NEON))
+   int max_width             = width - 7;
 #endif
 
    for (h = 0; h < height;
@@ -635,21 +1041,29 @@ void conv_0rgb1555_bgr24(void *output_, const void *input_,
          /* Non-POT pixel sizes for the loss */
          store_bgr24_sse2(out, res_lo0, res_hi0, res_lo1, res_hi1);
       }
+#elif (defined(__ARM_NEON__) || defined(__ARM_NEON))
+      for (; w < max_width; w += 8, out += 24)
+      {
+         uint16x8_t in = vld1q_u16(input + w);
+         uint16x8_t rt = vshlq_n_u16(in, 1);
+         uint16x8_t gt = vshlq_n_u16(in, 6);
+         uint16x8_t r  = vsriq_n_u16(rt, rt, 5);
+         uint16x8_t g  = vsriq_n_u16(gt, gt, 5);
+         uint16x8_t b  = vsliq_n_u16(in, in, 5);
+         uint8x8x3_t res;
+         res.val[2] = vshrn_n_u16(r, 8);
+         res.val[1] = vshrn_n_u16(g, 8);
+         res.val[0] = vshrn_n_u16(b, 2);
+         vst3_u8(out, res);
+      }
 #endif
 
       for (; w < width; w++)
       {
-         uint32_t col = input[w];
-         uint32_t b   = (col >>  0) & 0x1f;
-         uint32_t g   = (col >>  5) & 0x1f;
-         uint32_t r   = (col >> 10) & 0x1f;
-         b            = (b << 3) | (b >> 2);
-         g            = (g << 3) | (g >> 2);
-         r            = (r << 3) | (r >> 2);
-
-         *out++       = b;
-         *out++       = g;
-         *out++       = r;
+         uint32_t col = pixconv_0rgb1555_to_xrgb8888(input[w]);
+         *out++       = (uint8_t)(col);
+         *out++       = (uint8_t)(col >>  8);
+         *out++       = (uint8_t)(col >> 16);
       }
    }
 }
@@ -672,6 +1086,8 @@ void conv_rgb565_bgr24(void *output_, const void *input_,
    const __m128i a          = _mm_set1_epi16(0x00ff);
 
    int max_width            = width - 15;
+#elif (defined(__ARM_NEON__) || defined(__ARM_NEON))
+   int max_width            = width - 7;
 #endif
 
    for (h = 0; h < height; h++, output += out_stride, input += in_stride >> 1)
@@ -720,21 +1136,27 @@ void conv_rgb565_bgr24(void *output_, const void *input_,
 
          store_bgr24_sse2(out, res_lo0, res_hi0, res_lo1, res_hi1);
       }
+#elif (defined(__ARM_NEON__) || defined(__ARM_NEON))
+      for (; w < max_width; w += 8, out += 24)
+      {
+         uint16x8_t in = vld1q_u16(input + w);
+         uint16x8_t r  = vsriq_n_u16(in, in, 5);
+         uint16x8_t b  = vsliq_n_u16(in, in, 5);
+         uint16x8_t g  = vsriq_n_u16(b,  b,  6);
+         uint8x8x3_t res;
+         res.val[2] = vshrn_n_u16(r, 8);
+         res.val[1] = vshrn_n_u16(g, 8);
+         res.val[0] = vshrn_n_u16(b, 2);
+         vst3_u8(out, res);
+      }
 #endif
 
       for (; w < width; w++)
       {
-         uint32_t col = input[w];
-         uint32_t r   = (col >> 11) & 0x1f;
-         uint32_t g   = (col >>  5) & 0x3f;
-         uint32_t b   = (col >>  0) & 0x1f;
-         r = (r << 3) | (r >> 2);
-         g = (g << 2) | (g >> 4);
-         b = (b << 3) | (b >> 2);
-
-         *out++ = b;
-         *out++ = g;
-         *out++ = r;
+         uint32_t col = pixconv_rgb565_to_xrgb8888(input[w]);
+         *out++       = (uint8_t)(col);
+         *out++       = (uint8_t)(col >>  8);
+         *out++       = (uint8_t)(col >> 16);
       }
    }
 }
@@ -751,7 +1173,34 @@ void conv_bgr24_argb8888(void *output_, const void *input_,
          h++, output += out_stride >> 2, input += in_stride)
    {
       const uint8_t *inp = input;
-      for (w = 0; w < width; w++)
+      w = 0;
+#if (defined(__ARM_NEON__) || defined(__ARM_NEON))
+      for (; w + 8 <= width; w += 8, inp += 24)
+      {
+         uint8x8x3_t in = vld3_u8(inp);
+         uint8x8x4_t res;
+         res.val[0] = in.val[0];
+         res.val[1] = in.val[1];
+         res.val[2] = in.val[2];
+         res.val[3] = vdup_n_u8(0xffu);
+         vst4_u8((uint8_t*)(output + w), res);
+      }
+#elif PIXCONV_LITTLE_ENDIAN
+      /* Four pixels are three words on a little-endian host:
+       * b0 g0 r0 b1 | g1 r1 b2 g2 | r2 b3 g3 r3. */
+      for (; w + 4 <= width; w += 4, inp += 12)
+      {
+         uint32_t w0, w1, w2;
+         memcpy(&w0, inp + 0, sizeof(w0));
+         memcpy(&w1, inp + 4, sizeof(w1));
+         memcpy(&w2, inp + 8, sizeof(w2));
+         output[w + 0] = 0xff000000u | (w0 & 0x00ffffffu);
+         output[w + 1] = 0xff000000u | (w0 >> 24) | ((w1 & 0x0000ffffu) << 8);
+         output[w + 2] = 0xff000000u | (w1 >> 16) | ((w2 & 0x000000ffu) << 16);
+         output[w + 3] = 0xff000000u | (w2 >> 8);
+      }
+#endif
+      for (; w < width; w++)
       {
          uint32_t b = *inp++;
          uint32_t g = *inp++;
@@ -769,17 +1218,84 @@ void conv_bgr24_rgb565(void *output_, const void *input_,
    const uint8_t *input = (const uint8_t*)input_;
    uint16_t *output     = (uint16_t*)output_;
    for (h = 0; h < height;
-         h++, output += out_stride, input += in_stride)
+         h++, output += out_stride >> 1, input += in_stride)
    {
       const uint8_t *inp = input;
-      for (w = 0; w < width; w++)
+      w = 0;
+#if (defined(__ARM_NEON__) || defined(__ARM_NEON))
+      for (; w + 8 <= width; w += 8, inp += 24)
+      {
+         uint8x8x3_t in = vld3_u8(inp);
+         uint16x8_t  r  = vshll_n_u8(vand_u8(in.val[2], vdup_n_u8(0xf8)), 8);
+         uint16x8_t  g  = vshll_n_u8(vand_u8(in.val[1], vdup_n_u8(0xfc)), 3);
+         uint16x8_t  b  = vmovl_u8(vshr_n_u8(in.val[0], 3));
+         vst1q_u16(output + w, vorrq_u16(r, vorrq_u16(g, b)));
+      }
+#endif
+      for (; w < width; w++)
       {
          uint16_t b = *inp++;
          uint16_t g = *inp++;
          uint16_t r = *inp++;
-    
+
          output[w] = ((r & 0x00F8) << 8) | ((g&0x00FC) << 3) | ((b&0x00F8) >> 3);
-      }  
+      }
+   }
+}
+
+void conv_argb8888_rgb565(void *output_, const void *input_,
+      int width, int height,
+      int out_stride, int in_stride)
+{
+   int h, w;
+   const uint32_t *input = (const uint32_t*)input_;
+   uint16_t *output      = (uint16_t*)output_;
+
+   for (h = 0; h < height;
+         h++, output += out_stride >> 1, input += in_stride >> 2)
+   {
+      w = 0;
+#if defined(__SSE2__)
+      for (; w + 8 <= width; w += 8)
+      {
+         const __m128i rm   = _mm_set1_epi32(0xf800);
+         const __m128i gm   = _mm_set1_epi32(0x07e0);
+         const __m128i bm   = _mm_set1_epi32(0x001f);
+         const __m128i bias = _mm_set1_epi32(0x8000);
+         __m128i x0 = _mm_loadu_si128((const __m128i*)(input + w));
+         __m128i x1 = _mm_loadu_si128((const __m128i*)(input + w + 4));
+         x0 = _mm_or_si128(_mm_and_si128(_mm_srli_epi32(x0, 8), rm),
+               _mm_or_si128(_mm_and_si128(_mm_srli_epi32(x0, 5), gm),
+                            _mm_and_si128(_mm_srli_epi32(x0, 3), bm)));
+         x1 = _mm_or_si128(_mm_and_si128(_mm_srli_epi32(x1, 8), rm),
+               _mm_or_si128(_mm_and_si128(_mm_srli_epi32(x1, 5), gm),
+                            _mm_and_si128(_mm_srli_epi32(x1, 3), bm)));
+         /* Bias for SSE2's signed 32-to-16 pack. */
+         _mm_storeu_si128((__m128i*)(output + w), _mm_xor_si128(
+               _mm_packs_epi32(_mm_sub_epi32(x0, bias),
+                              _mm_sub_epi32(x1, bias)),
+               _mm_set1_epi16(-32768)));
+      }
+#elif (defined(__ARM_NEON__) || defined(__ARM_NEON))
+      for (; w + 4 <= width; w += 4)
+      {
+         uint32x4_t c = vld1q_u32(input + w);
+         uint32x4_t r = vandq_u32(vshrq_n_u32(c, 8), vdupq_n_u32(0xf800));
+         uint32x4_t g = vandq_u32(vshrq_n_u32(c, 5), vdupq_n_u32(0x07e0));
+         uint32x4_t b = vandq_u32(vshrq_n_u32(c, 3), vdupq_n_u32(0x001f));
+         vst1_u16(output + w, vmovn_u32(vorrq_u32(r, vorrq_u32(g, b))));
+      }
+#endif
+      for (; w < width; w++)
+      {
+         uint32_t c;
+         uint16_t packed;
+         /* Byte accesses keep in-place narrowing alias-safe. */
+         memcpy(&c, input + w, sizeof(c));
+         packed = (uint16_t)(((c >> 8) & 0xf800)
+               | ((c >> 5) & 0x07e0) | ((c >> 3) & 0x001f));
+         memcpy(output + w, &packed, sizeof(packed));
+      }
    }
 }
 
@@ -794,13 +1310,39 @@ void conv_argb8888_0rgb1555(void *output_, const void *input_,
    for (h = 0; h < height;
          h++, output += out_stride >> 1, input += in_stride >> 2)
    {
-      for (w = 0; w < width; w++)
+      w = 0;
+#if (defined(__ARM_NEON__) || defined(__ARM_NEON))
+      for (; w + 8 <= width; w += 8)
+      {
+         uint8x8x4_t in = vld4_u8((const uint8_t*)(input + w));
+         uint16x8_t  r  = vshll_n_u8(vand_u8(in.val[2], vdup_n_u8(0xf8)), 7);
+         uint16x8_t  g  = vshll_n_u8(vand_u8(in.val[1], vdup_n_u8(0xf8)), 2);
+         uint16x8_t  b  = vmovl_u8(vshr_n_u8(in.val[0], 3));
+         vst1q_u16(output + w, vorrq_u16(r, vorrq_u16(g, b)));
+      }
+#elif defined(__SSE2__)
+      for (; w + 8 <= width; w += 8)
+      {
+         const __m128i rm = _mm_set1_epi32(0x7c00);
+         const __m128i gm = _mm_set1_epi32(0x03e0);
+         const __m128i bm = _mm_set1_epi32(0x001f);
+         __m128i x0 = _mm_loadu_si128((const __m128i*)(input + w));
+         __m128i x1 = _mm_loadu_si128((const __m128i*)(input + w + 4));
+         x0 = _mm_or_si128(_mm_and_si128(_mm_srli_epi32(x0, 9), rm),
+               _mm_or_si128(_mm_and_si128(_mm_srli_epi32(x0, 6), gm),
+                            _mm_and_si128(_mm_srli_epi32(x0, 3), bm)));
+         x1 = _mm_or_si128(_mm_and_si128(_mm_srli_epi32(x1, 9), rm),
+               _mm_or_si128(_mm_and_si128(_mm_srli_epi32(x1, 6), gm),
+                            _mm_and_si128(_mm_srli_epi32(x1, 3), bm)));
+         /* Every result is at most 0x7fff, so the signed pack is exact. */
+         _mm_storeu_si128((__m128i*)(output + w), _mm_packs_epi32(x0, x1));
+      }
+#endif
+      for (; w < width; w++)
       {
          uint32_t col = input[w];
-         uint16_t r   = (col >> 19) & 0x1f;
-         uint16_t g   = (col >> 11) & 0x1f;
-         uint16_t b   = (col >>  3) & 0x1f;
-         output[w]    = (r << 10) | (g << 5) | (b << 0);
+         output[w]    = (uint16_t)(((col >> 9) & 0x7c00)
+               | ((col >> 6) & 0x03e0) | ((col >> 3) & 0x001f));
       }
    }
 }
@@ -815,6 +1357,8 @@ void conv_argb8888_bgr24(void *output_, const void *input_,
 
 #if defined(__SSE2__)
    int max_width = width - 15;
+#elif (defined(__ARM_NEON__) || defined(__ARM_NEON))
+   int max_width = width - 7;
 #endif
 
    for (h = 0; h < height;
@@ -830,6 +1374,16 @@ void conv_argb8888_bgr24(void *output_, const void *input_,
          __m128i l2 = _mm_loadu_si128((const __m128i*)(input + w +  8));
          __m128i l3 = _mm_loadu_si128((const __m128i*)(input + w + 12));
          store_bgr24_sse2(out, l0, l1, l2, l3);
+      }
+#elif (defined(__ARM_NEON__) || defined(__ARM_NEON))
+      for (; w < max_width; w += 8, out += 24)
+      {
+         uint8x8x4_t in = vld4_u8((const uint8_t*)(input + w));
+         uint8x8x3_t res;
+         res.val[0] = in.val[0];
+         res.val[1] = in.val[1];
+         res.val[2] = in.val[2];
+         vst3_u8(out, res);
       }
 #endif
 
@@ -868,6 +1422,8 @@ void conv_abgr8888_bgr24(void *output_, const void *input_,
 
 #if defined(__SSE2__)
    int max_width = width - 15;
+#elif (defined(__ARM_NEON__) || defined(__ARM_NEON))
+   int max_width = width - 7;
 #endif
 
    for (h = 0; h < height;
@@ -888,6 +1444,16 @@ void conv_abgr8888_bgr24(void *output_, const void *input_,
          d = conv_shuffle_rb_epi32(d);
          store_bgr24_sse2(out, a, b, c, d);
       }
+#elif (defined(__ARM_NEON__) || defined(__ARM_NEON))
+      for (; w < max_width; w += 8, out += 24)
+      {
+         uint8x8x4_t in = vld4_u8((const uint8_t*)(input + w));
+         uint8x8x3_t res;
+         res.val[0] = in.val[2];
+         res.val[1] = in.val[1];
+         res.val[2] = in.val[0];
+         vst3_u8(out, res);
+      }
 #endif
 
       for (; w < width; w++)
@@ -907,11 +1473,51 @@ void conv_argb8888_abgr8888(void *output_, const void *input_,
    int h, w;
    const uint32_t *input = (const uint32_t*)input_;
    uint32_t *output      = (uint32_t*)output_;
+#if defined(__SSE2__)
+   const __m128i mask_ag = _mm_set1_epi32(0xff00ff00);
+   const __m128i mask_r  = _mm_set1_epi32(0x00ff0000);
+   const __m128i mask_b  = _mm_set1_epi32(0x000000ff);
+   int max_width         = width - 3;
+#elif (defined(__ARM_NEON__) || defined(__ARM_NEON))
+   int max_width         = width - 3;
+#endif
 
    for (h = 0; h < height;
          h++, output += out_stride >> 2, input += in_stride >> 2)
    {
-      for (w = 0; w < width; w++)
+      w = 0;
+#if defined(__SSE2__)
+      /* Swap R and B while keeping A and G in place; identical per-lane
+       * to the scalar path. */
+      for (; w < max_width; w += 4)
+      {
+         const __m128i col = _mm_loadu_si128((const __m128i*)(input + w));
+         const __m128i ag  = _mm_and_si128(col, mask_ag);
+         const __m128i r   = _mm_and_si128(_mm_slli_epi32(col, 16), mask_r);
+         const __m128i b   = _mm_and_si128(_mm_srli_epi32(col, 16), mask_b);
+         _mm_storeu_si128((__m128i*)(output + w),
+               _mm_or_si128(ag, _mm_or_si128(r, b)));
+      }
+#elif (defined(__ARM_NEON__) || defined(__ARM_NEON))
+      /* Reverse the four bytes of each pixel (A,R,G,B -> B,G,R,A) then
+       * rotate so A and G return to their lanes: equivalently, view the
+       * pixels as bytes and swap byte 0 with byte 2 per pixel. */
+      for (; w < max_width; w += 4)
+      {
+         /* Swap the R and B bytes of each pixel, keeping A and G, using
+          * the same shift/mask arithmetic as the scalar path (portable
+          * across ARMv7 and AArch64 NEON). */
+         const uint32x4_t mask_ag = vdupq_n_u32(0xff00ff00);
+         const uint32x4_t mask_r  = vdupq_n_u32(0x00ff0000);
+         const uint32x4_t mask_b  = vdupq_n_u32(0x000000ff);
+         uint32x4_t col = vld1q_u32(input + w);
+         uint32x4_t ag  = vandq_u32(col, mask_ag);
+         uint32x4_t r   = vandq_u32(vshlq_n_u32(col, 16), mask_r);
+         uint32x4_t b   = vandq_u32(vshrq_n_u32(col, 16), mask_b);
+         vst1q_u32(output + w, vorrq_u32(ag, vorrq_u32(r, b)));
+      }
+#endif
+      for (; w < width; w++)
       {
          uint32_t col = input[w];
          output[w]    = ((col << 16) & 0xff0000) |
@@ -1041,6 +1647,50 @@ void conv_yuyv_argb8888(void *output_, const void *input_,
          _mm_storeu_si128((__m128i*)(dst +  8), res2);
          _mm_storeu_si128((__m128i*)(dst + 12), res3);
       }
+#elif (defined(__ARM_NEON__) || defined(__ARM_NEON))
+      /* Same 16-bit fixed point as the scalar path: every term fits
+       * in int16, the shift is arithmetic and vqmovun_s16 does the
+       * clamp to 0..255. */
+      for (; w + 16 <= width; w += 16, src += 32, dst += 16)
+      {
+         uint8x8x4_t yuyv = vld4_u8(src); /* Y0 U Y1 V, eight pairs */
+         int16x8_t   y0   = vreinterpretq_s16_u16(
+               vshll_n_u8(yuyv.val[0], YUV_SHIFT));
+         int16x8_t   y1   = vreinterpretq_s16_u16(
+               vshll_n_u8(yuyv.val[2], YUV_SHIFT));
+         int16x8_t   u    = vsubq_s16(vreinterpretq_s16_u16(
+                  vmovl_u8(yuyv.val[1])), vdupq_n_s16(128));
+         int16x8_t   v    = vsubq_s16(vreinterpretq_s16_u16(
+                  vmovl_u8(yuyv.val[3])), vdupq_n_s16(128));
+         int16x8_t   rc   = vmlaq_n_s16(vdupq_n_s16(YUV_OFFSET),
+               v, YUV_MAT_V_R);
+         int16x8_t   gc   = vmlaq_n_s16(vmlaq_n_s16(
+                  vdupq_n_s16(YUV_OFFSET), u, YUV_MAT_U_G), v, YUV_MAT_V_G);
+         int16x8_t   bc   = vmlaq_n_s16(vdupq_n_s16(YUV_OFFSET),
+               u, YUV_MAT_U_B);
+         uint8x8x2_t r, g, b;
+         uint8x8x4_t res;
+
+         r = vzip_u8(
+               vqmovun_s16(vshrq_n_s16(vaddq_s16(y0, rc), YUV_SHIFT)),
+               vqmovun_s16(vshrq_n_s16(vaddq_s16(y1, rc), YUV_SHIFT)));
+         g = vzip_u8(
+               vqmovun_s16(vshrq_n_s16(vaddq_s16(y0, gc), YUV_SHIFT)),
+               vqmovun_s16(vshrq_n_s16(vaddq_s16(y1, gc), YUV_SHIFT)));
+         b = vzip_u8(
+               vqmovun_s16(vshrq_n_s16(vaddq_s16(y0, bc), YUV_SHIFT)),
+               vqmovun_s16(vshrq_n_s16(vaddq_s16(y1, bc), YUV_SHIFT)));
+
+         res.val[3] = vdup_n_u8(0xffu);
+         res.val[0] = b.val[0];
+         res.val[1] = g.val[0];
+         res.val[2] = r.val[0];
+         vst4_u8((uint8_t*)(dst + 0), res);
+         res.val[0] = b.val[1];
+         res.val[1] = g.val[1];
+         res.val[2] = r.val[1];
+         vst4_u8((uint8_t*)(dst + 8), res);
+      }
 #endif
 
       /* Finish off the rest (if any) in C. */
@@ -1063,6 +1713,42 @@ void conv_yuyv_argb8888(void *output_, const void *input_,
          dst[1]     = 0xff000000u | (r1 << 16) | (g1 << 8) | (b1 << 0);
       }
    }
+}
+
+/* Each row's own @width pixels of @bpp bytes: a rectangle inside a
+ * larger image is copied without the rest of its rows */
+static void conv_copy_bpp(void *output_, const void *input_,
+      int width, int height, int out_stride, int in_stride, int bpp)
+{
+   int h;
+   size_t copy_len      = (size_t)width * bpp;
+   const uint8_t *input = (const uint8_t*)input_;
+   uint8_t *output      = (uint8_t*)output_;
+
+   for (h = 0; h < height;
+         h++, output += out_stride, input += in_stride)
+      memcpy(output, input, copy_len);
+}
+
+void conv_copy_16(void *output, const void *input,
+      int width, int height,
+      int out_stride, int in_stride)
+{
+   conv_copy_bpp(output, input, width, height, out_stride, in_stride, 2);
+}
+
+void conv_copy_24(void *output, const void *input,
+      int width, int height,
+      int out_stride, int in_stride)
+{
+   conv_copy_bpp(output, input, width, height, out_stride, in_stride, 3);
+}
+
+void conv_copy_32(void *output, const void *input,
+      int width, int height,
+      int out_stride, int in_stride)
+{
+   conv_copy_bpp(output, input, width, height, out_stride, in_stride, 4);
 }
 
 void conv_copy(void *output_, const void *input_,

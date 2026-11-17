@@ -33,6 +33,16 @@ RETRO_BEGIN_DECLS
 
 libretro_vfs_implementation_file *retro_vfs_file_open_impl(const char *path, unsigned mode, unsigned hints);
 
+/* Deallocate a range of a file without changing its length; see
+ * filestream_punch_hole. Returns 0 on success, -1 when the platform or
+ * filesystem cannot do it. */
+int retro_vfs_file_punch_hole_impl(libretro_vfs_implementation_file *stream, int64_t offset, int64_t len);
+
+/* Allocation unit of the filesystem holding this file; see
+ * filestream_get_sparse_granularity. 0 when unknown. */
+int64_t retro_vfs_file_get_sparse_granularity_impl(libretro_vfs_implementation_file *stream);
+
+/* Consumes stream even when reporting final I/O failure; do not retry close. */
 int retro_vfs_file_close_impl(libretro_vfs_implementation_file *stream);
 
 int retro_vfs_file_error_impl(libretro_vfs_implementation_file *stream);
@@ -49,6 +59,29 @@ int64_t retro_vfs_file_read_impl(libretro_vfs_implementation_file *stream, void 
 
 int64_t retro_vfs_file_write_impl(libretro_vfs_implementation_file *stream, const void *s, uint64_t len);
 
+/* Writes @count pieces of memory, in order, as if each were written
+ * with retro_vfs_file_write_impl: one writev() call for a descriptor-
+ * written stream where the platform has it, else one write per piece.
+ * Returns the bytes written, short at the first piece not written in
+ * full, or -1 if nothing was written. */
+int64_t retro_vfs_file_writev_impl(libretro_vfs_implementation_file *stream,
+      const struct retro_vfs_span *spans, size_t count);
+
+/* Reads @len bytes at @offset without moving the stream's position;
+ * any number of threads may call it on one stream at once. Returns the
+ * bytes read, 0 at or past the end, or -1 on an error or where the
+ * platform or the stream's scheme has no positional I/O (the caller then
+ * seeks and reads, under a lock of its own if it shares the stream). */
+int64_t retro_vfs_file_read_at_impl(libretro_vfs_implementation_file *stream,
+      void *s, uint64_t len, int64_t offset);
+
+/* Writes @len bytes at @offset the same way; with a negative @offset it
+ * appends, each append whole and after the one before it whichever
+ * thread it came from (after the file's end as it was opened, so a
+ * stream appended to is written with this call only). -1 as above. */
+int64_t retro_vfs_file_write_at_impl(libretro_vfs_implementation_file *stream,
+      const void *s, uint64_t len, int64_t offset);
+
 int retro_vfs_file_flush_impl(libretro_vfs_implementation_file *stream);
 
 int retro_vfs_file_remove_impl(const char *path);
@@ -57,9 +90,168 @@ int retro_vfs_file_rename_impl(const char *old_path, const char *new_path);
 
 const char *retro_vfs_file_get_path_impl(libretro_vfs_implementation_file *stream);
 
+/* Borrowed pointer to the whole file, when this stream is backed by a
+ * memory map, else NULL.  Valid until the stream is closed; read-only;
+ * never freed by the caller.
+ *
+ * RETRO_VFS_FILE_ACCESS_HINT_FREQUENT_ACCESS already maps the file,
+ * but the mapping was reachable only from inside the read path, which
+ * memcpy's out of it - so every consumer of the hint paid for a copy
+ * of data that was already addressable, and the point of asking for
+ * the map was lost.  This hands the map itself to callers that want
+ * to look rather than own: comparing a file against a buffer, hashing
+ * it, or passing it to a parser that takes a base pointer.
+ *
+ * NULL is a normal answer, not an error - no HAVE_MMAP, hint not
+ * given, a write mode, a scheme with no mapping, or a frontend-
+ * supplied VFS - so callers need the copying path anyway and should
+ * treat this as a fast lane, never as the only one. */
+const uint8_t *retro_vfs_file_get_mapped_ptr_impl(
+      libretro_vfs_implementation_file *stream, int64_t *len);
+
+/**
+ * retro_vfs_file_view_impl:
+ *
+ * retro_vfs_file_read_impl() without the copy: points @ptr at up to
+ * @len octets at the position, in the file's mapping or in a network
+ * stream's read-ahead window, and moves past them. They stay valid
+ * until the next call on @stream. Returns the octets lent, 0 at the
+ * end of the file, or -1 when nothing there can be lent; the caller
+ * then reads.
+ **/
+int64_t retro_vfs_file_view_impl(libretro_vfs_implementation_file *stream,
+      uint64_t len, const uint8_t **ptr);
+
+/* An open hint this implementation honours and the frontend VFS ABI does
+ * not carry: a read-only open of a local file that has to stay the file
+ * it opened, for a caller that checks what it reads (a core's signature).
+ * Implies the descriptor path, with no stdio buffer. The open fails
+ * unless the path names a regular file; it never waits (a FIFO), never
+ * becomes a controlling terminal and is not inherited by a child. On
+ * Windows no other handle can write the file or delete it for as long as
+ * this one is open. Ignored by any other mode or scheme, which open as
+ * before. */
+#define RETRO_VFS_FILE_ACCESS_HINT_IMPL_STABLE (1 << 16)
+
+/* struct retro_vfs_file_identity is libretro.h's (VFS API v7) */
+
+/* Fills @id for a plain-file stream opened on the descriptor path
+ * (RETRO_VFS_FILE_ACCESS_HINT_SEQUENTIAL_BULK, ..._FREQUENT_ACCESS or
+ * ..._IMPL_STABLE). One fstat() on POSIX. False for any other stream. */
+bool retro_vfs_file_identity_impl(libretro_vfs_implementation_file *stream,
+      struct retro_vfs_file_identity *id);
+
+/* The identity of what @path names now, following symbolic links, with
+ * no stream opened (stat() on POSIX; a handle opened only to query, on
+ * Windows). 1 with @id filled; 0 where nothing is there (no such file or
+ * folder); -1 where it can't be told (no permission to look, a part of
+ * the path is a file on POSIX, or the platform can't), @id zeroed for
+ * both. */
+int retro_vfs_stat_identity_impl(const char *path,
+      struct retro_vfs_file_identity *id);
+
+/* struct retro_vfs_volume and its flags are libretro.h's (VFS API v7) */
+
+/* The volume of an open stream's file. True when everything in @want
+ * was told (a flag clear is then a no); false, @vol zeroed, where any of
+ * it can't be. A kind never told is 0 and doesn't make it false. One
+ * fstatfs() answers WANT_FLAGS on Linux, the BSDs and macOS. */
+bool retro_vfs_file_volume_impl(libretro_vfs_implementation_file *stream,
+      unsigned want, struct retro_vfs_volume *vol);
+
+/* The same for what @path names, following links: 1 told, 0 nothing
+ * there, -1 where it can't be told, as retro_vfs_stat_identity_impl(). */
+int retro_vfs_stat_volume_impl(const char *path, unsigned want,
+      struct retro_vfs_volume *vol);
+
+/* fs-verity (Linux 5.4 on, Android 11 on): a file sealed for good, its
+ * contents checked by the kernel against a Merkle tree on every read.
+ * Descriptor streams only. */
+
+/* The digest the kernel keeps for a sealed file into @digest (up to
+ * @cap octets): its length, or 0 where the file isn't sealed, @cap is
+ * too small or it can't be told. */
+size_t retro_vfs_file_verity_measure_impl(
+      libretro_vfs_implementation_file *stream, uint8_t *digest, size_t cap);
+
+/* Seal the file (SHA-256, 4 KiB blocks): 1 sealed, now or before; 0
+ * where it can't be here (filesystem, mount or kernel without it, a file
+ * not ours, or one open for writing somewhere); -1 failed otherwise. */
+int retro_vfs_file_verity_enable_impl(
+      libretro_vfs_implementation_file *stream);
+
+/* A stable open (RETRO_VFS_FILE_ACCESS_HINT_IMPL_STABLE) that also
+ * fills @id, from the query the open makes anyway to vouch for the file:
+ * the identity as opened, without retro_vfs_file_identity_impl()'s own
+ * query (one fstat() fewer on POSIX; on Windows the identity's queries
+ * stand in for the size query). NULL, with @id zeroed, unless the stream
+ * is a stable one: a path the VFS opens by another scheme is closed and
+ * refused. Ask retro_vfs_file_identity_impl() for the identity later. */
+libretro_vfs_implementation_file *retro_vfs_file_open_stable_impl(
+      const char *path, struct retro_vfs_file_identity *id);
+
+/* Maps the whole of a descriptor-path stream read-only, on demand, and
+ * returns it; the stream owns the mapping and drops it at close. Reads,
+ * seeks and the position are untouched by it, and a second call returns
+ * the same mapping. NULL where the stream or platform can't map (the
+ * caller then reads), including an empty file or one too big for the
+ * address space.
+ *
+ * Reading the mapping is reading the file: where another process can
+ * shorten the file, a touch past its new end faults (SIGBUS on POSIX),
+ * and a removable or network volume can fail a touch the same way. A
+ * caller maps only a file nothing else can change, on a local fixed
+ * volume. */
+const uint8_t *retro_vfs_file_map_impl(libretro_vfs_implementation_file *stream,
+      int64_t *len);
+
+/**
+ * retro_vfs_file_prefetch_impl:
+ * @offset : first byte of the range about to be read
+ * @len    : bytes of it
+ *
+ * Asks the OS to start bringing the range into memory, so a read or a
+ * touch of the mapping that follows finds it resident instead of
+ * stalling on the disk. Returns at once: madvise(MADV_WILLNEED) on a
+ * mapped file, posix_fadvise(WILLNEED) on a descriptor; on Windows the
+ * range is handed to the file's read-ahead thread, which calls
+ * PrefetchVirtualMemory() (or touches the pages before Windows 8), so
+ * the caller never waits on the disk. A no-op where none of these
+ * exists, on a scheme that is not a local file, or when the OS
+ * declines. A hint, never an error. */
+void retro_vfs_file_prefetch_impl(
+      libretro_vfs_implementation_file *stream, uint64_t offset,
+      uint64_t len);
+
 int retro_vfs_stat_impl(const char *path, int32_t *size);
 
+int retro_vfs_stat_64_impl(const char *path, int64_t *size);
+
 int retro_vfs_mkdir_impl(const char *dir);
+
+int retro_vfs_rmdir_impl(const char *dir);
+
+/**
+ * retro_vfs_restrict_permissions_impl:
+ * @path : file to restrict
+ *
+ * Makes @path readable and writable by the owning user only, for
+ * files that hold secrets. On platforms without per-user file
+ * permissions (Windows profile directories, single-user consoles,
+ * Android SAF) there is nothing to do and the call succeeds.
+ *
+ * Returns: 0 on success, -1 on failure.
+ **/
+int retro_vfs_restrict_permissions_impl(const char *path);
+
+/* VFS API v5 */
+int retro_vfs_set_readonly_impl(const char *path, int readonly);
+int retro_vfs_get_mtime_impl(const char *path, int64_t *mtime);
+int retro_vfs_set_mtime_impl(const char *path, int64_t mtime);
+struct retro_vfs_copy_handle *retro_vfs_copy_begin_impl(const char *src, const char *dst, unsigned flags);
+int retro_vfs_copy_step_impl(struct retro_vfs_copy_handle *handle, int64_t max_bytes, int64_t *bytes_done, int64_t *bytes_total);
+int retro_vfs_copy_close_impl(struct retro_vfs_copy_handle *handle);
+int retro_vfs_dirent_stat_impl(libretro_vfs_implementation_dir *rdir, int64_t *size, int64_t *mtime);
 
 libretro_vfs_implementation_dir *retro_vfs_opendir_impl(const char *dir, bool include_hidden);
 

@@ -28,6 +28,7 @@
 #include <libretro.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include <compat/strl.h>
 #include <compat/strcasestr.h>
 #include <retro_math.h>
@@ -57,6 +58,28 @@
 #include <windows.h>
 #include <winioctl.h>
 #include <ntddscsi.h>
+#endif
+
+#if defined(__APPLE__)
+#include <fcntl.h>
+#include <errno.h>
+#include <sys/ioctl.h>
+#include <CoreFoundation/CoreFoundation.h>
+#include <IOKit/IOKitLib.h>
+#include <IOKit/IOBSD.h>
+#include <IOKit/IOCFPlugIn.h>
+#include <IOKit/scsi/SCSITaskLib.h>
+#include <IOKit/storage/IOCDMediaBSDClient.h>
+#include <IOKit/storage/IOCDTypes.h>
+/* kIOMainPortDefault superseded the now-deprecated kIOMasterPortDefault in the
+ * macOS 12 / iOS 15 SDKs.  When the deployment target predates that, the new
+ * symbol is unavailable, so fall back to the old name (which is not yet
+ * deprecated for those targets).  Keeps the build warning-free on old SDKs and
+ * on new SDKs targeting an older OS alike. */
+#if (defined(__MAC_OS_X_VERSION_MIN_REQUIRED) && __MAC_OS_X_VERSION_MIN_REQUIRED < 120000) || \
+    (defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && __IPHONE_OS_VERSION_MIN_REQUIRED < 150000)
+#define kIOMainPortDefault kIOMasterPortDefault
+#endif
 #endif
 
 #define CDROM_CUE_TRACK_BYTES 107
@@ -297,7 +320,7 @@ static int cdrom_send_command_win32(const libretro_vfs_implementation_file *stre
 
    sptd.s.TimeOutValue       = 5;
    sptd.s.DataBuffer         = buf;
-   sptd.s.DataTransferLength = len;
+   sptd.s.DataTransferLength = (ULONG)len;
    sptd.s.SenseInfoLength    = sizeof(sptd.sense);
    sptd.s.SenseInfoOffset    = offsetof(struct sptd_with_sense, sense);
 
@@ -315,7 +338,7 @@ static int cdrom_send_command_win32(const libretro_vfs_implementation_file *stre
    if (cmd[0] == 0xB9)
    {
       double time_taken = (double)(((clock() - t) * 1000) / CLOCKS_PER_SEC);
-      printf("time taken %f ms for DT received length %ld of %" PRId64 " for %02d:%02d:%02d to %02d:%02d:%02d%s req %d cur %d cur_lba %d\n", time_taken, sptd.s.DataTransferLength, len, cmd[3], cmd[4], cmd[5], cmd[6], cmd[7], cmd[8], extra, lba_req, lba_cur, stream->cdrom.cur_lba);
+      printf("time taken %f ms for DT received length %ld of %" PRId64 " for %02d:%02d:%02d to %02d:%02d:%02d%s req %d cur %d cur_lba %d\n", time_taken, sptd.s.DataTransferLength, len, cmd[3], cmd[4], cmd[5], cmd[6], cmd[7], cmd[8], extra, lba_req, lba_cur, stream->cdrom ? stream->cdrom->cur_lba : 0);
       fflush(stdout);
    }
 
@@ -325,7 +348,14 @@ static int cdrom_send_command_win32(const libretro_vfs_implementation_file *stre
    increment_msf(&last_min, &last_sec, &last_frame);
 #endif
 
-   if (!ioctl_rv || sptd.s.ScsiStatus != 0)
+   if (sense && sense_len)
+      memcpy(sense, sptd.sense, sense_len < sizeof(sptd.sense)
+            ? sense_len : sizeof(sptd.sense));
+
+   if (!ioctl_rv || sptd.s.ScsiStatus != 0
+         || (sptd.s.DataTransferLength != len
+            && (cmd[0] == 0x28 || cmd[0] == 0xB9 || cmd[0] == 0xBE
+               || cmd[0] == 0x25 || (cmd[0] == 0x46 && len == 8))))
       return 1;
 
    return 0;
@@ -356,19 +386,398 @@ static int cdrom_send_command_linux(const libretro_vfs_implementation_file *stre
    sgio.cmd_len      = cmd_len;
    sgio.cmdp         = cmd;
    sgio.dxferp       = buf;
-   sgio.dxfer_len    = len;
+   sgio.dxfer_len    = (unsigned)len;
    sgio.sbp          = sense;
    sgio.mx_sb_len    = sense_len;
    sgio.timeout      = 5000;
 
    rv = ioctl(fileno(stream->fp), SG_IO, &sgio);
 
-   if (rv == -1 || sgio.info & SG_INFO_CHECK)
+   if (rv == -1 || (sgio.info & SG_INFO_CHECK) || (sgio.resid != 0
+            && (cmd[0] == 0x28 || cmd[0] == 0xB9 || cmd[0] == 0xBE
+               || cmd[0] == 0x25 || (cmd[0] == 0x46 && len == 8)))
+         || sgio.status || sgio.host_status || sgio.driver_status)
       return 1;
 
    return 0;
 }
 #endif
+
+#if defined(__APPLE__)
+/* macOS exposes no raw SCSI pass-through for consumer optical drives,
+ * so there is no cdrom_send_command_macos analogous to the linux/win32
+ * ones: dispatch by CDB opcode to either the curated MMC plug-in
+ * (metadata) or a DKIOC ioctl on /dev/rdiskN (sector reads, speed).
+ * Unmappable CDBs return illegal-request, never a synthetic success. */
+static int cdrom_send_command_macos(libretro_vfs_implementation_file *stream,
+      CDROM_CMD_Direction dir, void *buf, size_t len,
+      unsigned char *cmd, size_t cmd_len,
+      unsigned char *sense, size_t sense_len)
+{
+   MMCDeviceInterface **mmc = (MMCDeviceInterface **)stream->iokit_mmc;
+   SCSITaskStatus       ts  = kSCSITaskStatus_GOOD;
+   SCSI_Sense_Data      ss  = {0};
+   IOReturn             r   = kIOReturnSuccess;
+
+   switch (cmd[0])
+   {
+      case 0x00: /* TEST UNIT READY */
+         if (!mmc) return 1;
+         r = (*mmc)->TestUnitReady(mmc, &ts, &ss);
+         break;
+
+      case 0x12: /* INQUIRY (standard page only) */
+         if (!mmc || !buf) return 1;
+         r = (*mmc)->Inquiry(mmc,
+               (SCSICmd_INQUIRY_StandardData *)buf,
+               (UInt32)(len > 36 ? 36 : len),
+               &ts, &ss);
+         break;
+
+      case 0x43: /* READ TOC / PMA / ATIP */
+         if (!mmc || !buf) return 1;
+         r = (*mmc)->ReadTableOfContents(mmc,
+               (cmd[1] >> 1) & 0x1                   /* MSF       */,
+               cmd[2] & 0x0F                         /* FORMAT    */,
+               cmd[6]                                /* TRACK/SES */,
+               buf, (SCSICmdField2Byte)len, &ts, &ss);
+         break;
+
+      case 0x46: /* GET CONFIGURATION */
+         if (!mmc || !buf) return 1;
+         r = (*mmc)->GetConfiguration(mmc,
+               cmd[1] & 0x03                         /* RT        */,
+               (SCSICmdField2Byte)(((unsigned)cmd[2] << 8) | cmd[3]),
+               buf, (SCSICmdField2Byte)len, &ts, &ss);
+         break;
+
+      case 0x52: /* READ TRACK INFORMATION */
+         if (!mmc || !buf) return 1;
+         r = (*mmc)->ReadTrackInformation(mmc,
+               cmd[1] & 0x03                         /* ADDR TYPE */,
+               ((UInt32)cmd[2] << 24) | ((UInt32)cmd[3] << 16)
+                  | ((UInt32)cmd[4] << 8) | (UInt32)cmd[5],
+               buf, (SCSICmdField2Byte)len, &ts, &ss);
+         break;
+
+      case 0x5A: /* MODE SENSE(10) */
+         if (!mmc || !buf) return 1;
+         r = (*mmc)->ModeSense10(mmc,
+               (cmd[1] >> 4) & 0x1                   /* LLBAA     */,
+               (cmd[1] >> 3) & 0x1                   /* DBD       */,
+               (cmd[2] >> 6) & 0x3                   /* PC        */,
+               cmd[2] & 0x3F                         /* PAGE_CODE */,
+               buf, (SCSICmdField2Byte)len, &ts, &ss);
+         break;
+
+      case 0xBB: /* SET CD SPEED -> DKIOCCDSETSPEED */
+         {
+            UInt32   spd_be = ((UInt32)cmd[2] << 24) | ((UInt32)cmd[3] << 16)
+                            | ((UInt32)cmd[4] << 8)  |  (UInt32)cmd[5];
+            uint16_t spd    = spd_be > 0xFFFF ? 0xFFFF : (uint16_t)spd_be;
+            if (stream->fd < 0) return 1;
+            return ioctl(stream->fd, DKIOCCDSETSPEED, &spd) == 0 ? 0 : 1;
+         }
+
+      /* The shared dispatcher normalizes both opcodes to a start MSF
+       * in cmd[3..5] and calls this once per sector. */
+      case 0xB9: /* READ CD MSF */
+      case 0xBE: /* READ CD -> DKIOCCDREAD */
+         {
+            dk_cd_read_t arg     = {0};
+            UInt8        fmt     = cmd[9];
+            UInt8        sub_sel = cmd[10] & 0x07;
+            UInt8        sec_t   = (cmd[1] >> 2) & 0x07;
+            unsigned     lba;
+            UInt8        area    = 0;
+
+            if (stream->fd < 0 || !buf) return 1;
+
+            /* cmd[3..5] is the starting MSF for this iteration. */
+            lba = cdrom_msf_to_lba(cmd[3], cmd[4], cmd[5]);
+            if (lba < 150) return 1;
+            lba -= 150;
+
+            if (fmt & 0x80) area |= kCDSectorAreaSync;
+            switch ((fmt >> 5) & 0x3)
+            {
+               case 1: area |= kCDSectorAreaHeader;                              break;
+               case 2: area |= kCDSectorAreaSubHeader;                           break;
+               case 3: area |= kCDSectorAreaHeader | kCDSectorAreaSubHeader;     break;
+            }
+            if (fmt & 0x10)        area |= kCDSectorAreaUser;
+            if (fmt & 0x08)        area |= kCDSectorAreaAuxiliary;
+            if ((fmt >> 1) & 0x03) area |= kCDSectorAreaErrorFlags;
+
+            switch (sub_sel)
+            {
+               case 1: area |= kCDSectorAreaSubChannel;  break;
+               case 2: area |= kCDSectorAreaSubChannelQ; break;
+            }
+
+            switch (sec_t)
+            {
+               case 1:  arg.sectorType = kCDSectorTypeCDDA;       break;
+               case 2:  arg.sectorType = kCDSectorTypeMode1;      break;
+               case 3:  arg.sectorType = kCDSectorTypeMode2;      break;
+               case 4:  arg.sectorType = kCDSectorTypeMode2Form1; break;
+               case 5:  arg.sectorType = kCDSectorTypeMode2Form2; break;
+               default: arg.sectorType = kCDSectorTypeUnknown;    break;
+            }
+
+            arg.offset       = (uint64_t)lba * 2352;
+            arg.sectorArea   = area;
+            arg.bufferLength = (uint32_t)len;
+            arg.buffer       = buf;
+
+            if (ioctl(stream->fd, DKIOCCDREAD, &arg) != 0)
+            {
+               /* Synthesize a medium-error sense so the outer dispatcher
+                * recognizes this as retryable. */
+               if (sense && sense_len >= 14)
+               {
+                  memset(sense, 0, sense_len);
+                  sense[0]  = 0x70; /* current error               */
+                  sense[2]  = 0x03; /* MEDIUM ERROR                */
+                  sense[7]  = 6;    /* bytes through ASC/ASCQ      */
+                  sense[12] = 0x11; /* UNRECOVERED READ            */
+               }
+               return 1;
+            }
+            return 0;
+         }
+
+      default:
+         /* Unhandled CDB: synthesize an ILLEGAL REQUEST sense so the
+          * outer dispatcher reports failure without retrying. */
+         if (sense && sense_len >= 14)
+         {
+            memset(sense, 0, sense_len);
+            sense[0]  = 0x70;
+            sense[2]  = 0x05; /* ILLEGAL REQUEST                   */
+            sense[7]  = 6;    /* bytes through ASC/ASCQ             */
+            sense[12] = 0x20; /* INVALID COMMAND OPERATION CODE    */
+         }
+         return 1;
+   }
+
+   /* MMC paths converge here. */
+   if (r != kIOReturnSuccess || ts != kSCSITaskStatus_GOOD)
+   {
+      if (ts == kSCSITaskStatus_CHECK_CONDITION && sense && sense_len)
+         memcpy(sense, &ss,
+                sense_len < sizeof(ss) ? sense_len : sizeof(ss));
+      return 1;
+   }
+   (void)dir; (void)cmd_len;
+   return 0;
+}
+
+/* The classes that actually publish a usable user client on macOS.
+ * IOSCSIPeripheralDeviceType05 is unregistered/unmatched on modern
+ * macOS; the MMC user client is vended one level down by these
+ * media-kind-specific service classes. */
+static const char *cdrom_macos_service_classes[] =
+{
+   "IODVDServices",
+   "IOCompactDiscServices",
+   "IOBDServices",
+   "IOAuthoringServices"
+};
+
+/* Recursively walk the IOService subtree for the first whole-disk
+ * IOMedia and return its BSD name (e.g. "disk28"). */
+static bool cdrom_macos_find_bsd(io_service_t parent,
+      char *bsd, size_t bsd_len)
+{
+   io_iterator_t iter  = IO_OBJECT_NULL;
+   io_service_t  child;
+   bool          found = false;
+
+   if (IORegistryEntryCreateIterator(parent, kIOServicePlane,
+            kIORegistryIterateRecursively, &iter) != KERN_SUCCESS)
+      return false;
+
+   while ((child = IOIteratorNext(iter)) != IO_OBJECT_NULL)
+   {
+      if (!found && IOObjectConformsTo(child, "IOMedia"))
+      {
+         CFTypeRef whole = IORegistryEntryCreateCFProperty(child,
+               CFSTR("Whole"), NULL, 0);
+         if (     whole
+               && CFGetTypeID(whole) == CFBooleanGetTypeID()
+               && CFBooleanGetValue((CFBooleanRef)whole))
+         {
+            CFTypeRef name = IORegistryEntryCreateCFProperty(child,
+                  CFSTR(kIOBSDNameKey), NULL, 0);
+            if (     name
+                  && CFGetTypeID(name) == CFStringGetTypeID()
+                  && CFStringGetCString((CFStringRef)name,
+                     bsd, bsd_len, kCFStringEncodingUTF8))
+               found = true;
+            if (name)
+               CFRelease(name);
+         }
+         if (whole)
+            CFRelease(whole);
+      }
+      IOObjectRelease(child);
+   }
+   IOObjectRelease(iter);
+   return found;
+}
+
+/* Return the io_service_t for the index-th optical drive in a stable
+ * ordering (same ordering cdrom_get_available_drives uses).  Caller
+ * releases the returned service. */
+static io_service_t cdrom_macos_service_at(int index,
+      char *bsd, size_t bsd_len)
+{
+   size_t ci;
+   int    seen = 0;
+
+   for (ci = 0; ci < sizeof(cdrom_macos_service_classes)
+                   / sizeof(cdrom_macos_service_classes[0]); ci++)
+   {
+      CFMutableDictionaryRef match;
+      io_iterator_t          iter = IO_OBJECT_NULL;
+      io_service_t           svc;
+
+      match = IOServiceMatching(cdrom_macos_service_classes[ci]);
+      if (!match)
+         continue;
+      if (IOServiceGetMatchingServices(kIOMainPortDefault, match, &iter)
+            != KERN_SUCCESS)
+         continue;
+
+      while ((svc = IOIteratorNext(iter)) != IO_OBJECT_NULL)
+      {
+         if (seen == index)
+         {
+            if (bsd && bsd_len)
+               cdrom_macos_find_bsd(svc, bsd, bsd_len);
+            IOObjectRelease(iter);
+            return svc;
+         }
+         seen++;
+         IOObjectRelease(svc);
+      }
+      IOObjectRelease(iter);
+   }
+   return IO_OBJECT_NULL;
+}
+
+int cdrom_macos_open(int index, void **out_plugin, void **out_mmc, int *out_fd)
+{
+   IOCFPlugInInterface **plugin = NULL;
+   MMCDeviceInterface  **mmc    = NULL;
+   io_service_t          svc;
+   SInt32                score  = 0;
+   IOReturn              r;
+   HRESULT               hr;
+   char                  bsd[64] = {0};
+
+   /* out_plugin and out_mmc are required: the plug-in must be handed
+    * back so it outlives the MMC interface (destroying it tears down
+    * the IPC connection the interface depends on). */
+   if (!out_plugin || !out_mmc)
+      return 1;
+   *out_plugin = NULL;
+   *out_mmc    = NULL;
+   if (out_fd)
+      *out_fd = -1;
+
+   svc = cdrom_macos_service_at(index, bsd, sizeof(bsd));
+   if (svc == IO_OBJECT_NULL)
+      return 1;
+
+   r = IOCreatePlugInInterfaceForService(svc,
+         kIOMMCDeviceUserClientTypeID,
+         kIOCFPlugInInterfaceID,
+         &plugin, &score);
+   IOObjectRelease(svc);
+   if (r != kIOReturnSuccess || !plugin)
+      return 1;
+
+   hr = (*plugin)->QueryInterface(plugin,
+         CFUUIDGetUUIDBytes(kIOMMCDeviceInterfaceID),
+         (LPVOID *)&mmc);
+   if (hr != S_OK || !mmc)
+   {
+      IODestroyPlugInInterface(plugin);
+      return 1;
+   }
+
+   if (out_fd)
+   {
+      char rdev[80];
+      int  fd;
+      if (!*bsd)
+      {
+         (*mmc)->Release(mmc);
+         IODestroyPlugInInterface(plugin);
+         return 1;
+      }
+      snprintf(rdev, sizeof(rdev), "/dev/r%s", bsd);
+      fd = open(rdev, O_RDONLY);
+      if (fd < 0)
+      {
+         (*mmc)->Release(mmc);
+         IODestroyPlugInInterface(plugin);
+         return 1;
+      }
+      *out_fd = fd;
+   }
+
+   *out_plugin = plugin;
+   *out_mmc    = mmc;
+   return 0;
+}
+
+void cdrom_macos_close(void *plugin, void *mmc, int fd)
+{
+   /* Order matters: release the queried interface before destroying
+    * the plug-in that owns the IPC connection. */
+   if (mmc)
+      (*(MMCDeviceInterface **)mmc)->Release((MMCDeviceInterface **)mmc);
+   if (plugin)
+      IODestroyPlugInInterface((IOCFPlugInInterface **)plugin);
+   if (fd >= 0)
+      close(fd);
+}
+#endif
+
+/* Preserve bound geometry until close, but never reuse it after an observed
+ * medium change/removal or device reset. Probes without geometry may retry.
+ * This is local to the handle, not a cross-handle media generation. */
+static bool cdrom_observe_media_change(libretro_vfs_implementation_file *stream,
+      const unsigned char *sense)
+{
+   unsigned key, asc;
+   unsigned response = sense[0] & 0x7f;
+   if (!stream || !stream->cdrom || (!stream->cdrom->logical_blocks
+            && (!stream->cdrom->toc || !stream->cdrom->toc->num_tracks)))
+      return false;
+   if ((response == 0x70 || response == 0x71) && sense[7] >= 5)
+   {
+      key = sense[2] & 0xf;
+      asc = sense[12];
+   }
+   else if (response == 0x72 || response == 0x73)
+   {
+      key = sense[1] & 0xf;
+      asc = sense[2];
+   }
+   else
+      return false;
+   if (!((key == 6 && (asc == 0x28 || asc == 0x29))
+            || (key == 2 && asc == 0x3a)))
+      return false;
+   stream->cdrom->media_changed = true;
+   stream->cdrom->last_frame_valid = false;
+   stream->cdrom->io_error = true;
+   return true;
+}
 
 static int cdrom_send_command(libretro_vfs_implementation_file *stream, CDROM_CMD_Direction dir,
       void *s, size_t len, unsigned char *cmd, size_t cmd_len, size_t skip)
@@ -380,16 +789,29 @@ static int cdrom_send_command(libretro_vfs_implementation_file *stream, CDROM_CM
    unsigned char sense[CDROM_MAX_SENSE_BYTES] = {0};
    unsigned char retries_left  = CDROM_MAX_RETRIES;
    size_t padded_req_bytes;
+   size_t allocation_bytes;
    size_t copied_bytes         = 0;
    bool read_cd                = false;
 
    if (!cmd || cmd_len == 0 || cmd_len < CDROM_MIN_BUFSIZE)
       return 1;
+   if (len > SIZE_MAX - skip)
+      return 1;
 
    if (cmd[0] == 0xBE || cmd[0] == 0xB9)
    {
-      frames = ceil((len + skip) / 2352.0);
-      padded_req_bytes = 2352 * frames;
+      size_t count;
+      if (stream && stream->cdrom && stream->cdrom->media_changed)
+         return 1;
+      if (dir != DIRECTION_IN || skip >= 2352)
+         return 1;
+      if (!len)
+         return 0;
+      count = (len + skip) / 2352 + ((len + skip) % 2352 != 0);
+      if (count > INT_MAX || count > SIZE_MAX / 2352)
+         return 1;
+      frames = (int)count;
+      padded_req_bytes = (size_t)2352 * count;
       read_cd = true;
       /* these will be incremented below */
       cmd[6] = cmd[3];
@@ -401,13 +823,29 @@ static int cdrom_send_command(libretro_vfs_implementation_file *stream, CDROM_CM
       padded_req_bytes = len + skip;
    }
 
-   xfer_buf     = (unsigned char*)memalign_alloc(4096, padded_req_bytes);
+   /* A complete cache hit needs neither transport nor staging, including
+    * unaligned and partial destinations. The sector remains handle-owned. */
+   if (read_cd && frames == 1 && s && stream && stream->cdrom
+         && stream->cdrom->last_frame_valid
+         && cdrom_msf_to_lba(cmd[3], cmd[4], cmd[5])
+            == stream->cdrom->last_frame_lba)
+   {
+      memmove(s, stream->cdrom->last_frame + skip, len);
+      increment_msf(&cmd[6], &cmd[7], &cmd[8]);
+      return 0;
+   }
+
+   allocation_bytes = padded_req_bytes;
+   if (!read_cd)
+   {
+      xfer_buf = (unsigned char*)memalign_alloc(4096, allocation_bytes);
+      if (!xfer_buf)
+         return 1;
+      memset(xfer_buf, 0, allocation_bytes);
+      if (dir == DIRECTION_OUT && s && len)
+         memcpy(xfer_buf + skip, s, len);
+   }
    xfer_buf_pos = xfer_buf;
-
-   if (!xfer_buf)
-      return 1;
-
-   memset(xfer_buf, 0, padded_req_bytes);
 #ifdef CDROM_DEBUG
    printf("Number of frames to read: %d\n", frames);
    fflush(stdout);
@@ -416,7 +854,7 @@ static int cdrom_send_command(libretro_vfs_implementation_file *stream, CDROM_CM
    {
       size_t request_len = padded_req_bytes;
       size_t copy_len = request_len;
-      bool cached_read = false;
+      bool direct_sector = false;
 
       if (read_cd)
       {
@@ -444,23 +882,32 @@ static int cdrom_send_command(libretro_vfs_implementation_file *stream, CDROM_CM
          }
 
          lba_req = cdrom_msf_to_lba(cmd[3], cmd[4], cmd[5]);
-
-         if (stream->cdrom.last_frame_valid && lba_req == stream->cdrom.last_frame_lba)
+         if (s && stream->cdrom && stream->cdrom->last_frame_valid
+               && lba_req == stream->cdrom->last_frame_lba)
          {
-            /* use cached frame */
-            cached_read = true;
-#ifdef CDROM_DEBUG
-            printf("[CDROM] Using cached frame\n");
-            fflush(stdout);
-#endif
-            /* assumes request_len is always equal to the size of last_frame */
-            memcpy(xfer_buf_pos, stream->cdrom.last_frame, sizeof(stream->cdrom.last_frame));
+            memmove((unsigned char*)s + copied_bytes,
+                  stream->cdrom->last_frame + skip, copy_len);
+            copied_bytes += copy_len;
+            continue;
          }
-
+         direct_sector = s && !skip && copy_len == 2352
+            && (((uintptr_t)s + copied_bytes) & 4095) == 0;
+         if (!direct_sector)
+         {
+            if (!xfer_buf)
+               xfer_buf = (unsigned char*)memalign_alloc(4096, 2352);
+            if (!xfer_buf)
+            {
+               rv = 1;
+               break;
+            }
+            memset(xfer_buf, 0, 2352);
+         }
+         xfer_buf_pos = direct_sector ? (unsigned char*)s + copied_bytes
+            : xfer_buf;
       }
 
 #ifdef CDROM_DEBUG
-      if (!cached_read)
       {
          unsigned j;
 
@@ -482,46 +929,61 @@ static int cdrom_send_command(libretro_vfs_implementation_file *stream, CDROM_CM
 
 retry:
 #if defined(__linux__) && !defined(ANDROID)
-      if (cached_read || !cdrom_send_command_linux(stream, dir, xfer_buf_pos, request_len, cmd, cmd_len, sense, sizeof(sense)))
-#else
-#if defined(_WIN32) && !defined(_XBOX)
-      if (cached_read || !cdrom_send_command_win32(stream, dir, xfer_buf_pos, request_len, cmd, cmd_len, sense, sizeof(sense)))
-#endif
+      if (!cdrom_send_command_linux(stream, dir, xfer_buf_pos, request_len, cmd, cmd_len, sense, sizeof(sense)))
+#elif defined(_WIN32) && !defined(_XBOX)
+      if (!cdrom_send_command_win32(stream, dir, xfer_buf_pos, request_len, cmd, cmd_len, sense, sizeof(sense)))
+#elif defined(__APPLE__)
+      if (!cdrom_send_command_macos(stream, dir, xfer_buf_pos, request_len, cmd, cmd_len, sense, sizeof(sense)))
 #endif
       {
          rv = 0;
 
-         if (s)
+         if (s && dir == DIRECTION_IN)
          {
 #if 0
             printf("offsetting %" PRId64 " from buf, copying at xfer_buf offset %" PRId64 ", copying %" PRId64 " bytes\n", copied_bytes, (xfer_buf_pos + skip) - xfer_buf, copy_len);
             fflush(stdout);
 #endif
-            memcpy((char*)s + copied_bytes, xfer_buf_pos + skip, copy_len);
+            if (!direct_sector)
+               memcpy((char*)s + copied_bytes, xfer_buf_pos + skip, copy_len);
             copied_bytes += copy_len;
 
-            if (read_cd && !cached_read && request_len >= 2352)
+            /* The sector cache only exists on cdrom:// handles. The
+             * raw device scan (cdrom_get_available_drives and
+             * friends) sends INQUIRY through a plain filestream open
+             * of /dev/sg* or \\.\X:, where stream->cdrom is NULL. */
+            if (stream->cdrom)
             {
-               unsigned frame_end = cdrom_msf_to_lba(cmd[6], cmd[7], cmd[8]);
+               if (read_cd && request_len >= 2352)
+               {
+                  unsigned frame_end = cdrom_msf_to_lba(cmd[6], cmd[7], cmd[8]);
 
-               /* cache the last received frame */
-               memcpy(stream->cdrom.last_frame, xfer_buf_pos, sizeof(stream->cdrom.last_frame));
-               stream->cdrom.last_frame_valid = true;
-               /* the ending frame is never actually read, so what we really just read is the one right before that */
-               stream->cdrom.last_frame_lba = frame_end - 1;
+                  /* cache the last received frame */
+                  if (stream->cdrom->last_frame != xfer_buf_pos)
+                     memcpy(stream->cdrom->last_frame, xfer_buf_pos, sizeof(stream->cdrom->last_frame));
+                  stream->cdrom->last_frame_valid = true;
+                  /* the ending frame is never actually read, so what we really just read is the one right before that */
+                  stream->cdrom->last_frame_lba = frame_end - 1;
+               }
+               else if (!read_cd)
+                  stream->cdrom->last_frame_valid = false;
             }
-            else
-               stream->cdrom.last_frame_valid = false;
 
 #if 0
             printf("Frame %d, adding %" PRId64 " to buf_pos, is now %" PRId64 ". skip is %" PRId64 "\n", i, request_len, (xfer_buf_pos + request_len) - xfer_buf, skip);
             fflush(stdout);
 #endif
-            xfer_buf_pos += request_len;
+            if (!read_cd)
+               xfer_buf_pos += request_len;
          }
       }
       else
       {
+         if (cdrom_observe_media_change(stream, sense))
+         {
+            rv = 1;
+            break;
+         }
 #ifdef CDROM_DEBUG
          cdrom_print_sense_data(sense, sizeof(sense));
 #endif
@@ -565,6 +1027,7 @@ retry:
          }
 
          rv = 1;
+         break;
       }
    }
 
@@ -874,7 +1337,9 @@ int cdrom_read_subq(libretro_vfs_implementation_file *stream, unsigned char *s, 
    unsigned short data_len = 0;
    unsigned char first_session = 0;
    unsigned char last_session = 0;
-   int i;
+   size_t max_entries = 0;
+   size_t num_entries = 0;
+   size_t i;
 #endif
    int rv;
 
@@ -887,6 +1352,9 @@ int cdrom_read_subq(libretro_vfs_implementation_file *stream, unsigned char *s, 
      return 1;
 
 #ifdef CDROM_DEBUG
+   if (len < 4)
+      return 0;
+
    data_len      = s[0] << 8 | s[1];
    first_session = s[2];
    last_session  = s[3];
@@ -895,7 +1363,15 @@ int cdrom_read_subq(libretro_vfs_implementation_file *stream, unsigned char *s, 
    printf("[CDROM] First Session: %d\n", first_session);
    printf("[CDROM] Last Session: %d\n", last_session);
 
-   for (i = 0; i < (data_len - 2) / 11; i++)
+   /* data_len comes off the wire; never let it walk the parse past
+    * the caller's buffer. */
+   max_entries = (len - 4) / 11;
+   if (data_len >= 2)
+      num_entries = (size_t)(data_len - 2) / 11;
+   if (num_entries > max_entries)
+      num_entries = max_entries;
+
+   for (i = 0; i < num_entries; i++)
    {
       unsigned char session_num = s[4 + (i * 11) + 0];
       unsigned char adr         = (s[4 + (i * 11) + 1] >> 4) & 0xF;
@@ -949,7 +1425,8 @@ static int cdrom_read_track_info(libretro_vfs_implementation_file *stream, unsig
    unsigned lba = 0;
    unsigned track_size = 0;
    int rv;
-   ssize_t pregap_lba_len;
+   unsigned pregap_lba_len;
+   int64_t absolute_start;
 
    cdb[5] = track;
 
@@ -957,18 +1434,28 @@ static int cdrom_read_track_info(libretro_vfs_implementation_file *stream, unsig
          sizeof(buf), cdb, sizeof(cdb), 0)))
      return 1;
 
+   if ((((unsigned)buf[0] << 8) | buf[1]) < 26)
+      return 1;
+
    memcpy(&lba, buf + 8, 4);
    memcpy(&track_size, buf + 24, 4);
 
    lba = swap_if_little32(lba);
    track_size = swap_if_little32(track_size);
 
-   /* lba_start may be earlier than the MSF start times seen in read_subq */
-   toc->track[track - 1].lba_start = lba;
+   /* TOC addresses are absolute MSF frames; track info uses device LBAs. */
+   absolute_start = (int64_t)(int32_t)lba + 150;
+   if (absolute_start < 0 || absolute_start > UINT32_MAX
+         || (uint64_t)absolute_start > toc->track[track - 1].lba)
+      return 1;
+   toc->track[track - 1].lba_start = (unsigned)absolute_start;
    toc->track[track - 1].track_size = track_size;
 
    pregap_lba_len = (toc->track[track - 1].audio ? 0 : (toc->track[track - 1].lba - toc->track[track - 1].lba_start));
 
+   if (!track_size || pregap_lba_len > track_size
+         || track_size - pregap_lba_len > UINT32_MAX / 2352)
+      return 1;
    toc->track[track - 1].track_bytes = (track_size - pregap_lba_len) * 2352;
    toc->track[track - 1].mode = buf[6] & 0xF;
 
@@ -1000,7 +1487,9 @@ int cdrom_set_read_speed(libretro_vfs_implementation_file *stream, unsigned spee
 int cdrom_write_cue(libretro_vfs_implementation_file *stream, char **out_buf, size_t *out_len, char cdrom_drive, unsigned char *num_tracks, cdrom_toc_t *toc)
 {
    int i;
-   unsigned char buf[2352] = {0};
+   unsigned char *buf = NULL;
+   cdrom_toc_t *built = NULL;
+   unsigned char tracks = 0;
    unsigned short data_len = 0;
    size_t _len = 0, pos = 0;
    int rv = 0;
@@ -1014,14 +1503,24 @@ int cdrom_write_cue(libretro_vfs_implementation_file *stream, char **out_buf, si
       return 1;
    }
 
+   *out_buf = NULL;
+   *out_len = 0;
+   *num_tracks = 0;
+   buf = (unsigned char*)calloc(1, 2352);
+   built = (cdrom_toc_t*)calloc(1, sizeof(*built));
+   if (!buf || !built)
+      goto error;
+   built->drive = cdrom_drive;
    cdrom_set_read_speed(stream, 0xFFFFFFFF);
 
-   rv = cdrom_read_subq(stream, buf, sizeof(buf));
+   rv = cdrom_read_subq(stream, buf, 2352);
 
    if (rv)
-      return rv;
+      goto error;
 
    data_len = buf[0] << 8 | buf[1];
+   if (data_len < 2 || data_len > 2350 || (data_len - 2) % 11)
+      goto error;
 
    for (i = 0; i < (data_len - 2) / 11; i++)
    {
@@ -1032,28 +1531,31 @@ int cdrom_write_cue(libretro_vfs_implementation_file *stream, char **out_buf, si
 
       if (/*(control == 4 || control == 6) && */adr == 1 && tno == 0 && point == 0xA1)
       {
-         *num_tracks = pmin;
+         if (!pmin || pmin > 99)
+            goto error;
+         if (pmin > tracks)
+            tracks = pmin;
 #ifdef CDROM_DEBUG
-         printf("[CDROM] Number of CDROM tracks: %d\n", *num_tracks);
+         printf("[CDROM] Number of CDROM tracks: %d\n", tracks);
          fflush(stdout);
 #endif
-         break;
       }
    }
 
-   if (!*num_tracks || *num_tracks > 99)
+   if (!tracks || tracks > 99)
    {
 #ifdef CDROM_DEBUG
       printf("[CDROM] Invalid number of CDROM tracks: %d\n", *num_tracks);
       fflush(stdout);
 #endif
-      return 1;
+      goto error;
    }
 
-   _len            = CDROM_CUE_TRACK_BYTES * (*num_tracks);
-   toc->num_tracks = *num_tracks;
+   _len            = CDROM_CUE_TRACK_BYTES * tracks;
+   built->num_tracks = tracks;
    *out_buf        = (char*)calloc(1, _len);
-   *out_len        = _len;
+   if (!*out_buf)
+      goto error;
 
    for (i = 0; i < (data_len - 2) / 11; i++)
    {
@@ -1077,6 +1579,9 @@ int cdrom_write_cue(libretro_vfs_implementation_file *stream, char **out_buf, si
       {
          bool audio = false;
          const char *track_type = "MODE1/2352";
+         if (point > tracks || built->track[point - 1].track_num
+               || psec >= 60 || pframe >= 75)
+            goto error;
 
          audio = (!(control & 0x4) && !(control & 0x5));
 
@@ -1085,20 +1590,21 @@ int cdrom_write_cue(libretro_vfs_implementation_file *stream, char **out_buf, si
          fflush(stdout);
 #endif
 
-         toc->track[point - 1].track_num = point;
-         toc->track[point - 1].min = pmin;
-         toc->track[point - 1].sec = psec;
-         toc->track[point - 1].frame = pframe;
-         toc->track[point - 1].lba = lba;
-         toc->track[point - 1].audio = audio;
+         built->track[point - 1].track_num = point;
+         built->track[point - 1].min = pmin;
+         built->track[point - 1].sec = psec;
+         built->track[point - 1].frame = pframe;
+         built->track[point - 1].lba = lba;
+         built->track[point - 1].audio = audio;
 
-         cdrom_read_track_info(stream, point, toc);
+         if (cdrom_read_track_info(stream, point, built))
+            goto error;
 
          if (audio)
             track_type = "AUDIO";
-         else if (toc->track[point - 1].mode == 1)
+         else if (built->track[point - 1].mode == 1)
             track_type = "MODE1/2352";
-         else if (toc->track[point - 1].mode == 2)
+         else if (built->track[point - 1].mode == 2)
             track_type = "MODE2/2352";
 
 #if defined(_WIN32) && !defined(_XBOX)
@@ -1109,9 +1615,9 @@ int cdrom_write_cue(libretro_vfs_implementation_file *stream, char **out_buf, si
          pos += snprintf(*out_buf + pos, _len - pos, "  TRACK %02d %s\n", point, track_type);
 
          {
-            unsigned pregap_lba_len = toc->track[point - 1].lba - toc->track[point - 1].lba_start;
+            unsigned pregap_lba_len = built->track[point - 1].lba - built->track[point - 1].lba_start;
 
-            if (toc->track[point - 1].audio && pregap_lba_len > 0)
+            if (built->track[point - 1].audio && pregap_lba_len > 0)
             {
                unsigned char min = 0;
                unsigned char sec = 0;
@@ -1128,7 +1634,23 @@ int cdrom_write_cue(libretro_vfs_implementation_file *stream, char **out_buf, si
       }
    }
 
+   for (i = 0; i < tracks; i++)
+      if (!built->track[i].track_num)
+         goto error;
+   memcpy(toc, built, sizeof(*toc));
+   *num_tracks = tracks;
+   *out_len = pos + 1;
+   free(built);
+   free(buf);
    return 0;
+
+error:
+   free(built);
+   free(buf);
+   free(*out_buf);
+   *out_buf = NULL;
+   *out_len = 0;
+   return 1;
 }
 
 /* needs 32 bytes for full vendor, product and version */
@@ -1167,6 +1689,139 @@ int cdrom_get_inquiry(libretro_vfs_implementation_file *stream, char *s, size_t 
    return 0;
 }
 
+/* Unlike READ CD, cooked DVD reads carry a logical block address and
+ * never use CD MSF, pregaps, or the 2352-byte raw-sector cache. */
+static int cdrom_transfer_blocks(libretro_vfs_implementation_file *stream,
+      void *s, size_t len, unsigned char *cdb, size_t cdb_len)
+{
+   unsigned char sense[CDROM_MAX_SENSE_BYTES] = {0};
+   int rv;
+   if (!stream || !s)
+      return 1;
+   if (stream->cdrom && stream->cdrom->media_changed && cdb[0] == 0x28)
+      return 1;
+#if defined(__linux__) && !defined(ANDROID)
+   if (!stream->fp)
+      return 1;
+   rv = cdrom_send_command_linux(stream, DIRECTION_IN,
+         s, len, cdb, cdb_len, sense, sizeof(sense));
+#elif defined(_WIN32) && !defined(_XBOX)
+   if (!stream->fh || stream->fh == INVALID_HANDLE_VALUE)
+      return 1;
+   rv = cdrom_send_command_win32(stream, DIRECTION_IN,
+         s, len, cdb, cdb_len, sense, sizeof(sense));
+#else
+   (void)len;
+   (void)cdb;
+   (void)cdb_len;
+   (void)sense;
+   return 1;
+#endif
+   if (rv)
+      cdrom_observe_media_change(stream, sense);
+   return rv;
+}
+
+int cdrom_get_media_profile(libretro_vfs_implementation_file *stream,
+      uint16_t *profile)
+{
+   unsigned char cdb[10] = {0x46, 0, 0, 0, 0, 0, 0, 0, 8, 0};
+   unsigned char *buf;
+   uint32_t size;
+   int rv;
+   if (!profile)
+      return 1;
+   *profile = 0;
+   buf = (unsigned char*)memalign_alloc(4096, 8);
+   if (!buf)
+      return 1;
+   memset(buf, 0, 8);
+   rv = cdrom_transfer_blocks(stream, buf, 8, cdb, sizeof(cdb));
+   size = ((uint32_t)buf[0] << 24) | ((uint32_t)buf[1] << 16)
+        | ((uint32_t)buf[2] << 8) | buf[3];
+   if (!rv && size >= 4)
+      *profile = (uint16_t)(((unsigned)buf[6] << 8) | buf[7]);
+   memalign_free(buf);
+   return rv || size < 4 ? 1 : 0;
+}
+
+int cdrom_get_capacity(libretro_vfs_implementation_file *stream,
+      uint64_t *blocks, uint32_t *block_size)
+{
+   unsigned char cdb[10] = {0x25, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+   unsigned char *buf;
+   uint32_t last, size;
+   int rv;
+   if (blocks)
+      *blocks = 0;
+   if (block_size)
+      *block_size = 0;
+   if (!stream || !blocks || !block_size)
+      return 1;
+   buf = (unsigned char*)memalign_alloc(4096, 8);
+   if (!buf)
+      return 1;
+   memset(buf, 0, 8);
+   rv = cdrom_transfer_blocks(stream, buf, 8, cdb, sizeof(cdb));
+   last = ((uint32_t)buf[0] << 24) | ((uint32_t)buf[1] << 16)
+        | ((uint32_t)buf[2] << 8) | buf[3];
+   size = ((uint32_t)buf[4] << 24) | ((uint32_t)buf[5] << 16)
+        | ((uint32_t)buf[6] << 8) | buf[7];
+   memalign_free(buf);
+   if (rv || last == UINT32_MAX || !size)
+      return 1;
+   *blocks     = (uint64_t)last + 1;
+   *block_size = size;
+   return 0;
+}
+
+int cdrom_read_blocks(libretro_vfs_implementation_file *stream,
+      uint32_t lba, uint32_t count, void *s)
+{
+   unsigned char cdb[10] = {0x28, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+   unsigned char *dst = (unsigned char*)s;
+   unsigned char *bounce = NULL;
+   int rv = 0;
+   if (!stream || (!s && count)
+         || (uint64_t)lba + count > (uint64_t)UINT32_MAX + 1
+         || (uint64_t)count * 2048 > SIZE_MAX)
+      return 1;
+   if (!count)
+      return 0;
+   /* Bounded 64KiB commands suit older optical adapters as well as DVD.
+    * A conservative page alignment avoids imposing device-specific
+    * alignment requirements on VFS callers. */
+   if ((uintptr_t)dst & 4095)
+   {
+      bounce = (unsigned char*)memalign_alloc(4096, (count > 32 ? 32 : count) * 2048);
+      if (!bounce)
+         return 1;
+   }
+   while (count)
+   {
+      uint32_t n = count > 32 ? 32 : count;
+      size_t bytes = (size_t)n * 2048;
+      cdb[2] = (unsigned char)(lba >> 24);
+      cdb[3] = (unsigned char)(lba >> 16);
+      cdb[4] = (unsigned char)(lba >> 8);
+      cdb[5] = (unsigned char)lba;
+      cdb[7] = (unsigned char)(n >> 8);
+      cdb[8] = (unsigned char)n;
+      rv = cdrom_transfer_blocks(stream, bounce ? bounce : dst,
+            bytes, cdb, sizeof(cdb));
+      if (rv)
+         break;
+      if (bounce)
+         memcpy(dst, bounce, bytes);
+      dst   += bytes;
+      lba   += n;
+      count -= n;
+   }
+   if (bounce)
+      memalign_free(bounce);
+   return rv;
+}
+
 int cdrom_read(libretro_vfs_implementation_file *stream,
       cdrom_group_timeouts_t *timeouts, unsigned char min,
       unsigned char sec, unsigned char frame, void *s,
@@ -1175,8 +1830,16 @@ int cdrom_read(libretro_vfs_implementation_file *stream,
    /* MMC Command: READ CD MSF */
    unsigned char cdb[] = {0xB9, 0, 0, 0, 0, 0, 0, 0, 0, 0xF8, 0, 0};
    int rv;
-   double frames = ceil((len + skip) / 2352.0);
-   unsigned frame_end = cdrom_msf_to_lba(min, sec, frame) + frames;
+   size_t frames;
+   unsigned frame_end;
+   unsigned start = cdrom_msf_to_lba(min, sec, frame);
+   if (!stream || (!s && len) || sec >= 60 || frame >= 75
+         || skip >= 2352 || len > SIZE_MAX - skip)
+      return 1;
+   frames = (len + skip) / 2352 + ((len + skip) % 2352 != 0);
+   if (frames > 256 * 60 * 75 - 1 - start)
+      return 1;
+   frame_end = start + (unsigned)frames;
 
    cdb[3] = min;
    cdb[4] = sec;
@@ -1200,7 +1863,8 @@ int cdrom_read(libretro_vfs_implementation_file *stream,
 #endif
    }
 
-   /* regardless of the length specified here, a new buffer will be allocated and padded to a sector multiple inside cdrom_send_command */
+   /* The dispatcher stages partial/unaligned or multi-sector reads; a
+    * complete page-aligned single sector can use the caller's buffer. */
    rv = cdrom_send_command(stream, DIRECTION_IN, s, len, cdb, sizeof(cdb), skip);
 
 #ifdef CDROM_DEBUG
@@ -1210,7 +1874,8 @@ int cdrom_read(libretro_vfs_implementation_file *stream,
 
    if (rv)
    {
-      stream->cdrom.last_frame_valid = false;
+      if (stream->cdrom)
+         stream->cdrom->last_frame_valid = false;
       return 1;
    }
 
@@ -1345,16 +2010,17 @@ struct string_list* cdrom_get_available_drives(void)
          if (!is_cdrom)
             continue;
 
-         sscanf(dir_list->elems[i].data + STRLEN_CONST("/dev/sg"),
-               "%d", &dev_index);
+         dev_index = (int)strtol(
+               dir_list->elems[i].data + STRLEN_CONST("/dev/sg"),
+               NULL, 10);
 
          dev_index = '0' + dev_index;
          attr.i    = dev_index;
 
-         if (!string_is_empty(drive_model))
+         if (*drive_model)
             strlcpy(drive_string, drive_model, sizeof(drive_string));
          else
-            strlcpy(drive_string, "Unknown Drive", sizeof(drive_string));
+            strlcpy_lit(drive_string, "Unknown Drive", sizeof(drive_string));
 
          string_list_append(list, drive_string, attr);
       }
@@ -1378,7 +2044,7 @@ struct string_list* cdrom_get_available_drives(void)
          {
             for (i = 0; i < (int)mods.size; i++)
             {
-               if (strcasestr(mods.elems[i].data, "sg "))
+               if (compat_strcasestr(mods.elems[i].data, "sg "))
                {
 #ifdef CDROM_DEBUG
                   found = true;
@@ -1421,16 +2087,21 @@ struct string_list* cdrom_get_available_drives(void)
    for (i = 0; i < (int)(sizeof(DWORD) * 8); i++)
    {
       char path[]       = {"a:\\"};
-      char cdrom_path[] = {"cdrom://a:/drive-track01.bin"};
+      char cdrom_path[32];
 
       path[0]          += i;
-      cdrom_path[8]    += i;
 
       /* this drive letter doesn't exist */
       if (!(drive_mask & (1 << i)))
          continue;
 
       if (GetDriveType(path) != DRIVE_CDROM)
+         continue;
+
+      /* INQUIRY needs only the device handle; a track or cue path
+       * would read the TOC and spin up the drive. */
+      if (!cdrom_device_filldevicepath(cdrom_path, sizeof(cdrom_path),
+               (char)('A' + i)))
          continue;
 
       {
@@ -1452,10 +2123,51 @@ struct string_list* cdrom_get_available_drives(void)
 
          attr.i = path[0];
 
-         if (!string_is_empty(drive_model))
+         if (*drive_model)
             strlcpy(drive_string, drive_model, sizeof(drive_string));
          else
-            strlcpy(drive_string, "Unknown Drive", sizeof(drive_string));
+            strlcpy_lit(drive_string, "Unknown Drive", sizeof(drive_string));
+
+         string_list_append(list, drive_string, attr);
+      }
+   }
+#endif
+#if defined(__APPLE__)
+   {
+      int idx;
+
+      for (idx = 0; idx < 10; idx++)
+      {
+         libretro_vfs_implementation_file tmp;
+         void                            *plugin     = NULL;
+         void                            *mmc        = NULL;
+         bool                             is_cdrom   = false;
+         char                             drive_model[32] = {0};
+         char                             drive_string[33];
+         union string_list_elem_attr      attr       = {0};
+
+         /* MMC only (no /dev/rdiskN): INQUIRY works without media and
+          * without the raw device, so enumeration never needs the fd. */
+         if (cdrom_macos_open(idx, &plugin, &mmc, NULL) != 0)
+            break;
+
+         memset(&tmp, 0, sizeof(tmp));
+         tmp.iokit_plugin = plugin;
+         tmp.iokit_mmc    = mmc;
+         tmp.fd           = -1;
+
+         cdrom_get_inquiry(&tmp, drive_model, sizeof(drive_model), &is_cdrom);
+         cdrom_macos_close(plugin, mmc, -1);
+
+         if (!is_cdrom)
+            continue;
+
+         attr.i = '0' + idx;
+
+         if (*drive_model)
+            strlcpy(drive_string, drive_model, sizeof(drive_string));
+         else
+            strlcpy_lit(drive_string, "Unknown Drive", sizeof(drive_string));
 
          string_list_append(list, drive_string, attr);
       }
@@ -1488,7 +2200,7 @@ bool cdrom_drive_has_media(const char drive)
    RFILE *file;
    char cdrom_path_bin[256] = {0};
 
-   cdrom_device_fillpath(cdrom_path_bin, sizeof(cdrom_path_bin), drive, 1, false);
+   cdrom_device_filldevicepath(cdrom_path_bin, sizeof(cdrom_path_bin), drive);
 
    file = filestream_open(cdrom_path_bin, RETRO_VFS_FILE_ACCESS_READ, 0);
 
@@ -1657,52 +2369,68 @@ bool cdrom_has_atip(libretro_vfs_implementation_file *stream)
    return true;
 }
 
-size_t cdrom_device_fillpath(char *s, size_t len, char drive, unsigned char track, bool is_cue)
+size_t cdrom_device_filldevicepath(char *s, size_t len, char drive)
 {
-   if (s && len > 0)
-   {
-      if (is_cue)
-      {
-#ifdef _WIN32
-         size_t _len = strlcpy(s, "cdrom://", len);
-         if (len > _len)
-            s[_len++] = drive;
-         _len += strlcpy(s + _len, ":/drive.cue", len - _len);
-         return _len;
+   if (!s || !len)
+      return 0;
+   s[0] = '\0';
+#if defined(_WIN32) && !defined(_XBOX)
+   if ((drive >= 'A' && drive <= 'Z') || (drive >= 'a' && drive <= 'z'))
+      return snprintf(s, len, "cdrom://%c:/drive.device", drive);
+#elif (defined(__linux__) && !defined(ANDROID)) || defined(__APPLE__)
+   if (drive >= '0' && drive <= '9')
+      return snprintf(s, len, "cdrom://drive%c.device", drive);
 #else
-#ifdef __linux__
-         size_t _len = strlcpy(s, "cdrom://drive", len);
-         if (len > _len + 1)
-         {
-            s[_len++] = drive;
-            s[_len]   = '\0';
-         }
-         _len += strlcpy(s + _len, ".cue", len - _len);
-         return _len;
+   (void)drive;
 #endif
-#endif
-      }
-      else
-      {
-#ifdef _WIN32
-         size_t _len = strlcpy(s, "cdrom://", len);
-         if (len > _len + 1)
-         {
-            s[_len++] = drive;
-            s[_len]   = '\0';
-         }
-         _len += snprintf(s + _len, len - _len, ":/drive-track%02d.bin", track);
-         return _len;
-#else
-#ifdef __linux__
-         size_t _len = strlcpy(s, "cdrom://drive", len);
-         if (len > _len)
-            s[_len++] = drive;
-         _len += snprintf(s + _len, len - _len, "-track%02d.bin", track);
-         return _len;
-#endif
-#endif
-      }
-   }
    return 0;
+}
+
+size_t cdrom_device_fillimagepath(char *s, size_t len, char drive)
+{
+   if (!s || !len)
+      return 0;
+   s[0] = '\0';
+#if defined(_WIN32) && !defined(_XBOX)
+   if ((drive >= 'A' && drive <= 'Z') || (drive >= 'a' && drive <= 'z'))
+      return snprintf(s, len, "cdrom://%c:/drive.iso", drive);
+#elif defined(__linux__) && !defined(ANDROID)
+   if (drive >= '0' && drive <= '9')
+      return snprintf(s, len, "cdrom://drive%c.iso", drive);
+#else
+   (void)drive;
+#endif
+   return 0;
+}
+
+size_t cdrom_device_fillpath(char *s, size_t len, char drive,
+      unsigned char track, bool is_cue)
+{
+   int _len = -1;
+   if (!s || !len)
+      return 0;
+   s[0] = '\0';
+#if defined(_WIN32)
+   if (is_cue)
+      _len = snprintf(s, len, "cdrom://%c:/drive.cue", drive);
+   else
+      _len = snprintf(s, len, "cdrom://%c:/drive-track%02d.bin",
+            drive, track);
+#elif defined(__linux__) || defined(__APPLE__)
+   if (is_cue)
+      _len = snprintf(s, len, "cdrom://drive%c.cue", drive);
+   else
+      _len = snprintf(s, len, "cdrom://drive%c-track%02d.bin",
+            drive, track);
+#else
+   (void)drive;
+   (void)track;
+   (void)is_cue;
+#endif
+   if (_len < 0)
+   {
+      s[0] = '\0';
+      return 0;
+   }
+   return (size_t)_len;
 }

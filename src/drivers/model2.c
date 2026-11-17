@@ -11,7 +11,7 @@
 
 #include "driver.h"
 #include "state.h"
-#include <compat/zlib.h>
+#include <zlib.h>
 #include "cpu/i960/i960.h"
 #include "cpu/mb86233/mb86233.h"
 #include "cpu/mb86235/mb86235.h"

@@ -30,7 +30,7 @@
  * @in_size                     : input size
  * @s                           : output data
  * @len                         : output size
- * @error                       : (optional) output for error code
+ * @err                         : (optional) output for error code
  *
  * Perform a full transcoding from a source to a destination.
  */
@@ -38,7 +38,7 @@ bool trans_stream_trans_full(
     struct trans_stream_backend *backend, void **data,
     const uint8_t *in, uint32_t in_size,
     uint8_t *s, uint32_t len,
-    enum trans_stream_error *error)
+    enum trans_stream_error *err)
 {
    void *rdata;
    bool ret;
@@ -50,15 +50,15 @@ bool trans_stream_trans_full(
    {
       if (!(rdata = backend->stream_new()))
       {
-         if (error)
-            *error = TRANS_STREAM_ERROR_ALLOCATION_FAILURE;
+         if (err)
+            *err = TRANS_STREAM_ERROR_ALLOCATION_FAILURE;
          return false;
       }
    }
 
    backend->set_in(rdata, in, in_size);
    backend->set_out(rdata, s, len);
-   ret = backend->trans(rdata, true, &rd, &wn, error);
+   ret = backend->trans(rdata, true, &rd, &wn, err);
 
    if (data)
       *data = rdata;
@@ -73,7 +73,9 @@ const struct trans_stream_backend* trans_stream_get_zlib_deflate_backend(void)
 #if HAVE_ZLIB
    return &zlib_deflate_backend;
 #else
-   return NULL;
+   /* No zlib: use the built-in clean-room DEFLATE backend so compression
+    * paths keep working. */
+   return &deflate_deflate_backend;
 #endif
 }
 
@@ -82,8 +84,18 @@ const struct trans_stream_backend* trans_stream_get_zlib_inflate_backend(void)
 #if HAVE_ZLIB
    return &zlib_inflate_backend;
 #else
-   return NULL;
+   return &deflate_inflate_backend;
 #endif
+}
+
+const struct trans_stream_backend* trans_stream_get_deflate_deflate_backend(void)
+{
+   return &deflate_deflate_backend;
+}
+
+const struct trans_stream_backend* trans_stream_get_deflate_inflate_backend(void)
+{
+   return &deflate_inflate_backend;
 }
 
 const struct trans_stream_backend* trans_stream_get_pipe_backend(void)

@@ -28,18 +28,34 @@
 #include <encodings/crc32.h>
 #include <streams/interface_stream.h>
 #include <streams/trans_stream.h>
+#include <gfx/scaler/pixconv.h>
+
+/* SIMD acceleration: SSE2 on x86/x86-64, NEON on ARM.  Same gating as
+ * the decoder in rpng.c: retro_environment.h spells MSVC's SSE2
+ * targets as __SSE2__. */
+#include <retro_environment.h>
+
+#if defined(__SSE2__)
+#include <emmintrin.h>
+#define RPNG_ENC_SSE2 1
+#elif defined(__ARM_NEON) || defined(__ARM_NEON__)
+#if !defined(VITA) && !defined(WEBOS) && !defined(HAVE_LIBNX)
+#include <arm_neon.h>
+#define RPNG_ENC_NEON 1
+#endif
+#endif
 
 #include "rpng_internal.h"
 
 #undef GOTO_END_ERROR
 #define GOTO_END_ERROR() do { \
-   fprintf(stderr, "[RPNG]: Error in line %d.\n", __LINE__); \
+   fprintf(stderr, "[RPNG] Error in line %d.\n", __LINE__); \
    ret = false; \
    goto end; \
 } while (0)
 
-double DEFLATE_PADDING = 1.1;
-int PNG_ROUGH_HEADER = 100;
+static const double DEFLATE_PADDING = 1.1;
+static const int PNG_ROUGH_HEADER  = 100;
 
 static void dword_write_be(uint8_t *buf, uint32_t val)
 {
@@ -94,6 +110,90 @@ static bool png_write_ihdr_string(intfstream_t *intf_s, const struct png_ihdr *i
          sizeof(ihdr_raw) - sizeof(uint32_t));
 }
 
+/* --- PNG 3rd-edition HDR colour-space chunks --------------------------
+ * These are ancillary chunks placed after IHDR and before IDAT. They only
+ * label the colour space / light levels; they never touch the pixel data.
+ * Each is framed exactly like IHDR: [len(4)][type(4)][payload][crc(4)],
+ * with the CRC computed over type+payload. */
+
+static bool png_write_cicp_string(intfstream_t *intf_s,
+      const struct rpng_hdr_metadata *hdr)
+{
+   /* 4-byte payload: primaries, transfer, matrix (0 for PNG), full range. */
+   uint8_t raw[12];
+   dword_write_be(raw + 0, 4);
+   raw[4]  = 'c'; raw[5] = 'I'; raw[6] = 'C'; raw[7] = 'P';
+   raw[8]  = hdr->colour_primaries;
+   raw[9]  = hdr->transfer_function;
+   raw[10] = hdr->matrix_coefficients;
+   raw[11] = hdr->video_full_range_flag;
+   if (intfstream_write(intf_s, raw, sizeof(raw)) != sizeof(raw))
+      return false;
+   return png_write_crc_string(intf_s, raw + 4, sizeof(raw) - 4);
+}
+
+static bool png_write_clli_string(intfstream_t *intf_s,
+      const struct rpng_hdr_metadata *hdr)
+{
+   /* 8-byte payload: MaxCLL, MaxFALL, each a 4-byte unsigned integer in
+    * units of 0.0001 cd/m^2 (i.e. cd/m^2 * 10000). */
+   uint8_t raw[16];
+   dword_write_be(raw + 0, 8);
+   raw[4] = 'c'; raw[5] = 'L'; raw[6] = 'L'; raw[7] = 'I';
+   dword_write_be(raw +  8, (uint32_t)(hdr->max_cll  * 10000.0f + 0.5f));
+   dword_write_be(raw + 12, (uint32_t)(hdr->max_fall * 10000.0f + 0.5f));
+   if (intfstream_write(intf_s, raw, sizeof(raw)) != sizeof(raw))
+      return false;
+   return png_write_crc_string(intf_s, raw + 4, sizeof(raw) - 4);
+}
+
+static void word_write_be(uint8_t *buf, uint16_t val)
+{
+   buf[0] = (uint8_t)(val >> 8);
+   buf[1] = (uint8_t)(val >> 0);
+}
+
+static bool png_write_mdcv_string(intfstream_t *intf_s,
+      const struct rpng_hdr_metadata *hdr)
+{
+   /* 24-byte payload: R,G,B chromaticity pairs then white point, each xy as
+    * a 2-byte unsigned integer in units of 0.00002 (value * 50000); then max
+    * and min luminance as 4-byte unsigned integers in units of 0.0001
+    * cd/m^2 (value * 10000). */
+   uint8_t raw[8 + 24];
+   int c;
+   dword_write_be(raw + 0, 24);
+   raw[4] = 'm'; raw[5] = 'D'; raw[6] = 'C'; raw[7] = 'V';
+   for (c = 0; c < 3; c++)
+   {
+      word_write_be(raw + 8 + c * 4 + 0,
+            (uint16_t)(hdr->primary_chromaticity[c][0] * 50000.0f + 0.5f));
+      word_write_be(raw + 8 + c * 4 + 2,
+            (uint16_t)(hdr->primary_chromaticity[c][1] * 50000.0f + 0.5f));
+   }
+   word_write_be(raw + 20, (uint16_t)(hdr->white_point[0] * 50000.0f + 0.5f));
+   word_write_be(raw + 22, (uint16_t)(hdr->white_point[1] * 50000.0f + 0.5f));
+   dword_write_be(raw + 24, (uint32_t)(hdr->max_luminance * 10000.0f + 0.5f));
+   dword_write_be(raw + 28, (uint32_t)(hdr->min_luminance * 10000.0f + 0.5f));
+   if (intfstream_write(intf_s, raw, sizeof(raw)) != sizeof(raw))
+      return false;
+   return png_write_crc_string(intf_s, raw + 4, sizeof(raw) - 4);
+}
+
+static bool png_write_hdr_chunks(intfstream_t *intf_s,
+      const struct rpng_hdr_metadata *hdr)
+{
+   if (!png_write_cicp_string(intf_s, hdr))
+      return false;
+   if (hdr->max_cll != 0.0f || hdr->max_fall != 0.0f)
+      if (!png_write_clli_string(intf_s, hdr))
+         return false;
+   if (hdr->write_mdcv)
+      if (!png_write_mdcv_string(intf_s, hdr))
+         return false;
+   return true;
+}
+
 static bool png_write_idat_string(intfstream_t* intf_s, const uint8_t *data, size_t len)
 {
    if (intfstream_write(intf_s, data, len) != (ssize_t)len)
@@ -115,6 +215,30 @@ static bool png_write_iend_string(intfstream_t* intf_s)
          sizeof(data) - sizeof(uint32_t));
 }
 
+/* enum rpng_pixfmt lives in rpng.h so that the path-based convenience
+ * adapters in file/rpng_file.c (and any external stream caller) can select
+ * the format without this TU exposing anything path-related. */
+
+static unsigned rpng_pixfmt_bpp(enum rpng_pixfmt fmt)
+{
+   switch (fmt)
+   {
+      case RPNG_PIXFMT_ARGB32:
+      case RPNG_PIXFMT_RGBA32:
+         return 4;
+      case RPNG_PIXFMT_RGB48:
+         return 6;
+      case RPNG_PIXFMT_XRGB8888:
+      case RPNG_PIXFMT_XBGR8888:
+      case RPNG_PIXFMT_RGB565:
+         /* 32/16-bit sources, but the PNG side is 8-bit RGB. */
+      case RPNG_PIXFMT_BGR24:
+      default:
+         break;
+   }
+   return 3;
+}
+
 static void copy_argb_line(uint8_t *dst, const uint32_t *src, unsigned width)
 {
    unsigned i;
@@ -128,320 +252,1141 @@ static void copy_argb_line(uint8_t *dst, const uint32_t *src, unsigned width)
    }
 }
 
+/* RGBA32 is already the on-wire channel order for colour type 6 - R,G,B,A,
+ * one byte each, in memory order - so the row needs no swizzle at all,
+ * only the move into the filter scratch buffer.
+ *
+ * That move cannot be elided by pointing rgba_line at the caller's row:
+ * the winning filter's tag byte is written at chosen_filtered[-1], and
+ * when the "none" filter wins chosen_filtered *is* rgba_line, which would
+ * scribble one byte into the caller's surface. */
+static void copy_rgba_line(uint8_t *dst, const uint8_t *src, unsigned width)
+{
+   memcpy(dst, src, (size_t)width * 4);
+}
+
+/* B,G,R -> R,G,B: the outer two bytes of every pixel trade places.  This
+ * ran a byte at a time ahead of filters that are all vectorised, and on
+ * a 3840x2160 capture it was two thirds of the row work outside deflate.
+ *
+ * SSE2 has no byte shuffle, but none is needed.  A 16-byte load that
+ * starts on a pixel boundary holds each byte's partner two places away,
+ * in a pattern that repeats every three bytes: the red slot takes the
+ * byte two to the right, the blue slot the byte two to the left, green
+ * stays.  Two whole-register byte shifts and three fixed masks build the
+ * swap.  The first four pixels (12 bytes) are then complete; the last
+ * four bytes are a half-built fifth pixel that the next step's store -
+ * 12 bytes on - overwrites, as does the scalar tail after the last
+ * step.  NEON loads the three channels as planes and stores them back
+ * crossed. */
 static void copy_bgr24_line(uint8_t *dst, const uint8_t *src, unsigned width)
 {
-   unsigned i;
-   for (i = 0; i < width; i++, dst += 3, src += 3)
+   size_t i   = 0;
+   size_t len = (size_t)width * 3;
+#if defined(RPNG_ENC_SSE2)
    {
-      dst[2] = src[0];
-      dst[1] = src[1];
-      dst[0] = src[2];
+      const __m128i m_r = _mm_setr_epi8(-1,0,0, -1,0,0, -1,0,0, -1,0,0, -1,0,0, -1);
+      const __m128i m_g = _mm_setr_epi8(0,-1,0, 0,-1,0, 0,-1,0, 0,-1,0, 0,-1,0, 0);
+      const __m128i m_b = _mm_setr_epi8(0,0,-1, 0,0,-1, 0,0,-1, 0,0,-1, 0,0,-1, 0);
+      for (; i + 16 <= len; i += 12)
+      {
+         __m128i v = _mm_loadu_si128((const __m128i*)(src + i));
+         _mm_storeu_si128((__m128i*)(dst + i), _mm_or_si128(
+                  _mm_and_si128(v, m_g),
+                  _mm_or_si128(_mm_and_si128(_mm_srli_si128(v, 2), m_r),
+                               _mm_and_si128(_mm_slli_si128(v, 2), m_b))));
+      }
    }
+#elif defined(RPNG_ENC_NEON)
+   for (; i + 48 <= len; i += 48)
+   {
+      uint8x16x3_t p = vld3q_u8(src + i);
+      uint8x16_t   t = p.val[0];
+      p.val[0]       = p.val[2];
+      p.val[2]       = t;
+      vst3q_u8(dst + i, p);
+   }
+#endif
+   for (; i < len; i += 3)
+   {
+      dst[i + 2] = src[i    ];
+      dst[i + 1] = src[i + 1];
+      dst[i    ] = src[i + 2];
+   }
+}
+
+/* The raw-framebuffer screenshot path - a core's own XRGB8888 or RGB565
+ * frame, no readback - converts each row here, and like the BGR24 swap
+ * both ran a pixel at a time ahead of vectorised filters.
+ *
+ * SSE2 builds each pixel as a 32-bit lane 0x00BBGGRR, which is R,G,B,0
+ * in memory, and then closes the gaps: within each 64-bit half the odd
+ * lane moves down a byte onto the even lane's zero, and the upper half
+ * moves down to follow the lower one - four pixels in the first 12
+ * bytes, the last four zero and rewritten by the next store or the
+ * scalar tail.  NEON works on channel planes and stores them with vst3. */
+#if defined(RPNG_ENC_SSE2)
+static INLINE __m128i rpng_pack_rgb0x4(__m128i v)
+{
+   const __m128i lo = _mm_set_epi32(0, 0x00FFFFFF, 0, 0x00FFFFFF);
+   const __m128i hi = _mm_set_epi32(0x0000FFFF, (int)0xFF000000,
+                                    0x0000FFFF, (int)0xFF000000);
+   __m128i e = _mm_or_si128(_mm_and_si128(v, lo),
+                            _mm_and_si128(_mm_srli_epi64(v, 8), hi));
+   return _mm_or_si128(_mm_move_epi64(e),
+                       _mm_slli_si128(_mm_srli_si128(e, 8), 6));
+}
+
+/* Four R5G6B5 values in 32-bit lanes -> 0x00BBGGRR, replicating each
+ * channel's top bits into its low ones as pixconv_rgb565_to_xbgr8888. */
+static INLINE __m128i rpng_rgb565_to_rgb0x4(__m128i c)
+{
+   const __m128i m_b  = _mm_set1_epi32(0x001F);
+   const __m128i m_r  = _mm_set1_epi32(0xF800);
+   const __m128i m_g  = _mm_set1_epi32(0x07E0);
+   const __m128i m_br = _mm_set1_epi32(0x070007);
+   const __m128i m_gl = _mm_set1_epi32(0x000300);
+   __m128i br = _mm_or_si128(_mm_slli_epi32(_mm_and_si128(c, m_b), 19),
+                             _mm_srli_epi32(_mm_and_si128(c, m_r), 8));
+   __m128i g  = _mm_slli_epi32(_mm_and_si128(c, m_g), 5);
+   br = _mm_or_si128(br, _mm_and_si128(_mm_srli_epi32(br, 5), m_br));
+   g  = _mm_or_si128(g,  _mm_and_si128(_mm_srli_epi32(g,  6), m_gl));
+   return _mm_or_si128(br, g);
+}
+#endif
+
+/* X8R8G8B8 -> PNG RGB.  The X byte is ignored. */
+static void copy_xrgb8888_line(uint8_t *dst, const uint32_t *src,
+      unsigned width)
+{
+   unsigned i = 0;
+#if defined(RPNG_ENC_SSE2)
+   {
+      const __m128i m_rb = _mm_set1_epi32(0x00FF00FF);
+      const __m128i m_g  = _mm_set1_epi32(0x0000FF00);
+      for (; i + 6 <= width; i += 4)
+      {
+         __m128i v = _mm_loadu_si128((const __m128i*)(src + i));
+         /* rotate by 16: 0xXXRRGGBB -> 0xGGBBXXRR, keep B and R */
+         __m128i t = _mm_or_si128(_mm_slli_epi32(v, 16), _mm_srli_epi32(v, 16));
+         _mm_storeu_si128((__m128i*)(dst + (size_t)i * 3), rpng_pack_rgb0x4(
+                  _mm_or_si128(_mm_and_si128(t, m_rb), _mm_and_si128(v, m_g))));
+      }
+   }
+#elif defined(RPNG_ENC_NEON) && !defined(__ARM_BIG_ENDIAN)
+   for (; i + 16 <= width; i += 16)
+   {
+      uint8x16x4_t p = vld4q_u8((const uint8_t*)(src + i)); /* B,G,R,X */
+      uint8x16x3_t q;
+      q.val[0] = p.val[2];
+      q.val[1] = p.val[1];
+      q.val[2] = p.val[0];
+      vst3q_u8(dst + (size_t)i * 3, q);
+   }
+#endif
+   for (dst += (size_t)i * 3; i < width; i++)
+   {
+      uint32_t px = src[i];
+      *dst++      = (uint8_t)(px >> 16); /* R */
+      *dst++      = (uint8_t)(px >>  8); /* G */
+      *dst++      = (uint8_t)(px >>  0); /* B */
+   }
+}
+
+/* X8B8G8R8 (R,G,B,X in memory) -> PNG RGB.  Each 32-bit lane is
+ * already 0xXXBBGGRR, so SSE2 drops the X byte and closes the gaps as
+ * the XRGB8888 path does after its rotate; NEON stores the first three
+ * of the four channel planes. */
+static void copy_xbgr8888_line(uint8_t *dst, const uint32_t *src,
+      unsigned width)
+{
+   unsigned i = 0;
+#if defined(RPNG_ENC_SSE2)
+   {
+      const __m128i m_rgb = _mm_set1_epi32(0x00FFFFFF);
+      for (; i + 6 <= width; i += 4)
+      {
+         __m128i v = _mm_loadu_si128((const __m128i*)(src + i));
+         _mm_storeu_si128((__m128i*)(dst + (size_t)i * 3),
+               rpng_pack_rgb0x4(_mm_and_si128(v, m_rgb)));
+      }
+   }
+#elif defined(RPNG_ENC_NEON) && !defined(__ARM_BIG_ENDIAN)
+   for (; i + 16 <= width; i += 16)
+   {
+      uint8x16x4_t p = vld4q_u8((const uint8_t*)(src + i)); /* R,G,B,X */
+      uint8x16x3_t q;
+      q.val[0] = p.val[0];
+      q.val[1] = p.val[1];
+      q.val[2] = p.val[2];
+      vst3q_u8(dst + (size_t)i * 3, q);
+   }
+#endif
+   {
+      const uint8_t *s8 = (const uint8_t*)(src + i);
+      for (dst += (size_t)i * 3; i < width; i++, s8 += 4)
+      {
+         *dst++ = s8[0]; /* R */
+         *dst++ = s8[1]; /* G */
+         *dst++ = s8[2]; /* B */
+      }
+   }
+}
+
+/* R5G6B5 -> PNG RGB, expanding channels exactly as the scaler's
+ * conv_rgb565_bgr24 does so this path is pixel-identical to the
+ * historical convert-then-encode path. */
+static void copy_rgb565_line(uint8_t *dst, const uint16_t *src,
+      unsigned width)
+{
+   unsigned i = 0;
+#if defined(RPNG_ENC_SSE2)
+   {
+      const __m128i z = _mm_setzero_si128();
+      for (; i + 10 <= width; i += 8)
+      {
+         __m128i c = _mm_loadu_si128((const __m128i*)(src + i));
+         uint8_t *d = dst + (size_t)i * 3;
+         _mm_storeu_si128((__m128i*)d, rpng_pack_rgb0x4(
+                  rpng_rgb565_to_rgb0x4(_mm_unpacklo_epi16(c, z))));
+         _mm_storeu_si128((__m128i*)(d + 12), rpng_pack_rgb0x4(
+                  rpng_rgb565_to_rgb0x4(_mm_unpackhi_epi16(c, z))));
+      }
+   }
+#elif defined(RPNG_ENC_NEON)
+   /* vsri keeps a byte's top bits and slides its own top bits in
+    * below them: the same replication, one instruction a channel. */
+   for (; i + 8 <= width; i += 8)
+   {
+      uint16x8_t  c = vld1q_u16(src + i);
+      uint8x8_t   r = vshrn_n_u16(c, 8);                /* rrrrrggg */
+      uint8x8_t   g = vshrn_n_u16(c, 3);                /* gggggg.. */
+      uint8x8_t   b = vmovn_u16(vshlq_n_u16(c, 3));     /* bbbbb000 */
+      uint8x8x3_t q;
+      q.val[0] = vsri_n_u8(r, r, 5);
+      q.val[1] = vsri_n_u8(g, g, 6);
+      q.val[2] = vsri_n_u8(b, b, 5);
+      vst3_u8(dst + (size_t)i * 3, q);
+   }
+#endif
+   for (dst += (size_t)i * 3; i < width; i++)
+   {
+      uint32_t px = pixconv_rgb565_to_xrgb8888(src[i]);
+      *dst++      = (uint8_t)(px >> 16);
+      *dst++      = (uint8_t)(px >>  8);
+      *dst++      = (uint8_t)(px);
+   }
+}
+
+/* 16-bit-per-channel RGB. PNG stores 16-bit samples big-endian, so each
+ * host-order R,G,B sample is written most-significant byte first. Input is
+ * three uint16_t per pixel in R,G,B order (already the PNG channel order,
+ * unlike the BGR 8-bit path). */
+static void copy_rgb48_line(uint8_t *dst, const uint16_t *src, unsigned width)
+{
+   unsigned i;
+   for (i = 0; i < width; i++, dst += 6, src += 3)
+   {
+      dst[0] = (uint8_t)(src[0] >> 8); dst[1] = (uint8_t)(src[0] & 0xff);
+      dst[2] = (uint8_t)(src[1] >> 8); dst[3] = (uint8_t)(src[1] & 0xff);
+      dst[4] = (uint8_t)(src[2] >> 8); dst[5] = (uint8_t)(src[2] & 0xff);
+   }
+}
+
+/* Forward filtering, fused with the sum-of-absolute-differences score
+ * that picks between the results.
+ *
+ * The encode direction has no serial dependency - every predictor input
+ * is a *raw* byte, not a byte this pass just produced - so unlike the
+ * decoder these loops vectorise across the full register width.  Fusing
+ * the score in removes four extra passes over the row: the old shape
+ * wrote each filtered row and then read it back to score it.
+ *
+ * The score is sum(|(int8)b|), the standard minimum-sum-of-absolute-
+ * differences heuristic.  |(int8)b| is min(b, 256 - b) on unsigned
+ * bytes, which is one min and one subtract, and psadbw then accumulates
+ * a whole register with no widening. */
+
+#if defined(RPNG_ENC_SSE2)
+static INLINE __m128i rpng_abs_i8(__m128i v)
+{
+   return _mm_min_epu8(v, _mm_sub_epi8(_mm_setzero_si128(), v));
+}
+
+static INLINE unsigned rpng_sad_final(__m128i acc)
+{
+   return (unsigned)_mm_cvtsi128_si32(acc)
+        + (unsigned)_mm_cvtsi128_si32(_mm_srli_si128(acc, 8));
+}
+
+/* Paeth predictor over 16 unsigned bytes, without widening.
+ *
+ * pa = |b - c| and pb = |a - c| are plain byte absolute differences.
+ * pc = |a + b - 2c| = |(b - c) + (a - c)| needs nine bits, but only
+ * where both differences have the same sign, and there it is pa + pb -
+ * no smaller than either, so saturating it at 255 cannot change how it
+ * compares with pa or pb (both <= 255).  Where the signs differ it is
+ * |pa - pb|, which fits.  (b == c or a == c makes both forms equal, so
+ * the sign of a zero difference does not matter.)  The selection is
+ * the scalar rpng_paeth_pred()'s: a unless pa > pb or pa > pc, then b
+ * unless pb > pc.  Twice the lanes of the widened form it replaces,
+ * and checked against the scalar predictor for all 2^24 inputs. */
+static INLINE __m128i rpng_absdiff_u8(__m128i x, __m128i y)
+{
+   return _mm_or_si128(_mm_subs_epu8(x, y), _mm_subs_epu8(y, x));
+}
+
+static INLINE __m128i rpng_gt_u8(__m128i x, __m128i y)
+{
+   return _mm_xor_si128(_mm_cmpeq_epi8(_mm_subs_epu8(x, y),
+            _mm_setzero_si128()), _mm_set1_epi8(-1));
+}
+
+static INLINE __m128i rpng_paeth_pred_epu8(__m128i a, __m128i b, __m128i c)
+{
+   const __m128i z = _mm_setzero_si128();
+   __m128i pa     = rpng_absdiff_u8(b, c);
+   __m128i pb     = rpng_absdiff_u8(a, c);
+   /* 0xFF where b >= c and a >= c agree */
+   __m128i same   = _mm_cmpeq_epi8(
+         _mm_cmpeq_epi8(_mm_subs_epu8(c, b), z),
+         _mm_cmpeq_epi8(_mm_subs_epu8(c, a), z));
+   __m128i pc     = _mm_or_si128(
+         _mm_and_si128(   same, _mm_adds_epu8(pa, pb)),
+         _mm_andnot_si128(same, rpng_absdiff_u8(pa, pb)));
+   __m128i not_a  = _mm_or_si128(rpng_gt_u8(pa, pb), rpng_gt_u8(pa, pc));
+   __m128i pick_c = rpng_gt_u8(pb, pc);
+   __m128i bc_sel = _mm_or_si128(_mm_andnot_si128(pick_c, b),
+                                 _mm_and_si128(   pick_c, c));
+   return           _mm_or_si128(_mm_andnot_si128(not_a,  a),
+                                 _mm_and_si128(   not_a,  bc_sel));
+}
+#endif
+
+#if defined(RPNG_ENC_NEON)
+static INLINE uint8x16_t rpng_abs_i8(uint8x16_t v)
+{
+   return vminq_u8(v, vsubq_u8(vdupq_n_u8(0), v));
+}
+
+/* The byte-wide Paeth predictor; see the SSE2 version for why the
+ * saturated pc is exact. */
+static INLINE uint8x16_t rpng_paeth_pred_u8(
+      uint8x16_t a, uint8x16_t b, uint8x16_t c)
+{
+   uint8x16_t pa     = vabdq_u8(b, c);
+   uint8x16_t pb     = vabdq_u8(a, c);
+   uint8x16_t same   = vceqq_u8(vcgeq_u8(b, c), vcgeq_u8(a, c));
+   uint8x16_t pc     = vbslq_u8(same, vqaddq_u8(pa, pb), vabdq_u8(pa, pb));
+   uint8x16_t not_a  = vorrq_u8(vcgtq_u8(pa, pb), vcgtq_u8(pa, pc));
+   uint8x16_t pick_c = vcgtq_u8(pb, pc);
+   uint8x16_t bc_sel = vbslq_u8(pick_c, c, b);
+   return              vbslq_u8(not_a,  bc_sel, a);
+}
+#endif
+
+/* |(int8)b| without a branch, for the scalar paths.  The conditional
+ * form the old code used compiled to a branch that mispredicts on image
+ * data as often as not. */
+static INLINE unsigned rpng_abs8(uint8_t b)
+{
+   int v = (int)(int8_t)b;
+   int m = v >> (sizeof(int) * 8 - 1);
+   return (unsigned)((v + m) ^ m);
+}
+
+static INLINE int rpng_paeth_pred(int a, int b, int c)
+{
+   int pa   = b - c;
+   int pb   = a - c;
+   int pc   = pa + pb;
+   int apa  = pa < 0 ? -pa : pa;
+   int apb  = pb < 0 ? -pb : pb;
+   int apc  = pc < 0 ? -pc : pc;
+   int nota = -(int)((apa > apb) | (apa > apc));
+   int pick = -(int)(apb > apc);
+   int bc   = (b & ~pick) | (c & pick);
+   return (a & ~nota) | (bc & nota);
 }
 
 static unsigned count_sad(const uint8_t *data, size_t len)
 {
-   size_t i;
+   size_t i = 0;
    unsigned cnt = 0;
-   for (i = 0; i < len; i++)
+#if defined(RPNG_ENC_SSE2)
    {
-      if (data[i])
-         cnt += abs((int8_t)data[i]);
+      __m128i acc = _mm_setzero_si128();
+      for (; i + 16 <= len; i += 16)
+         acc = _mm_add_epi64(acc, _mm_sad_epu8(
+                  rpng_abs_i8(_mm_loadu_si128((const __m128i*)(data + i))),
+                  _mm_setzero_si128()));
+      cnt = rpng_sad_final(acc);
    }
+#elif defined(RPNG_ENC_NEON)
+   {
+      uint32x4_t acc = vdupq_n_u32(0);
+      for (; i + 16 <= len; i += 16)
+         acc = vpadalq_u16(acc, vpaddlq_u8(rpng_abs_i8(vld1q_u8(data + i))));
+      cnt = vgetq_lane_u32(acc, 0) + vgetq_lane_u32(acc, 1)
+          + vgetq_lane_u32(acc, 2) + vgetq_lane_u32(acc, 3);
+   }
+#endif
+   for (; i < len; i++)
+      cnt += rpng_abs8(data[i]);
    return cnt;
 }
 
 static unsigned filter_up(uint8_t *target, const uint8_t *line,
       const uint8_t *prev, unsigned width, unsigned bpp)
 {
-   unsigned i;
-   width *= bpp;
-   for (i = 0; i < width; i++)
-      target[i] = line[i] - prev[i];
-
-   return count_sad(target, width);
+   size_t i = 0, len = (size_t)width * bpp;
+   unsigned cnt = 0;
+#if defined(RPNG_ENC_SSE2)
+   {
+      __m128i acc = _mm_setzero_si128();
+      for (; i + 16 <= len; i += 16)
+      {
+         __m128i v = _mm_sub_epi8(
+               _mm_loadu_si128((const __m128i*)(line + i)),
+               _mm_loadu_si128((const __m128i*)(prev + i)));
+         _mm_storeu_si128((__m128i*)(target + i), v);
+         acc = _mm_add_epi64(acc,
+               _mm_sad_epu8(rpng_abs_i8(v), _mm_setzero_si128()));
+      }
+      cnt = rpng_sad_final(acc);
+   }
+#elif defined(RPNG_ENC_NEON)
+   {
+      uint32x4_t acc = vdupq_n_u32(0);
+      for (; i + 16 <= len; i += 16)
+      {
+         uint8x16_t v = vsubq_u8(vld1q_u8(line + i), vld1q_u8(prev + i));
+         vst1q_u8(target + i, v);
+         acc = vpadalq_u16(acc, vpaddlq_u8(rpng_abs_i8(v)));
+      }
+      cnt = vgetq_lane_u32(acc, 0) + vgetq_lane_u32(acc, 1)
+          + vgetq_lane_u32(acc, 2) + vgetq_lane_u32(acc, 3);
+   }
+#endif
+   for (; i < len; i++)
+   {
+      target[i] = (uint8_t)(line[i] - prev[i]);
+      cnt      += rpng_abs8(target[i]);
+   }
+   return cnt;
 }
 
 static unsigned filter_sub(uint8_t *target, const uint8_t *line,
       unsigned width, unsigned bpp)
 {
-   unsigned i;
-   width *= bpp;
-   for (i = 0; i < bpp; i++)
+   size_t i, len = (size_t)width * bpp;
+   unsigned cnt = 0;
+   for (i = 0; i < bpp && i < len; i++)
+   {
       target[i] = line[i];
-   for (i = bpp; i < width; i++)
-      target[i] = line[i] - line[i - bpp];
-
-   return count_sad(target, width);
+      cnt      += rpng_abs8(target[i]);
+   }
+#if defined(RPNG_ENC_SSE2)
+   {
+      __m128i acc = _mm_setzero_si128();
+      for (; i + 16 <= len; i += 16)
+      {
+         __m128i v = _mm_sub_epi8(
+               _mm_loadu_si128((const __m128i*)(line + i)),
+               _mm_loadu_si128((const __m128i*)(line + i - bpp)));
+         _mm_storeu_si128((__m128i*)(target + i), v);
+         acc = _mm_add_epi64(acc,
+               _mm_sad_epu8(rpng_abs_i8(v), _mm_setzero_si128()));
+      }
+      cnt += rpng_sad_final(acc);
+   }
+#elif defined(RPNG_ENC_NEON)
+   {
+      uint32x4_t acc = vdupq_n_u32(0);
+      for (; i + 16 <= len; i += 16)
+      {
+         uint8x16_t v = vsubq_u8(vld1q_u8(line + i), vld1q_u8(line + i - bpp));
+         vst1q_u8(target + i, v);
+         acc = vpadalq_u16(acc, vpaddlq_u8(rpng_abs_i8(v)));
+      }
+      cnt += vgetq_lane_u32(acc, 0) + vgetq_lane_u32(acc, 1)
+           + vgetq_lane_u32(acc, 2) + vgetq_lane_u32(acc, 3);
+   }
+#endif
+   for (; i < len; i++)
+   {
+      target[i] = (uint8_t)(line[i] - line[i - bpp]);
+      cnt      += rpng_abs8(target[i]);
+   }
+   return cnt;
 }
 
 static unsigned filter_avg(uint8_t *target, const uint8_t *line,
       const uint8_t *prev, unsigned width, unsigned bpp)
 {
-   unsigned i;
-   width *= bpp;
-   for (i = 0; i < bpp; i++)
-      target[i] = line[i] - (prev[i] >> 1);
-   for (i = bpp; i < width; i++)
-      target[i] = line[i] - ((line[i - bpp] + prev[i]) >> 1);
-
-   return count_sad(target, width);
+   size_t i, len = (size_t)width * bpp;
+   unsigned cnt = 0;
+   for (i = 0; i < bpp && i < len; i++)
+   {
+      target[i] = (uint8_t)(line[i] - (prev[i] >> 1));
+      cnt      += rpng_abs8(target[i]);
+   }
+#if defined(RPNG_ENC_SSE2)
+   {
+      /* floor((l + p) / 2) == pavgb(l, p) - ((l ^ p) & 1), pavgb being
+       * the rounding-up form. */
+      const __m128i one = _mm_set1_epi8(1);
+      __m128i acc = _mm_setzero_si128();
+      for (; i + 16 <= len; i += 16)
+      {
+         __m128i l = _mm_loadu_si128((const __m128i*)(line + i - bpp));
+         __m128i p = _mm_loadu_si128((const __m128i*)(prev + i));
+         __m128i m = _mm_sub_epi8(_mm_avg_epu8(l, p),
+               _mm_and_si128(_mm_xor_si128(l, p), one));
+         __m128i v = _mm_sub_epi8(
+               _mm_loadu_si128((const __m128i*)(line + i)), m);
+         _mm_storeu_si128((__m128i*)(target + i), v);
+         acc = _mm_add_epi64(acc,
+               _mm_sad_epu8(rpng_abs_i8(v), _mm_setzero_si128()));
+      }
+      cnt += rpng_sad_final(acc);
+   }
+#elif defined(RPNG_ENC_NEON)
+   {
+      /* vhaddq_u8 is already the flooring halving add. */
+      uint32x4_t acc = vdupq_n_u32(0);
+      for (; i + 16 <= len; i += 16)
+      {
+         uint8x16_t m = vhaddq_u8(vld1q_u8(line + i - bpp), vld1q_u8(prev + i));
+         uint8x16_t v = vsubq_u8(vld1q_u8(line + i), m);
+         vst1q_u8(target + i, v);
+         acc = vpadalq_u16(acc, vpaddlq_u8(rpng_abs_i8(v)));
+      }
+      cnt += vgetq_lane_u32(acc, 0) + vgetq_lane_u32(acc, 1)
+           + vgetq_lane_u32(acc, 2) + vgetq_lane_u32(acc, 3);
+   }
+#endif
+   for (; i < len; i++)
+   {
+      target[i] = (uint8_t)(line[i] - ((line[i - bpp] + prev[i]) >> 1));
+      cnt      += rpng_abs8(target[i]);
+   }
+   return cnt;
 }
 
 static unsigned filter_paeth(uint8_t *target,
       const uint8_t *line, const uint8_t *prev,
       unsigned width, unsigned bpp)
 {
-   unsigned i;
-   width *= bpp;
-   for (i = 0; i < bpp; i++)
-      target[i] = line[i] - paeth(0, prev[i], 0);
-   for (i = bpp; i < width; i++)
-      target[i] = line[i] - paeth(line[i - bpp], prev[i], prev[i - bpp]);
-
-   return count_sad(target, width);
+   size_t i, len = (size_t)width * bpp;
+   unsigned cnt = 0;
+   for (i = 0; i < bpp && i < len; i++)
+   {
+      target[i] = (uint8_t)(line[i] - prev[i]);  /* paeth(0, b, 0) == b */
+      cnt      += rpng_abs8(target[i]);
+   }
+#if defined(RPNG_ENC_SSE2)
+   {
+      const __m128i z = _mm_setzero_si128();
+      __m128i acc = _mm_setzero_si128();
+      for (; i + 16 <= len; i += 16)
+      {
+         __m128i pr = rpng_paeth_pred_epu8(
+               _mm_loadu_si128((const __m128i*)(line + i - bpp)),
+               _mm_loadu_si128((const __m128i*)(prev + i)),
+               _mm_loadu_si128((const __m128i*)(prev + i - bpp)));
+         __m128i v  = _mm_sub_epi8(
+               _mm_loadu_si128((const __m128i*)(line + i)), pr);
+         _mm_storeu_si128((__m128i*)(target + i), v);
+         acc = _mm_add_epi64(acc, _mm_sad_epu8(rpng_abs_i8(v), z));
+      }
+      cnt += rpng_sad_final(acc);
+   }
+#elif defined(RPNG_ENC_NEON)
+   {
+      uint32x4_t acc = vdupq_n_u32(0);
+      for (; i + 16 <= len; i += 16)
+      {
+         uint8x16_t pr = rpng_paeth_pred_u8(vld1q_u8(line + i - bpp),
+               vld1q_u8(prev + i), vld1q_u8(prev + i - bpp));
+         uint8x16_t v  = vsubq_u8(vld1q_u8(line + i), pr);
+         vst1q_u8(target + i, v);
+         acc = vpadalq_u16(acc, vpaddlq_u8(rpng_abs_i8(v)));
+      }
+      cnt += vgetq_lane_u32(acc, 0) + vgetq_lane_u32(acc, 1)
+           + vgetq_lane_u32(acc, 2) + vgetq_lane_u32(acc, 3);
+   }
+#endif
+   for (; i < len; i++)
+   {
+      target[i] = (uint8_t)(line[i] - rpng_paeth_pred(
+               line[i - bpp], prev[i], prev[i - bpp]));
+      cnt      += rpng_abs8(target[i]);
+   }
+   return cnt;
 }
 
-bool rpng_save_image_stream(const uint8_t *data, intfstream_t* intf_s,
-      unsigned width, unsigned height, signed pitch, unsigned bpp)
+/* Size of the per-chunk deflate output buffer.  A screenshot-sized
+ * encode will fill this many times over and produce multiple IDAT
+ * chunks; smaller than zlib's default window (32 KiB) to keep
+ * peak memory low while large enough to amortise chunk-header
+ * overhead (12 bytes per IDAT). */
+#define IDAT_CHUNK_SIZE 16384
+
+/* Region spacing inside the row arena: round a cursor past a region of
+ * the given size up to the next 64-byte boundary. */
+#define ROW_ARENA_NEXT(cur, bytes) \
+   ((((cur) + (bytes) + 63) / 64) * 64)
+
+/* Emit one IDAT chunk.  `chunk_buf` is laid out as:
+ *     bytes [0..4): length field (filled in here, big-endian)
+ *     bytes [4..8): literal "IDAT"
+ *     bytes [8..8+payload_len): the deflate output produced by
+ *                               this chunk's worth of trans() calls
+ * Matches the layout png_write_idat_string expects. */
+static bool flush_idat_chunk(intfstream_t *intf_s,
+      uint8_t *chunk_buf, size_t payload_len)
 {
-   unsigned h;
+   if (payload_len == 0)
+      return true; /* empty chunk -- nothing to emit, not an error */
+   dword_write_be(chunk_buf + 0, (uint32_t)payload_len);
+   memcpy(chunk_buf + 4, "IDAT", 4);
+   return png_write_idat_string(intf_s, chunk_buf, payload_len + 8);
+}
+
+/* The encoder between steps: everything the row loop carries. */
+struct rpng_encoder
+{
+   const struct trans_stream_backend *backend;
+   void *stream;
+   intfstream_t *intf_s;
+   const uint8_t *data;      /* the next row */
+   uint8_t *row_arena;
+   uint8_t *rgba_line;
+   uint8_t *prev_encoded;
+   uint8_t *up_filtered;
+   uint8_t *sub_filtered;
+   uint8_t *avg_filtered;
+   uint8_t *paeth_filtered;
+   /* chunk_buf is the IDAT-chunk staging buffer:
+    *   [0..4):        length field (filled in at flush time)
+    *   [4..8):        "IDAT"
+    *   [8..8+IDAT_CHUNK_SIZE): deflate output */
+   uint8_t *chunk_buf;
+   size_t line_len;
+   /* How many bytes deflate has produced into the current chunk_buf
+    * since the last set_out.  Reset to 0 after every flush_idat_chunk. */
+   size_t chunk_fill;
+   signed pitch;
+   unsigned width;
+   unsigned height;
+   unsigned bpp;
+   unsigned row;             /* rows encoded so far */
+   enum rpng_pixfmt fmt;
+};
+
+void rpng_encode_free(rpng_encoder_t *e)
+{
+   if (!e)
+      return;
+   free(e->row_arena);
+   if (e->backend && e->stream && e->backend->stream_free)
+      e->backend->stream_free(e->stream);
+   free(e);
+}
+
+rpng_encoder_t *rpng_encode_begin(const uint8_t *data,
+      intfstream_t *intf_s, unsigned width, unsigned height, signed pitch,
+      enum rpng_pixfmt fmt, const struct rpng_hdr_metadata *hdr)
+{
    struct png_ihdr ihdr = {0};
-   bool ret = true;
-   const struct trans_stream_backend *stream_backend = NULL;
-   size_t encode_buf_size  = 0;
-   uint8_t *encode_buf     = NULL;
-   uint8_t *deflate_buf    = NULL;
-   uint8_t *rgba_line      = NULL;
-   uint8_t *up_filtered    = NULL;
-   uint8_t *sub_filtered   = NULL;
-   uint8_t *avg_filtered   = NULL;
-   uint8_t *paeth_filtered = NULL;
-   uint8_t *prev_encoded   = NULL;
-   uint8_t *encode_target  = NULL;
-   void *stream            = NULL;
-   uint32_t total_in       = 0;
-   uint32_t total_out      = 0;
+   bool ret             = true;
+   size_t row_stride;
+   uint8_t *prev_base, *rgba_base, *up_base, *sub_base, *avg_base, *paeth_base;
+   rpng_encoder_t *e    = NULL;
 
    if (!intf_s)
       GOTO_END_ERROR();
+   if (!(e = (rpng_encoder_t*)calloc(1, sizeof(*e))))
+      GOTO_END_ERROR();
 
-   stream_backend = trans_stream_get_zlib_deflate_backend();
+   e->intf_s   = intf_s;
+   e->data     = data;
+   e->width    = width;
+   e->height   = height;
+   e->pitch    = pitch;
+   e->fmt      = fmt;
+   e->bpp      = rpng_pixfmt_bpp(fmt);
+   e->line_len = (size_t)width * e->bpp;
+   e->backend  = trans_stream_get_zlib_deflate_backend();
 
    if (intfstream_write(intf_s, png_magic, sizeof(png_magic)) != sizeof(png_magic))
       GOTO_END_ERROR();
 
-   ihdr.width = width;
-   ihdr.height = height;
-   ihdr.depth = 8;
-   ihdr.color_type = bpp == sizeof(uint32_t) ? 6 : 2; /* RGBA or RGB */
+   ihdr.width      = width;
+   ihdr.height     = height;
+   /* bpp is bytes per pixel: 6 = 16-bit RGB, 4 = 8-bit RGBA, 3 = 8-bit RGB. */
+   ihdr.depth      = (e->bpp == 6) ? 16 : 8;
+   ihdr.color_type = (e->bpp == sizeof(uint32_t)) ? 6 : 2; /* RGBA or RGB */
    if (!png_write_ihdr_string(intf_s, &ihdr))
       GOTO_END_ERROR();
 
-   encode_buf_size = (width * bpp + 1) * height;
-   encode_buf      = (uint8_t*)malloc(encode_buf_size);
-   if (!encode_buf)
+   /* HDR colour-space chunks (cICP / cLLI / mDCV) belong after IHDR and
+    * before IDAT. Only written when the caller supplied metadata. */
+   if (hdr)
+      if (!png_write_hdr_chunks(intf_s, hdr))
+         GOTO_END_ERROR();
+
+   /* Per-row scratch.  ~width*bpp each -- trivial compared to the
+    * frame-sized encode_buf the old full-buffer path allocated. */
+   /* Every row buffer carries one spare byte in front so the PNG filter
+    * tag can be written immediately before the filtered data and the
+    * whole thing handed to deflate as one span.  The old shape copied
+    * the winning row into a separate tag+data buffer, a full extra pass
+    * over the row for nothing. */
+   /* The six row buffers and the IDAT staging buffer come out of one
+    * block. Each row's data (the byte after its tag slot) starts on a
+    * 64-byte boundary, so the filter passes that read the current and
+    * previous rows together stream from aligned lines. The previous-row
+    * buffer is the only one read before it is written and is zeroed. */
+   row_stride     = ROW_ARENA_NEXT(64, e->line_len + 1);
+   e->row_arena   = (uint8_t*)malloc(6 * row_stride + IDAT_CHUNK_SIZE + 8);
+   if (!e->row_arena)
+      GOTO_END_ERROR();
+   prev_base      = e->row_arena + 0 * row_stride + 63;
+   rgba_base      = e->row_arena + 1 * row_stride + 63;
+   up_base        = e->row_arena + 2 * row_stride + 63;
+   sub_base       = e->row_arena + 3 * row_stride + 63;
+   avg_base       = e->row_arena + 4 * row_stride + 63;
+   paeth_base     = e->row_arena + 5 * row_stride + 63;
+   e->chunk_buf   = e->row_arena + 6 * row_stride;
+   memset(prev_base, 0, e->line_len + 1);
+
+   e->prev_encoded   = prev_base  + 1;
+   e->rgba_line      = rgba_base  + 1;
+   e->up_filtered    = up_base    + 1;
+   e->sub_filtered   = sub_base   + 1;
+   e->avg_filtered   = avg_base   + 1;
+   e->paeth_filtered = paeth_base + 1;
+
+   e->stream = e->backend->stream_new();
+
+   /* Both deflate backends default to level 9, which is the wrong
+    * trade for a screenshot: it is a foreground action the user waits
+    * on, and on the content emulator screenshots actually contain the
+    * top levels buy nothing.  Measured at 1920x1080 and 3840x2160,
+    * BGR24, against libpng at its own default for scale:
+    *
+    *                  libpng        level 6        level 9
+    *   2D pixel art    59 ms/0.23    67 ms/0.23    591 ms/0.23
+    *   pixel art 4K   242 ms/0.88   272 ms/0.88   2221 ms/0.86
+    *   smooth ramp    460 ms/1.00   432 ms/1.00   2649 ms/0.92
+    *   3D scene       707 ms/2.82   458 ms/3.13    448 ms/3.13
+    *   3D scene 4K   2929 ms/11.26 1843 ms/12.49  1830 ms/12.49
+    *   menu frame      48 ms/0.01    56 ms/0.01     70 ms/0.01
+    *
+    * Level 9's deep chain search collapses on the repetitive content -
+    * flat runs, upscaled pixel art, smooth ramps - which is most of
+    * what gets captured, and returns 0-8% for 6-9x the time.  Where it
+    * does earn its keep, on noisy 3D output, level 6 matches it
+    * exactly.  Worst case here is 80 KB against 2.2 seconds.
+    *
+    * 6 is also zlib's and libpng's own default, so a screenshot is no
+    * longer larger or slower than what every other PNG writer emits. */
+   if (e->stream)
+      e->backend->define(e->stream, "level", 6);
+
+   /* The filtered match strategy is deliberately not requested here.
+    * It does close the size gap against libpng on noisy 3D output -
+    * 3.13 MB down to 2.82 MB at 1080p, matching libpng exactly - but at
+    * level 6 it costs 390 ms to 647 ms for it, because Z_FILTERED
+    * discards matches of five bytes or fewer *after* the level-6 match
+    * finder has walked a 128-deep hash chain to find them.  The search
+    * is thrown away, not skipped.
+    *
+    * That cost is not inherent.  Level 4, whose chain is 16 deep,
+    * reaches the same 2.81 MB in 447 ms - within noise of the 436 ms
+    * the default strategy takes at level 6.  But level 4 gives up 18%
+    * on smooth content (1.00 MB to 1.18 MB on a gradient), so the two
+    * settings have to be chosen together and there is no cell that wins
+    * on both axes for every shape:
+    *
+    *                     3D scene      gradient    pixel art   menu
+    *   6 + default       436 ms/3.13   456 ms/1.00  52 ms/0.23  38 ms/0.01
+    *   6 + filtered      721 ms/2.82   466 ms/1.00  51 ms/0.23  48 ms/0.01
+    *   5 + filtered      659 ms/2.82   231 ms/1.09  46 ms/0.23  38 ms/0.01
+    *   4 + filtered      447 ms/2.81   150 ms/1.18  45 ms/0.23  37 ms/0.01
+    *   libpng default    812 ms/2.82   511 ms/1.00  87 ms/0.23  72 ms/0.01
+    *
+    * The only shape arguing for the higher level is the gradient, and
+    * that test image is a pure mathematical ramp - the least like a real
+    * screenshot of the set, since real fades carry dithering that puts
+    * them nearer the 3D row.  Deciding a size-for-time trade on it is
+    * not sound.  Default strategy is the state that gives nothing away:
+    * fastest everywhere, and still ahead of libpng on time for every
+    * shape, at the cost of 11% on noisy 3D output.
+    *
+    * Both backends implement the strategy property, so turning it on -
+    * with a level chosen alongside it, against real captures rather than
+    * synthetic ones - is a one-line change whenever that measurement
+    * exists. */
+   if (!e->stream)
       GOTO_END_ERROR();
 
-   prev_encoded = (uint8_t*)calloc(1, width * bpp);
-   if (!prev_encoded)
-      GOTO_END_ERROR();
+   /* Point deflate's output at our chunk staging area (after the
+    * 8-byte chunk header).  We re-point it every time we flush
+    * a chunk so the driver doesn't need to know the chunk layout. */
+   e->backend->set_out(e->stream,
+         e->chunk_buf + 8, (uint32_t)IDAT_CHUNK_SIZE);
 
-   rgba_line      = (uint8_t*)malloc(width * bpp);
-   up_filtered    = (uint8_t*)malloc(width * bpp);
-   sub_filtered   = (uint8_t*)malloc(width * bpp);
-   avg_filtered   = (uint8_t*)malloc(width * bpp);
-   paeth_filtered = (uint8_t*)malloc(width * bpp);
-   if (!rgba_line || !up_filtered || !sub_filtered || !avg_filtered || !paeth_filtered)
-      GOTO_END_ERROR();
-
-   encode_target = encode_buf;
-   for (h = 0; h < height;
-         h++, encode_target += width * bpp, data += pitch)
-   {
-      if (bpp == sizeof(uint32_t))
-         copy_argb_line(rgba_line, (const uint32_t*)data, width);
-      else
-         copy_bgr24_line(rgba_line, data, width);
-
-      /* Try every filtering method, and choose the method
-       * which has most entries as zero.
-       *
-       * This is probably not very optimal, but it's very
-       * simple to implement.
-       */
-      {
-         unsigned none_score  = count_sad(rgba_line, width * bpp);
-         unsigned up_score    = filter_up(up_filtered, rgba_line, prev_encoded, width, bpp);
-         unsigned sub_score   = filter_sub(sub_filtered, rgba_line, width, bpp);
-         unsigned avg_score   = filter_avg(avg_filtered, rgba_line, prev_encoded, width, bpp);
-         unsigned paeth_score = filter_paeth(paeth_filtered, rgba_line, prev_encoded, width, bpp);
-
-         uint8_t filter       = 0;
-         unsigned min_sad     = none_score;
-         const uint8_t *chosen_filtered = rgba_line;
-
-         if (sub_score < min_sad)
-         {
-            filter = 1;
-            chosen_filtered = sub_filtered;
-            min_sad = sub_score;
-         }
-
-         if (up_score < min_sad)
-         {
-            filter = 2;
-            chosen_filtered = up_filtered;
-            min_sad = up_score;
-         }
-
-         if (avg_score < min_sad)
-         {
-            filter = 3;
-            chosen_filtered = avg_filtered;
-            min_sad = avg_score;
-         }
-
-         if (paeth_score < min_sad)
-         {
-            filter = 4;
-            chosen_filtered = paeth_filtered;
-         }
-
-         *encode_target++ = filter;
-         memcpy(encode_target, chosen_filtered, width * bpp);
-
-         memcpy(prev_encoded, rgba_line, width * bpp);
-      }
-   }
-
-   deflate_buf = (uint8_t*)malloc(encode_buf_size * 2); /* Just to be sure. */
-   if (!deflate_buf)
-      GOTO_END_ERROR();
-
-   stream = stream_backend->stream_new();
-
-   if (!stream)
-      GOTO_END_ERROR();
-
-   stream_backend->set_in(
-         stream,
-         encode_buf,
-         (unsigned)encode_buf_size);
-   stream_backend->set_out(
-         stream,
-         deflate_buf + 8,
-         (unsigned)(encode_buf_size * 2));
-
-   if (!stream_backend->trans(stream, true, &total_in, &total_out, NULL))
-      GOTO_END_ERROR();
-
-   memcpy(deflate_buf + 4, "IDAT", 4);
-   dword_write_be(deflate_buf + 0,        ((uint32_t)total_out));
-   if (!png_write_idat_string(intf_s, deflate_buf, ((size_t)total_out + 8)))
-      GOTO_END_ERROR();
-
-   if (!png_write_iend_string(intf_s))
-      GOTO_END_ERROR();
 end:
-   free(encode_buf);
-   free(deflate_buf);
-   free(rgba_line);
-   free(prev_encoded);
-   free(up_filtered);
-   free(sub_filtered);
-   free(avg_filtered);
-   free(paeth_filtered);
-
-   if (stream_backend)
+   if (!ret)
    {
-      if (stream)
-      {
-         if (stream_backend->stream_free)
-            stream_backend->stream_free(stream);
-      }
+      rpng_encode_free(e);
+      return NULL;
    }
+   return e;
+}
+
+/* One row: convert, filter, feed deflate, flushing full chunks. */
+static bool rpng_encode_row(rpng_encoder_t *e)
+{
+   uint32_t rd, wn;
+   uint8_t filter;
+   unsigned none_score, up_score, sub_score, avg_score, paeth_score;
+   unsigned min_sad;
+   uint8_t *chosen_filtered;
+   bool ret                    = true;
+   enum trans_stream_error err = TRANS_STREAM_ERROR_NONE;
+   unsigned width              = e->width;
+   unsigned bpp                = e->bpp;
+   size_t line_len             = e->line_len;
+   const uint8_t *data         = e->data;
+
+   switch (e->fmt)
+   {
+      case RPNG_PIXFMT_ARGB32:
+         copy_argb_line(e->rgba_line, (const uint32_t*)data, width);
+         break;
+      case RPNG_PIXFMT_RGBA32:
+         copy_rgba_line(e->rgba_line, data, width);
+         break;
+      case RPNG_PIXFMT_RGB48:
+         copy_rgb48_line(e->rgba_line, (const uint16_t*)data, width);
+         break;
+      case RPNG_PIXFMT_XRGB8888:
+         copy_xrgb8888_line(e->rgba_line, (const uint32_t*)(const void*)data, width);
+         break;
+      case RPNG_PIXFMT_XBGR8888:
+         copy_xbgr8888_line(e->rgba_line, (const uint32_t*)(const void*)data, width);
+         break;
+      case RPNG_PIXFMT_RGB565:
+         copy_rgb565_line(e->rgba_line, (const uint16_t*)(const void*)data, width);
+         break;
+      case RPNG_PIXFMT_BGR24:
+      default:
+         copy_bgr24_line(e->rgba_line, data, width);
+         break;
+   }
+
+   /* Filter selection unchanged from the previous implementation:
+    * try every filter, pick the one with lowest sum-of-abs-deviation. */
+   none_score  = count_sad(e->rgba_line, line_len);
+   up_score    = filter_up   (e->up_filtered,    e->rgba_line, e->prev_encoded, width, bpp);
+   sub_score   = filter_sub  (e->sub_filtered,   e->rgba_line,                  width, bpp);
+   avg_score   = filter_avg  (e->avg_filtered,   e->rgba_line, e->prev_encoded, width, bpp);
+   paeth_score = filter_paeth(e->paeth_filtered, e->rgba_line, e->prev_encoded, width, bpp);
+
+   filter          = 0;
+   min_sad         = none_score;
+   chosen_filtered = e->rgba_line;
+   if (sub_score < min_sad)   { filter = 1; chosen_filtered = e->sub_filtered;   min_sad = sub_score;   }
+   if (up_score < min_sad)    { filter = 2; chosen_filtered = e->up_filtered;    min_sad = up_score;    }
+   if (avg_score < min_sad)   { filter = 3; chosen_filtered = e->avg_filtered;   min_sad = avg_score;   }
+   if (paeth_score < min_sad) { filter = 4; chosen_filtered = e->paeth_filtered;                        }
+
+   /* Tag goes in the spare byte ahead of the winning buffer, so the
+    * row is fed to deflate in place. */
+   chosen_filtered[-1] = filter;
+
+   /* Feed this row into deflate. The loop handles the case where
+    * our chunk buffer fills mid-row (BUFFER_FULL): flush IDAT,
+    * point deflate at a fresh output buffer, and keep going.
+    *
+    * When trans() returns success with err=AGAIN, zlib has
+    * consumed what we gave it but hasn't finalized (no Z_FINISH
+    * was requested) -- that's the normal "ok, send more data
+    * next time" signal.  We break out and feed the next row. */
+   e->backend->set_in(e->stream, chosen_filtered - 1,
+         (uint32_t)(line_len + 1));
+   for (;;)
+   {
+      bool ok = e->backend->trans(e->stream, false, &rd, &wn, &err);
+      e->chunk_fill += wn;
+
+      if (ok)
+      {
+         /* All input consumed.  If the output buffer also happens
+          * to be exactly full (avail_in=0 AND avail_out=0 on the
+          * same call, which the trans API reports as success
+          * with AGAIN rather than BUFFER_FULL), flush proactively
+          * -- otherwise the next row's trans() would find
+          * avail_out=0 and error out. */
+         if (e->chunk_fill >= IDAT_CHUNK_SIZE)
+         {
+            if (!flush_idat_chunk(e->intf_s, e->chunk_buf, e->chunk_fill))
+               GOTO_END_ERROR();
+            e->chunk_fill = 0;
+            e->backend->set_out(e->stream,
+                  e->chunk_buf + 8, (uint32_t)IDAT_CHUNK_SIZE);
+         }
+         break;
+      }
+
+      if (err != TRANS_STREAM_ERROR_BUFFER_FULL)
+         GOTO_END_ERROR();
+
+      /* Output filled mid-row.  chunk_fill should equal
+       * IDAT_CHUNK_SIZE.  Flush and re-point. */
+      if (!flush_idat_chunk(e->intf_s, e->chunk_buf, e->chunk_fill))
+         GOTO_END_ERROR();
+      e->chunk_fill = 0;
+      e->backend->set_out(e->stream,
+            e->chunk_buf + 8, (uint32_t)IDAT_CHUNK_SIZE);
+   }
+
+   /* This row becomes the next row's predictor.  Swapping the two
+    * buffers replaces a second full-row copy; both were allocated
+    * the same way, so either can serve as either. */
+   {
+      uint8_t *tmp    = e->prev_encoded;
+      e->prev_encoded = e->rgba_line;
+      e->rgba_line    = tmp;
+   }
+   e->data += e->pitch;
+   e->row++;
+
+end:
    return ret;
 }
 
-bool rpng_save_image_argb(const char *path, const uint32_t *data,
-      unsigned width, unsigned height, unsigned pitch)
+/* All rows consumed.  Drain deflate with Z_FINISH, emitting IDATs
+ * on BUFFER_FULL, final partial on NONE (Z_STREAM_END); then IEND. */
+static bool rpng_encode_finish(rpng_encoder_t *e)
 {
-   bool ret                      = false;
-   intfstream_t* intf_s          = NULL;
+   bool ret                    = true;
+   enum trans_stream_error err = TRANS_STREAM_ERROR_NONE;
 
-   intf_s = intfstream_open_file(path,
-         RETRO_VFS_FILE_ACCESS_WRITE,
-         RETRO_VFS_FILE_ACCESS_HINT_NONE);
+   e->backend->set_in(e->stream, NULL, 0);
+   for (;;)
+   {
+      uint32_t rd = 0, wn = 0;
+      bool ok = e->backend->trans(e->stream, true, &rd, &wn, &err);
+      e->chunk_fill += wn;
 
-   ret = rpng_save_image_stream((const uint8_t*) data, intf_s,
-                                width, height,
-                                (signed) pitch, sizeof(uint32_t));
-   intfstream_close(intf_s);
-   free(intf_s);
+      if (!ok)
+      {
+         /* BUFFER_FULL during flush-drain with avail_in=0 shouldn't
+          * strictly be reachable, but handle defensively. */
+         if (err != TRANS_STREAM_ERROR_BUFFER_FULL)
+            GOTO_END_ERROR();
+         if (!flush_idat_chunk(e->intf_s, e->chunk_buf, e->chunk_fill))
+            GOTO_END_ERROR();
+         e->chunk_fill = 0;
+         e->backend->set_out(e->stream,
+               e->chunk_buf + 8, (uint32_t)IDAT_CHUNK_SIZE);
+         continue;
+      }
+      if (err == TRANS_STREAM_ERROR_AGAIN)
+      {
+         /* Z_OK during Z_FINISH with avail_in=0 means deflate has
+          * more output to emit but our buffer ran out of space.
+          * Flush the full chunk and give it more room. */
+         if (!flush_idat_chunk(e->intf_s, e->chunk_buf, e->chunk_fill))
+            GOTO_END_ERROR();
+         e->chunk_fill = 0;
+         e->backend->set_out(e->stream,
+               e->chunk_buf + 8, (uint32_t)IDAT_CHUNK_SIZE);
+         continue;
+      }
+      /* err == NONE: Z_STREAM_END.  Flush whatever's in the buffer
+       * and we're done.  flush_idat_chunk tolerates chunk_fill==0. */
+      if (!flush_idat_chunk(e->intf_s, e->chunk_buf, e->chunk_fill))
+         GOTO_END_ERROR();
+      break;
+   }
+
+   if (!png_write_iend_string(e->intf_s))
+      GOTO_END_ERROR();
+
+end:
    return ret;
 }
 
-bool rpng_save_image_bgr24(const char *path, const uint8_t *data,
-      unsigned width, unsigned height, unsigned pitch)
+int rpng_encode_step(rpng_encoder_t *e,
+      bool (*within)(void *userdata), void *userdata)
 {
-   bool ret                      = false;
-   intfstream_t* intf_s          = NULL;
-
-   intf_s = intfstream_open_file(path,
-         RETRO_VFS_FILE_ACCESS_WRITE,
-         RETRO_VFS_FILE_ACCESS_HINT_NONE);
-   ret = rpng_save_image_stream(data, intf_s, width, height,
-                                (signed) pitch, 3);
-   intfstream_close(intf_s);
-   free(intf_s);
-   return ret;
+   unsigned done = 0;
+   if (!e)
+      return -1;
+   /* Asked before every row; the first row of a step runs whatever the
+    * answer, so a step always gets somewhere. */
+   while (e->row < e->height)
+   {
+      if (within && !within(userdata) && done)
+         return 0;
+      if (!rpng_encode_row(e))
+         return -1;
+      done++;
+   }
+   return rpng_encode_finish(e) ? 1 : -1;
 }
 
-
-uint8_t* rpng_save_image_bgr24_string(const uint8_t *data,
-      unsigned width, unsigned height, signed pitch, uint64_t* bytes)
+bool rpng_save_image_stream_fmt(const uint8_t *data,
+      intfstream_t* intf_s, unsigned width, unsigned height, signed pitch,
+      enum rpng_pixfmt fmt, const struct rpng_hdr_metadata *hdr)
 {
-   bool ret                    = false;
-   uint8_t* buf                = NULL;
-   uint8_t* output             = NULL;
-   int buf_length              = 0;
-   intfstream_t* intf_s        = NULL;
+   int r;
+   rpng_encoder_t *e = rpng_encode_begin(data, intf_s,
+         width, height, pitch, fmt, hdr);
+   if (!e)
+      return false;
+   r = rpng_encode_step(e, NULL, NULL);
+   rpng_encode_free(e);
+   return r == 1;
+}
 
-   buf_length = (int)(width*height*3*DEFLATE_PADDING)+PNG_ROUGH_HEADER;
-   buf        = (uint8_t*)malloc(buf_length*sizeof(uint8_t));
+/* Bytes-per-pixel entry point kept for callers outside this file, which
+ * predate the format enum.  bpp is unambiguous for every format it could
+ * already express; RGBA32 is reachable only through the fmt worker or
+ * rpng_save_image_rgba(). */
+bool rpng_save_image_stream(const uint8_t *data, intfstream_t* intf_s,
+      unsigned width, unsigned height, signed pitch, unsigned bpp,
+      const struct rpng_hdr_metadata *hdr)
+{
+   enum rpng_pixfmt fmt;
+
+   switch (bpp)
+   {
+      case 4:
+         fmt = RPNG_PIXFMT_ARGB32;
+         break;
+      case 6:
+         fmt = RPNG_PIXFMT_RGB48;
+         break;
+      case 3:
+         fmt = RPNG_PIXFMT_BGR24;
+         break;
+      default:
+         return false;
+   }
+
+   return rpng_save_image_stream_fmt(data, intf_s, width, height,
+         pitch, fmt, hdr);
+}
+
+/* The path-based convenience wrappers (rpng_save_image_argb / bgr24 /
+ * rgba / rgb48_hdr) live in file/rpng_file.c: this TU is a pure encoder and
+ * never opens a path.  Memory-backed intfstreams (used by the *_string
+ * entry points below) are the only streams it creates itself. */
+
+
+uint8_t* rpng_save_image_bgr24_hdr_string(const uint8_t *data,
+      unsigned width, unsigned height, signed pitch,
+      const struct rpng_hdr_metadata *hdr, uint64_t* bytes)
+{
+   bool ret             = false;
+   intfstream_t *intf_s = NULL;
+   /* cICP(16) + cLLI(20) + mDCV(36) = 72 bytes of extra chunks at most. */
+   size_t hdr_extra     = hdr ? 72 : 0;
+   size_t _len          = (size_t)(width * height * 3 * DEFLATE_PADDING) + PNG_ROUGH_HEADER + hdr_extra;
+   uint8_t *buf         = (uint8_t*)malloc(_len * sizeof(uint8_t));
    if (!buf)
       GOTO_END_ERROR();
 
-   intf_s = intfstream_open_writable_memory(buf,
+   intf_s = intfstream_open_memory(buf,
          RETRO_VFS_FILE_ACCESS_WRITE,
          RETRO_VFS_FILE_ACCESS_HINT_NONE,
-         buf_length);
+         _len);
 
-   ret = rpng_save_image_stream((const uint8_t*)data,
-            intf_s, width, height, pitch, 3);
-
+   ret    = rpng_save_image_stream_fmt((const uint8_t*)data,
+            intf_s, width, height, pitch, RPNG_PIXFMT_BGR24, hdr);
    *bytes = intfstream_get_ptr(intf_s);
-   intfstream_rewind(intf_s);
-   output = (uint8_t*)malloc((size_t)((*bytes)*sizeof(uint8_t)));
-   if (!output)
-      GOTO_END_ERROR();
-   intfstream_read(intf_s, output, *bytes);
+
+   /* Trim the buffer to the actual written size instead of
+    * allocating a second buffer and copying. */
+   if (ret && *bytes > 0)
+   {
+      uint8_t *trimmed = (uint8_t*)realloc(buf, (size_t)*bytes);
+      if (trimmed)
+         buf = trimmed;
+      /* If realloc fails, the original (oversized) buf is still valid */
+   }
 
 end:
-   if (buf)
-      free(buf);
    if (intf_s)
    {
       intfstream_close(intf_s);
       free(intf_s);
    }
-   if (ret == false)
+   if (!ret)
    {
-      if (output)
-         free(output);
+      if (buf)
+         free(buf);
       return NULL;
    }
-   return output;
+   return buf;
+}
+
+uint8_t* rpng_save_image_bgr24_string(const uint8_t *data,
+      unsigned width, unsigned height, signed pitch, uint64_t* bytes)
+{
+   return rpng_save_image_bgr24_hdr_string(data, width, height, pitch,
+         NULL, bytes);
+}
+
+uint8_t* rpng_save_image_rgb48_hdr_string(const uint16_t *data,
+      unsigned width, unsigned height, signed pitch,
+      const struct rpng_hdr_metadata *hdr, uint64_t* bytes)
+{
+   bool ret             = false;
+   intfstream_t *intf_s = NULL;
+   /* cICP(16) + cLLI(20) + mDCV(36) = 72 bytes of extra chunks at most. */
+   size_t hdr_extra     = hdr ? 72 : 0;
+   /* 6 bytes/pixel for 16-bit RGB. */
+   size_t _len          = (size_t)(width * height * 6 * DEFLATE_PADDING) + PNG_ROUGH_HEADER + hdr_extra;
+   uint8_t *buf         = (uint8_t*)malloc(_len * sizeof(uint8_t));
+   if (!buf)
+      GOTO_END_ERROR();
+
+   intf_s = intfstream_open_memory(buf,
+         RETRO_VFS_FILE_ACCESS_WRITE,
+         RETRO_VFS_FILE_ACCESS_HINT_NONE,
+         _len);
+
+   ret    = rpng_save_image_stream_fmt((const uint8_t*)data,
+            intf_s, width, height, pitch, RPNG_PIXFMT_RGB48, hdr);
+   *bytes = intfstream_get_ptr(intf_s);
+
+   if (ret && *bytes > 0)
+   {
+      uint8_t *trimmed = (uint8_t*)realloc(buf, (size_t)*bytes);
+      if (trimmed)
+         buf = trimmed;
+   }
+
+end:
+   if (intf_s)
+   {
+      intfstream_close(intf_s);
+      free(intf_s);
+   }
+   if (!ret)
+   {
+      if (buf)
+         free(buf);
+      return NULL;
+   }
+   return buf;
 }
 

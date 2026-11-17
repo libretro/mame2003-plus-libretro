@@ -40,6 +40,8 @@ special technique is called for.
 
 #define RETRO_BEGIN_DECLS
 #define RETRO_END_DECLS
+#define RETRO_BEGIN_DECLS_CXX
+#define RETRO_END_DECLS_CXX
 
 #ifdef __cplusplus
 
@@ -50,6 +52,13 @@ special technique is called for.
 #undef RETRO_END_DECLS
 #define RETRO_BEGIN_DECLS extern "C" {
 #define RETRO_END_DECLS }
+/* Force C++ linkage for a region inside a header that may be included
+ * from within a caller's extern "C" { ... } block -- needed when the
+ * region pulls in a C++ standard library header (e.g. <atomic>). */
+#undef RETRO_BEGIN_DECLS_CXX
+#undef RETRO_END_DECLS_CXX
+#define RETRO_BEGIN_DECLS_CXX extern "C++" {
+#define RETRO_END_DECLS_CXX }
 #endif
 
 #else
@@ -71,7 +80,11 @@ typedef __int64 ssize_t;
 typedef int ssize_t;
 #endif
 #endif
-#elif defined(__MACH__)
+#elif defined(__unix__) || (defined(__MACH__) && defined(__APPLE__)) \
+      || defined(__HAIKU__)
+/* POSIX home of ssize_t; <stdio.h> carries it only for a profile asking
+ * for the BSD or POSIX.1-2008 set. Console toolchains keep the arms
+ * above, as they do not define __unix__. */
 #include <sys/types.h>
 #endif
 
@@ -82,6 +95,7 @@ typedef int ssize_t;
 #ifndef PRId64
 #define PRId64 "I64d"
 #define PRIu64 "I64u"
+#define PRIx64 "I64x"
 #define PRIuPTR "Iu"
 #endif
 #endif

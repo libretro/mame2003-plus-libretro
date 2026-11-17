@@ -23,27 +23,157 @@
 #ifndef _LIBRETRO_SDK_NET_SOCKET_SSL_H
 #define _LIBRETRO_SDK_NET_SOCKET_SSL_H
 
+#include <stdint.h>
 #include <stdlib.h>
 #include <boolean.h>
 #include <retro_common_api.h>
+/* ssize_t, as net_socket.h gets it. */
+#include <net/net_compat.h>
 
 RETRO_BEGIN_DECLS
+
+/* How long a TLS read, in the handshake or in a record, waits for the
+ * server's next bytes before it fails: a server that goes silent must
+ * not hold the caller's thread for good. */
+#ifndef SSL_SOCKET_IO_TIMEOUT_MS
+#define SSL_SOCKET_IO_TIMEOUT_MS 30000
+#endif
 
 void* ssl_socket_init(int fd, const char *domain);
 
 int ssl_socket_connect(void *state_data, void *data, bool timeout_enable, bool nonblock);
 
+/* TLS only, on an already-connected descriptor. Enables nonblocking I/O.
+ * 1: complete, -1: failed, 0: progress; read/write name the next readiness
+ * interests. Neither means internal work remains: schedule another step.
+ * The caller owns scheduling, deadlines and cancellation (close then free).
+ * Do not mix this with ssl_socket_connect() on the same state. */
+int ssl_socket_handshake_step(void *state_data, bool *read, bool *write);
+
+/* The TLS library's own code for the most recent failure in
+ * ssl_socket_init()/ssl_socket_connect(), as the library reports it
+ * (mbedtls: negative, so -0x7780 style; BearSSL: its BR_ERR_* value),
+ * or 0 when the last failure was in the socket layer or there was
+ * none.  For logging: it is what turns "connect failed" into a
+ * message the library's error table can decode. */
+int ssl_socket_last_error(void *state_data);
+
 int ssl_socket_send_all_blocking(void *state_data, const void *data_, size_t len, bool no_signal);
 
+/* Takes as much of @data_ as the connection can accept without
+ * blocking and returns how much that was: 0 when the socket is full,
+ * -1 on error.  Bytes taken may still sit inside the TLS layer; once
+ * the last of them is taken, call ssl_socket_flush_nonblocking() until
+ * it reports 1.  After a 0, the next call must pass the same buffer,
+ * at least as long (mbedtls has to finish the record it began). */
 ssize_t ssl_socket_send_all_nonblocking(void *state_data, const void *data_, size_t len, bool no_signal);
+
+/* Moves bytes already taken by ssl_socket_send_all_nonblocking() on to
+ * the socket without blocking.  1: nothing left pending, 0: the socket
+ * is full (wait for it to be writable and call again), -1: error. */
+int ssl_socket_flush_nonblocking(void *state_data);
 
 int ssl_socket_receive_all_blocking(void *state_data, void *data_, size_t len);
 
+/* Positive plaintext bytes, zero yields, negative sets error. Native partial
+ * records/control work use ssl_socket_retro_pending for readiness. */
 ssize_t ssl_socket_receive_all_nonblocking(void *state_data, bool *error, void *data_, size_t len);
 
+/* Closes immediately; flush pending application bytes before closing when
+ * delivery matters. The close notification is best effort and never waits. */
 void ssl_socket_close(void *state_data);
 
 void ssl_socket_free(void *state_data);
+
+/* Certificate-verification policy hook. `mode` is a tls_verify_mode value
+ * (0 = required, 1 = optional, 2 = disabled, see network/tls_config.h).
+ * Called once at startup and whenever the setting changes; the active
+ * backend snapshots the value at the next ssl_socket_connect. */
+void ssl_socket_set_verify_mode(unsigned mode);
+
+/* Weak logging hooks. The active SSL backend ships no-op defaults so
+ * libretro-common still builds/links standalone; RetroArch overrides them
+ * in network/tls_log.c to route into RARCH_ERR/RARCH_WARN without dragging
+ * verbosity.h into vendored code. `mode_required` != 0 means a hard
+ * (REQUIRED) failure; == 0 means a soft (OPTIONAL) failure. */
+void ssl_socket_log_verify_fail(int mode_required, const char *domain,
+      const char *verify_info);
+void ssl_socket_log_verify_disabled(const char *domain);
+
+/* net_socket_ssl_retro.c only: replace the built-in CA bundle with
+ * @pem (concatenated PEM certificates) for the process, NULL to
+ * restore. For tests against a local server. */
+void ssl_socket_retro_set_trust_pem(const char *pem, size_t len);
+/* net_socket_ssl_retro.c only: whether the last handshake on
+ * @state_data resumed a cached session rather than running in full. */
+int ssl_socket_retro_was_resumed(void *state_data);
+/* net_socket_ssl_retro.c only: 0x0304 for a TLS 1.3 connection,
+ * 0x0303 for 1.2, 0 before the handshake. */
+unsigned ssl_socket_retro_version(void *state_data);
+/* net_socket_ssl_retro.c only: the negotiated cipher suite's IANA
+ * number (0x1303 is TLS_CHACHA20_POLY1305_SHA256), 0 before the
+ * handshake. */
+unsigned ssl_socket_retro_suite(void *state_data);
+
+/* After handshake, native backend: buffered plaintext/control work is ready.
+ * Otherwise include *write in the socket wait interests, alongside reading. */
+bool ssl_socket_retro_pending(void *state_data, bool *write);
+
+struct rsa_private_key;
+
+/* net_socket_ssl_retro.c only: one connection's own settings, for
+ * clients that pin their own CAs or present a certificate. Every
+ * pointer is borrowed until ssl_socket_connect() returns, or until the
+ * incremental handshake completes or the connection is freed. */
+struct ssl_socket_retro_config
+{
+   /* Trust anchors, DER, in place of the built-in bundle; NULL for
+    * the bundle. */
+   const uint8_t *const *trust;
+   const size_t   *trust_lens;
+   /* Client certificate chain, DER, leaf first, and the leaf's RSA
+    * key: sent when the server asks for one. A connection presenting
+    * a certificate runs TLS 1.2. */
+   const uint8_t *const *chain;
+   const size_t   *chain_lens;
+   const struct rsa_private_key *key;
+   /* TLS 1.2 and 1.3 suites to offer, by IANA number, most preferred
+    * first; NULL for the default ECDHE AEAD set. This may name the RSA
+    * key exchange and CBC suites, which the default never offers. */
+   const unsigned *suites;
+   unsigned trust_count;
+   unsigned chain_count;
+   unsigned suite_count;
+   unsigned flags;           /* SSL_RETRO_* */
+};
+
+/* Accept any server certificate. */
+#define SSL_RETRO_NO_VERIFY   (1 << 0)
+/* Check the chain but not that it names the host. */
+#define SSL_RETRO_NO_HOSTNAME (1 << 1)
+/* Full duplex: once the handshake is done, one thread may receive
+ * (ssl_socket_receive_all_nonblocking, ssl_socket_retro_pending) while
+ * another sends (ssl_socket_send_all_nonblocking,
+ * ssl_socket_flush_nonblocking) on this connection, with no lock. The
+ * receiving side then sends nothing itself: a KeyUpdate the server asks
+ * for is sent by the next send or flush, before its data. Nonblocking
+ * calls only after the handshake; close and free once neither thread
+ * uses the connection. */
+#define SSL_RETRO_DUPLEX      (1 << 2)
+/* Send no server_name: for a client that emulates one without SNI. The
+ * certificate is still checked against the host. */
+#define SSL_RETRO_NO_SNI      (1 << 3)
+
+/**
+ * ssl_socket_retro_configure:
+ * Applies @cfg to a connection between ssl_socket_init() and
+ * ssl_socket_connect(). Such a connection neither resumes a cached
+ * session nor leaves one in the cache.
+ *
+ * Returns: 0 on success, -1 when @cfg names no suite this client has.
+ **/
+int ssl_socket_retro_configure(void *state_data,
+      const struct ssl_socket_retro_config *cfg);
 
 RETRO_END_DECLS
 

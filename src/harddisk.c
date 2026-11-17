@@ -34,7 +34,7 @@
 #include "harddisk.h"
 #include "hash.h"
 #include "lib/libchdr/include/libchdr/chd.h"
-#include <compat/zlib.h>
+#include <zlib.h>
 
 
 

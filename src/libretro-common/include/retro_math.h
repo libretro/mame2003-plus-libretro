@@ -28,6 +28,12 @@
 
 #if defined(_WIN32) && !defined(_XBOX)
 #define WIN32_LEAN_AND_MEAN
+#ifndef NOMINMAX
+#define NOMINMAX   /* MSVC defines min/max as macros in C++ too */
+#endif
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
 #include <windows.h>
 #elif defined(_WIN32) && defined(_XBOX)
 #include <Xtl.h>
@@ -198,7 +204,10 @@ static INLINE void convert_yxy_to_rgb(const float* Yxy, float* rgb)
  */
 static INLINE size_t random_range(unsigned min, unsigned max)
 {
-   return (min == max) ? min : (size_t)((float)rand() / (float)RAND_MAX * (max + 1 - min) + min);
+   /* rand() / (RAND_MAX + 1) stays below 1, so the result never
+    * passes max; double keeps that exact for any RAND_MAX */
+   return (min == max) ? min : min + (size_t)((double)rand()
+         / ((double)RAND_MAX + 1.0) * ((double)max - (double)min + 1.0));
 }
 
 #endif

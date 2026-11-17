@@ -304,6 +304,33 @@ extern "C" {
  */
 #define RETRO_DEVICE_POINTER      6
 
+/**
+ * A controller's touchpad, such as the DualShock 4's or the DualSense's.
+ *
+ * It is not the screen: \c RETRO_DEVICE_POINTER is, and a core can read
+ * both at once - a handheld's front touchscreen through the pointer and
+ * its rear touchpad through this, for example.
+ *
+ * Read per port, with the pointer's IDs:
+ * \c RETRO_DEVICE_ID_POINTER_X and \c RETRO_DEVICE_ID_POINTER_Y give a
+ * finger's place, -0x7fff to 0x7fff across the touchpad's surface;
+ * \c RETRO_DEVICE_ID_POINTER_PRESSED whether that finger is on it; and
+ * \c RETRO_DEVICE_ID_POINTER_COUNT how many fingers are.
+ *
+ * The index is the touchpad times 16 plus the finger: 0 is the first
+ * finger on the port's first touchpad, 1 the second, and 16 the first
+ * finger on a second touchpad. As with the pointer, fingers are counted
+ * among those on the surface: index 0 is the first one down.
+ *
+ * A port whose controller has no touchpad answers 0 to every query.
+ * The frontend sets <tt>(1 << RETRO_DEVICE_TOUCHPAD)</tt> in
+ * \c RETRO_ENVIRONMENT_GET_INPUT_DEVICE_CAPABILITIES where it can read
+ * controllers' touchpads at all.
+ *
+ * @see RETRO_DEVICE_POINTER
+ */
+#define RETRO_DEVICE_TOUCHPAD     7
+
 /** @} */
 
 /** @defgroup RETRO_DEVICE_ID_JOYPAD RetroPad Input
@@ -484,6 +511,8 @@ enum retro_language
    RETRO_LANGUAGE_BELARUSIAN          = 32,
    RETRO_LANGUAGE_GALICIAN            = 33,
    RETRO_LANGUAGE_NORWEGIAN           = 34,
+   RETRO_LANGUAGE_IRISH               = 35,
+   RETRO_LANGUAGE_THAI                = 36,
    RETRO_LANGUAGE_LAST,
 
    /** Defined to ensure that <tt>sizeof(retro_language) == sizeof(int)</tt>. Do not use. */
@@ -517,6 +546,9 @@ enum retro_language
 
 /* Video ram lets a frontend peek into a game systems video RAM (VRAM). */
 #define RETRO_MEMORY_VIDEO_RAM   3
+
+/* ROM lets a frontend peek into a game systems ROM. */
+#define RETRO_MEMORY_ROM   4
 
 /** @} */
 
@@ -717,9 +749,10 @@ enum retro_mod
  */
 
 /**
- * This bit indicates that the associated environment call is experimental,
- * and may be changed or removed in the future.
- * Frontends should mask out this bit before handling the environment call.
+ * This bit used to indicate that the associated environment call is experimental,
+ * and may be changed or removed in the future, but this has since changed.
+ * Frontends should NOT mask out this bit before handling the environment call,
+ * as some callbacks need it to distinguish themselves from others.
  */
 #define RETRO_ENVIRONMENT_EXPERIMENTAL 0x10000
 
@@ -1726,6 +1759,24 @@ enum retro_mod
 #define RETRO_ENVIRONMENT_GET_VFS_INTERFACE (45 | RETRO_ENVIRONMENT_EXPERIMENTAL)
 
 /**
+ * Returns a list of frontend-authorized filesystem locations.
+ *
+ * Paths returned by this call must be directly usable with the VFS interface,
+ * for example saf://... on Android.
+ *
+ * @param[out] data <tt>struct retro_vfs_authorized_locations *</tt>.
+ * The frontend owns the returned pointers. The core must copy strings
+ * if it needs to retain them.
+ * If \c data is \c NULL, the frontend should only return whether this
+ * environment callback is available.
+ *
+ * @return \c true if this environment call is available,
+ * \c false otherwise.
+ * @see RETRO_ENVIRONMENT_GET_VFS_INTERFACE
+ */
+#define RETRO_ENVIRONMENT_GET_VFS_AUTHORIZED_LOCATIONS (93 | RETRO_ENVIRONMENT_EXPERIMENTAL)
+
+/**
  * Returns an interface that the core can use
  * to set the state of any accessible device LEDs.
  *
@@ -2574,6 +2625,1095 @@ enum retro_mod
  */
 #define RETRO_ENVIRONMENT_GET_FILE_BROWSER_START_DIRECTORY 80
 
+/**
+ * Returns the audio sample rate the frontend is targeting, in Hz.
+ * The intended use case is for the core to use the result to select an ideal sample rate.
+ *
+ * @param[out] data <tt>unsigned *</tt>.
+ * Pointer to the \c unsigned integer in which the frontend will store its target sample rate.
+ * Behavior is undefined if \c data is <tt>NULL</tt>.
+ * @return \c true if this environment call is available,
+ * regardless of the value returned in \c data.
+*/
+#define RETRO_ENVIRONMENT_GET_TARGET_SAMPLE_RATE (81 | RETRO_ENVIRONMENT_EXPERIMENTAL)
+
+/**
+ * Returns the local player's netplay client index when using frontend-managed
+ * multiplayer/rollback netplay.
+ *
+ * @param[out] data <tt>unsigned *</tt>.
+ * Pointer to an unsigned integer where the frontend stores the local client index.
+ * 0 indicates host. Values > 0 indicate connected clients.
+ * @return \\c true if the environment call is available and value was written,
+ * \\c false otherwise.
+*/
+#define RETRO_ENVIRONMENT_GET_NETPLAY_CLIENT_INDEX (82 | RETRO_ENVIRONMENT_EXPERIMENTAL)
+
+/**
+ * Allocates a region of executable memory, optionally dual-mapped.
+ *
+ * The frontend allocates memory suitable for JIT code generation and returns
+ * it to the core.  The returned mode tells the core how to use the memory:
+ *
+ *  - \c RETRO_EXEC_MEM_MODE_UNRESTRICTED: The platform has no restrictions
+ *    on executable memory.  The core should self-allocate.  Do not call
+ *    this environment with a non-zero size in this mode.
+ *  - \c RETRO_EXEC_MEM_MODE_RWX: Single mapping, read-write-execute.
+ *    \c rx and \c rw point to the same region.
+ *  - \c RETRO_EXEC_MEM_MODE_WX_TOGGLE: Single mapping, write XOR execute.
+ *    \c rx and \c rw point to the same region; the core must toggle
+ *    protections itself (e.g. mprotect) before writing or executing.
+ *  - \c RETRO_EXEC_MEM_MODE_DUAL_MAP: Separate read-execute and read-write
+ *    mappings of the same physical pages.  The core writes through \c rw
+ *    and executes from \c rx.
+ *
+ * Returned memory is page-aligned.  The frontend tracks all allocations
+ * and frees any outstanding ones when the core is unloaded.
+ *
+ * The core sets \c version and \c size before calling.  The frontend fills
+ * in \c mode, \c rx, and \c rw on success.
+ *
+ * If \c size is 0, this is a probe: the frontend returns \c true and sets
+ * \c mode to indicate what kind of memory it would provide, but does not
+ * allocate.  \c rx and \c rw will be NULL.  Cores can use this to decide
+ * whether to take a JIT code path before committing to an allocation.
+ *
+ * @param[in,out] data <tt>struct retro_exec_mem_alloc *</tt>.
+ * @return \c true if the allocation succeeded, \c false otherwise.
+ *         If the frontend does not support this call, returns \c false
+ *         and the core should fall back to managing its own executable memory.
+ * @see retro_exec_mem_alloc
+ * @see RETRO_ENVIRONMENT_EXEC_MEM_FREE
+ */
+#define RETRO_ENVIRONMENT_EXEC_MEM_ALLOC 83
+
+/**
+ * Frees a region of executable memory previously allocated with
+ * \c RETRO_ENVIRONMENT_EXEC_MEM_ALLOC.
+ *
+ * This is optional; the frontend will free all outstanding allocations
+ * when the core is unloaded.  Cores that never need to release memory
+ * mid-session need not call this.
+ *
+ * @param[in] data <tt>struct retro_exec_mem_free *</tt>.
+ * @return \c true if the memory was freed, \c false otherwise.
+ * @see retro_exec_mem_free
+ * @see RETRO_ENVIRONMENT_EXEC_MEM_ALLOC
+ */
+#define RETRO_ENVIRONMENT_EXEC_MEM_FREE  84
+
+/**
+ * Queries whether the frontend can accept audio samples in 32-bit
+ * native-endian IEEE-754 float format, and, if so, obtains a float
+ * sample-batch callback the core may use in place of the standard
+ * int16 \c retro_audio_sample_batch_t callback.
+ *
+ * Rationale: frontend resamplers and DSP chains operate on float, and
+ * most modern audio drivers expose a native float output path. A core
+ * whose audio is float-native (e.g. one with a float software mixer or
+ * a float decoder) currently has to squash its output down to int16 at
+ * the libretro boundary, only for the frontend to immediately widen it
+ * back to float. Negotiating float output here removes that redundant
+ * int16<->float round-trip on both sides of the boundary.
+ *
+ * On success the frontend sets \c batch in the supplied
+ * \c retro_audio_sample_float_callback. The core may call that function
+ * from within \c retro_run() (or from the audio callback registered via
+ * \c RETRO_ENVIRONMENT_SET_AUDIO_CALLBACK), passing interleaved stereo
+ * frames of float samples normalized to the range [-1.0, 1.0]. The
+ * return value has the same meaning as \c retro_audio_sample_batch_t.
+ *
+ * Contract:
+ *  - The core must commit to a single output format for the lifetime of
+ *    a loaded game; it must not mix int16 and float batch calls. Perform
+ *    negotiation once, during \c retro_load_game() (after any
+ *    \c RETRO_ENVIRONMENT_SET_AUDIO_CALLBACK call).
+ *  - If this returns \c false the core must keep using the int16
+ *    \c retro_audio_sample_batch_t / \c retro_audio_sample_t callbacks.
+ *  - The \c batch function pointer is owned by the frontend and remains
+ *    valid until \c retro_unload_game().
+ *  - Frontends that do not recognize this call return \c false, so older
+ *    frontends transparently keep the int16 path.
+ *
+ * @param[out] data <tt>struct retro_audio_sample_float_callback *</tt>.
+ * @return \c true if float audio output is supported, \c false otherwise.
+ * @see retro_audio_sample_batch_float_t
+ * @see retro_audio_sample_float_callback
+ */
+#define RETRO_ENVIRONMENT_GET_AUDIO_SAMPLE_BATCH_FLOAT (85 | RETRO_ENVIRONMENT_EXPERIMENTAL)
+
+/**
+ * Queries how much system memory the frontend has available.
+ *
+ * A core may use this to size large internal allocations (a memory pool,
+ * heap or asset cache) to the running machine instead of to a fixed
+ * compile-time default. The reported values are advisory snapshots: \c free
+ * in particular may include reclaimable cache and can change immediately
+ * after the call, so a core should take a fraction of it and clamp the
+ * result -- it must never assume it can allocate the whole amount.
+ *
+ * Frontends that do not implement this return \c false, in which case the
+ * core is expected to fall back to its own defaults.
+ *
+ * @param[out] data <tt>struct retro_memory_status *</tt>.
+ * @return \c true if the frontend filled in the structure, \c false otherwise.
+ * @see retro_memory_status
+ */
+#define RETRO_ENVIRONMENT_GET_MEMORY_STATUS (86 | RETRO_ENVIRONMENT_EXPERIMENTAL)
+
+/**
+ * Legacy compatibility shim to RETRO_ENVIRONMENT_SET_SERIALIZATION_QUIRKS.
+ * Cores should avoid using this, as it is not as well-supported.
+ *
+ * @see RETRO_SERIALIZATION_QUIRK
+ */
+#define RETRO_ENVIRONMENT_SET_SERIALIZATION_QUIRKS_2 87
+
+/**
+ * Queries the frontend's HDR presentation contract.
+ * Call from the emulation thread, as with video format negotiation.
+ * data points to struct retro_hdr_metadata. The caller zeroes it and sets
+ * version = 1 and size = sizeof(struct retro_hdr_metadata) before calling.
+ * Unknown versions and undersized buffers return false without modification.
+ * Larger buffers are accepted; bytes beyond the version-1 layout are untouched.
+ * Re-query after presentation or settings changes. This replaces experimental
+ * commands 88-92; those numbers must not be reused.
+ */
+#define RETRO_ENVIRONMENT_GET_HDR_METADATA (101 | RETRO_ENVIRONMENT_EXPERIMENTAL)
+
+/**
+ * Queries presentation state and optional display capabilities together.
+ * data points to struct retro_display_metadata, with version = 1 and size set
+ * by the caller as above. The frontend fills the nested HDR header itself.
+ * Unknown geometry/capabilities are zero. No raw EDID or display identity is
+ * exposed. The HDR block describes presentation, not panel capability.
+ */
+#define RETRO_ENVIRONMENT_GET_DISPLAY_METADATA (102 | RETRO_ENVIRONMENT_EXPERIMENTAL)
+
+/* Native core-input formats, independent of output mode or display bit depth. */
+#define RETRO_HDR_SOURCE_FORMAT_HDR10_2101010 (1u << 0)
+/* RETRO_PIXEL_FORMAT_SCRGB_RGBA16F core input.
+ * Do not advertise solely because an FP16 output framebuffer exists. */
+#define RETRO_HDR_SOURCE_FORMAT_SCRGB_RGBA16F (1u << 1)
+
+struct retro_hdr_metadata
+{
+   unsigned version;
+   unsigned size;
+   /* 0 = SDR or no active output, 1 = PQ Rec.2020, 2 = linear Rec.709. */
+   unsigned output_mode;
+   /* RETRO_HDR_SOURCE_FORMAT_* mask; zero means none known.
+    * Before video init this reports configured capability; SET_PIXEL_FORMAT
+    * must still accept the requested format. Ignore unknown bits. */
+   uint32_t source_formats;
+   float paper_white_nits;
+   /* Effective frontend target, including a display-peak override. */
+   float max_nits;
+   float min_nits;
+   /* SDR expansion: 0 accurate, 1 expanded, 2 P3, 3 unrotated. */
+   unsigned expand_gamut;
+   /* Content light levels, zero when unknown; never inferred from peak. */
+   float max_cll;
+   float max_fall;
+   /* H.273 codes; zero when unspecified. Linear transfer is 8, PQ is 16. */
+   unsigned color_primaries;
+   unsigned transfer_function;
+   /* For accepted HDR10_2101010 input: no creative curve, paper-white scale
+    * or SDR gamut expansion. PQ-to-linear/gamut conversion remains required
+    * for scRGB. Does not override a shader preset's existing contract. */
+   bool passthrough;
+   /* 0 = full-spectrum rational; other operators are not implemented. */
+   unsigned tonemap_operator;
+   uint32_t reserved[8];
+};
+
+struct retro_display_geometry
+{
+   unsigned native_width;
+   unsigned native_height;
+   unsigned width_mm;
+   unsigned height_mm;
+   unsigned refresh_min_mHz;
+   unsigned refresh_max_mHz;
+};
+
+struct retro_display_color_caps
+{
+   float peak_nits;
+   float min_nits;
+   float max_frame_avg_nits;
+   /* CIE xy / 10000: Rx,Ry,Gx,Gy,Bx,By,Wx,Wy. All zero = unknown. */
+   uint16_t primaries_xy[8];
+   /* Bit 0 SDR, bit 1 PQ, bit 2 HLG. Zero = unknown. */
+   unsigned supported_eotf_mask;
+   unsigned edid_gamma_x100;
+   /* 0 unknown, 1 user, 2 EDID/CTA, 3 platform API. */
+   unsigned capability_source;
+};
+
+struct retro_display_metadata
+{
+   unsigned version;
+   unsigned size;
+   struct retro_display_geometry geo;
+   struct retro_hdr_metadata hdr;
+   struct retro_display_color_caps caps;
+};
+
+/**
+ * Negotiates multi-channel audio output.
+ *
+ * The classic batch callbacks carry interleaved stereo. A core whose
+ * source has more channels - a console with discrete surround, a
+ * media player, an arcade board with a distinct rear pair - has had
+ * to fold them to two at the libretro boundary. This call hands the
+ * core a pair of batch entry points that take a frame of any of the
+ * layouts below, so the channels reach the frontend as they are;
+ * what happens to them then is the frontend's: sent discretely to a
+ * device that has those speakers, folded to stereo for one that does
+ * not, folded and re-expanded as the user's settings say.
+ *
+ * On success the frontend fills the supplied
+ * \c retro_audio_sample_multi_callback: \c batch_int16 always, and
+ * \c batch_float when it also answers \c true to
+ * \c RETRO_ENVIRONMENT_GET_AUDIO_SAMPLE_BATCH_FLOAT (a core wanting
+ * float should query that first; a NULL \c batch_float means int16
+ * only). Either function takes interleaved frames of \c channels
+ * samples, in the ascending-bit order of \c layout - front left,
+ * front right, front centre, LFE, back left, back right, ...
+ * - which is the order the WAVEFORMATEXTENSIBLE channel mask, ALSA,
+ * SDL and the WAV format use. \c channels must equal the number of
+ * bits set in \c layout. The return value has the meaning of
+ * \c retro_audio_sample_batch_t.
+ *
+ * Contract:
+ *  - Negotiate once, during \c retro_load_game(). The layout may
+ *    change from call to call (a game switching from stereo to 5.1),
+ *    but the core commits to one sample format for the loaded game,
+ *    as with the float call, and does not mix these entry points
+ *    with the classic ones.
+ *  - A layout with a bit the frontend does not know, or more than
+ *    eight channels, is refused: the call returns 0 frames. Cores
+ *    should use the \c RETRO_AUDIO_LAYOUT_ constants.
+ *  - The function pointers are owned by the frontend and remain
+ *    valid until \c retro_unload_game().
+ *  - Frontends that do not recognise this call return \c false; the
+ *    core keeps folding to stereo and using the classic callbacks.
+ *
+ * @param[out] data <tt>struct retro_audio_sample_multi_callback *</tt>.
+ * @return \c true if multi-channel output is supported, \c false otherwise.
+ * @see retro_audio_sample_multi_callback
+ * @see RETRO_AUDIO_SPEAKER_FRONT_LEFT
+ */
+#define RETRO_ENVIRONMENT_GET_AUDIO_SAMPLE_BATCH_MULTI (94 | RETRO_ENVIRONMENT_EXPERIMENTAL)
+
+enum retro_vr_reference_space {
+   RETRO_VR_REFERENCE_SPACE_LOCAL = 0,  /* seated: origin = head at session start/recenter */
+   RETRO_VR_REFERENCE_SPACE_STAGE = 1,  /* standing: origin = floor */
+   RETRO_VR_REFERENCE_SPACE_DUMMY = INT_MAX
+};
+
+/**
+ * Describes how the frame the core passes to \c retro_video_refresh_t
+ * divides into views: the screens of a multi-screen system and the eyes
+ * of a stereo image.
+ *
+ * The core keeps drawing every view into its one frame, packed however it
+ * likes, and this call says where each view is. A frontend that presents
+ * views lays them out, shades and composes them itself. Any other frontend
+ * shows the packed frame as it is, so the core needs no second code path.
+ *
+ * Rules:
+ *  - Call from \c retro_load_game() or \c retro_run(). The map applies from
+ *    the next \c retro_video_refresh_t call and the frontend copies it.
+ *    Cores should send it every \c retro_run(): an unchanged map costs a
+ *    comparison, and resending covers state loads and run-ahead.
+ *  - Rectangles are pixels in the frame of each refresh call (for a
+ *    hardware frame, the \c width and \c height passed to the refresh
+ *    call), measured from the top-left of the image as displayed. A GL core
+ *    rendering bottom-up still measures \c y from the top. Width and height
+ *    are non-zero. Rectangles may overlap. A frame that some rectangle does
+ *    not fit inside is shown as the packed frame; the map applies again to
+ *    the next frame they all fit.
+ *  - \c num_views is 1 to \c RETRO_VIDEO_VIEWS_MAX, or 0 to clear the map,
+ *    in which case \c views may be NULL.
+ *    Screens number from 0 with no gaps; screen 0 is the primary. Each
+ *    screen has one \c RETRO_VIDEO_VIEW_EYE_NONE view, or one
+ *    \c RETRO_VIDEO_VIEW_EYE_LEFT and one \c RETRO_VIDEO_VIEW_EYE_RIGHT view
+ *    of equal width and height.
+ *  - \c aspect_ratio is the view's display aspect ratio. At or below zero
+ *    means \c width / \c height. Above zero it must be from 0.01 to 100,
+ *    or the map is invalid.
+ *  - \c retro_game_geometry keeps describing the whole packed frame.
+ *    \c RETRO_ENVIRONMENT_SET_ROTATION rotates each view on its own.
+ *  - Touch and light gun coordinates stay in packed-frame terms. A touch
+ *    on any copy of a screen is reported inside that screen's
+ *    \c RETRO_VIDEO_VIEW_EYE_NONE or \c RETRO_VIDEO_VIEW_EYE_LEFT view, at
+ *    the same fraction of its width and height as the touch is across the
+ *    screen as displayed. Rotation is not undone: x follows the display's
+ *    horizontal axis, as it does for a frame without views, so a core that
+ *    sets a rotation turns the point itself.
+ *  - The frontend clears the map when content unloads.
+ *
+ * @param[in] data <tt>const struct retro_video_views *</tt>.
+ * @return \c true if the map was accepted. \c false for an invalid map,
+ * which leaves the previous map in effect, or from a frontend that does
+ * not know this call. Either way the core keeps sending the packed frame.
+ * @see retro_video_views
+ * @see RETRO_ENVIRONMENT_GET_VIDEO_VIEWS_STATUS
+ */
+#define RETRO_ENVIRONMENT_SET_VIDEO_VIEWS (95 | RETRO_ENVIRONMENT_EXPERIMENTAL)
+
+/**
+ * Asks whether the frontend presents views, and whether it shows both eyes.
+ *
+ * The answer can change at any time (the user's stereo mode, HDR output,
+ * the video driver), so a core asks every \c retro_run(), before it draws.
+ *  - With \c RETRO_VIDEO_VIEWS_STATUS_PRESENTS, the core may pack its frame
+ *    for views and send the map with \c RETRO_ENVIRONMENT_SET_VIDEO_VIEWS
+ *    before the \c retro_video_refresh_t call of the frame it describes.
+ *  - Without it, a core with layouts of its own uses them, and clears any
+ *    map it sent by sending one with \c num_views 0.
+ *  - With \c RETRO_VIDEO_VIEWS_STATUS_STEREO, a core with stereo content
+ *    sends left/right pairs. A screen with no 3D content may still be one
+ *    \c RETRO_VIDEO_VIEW_EYE_NONE view, which appears the same in both eyes.
+ *  - Without it, the core sends one \c RETRO_VIDEO_VIEW_EYE_NONE view per
+ *    screen and can skip rendering the second eye. A left/right pair sent
+ *    anyway is shown as its left eye where views are presented, and within
+ *    the packed frame elsewhere.
+ *
+ * @param[out] data <tt>unsigned *</tt>. Set to a combination of the
+ * \c RETRO_VIDEO_VIEWS_STATUS_ flags.
+ * @return \c true if the call is recognised. A frontend that does not know
+ * it returns \c false, which means no flags.
+ * @see RETRO_ENVIRONMENT_SET_VIDEO_VIEWS
+ */
+#define RETRO_ENVIRONMENT_GET_VIDEO_VIEWS_STATUS (96 | RETRO_ENVIRONMENT_EXPERIMENTAL)
+
+/* Flags of RETRO_ENVIRONMENT_GET_VIDEO_VIEWS_STATUS. PRESENTS: the frontend
+ * would lay out a valid map sent now, whether or not one is set. STEREO:
+ * both eyes are shown; only set together with PRESENTS. */
+#define RETRO_VIDEO_VIEWS_STATUS_PRESENTS (1 << 0)
+#define RETRO_VIDEO_VIEWS_STATUS_STEREO   (1 << 1)
+/** A headset session is running and head tracking is available:
+ * RETRO_ENVIRONMENT_GET_VR_FRAME_STATE and GET_VR_HEAD_POSE answer, and a
+ * map with RETRO_VIDEO_VIEWS_FLAG_TRACKED becomes the head-tracked view.
+ * Only set together with PRESENTS and STEREO. A core learns about a
+ * headset from this bit only: SET_VIDEO_VIEWS returning true means the
+ * map was accepted, headset or not. */
+#define RETRO_VIDEO_VIEWS_STATUS_HMD      (1 << 2)
+
+/* The eye a view shows; see RETRO_ENVIRONMENT_SET_VIDEO_VIEWS. */
+#define RETRO_VIDEO_VIEW_EYE_NONE  0
+#define RETRO_VIDEO_VIEW_EYE_LEFT  1
+#define RETRO_VIDEO_VIEW_EYE_RIGHT 2
+
+/* The most views one map may hold. */
+#define RETRO_VIDEO_VIEWS_MAX      8
+/** The map's one LEFT and one RIGHT view were drawn from this frame's
+ * RETRO_ENVIRONMENT_GET_VR_FRAME_STATE eye poses and fields of view.
+ * While RETRO_VIDEO_VIEWS_STATUS_HMD is set, the frontend shows those two
+ * as the headset's head-tracked view and every other view as a screen.
+ * Without HMD the flag changes nothing. While HMD is set, a map with the
+ * flag and any views must hold exactly one LEFT and one RIGHT view, or it
+ * is refused; an empty map clears the views whatever its flags. */
+#define RETRO_VIDEO_VIEWS_FLAG_TRACKED (1 << 0)
+
+/**
+ * One view of the frame.
+ * @see RETRO_ENVIRONMENT_SET_VIDEO_VIEWS
+ */
+struct retro_video_view
+{
+   /** The view's rectangle in the frame, from the top-left as displayed. */
+   unsigned x;
+   unsigned y;
+   unsigned width;
+   unsigned height;
+   /** Screen number, from 0. */
+   unsigned screen;
+   /** One of the \c RETRO_VIDEO_VIEW_EYE_ values. */
+   unsigned eye;
+   /** Display aspect ratio; at or below zero means \c width / \c height. */
+   float aspect_ratio;
+};
+
+/**
+ * The argument of \c RETRO_ENVIRONMENT_SET_VIDEO_VIEWS.
+ */
+struct retro_video_views
+{
+   const struct retro_video_view *views;
+   unsigned num_views;
+
+   /** RETRO_VIDEO_VIEWS_FLAG_ values. */
+   unsigned flags;
+
+   /**
+    * The space a TRACKED map's poses are in: LOCAL (seated) or STAGE
+    * (standing, LOCAL where the runtime has none).
+    */
+   enum retro_vr_reference_space reference_space;
+
+   /**
+    * Output, while RETRO_VIDEO_VIEWS_STATUS_HMD is set: the recommended
+    * size of one eye's render target; 0 otherwise.
+    * The frontend does not change the core's geometry for it: a core
+    * that draws at this size reports its new frame size with
+    * RETRO_ENVIRONMENT_SET_SYSTEM_AV_INFO.
+    */
+   unsigned recommended_view_width;
+   unsigned recommended_view_height;
+};
+
+/* RETRO_VR_FRAME_RECENTERED: the user or the runtime recentered, the
+ * runtime moved STAGE, or a new headset session started, as after a
+ * video driver restart. LOCAL poses then have a new origin; STAGE poses
+ * keep the room's through a recenter. A core that was paused hears of it
+ * at its next frame. A core keeping a reference pose takes it again. */
+#define RETRO_VR_FRAME_RECENTERED     (1u << 0)
+#define RETRO_VR_FRAME_TARGET_RESIZED (1u << 1)  /* eye size changed: call SET_VIDEO_VIEWS again */
+
+/**
+ * Retrieves the per-eye state plus per-frame event flags
+ * (RETRO_VR_FRAME_RECENTERED / RETRO_VR_FRAME_TARGET_RESIZED) for the
+ * current retro_run() call.
+ *
+ * The frontend samples both eye states once per frame, immediately before
+ * retro_run(), and returns that same sample for the duration of that
+ * retro_run() call.
+ *
+ * The position and orientation in each eye state are the eye-to-tracking
+ * transforms used for that frame. The FOV values are the same values the
+ * frontend must use when submitting the compositor layer for the
+ * corresponding frame.
+ *
+ * @param[out] data <tt>struct retro_vr_frame_state *</tt>.
+ * @return false if no VR session exists or no valid sample is available.
+ */
+#define RETRO_ENVIRONMENT_GET_VR_FRAME_STATE (97 | RETRO_ENVIRONMENT_EXPERIMENTAL)
+
+
+/**
+ * Identifies which eye a \ref retro_vr_eye_state describes, and the index
+ * of that eye within the two-element array passed to
+ * RETRO_ENVIRONMENT_GET_VR_FRAME_STATE.
+ */
+enum retro_vr_eye
+{
+   RETRO_VR_EYE_LEFT  = 0,
+   RETRO_VR_EYE_RIGHT = 1,
+
+   /** @private Defined to ensure <tt>sizeof(retro_vr_eye) == sizeof(int)</tt>. Do not use. */
+   RETRO_VR_EYE_DUMMY = INT_MAX
+};
+
+/**
+ * One eye's head-tracked pose and asymmetric field of view for the current
+ * frame, in the frontend's tracking space (meters, right-handed, Y up).
+ *
+ * position and orientation describe the eye-to-tracking-space transform,
+ * not its inverse.
+ *
+ * The quaternion is stored in (x, y, z, w) order. This is intentionally
+ * different from APIs such as GLM where glm::quat is constructed as
+ * (w, x, y, z).
+ *
+ * @see RETRO_ENVIRONMENT_GET_VR_FRAME_STATE
+ */
+struct retro_vr_eye_state
+{
+   /**
+    * Eye position in tracking space, in meters.
+    */
+   float position[3];
+
+   /**
+    * Eye orientation in tracking space, as a quaternion (x, y, z, w).
+    *
+    * This is the orientation of the eye relative to tracking space, not
+    * the inverse/view orientation.
+    */
+   float orientation[4];
+
+   /**
+    * Tangent of the positive half-angle from the eye's forward axis to
+    * each frustum edge, in the order:
+    *
+    *   [0] left
+    *   [1] right
+    *   [2] up
+    *   [3] down
+    *
+    * All four values are positive magnitudes. They describe the distance
+    * of each frustum edge from the forward axis in tangent space; they are
+    * not signed OpenXR angles.
+    *
+    * The four values are independent because HMD eye frustums are normally
+    * asymmetric.
+    *
+    * For example, if the left and right tangent values are l and r, and
+    * the up and down tangent values are u and d, the projection frustum
+    * spans:
+    *
+    *   left   = -l
+    *   right  =  r
+    *   bottom = -d
+    *   top    =  u
+    *
+    * A frontend converting from APIs that represent the corresponding
+    * angles as signed values must use their magnitudes.
+    */
+   float fov_tan[4];
+};
+
+struct retro_vr_frame_state {
+   struct retro_vr_eye_state eyes[2];
+   uint32_t flags;
+};
+
+/**
+ * Retrieves the current head-tracked pose.
+ *
+ * The frontend samples the HMD once per frame, immediately before
+ * retro_run(), and returns the same sample for the duration of that
+ * retro_run() call.
+ */
+#define RETRO_ENVIRONMENT_GET_VR_HEAD_POSE (98 | RETRO_ENVIRONMENT_EXPERIMENTAL)
+
+/* Frontend H.264 decoding to CPU-readable 8-bit YUV 4:2:0 planes.
+ * Versions 1 to 4 are supported. Initialize the version before querying.
+ * Version 1 writes only the original prefix through close. Calls for each decoder
+ * are serialized by the core; close all decoders before context teardown.
+ * Unsupported frontends return false. Input is one Annex-B access unit.
+ * Planes remain valid until decode, drain or close. */
+#define RETRO_ENVIRONMENT_GET_VIDEO_DECODE_INTERFACE (99 | RETRO_ENVIRONMENT_EXPERIMENTAL)
+#define RETRO_VIDEO_DECODE_INTERFACE_VERSION 4
+#define RETRO_VIDEO_DECODE_DEFER_PLANES (1u << 0)
+
+struct retro_video_decode_frame
+{
+   const uint8_t *planes[3];
+   unsigned strides[3];
+   unsigned width, height;
+   bool hardware;
+};
+
+enum retro_video_decode_gpu_api
+{
+   RETRO_VIDEO_DECODE_GPU_VULKAN = 1,
+   RETRO_VIDEO_DECODE_GPU_D3D11 = 2
+};
+
+/* Version 3 GPU output. Vulkan uses same-device VkImage/views and timeline
+ * semaphores; D3D11 uses shared NT handles. Wait on wait_value before GPU
+ * reads, preserve layout, and signal done_value after the final GPU read.
+ * An unused lease is returned with abandon. Close/context destruction
+ * requires all leases to have completed; handles must never be cached
+ * beyond their lease. Chroma views are R8/R8G8 (8-bit 4:2:0).
+ * The copy is independent of subsequent decode/drain output. */
+struct retro_video_decode_gpu_frame
+{
+   uint64_t image, plane_views[2];
+   uint64_t wait, wait_value, done, done_value;
+   void (*abandon)(void *owner, uint64_t done, uint64_t done_value);
+   void *owner;
+   unsigned width, height, layout, yuv, pixfmt, array_slice, crop_x, crop_y;
+   unsigned api;
+};
+
+struct retro_video_decode_interface
+{
+   unsigned interface_version;
+   void *(*open)(void);
+   /* 1: frame ready; 0: consumed, delayed output; -1: failure. */
+   int (*decode)(void *decoder, const uint8_t *data, size_t size,
+         struct retro_video_decode_frame *frame);
+   /* 1: frame ready; 0: no more frames; -1: failure. */
+   int (*drain)(void *decoder, struct retro_video_decode_frame *frame);
+   void (*close)(void *decoder);
+   /* Version 2: flags=0 preserves eager CPU planes. DEFER_PLANES returns
+    * width/height/hardware with null planes; get_frame materializes them.
+    * Output expires on the next decode/drain/close. No GPU handle is leased.
+    * 2: hardware busy; retry decode_ex with the same live input pointer
+    * and size, or retry drain_ex later. Do not consume another access unit.
+    * Unsupported flag bits fail without consuming input. */
+   int (*decode_ex)(void *decoder, const uint8_t *data, size_t size,
+         struct retro_video_decode_frame *frame, unsigned flags);
+   int (*drain_ex)(void *decoder, struct retro_video_decode_frame *frame,
+         unsigned flags);
+   /* 1: CPU planes ready; -1: no current output or readback failure.
+    * Repeated calls reuse the same CPU copy. */
+   int (*get_frame)(void *decoder, struct retro_video_decode_frame *frame);
+   /* Version 3: export the current deferred output once. 1 leased,
+    * 2 busy (retry later), -1 unavailable/error. CPU get_frame remains
+    * valid until decode/drain. Failed calls acquire no lease. */
+   int (*get_gpu_frame)(void *decoder, struct retro_video_decode_gpu_frame *frame);
+   /* Version 4: set_tag gives the picture the next decode/decode_ex opens
+    * a value, which get_tag returns once decode or drain hands that
+    * picture out: output is in display order, not the input's. */
+   void (*set_tag)(void *decoder, uint64_t tag);
+   uint64_t (*get_tag)(void *decoder);
+};
+
+
+
+#define RETRO_VR_HEAD_POSE_POSITION_VALID    (1u << 0)
+#define RETRO_VR_HEAD_POSE_ORIENTATION_VALID (1u << 1)
+#define RETRO_VR_HEAD_POSE_VELOCITY_VALID    (1u << 2)
+
+/**
+ * Head pose and motion in the frontend's tracking space (meters,
+ * seconds, right-handed, Y up).
+ *
+ * position and orientation describe the head-to-tracking-space transform,
+ * not its inverse. The orientation quaternion rotates vectors from head
+ * space into tracking space.
+ *
+ * linear_velocity is the velocity of the head-space origin, expressed in
+ * tracking-space coordinates. angular_velocity is the head's angular
+ * velocity, expressed in tracking-space coordinates. Velocity fields are
+ * valid only when RETRO_VR_HEAD_POSE_VELOCITY_VALID is set.
+ */
+struct retro_vr_head_pose
+{
+   /** Head position in tracking space, in meters. */
+   float position[3];
+
+   /** Head orientation in tracking space, quaternion (x, y, z, w). */
+   float orientation[4];
+
+   /** Linear velocity in meters/second. */
+   float linear_velocity[3];
+
+   /** Angular velocity in radians/second. */
+   float angular_velocity[3];
+
+   /* orientation/position are valid */
+   uint32_t flags;
+};
+
+/**
+ * Retrieves where the user's hands are: each motion controller's poses
+ * and each hand's joints.
+ *
+ * A core reads a pose, a joint or a field only when its flag says so.
+ *
+ * The three poses are:
+ *  - grip: /input/grip/pose, at the palm's
+ *    centre when the hand closes on the controller. -Z runs through the
+ *    tube the closed fingers make, from the little finger toward the
+ *    thumb; +X is normal to the flat palm, away from it on the left
+ *    hand and into it on the right.
+ *  - aim: /input/aim/pose, the pointing ray, -Z forward from the
+ *    controller's tip: where a laser or a shot starts.
+ *  - palm: the palm's centre at its surface, -Z the way
+ *    a straightened index finger points, +X as for grip: where a hand
+ *    model goes.
+ *
+ * A runtime that drives a controller profile from a bare tracked hand
+ * reports that hand as active, with grip and aim taken from the hand.
+ * The poses and joints are those the frontend sampled for this run,
+ * before retro_run(); call it from retro_run().
+ *
+ * @param[out] data <tt>struct retro_vr_controller_poses *</tt>.
+ * @return false if no VR session exists or no valid sample is available,
+ * and from a frontend that does not know the call. true with neither
+ * hand RETRO_VR_HAND_ACTIVE: a session that sees no hands.
+ * @see retro_vr_controller_poses
+ */
+#define RETRO_ENVIRONMENT_GET_VR_CONTROLLER_POSES (100 | RETRO_ENVIRONMENT_EXPERIMENTAL)
+
+/** Which hand a \ref retro_vr_hand_state describes, and its index in
+ * \ref retro_vr_controller_poses::hands. */
+enum retro_vr_hand
+{
+   RETRO_VR_HAND_LEFT  = 0,
+   RETRO_VR_HAND_RIGHT = 1,
+   RETRO_VR_HAND_COUNT = 2,
+
+   /** @private Defined to ensure <tt>sizeof(retro_vr_hand) == sizeof(int)</tt>. Do not use. */
+   RETRO_VR_HAND_DUMMY = INT_MAX
+};
+
+/* Flags of retro_vr_pose: OpenXR's XrSpaceLocationFlags and
+ * XrSpaceVelocityFlags. VALID: the value may be used. TRACKED: it is
+ * measured now rather than estimated, as a controller out of the
+ * headset's cameras' view keeps an estimated position for a while. */
+#define RETRO_VR_POSE_ORIENTATION_VALID      (1u << 0)
+#define RETRO_VR_POSE_POSITION_VALID         (1u << 1)
+#define RETRO_VR_POSE_ORIENTATION_TRACKED    (1u << 2)
+#define RETRO_VR_POSE_POSITION_TRACKED       (1u << 3)
+#define RETRO_VR_POSE_LINEAR_VELOCITY_VALID  (1u << 4)
+#define RETRO_VR_POSE_ANGULAR_VELOCITY_VALID (1u << 5)
+
+/**
+ * A pose and its motion in the tracking space.
+ *
+ * position and orientation are the pose-to-tracking-space transform.
+ * linear_velocity is the origin's velocity in meters per second;
+ * angular_velocity the rotation axis scaled by radians per second.
+ * Both are in tracking-space coordinates.
+ */
+struct retro_vr_pose
+{
+   float position[3];
+   float orientation[4];
+   float linear_velocity[3];
+   float angular_velocity[3];
+   /** RETRO_VR_POSE_ flags; 0 when nothing is known. */
+   uint32_t flags;
+};
+
+/**
+ * A hand's joints, in XR_EXT_hand_tracking's XrHandJointEXT order.
+ * Each joint's -Z points along its bone toward the fingertip, +Y out of
+ * the back of the hand. The palm joint is at the centre of the middle
+ * finger's metacarpal; the wrist joint at the wrist.
+ *
+ * The set is XR_EXT_hand_tracking's default one and is fixed: a larger
+ * joint set comes through a call of its own.
+ */
+enum retro_vr_hand_joint
+{
+   RETRO_VR_HAND_JOINT_PALM = 0,
+   RETRO_VR_HAND_JOINT_WRIST,
+   RETRO_VR_HAND_JOINT_THUMB_METACARPAL,
+   RETRO_VR_HAND_JOINT_THUMB_PROXIMAL,
+   RETRO_VR_HAND_JOINT_THUMB_DISTAL,
+   RETRO_VR_HAND_JOINT_THUMB_TIP,
+   RETRO_VR_HAND_JOINT_INDEX_METACARPAL,
+   RETRO_VR_HAND_JOINT_INDEX_PROXIMAL,
+   RETRO_VR_HAND_JOINT_INDEX_INTERMEDIATE,
+   RETRO_VR_HAND_JOINT_INDEX_DISTAL,
+   RETRO_VR_HAND_JOINT_INDEX_TIP,
+   RETRO_VR_HAND_JOINT_MIDDLE_METACARPAL,
+   RETRO_VR_HAND_JOINT_MIDDLE_PROXIMAL,
+   RETRO_VR_HAND_JOINT_MIDDLE_INTERMEDIATE,
+   RETRO_VR_HAND_JOINT_MIDDLE_DISTAL,
+   RETRO_VR_HAND_JOINT_MIDDLE_TIP,
+   RETRO_VR_HAND_JOINT_RING_METACARPAL,
+   RETRO_VR_HAND_JOINT_RING_PROXIMAL,
+   RETRO_VR_HAND_JOINT_RING_INTERMEDIATE,
+   RETRO_VR_HAND_JOINT_RING_DISTAL,
+   RETRO_VR_HAND_JOINT_RING_TIP,
+   RETRO_VR_HAND_JOINT_LITTLE_METACARPAL,
+   RETRO_VR_HAND_JOINT_LITTLE_PROXIMAL,
+   RETRO_VR_HAND_JOINT_LITTLE_INTERMEDIATE,
+   RETRO_VR_HAND_JOINT_LITTLE_DISTAL,
+   RETRO_VR_HAND_JOINT_LITTLE_TIP,
+   RETRO_VR_HAND_JOINT_COUNT,
+
+   /** @private Defined to ensure <tt>sizeof(retro_vr_hand_joint) == sizeof(int)</tt>. Do not use. */
+   RETRO_VR_HAND_JOINT_DUMMY = INT_MAX
+};
+
+/** One joint: its pose, and the distance from it to the skin in meters
+ * (0 when unknown). */
+struct retro_vr_hand_joint_state
+{
+   struct retro_vr_pose pose;
+   float radius;
+};
+
+/* Flags of retro_vr_hand_state. */
+/** Something is in the hand: a controller or a tracked hand. Without
+ * it the rest of the hand's state is cleared. */
+#define RETRO_VR_HAND_ACTIVE            (1u << 0)
+/** The joints are filled: the frontend tracks this hand's joints now. */
+#define RETRO_VR_HAND_JOINTS            (1u << 1)
+/** The joints are seen by the headset, the hand bare. */
+#define RETRO_VR_HAND_JOINTS_OPTICAL    (1u << 2)
+/** The joints are estimated from a held controller's grip and touch
+ * sensors. With neither JOINTS_ source bit, the source is unknown. */
+#define RETRO_VR_HAND_JOINTS_CONTROLLER (1u << 3)
+
+/** One hand. */
+struct retro_vr_hand_state
+{
+   /** The OpenXR interaction profile path the hand is used through,
+    * such as "/interaction_profiles/oculus/touch_controller"; NULL when
+    * none is known. The string is the frontend's, valid until the next
+    * RETRO_ENVIRONMENT_GET_VR_CONTROLLER_POSES call or until
+    * retro_run() returns, whichever comes first. */
+   const char *interaction_profile;
+
+   /** RETRO_VR_HAND_ flags. */
+   uint32_t flags;
+
+   struct retro_vr_pose grip;
+   struct retro_vr_pose aim;
+   struct retro_vr_pose palm;
+
+   /** Valid while RETRO_VR_HAND_JOINTS is set, each joint by its own
+    * pose flags. */
+   struct retro_vr_hand_joint_state joints[RETRO_VR_HAND_JOINT_COUNT];
+};
+
+/** The argument of RETRO_ENVIRONMENT_GET_VR_CONTROLLER_POSES. */
+struct retro_vr_controller_poses
+{
+   /** Indexed by enum retro_vr_hand. */
+   struct retro_vr_hand_state hands[RETRO_VR_HAND_COUNT];
+};
+
+/**
+ * const struct retro_hw_render_upscaler_interface ** --
+ * The frontend's temporal upscaler, for a hardware-rendered core: how the
+ * core learns that an upscaler (NVIDIA DLSS Super Resolution; the same
+ * contract serves FSR and XeSS) is taking its frames and what render size
+ * it wants, and how it hands over the depth, motion vectors and jitter
+ * the upscaler needs beside the color image it already presents.
+ *
+ * Call it first in retro_load_game, beside SET_HW_RENDER: there it
+ * returns false and tells the frontend to make the context for the
+ * upscaler, which loads its libraries and adds what they need to the
+ * context; a frontend does neither for a core that has not asked. Then
+ * call after the hardware context is reset (context_reset), once; the
+ * interface is valid until context_destroy. Returns false when the
+ * frontend has no upscaler for this context type or video driver; the
+ * core then renders as it always has. A core that never calls this is
+ * unaffected: the frontend shows its frames as they are.
+ *
+ * @see retro_hw_render_upscaler_interface
+ */
+#define RETRO_ENVIRONMENT_GET_HW_RENDER_UPSCALER_INTERFACE (103 | RETRO_ENVIRONMENT_EXPERIMENTAL)
+
+#define RETRO_HW_RENDER_UPSCALER_INTERFACE_VERSION 1
+
+/**
+ * An image of the hardware context's API, named the way the color image
+ * is in the context's own render interface:
+ * - Vulkan: image is the VkImage, view a VkImageView over it (one mip,
+ *   one layer), format the VkFormat, state the VkImageLayout the image is
+ *   in when the frontend reads it (VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
+ *   or VK_IMAGE_LAYOUT_GENERAL); created with VK_IMAGE_USAGE_SAMPLED_BIT.
+ * - Direct3D 12: image is the ID3D12Resource *, view 0, format the
+ *   DXGI_FORMAT, state the D3D12_RESOURCE_STATES it is in.
+ * image 0 is no image.
+ */
+struct retro_hw_upscaler_image
+{
+   uint64_t image;
+   uint64_t view;
+   unsigned format;
+   unsigned state;
+   unsigned width;
+   unsigned height;
+};
+
+/* Flags of retro_hw_upscaler_inputs. */
+/** The motion vectors include this frame's jitter; the upscaler takes it
+ * back out with jitter_x/y. Without it they are the unjittered motion. */
+#define RETRO_HW_UPSCALER_MV_JITTERED     (1 << 0)
+/** Depth runs 1 at the near plane to 0 at the far plane. */
+#define RETRO_HW_UPSCALER_DEPTH_INVERTED  (1 << 1)
+/** The color image is linear light, unbounded (scRGB, a float format),
+ * not display-encoded SDR. */
+#define RETRO_HW_UPSCALER_HDR             (1 << 2)
+/** Nothing of the previous frames applies to this one (a cut, a reset,
+ * a state load): the upscaler starts its history over. */
+#define RETRO_HW_UPSCALER_RESET           (1 << 3)
+/** The motion vectors are at the output size rather than the render
+ * size. */
+#define RETRO_HW_UPSCALER_MV_OUTPUT_RES   (1 << 4)
+
+/**
+ * What a frame brings beside its color image. Pixel coordinates have
+ * (0,0) at the top left and +y down, in texels of the render size (the
+ * color image's), for motion vectors and jitter alike.
+ */
+struct retro_hw_upscaler_inputs
+{
+   /** RETRO_HW_UPSCALER_* bits. */
+   unsigned flags;
+   /** Two-channel float (RG16F or RG32F): for every pixel, how far the
+    * surface seen there moved from the previous frame to this one, in
+    * pixels, after mv_scale. Required. */
+   struct retro_hw_upscaler_image motion_vectors;
+   /** Depth: any one-channel or depth(-stencil) format. Required. */
+   struct retro_hw_upscaler_image depth;
+   /** Optional: a 1x1 single float of the frame's exposure; none makes
+    * the upscaler measure it. */
+   struct retro_hw_upscaler_image exposure;
+   /** Optional: a one-channel mask, 1 where the color is translucent or
+    * has no depth or motion of its own (particles, overlays). */
+   struct retro_hw_upscaler_image transparency_mask;
+   /** The sub-pixel offset the projection was shifted by this frame, in
+    * render pixels, each in [-0.5, 0.5]; a Halton (2,3) sequence works
+    * well. (0,0) when the frame was not jittered. */
+   float jitter_x;
+   float jitter_y;
+   /** Multiplied into the motion vectors as stored; 1 when they are in
+    * pixels already. 0 reads as 1. Negative flips an axis. */
+   float mv_scale_x;
+   float mv_scale_y;
+   /** Exposure applied to the color before it was stored, and a scale
+    * on the exposure used. 0 reads as 1. */
+   float pre_exposure;
+   float exposure_scale;
+   /** This frame's duration in milliseconds, 0 when unknown. */
+   float frame_time_ms;
+};
+
+/**
+ * What the upscaler wants, read before rendering a frame.
+ */
+struct retro_hw_upscaler_request
+{
+   /** The size the upscaler produces: the content's size on screen. */
+   unsigned output_width;
+   unsigned output_height;
+   /** The size it wants to be fed, the best for its mode: render and hand
+    * over frames of this size. A frame of another size within the range
+    * below is taken and scaled from what it is; outside it, shown without
+    * upscaling. */
+   unsigned render_width;
+   unsigned render_height;
+   unsigned min_render_width;
+   unsigned min_render_height;
+   unsigned max_render_width;
+   unsigned max_render_height;
+   /** Reserved, 0. */
+   unsigned flags;
+   /** The texture LOD bias the core should render with so textures keep
+    * their detail at the output size: log2(render / output) - 1. */
+   float mip_bias;
+};
+
+/**
+ * @see RETRO_ENVIRONMENT_GET_HW_RENDER_UPSCALER_INTERFACE
+ */
+struct retro_hw_render_upscaler_interface
+{
+   /** RETRO_HW_RENDER_UPSCALER_INTERFACE_VERSION. */
+   unsigned interface_version;
+
+   /** Opaque, passed to every function here. */
+   void *handle;
+
+   /**
+    * Whether an upscaler will take the next frame, and what it wants:
+    * true with @request filled, or false with it untouched when none is
+    * active, in which case the core renders as it always has. Read it
+    * every frame before rendering; the answer changes when the user turns
+    * the upscaler on or off, resizes the window or picks another mode.
+    * While it answers true the core renders at render_width x
+    * render_height with sub-pixel jitter and without temporal or
+    * post-process anti-aliasing of its own, which would fight the
+    * upscaler's.
+    */
+   bool (*get_request)(void *handle, struct retro_hw_upscaler_request *request);
+
+   /**
+    * This frame's depth, motion vectors and jitter, called before the
+    * color image is handed over (set_image, set_texture) and
+    * retro_video_refresh_t is called. @inputs must stay valid until
+    * retro_video_refresh_t returns; its images for as long as the color
+    * image of the same frame, under the same sync index rules, and they
+    * are complete when it is: the semaphores or fence that cover the
+    * color image cover them. A frame without a call, or with NULL, has
+    * no inputs and is shown without upscaling.
+    */
+   void (*set_inputs)(void *handle, const struct retro_hw_upscaler_inputs *inputs);
+};
+
+/**
+ * Gets an interface with which an OpenGL or OpenGL ES hardware core makes
+ * contexts for threads of its own: each is in the share group of the
+ * core's context (RETRO_ENVIRONMENT_SET_HW_RENDER), of the same API,
+ * version and profile, so textures, buffers, shaders, programs and syncs
+ * made on one are seen on the others; framebuffers and vertex arrays are
+ * not shared, as in OpenGL. A core renders on another thread this way -
+ * into a texture of its own, with a fence the core's context waits on
+ * before using it in retro_run - and compiles shaders on threads of its
+ * own, with nothing of the window system in the core.
+ *
+ * Call it from context_reset or later; the interface is valid until
+ * context_destroy, before which the core destroys every context it
+ * made. Returns false when the frontend cannot make such contexts for
+ * the video driver it runs; a core then keeps its OpenGL work on the
+ * thread that calls retro_run, as it always could.
+ *
+ * @param[out] data <tt>const struct retro_hw_shared_context_interface **</tt>.
+ * @see retro_hw_shared_context_interface
+ */
+#define RETRO_ENVIRONMENT_GET_HW_SHARED_CONTEXT_INTERFACE (104 | RETRO_ENVIRONMENT_EXPERIMENTAL)
+
+#define RETRO_HW_SHARED_CONTEXT_INTERFACE_VERSION 1
+
+/** A context made with retro_hw_shared_context_interface; opaque. */
+struct retro_hw_shared_context;
+
+struct retro_hw_shared_context_interface
+{
+   /** RETRO_HW_SHARED_CONTEXT_INTERFACE_VERSION. */
+   unsigned interface_version;
+
+   /**
+    * A new context, current on no thread; NULL when one cannot be made.
+    * Call it on the thread that calls retro_run, in context_reset or
+    * retro_run. Each costs the driver a context: make them up front,
+    * one for each thread, not one per piece of work.
+    */
+   struct retro_hw_shared_context *(RETRO_CALLCONV *create)(void);
+
+   /**
+    * Makes @ctx current on the calling thread (@current true), or no
+    * context of these at all (false), and returns whether it could. A
+    * context is current on one thread at a time. It has no framebuffer
+    * of the window's: framebuffer 0 is not to be drawn to or read, and
+    * it draws into framebuffers of its own. Functions are looked up with
+    * the hardware render callback's get_proc_address, with this context
+    * current or the core's.
+    */
+   bool (RETRO_CALLCONV *make_current)(struct retro_hw_shared_context *ctx,
+         bool current);
+
+   /**
+    * Destroys @ctx, which is current on no thread. Call it on the thread
+    * that calls retro_run, in retro_run or context_destroy.
+    */
+   void (RETRO_CALLCONV *destroy)(struct retro_hw_shared_context *ctx);
+};
+
+/* Speaker positions, as bits of a layout mask; a frame's channels are
+ * interleaved in ascending bit order. The bits are those of the
+ * WAVEFORMATEXTENSIBLE channel mask. */
+#define RETRO_AUDIO_SPEAKER_FRONT_LEFT            0x001
+#define RETRO_AUDIO_SPEAKER_FRONT_RIGHT           0x002
+#define RETRO_AUDIO_SPEAKER_FRONT_CENTER          0x004
+#define RETRO_AUDIO_SPEAKER_LOW_FREQUENCY         0x008
+#define RETRO_AUDIO_SPEAKER_BACK_LEFT             0x010
+#define RETRO_AUDIO_SPEAKER_BACK_RIGHT            0x020
+#define RETRO_AUDIO_SPEAKER_FRONT_LEFT_OF_CENTER  0x040
+#define RETRO_AUDIO_SPEAKER_FRONT_RIGHT_OF_CENTER 0x080
+#define RETRO_AUDIO_SPEAKER_BACK_CENTER           0x100
+#define RETRO_AUDIO_SPEAKER_SIDE_LEFT             0x200
+#define RETRO_AUDIO_SPEAKER_SIDE_RIGHT            0x400
+
+/* The layouts a core is expected to use. Others are accepted where the
+ * frontend knows every bit. */
+#define RETRO_AUDIO_LAYOUT_MONO   (RETRO_AUDIO_SPEAKER_FRONT_CENTER)
+#define RETRO_AUDIO_LAYOUT_STEREO (RETRO_AUDIO_SPEAKER_FRONT_LEFT | RETRO_AUDIO_SPEAKER_FRONT_RIGHT)
+#define RETRO_AUDIO_LAYOUT_2_1    (RETRO_AUDIO_LAYOUT_STEREO | RETRO_AUDIO_SPEAKER_LOW_FREQUENCY)
+#define RETRO_AUDIO_LAYOUT_QUAD   (RETRO_AUDIO_LAYOUT_STEREO | RETRO_AUDIO_SPEAKER_BACK_LEFT | RETRO_AUDIO_SPEAKER_BACK_RIGHT)
+#define RETRO_AUDIO_LAYOUT_5_1    (RETRO_AUDIO_LAYOUT_QUAD | RETRO_AUDIO_SPEAKER_FRONT_CENTER | RETRO_AUDIO_SPEAKER_LOW_FREQUENCY)
+#define RETRO_AUDIO_LAYOUT_5_1_SIDE (RETRO_AUDIO_LAYOUT_STEREO | RETRO_AUDIO_SPEAKER_FRONT_CENTER | RETRO_AUDIO_SPEAKER_LOW_FREQUENCY \
+                                    | RETRO_AUDIO_SPEAKER_SIDE_LEFT | RETRO_AUDIO_SPEAKER_SIDE_RIGHT)
+#define RETRO_AUDIO_LAYOUT_7_1    (RETRO_AUDIO_LAYOUT_5_1 | RETRO_AUDIO_SPEAKER_SIDE_LEFT | RETRO_AUDIO_SPEAKER_SIDE_RIGHT)
+
+/**
+ * Result of \c RETRO_ENVIRONMENT_GET_MEMORY_STATUS.
+ *
+ * Sizes are in bytes; a field the frontend cannot determine is left at 0.
+ */
+struct retro_memory_status
+{
+   uint64_t free;   /**< Physical memory currently available to allocate. */
+   uint64_t total;  /**< Total physical memory installed. */
+};
+
 /**@}*/
 
 /**
@@ -2686,6 +3826,20 @@ struct retro_vfs_dir_handle;
  */
 #define RETRO_VFS_FILE_ACCESS_HINT_FREQUENT_ACCESS   (1 << 0)
 
+/**
+ * Indicates that the file will be read once, from start to finish,
+ * and then closed.
+ *
+ * No mapping or caching is wanted: the caller already keeps the bytes
+ * it asked for, so anything the frontend holds on to beyond the call
+ * is dead weight.  A frontend that buffers its reads may wish to skip
+ * doing so for such a stream, since a whole-file read gains nothing
+ * from being split across a buffer and copied twice.
+ *
+ * Only meaningful together with \c RETRO_VFS_FILE_ACCESS_READ.
+ */
+#define RETRO_VFS_FILE_ACCESS_HINT_SEQUENTIAL_BULK   (1 << 1)
+
 /** @} */
 
 /** @defgroup RETRO_VFS_SEEK_POSITION File Seek Positions
@@ -2730,7 +3884,48 @@ struct retro_vfs_dir_handle;
  */
 #define RETRO_VFS_STAT_IS_CHARACTER_SPECIAL   (1 << 2)
 
+/**
+ * Indicates that the current user cannot write to the given path.
+ * POSIX: the owner write bit is clear.
+ * Windows/UWP: \c FILE_ATTRIBUTE_READONLY is set.
+ * Frontends that cannot determine this never set the flag.
+ * @since VFS API v5
+ */
+#define RETRO_VFS_STAT_IS_READONLY            (1 << 3)
+
 /** @} */
+
+/**
+ * @defgroup RETRO_VFS_COPY Copy Flags
+ * @since VFS API v5
+ * @{
+ */
+
+/** Replace \c dst if it already exists. Without it an existing \c dst is an error. */
+#define RETRO_VFS_COPY_OVERWRITE              (1 << 0)
+
+/** @} */
+
+/**
+ * @defgroup RETRO_VFS_COPY_STATUS Copy Status
+ * Values returned by \c retro_vfs_copy_step_t.
+ * @since VFS API v5
+ * @{
+ */
+/** The copy is still in progress. */
+#define RETRO_VFS_COPY_RUNNING                (0)
+/** The copy completed; \c dst is complete and closed. */
+#define RETRO_VFS_COPY_DONE                   (1)
+/** The copy failed or was cancelled; no partial \c dst remains. */
+#define RETRO_VFS_COPY_FAILED                 (-1)
+/** @} */
+
+/**
+ * Opaque handle to an in-progress file copy.
+ * @see retro_vfs_copy_begin_t
+ * @since VFS API v5
+ */
+struct retro_vfs_copy_handle;
 
 /**
  * Returns the path that was used to open this file.
@@ -2750,6 +3945,10 @@ typedef const char *(RETRO_CALLCONV *retro_vfs_get_path_t)(struct retro_vfs_file
  * @param path The path to open.
  * @param mode A bitwise combination of \c RETRO_VFS_FILE_ACCESS flags.
  * At a minimum, one of \c RETRO_VFS_FILE_ACCESS_READ or \c RETRO_VFS_FILE_ACCESS_WRITE must be specified.
+ * If \c RETRO_VFS_FILE_ACCESS_WRITE is specified and \c RETRO_VFS_FILE_ACCESS_UPDATE_EXISTING is not specified,
+ * and no file or directory exists at \c path, this function will attempt to create an empty file at \c path.
+ * If either \c RETRO_VFS_FILE_ACCESS_WRITE is not specified or \c RETRO_VFS_FILE_ACCESS_UPDATE_EXISTING is specified,
+ * and no file or directory exists at \c path, this function will return \c NULL without attempting to create a file at \c path.
  * @param hints A bitwise combination of \c RETRO_VFS_FILE_ACCESS_HINT flags.
  * @return A handle to the opened file,
  * or \c NULL upon failure.
@@ -2821,8 +4020,7 @@ typedef int64_t (RETRO_CALLCONV *retro_vfs_tell_t)(struct retro_vfs_file_handle 
  * @param stream The file to set the position of.
  * @param offset The new position, in bytes.
  * @param seek_position The position to seek from.
- * @return The new position,
- * or -1 if there was an error.
+ * @return 0 on success, -1 on failure.
  * @since VFS API v1
  * @see File Seek Positions
  * @see filestream_seek
@@ -2908,6 +4106,137 @@ typedef int (RETRO_CALLCONV *retro_vfs_rename_t)(const char *old_path, const cha
 typedef int (RETRO_CALLCONV *retro_vfs_stat_t)(const char *path, int32_t *size);
 
 /**
+ * Gets information about the given file (64-bit size).
+ *
+ * @param path The path to the file to query.
+ * @param[out] size The reported size of the file in bytes.
+ * May be \c NULL, in which case this value is ignored.
+ * @return A bitmask of \c RETRO_VFS_STAT flags,
+ * or 0 if \c path doesn't refer to a valid file.
+ * @see RETRO_VFS_STAT
+ * @since VFS API v4
+ */
+typedef int (RETRO_CALLCONV *retro_vfs_stat_64_t)(const char *path, int64_t *size);
+
+/**
+ * Sets or clears the read-only state of a file or directory.
+ *
+ * POSIX: sets or clears the write bits of the mode, leaving the rest intact.
+ * Windows/UWP: sets or clears \c FILE_ATTRIBUTE_READONLY.
+ *
+ * @param path The path to the file or directory.
+ * @param readonly Non-zero to make the path read-only,
+ * zero to make it writable.
+ * @return 0 on success,
+ * or -1 if \c path does not exist or the platform or file system
+ * cannot store a read-only state.
+ * @see path_set_readonly
+ * @see RETRO_VFS_STAT_IS_READONLY
+ * @since VFS API v5
+ */
+typedef int (RETRO_CALLCONV *retro_vfs_set_readonly_t)(const char *path, int readonly);
+
+/**
+ * Gets the last modification time of a file or directory.
+ *
+ * @param path The path to the file or directory.
+ * @param[out] mtime Set to the modification time
+ * in seconds since 1970-01-01T00:00:00Z. May be negative.
+ * @return 0 on success,
+ * or -1 if \c path does not exist or the platform
+ * cannot report a modification time.
+ * @see path_get_mtime
+ * @since VFS API v5
+ */
+typedef int (RETRO_CALLCONV *retro_vfs_get_mtime_t)(const char *path, int64_t *mtime);
+
+/**
+ * Sets the last modification time of a file or directory.
+ *
+ * The frontend rounds to the file system's resolution,
+ * so a following \c retro_vfs_get_mtime_t may report a different value.
+ *
+ * @param path The path to the file or directory.
+ * @param mtime The modification time in seconds since 1970-01-01T00:00:00Z.
+ * @return 0 on success,
+ * or -1 if \c path does not exist or the platform or file system
+ * does not allow the modification time to be set.
+ * @see path_set_mtime
+ * @since VFS API v5
+ */
+typedef int (RETRO_CALLCONV *retro_vfs_set_mtime_t)(const char *path, int64_t mtime);
+
+/**
+ * Starts copying a single regular file and returns without moving any of it.
+ *
+ * A copy is a resumable operation that the caller advances with
+ * \c retro_vfs_copy_step_t, each step bounded by a byte budget the caller
+ * chooses. The frontend keeps no thread and holds no lock for it; a caller
+ * that wants the transfer off its own thread drives the steps from wherever
+ * it likes. No call in this group ever waits for more than the requested
+ * step.
+ *
+ * \c dst is the full path of the new file, not a directory; missing parent
+ * directories are created. Metadata (modification time, read-only state)
+ * of \c dst after the copy is platform-defined. Either path may belong to
+ * any file system the frontend supports.
+ *
+ * Checks that can be made up front (missing or non-regular \c src,
+ * \c dst is a directory, \c dst exists without \c RETRO_VFS_COPY_OVERWRITE,
+ * \c src equals \c dst) fail here by returning \c NULL.
+ *
+ * @param src The path to the file to copy. Must be a regular file.
+ * @param dst The full path of the destination file. Must differ from \c src.
+ * @param flags Bitwise combination of \c RETRO_VFS_COPY flags, or 0.
+ * @return A handle to poll and close, or \c NULL if the copy could not start.
+ * @see retro_vfs_copy_step_t
+ * @see retro_vfs_copy_close_t
+ * @see filestream_copy_begin
+ * @see RETRO_VFS_COPY
+ * @since VFS API v5
+ */
+typedef struct retro_vfs_copy_handle *(RETRO_CALLCONV *retro_vfs_copy_begin_t)(const char *src, const char *dst, unsigned flags);
+
+/**
+ * Advances a copy started with \c retro_vfs_copy_begin_t by at most
+ * \c max_bytes and reports its state.
+ *
+ * The budget is the caller's latency/throughput dial: a few MiB from a
+ * frame loop keeps each call short; a very large budget (or repeated calls
+ * until the status leaves \c RETRO_VFS_COPY_RUNNING) runs the transfer at
+ * the full speed of the platform's copy primitive with no user-space
+ * buffer where the kernel can move the bytes itself.
+ *
+ * A step never moves more than \c max_bytes, but it may move less, and it
+ * may report \c RETRO_VFS_COPY_DONE early if the platform completed the
+ * copy without moving bytes (e.g. a file-system clone).
+ *
+ * @param handle The copy.
+ * @param max_bytes Upper bound on bytes moved by this call; 0 selects a
+ * frontend default sized for a frame loop (a few MiB).
+ * @param[out] bytes_done Bytes written to \c dst so far. May be \c NULL.
+ * @param[out] bytes_total Size of \c src in bytes. May be \c NULL.
+ * @return One of the \c RETRO_VFS_COPY_STATUS values.
+ * @since VFS API v5
+ */
+typedef int (RETRO_CALLCONV *retro_vfs_copy_step_t)(struct retro_vfs_copy_handle *handle, int64_t max_bytes, int64_t *bytes_done, int64_t *bytes_total);
+
+/**
+ * Releases a copy handle.
+ *
+ * If the copy is still running it is cancelled and the partial \c dst
+ * removed; nothing is waited for. Must be called exactly once for every
+ * non-NULL handle from \c retro_vfs_copy_begin_t, whatever
+ * \c retro_vfs_copy_step_t reported.
+ *
+ * @param handle The copy.
+ * @return 0 if the copy had completed successfully, or -1 if it failed,
+ * was cancelled, or was still running when closed.
+ * @since VFS API v5
+ */
+typedef int (RETRO_CALLCONV *retro_vfs_copy_close_t)(struct retro_vfs_copy_handle *handle);
+
+/**
  * Creates a directory at the given path.
  *
  * @param dir The desired location of the new directory.
@@ -2980,6 +4309,29 @@ typedef const char *(RETRO_CALLCONV *retro_vfs_dirent_get_name_t)(struct retro_v
 typedef bool (RETRO_CALLCONV *retro_vfs_dirent_is_dir_t)(struct retro_vfs_dir_handle *dirstream);
 
 /**
+ * Gets information about the directory entry most recently returned by
+ * \c retro_vfs_readdir_t, without opening it or building its path.
+ *
+ * Only valid after a \c retro_vfs_readdir_t call that returned \c true,
+ * and before the next \c retro_vfs_readdir_t or \c retro_vfs_closedir_t
+ * call on the same handle.
+ *
+ * @param dirstream The directory being enumerated.
+ * @param[out] size The entry's size in bytes (0 for directories).
+ * May be \c NULL, in which case this value is ignored.
+ * @param[out] mtime The entry's modification time
+ * in seconds since 1970-01-01T00:00:00Z.
+ * May be \c NULL, in which case this value is ignored.
+ * @return A bitmask of \c RETRO_VFS_STAT flags for the entry
+ * (\c RETRO_VFS_STAT_IS_VALID is always set on success),
+ * or 0 if the frontend cannot provide entry information.
+ * @see retro_dirent_stat
+ * @see RETRO_VFS_STAT
+ * @since VFS API v5
+ */
+typedef int (RETRO_CALLCONV *retro_vfs_dirent_stat_t)(struct retro_vfs_dir_handle *dirstream, int64_t *size, int64_t *mtime);
+
+/**
  * Closes the given directory and release its resources.
  *
  * Must be called on any \c retro_vfs_dir_handle returned by \c retro_vfs_open_t.
@@ -2992,6 +4344,230 @@ typedef bool (RETRO_CALLCONV *retro_vfs_dirent_is_dir_t)(struct retro_vfs_dir_ha
  * @since VFS API v3
  */
 typedef int (RETRO_CALLCONV *retro_vfs_closedir_t)(struct retro_vfs_dir_handle *dirstream);
+
+/**
+ * Reads from a file at a given offset, without moving the position that
+ * \c retro_vfs_read_t, \c retro_vfs_seek_t and \c retro_vfs_tell_t share.
+ * Any number of threads may call it on one handle at once, with no lock
+ * of the core's: the frontend reads at the offset itself. Introduced in
+ * VFS API v6.
+ *
+ * It reads the file as it is on disk: bytes written with
+ * \c retro_vfs_write_t and not flushed yet may not be seen.
+ *
+ * @param stream The file to read from.
+ * @param s Where the bytes go.
+ * @param len How many to read.
+ * @param offset Where in the file, from its start; not negative.
+ * @return The number of bytes read, 0 at or past the end of the file, or
+ * -1 on an error or when the frontend has no positional I/O for this
+ * file (a cdrom:// or network path, a platform without it): the core
+ * then seeks and reads, under a lock of its own if it shares the handle.
+ */
+typedef int64_t (RETRO_CALLCONV *retro_vfs_read_at_t)(struct retro_vfs_file_handle *stream, void *s, uint64_t len, int64_t offset);
+
+/** \c offset of \c retro_vfs_write_at_t for an append. */
+#define RETRO_VFS_WRITE_AT_APPEND (-1)
+
+/**
+ * Writes to a file at a given offset, without moving the handle's
+ * position; callable from several threads at once as
+ * \c retro_vfs_read_at_t is. Introduced in VFS API v6.
+ *
+ * With \c RETRO_VFS_WRITE_AT_APPEND the bytes are appended: each append
+ * goes in whole, after the one before it, whichever thread it came from
+ * - a log or a cache several threads add records to needs no lock. The
+ * appends start at the end of the file as it was opened, so a handle
+ * that is appended to is written with this call only.
+ *
+ * @param stream The file to write to.
+ * @param s The bytes to write.
+ * @param len How many.
+ * @param offset Where in the file, or \c RETRO_VFS_WRITE_AT_APPEND.
+ * @return The number of bytes written, or -1 on an error or when the
+ * frontend has no positional I/O for this file.
+ */
+typedef int64_t (RETRO_CALLCONV *retro_vfs_write_at_t)(struct retro_vfs_file_handle *stream, const void *s, uint64_t len, int64_t offset);
+
+/**
+ * Lends the next bytes of a file instead of copying them: points \c *ptr
+ * at up to \c len of them at the handle's position, in the frontend's
+ * mapping of the file or its read-ahead, and moves the position past
+ * them. Introduced in VFS API v7.
+ *
+ * The bytes stay valid until the next call on \c stream. They are the
+ * frontend's: the core reads them and never writes or frees them.
+ *
+ * @param stream The file to read from.
+ * @param len The most bytes wanted.
+ * @param ptr Set to the lent bytes.
+ * @return How many were lent, 0 at the end of the file, or -1 where
+ * nothing can be lent (no mapping of this file): the core then reads
+ * with \c retro_vfs_read_t, which this never stands in for.
+ */
+typedef int64_t (RETRO_CALLCONV *retro_vfs_view_t)(struct retro_vfs_file_handle *stream, uint64_t len, const uint8_t **ptr);
+
+/**
+ * Maps the whole of a file read-only, on demand, and returns it.
+ * Introduced in VFS API v7.
+ *
+ * The handle owns the mapping and drops it when it is closed; a second
+ * call returns the same one. Reads, seeks and the position are not
+ * touched by it.
+ *
+ * Reading the mapping is reading the file: where something else can
+ * shorten the file while it is mapped, a read past its new end faults
+ * (SIGBUS on POSIX), and a removable or network drive can fail a read
+ * the same way. A core maps only files nothing else changes - its own
+ * content, opened read-only - and reads them with \c retro_vfs_read_t
+ * where \c retro_vfs_volume_t says the drive is not a fixed one.
+ *
+ * @param stream A file opened for reading.
+ * @param len Set to the mapping's size, 0 when there is none.
+ * @return The mapping, or NULL where the file can't be mapped (an empty
+ * file, one too big for the address space, a write mode, a cdrom:// or
+ * network path, a platform without mappings): the core then reads.
+ */
+typedef const uint8_t *(RETRO_CALLCONV *retro_vfs_map_t)(struct retro_vfs_file_handle *stream, int64_t *len);
+
+/**
+ * Which file an open handle is, read from the handle rather than by
+ * path, so it describes the file being read even once the path names
+ * another. Introduced in VFS API v7.
+ *
+ * A core compares two of them (\c dev and \c id) to tell whether two
+ * handles or paths are one file, and \c size, \c mtime and \c ctime to
+ * tell whether it changed since.
+ */
+struct retro_vfs_file_identity
+{
+   uint64_t dev;          /**< The volume. */
+   uint64_t size;
+   int64_t  mtime;        /**< Last write, seconds since 1970. */
+   int64_t  ctime;        /**< Last status change (Windows: ChangeTime),
+                           *   0 where the platform has none. */
+   uint32_t mtime_nsec;
+   uint32_t ctime_nsec;
+   uint8_t  id[16];       /**< The file on the volume: Windows' 128-bit
+                           *   id, else the inode, big-endian, in the
+                           *   last 8 bytes. */
+   uint32_t uid;          /**< Owner and group, where \c flags has
+                           *   \c RETRO_VFS_IDENTITY_HAS_OWNER (POSIX). */
+   uint32_t gid;
+   uint16_t perm;         /**< POSIX permission bits (07777), with owner. */
+   uint8_t  type;         /**< \c RETRO_VFS_IDENTITY_REGULAR, ... */
+   uint8_t  flags;        /**< \c RETRO_VFS_IDENTITY_HAS_OWNER */
+};
+
+#define RETRO_VFS_IDENTITY_REGULAR   1
+#define RETRO_VFS_IDENTITY_DIRECTORY 2
+#define RETRO_VFS_IDENTITY_OTHER     3 /**< A FIFO, device, socket... */
+
+#define RETRO_VFS_IDENTITY_HAS_OWNER (1 << 0)
+
+/**
+ * The identity of an open file. Introduced in VFS API v7.
+ *
+ * @param stream The file.
+ * @param id Filled with its identity.
+ * @return \c true with \c id filled; \c false where the handle can't
+ * tell (a cdrom:// or network path, one opened without a descriptor).
+ */
+typedef bool (RETRO_CALLCONV *retro_vfs_identity_t)(struct retro_vfs_file_handle *stream, struct retro_vfs_file_identity *id);
+
+/**
+ * The identity of what a path names now, following links, without
+ * opening it. Introduced in VFS API v7.
+ *
+ * @param path The file or folder.
+ * @param id Filled with its identity; zeroed unless 1 is returned.
+ * @return 1 with \c id filled; 0 where nothing is there; -1 where it
+ * can't be told (no permission to look, a part of the path is a file on
+ * POSIX, or the frontend can't).
+ */
+typedef int (RETRO_CALLCONV *retro_vfs_stat_identity_t)(const char *path, struct retro_vfs_file_identity *id);
+
+/**
+ * What a file's volume is: how it is mounted and what kind of drive.
+ * Introduced in VFS API v7.
+ */
+struct retro_vfs_volume
+{
+   uint64_t mount; /**< The mount's id, with \c RETRO_VFS_VOLUME_MOUNT
+                    *   (Linux). */
+   uint8_t  kind;  /**< \c RETRO_VFS_VOLUME_FIXED, ..., 0 when not known. */
+   uint8_t  flags; /**< \c RETRO_VFS_VOLUME_READ_ONLY, ... */
+};
+
+/** Mounted read-only. */
+#define RETRO_VFS_VOLUME_READ_ONLY  (1 << 0)
+/** A filesystem whose kernel alone sets change times, and that is not
+ *  stacked on another: no user can forge a file's ctime. */
+#define RETRO_VFS_VOLUME_CTIME_KEPT (1 << 1)
+/** \c mount holds the mount's id. */
+#define RETRO_VFS_VOLUME_MOUNT      (1 << 2)
+
+/* kind: the drive type (Windows); elsewhere 0, not known */
+#define RETRO_VFS_VOLUME_FIXED     1
+#define RETRO_VFS_VOLUME_REMOVABLE 2 /**< Removable or optical. */
+#define RETRO_VFS_VOLUME_REMOTE    3
+#define RETRO_VFS_VOLUME_RAM       4
+
+/* What to ask for: each part costs a query of its own on some platforms */
+#define RETRO_VFS_VOLUME_WANT_FLAGS (1 << 0) /**< READ_ONLY, CTIME_KEPT */
+#define RETRO_VFS_VOLUME_WANT_MOUNT (1 << 1)
+#define RETRO_VFS_VOLUME_WANT_KIND  (1 << 2)
+
+/**
+ * The volume of an open file. Introduced in VFS API v7.
+ *
+ * @param stream The file.
+ * @param want The \c RETRO_VFS_VOLUME_WANT_ parts to ask for.
+ * @param vol Filled; a flag not set is a no. Zeroed on \c false.
+ * @return \c true when every part in \c want was told (a kind never
+ * told is 0 and does not make it \c false); \c false where any part
+ * can't be.
+ */
+typedef bool (RETRO_CALLCONV *retro_vfs_volume_t)(struct retro_vfs_file_handle *stream, unsigned want, struct retro_vfs_volume *vol);
+
+/**
+ * The volume of what a path names, following links. Introduced in VFS
+ * API v7.
+ *
+ * @return 1 told, 0 nothing there, -1 can't be told, as
+ * \c retro_vfs_stat_identity_t.
+ */
+typedef int (RETRO_CALLCONV *retro_vfs_stat_volume_t)(const char *path, unsigned want, struct retro_vfs_volume *vol);
+
+/** The longest fs-verity digest \c retro_vfs_verity_measure_t gives. */
+#define RETRO_VFS_VERITY_MAX 64
+
+/**
+ * The digest fs-verity keeps for a sealed file (Linux 5.4 on, Android 11
+ * on): the kernel checks every read of the file against it, so a file
+ * whose digest is known is that file. Introduced in VFS API v7.
+ *
+ * @param stream The file.
+ * @param digest Where the digest goes.
+ * @param cap Its room, in bytes.
+ * @return The digest's length; 0 where the file isn't sealed, \c cap is
+ * too small, or it can't be told.
+ */
+typedef size_t (RETRO_CALLCONV *retro_vfs_verity_measure_t)(struct retro_vfs_file_handle *stream, uint8_t *digest, size_t cap);
+
+/**
+ * Seals a file with fs-verity (SHA-256, 4 KiB blocks): from then on it
+ * can't be written again, only removed, and the kernel checks every read
+ * of it. Introduced in VFS API v7.
+ *
+ * @param stream The file, opened for reading; nothing may have it open
+ * for writing.
+ * @return 1 sealed, now or before; 0 where it can't be here (a
+ * filesystem, mount or kernel without fs-verity, a file not the core's,
+ * one open for writing somewhere, any platform but Linux and Android);
+ * -1 on another error.
+ */
+typedef int (RETRO_CALLCONV *retro_vfs_verity_enable_t)(struct retro_vfs_file_handle *stream);
 
 /**
  * File system interface exposed by the frontend.
@@ -3062,6 +4638,64 @@ struct retro_vfs_interface
 
    /** @copydoc retro_vfs_closedir_t */
    retro_vfs_closedir_t closedir;
+
+   /* VFS API v4 */
+   /** @copydoc retro_vfs_stat_64_t */
+   retro_vfs_stat_64_t stat_64;
+
+   /* VFS API v5 */
+   /** @copydoc retro_vfs_set_readonly_t */
+   retro_vfs_set_readonly_t set_readonly;
+
+   /** @copydoc retro_vfs_get_mtime_t */
+   retro_vfs_get_mtime_t get_mtime;
+
+   /** @copydoc retro_vfs_set_mtime_t */
+   retro_vfs_set_mtime_t set_mtime;
+
+   /** @copydoc retro_vfs_copy_begin_t */
+   retro_vfs_copy_begin_t copy_begin;
+
+   /** @copydoc retro_vfs_copy_step_t */
+   retro_vfs_copy_step_t copy_step;
+
+   /** @copydoc retro_vfs_copy_close_t */
+   retro_vfs_copy_close_t copy_close;
+
+   /** @copydoc retro_vfs_dirent_stat_t */
+   retro_vfs_dirent_stat_t dirent_stat;
+
+   /* VFS API v6 */
+   /** @copydoc retro_vfs_read_at_t */
+   retro_vfs_read_at_t read_at;
+
+   /** @copydoc retro_vfs_write_at_t */
+   retro_vfs_write_at_t write_at;
+
+   /* VFS API v7 */
+   /** @copydoc retro_vfs_view_t */
+   retro_vfs_view_t view;
+
+   /** @copydoc retro_vfs_map_t */
+   retro_vfs_map_t map;
+
+   /** @copydoc retro_vfs_identity_t */
+   retro_vfs_identity_t identity;
+
+   /** @copydoc retro_vfs_stat_identity_t */
+   retro_vfs_stat_identity_t stat_identity;
+
+   /** @copydoc retro_vfs_volume_t */
+   retro_vfs_volume_t volume;
+
+   /** @copydoc retro_vfs_stat_volume_t */
+   retro_vfs_stat_volume_t stat_volume;
+
+   /** @copydoc retro_vfs_verity_measure_t */
+   retro_vfs_verity_measure_t verity_measure;
+
+   /** @copydoc retro_vfs_verity_enable_t */
+   retro_vfs_verity_enable_t verity_enable;
 };
 
 /**
@@ -3103,6 +4737,33 @@ struct retro_vfs_interface_info
    struct retro_vfs_interface *iface;
 };
 
+/**
+ * Represents a single frontend-authorized filesystem location.
+ *
+ * The \c path field must be directly usable through the frontend VFS
+ * interface, for example saf://... on Android.
+ *
+ * The frontend owns all returned pointers. Cores must copy strings if they
+ * need to retain them after the environment callback returns.
+ */
+struct retro_vfs_authorized_location
+{
+   const char *path;
+   const char *label;
+   unsigned flags;
+};
+
+/**
+ * Represents the list of frontend-authorized filesystem locations.
+ *
+ * This is returned by RETRO_ENVIRONMENT_GET_VFS_AUTHORIZED_LOCATIONS.
+ */
+struct retro_vfs_authorized_locations
+{
+   const struct retro_vfs_authorized_location *locations;
+   size_t count;
+};
+
 /** @} */
 
 /** @defgroup GET_HW_RENDER_INTERFACE Hardware Rendering Interface
@@ -3127,7 +4788,10 @@ enum retro_hw_render_interface_type
     */
    RETRO_HW_RENDER_INTERFACE_VULKAN     = 0,
 
-   /** Indicates a \c retro_hw_render_interface for Direct3D 9. */
+   /**
+    * Indicates a \c retro_hw_render_interface for Direct3D 9.
+    * @see retro_hw_render_interface_d3d9
+    */
    RETRO_HW_RENDER_INTERFACE_D3D9       = 1,
 
    /** Indicates a \c retro_hw_render_interface for Direct3D 10. */
@@ -3151,6 +4815,12 @@ enum retro_hw_render_interface_type
     * @see retro_hw_render_interface_gskit_ps2
     */
    RETRO_HW_RENDER_INTERFACE_GSKIT_PS2  = 5,
+
+   /**
+    * PlayStation 3 RSX (PSL1GHT).
+    * @see retro_hw_render_interface_rsx in libretro_rsx.h
+    */
+   RETRO_HW_RENDER_INTERFACE_RSX        = 6,
 
    /** @private Defined to ensure <tt>sizeof(retro_hw_render_interface_type) == sizeof(int)</tt>.
     * Do not use. */
@@ -3385,6 +5055,20 @@ enum retro_hw_render_context_negotiation_interface_type
     * @see retro_hw_render_context_negotiation_interface_vulkan
     */
    RETRO_HW_RENDER_CONTEXT_NEGOTIATION_INTERFACE_VULKAN = 0,
+
+   /**
+    * Denotes a context negotiation interface for Direct3D 12.
+    * Carries the highest hardware render interface version the core can use.
+    * @see retro_hw_render_context_negotiation_interface_d3d12
+    */
+   RETRO_HW_RENDER_CONTEXT_NEGOTIATION_INTERFACE_D3D12 = 1,
+
+   /**
+    * Denotes a context negotiation interface for Direct3D 11.
+    * Carries the highest hardware render interface version the core can use.
+    * @see retro_hw_render_context_negotiation_interface_d3d11
+    */
+   RETRO_HW_RENDER_CONTEXT_NEGOTIATION_INTERFACE_D3D11 = 2,
 
    /**
     * @private Defined to ensure <tt>sizeof(retro_hw_render_context_negotiation_interface_type) == sizeof(int)</tt>.
@@ -4202,6 +5886,81 @@ struct retro_log_callback
 /** Indicates CPU support for the ASIMD instruction set. */
 #define RETRO_SIMD_ASIMD    (1 << 21)
 
+/** Indicates CPU support for the AVX-512 x86-64-v4 baseline:
+ * AVX-512 F, CD, BW, DQ and VL are all present and the OS saves
+ * ZMM state. */
+#define RETRO_SIMD_AVX512   (1 << 22)
+
+/** Indicates CPU support for the LZCNT instruction (x86 ABM / ARM CLZ). */
+#define RETRO_SIMD_LZCNT    (1 << 23)
+
+/**
+ * Indicates CPU support for the PCLMULQDQ carry-less multiply instruction.
+ *
+ * Distinct from \c RETRO_SIMD_AES: AES-NI is CPUID.1:ECX[25] and
+ * PCLMULQDQ is CPUID.1:ECX[1]. They shipped together on most parts but
+ * hypervisors mask them independently and some early Westmere SKUs had
+ * AES fused off, so one must not be used as a proxy for the other.
+ */
+#define RETRO_SIMD_PCLMUL   (1 << 24)
+
+/**
+ * Indicates CPU support for the ARMv8 CRC32 instructions
+ * (\c crc32b / \c crc32h / \c crc32w / \c crc32x).
+ *
+ * These compute CRC-32/ISO-HDLC, the gzip and PNG polynomial, not
+ * CRC-32C. Optional in ARMv8.0 and mandatory from ARMv8.1, so a
+ * 64-bit ARM CPU does not imply their presence: Apple's A7 through
+ * A10 lack them, for instance.
+ */
+#define RETRO_SIMD_CRC32    (1 << 25)
+
+/**
+ * Indicates CPU support for hardware SHA-512 acceleration.
+ *
+ * On AArch64 this is FEAT_SHA512, optional from Armv8.1 and A64-only.
+ * On x86 it is the SHA512 instruction group enumerated by
+ * CPUID.(EAX=07H,ECX=1):EAX[0], which is separate from the SHA-NI
+ * instructions covering SHA-1 and SHA-256.
+ */
+#define RETRO_SIMD_SHA512   (1 << 26)
+
+/**
+ * Indicates CPU support for hardware SHA-1 acceleration.
+ *
+ * On AArch64 this is FEAT_SHA1; on x86 it is part of SHA-NI, which
+ * covers SHA-1 and SHA-256 in one CPUID bit and therefore always
+ * reports alongside \c RETRO_SIMD_SHA256 there.
+ */
+#define RETRO_SIMD_SHA1     (1 << 27)
+
+/**
+ * Indicates CPU support for hardware SHA-256 acceleration.
+ *
+ * On AArch64 this is FEAT_SHA256; on x86 it is the other half of
+ * SHA-NI. Separate from \c RETRO_SIMD_SHA1 because AArch64 enumerates
+ * the two independently.
+ */
+#define RETRO_SIMD_SHA256   (1 << 28)
+
+/**
+ * Indicates CPU support for the FMA3 fused multiply-add instructions.
+ *
+ * CPUID.(EAX=01H):ECX[12]. They operate on YMM state, so this reports
+ * only where the operating system preserves it, as \c RETRO_SIMD_AVX
+ * does.
+ */
+#define RETRO_SIMD_FMA3     (1 << 29)
+
+/**
+ * Indicates CPU support for the FMA4 fused multiply-add instructions.
+ *
+ * CPUID.(EAX=80000001H):ECX[16], an AMD extension dropped from Zen, and
+ * a different encoding from \c RETRO_SIMD_FMA3 rather than a superset
+ * of it. Gated on the same operating system state.
+ */
+#define RETRO_SIMD_FMA4     (1 << 30)
+
 /** @} */
 
 /**
@@ -4463,15 +6222,18 @@ enum retro_sensor_action
 /* Id values for SENSOR types. */
 
 /**
- * Returns the device's acceleration along its local X axis minus the effect of gravity, in m/s^2.
+ * Returns the device's acceleration along its local X axis, in g (standard gravity, 9.80665 m/s^2).
+ * Includes the effect of gravity;
+ * a device at rest on a table will have values close to 0, 0, 1.
  *
- * Positive values mean that the device is accelerating to the right.
+ * Positive values mean that the device is accelerating to the right,
  * assuming the user is looking at it head-on.
  */
 #define RETRO_SENSOR_ACCELEROMETER_X 0
 
 /**
- * Returns the device's acceleration along its local Y axis minus the effect of gravity, in m/s^2.
+ * Returns the device's acceleration along its local Y axis, in g (standard gravity, 9.80665 m/s^2).
+ * Includes the effect of gravity.
  *
  * Positive values mean that the device is accelerating upwards,
  * assuming the user is looking at it head-on.
@@ -4479,7 +6241,8 @@ enum retro_sensor_action
 #define RETRO_SENSOR_ACCELEROMETER_Y 1
 
 /**
- * Returns the the device's acceleration along its local Z axis minus the effect of gravity, in m/s^2.
+ * Returns the device's acceleration along its local Z axis, in g (standard gravity, 9.80665 m/s^2).
+ * Includes the effect of gravity.
  *
  * Positive values indicate forward acceleration towards the user,
  * assuming the user is looking at the device head-on.
@@ -4525,6 +6288,55 @@ enum retro_sensor_action
  * @see https://en.wikipedia.org/wiki/Lux for a table of common lux values.
  */
 #define RETRO_SENSOR_ILLUMINANCE 6
+/** @} */
+
+/** @defgroup RETRO_SENSOR_SUBDEVICE Sensor Sub-Device Index
+ * @{
+ */
+
+/**
+ * The number of bits that a sub-device index is shifted by within a sensor ID
+ * or a \c retro_sensor_action.
+ *
+ * Addresses more than one sensor of the same kind on a single port.
+ * Index 0 denotes the controller itself and encodes to the values already in
+ * use (<tt>RETRO_SENSOR_SUBDEVICE(0, id) == id</tt>). Index 1 denotes the part
+ * of the controller held in the left hand: a Wii Remote's Nunchuk, or the
+ * left Joy-Con of a pair held as one controller (whose index 0 is the right
+ * one). Higher indices are left for controllers with more parts.
+ *
+ * A core learns whether the frontend has a sub-device's sensor from the
+ * enable action, \c retro_set_sensor_state_t returning \c true for it; a
+ * reading of 0 says nothing, as a frontend without it returns 0 for every
+ * read. For instance:
+ * @code
+ * bool nunchuk = sensor.set_sensor_state(port, (enum retro_sensor_action)
+ *       RETRO_SENSOR_SUBDEVICE(1, RETRO_SENSOR_ACCELEROMETER_ENABLE), 100);
+ * float x      = sensor.get_sensor_input(port,
+ *       RETRO_SENSOR_SUBDEVICE(1, RETRO_SENSOR_ACCELEROMETER_X));
+ * @endcode
+ *
+ * @note \c retro_sensor_action is an enum, so an encoded action must be cast at
+ * the call site. \c RETRO_SENSOR_DUMMY pins the underlying type to \c int, so
+ * the encoded value is in range.
+ *
+ * @see RETRO_SENSOR_ID
+ * @see retro_sensor_action
+ */
+#define RETRO_SENSOR_INDEX_SHIFT 8
+
+/** Mask of the bits below the sub-device index. */
+#define RETRO_SENSOR_INDEX_MASK ((1u << RETRO_SENSOR_INDEX_SHIFT) - 1u)
+
+/** Returns the sub-device index encoded in \c id; 0 is the controller itself. */
+#define RETRO_SENSOR_INDEX(id) ((unsigned)(id) >> RETRO_SENSOR_INDEX_SHIFT)
+
+/** Returns the sensor ID or action in \c id, without its sub-device index. */
+#define RETRO_SENSOR_BASE(id) ((unsigned)(id) & RETRO_SENSOR_INDEX_MASK)
+
+/** Addresses sensor \c id on sub-device \c index of a port. */
+#define RETRO_SENSOR_SUBDEVICE(index, id) \
+   ((unsigned)((((unsigned)(index)) << RETRO_SENSOR_INDEX_SHIFT) | ((unsigned)(id))))
 /** @} */
 
 /**
@@ -4605,10 +6417,61 @@ enum retro_camera_buffer
    RETRO_CAMERA_BUFFER_RAW_FRAMEBUFFER,
 
    /**
+    * Indicates that camera frames should be delivered to the core as
+    * the planar 4:2:0 YCbCr the capture device produces, in place.
+    *
+    * No conversion happens between the device and the core: the planes
+    * are the capture buffer itself. A core that can sample or convert
+    * YCbCr should prefer this over \c RETRO_CAMERA_BUFFER_RAW_FRAMEBUFFER,
+    * which costs the frontend a conversion pass per frame.
+    *
+    * @see retro_camera_frame_planar_t
+    */
+   RETRO_CAMERA_BUFFER_PLANAR,
+
+   /**
     * @private Defined to ensure <tt>sizeof(enum retro_camera_buffer) == sizeof(int)</tt>.
     * Do not use.
     */
    RETRO_CAMERA_BUFFER_DUMMY = INT_MAX
+};
+
+/** The luma plane is full range (0..255) rather than limited (16..235). */
+#define RETRO_CAMERA_PLANAR_FULL_RANGE (1 << 0)
+/** BT.709 matrix rather than BT.601. */
+#define RETRO_CAMERA_PLANAR_BT709      (1 << 1)
+
+/**
+ * One 8-bit 4:2:0 YCbCr frame, as planes.
+ *
+ * Covers NV12, NV21 and I420 without a format tag: the chroma planes
+ * are addressed by their own base pointers and a common sample step,
+ * so NV12 is <tt>planes[2] == planes[1] + 1</tt> with \c chroma_step 2,
+ * NV21 the other way round, and I420 two separate planes with
+ * \c chroma_step 1. Row pairs share a chroma row.
+ *
+ * @see RETRO_CAMERA_BUFFER_PLANAR
+ */
+struct retro_camera_planar_frame
+{
+   /** Y, Cb, Cr. Owned by the frontend, read-only, valid for the duration of the callback. */
+   const uint8_t *planes[3];
+
+   /** Row strides of the three planes, in bytes. */
+   size_t strides[3];
+
+   /** Distance between horizontally adjacent chroma samples of one plane, in bytes: 1 or 2. */
+   size_t chroma_step;
+
+   /** Frame size in luma pixels. */
+   unsigned width;
+   unsigned height;
+
+   /** Degrees the frame must be rotated clockwise to be upright: 0, 90, 180 or 270. */
+   unsigned rotation;
+
+   /** \c RETRO_CAMERA_PLANAR_* bits. */
+   unsigned flags;
 };
 
 /**
@@ -4690,6 +6553,17 @@ typedef void (RETRO_CALLCONV *retro_camera_frame_opengl_texture_t)(unsigned text
       unsigned texture_target, const float *affine);
 
 /**
+ * Called by the frontend to report a new camera frame,
+ * delivered as the capture device's own planar YCbCr buffer.
+ *
+ * @param frame The frame. Its planes may be invalidated when this function returns,
+ * so the core should make its own copy if necessary.
+ * @see RETRO_CAMERA_BUFFER_PLANAR
+ */
+typedef void (RETRO_CALLCONV *retro_camera_frame_planar_t)(
+      const struct retro_camera_planar_frame *frame);
+
+/**
  * An interface that the core can use to access a device's camera.
  *
  * @see RETRO_ENVIRONMENT_GET_CAMERA_INTERFACE
@@ -4764,6 +6638,15 @@ struct retro_camera_callback
     * May be \c NULL, in which case this function is skipped.
     */
    retro_camera_lifetime_status_t deinitialized;
+
+   /**
+    * @copydoc retro_camera_frame_planar_t
+    * @note Read by the frontend only when \c caps has the
+    * \c RETRO_CAMERA_BUFFER_PLANAR bit, so a core built against an
+    * older header, whose struct ends above, is never read past.
+    * If \c NULL, this function will not be called.
+    */
+   retro_camera_frame_planar_t frame_planar;
 };
 
 /** @} */
@@ -5082,6 +6965,9 @@ enum retro_hw_context_type
 
    /* Direct3D9, see RETRO_ENVIRONMENT_GET_HW_RENDER_INTERFACE */
    RETRO_HW_CONTEXT_D3D9             = 10,
+
+   /* PlayStation 3 RSX, see libretro_rsx.h */
+   RETRO_HW_CONTEXT_RSX              = 11,
 
    /** Dummy value to ensure sizeof(enum retro_hw_context_type) == sizeof(int). Do not use. */
    RETRO_HW_CONTEXT_DUMMY = INT_MAX
@@ -5629,7 +7515,79 @@ enum retro_pixel_format
     */
    RETRO_PIXEL_FORMAT_RGB565   = 2,
 
-   /** Defined to ensure that <tt>sizeof(retro_pixel_format) == sizeof(int)</tt>. Do not use. */
+   /**
+    * XRGB2101010, native endian.
+    * 32-bit packed: 2 ignored high bits followed by 10-bit R, G, B
+    * (i.e. bits [29:20]=R, [19:10]=G, [9:0]=B; the top 2 bits are ignored).
+    * Intended for cores that decode 10-bit-per-channel content (e.g. HDR10
+    * sources) and want to pass it through without narrowing to 8 bits.
+    *
+    * A frontend is not required to render this natively: if the active video
+    * driver does not support a 10-bit source surface, the frontend transparently
+    * down-converts to XRGB8888, so a core may rely on SET_PIXEL_FORMAT accepting
+    * this value but should not assume the display path is 10-bit end to end.
+    */
+   RETRO_PIXEL_FORMAT_XRGB2101010 = 3,
+
+   /**
+    * HDR10: PQ-encoded Rec.2020, 10 bits per channel, native endian.
+    *
+    * Bit layout is identical to #RETRO_PIXEL_FORMAT_XRGB2101010 -- 2 ignored
+    * high bits then 10-bit R, G, B (bits [29:20]=R, [19:10]=G, [9:0]=B) --
+    * but the *encoding* differs, and that is the whole point of a separate
+    * value: the samples are SMPTE ST.2084 (PQ) over Rec.2020 primaries,
+    * covering 0..10000 nits absolute, exactly as HDR10 video does.
+    *
+    * XRGB2101010 is 10-bit SDR: the frontend treats 1.0 as paper white and
+    * cannot represent anything brighter, so a core has no way to make a
+    * highlight exceed the SDR white level.  With this format the core
+    * chooses absolute luminance per pixel, so specular highlights, muzzle
+    * flashes, explosions and emissive surfaces can sit well above paper
+    * white while the rest of the image stays where it was.
+    *
+    * A frontend that accepts this format MUST pass the samples through to an
+    * HDR10 (PQ / Rec.2020) swapchain without re-encoding them: no inverse
+    * tonemap, no Rec.709->Rec.2020 rotation, no paper-white scaling, since
+    * the core has already applied all of it.  For scRGB output the frontend must instead decode PQ, rotate Rec.2020
+    * to linear Rec.709 and scale to the platform reference white, without
+    * a second creative curve. A frontend without either path must reject the format from SET_PIXEL_FORMAT rather than
+    * silently down-converting -- PQ samples interpreted as SDR look badly
+    * wrong, so the usual transparent narrowing is not safe here.  Cores
+    * should therefore keep an SDR path and fall back when this is refused.
+    *
+    * Cores should query #RETRO_ENVIRONMENT_GET_HDR_METADATA to learn
+    * the luminance the user considers "SDR white" and map their normal
+    * output to it; content authored above that value is what produces the
+    * HDR effect.
+    */
+   RETRO_PIXEL_FORMAT_HDR10_2101010 = 4,
+
+   /**
+    * FP16 linear scRGB with Rec.709/sRGB primaries and D65 white.
+    *
+    * Each pixel is four IEEE 754 binary16 samples in memory order R, G, B, A,
+    * with each 16-bit sample in native byte order. Alpha is ignored; cores
+    * should set it to 1.0. Each pixel occupies 8 bytes; pitch is in bytes.
+    * RGB samples must be finite. Negative values and values above 1.0 are
+    * valid and must not be clamped during upload or intermediate storage.
+    *
+    * RGB 1.0 represents 80 cd/m^2, independent of frontend paper white and
+    * platform output units. There is no gamma/PQ transfer to decode. Cores
+    * can use GET_HDR_METADATA paper_white_nits / 80.0 for their SDR white.
+    *
+    * An accepting frontend must preserve linear HDR values, converting
+    * primaries, transfer and reference-white units on the GPU as required
+    * by its output. Do not apply SDR expansion or a second paper-white
+    * scale. Unsupported paths must reject SET_PIXEL_FORMAT; cores must
+    * check its result and retain an SDR fallback. The corresponding
+    * source_formats bit is RETRO_HDR_SOURCE_FORMAT_SCRGB_RGBA16F.
+    */
+   RETRO_PIXEL_FORMAT_SCRGB_RGBA16F = 5,
+
+   /** 
+    * @private Defined to ensure that <tt>sizeof(retro_pixel_format) == sizeof(int)</tt>.
+	* Do not use.
+	*/
    RETRO_PIXEL_FORMAT_UNKNOWN  = INT_MAX
 };
 
@@ -7382,6 +9340,46 @@ struct retro_device_power
 
 /** @} */
 
+/** @defgroup Executable Memory Modes
+ * Describes how the frontend provisions executable memory.
+ * @{
+ */
+
+#define RETRO_EXEC_MEM_MODE_UNAVAILABLE  0 /**< No executable memory available */
+#define RETRO_EXEC_MEM_MODE_UNRESTRICTED 1 /**< No restrictions; core should self-allocate */
+#define RETRO_EXEC_MEM_MODE_RWX          2 /**< Single mapping, read-write-execute */
+#define RETRO_EXEC_MEM_MODE_WX_TOGGLE    3 /**< Single mapping, write XOR execute (core toggles) */
+#define RETRO_EXEC_MEM_MODE_DUAL_MAP     4 /**< Separate R-X and R-W mappings of same pages */
+
+/**
+ * Parameters for \c RETRO_ENVIRONMENT_EXEC_MEM_ALLOC.
+ *
+ * The core fills in \c version and \c size before calling.
+ * The frontend fills in \c mode, \c rx, and \c rw on success.
+ * @see RETRO_ENVIRONMENT_EXEC_MEM_ALLOC
+ */
+struct retro_exec_mem_alloc
+{
+   unsigned version;  /**< Set by core (currently 1). */
+   size_t   size;     /**< Set by core: requested bytes.  */
+   unsigned mode;     /**< Set by frontend: one of \c RETRO_EXEC_MEM_MODE_*. */
+   void    *rx;       /**< Set by frontend: execute from this pointer. */
+   void    *rw;       /**< Set by frontend: write through this pointer.
+                           Equal to \c rx when mode is RWX or WX_TOGGLE. */
+};
+
+/**
+ * Parameters for \c RETRO_ENVIRONMENT_EXEC_MEM_FREE.
+ * @see RETRO_ENVIRONMENT_EXEC_MEM_FREE
+ */
+struct retro_exec_mem_free
+{
+   void *rx;  /**< The \c rx pointer returned by a previous alloc call.
+                   The matching \c rw pointer is also accepted. */
+};
+
+/** @} */
+
 /**
  * @defgroup Callbacks
  * @{
@@ -7453,6 +9451,74 @@ typedef size_t (RETRO_CALLCONV *retro_audio_sample_batch_t)(const int16_t *data,
       size_t frames);
 
 /**
+ * Renders multiple audio frames in one go, in float format.
+ *
+ * This is the float counterpart of \c retro_audio_sample_batch_t. It is
+ * only valid after the frontend has answered \c true to
+ * \c RETRO_ENVIRONMENT_GET_AUDIO_SAMPLE_BATCH_FLOAT, and must not be
+ * mixed with the int16 callbacks within the same loaded game.
+ *
+ * @param data A pointer to interleaved stereo float sample frames,
+ *     normalized to the range [-1.0, 1.0]. One frame is a left/right
+ *     pair, e.g. <tt>float buf[4] = { l, r, l, r };</tt> is 2 frames.
+ * @param frames The number of frames represented in \c data.
+ *
+ * @return The number of frames that were processed.
+ *
+ * @see RETRO_ENVIRONMENT_GET_AUDIO_SAMPLE_BATCH_FLOAT
+ * @see retro_audio_sample_batch_t
+ */
+typedef size_t (RETRO_CALLCONV *retro_audio_sample_batch_float_t)(
+      const float *data, size_t frames);
+
+/**
+ * Float audio sample-batch callback handed to the core in response to
+ * \c RETRO_ENVIRONMENT_GET_AUDIO_SAMPLE_BATCH_FLOAT.
+ *
+ * @see RETRO_ENVIRONMENT_GET_AUDIO_SAMPLE_BATCH_FLOAT
+ */
+struct retro_audio_sample_float_callback
+{
+   /* Set by the frontend. The core calls this instead of the int16
+    * batch callback once float output has been negotiated. */
+   retro_audio_sample_batch_float_t batch;
+};
+
+/**
+ * Renders multiple audio frames of a multi-channel layout.
+ *
+ * Valid only after the frontend has answered \c true to
+ * \c RETRO_ENVIRONMENT_GET_AUDIO_SAMPLE_BATCH_MULTI.
+ *
+ * @param data Interleaved frames of \c channels samples, one sample
+ *     a speaker in the ascending-bit order of \c layout; int16 or
+ *     float in [-1.0, 1.0] by the entry point.
+ * @param frames The number of frames in \c data.
+ * @param channels Samples per frame: the bits set in \c layout.
+ * @param layout The speaker mask, from the \c RETRO_AUDIO_SPEAKER_ bits.
+ * @return The number of frames processed; 0 for a layout the frontend
+ *     does not take.
+ * @see RETRO_ENVIRONMENT_GET_AUDIO_SAMPLE_BATCH_MULTI
+ */
+typedef size_t (RETRO_CALLCONV *retro_audio_sample_batch_multi_int16_t)(
+      const int16_t *data, size_t frames, unsigned channels, unsigned layout);
+typedef size_t (RETRO_CALLCONV *retro_audio_sample_batch_multi_float_t)(
+      const float *data, size_t frames, unsigned channels, unsigned layout);
+
+/**
+ * Multi-channel batch callbacks handed to the core in response to
+ * \c RETRO_ENVIRONMENT_GET_AUDIO_SAMPLE_BATCH_MULTI.
+ */
+struct retro_audio_sample_multi_callback
+{
+   /* Set by the frontend. */
+   retro_audio_sample_batch_multi_int16_t batch_int16;
+   /* Set by the frontend when float output is negotiated too, NULL
+    * otherwise. */
+   retro_audio_sample_batch_multi_float_t batch_float;
+};
+
+/**
  * Polls input.
  *
  * @see retro_set_input_poll()
@@ -7464,6 +9530,9 @@ typedef void (RETRO_CALLCONV *retro_input_poll_t)(void);
  *
  * @param port Which player 'port' to query.
  * @param device Which device to query for. Will be masked with \c RETRO_DEVICE_MASK.
+ * @warning Poll with a base device ID only; passing an ID created via
+ * \c RETRO_DEVICE_SUBCLASS is reserved for future definition, and the masking
+ * noted above is a frontend convenience that must not be relied upon.
  * @param index The input index to retrieve.
  * The exact semantics depend on the device type given in \c device.
  * @param id The ID of which value to query, like \c RETRO_DEVICE_ID_JOYPAD_B.

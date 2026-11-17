@@ -45,7 +45,27 @@ enum audio_mixer_type
    AUDIO_MIXER_TYPE_OGG,
    AUDIO_MIXER_TYPE_MOD,
    AUDIO_MIXER_TYPE_FLAC,
-   AUDIO_MIXER_TYPE_MP3
+   AUDIO_MIXER_TYPE_MP3,
+   AUDIO_MIXER_TYPE_M4A,
+   AUDIO_MIXER_TYPE_OPUS,
+   AUDIO_MIXER_TYPE_WEBA, /* resolves to OPUS or OGG at load */
+   AUDIO_MIXER_TYPE_AC3,  /* a .ac3 file of syncframes (rac3); up to
+                           * 5.1, folded to stereo like the others */
+   AUDIO_MIXER_TYPE_LPCM, /* a .lpcm or .pcm file of samples (rlpcm).
+                           * A buffer opening with a DVD or Blu-ray
+                           * header says its own shape; raw samples do
+                           * not, so those are taken as 16-bit stereo
+                           * at 48 kHz, little-endian, which is what a
+                           * file with no header and no other word on
+                           * the matter most often is                 */
+   /* A WAV played as a stream: decoded a chunk at a time out of the
+    * source buffer rather than converted whole at load, so its cost
+    * is the source and not the source plus a decoded copy, and its
+    * source may be a window rather than the file.  AUDIO_MIXER_TYPE_WAV
+    * remains the right choice for the short sounds - menu clicks and
+    * the like - that want their PCM ready before the first mix. */
+   AUDIO_MIXER_TYPE_WAV_STREAM,
+   AUDIO_MIXER_TYPE_WMA
 };
 
 typedef struct audio_mixer_sound audio_mixer_sound_t;
@@ -62,14 +82,91 @@ void audio_mixer_init(unsigned rate);
 
 void audio_mixer_done(void);
 
-audio_mixer_sound_t* audio_mixer_load_wav(void *buffer, int32_t size,
-      const char *resampler_ident, enum resampler_quality quality);
-audio_mixer_sound_t* audio_mixer_load_ogg(void *buffer, int32_t size);
-audio_mixer_sound_t* audio_mixer_load_mod(void *buffer, int32_t size);
-audio_mixer_sound_t* audio_mixer_load_flac(void *buffer, int32_t size);
-audio_mixer_sound_t* audio_mixer_load_mp3(void *buffer, int32_t size);
+/* want_s16 selects which PCM format is built at load - the one the
+ * mixer's current mode will play.  The other format derives on
+ * demand at the first mode-mismatched play (see the derivation notes
+ * in the implementation), so a WAV holds one PCM copy, not two. */
+audio_mixer_sound_t* audio_mixer_load_wav(void *buffer, size_t size,
+      const char *resampler_ident, enum resampler_quality quality,
+      bool want_s16);
+audio_mixer_sound_t* audio_mixer_load_wav_stream(void *buffer,
+      size_t size);
+audio_mixer_sound_t* audio_mixer_load_ogg(void *buffer, size_t size);
+audio_mixer_sound_t* audio_mixer_load_mod(void *buffer, size_t size);
+audio_mixer_sound_t* audio_mixer_load_flac(void *buffer, size_t size);
+audio_mixer_sound_t* audio_mixer_load_mp3(void *buffer, size_t size);
+audio_mixer_sound_t* audio_mixer_load_m4a(void *buffer, size_t size);
+audio_mixer_sound_t* audio_mixer_load_ac3(void *buffer, size_t size);
+audio_mixer_sound_t* audio_mixer_load_wma(void *buffer, size_t size);
+audio_mixer_sound_t* audio_mixer_load_lpcm(void *buffer, size_t size);
+audio_mixer_sound_t* audio_mixer_load_opus(void *buffer, size_t size);
+/* WebM audio (.weba): identifies the track's codec and returns a sound
+ * of the matching existing type (OPUS or OGG), or NULL when the
+ * container carries no supported track. */
+audio_mixer_sound_t* audio_mixer_load_weba(void *buffer, size_t size);
+/* As above, but the codec sniff reads no further than 'avail' bytes.
+ * A windowed caller must use this: the plain form walks the segment
+ * with the file's whole length, which is not resident. */
+audio_mixer_sound_t* audio_mixer_load_weba_avail(void *buffer, size_t size,
+      size_t avail);
+
+/* Compressed-byte read position of a stream voice's decoder as of the
+ * last mix (0 when not a live buffer-mode stream voice).  Takes no
+ * lock; one thread per voice, the one that calls
+ * audio_mixer_voice_set_avail. */
+size_t audio_mixer_voice_buffer_tell(audio_mixer_voice_t *voice);
+/* Lock-free snapshot for this play only. Never inspects the live decoder. */
+size_t audio_mixer_voice_buffer_read_end(audio_mixer_voice_t *voice, size_t serial);
 
 void audio_mixer_destroy(audio_mixer_sound_t* sound);
+
+/* Mark the sound's compressed source data as borrowed: destroy will
+ * hand it back through release(owner) instead of free()ing it.  For
+ * callers whose bytes live inside a larger owned object (a file
+ * mapping, a data_transfer) this removes the defensive copy.
+ * Ownership of 'owner' transfers on this call in every outcome
+ * (a NULL sound releases immediately). */
+void audio_mixer_sound_set_data_owner(audio_mixer_sound_t *sound,
+      void *owner, void (*release)(void *owner));
+
+/* Windowed Ogg-Opus only: supply the stream's last-page granule so
+ * the decoder skips its full-file end scan at play.  0 = not supplied.
+ * No-op for a NULL sound or any non-Opus stream. */
+void audio_mixer_sound_set_end_granule(audio_mixer_sound_t *sound,
+      int64_t end_granule);
+
+/* The caller's word for a sound, for its stop callback: set before
+ * the play, read by the callback on the mixing thread. */
+void audio_mixer_sound_set_tag(audio_mixer_sound_t *sound, unsigned tag);
+unsigned audio_mixer_sound_tag(const audio_mixer_sound_t *sound);
+
+/* Resident prefix of a windowed sound's source buffer: bounds the
+ * decoder's container header parse at open.  0 = fully resident. */
+void audio_mixer_sound_set_avail(audio_mixer_sound_t *sound, size_t avail);
+
+/* Exclusive sound owner: attach a started audio_transfer context for
+ * this sound's codec, already positioned by a worker. Success takes
+ * ownership. The next matching play consumes it once; output-rate or
+ * float/S16 changes refuse the play without consuming it. Keep its
+ * borrowed source alive through the sound's usual source ownership. */
+bool audio_mixer_sound_set_prepared_transfer(audio_mixer_sound_t *sound,
+      void *transfer, unsigned mix_rate, bool s16);
+/* Applied before a new voice becomes visible to the mixer. */
+void audio_mixer_sound_set_initial_paused(audio_mixer_sound_t *sound,
+      bool paused);
+
+/* Set a live stream voice's resident prefix as the window slides.
+ * Takes no lock: the mix applies it before its next decode.  A bound
+ * set after audio_mixer_voice_buffer_tell belongs to the position
+ * that call returned, and is dropped if the decoder has rewound since
+ * - call both again.  One set with no tell before it stands across
+ * rewinds. */
+void audio_mixer_voice_set_avail(audio_mixer_voice_t *voice, size_t avail);
+
+/* A retained session's bound: requests for a retired play are ignored
+ * by a reused voice. serial is captured with audio_mixer_voice_clock. */
+void audio_mixer_voice_set_avail_bound(audio_mixer_voice_t *voice,
+      size_t avail, size_t serial);
 
 audio_mixer_voice_t* audio_mixer_play(audio_mixer_sound_t* sound,
       bool repeat, float volume,
@@ -79,11 +176,70 @@ audio_mixer_voice_t* audio_mixer_play(audio_mixer_sound_t* sound,
 
 void audio_mixer_stop(audio_mixer_voice_t* voice);
 
+/* The owner of a live voice may change its repeat policy without restarting
+ * it. The mixer samples the request at the next end of the source. */
+void audio_mixer_voice_set_repeat(audio_mixer_voice_t *voice, bool repeat);
+
+/* Retain the exact decoder/resampler/PCM position while paused. Applied
+ * at the next mix block boundary; an already mixing block may finish.
+ * The caller owns this live voice until stopped, as for gain/volume.
+ * NULL is harmless. A new voice uses the sound's initial pause setting. */
+void audio_mixer_voice_set_paused(audio_mixer_voice_t *voice, bool paused);
+
+/* PCM frames contributed to the mix, at the output sample rate. This
+ * advances only for actual PCM, not pauses, starvation or decode-ahead,
+ * and continues across loops. The count wraps modulo SIZE_MAX+1; poll
+ * often enough to accumulate unsigned deltas across a wrap. One live
+ * voice per caller, as for pause/gain. False for an idle/NULL voice.
+ * serial distinguishes separate plays, including voice/slot reuse and
+ * mixer restart. False during a reset; retry next poll, never spin.
+ * This is a mix clock, not a physical audio-device play cursor. */
+bool audio_mixer_voice_clock(audio_mixer_voice_t *voice,
+      size_t *frames, unsigned *rate, size_t *serial);
+
 float audio_mixer_voice_get_volume(audio_mixer_voice_t *voice);
 
 void audio_mixer_voice_set_volume(audio_mixer_voice_t *voice, float val);
 
+/* Q16.16 fixed-point gain: AUDIO_MIXER_GAIN_UNITY is 1.0. This is the
+ * form the s16 pipeline uses throughout, so a build with no hardware
+ * float never has to produce one to drive it. */
+#define AUDIO_MIXER_GAIN_UNITY 0x10000
+
+int32_t audio_mixer_voice_get_gain(audio_mixer_voice_t *voice);
+
+/* s16 form of set_volume. set_volume still works on an s16 voice - it
+ * converts once, off the audio thread - but a float-free caller can
+ * use this and never touch a float at all. */
+void audio_mixer_voice_set_gain(audio_mixer_voice_t *voice, int32_t gain);
+
 void audio_mixer_mix(float* buffer, size_t num_frames, float volume_override, bool override);
+
+/* s16 (fixed-point) mixer pipeline: parallel to the float API above,
+ * no int16<->float round-trip. Voices played via audio_mixer_play_s16
+ * are mixed only by audio_mixer_mix_s16, and vice versa.
+ *
+ * Gains are Q16.16, not float: this path exists for builds without
+ * hardware float, and taking a float here meant one was converted on
+ * every mix call, on the audio thread. */
+void audio_mixer_mix_s16(int16_t* buffer, size_t num_frames,
+      int32_t gain_override, bool override);
+
+/* The same, with @base (num_frames * 2 samples) in place of what @dst
+ * holds: the sum lands in @dst, and @base is not copied there first.
+ * @base and @dst may not overlap. */
+void audio_mixer_mix_s16_over(int16_t *dst, const int16_t *base,
+      size_t num_frames, int32_t gain_override, bool override);
+
+bool audio_mixer_has_float_voices(void);
+
+bool audio_mixer_has_s16_voices(void);
+
+audio_mixer_voice_t* audio_mixer_play_s16(audio_mixer_sound_t* sound,
+      bool repeat, int32_t gain,
+      const char *resampler_ident,
+      enum resampler_quality quality,
+      audio_mixer_stop_cb_t stop_cb);
 
 RETRO_END_DECLS
 

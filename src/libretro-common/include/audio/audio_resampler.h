@@ -29,6 +29,8 @@
 #include <boolean.h>
 #include <retro_common_api.h>
 
+#include <audio/sinc_resampler_int16.h>
+
 RETRO_BEGIN_DECLS
 
 #define RESAMPLER_SIMD_SSE      (1 << 0)
@@ -46,6 +48,7 @@ RETRO_BEGIN_DECLS
 #define RESAMPLER_SIMD_AVX2     (1 << 12)
 #define RESAMPLER_SIMD_VFPU     (1 << 13)
 #define RESAMPLER_SIMD_PS       (1 << 14)
+#define RESAMPLER_SIMD_AVX512   (1 << 22)
 
 enum resampler_quality
 {
@@ -156,6 +159,42 @@ typedef void (*resampler_free_t)(void *data);
 /* Processes input data. */
 typedef void (*resampler_process_t)(void *_data, struct resampler_data *data);
 
+/* Forgets the stream's history - the sample rings, the phase, the
+ * fractional position - leaving the configuration: tables, taps,
+ * quality. What a fresh init() would hold before its first process(),
+ * without the allocation, so a stream can be resumed after a gap
+ * on the thread that resamples. */
+typedef void (*resampler_reset_t)(void *data);
+
+/* A new instance over data's tables with a fresh stream of its own,
+ * freed like any other. */
+typedef void *(*resampler_sibling_t)(void *data);
+
+/* The most input frames, at most @max_input, whose process() at @ratio
+ * is sure to produce no more than @max_output frames - exact for this
+ * stream's state, where the backend can tell, so a caller producing into
+ * a buffer of @max_output frames fills it to within the frames one
+ * input frame makes. 0 where it cannot tell (the caller then sizes from
+ * a bound), or where no input fits. The stream is not changed. */
+typedef size_t (*resampler_fit_t)(void *data, double ratio,
+      size_t max_output, size_t max_input);
+
+/* The stream's state as bytes, for a savestate: everything reset()
+ * forgets, nothing of the configuration. With @buf NULL, the size.
+ * Otherwise copies the state out to @buf (@write 0) or in from it
+ * (@write 1) and returns the bytes moved, or 0 when @len is not the
+ * size, which leaves the stream as it was: a state from an instance of
+ * another configuration is refused, and the caller resets instead. The
+ * instance read into has the configuration the state came from. */
+typedef size_t (*resampler_state_t)(void *data, void *buf, size_t len,
+      int write);
+
+/* What a backend reads of the settings the frontend exposes. One that
+ * reads neither leaves this zero, and the frontend has no control to
+ * offer for it. */
+#define RESAMPLER_CAP_QUALITY       (1 << 0)
+#define RESAMPLER_CAP_HQ_OVERSAMPLE (1 << 1)
+
 typedef struct retro_resampler
 {
    resampler_init_t     init;
@@ -171,6 +210,25 @@ typedef struct retro_resampler
    /* Computer-friendly short version of ident.
     * Lower case, no spaces and special characters, etc. */
    const char *short_ident;
+
+   /* Optional; last, so an implementation that does not set it is
+    * NULL here, and the caller re-creates the state instead. */
+   resampler_reset_t    reset;
+
+   /* RESAMPLER_CAP_*, zero for a backend that reads neither. */
+   unsigned caps;
+
+   /* Optional: NULL where the backend has no tables worth sharing, and
+    * the caller makes a fresh instance instead. */
+   resampler_sibling_t  sibling;
+
+   /* Optional; last, so a backend that does not set it is NULL here, and
+    * the caller sizes its output from a bound instead. */
+   resampler_fit_t      fit;
+
+   /* Optional; NULL where the stream cannot be saved, and the caller
+    * resets it on restore. */
+   resampler_state_t    state;
 } retro_resampler_t;
 
 typedef struct audio_frame_float
@@ -184,6 +242,37 @@ extern retro_resampler_t sinc_resampler;
 extern retro_resampler_t CC_resampler;
 #endif
 extern retro_resampler_t nearest_resampler;
+
+/* The deterministic integer counterpart of a float backend. Zeroed
+ * where the named backend has no int16 implementation, which is the
+ * caller's signal to keep the float path. */
+typedef struct retro_resampler_int16
+{
+   void  *data;
+   void (*process)(void *, struct resampler_data_int16 *);
+   void (*reset)(void *);
+   void (*free)(void *);
+   void *(*sibling)(void *);
+} retro_resampler_int16_t;
+
+/* Builds the int16 counterpart of @short_ident - the short_ident of a
+ * backend, not a user-facing name. @hq_oversampling is a request; a
+ * backend that does not read it ignores it, as it ignores @quality.
+ * Returns whether an instance was made; the struct is zeroed if not,
+ * and its free() is the one that must release data. */
+bool retro_resampler_int16_new(retro_resampler_int16_t *out,
+      const char *short_ident, enum resampler_quality quality,
+      double bw_ratio, bool hq_oversampling);
+
+/* The backend the named one resolves to, by the lookup
+ * retro_resampler_realloc() uses: NULL or an unknown name gives the
+ * fallback. */
+const retro_resampler_t *audio_resampler_driver_find(const char *ident);
+
+/* The RESAMPLER_CAP_* of the named backend, by the same lookup
+ * retro_resampler_realloc() uses, so an unknown name reports the
+ * fallback's. Zero where the name is NULL or nothing is registered. */
+unsigned audio_resampler_driver_caps(const char *ident);
 
 /**
  * audio_resampler_driver_find_handle:
@@ -217,6 +306,12 @@ const char *audio_resampler_driver_find_ident(int index);
  **/
 bool retro_resampler_realloc(void **re, const retro_resampler_t **backend,
       const char *ident, enum resampler_quality quality, double bw_ratio);
+
+/* Same lifetime/lookup semantics as realloc. HQ affects only sinc at nominal
+ * ratios >= 2; other backends ignore it. Call only with processing stopped. */
+bool retro_resampler_realloc_hq(void **re, const retro_resampler_t **backend,
+      const char *ident, enum resampler_quality quality, double bw_ratio,
+      bool hq_oversampling);
 
 RETRO_END_DECLS
 

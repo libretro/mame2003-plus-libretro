@@ -51,7 +51,7 @@ linked_list_t *linked_list_new(void)
 {
    linked_list_t *list;
 
-   list = (linked_list_t *)calloc(sizeof(linked_list_t), 1);
+   list = (linked_list_t *)calloc(1, sizeof(linked_list_t));
    return list;
 }
 
@@ -84,7 +84,10 @@ void linked_list_add(linked_list_t *list, void *value)
    if (!list)
       return;
 
-   new_item = (struct linked_list_item_t *)malloc(sizeof(struct linked_list_item_t));
+   /* NULL-check malloc: the field writes below would dereference NULL.
+    * The API returns void, so an OOM leaves the list unchanged. */
+   if (!(new_item = (struct linked_list_item_t *)malloc(sizeof(struct linked_list_item_t))))
+      return;
    new_item->value = value;
    new_item->previous = list->last_item;
    new_item->next = NULL;
@@ -116,7 +119,9 @@ void linked_list_insert(linked_list_t *list, size_t index, void *value)
       next_item = next_item->next;
    }
 
-   new_item = (struct linked_list_item_t *)malloc(sizeof(struct linked_list_item_t));
+   /* NULL-check malloc: see linked_list_add. */
+   if (!(new_item = (struct linked_list_item_t *)malloc(sizeof(struct linked_list_item_t))))
+      return;
    new_item->value = value;
 
    if (previous_item)
@@ -298,7 +303,7 @@ void *linked_list_remove_first_matching(linked_list_t *list, bool (*matches)(voi
 {
    struct linked_list_item_t *item;
 
-   if (!list)
+   if (!list || !matches)
       return NULL;
 
    for (item = list->first_item; item; item = item->next)
@@ -323,7 +328,7 @@ void *linked_list_remove_last_matching(linked_list_t *list, bool (*matches)(void
 {
    struct linked_list_item_t *item;
 
-   if (!list)
+   if (!list || !matches)
       return NULL;
 
    for (item = list->last_item; item; item = item->previous)
@@ -348,7 +353,7 @@ void linked_list_remove_all_matching(linked_list_t *list, bool (*matches)(void *
 {
    struct linked_list_item_t *item;
 
-   if (!list)
+   if (!list || !matches)
       return;
 
    for (item = list->first_item; item;)
@@ -403,7 +408,10 @@ linked_list_iterator_t *linked_list_iterator(linked_list_t *list, bool forward)
    if (!list || !list->first_item)
       return NULL;
 
-   iterator = (linked_list_iterator_t *)malloc(sizeof(linked_list_iterator_t));
+   /* NULL-check malloc: callers already handle a NULL iterator
+    * (returned for an empty list). */
+   if (!(iterator = (linked_list_iterator_t *)malloc(sizeof(linked_list_iterator_t))))
+      return NULL;
    iterator->list = list;
    iterator->item = forward ? list->first_item : list->last_item;
    iterator->forward = forward;

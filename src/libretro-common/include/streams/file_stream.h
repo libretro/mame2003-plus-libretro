@@ -54,6 +54,7 @@
  * The minimum version of the VFS interface required by the \c filestream functions.
  */
 #define FILESTREAM_REQUIRED_VFS_VERSION 2
+#define FILESTREAM_COPY_REQUIRED_VFS_VERSION 5
 
 RETRO_BEGIN_DECLS
 
@@ -62,8 +63,6 @@ RETRO_BEGIN_DECLS
  * @warning This is not interchangeable with \c FILE* or \c retro_vfs_file_handle.
  */
 typedef struct RFILE RFILE;
-
-#define FILESTREAM_REQUIRED_VFS_VERSION 2
 
 /**
  * Initializes the \c filestream functions to use the VFS interface provided by the frontend.
@@ -123,7 +122,7 @@ RFILE* filestream_open(const char *path, unsigned mode, unsigned hints);
  * @param offset The new stream position, in bytes.
  * @param seek_position The position to seek from.
  * Should be one of the values in \refitem RETRO_VFS_SEEK_POSITION.
- * @return The new stream position in bytes relative to the beginning,
+ * @return 0 if the stream position was set successfully,
  * or -1 if there was an error.
  * @see RETRO_VFS_SEEK_POSITION
  * @see retro_vfs_seek_t
@@ -159,6 +158,47 @@ int64_t filestream_read(RFILE *stream, void *data, int64_t len);
  * @see retro_vfs_write_t
  */
 int64_t filestream_write(RFILE *stream, const void *data, int64_t len);
+
+/**
+ * Reads \c len bytes at \c offset without moving the stream's position
+ * or touching its read-ahead: any number of threads may call it on one
+ * stream at once, with no lock.  It reads the file as it is on disk;
+ * bytes written with \c filestream_write and not flushed are not seen.
+ *
+ * @return The number of bytes read, 0 at or past the end, or -1 on an
+ * error or where there is no positional I/O for this stream (the VFS in
+ * use is older than v6, a cdrom:// or network path, a platform without
+ * it): the caller then seeks and reads, under a lock of its own if it
+ * shares the stream.
+ * @see retro_vfs_read_at_t
+ */
+int64_t filestream_read_at(RFILE *stream, void *data, int64_t len,
+      int64_t offset);
+
+/**
+ * Writes \c len bytes at \c offset the same way.  With
+ * \c RETRO_VFS_WRITE_AT_APPEND for \c offset each call appends, whole
+ * and after the one before it, whichever thread it came from.
+ *
+ * @return The number of bytes written, or -1 as \c filestream_read_at.
+ * @see retro_vfs_write_at_t
+ */
+int64_t filestream_write_at(RFILE *stream, const void *data, int64_t len,
+      int64_t offset);
+
+/**
+ * Writes @count pieces of memory to the given file, in order, as if
+ * each were passed to \c filestream_write in turn.  A stream opened
+ * with \c RETRO_VFS_FILE_ACCESS_HINT_SEQUENTIAL_BULK hands them to the
+ * kernel in one gathered write where the platform has one, so pieces
+ * scattered through a buffer reach the file without being copied
+ * together first.
+ *
+ * @return The number of bytes written, short at the first piece not
+ * written in full, or -1 if nothing was written.
+ */
+int64_t filestream_writev(RFILE *stream,
+      const struct retro_vfs_span *spans, size_t count);
 
 /**
  * Returns the current position of the given file in bytes.
@@ -287,6 +327,80 @@ int filestream_eof(RFILE *stream);
 bool filestream_write_file(const char *path, const void *data, int64_t size);
 
 /**
+ * Writes the entirety of a given buffer to a file at a given path,
+ * by way of a sibling temporary file that is renamed over the target
+ * once it is complete. A process that dies partway through leaves
+ * either the previous contents of \c path or the new ones, never a
+ * partial file.
+ *
+ * Use this for anything a later run reads back and trusts without a
+ * length or checksum of its own, where a truncated file is worse than
+ * an absent one.
+ *
+ * Under a frontend VFS whose rename refuses an existing destination,
+ * the target is removed first and the rename retried, so there the
+ * replacement is not atomic.
+ *
+ * @param path Path to the file that will be written to.
+ * @param data The buffer to write to \c path.
+ * @param size The size of \c data, in bytes.
+ * @return \c true if the file was written successfully,
+ * \c false if there was an error, in which case \c path is left as it
+ * was and no temporary file remains.
+ */
+bool filestream_write_file_atomic(const char *path, const void *data, int64_t size);
+
+/**
+ * Opens the sibling temporary file an atomic write of \c path goes
+ * through (\c path with ".tmp" appended), for a writer that produces
+ * the contents a piece at a time.  Finish with
+ * filestream_commit_atomic(), which closes it either way.
+ *
+ * @param path Path of the file that will be replaced.
+ * @return The temporary file, open for writing, or \c NULL on error.
+ */
+RFILE *filestream_open_atomic(const char *path);
+
+/**
+ * Closes a file from filestream_open_atomic() and, if \c ok and the
+ * close succeeded, renames it over \c path, exactly as
+ * filestream_write_file_atomic() does.
+ *
+ * @param file The file returned by filestream_open_atomic(); always
+ * closed and freed.
+ * @param path The same path it was opened for.
+ * @param ok Whether the caller wrote everything it meant to.
+ * @return 0 if \c path now holds the new contents; -1 if the write or
+ * close failed, in which case the temporary file is deleted and \c path
+ * is left as it was; 1 if the contents are complete in the temporary
+ * file but could not be renamed into place, in which case the temporary
+ * file is left for the caller to copy or delete.
+ */
+int filestream_commit_atomic(RFILE *file, const char *path, bool ok);
+
+/**
+ * The name of the sibling temporary file an atomic write of \c path
+ * goes through, for a writer that opens files by name.
+ *
+ * @param s Where the name is written.
+ * @param len The size of \c s.
+ * @param path Path of the file that will be replaced.
+ * @return \c false if the name does not fit in \c s.
+ */
+bool filestream_atomic_temp_name(char *s, size_t len, const char *path);
+
+/**
+ * Finishes an atomic write of \c path whose temporary file, named by
+ * filestream_atomic_temp_name(), was written and closed by other means:
+ * as filestream_commit_atomic() does after its close.
+ *
+ * @param path Path of the file that will be replaced.
+ * @param ok Whether the temporary file holds everything it should.
+ * @return As filestream_commit_atomic().
+ */
+int filestream_finish_atomic(const char *path, bool ok);
+
+/**
  * Writes a single character to the given file.
  *
  * @param stream The file to write to.
@@ -370,6 +484,67 @@ int filestream_delete(const char *path);
 int filestream_rename(const char *old_path, const char *new_path);
 
 /**
+ * Copies a regular file to a new location, replacing an existing one,
+ * and does not return until it is done.
+ *
+ * It runs the copy of \c filestream_copy_begin to the end, so it uses
+ * the platform's copy primitive where there is one, and falls back to
+ * \c filestream_open/read/write where that copy cannot start. Code
+ * that must not block should use \c filestream_copy_begin itself.
+ *
+ * @param src_path Path to the file to copy.
+ * @param dst_path The target name and location of the file.
+ * @return 0 if the file was copied successfully,
+ * or -1 if there was an error (no partial \c dst_path is left behind).
+ * @see filestream_copy_begin
+ */
+int filestream_copy(const char *src_path, const char *dst_path);
+
+/**
+ * Starts copying a regular file without moving any of it yet.
+ * Wraps \c retro_vfs_copy_begin_t; see it for the full contract. The
+ * caller advances the copy with \c filestream_copy_step; no thread is
+ * involved unless the caller supplies one.
+ *
+ * @param src_path Path to the file to copy. Must be a regular file.
+ * @param dst_path Full path of the destination. Must differ from \c src_path.
+ * @param flags Bitwise combination of \c RETRO_VFS_COPY flags, or 0.
+ * @return A handle for \c filestream_copy_step and \c filestream_copy_close,
+ * or \c NULL if the copy could not start (including when the frontend
+ * does not offer VFS API v5).
+ */
+struct retro_vfs_copy_handle *filestream_copy_begin(const char *src_path, const char *dst_path, unsigned flags);
+
+/**
+ * Advances a copy started with \c filestream_copy_begin by at most
+ * \c max_bytes and reports its state. See \c retro_vfs_copy_step_t for
+ * how to use the budget as a latency/throughput dial.
+ *
+ * @param max_bytes Upper bound on bytes moved by this call; 0 selects a
+ * default sized for a frame loop.
+ * @return One of the \c RETRO_VFS_COPY_STATUS values.
+ */
+int filestream_copy_step(struct retro_vfs_copy_handle *handle, int64_t max_bytes, int64_t *bytes_done, int64_t *bytes_total);
+
+/**
+ * Releases a copy handle, cancelling the copy if it is still running.
+ * See \c retro_vfs_copy_close_t.
+ *
+ * @return 0 if the copy had completed successfully, otherwise -1.
+ */
+int filestream_copy_close(struct retro_vfs_copy_handle *handle);
+
+/**
+ * Compares and verifies files.
+ *
+ * @param src_path Path to the file.
+ * @param dst_path Path to the other file.
+ * @return 0 if the files are equal,
+ * or -1 if there was an error.
+ */
+int filestream_cmp(const char *src_path, const char *dst_path);
+
+/**
  * Get the path that was used to open a file.
  *
  * @param stream The file to get the path of.
@@ -378,6 +553,137 @@ int filestream_rename(const char *old_path, const char *new_path);
  * The string is owned by \c stream and must not be modified or freed by the caller.
  */
 const char* filestream_get_path(RFILE *stream);
+
+/**
+ * Borrowed read-only pointer to the entire file, when \c stream is
+ * backed by a memory map.
+ *
+ * Open with \c RETRO_VFS_FILE_ACCESS_HINT_FREQUENT_ACCESS to ask for
+ * a mapping.  The hint has always produced one, but the map was
+ * reachable only from inside the read path, which copies out of it -
+ * so consumers of the hint paid for a copy of data that was already
+ * addressable.  Use this when the file is to be read rather than
+ * owned: compared against a buffer, hashed, or handed to a parser
+ * that takes a base pointer.
+ *
+ * \c NULL is a normal answer rather than an error - the platform may
+ * have no mapping support, the hint may not have been given, or the
+ * stream may come from a frontend-supplied VFS - so a caller must
+ * keep its ordinary read path and treat this purely as a fast lane.
+ *
+ * @param stream The file to get the mapping of.
+ * @param len Filled with the mapped length, or 0 when there is no
+ * mapping.  May be \c NULL.
+ * @return Pointer to the mapped file, or \c NULL if it is not mapped.
+ * The mapping is owned by \c stream, is valid only until \c stream is
+ * closed, and must not be written or freed by the caller.
+ */
+const uint8_t *filestream_get_mapped_ptr(RFILE *stream, int64_t *len);
+
+/**
+ * filestream_read() without the copy: points \c ptr at up to \c len
+ * octets at the stream position - in the lookahead, the file's
+ * mapping or a network stream's read-ahead window - and moves past
+ * them, as a read of that many would.
+ *
+ * @return The octets lent, 0 at the end of the file, or -1 when
+ * nothing there can be lent; the caller then reads as before. Lent
+ * octets stay valid until the next call on \c stream and must not be
+ * written.
+ */
+int64_t filestream_view(RFILE *stream, int64_t len, const uint8_t **ptr);
+
+/**
+ * The whole file mapped read-only, on demand: retro_vfs_map_t's contract,
+ * and its warning (map only a file nothing else changes, on a fixed
+ * drive). The stream owns the mapping; NULL where it can't be mapped,
+ * including under a frontend before VFS API v7: the caller then reads.
+ **/
+const uint8_t *filestream_map(RFILE *stream, int64_t *len);
+
+/* VFS API v7's file facts, by stream or by path: retro_vfs_identity_t,
+ * retro_vfs_stat_identity_t, retro_vfs_volume_t, retro_vfs_stat_volume_t,
+ * retro_vfs_verity_measure_t and retro_vfs_verity_enable_t, with their
+ * answers. Under a frontend before v7 each says it can't be told (false,
+ * -1, 0, 0). */
+bool filestream_identity(RFILE *stream, struct retro_vfs_file_identity *id);
+int filestream_stat_identity(const char *path,
+      struct retro_vfs_file_identity *id);
+bool filestream_volume(RFILE *stream, unsigned want,
+      struct retro_vfs_volume *vol);
+int filestream_stat_volume(const char *path, unsigned want,
+      struct retro_vfs_volume *vol);
+size_t filestream_verity_measure(RFILE *stream, uint8_t *digest, size_t cap);
+int filestream_verity_enable(RFILE *stream);
+
+typedef const uint8_t *(*filestream_mapped_ptr_cb_t)(void *hfile, int64_t *len);
+void filestream_set_mapped_ptr_cb(filestream_mapped_ptr_cb_t cb);
+
+/**
+ * Ask the OS to start reading [offset, offset + len) of \c stream into
+ * memory ahead of a read or a touch of its mapping. A hint: it returns
+ * at once and does nothing on a frontend-supplied VFS or where the
+ * platform has no such request. See retro_vfs_file_prefetch_impl().
+ */
+void filestream_prefetch(RFILE *stream, uint64_t offset, uint64_t len);
+
+/* An installed VFS that keeps local handles (vfs_hybrid) takes the hint
+ * for them through this; without one the hint stops at filestream. */
+typedef void (*filestream_prefetch_cb_t)(void *hfile, uint64_t offset,
+      uint64_t len);
+void filestream_set_prefetch_cb(filestream_prefetch_cb_t cb);
+
+/**
+ * Size of the window filestream_vscanf() reads and scans at a time,
+ * i.e. the furthest a single conversion can reach.
+ *
+ * Named so a test can drive input either side of it rather than
+ * assume a value, the way the compare window below is.
+ */
+#define FILESTREAM_SCANF_WINDOW 4096
+
+/**
+ * Size of the buffer filestream_matches_buf() compares through when
+ * the file is not mapped.
+ *
+ * Exposed so a test can aim at the real boundary rather than a
+ * remembered one - a boundary case pointed at the wrong offset is
+ * just another mid-file check under a boundary's name.
+ *
+ * The ceiling is a stack budget, not a throughput one: this buffer is
+ * a local, and the smallest thread stack in the tree is GEKKO's
+ * 8 KiB (the GEKKO STACKSIZE in rthreads.c), with 32 KiB on 3DS and
+ * 64 KiB on Vita. Larger reads are faster - at or above the VFS's
+ * own 64 KiB stdio buffer they bypass it entirely - but the platforms
+ * that take this path are the ones without memory mapping, which are
+ * the same ones with those stacks.
+ */
+#define FILESTREAM_MATCHES_BUF_WINDOW 1024
+
+/**
+ * Does the file at \c path hold exactly \c len bytes equal to
+ * \c data?
+ *
+ * For the common "has this changed since I last wrote it?" question,
+ * where the answer decides whether to write at all.  Callers used to
+ * answer it by reading the whole file into a fresh allocation,
+ * comparing, and freeing - paying a full-size malloc and a full-file
+ * read even when a size mismatch made the answer free.
+ *
+ * This allocates nothing: it settles a size mismatch without reading,
+ * compares in place against the memory map where the platform offers
+ * one, falls back to a fixed window otherwise, and stops at the first
+ * differing byte.
+ *
+ * @param path The file to compare against.
+ * @param data The buffer to compare with. May be \c NULL only when
+ * \c len is 0.
+ * @param len The number of bytes in \c data.
+ * @return \c true only if the file exists, is exactly \c len bytes,
+ * and every byte matches. A missing or unreadable file is \c false,
+ * not an error - the caller's next step is the same either way.
+ */
+bool filestream_matches_buf(const char *path, const void *data, size_t len);
 
 /**
  * Determines if a file exists at the given path.
@@ -406,6 +712,59 @@ char* filestream_getline(RFILE *stream);
  * @return The file handle returned by the underlying VFS implementation.
  */
 libretro_vfs_implementation_file* filestream_get_vfs_handle(RFILE *stream);
+
+/**
+ * filestream_punch_hole:
+ * @stream: file handle.
+ * @offset: byte offset to start deallocating at.
+ * @len   : number of bytes to deallocate.
+ *
+ * Deallocate a range within a file, leaving the file's length unchanged
+ * and subsequent reads of the range returning zeroes. This is what makes a
+ * sparse image sparse: a disk image that is mostly untouched occupies only
+ * the blocks that were actually written.
+ *
+ * Not every backend can do this, and that is the normal case rather than
+ * an error. It works when the stream came from libretro-common's own
+ * implementation on a filesystem that supports it -- fallocate() with
+ * FALLOC_FL_PUNCH_HOLE on Linux, FSCTL_SET_ZERO_DATA on Windows. It does
+ * not work when the frontend supplied its own VFS, because a frontend
+ * handle need not be a file at all and the interface exposes no
+ * descriptor. Rather than extend the frontend ABI for one operation that
+ * most backends cannot implement, this is a capability: callers ask, and
+ * fall back to writing zeroes when the answer is no.
+ *
+ * Returns: 0 if the range was deallocated, -1 if the backend cannot do it
+ * or the call failed. A caller that must guarantee zeroes still has to
+ * write them when this returns -1; the only thing lost is the space
+ * saving.
+ */
+int filestream_punch_hole(RFILE *stream, int64_t offset, int64_t len);
+
+/**
+ * filestream_get_sparse_granularity:
+ * @stream: file handle.
+ *
+ * The allocation unit of the filesystem holding this file: the smallest
+ * span that filestream_punch_hole can actually deallocate. Punching a
+ * range shorter than this, or one not aligned to it, is accepted and
+ * frees nothing, so a caller that wants sparse files has to work in
+ * multiples of this value rather than assuming 4096.
+ *
+ * On Windows this is the cluster size on most filesystems, but on NTFS
+ * it is the compression unit -- 16 clusters, capped at 64K -- because
+ * that is the span NTFS actually deallocates. A 4K-cluster NTFS volume,
+ * the common case, frees in 64K chunks, so punching a single cluster
+ * frees nothing. On POSIX it is the block size the filesystem reports
+ * for the file.
+ *
+ * Returns: the granularity in bytes, or 0 when it cannot be determined --
+ * from a frontend-supplied VFS, for instance, which has no descriptor to
+ * ask about. A caller that gets 0 should either skip hole punching or
+ * pick a conservative unit; it must not treat 0 as "no alignment
+ * needed".
+ */
+int64_t filestream_get_sparse_granularity(RFILE *stream);
 
 RETRO_END_DECLS
 

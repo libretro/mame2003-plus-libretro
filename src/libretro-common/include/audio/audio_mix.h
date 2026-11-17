@@ -27,67 +27,31 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#ifdef _WIN32
-#include <direct.h>
-#else
-#include <unistd.h>
-#endif
-
-#include <formats/rwav.h>
-#include <audio/audio_resampler.h>
 
 RETRO_BEGIN_DECLS
 
-typedef struct
-{
-   double ratio;
-   void *buf;
-   int16_t *upsample_buf;
-   float *float_buf;
-   float *float_resample_buf;
-   int16_t *resample_buf;
-   const retro_resampler_t *resampler;
-   void *resampler_data;
-   rwav_t *rwav;
-   ssize_t len;
-   size_t resample_len;
-   int sample_rate;
-   bool resample;
-} audio_chunk_t;
-
-#if defined(__SSE2__)
+/* SSE2 wherever the whole build has it (all x86-64, MSVC included,
+ * and 32-bit x86 built with it), NEON on ARMv8 and ARM builds with
+ * it, the C loop elsewhere. AUDIO_MIX_NO_SIMD leaves them out. */
+#if !defined(AUDIO_MIX_NO_SIMD) && (defined(__SSE2__) || defined(_M_X64) \
+   || (defined(_M_IX86_FP) && _M_IX86_FP >= 2))
+#define AUDIO_MIX_HAVE_SSE2 1
 #define audio_mix_volume           audio_mix_volume_SSE2
 
 void audio_mix_volume_SSE2(float *out,
+      const float *in, float vol, size_t samples);
+#elif !defined(AUDIO_MIX_NO_SIMD) && (defined(__ARM_NEON) \
+   || defined(__ARM_NEON__) || defined(_M_ARM64))
+#define AUDIO_MIX_HAVE_NEON 1
+#define audio_mix_volume           audio_mix_volume_NEON
+
+void audio_mix_volume_NEON(float *out,
       const float *in, float vol, size_t samples);
 #else
 #define audio_mix_volume           audio_mix_volume_C
 #endif
 
 void audio_mix_volume_C(float *dst, const float *src, float vol, size_t samples);
-
-void audio_mix_free_chunk(audio_chunk_t *chunk);
-
-audio_chunk_t* audio_mix_load_wav_file(const char *path, int sample_rate,
-      const char *resampler_ident, enum resampler_quality quality);
-
-size_t audio_mix_get_chunk_num_samples(audio_chunk_t *chunk);
-
-/**
- * audio_mix_get_chunk_sample:
- * @chunk              : audio chunk instance
- * @channel            : channel of the sample (0=left, 1=right)
- * @index              : index of the sample
- *
- * Get a sample from an audio chunk.
- *
- * Returns: A signed 16-bit audio sample, (if necessary) resampled into the desired output rate.
- **/
-int16_t audio_mix_get_chunk_sample(audio_chunk_t *chunk, unsigned channel, size_t sample);
-
-int16_t* audio_mix_get_chunk_samples(audio_chunk_t *chunk);
-
-int audio_mix_get_chunk_num_channels(audio_chunk_t *chunk);
 
 RETRO_END_DECLS
 

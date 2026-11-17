@@ -20,7 +20,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+#include <stddef.h>
 #include <stdlib.h>
+#include <limits.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -31,6 +33,14 @@
 #include <features/features_cpu.h>
 
 #include <net/net_socket.h>
+
+/* Winsock's send/recv count in int: a larger request is clamped and the
+ * callers' loops send or receive the rest. */
+#ifdef _WIN32
+#define NET_IO_LEN(n) ((int)((n) > INT_MAX ? INT_MAX : (n)))
+#else
+#define NET_IO_LEN(n) (n)
+#endif
 
 int socket_init(void **address, uint16_t port, const char *server,
       enum socket_type type, int family)
@@ -77,7 +87,7 @@ int socket_init(void **address, uint16_t port, const char *server,
    if (!addr)
       return -1;
 
-   return socket(addr->ai_family, addr->ai_socktype, addr->ai_protocol);
+   return (int)socket(addr->ai_family, addr->ai_socktype, addr->ai_protocol);
 }
 
 int socket_next(void **address)
@@ -86,20 +96,20 @@ int socket_next(void **address)
    struct addrinfo *addr      = *addrinfo;
 
    if ((*addrinfo = addr = addr->ai_next))
-      return socket(addr->ai_family, addr->ai_socktype, addr->ai_protocol);
+      return (int)socket(addr->ai_family, addr->ai_socktype, addr->ai_protocol);
 
    return -1;
 }
 
-ssize_t socket_receive_all_nonblocking(int fd, bool *error,
+ssize_t socket_receive_all_nonblocking(int fd, bool *err,
       void *data_, size_t len)
 {
-   ssize_t ret = recv(fd, (char*)data_, len, 0);
+   ssize_t ret = recv(fd, (char*)data_, NET_IO_LEN(len), 0);
    if (ret > 0)
       return ret;
    if (ret < 0 && isagain((int)ret))
       return 0;
-   *error = true;
+   *err = true;
    return -1;
 }
 
@@ -109,7 +119,7 @@ bool socket_receive_all_blocking(int fd, void *data_, size_t len)
 
    while (len)
    {
-      ssize_t ret = recv(fd, (char*)data, len, 0);
+      ssize_t ret = recv(fd, (char*)data, NET_IO_LEN(len), 0);
 
       if (!ret)
          return false;
@@ -142,7 +152,7 @@ bool socket_receive_all_blocking_with_timeout(int fd,
 
    while (len)
    {
-      ssize_t ret = recv(fd, (char*)data, len, 0);
+      ssize_t ret = recv(fd, (char*)data, NET_IO_LEN(len), 0);
 
       if (!ret)
          return false;
@@ -182,7 +192,7 @@ bool socket_set_block(int fd, bool block)
    int i = !block;
 
    return !setsockopt(fd, SOL_SOCKET, SO_NBIO, &i, sizeof(i));
-#elif defined(GEKKO)
+#elif defined(GEKKO) && !defined(GEKKO_NATIVE)
    u32 i = !block;
 
    return !net_ioctl(fd, FIONBIO, &i);
@@ -218,10 +228,10 @@ int socket_close(int fd)
 }
 
 int socket_select(int nfds, fd_set *readfds, fd_set *writefds,
-      fd_set *errorfds, struct timeval *timeout)
+      fd_set *err_fds, struct timeval *timeout)
 {
 #if defined(__PS3__)
-   return socketselect(nfds, readfds, writefds, errorfds, timeout);
+   return socketselect(nfds, readfds, writefds, err_fds, timeout);
 #elif defined(VITA)
    int i, j;
    fd_set rfds, wfds, efds;
@@ -250,7 +260,7 @@ int socket_select(int nfds, fd_set *readfds, fd_set *writefds,
          event_count++;
       else if (writefds && FD_ISSET(i, writefds))
          event_count++;
-      else if (errorfds && FD_ISSET(i, errorfds))
+      else if (err_fds && FD_ISSET(i, err_fds))
          event_count++;
    }
 
@@ -275,7 +285,7 @@ int socket_select(int nfds, fd_set *readfds, fd_set *writefds,
          if (writefds && FD_ISSET(i, writefds))
             event->events |= SCE_NET_EPOLLOUT;
 
-         if (event->events || (errorfds && FD_ISSET(i, errorfds)))
+         if (event->events || (err_fds && FD_ISSET(i, err_fds)))
          {
             event->data.fd = i;
 
@@ -306,8 +316,8 @@ int socket_select(int nfds, fd_set *readfds, fd_set *writefds,
          memcpy(&rfds, readfds, sizeof(rfds));
       if (writefds)
          memcpy(&wfds, writefds, sizeof(wfds));
-      if (errorfds)
-         memcpy(&efds, errorfds, sizeof(efds));
+      if (err_fds)
+         memcpy(&efds, err_fds, sizeof(efds));
    }
    else
    {
@@ -322,8 +332,8 @@ int socket_select(int nfds, fd_set *readfds, fd_set *writefds,
       FD_ZERO(readfds);
    if (writefds)
       FD_ZERO(writefds);
-   if (errorfds)
-      FD_ZERO(errorfds);
+   if (err_fds)
+      FD_ZERO(err_fds);
 
    /* Vita's epoll takes a microsecond timeout parameter. */
    if (timeout)
@@ -350,7 +360,7 @@ int socket_select(int nfds, fd_set *readfds, fd_set *writefds,
 
       EPOLL_FD_SET(SCE_NET_EPOLLIN,  &rfds, readfds)
       EPOLL_FD_SET(SCE_NET_EPOLLOUT, &wfds, writefds)
-      EPOLL_FD_SET(SCE_NET_EPOLLERR, &efds, errorfds)
+      EPOLL_FD_SET(SCE_NET_EPOLLERR, &efds, err_fds)
    }
 
    ret = j;
@@ -363,7 +373,7 @@ done:
 
    return ret;
 #else
-   return select(nfds, readfds, writefds, errorfds, timeout);
+   return select(nfds, readfds, writefds, err_fds, timeout);
 #endif
 }
 
@@ -371,7 +381,90 @@ done:
 int socket_poll(struct pollfd *fds, unsigned nfds, int timeout)
 {
 #if defined(_WIN32)
-   return WSAPoll(fds, nfds, timeout);
+   /* select() exists on 9x, XP, Vista+, and Xbox XTL. WSAPoll does not.
+    * A Winsock fd_set is a count and an array that select() reads up to
+    * the count, and FD_SET drops what passes FD_SETSIZE (64), so more
+    * sockets than that get sets sized for them. */
+   fd_set sets[3];
+   fd_set *rfds = &sets[0], *wfds = &sets[1], *efds = &sets[2];
+   void   *big  = NULL;
+   struct timeval tv, *ptv = NULL;
+   unsigned i;
+   int ret;
+   int nready = 0;
+
+   if (nfds && !fds)
+      return -1;
+
+   if (nfds > FD_SETSIZE)
+   {
+      size_t one = offsetof(fd_set, fd_array) + nfds * sizeof(SOCKET);
+      if (!(big = malloc(3 * one)))
+         return -1;
+      rfds = (fd_set*)big;
+      wfds = (fd_set*)((char*)big + one);
+      efds = (fd_set*)((char*)big + 2 * one);
+   }
+   rfds->fd_count = 0;
+   wfds->fd_count = 0;
+   efds->fd_count = 0;
+
+   for (i = 0; i < nfds; i++)
+   {
+      SOCKET s = (SOCKET)fds[i].fd;
+
+      fds[i].revents = 0;
+
+      if (s == INVALID_SOCKET)
+      {
+         fds[i].revents = POLLNVAL;
+         nready++;
+         continue;
+      }
+
+      if (fds[i].events & (POLLIN | POLLRDNORM | POLLRDBAND | POLLPRI))
+         rfds->fd_array[rfds->fd_count++] = s;
+      if (fds[i].events & (POLLOUT | POLLWRNORM | POLLWRBAND))
+         wfds->fd_array[wfds->fd_count++] = s;
+      efds->fd_array[efds->fd_count++] = s;
+   }
+
+   if (timeout >= 0)
+   {
+      tv.tv_sec  = (long)timeout / 1000;
+      tv.tv_usec = ((long)timeout % 1000) * 1000;
+      ptv = &tv;
+   }
+
+   /* Winsock ignores nfds and walks the fd_set. */
+   ret = socket_select(0, rfds, wfds, efds, ptv);
+   if (ret < 0)
+   {
+      free(big);
+      return ret;
+   }
+
+   for (i = 0; i < nfds; i++)
+   {
+      SOCKET s = (SOCKET)fds[i].fd;
+
+      if (fds[i].revents & POLLNVAL)
+         continue;
+
+      if (FD_ISSET(s, rfds))
+         fds[i].revents |= (short)(fds[i].events &
+               (POLLIN | POLLRDNORM | POLLRDBAND | POLLPRI));
+      if (FD_ISSET(s, wfds))
+         fds[i].revents |= (short)(fds[i].events &
+               (POLLOUT | POLLWRNORM | POLLWRBAND));
+      if (FD_ISSET(s, efds))
+         fds[i].revents |= POLLERR;
+      if (fds[i].revents)
+         nready++;
+   }
+
+   free(big);
+   return nready;
 #elif defined(VITA)
    int i, j;
    int epoll_fd;
@@ -479,7 +572,6 @@ done:
    for (i = 0; i < timeout_quotient; i++)
    {
       ret = poll(fds, nfds, TIMEOUT_DIVISOR);
-
       /* Success or error. */
       if (ret)
          return ret;
@@ -492,7 +584,7 @@ done:
    return ret;
 #undef TIMEOUT_DIVISOR
 
-#elif defined(GEKKO)
+#elif defined(GEKKO) && !defined(GEKKO_NATIVE)
    return net_poll(fds, nfds, timeout);
 #else
    return poll(fds, nfds, timeout);
@@ -574,7 +666,7 @@ bool socket_send_all_blocking(int fd, const void *data_, size_t len,
 
    while (len)
    {
-      ssize_t ret = send(fd, (const char*)data, len, flags);
+      ssize_t ret = send(fd, (const char*)data, NET_IO_LEN(len), flags);
 
       if (!ret)
          continue;
@@ -609,7 +701,7 @@ bool socket_send_all_blocking_with_timeout(int fd,
 
    while (len)
    {
-      ssize_t ret = send(fd, (const char*)data, len, flags);
+      ssize_t ret = send(fd, (const char*)data, NET_IO_LEN(len), flags);
 
       if (!ret)
          continue;
@@ -647,7 +739,7 @@ ssize_t socket_send_all_nonblocking(int fd, const void *data_, size_t len,
 
    while (len)
    {
-      ssize_t ret = send(fd, (const char*)data, len, flags);
+      ssize_t ret = send(fd, (const char*)data, NET_IO_LEN(len), flags);
 
       if (!ret)
          break;
@@ -680,7 +772,7 @@ bool socket_bind(int fd, void *data)
          (char*)&on, sizeof(on));
    }
 
-   return !bind(fd, addr->ai_addr, addr->ai_addrlen);
+   return !bind(fd, addr->ai_addr, (socklen_t)addr->ai_addrlen);
 }
 
 int socket_connect(int fd, void *data)
@@ -706,7 +798,107 @@ int socket_connect(int fd, void *data)
    }
 #endif
 
-   return connect(fd, addr->ai_addr, addr->ai_addrlen);
+   return connect(fd, addr->ai_addr, (socklen_t)addr->ai_addrlen);
+}
+
+/* Where the platform keeps socket errors in errno (or WSAGetLastError
+ * on Windows), a failed socket_connect_with_timeout() leaves the reason
+ * there too, so callers can report it.  A non-blocking connect reports
+ * a refused or unreachable peer through SO_ERROR rather than errno, and
+ * a timeout through nothing at all, so both are copied over by hand. */
+#if defined(_WIN32) || (!defined(__PS3__) && !defined(VITA) \
+      && !defined(WIIU) && !(defined(GEKKO) && !defined(GEKKO_NATIVE)) \
+      && !defined(_3DS))
+#define SOCKET_CONNECT_SETS_ERROR
+static void socket_set_last_error(int err)
+{
+#ifdef _WIN32
+   WSASetLastError(err);
+#else
+   errno = err;
+#endif
+}
+#endif
+
+int socket_connect_begin(int fd, void *data)
+{
+   int result;
+   if (fd < 0 || !data || !socket_nonblock(fd))
+      return SOCKET_CONNECT_ERROR;
+   result = socket_connect(fd, data);
+   if (!result)
+      return SOCKET_CONNECT_READY;
+   return isinprogress(result) || isagain(result)
+      ? SOCKET_CONNECT_PENDING : SOCKET_CONNECT_ERROR;
+}
+
+int socket_connect_step(int fd, void *data)
+{
+   int result;
+   if (fd < 0 || !data)
+      return SOCKET_CONNECT_ERROR;
+#ifdef NETWORK_HAVE_POLL
+   {
+      struct pollfd fds = {0};
+      NET_POLL_FD(fd, &fds);
+      NET_POLL_EVENT(POLLOUT, &fds);
+      result = socket_poll(&fds, 1, 0);
+      if (result < 0)
+         return SOCKET_CONNECT_ERROR;
+      if (!result || !NET_POLL_HAS_EVENT(POLLOUT | POLLERR | POLLHUP | POLLNVAL, &fds))
+         return SOCKET_CONNECT_PENDING;
+   }
+#else
+   {
+      fd_set writable, errors;
+      struct timeval timeout;
+#ifndef _WIN32
+      if (fd >= FD_SETSIZE)
+         return SOCKET_CONNECT_ERROR;
+#endif
+      FD_ZERO(&writable);
+      FD_ZERO(&errors);
+      FD_SET(fd, &writable);
+      FD_SET(fd, &errors);
+      timeout.tv_sec = timeout.tv_usec = 0;
+      result = socket_select(fd + 1, NULL, &writable, &errors, &timeout);
+      if (result < 0)
+         return SOCKET_CONNECT_ERROR;
+      if (!result || (!FD_ISSET(fd, &writable) && !FD_ISSET(fd, &errors)))
+         return SOCKET_CONNECT_PENDING;
+   }
+#endif
+#if defined(GEKKO) && !defined(GEKKO_NATIVE)
+   result = socket_connect(fd, data);
+   if (!result || -result == EISCONN)
+      return SOCKET_CONNECT_READY;
+#elif defined(_3DS) || defined(GEKKO_NATIVE)
+   result = socket_connect(fd, data);
+   if (!result || errno == EISCONN)
+      return SOCKET_CONNECT_READY;
+#elif defined(WIIU)
+   result = socket_connect(fd, data);
+   if (!result || socketlasterr() == SO_EISCONN)
+      return SOCKET_CONNECT_READY;
+#else
+   {
+      int error = -1;
+      socklen_t size = sizeof(error);
+      result = getsockopt(fd, SOL_SOCKET, SO_ERROR, (char*)&error, &size);
+      if (result < 0 || size != sizeof(error))
+         return SOCKET_CONNECT_ERROR;
+      if (!error)
+         return SOCKET_CONNECT_READY;
+#ifdef SOCKET_CONNECT_SETS_ERROR
+      socket_set_last_error(error);
+#endif
+      return SOCKET_CONNECT_ERROR;
+   }
+#endif
+#if defined(GEKKO) || defined(GEKKO_NATIVE) || defined(_3DS) || defined(WIIU)
+   return isinprogress(result) || isagain(result)
+      ? SOCKET_CONNECT_PENDING : SOCKET_CONNECT_ERROR;
+#endif
 }
 
 bool socket_connect_with_timeout(int fd, void *data, int timeout)
@@ -736,10 +928,11 @@ bool socket_connect_with_timeout(int fd, void *data, int timeout)
    }
 #endif
 
-   res = connect(fd, addr->ai_addr, addr->ai_addrlen);
+   res = connect(fd, addr->ai_addr, (socklen_t)addr->ai_addrlen);
    if (res)
    {
       bool ready = true;
+      bool waited;
 
       if (!isinprogress(res) && !isagain(res))
          return false;
@@ -747,17 +940,39 @@ bool socket_connect_with_timeout(int fd, void *data, int timeout)
       if (timeout <= 0)
          timeout = 5000;
 
-      if (!socket_wait(fd, NULL, &ready, timeout) || !ready)
+      waited = socket_wait(fd, NULL, &ready, timeout);
+      if (!waited || !ready)
+      {
+#ifdef SOCKET_CONNECT_SETS_ERROR
+         int       err   = 0;
+         socklen_t errsz = sizeof(err);
+         getsockopt(fd, SOL_SOCKET, SO_ERROR, (char*)&err, &errsz);
+         if (err)
+            socket_set_last_error(err);
+         /* Poll/select succeeded but the socket never became writable:
+          * that is the timeout.  A failed poll/select already left its
+          * own errno. */
+         else if (waited && !ready)
+         {
+#if defined(_WIN32)
+            socket_set_last_error(WSAETIMEDOUT);
+#elif defined(ETIMEDOUT)
+            socket_set_last_error(ETIMEDOUT);
+#endif
+         }
+#endif
          return false;
+      }
    }
 
-#if defined(GEKKO)
+#if defined(GEKKO) && !defined(GEKKO_NATIVE)
    /* libogc does not have getsockopt implemented */
    res = connect(fd, addr->ai_addr, addr->ai_addrlen);
    if (res < 0 && -res != EISCONN)
       return false;
-#elif defined(_3DS)
-   /* libctru getsockopt does not return expected value */
+#elif defined(_3DS) || defined(GEKKO_NATIVE)
+   /* libctru getsockopt does not return expected value; on the Wii,
+    * connecting again is what works under emulation too */
    if ((connect(fd, addr->ai_addr, addr->ai_addrlen) < 0) && errno != EISCONN)
       return false;
 #elif defined(WIIU)
@@ -768,12 +983,17 @@ bool socket_connect_with_timeout(int fd, void *data, int timeout)
       return false;
 #else
    {
-      int       error = -1;
-      socklen_t errsz = sizeof(error);
+      int       err = -1;
+      socklen_t errsz = sizeof(err);
 
-      getsockopt(fd, SOL_SOCKET, SO_ERROR, (char*)&error, &errsz);
-      if (error)
+      getsockopt(fd, SOL_SOCKET, SO_ERROR, (char*)&err, &errsz);
+      if (err)
+      {
+#ifdef SOCKET_CONNECT_SETS_ERROR
+         socket_set_last_error(err);
+#endif
          return false;
+      }
    }
 #endif
 
@@ -829,7 +1049,7 @@ int socket_create(
 #ifdef VITA
    return sceNetSocket(name, domain, type, protocol);
 #else
-   return socket(domain, type, protocol);
+   return (int)socket(domain, type, protocol);
 #endif
 }
 

@@ -22,19 +22,29 @@
 
 #include <math.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
 
 #include <retro_miscellaneous.h>
+#include <retro_math.h>
 #include <libretro_dspfilter.h>
-#include <string/stdstring.h>
+
+#include "dsp_round.h"
 
 #define sqr(a) ((a) * (a))
 
 #define VIBRATO_BASE_DELAY_SEC 0.002f /* 2 ms */
 #define VIBRATO_FREQUENCY_DEFAULT_HZ 2.0f
+#define VIBRATO_FREQUENCY_MIN_HZ 0.1f
 #define VIBRATO_FREQUENCY_MAX_HZ 14.0f
 #define VIBRATO_DEPTH_DEFAULT_PERCENT 50.0f
 #define VIBRATO_ADD_DELAY 3
+
+/* Ordered so NaN, which compares false against everything, lands on lo. */
+static float vibrato_clampf(float x, float lo, float hi)
+{
+   return (x >= lo) ? ((x <= hi) ? x : hi) : lo;
+}
 
 static float hermite_interp(float x, float *y)
 {
@@ -45,9 +55,42 @@ static float hermite_interp(float x, float *y)
    return ((c3 * x + c2) * x + c1) * x + c0;
 }
 
+/* Fixed-point 4-point Hermite, x in Q16 [0,1).  The float coefficients carry
+ * halves, so 2*c0..2*c3 are exact integers in the int16 sample domain; run
+ * Horner in Q16 (per-step round-half-away-from-zero), then halve the result
+ * and saturate to s16. */
+static int32_t hermite_interp_i16(int32_t x, const int16_t *y)
+{
+   int64_t c0 = 2 * (int64_t)y[1];
+   int64_t c1 = (int64_t)y[2] - y[0];
+   int64_t c2 = 2 * (int64_t)y[0] - 5 * (int64_t)y[1]
+              + 4 * (int64_t)y[2] - (int64_t)y[3];
+   int64_t c3 = ((int64_t)y[3] - y[0]) + 3 * ((int64_t)y[1] - y[2]);
+   int64_t acc = c3 * 65536;    /* Q16, holds 2*intermediate */
+   int64_t p;
+   int32_t r;
+
+   p   = acc * x;
+   acc = (dsp_round_shift(p, 16)) + c2 * 65536;
+   p   = acc * x;
+   acc = (dsp_round_shift(p, 16)) + c1 * 65536;
+   p   = acc * x;
+   acc = (dsp_round_shift(p, 16)) + c0 * 65536;
+   /* acc is Q16 of 2*result; result = acc / (2 * 65536) = acc / 131072. */
+   r   = (int32_t)dsp_round_shift(acc, 17);
+   if      (r >  32767) r =  32767;
+   else if (r < -32768) r = -32768;
+   return r;
+}
+
 struct vibrato_core
 {
    float* buffer;
+   /* int16 mirror of the delay line, plus a precomputed Q16 per-phase delay
+    * LUT and the LFO period, for the deterministic int16 path. */
+   int16_t *buffer_i;
+   int32_t *delay_lut;
+   int maxphase;
    float freq;
    float samplerate;
    float depth;
@@ -59,26 +102,77 @@ struct vibrato_core
 struct vibrato
 {
    struct vibrato_core left, right;
+   /* Both channels' delay lines, int16 mirrors and delay LUTs are views
+    * into this one block. */
+   uint8_t *arena;
 };
 
 static void vibrato_free(void *data)
 {
    struct vibrato *vib = (struct vibrato*)data;
-   free(vib->left.buffer);
-   free(vib->right.buffer);
-   free(data);
+   if (!vib)
+      return;
+   free(vib->arena);
+   free(vib);
+}
+
+/* Region spacing inside the arena, in bytes. */
+#define VIBRATO_ARENA_NEXT(cur, bytes) \
+   ((((cur) + (bytes) + 63) / 64) * 64)
+
+/* Lay one channel's three buffers out at byte offset cur inside base
+ * (measure only when base is NULL); returns the cursor after them. */
+static size_t vibratocore_carve(struct vibrato_core *core, int samplerate,
+      float freq, uint8_t *base, size_t cur)
+{
+   size_t line;
+   core->size     = VIBRATO_BASE_DELAY_SEC * samplerate * 2;
+   /* The Hermite tap reads buffer[ipart .. ipart + 3]. */
+   if (core->size < 8)
+      core->size  = 8;
+   core->maxphase = samplerate / freq;
+   if (core->maxphase < 1)
+      core->maxphase = 1;
+   line           = (size_t)core->size + VIBRATO_ADD_DELAY;
+   core->buffer   = base ? (float*)(base + cur) : NULL;
+   cur            = VIBRATO_ARENA_NEXT(cur, line * sizeof(float));
+   core->buffer_i = base ? (int16_t*)(base + cur) : NULL;
+   cur            = VIBRATO_ARENA_NEXT(cur, line * sizeof(int16_t));
+   return cur;
+}
+
+/* Lay one channel's delay LUT out at cur; the LUTs follow both channels'
+ * delay lines so the lines can be zeroed with one memset. */
+static size_t vibratocore_carve_lut(struct vibrato_core *core,
+      uint8_t *base, size_t cur)
+{
+   core->delay_lut = base ? (int32_t*)(base + cur) : NULL;
+   cur            = VIBRATO_ARENA_NEXT(cur, (size_t)core->maxphase * sizeof(int32_t));
+   return cur;
 }
 
 static void vibratocore_init(struct vibrato_core *core,float depth,int samplerate,float freq)
 {
-	core->size       = VIBRATO_BASE_DELAY_SEC * samplerate * 2;
-	core->buffer     = malloc((core->size + VIBRATO_ADD_DELAY) * sizeof(float));
-	memset(core->buffer, 0, (core->size   + VIBRATO_ADD_DELAY) * sizeof(float));
 	core->samplerate = samplerate;
 	core->freq       = freq;
 	core->depth      = depth;
 	core->phase      = 0;
 	core->writeindex = 0;
+
+	/* Precomputed Q16 per-phase delay LUT built from the same
+	 * double-precision sine the float path uses, so the int16 path needs
+	 * no FPU at run time. The delay lines start zeroed from the arena. */
+	{
+		float    M        = freq / samplerate;
+		int      maxdelay = VIBRATO_BASE_DELAY_SEC * samplerate;
+		int      p;
+		for (p = 0; p < core->maxphase; p++)
+		{
+			double lfo   = sin((double)M * 2.0 * M_PI * p);
+			double delay = (lfo + 1.0) * depth * maxdelay + VIBRATO_ADD_DELAY;
+			core->delay_lut[p] = (int32_t)floor(delay * 65536.0 + 0.5);
+		}
+	}
 }
 
 float vibratocore_core(struct vibrato_core *core,float in)
@@ -86,10 +180,9 @@ float vibratocore_core(struct vibrato_core *core,float in)
    int ipart;
    float delay, readindex, fpart, value;
    float M                        = core->freq / core->samplerate;
-   int maxphase                   = core->samplerate / core->freq;
    float lfo                      = sin(M * 2. * M_PI * core->phase++);
    int maxdelay                   = VIBRATO_BASE_DELAY_SEC * core->samplerate;
-   core->phase                    = core->phase % maxphase;
+   core->phase                    = core->phase % core->maxphase;
    lfo                            = (lfo + 1) * 1.; /* Transform from [-1; 1] to [0; 1] */
    delay                          =  lfo * core->depth * maxdelay;
    delay                         += VIBRATO_ADD_DELAY;
@@ -110,6 +203,59 @@ float vibratocore_core(struct vibrato_core *core,float in)
    return value;
 }
 
+/* Deterministic int16 path: same modulated fractional delay and 4-point
+ * Hermite interpolation as vibratocore_core(), driven by the precomputed Q16
+ * delay LUT and an int16 delay line. */
+static int16_t vibratocore_core_i16(struct vibrato_core *core, int16_t in)
+{
+   int      ipart;
+   int32_t  x_q16, value;
+   int64_t  readindex_q16, size_q16;
+   int32_t  delay_q16 = core->delay_lut[core->phase++];
+   core->phase        = core->phase % core->maxphase;
+
+   size_q16      = (int64_t)core->size << 16;
+   readindex_q16 = (int64_t)(core->writeindex - 1) * 65536 - delay_q16;
+   while (readindex_q16 < 0)
+      readindex_q16 += size_q16;
+   while (readindex_q16 >= size_q16)
+      readindex_q16 -= size_q16;
+
+   ipart = (int)(readindex_q16 >> 16);
+   x_q16 = (int32_t)(readindex_q16 - ((int64_t)ipart << 16));
+   value = hermite_interp_i16(x_q16, &core->buffer_i[ipart]);
+
+   core->buffer_i[core->writeindex] = in;
+   if (core->writeindex < VIBRATO_ADD_DELAY)
+      core->buffer_i[core->size + core->writeindex] = in;
+   core->writeindex++;
+   if (core->writeindex == core->size)
+      core->writeindex = 0;
+   return (int16_t)value;
+}
+
+static void vibrato_process_i16(void *data,
+      struct dspfilter_output_i16 *output,
+      const struct dspfilter_input_i16 *input)
+{
+   unsigned i;
+   int16_t *out;
+   struct vibrato *vib = (struct vibrato*)data;
+
+   output->samples     = input->samples;
+   output->frames      = input->frames;
+   out                 = output->samples;
+
+   for (i = 0; i < input->frames; i++, out += 2)
+   {
+      int16_t in[2];
+      in[0]         = out[0];
+      in[1]         = out[1];
+      out[0]        = vibratocore_core_i16(&vib->left, in[0]);
+      out[1]        = vibratocore_core_i16(&vib->right, in[1]);
+   }
+}
+
 static void vibrato_process(void *data,
       struct dspfilter_output *output,
       const struct dspfilter_input *input)
@@ -124,7 +270,9 @@ static void vibrato_process(void *data,
 
    for (i = 0; i < input->frames; i++, out += 2)
    {
-      float in[2] = { out[0], out[1] };
+      float in[2];
+      in[0]       = out[0];
+      in[1]       = out[1];
       out[0]      = vibratocore_core(&vib->left, in[0]);
       out[1]      = vibratocore_core(&vib->right, in[1]);
    }
@@ -134,12 +282,37 @@ static void *vibrato_init(const struct dspfilter_info *info,
       const struct dspfilter_config *config, void *userdata)
 {
    float freq, depth;
-   struct vibrato *vib = (struct vibrato*)calloc(1, sizeof(*vib));
-   if (!vib)
+   size_t len, lines;
+   struct vibrato *vib;
+
+   if (!info || info->input_rate < 1)
+      return NULL;
+   if (!(vib = (struct vibrato*)calloc(1, sizeof(*vib))))
       return NULL;
 
    config->get_float(userdata, "freq", &freq,5.0f);
    config->get_float(userdata, "depth", &depth, 0.5f);
+   /* Both come from the preset. freq sets the LFO period and so the LUT
+    * length; depth scales the delay, which the line is sized for at 1.0. */
+   freq  = vibrato_clampf(freq, VIBRATO_FREQUENCY_MIN_HZ,
+         VIBRATO_FREQUENCY_MAX_HZ);
+   depth = vibrato_clampf(depth, 0.0f, 1.0f);
+   len   = vibratocore_carve(&vib->left,  info->input_rate, freq, NULL, 0);
+   lines = vibratocore_carve(&vib->right, info->input_rate, freq, NULL, len);
+   len   = vibratocore_carve_lut(&vib->left,  NULL, lines);
+   len   = vibratocore_carve_lut(&vib->right, NULL, len);
+   if (!(vib->arena = (uint8_t*)malloc(len)))
+   {
+      free(vib);
+      return NULL;
+   }
+   len   = vibratocore_carve(&vib->left,  info->input_rate, freq, vib->arena, 0);
+   lines = vibratocore_carve(&vib->right, info->input_rate, freq, vib->arena, len);
+   len   = vibratocore_carve_lut(&vib->left,  vib->arena, lines);
+   vibratocore_carve_lut(&vib->right, vib->arena, len);
+   /* Only the delay lines need to start silent; the LUTs are filled in
+    * full by init and zeroing them first would touch them twice. */
+   memset(vib->arena, 0, lines);
    vibratocore_init(&vib->left,depth,info->input_rate,freq);
    vibratocore_init(&vib->right,depth,info->input_rate,freq);
    return vib;
@@ -153,6 +326,8 @@ static const struct dspfilter_implementation vibrato_plug = {
    DSPFILTER_API_VERSION,
    "Vibrato",
    "vibrato",
+
+   vibrato_process_i16,
 };
 
 #ifdef HAVE_FILTERS_BUILTIN
@@ -161,6 +336,7 @@ static const struct dspfilter_implementation vibrato_plug = {
 
 const struct dspfilter_implementation *dspfilter_get_implementation(dspfilter_simd_mask_t mask)
 {
+   (void)mask;
    return &vibrato_plug;
 }
 

@@ -25,7 +25,10 @@
 #include <string.h>
 
 #include <retro_miscellaneous.h>
+#include <retro_math.h>
 #include <libretro_dspfilter.h>
+
+#include "dsp_round.h"
 
 #define CHORUS_MAX_DELAY 4096
 #define CHORUS_DELAY_MASK (CHORUS_MAX_DELAY - 1)
@@ -33,6 +36,12 @@
 struct chorus_data
 {
    float old[2][CHORUS_MAX_DELAY];
+   /* int16 mirror of the delay line, plus a precomputed Q16 per-phase delay
+    * LUT and Q16 mix gains, for the deterministic int16 path. */
+   int16_t old_i[2][CHORUS_MAX_DELAY];
+   int32_t *delay_lut;
+   int32_t mix_dry_i;
+   int32_t mix_wet_i;
    float delay;
    float depth;
    float input_rate;
@@ -46,7 +55,11 @@ struct chorus_data
 static void chorus_free(void *data)
 {
    if (data)
+   {
+      struct chorus_data *ch = (struct chorus_data*)data;
+      free(ch->delay_lut);
       free(data);
+   }
 }
 
 static void chorus_process(void *data, struct dspfilter_output *output,
@@ -65,8 +78,11 @@ static void chorus_process(void *data, struct dspfilter_output *output,
       unsigned delay_int;
       float delay_frac, l_a, l_b, r_a, r_b;
       float chorus_l, chorus_r;
-      float in[2]             = { out[0], out[1] };
+      float in[2];
       float delay             = ch->delay + ch->depth * sin((2.0 * M_PI * ch->lfo_ptr++) / ch->lfo_period);
+
+      in[0] = out[0];
+      in[1] = out[1];
 
       delay                  *= ch->input_rate;
       if (ch->lfo_ptr >= ch->lfo_period)
@@ -99,6 +115,79 @@ static void chorus_process(void *data, struct dspfilter_output *output,
    }
 }
 
+/* Deterministic int16 path: same modulated fractional-delay chorus as
+ * chorus_process(), but the LFO delay is read from a precomputed Q16
+ * per-phase LUT, the delay line is int16, and the linear interpolation and
+ * dry/wet mix are done in Q16 with int64 accumulation and s16 saturation. */
+static void chorus_process_i16(void *data,
+      struct dspfilter_output_i16 *output,
+      const struct dspfilter_input_i16 *input)
+{
+   unsigned i;
+   int16_t *out           = NULL;
+   struct chorus_data *ch = (struct chorus_data*)data;
+
+   output->samples        = input->samples;
+   output->frames         = input->frames;
+   out                    = output->samples;
+
+   for (i = 0; i < input->frames; i++, out += 2)
+   {
+      unsigned delay_int;
+      int32_t frac_q16;
+      int16_t l_a, l_b, r_a, r_b;
+      int64_t chorus_l, chorus_r, acc;
+      int32_t v;
+      int16_t in0             = out[0];
+      int16_t in1             = out[1];
+      int32_t delay_q16       = ch->delay_lut[ch->lfo_ptr++];
+
+      if (ch->lfo_ptr >= ch->lfo_period)
+         ch->lfo_ptr          = 0;
+
+      delay_int               = (unsigned)(delay_q16 >> 16);
+      if (delay_int >= CHORUS_MAX_DELAY - 1)
+         delay_int            = CHORUS_MAX_DELAY - 2;
+      frac_q16                = delay_q16 - (int32_t)(delay_int << 16);
+
+      ch->old_i[0][ch->old_ptr] = in0;
+      ch->old_i[1][ch->old_ptr] = in1;
+
+      l_a = ch->old_i[0][(ch->old_ptr - delay_int - 0) & CHORUS_DELAY_MASK];
+      l_b = ch->old_i[0][(ch->old_ptr - delay_int - 1) & CHORUS_DELAY_MASK];
+      r_a = ch->old_i[1][(ch->old_ptr - delay_int - 0) & CHORUS_DELAY_MASK];
+      r_b = ch->old_i[1][(ch->old_ptr - delay_int - 1) & CHORUS_DELAY_MASK];
+
+      /* chorus = lerp(a, b, frac), kept in Q16 (value << 16). */
+      chorus_l = (int64_t)l_a * (65536 - frac_q16) + (int64_t)l_b * frac_q16;
+      chorus_r = (int64_t)r_a * (65536 - frac_q16) + (int64_t)r_b * frac_q16;
+
+      /* out = mix_dry*in + mix_wet*chorus, all in Q16, then round + saturate.
+       * The wet term folds the Q16 chorus and the Q16 gain: (gain*chorus)>>16. */
+      acc = (int64_t)ch->mix_dry_i * in0
+          + ((int64_t)ch->mix_wet_i * chorus_l >> 16);
+      v   = (int32_t)dsp_round_shift(acc, 16);
+      if      (v >  32767) v =  32767;
+      else if (v < -32768) v = -32768;
+      out[0] = (int16_t)v;
+
+      acc = (int64_t)ch->mix_dry_i * in1
+          + ((int64_t)ch->mix_wet_i * chorus_r >> 16);
+      v   = (int32_t)dsp_round_shift(acc, 16);
+      if      (v >  32767) v =  32767;
+      else if (v < -32768) v = -32768;
+      out[1] = (int16_t)v;
+
+      ch->old_ptr             = (ch->old_ptr + 1) & CHORUS_DELAY_MASK;
+   }
+}
+
+/* Ordered so NaN, which compares false against everything, lands on lo. */
+static float chorus_clampf(float x, float lo, float hi)
+{
+   return (x >= lo) ? ((x <= hi) ? x : hi) : lo;
+}
+
 static void *chorus_init(const struct dspfilter_info *info,
       const struct dspfilter_config *config, void *userdata)
 {
@@ -106,6 +195,12 @@ static void *chorus_init(const struct dspfilter_info *info,
    struct chorus_data *ch = (struct chorus_data*)calloc(1, sizeof(*ch));
    if (!ch)
       return NULL;
+   /* 0 is what the rate is when the audio device never opened. */
+   if (!info || info->input_rate < 1)
+   {
+      free(ch);
+      return NULL;
+   }
 
    config->get_float(userdata, "delay_ms", &delay, 25.0f);
    config->get_float(userdata, "depth_ms", &depth, 1.0f);
@@ -115,13 +210,19 @@ static void *chorus_init(const struct dspfilter_info *info,
    delay            /= 1000.0f;
    depth            /= 1000.0f;
 
+   /* The ring holds CHORUS_MAX_DELAY frames and the int16 LUT carries the
+    * modulated delay as Q16 samples, so delay + depth has to fit both. */
+   {
+      float max_s    = (float)(CHORUS_MAX_DELAY - 2) / (float)info->input_rate;
+      delay          = chorus_clampf(delay, 0.0f, max_s);
+      depth          = chorus_clampf(depth, 0.0f, max_s - delay);
+   }
    if (depth > delay)
       depth          = delay;
 
-   if (drywet < 0.0f)
-      drywet         = 0.0f;
-   else if (drywet > 1.0f)
-      drywet         = 1.0f;
+   /* lfo_freq sets the LUT length and the loop that fills it. */
+   lfo_freq          = chorus_clampf(lfo_freq, 0.05f, 50.0f);
+   drywet            = chorus_clampf(drywet, 0.0f, 1.0f);
 
    ch->mix_dry       = 1.0f - 0.5f * drywet;
    ch->mix_wet       = 0.5f * drywet;
@@ -132,6 +233,35 @@ static void *chorus_init(const struct dspfilter_info *info,
    ch->input_rate    = info->input_rate;
    if (!ch->lfo_period)
       ch->lfo_period = 1;
+
+   /* Precompute the Q16 per-phase delay LUT (in samples) and Q16 mix gains
+    * for the int16 path: one full LFO period of the same double-precision
+    * sine the float path uses, so no FPU is needed at run time. */
+   ch->mix_dry_i     = (int32_t)floor((double)ch->mix_dry * 65536.0 + 0.5);
+   ch->mix_wet_i     = (int32_t)floor((double)ch->mix_wet * 65536.0 + 0.5);
+   ch->delay_lut     = (int32_t*)malloc(ch->lfo_period * sizeof(int32_t));
+   if (!ch->delay_lut)
+   {
+      chorus_free(ch);
+      return NULL;
+   }
+   {
+      unsigned p;
+      for (p = 0; p < ch->lfo_period; p++)
+      {
+         double   d  = (ch->delay + ch->depth *
+               sin((2.0 * M_PI * p) / ch->lfo_period)) * ch->input_rate;
+         double   di = floor(d);            /* matches float (unsigned)delay */
+         int32_t  ip = (int32_t)di;
+         int32_t  fp = (int32_t)floor((d - di) * 65536.0 + 0.5);
+         if (fp > 65535)                    /* rounding carried into next int */
+         {
+            fp -= 65536;
+            ip += 1;
+         }
+         ch->delay_lut[p] = (ip << 16) | (fp & 0xFFFF);
+      }
+   }
    return ch;
 }
 
@@ -143,6 +273,8 @@ static const struct dspfilter_implementation chorus_plug = {
    DSPFILTER_API_VERSION,
    "Chorus",
    "chorus",
+
+   chorus_process_i16,
 };
 
 #ifdef HAVE_FILTERS_BUILTIN
@@ -150,6 +282,10 @@ static const struct dspfilter_implementation chorus_plug = {
 #endif
 
 const struct dspfilter_implementation *
-dspfilter_get_implementation(dspfilter_simd_mask_t mask) { return &chorus_plug; }
+dspfilter_get_implementation(dspfilter_simd_mask_t mask)
+{
+   (void)mask;
+   return &chorus_plug;
+}
 
 #undef dspfilter_get_implementation

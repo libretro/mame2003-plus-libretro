@@ -128,9 +128,9 @@
 #include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
-#include <compat/zlib.h>
+#include <zlib.h>
 #include "hash.h"
-#include <utils/md5.h>
+#include <lrc_hash.h>
 #include "mame_sha1.h"
 #include "osd_cpu.h"
 #include "mame.h"
@@ -688,7 +688,7 @@ static void h_md5_begin(void)
 static void h_md5_buffer(const void* mem, unsigned long len)
 {
 #ifndef HAVE_LIBNX // Add hw crypto later, works without
-	MD5_Update(&md5, (md5byte*)mem, len);
+	MD5_Update(&md5, mem, len);
 #endif
 }
 

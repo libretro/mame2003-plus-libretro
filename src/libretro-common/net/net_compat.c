@@ -29,6 +29,10 @@
 
 #include <net/net_compat.h>
 
+#ifdef GEKKO_NATIVE
+#include <gekko/net.h>
+#endif
+
 #if defined(_WIN32) && !defined(_XBOX)
 #if !defined(_WIN32_WINNT) || _WIN32_WINNT < 0x0600
 const char *inet_ntop(int af, const void *src, char *dst, socklen_t size)
@@ -128,28 +132,29 @@ struct hostent *gethostbyname(const char *name)
 
    XNetDnsLookup(name, event, &dns);
    if (!dns)
-      goto done;
+   {
+      WSACloseEvent(event);
+      return NULL;
+   }
 
    WaitForSingleObject((HANDLE)event, INFINITE);
 
-   if (dns->iStatus)
-      goto done;
+   if (!dns->iStatus)
+   {
+      memcpy(&addr, dns->aina, sizeof(addr));
 
-   memcpy(&addr, dns->aina, sizeof(addr));
+      he.h_name      = NULL;
+      he.h_aliases   = NULL;
+      he.h_addrtype  = AF_INET;
+      he.h_length    = sizeof(addr);
+      he.h_addr_list = &he.h_addr;
+      he.h_addr      = (char*)&addr;
 
-   he.h_name      = NULL;
-   he.h_aliases   = NULL;
-   he.h_addrtype  = AF_INET;
-   he.h_length    = sizeof(addr);
-   he.h_addr_list = &he.h_addr;
-   he.h_addr      = (char*)&addr;
+      ret = &he;
+   }
 
-   ret = &he;
-
-done:
    WSACloseEvent(event);
-   if (dns)
-      XNetDnsRelease(dns);
+   XNetDnsRelease(dns);
 
    return ret;
 }
@@ -210,7 +215,7 @@ done:
    return ret;
 }
 
-#elif defined(GEKKO)
+#elif defined(GEKKO) && !defined(GEKKO_NATIVE) && !defined(NET_HAVE_SYS_INET_NTOP)
 const char *inet_ntop(int af, const void *src, char *dst, socklen_t size)
 {
    const char *addr_str = inet_ntoa(*(struct in_addr*)src);
@@ -549,6 +554,9 @@ failure:
    }
 
    return true;
+#elif defined(GEKKO_NATIVE)
+   /* Waits for an address as long as libogc's if_config did. */
+   return gk_net_init(10000) == 0;
 #elif defined(GEKKO)
    static bool initialized = false;
 

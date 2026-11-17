@@ -30,6 +30,7 @@
 
 #include <retro_common_api.h>
 
+#include <stddef.h>
 #include <boolean.h>
 
 #include <retro_inline.h>
@@ -60,6 +61,21 @@ typedef void (*thread_func_t)(void *arg);
 tpool_t *tpool_create(size_t num);
 
 /**
+ * tpool_create_with_stack_size:
+ * @num           : Number of threads the pool should have.
+ *                  If 0 defaults to 2.
+ * @stack_size    : Stack size of each thread in bytes; 0 for the
+ *                  platform default, as tpool_create.
+ *
+ * Create a thread pool whose threads have a stack of the given size,
+ * for work whose depth is known rather than whatever the platform's
+ * default happens to be.
+ *
+ * Returns: pool.
+ */
+tpool_t *tpool_create_with_stack_size(size_t num, size_t stack_size);
+
+/**
  * tpool_destroy:
  * @tp            : Thread pool.
  *
@@ -83,12 +99,31 @@ void tpool_destroy(tpool_t *tp);
  **/
 bool tpool_add_work(tpool_t *tp, thread_func_t func, void *arg);
 
+/* One ring claim attempt, without allocation or overflow locks. False on
+ * fullness/contention, stopping, or a backend without lock-free atomics.
+ * A refused job is never queued; caller retains it and may retry later. */
+bool tpool_try_add_work(tpool_t *tp, thread_func_t func, void *arg);
+
 /**
  * tpool_wait:
  * @tp Thread pool.
  *
  * Wait for all work in the pool to be completed.
  */
+/**
+ * tpool_help:
+ * @tp : the pool.
+ *
+ * Runs the work at the head of the queue on the calling thread, if
+ * there is any, and returns whether it did. For a thread that would
+ * otherwise sleep until the pool has done something: instead of
+ * waiting it takes the oldest job itself. The head is taken, as a
+ * worker takes it, so a job depending only on jobs posted before it -
+ * a picture on the pictures it predicts from - never waits on one
+ * still queued.
+ */
+bool tpool_help(tpool_t *tp);
+
 void tpool_wait(tpool_t *tp);
 
 RETRO_END_DECLS

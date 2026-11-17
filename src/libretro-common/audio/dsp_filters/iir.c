@@ -25,8 +25,8 @@
 #include <string.h>
 
 #include <retro_miscellaneous.h>
+#include <retro_math.h>
 #include <libretro_dspfilter.h>
-#include <string/stdstring.h>
 
 #define sqr(a) ((a) * (a))
 
@@ -52,11 +52,23 @@ struct iir_data
    float b0, b1, b2;
    float a0, a1, a2;
 
+   /* Deterministic int16 path: normalized coefficients (b/a0, a/a0) in Q24,
+    * and per-channel state.  The feedback history yn1/yn2 is kept in Q16
+    * int64 so the recursion runs at higher-than-int16 precision (no
+    * in-loop quantization noise) and cannot overflow on boost/overshoot. */
+   int32_t nb0_q, nb1_q, nb2_q, na1_q, na2_q;
+
    struct
    {
       float xn1, xn2;
       float yn1, yn2;
    } l, r;
+
+   struct
+   {
+      int32_t xn1, xn2;
+      int64_t yn1, yn2;
+   } li, ri;
 };
 
 static void iir_free(void *data)
@@ -69,7 +81,7 @@ static void iir_process(void *data, struct dspfilter_output *output,
 {
    unsigned i;
    struct iir_data *iir = (struct iir_data*)data;
-   float *out           = output->samples;
+   float *out           = input->samples;
 
    float b0             = iir->b0;
    float b1             = iir->b1;
@@ -124,7 +136,70 @@ static void iir_process(void *data, struct dspfilter_output *output,
    iir->r.yn2 = yn2_r;
 }
 
-#define CHECK(x) if (string_is_equal(str, #x)) return x
+/* Deterministic int16 Direct Form I biquad.  Forward terms accumulate to Q40
+ * (int64), the a0-normalized Q24 coefficients multiply the Q16 feedback
+ * history, and a single symmetric rounding produces the int16 output while
+ * the Q16 history is retained for the next iteration. */
+static void iir_process_i16(void *data,
+      struct dspfilter_output_i16 *output,
+      const struct dspfilter_input_i16 *input)
+{
+   unsigned i;
+   struct iir_data *iir = (struct iir_data*)data;
+   int16_t *out;
+   int32_t nb0   = iir->nb0_q;
+   int32_t nb1   = iir->nb1_q;
+   int32_t nb2   = iir->nb2_q;
+   int32_t na1   = iir->na1_q;
+   int32_t na2   = iir->na2_q;
+   int32_t xn1_l = iir->li.xn1, xn2_l = iir->li.xn2;
+   int64_t yn1_l = iir->li.yn1, yn2_l = iir->li.yn2;
+   int32_t xn1_r = iir->ri.xn1, xn2_r = iir->ri.xn2;
+   int64_t yn1_r = iir->ri.yn1, yn2_r = iir->ri.yn2;
+
+   output->samples = input->samples;
+   output->frames  = input->frames;
+   out             = output->samples;
+
+   for (i = 0; i < input->frames; i++, out += 2)
+   {
+      int32_t in_l = out[0];
+      int32_t in_r = out[1];
+      int64_t fwd, acc;
+      int32_t v;
+
+      fwd = (int64_t)nb0 * in_l + (int64_t)nb1 * xn1_l + (int64_t)nb2 * xn2_l;
+      acc = fwd * 65536 - (int64_t)na1 * yn1_l - (int64_t)na2 * yn2_l;
+      v   = (acc >= 0) ?  (int32_t)(( acc + (1LL << 39)) >> 40)
+                       : -(int32_t)((-acc + (1LL << 39)) >> 40);
+      if      (v >  32767) v =  32767;
+      else if (v < -32768) v = -32768;
+      xn2_l = xn1_l; xn1_l = in_l;
+      yn2_l = yn1_l;
+      yn1_l = (acc >= 0) ?  (( acc + (1LL << 23)) >> 24)
+                         : -((-acc + (1LL << 23)) >> 24);
+      out[0] = (int16_t)v;
+
+      fwd = (int64_t)nb0 * in_r + (int64_t)nb1 * xn1_r + (int64_t)nb2 * xn2_r;
+      acc = fwd * 65536 - (int64_t)na1 * yn1_r - (int64_t)na2 * yn2_r;
+      v   = (acc >= 0) ?  (int32_t)(( acc + (1LL << 39)) >> 40)
+                       : -(int32_t)((-acc + (1LL << 39)) >> 40);
+      if      (v >  32767) v =  32767;
+      else if (v < -32768) v = -32768;
+      xn2_r = xn1_r; xn1_r = in_r;
+      yn2_r = yn1_r;
+      yn1_r = (acc >= 0) ?  (( acc + (1LL << 23)) >> 24)
+                         : -((-acc + (1LL << 23)) >> 24);
+      out[1] = (int16_t)v;
+   }
+
+   iir->li.xn1 = xn1_l; iir->li.xn2 = xn2_l;
+   iir->li.yn1 = yn1_l; iir->li.yn2 = yn2_l;
+   iir->ri.xn1 = xn1_r; iir->ri.xn2 = xn2_r;
+   iir->ri.yn1 = yn1_r; iir->ri.yn2 = yn2_r;
+}
+
+#define CHECK(x) if (strcmp(str, #x) == 0) return x
 static enum IIRFilter str_to_type(const char *str)
 {
    CHECK(LPF);
@@ -306,6 +381,7 @@ static void iir_filter_init(struct iir_data *iir,
          A = exp(log(10.0) * -9.477 / 40.0);
          beta = sqrt(A + A);
          (void)a1pha;
+         /* fall through - RIAA CD de-emphasis is a high shelf */
       case HSH:
          b0 = A * ((A + 1.0) + (A - 1.0) * cs + beta * sn);
          b1 = -2.0 * A * ((A - 1.0) + (A + 1.0) * cs);
@@ -326,6 +402,12 @@ static void iir_filter_init(struct iir_data *iir,
    iir->a2 = a2;
 }
 
+/* Ordered so NaN, which compares false against everything, lands on lo. */
+static float iir_clampf(float x, float lo, float hi)
+{
+   return (x >= lo) ? ((x <= hi) ? x : hi) : lo;
+}
+
 static void *iir_init(const struct dspfilter_info *info,
       const struct dspfilter_config *config, void *userdata)
 {
@@ -335,6 +417,12 @@ static void *iir_init(const struct dspfilter_info *info,
    struct iir_data *iir   = (struct iir_data*)calloc(1, sizeof(*iir));
    if (!iir)
       return NULL;
+   /* 0 is what the rate is when the audio device never opened. */
+   if (!info || info->input_rate < 1)
+   {
+      free(iir);
+      return NULL;
+   }
 
    config->get_float(userdata, "frequency", &freq, 1024.0f);
    config->get_float(userdata, "quality", &qual, 0.707f);
@@ -342,10 +430,26 @@ static void *iir_init(const struct dspfilter_info *info,
 
    config->get_string(userdata, "type", &type, "LPF");
 
+   /* quality divides the biquad alpha, gain is in dB, and a corner at or
+    * past Nyquist leaves the coefficients undefined. */
+   freq = iir_clampf(freq, 1.0f, (float)info->input_rate * 0.49f);
+   qual = iir_clampf(qual, 0.01f, 100.0f);
+   gain = iir_clampf(gain, -60.0f, 60.0f);
+
    filter = str_to_type(type);
    config->free(type);
 
    iir_filter_init(iir, info->input_rate, freq, qual, gain, filter);
+
+   /* Precompute a0-normalized Q24 coefficients for the int16 path. */
+   {
+      double inv_a0 = (iir->a0 != 0.0f) ? 1.0 / (double)iir->a0 : 0.0;
+      iir->nb0_q = (int32_t)floor((double)iir->b0 * inv_a0 * 16777216.0 + 0.5);
+      iir->nb1_q = (int32_t)floor((double)iir->b1 * inv_a0 * 16777216.0 + 0.5);
+      iir->nb2_q = (int32_t)floor((double)iir->b2 * inv_a0 * 16777216.0 + 0.5);
+      iir->na1_q = (int32_t)floor((double)iir->a1 * inv_a0 * 16777216.0 + 0.5);
+      iir->na2_q = (int32_t)floor((double)iir->a2 * inv_a0 * 16777216.0 + 0.5);
+   }
    return iir;
 }
 
@@ -357,6 +461,8 @@ static const struct dspfilter_implementation iir_plug = {
    DSPFILTER_API_VERSION,
    "IIR",
    "iir",
+
+   iir_process_i16,
 };
 
 #ifdef HAVE_FILTERS_BUILTIN
@@ -365,6 +471,7 @@ static const struct dspfilter_implementation iir_plug = {
 
 const struct dspfilter_implementation *dspfilter_get_implementation(dspfilter_simd_mask_t mask)
 {
+   (void)mask;
    return &iir_plug;
 }
 

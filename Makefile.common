@@ -2867,6 +2867,7 @@ SOURCES_C += $(CORE_DIR)/lib/sljit/sljit_mame.c
 ifeq ($(HAVE_THREADS),1)
 COREDEFINES += -DHAVE_THREADS
 SOURCES_C += $(LIBRETRO_COMM_DIR)/rthreads/rthreads.c
+SOURCES_C += $(LIBRETRO_COMM_DIR)/rthreads/retro_eventcount.c
 endif
 
 ifeq ($(STATIC_LINKING),1)
@@ -2882,6 +2883,10 @@ SOURCES_C += \
 	$(LIBRETRO_COMM_DIR)/file/file_path.c \
 	$(LIBRETRO_COMM_DIR)/file/file_path_io.c \
 	$(LIBRETRO_COMM_DIR)/streams/file_stream.c \
+	$(LIBRETRO_COMM_DIR)/streams/trans_stream_deflate.c \
+	$(LIBRETRO_COMM_DIR)/encodings/encoding_deflate.c \
+	$(LIBRETRO_COMM_DIR)/string/rstrtod.c \
+	$(LIBRETRO_COMM_DIR)/features/features_cpu.c \
 	$(LIBRETRO_COMM_DIR)/streams/file_stream_transforms.c \
 	$(LIBRETRO_COMM_DIR)/streams/interface_stream.c \
 	$(LIBRETRO_COMM_DIR)/streams/memory_stream.c \

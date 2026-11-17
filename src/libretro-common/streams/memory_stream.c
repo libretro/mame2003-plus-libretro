@@ -26,11 +26,6 @@
 
 #include <streams/memory_stream.h>
 
-/* TODO/FIXME - static globals */
-static uint8_t* g_buffer      = NULL;
-static uint64_t g_size         = 0;
-static uint64_t last_file_size = 0;
-
 struct memstream
 {
    uint64_t size;
@@ -40,31 +35,21 @@ struct memstream
    unsigned writing;
 };
 
-void memstream_set_buffer(uint8_t *s, uint64_t len)
-{
-   g_buffer = s;
-   g_size   = len;
-}
 
-memstream_t *memstream_open(unsigned writing)
+memstream_t *memstream_open(uint8_t *buf, uint64_t size, unsigned writing)
 {
    memstream_t *stream;
-   if (!g_buffer || !g_size)
-      return NULL;
 
    stream = (memstream_t*)malloc(sizeof(*stream));
 
    if (!stream)
       return NULL;
 
-   stream->buf       = g_buffer;
-   stream->size      = g_size;
    stream->ptr       = 0;
    stream->max_ptr   = 0;
    stream->writing   = writing;
-
-   g_buffer          = NULL;
-   g_size            = 0;
+   stream->buf       = buf;
+   stream->size      = size;
 
    return stream;
 }
@@ -74,13 +59,17 @@ void memstream_close(memstream_t *stream)
    if (!stream)
       return;
 
-   last_file_size = stream->writing ? stream->max_ptr : stream->size;
    free(stream);
 }
 
 uint64_t memstream_get_ptr(memstream_t *stream)
 {
    return stream->ptr;
+}
+
+uint64_t memstream_get_size(memstream_t *stream)
+{
+   return stream->size;
 }
 
 uint64_t memstream_read(memstream_t *stream, void *data, uint64_t bytes)
@@ -99,6 +88,21 @@ uint64_t memstream_read(memstream_t *stream, void *data, uint64_t bytes)
    if (stream->ptr > stream->max_ptr)
       stream->max_ptr  = stream->ptr;
    return bytes;
+}
+
+int64_t memstream_read_at(memstream_t *stream, void *data, uint64_t bytes,
+      int64_t offset)
+{
+   uint64_t avail;
+   if (!stream || offset < 0)
+      return -1;
+   if ((uint64_t)offset >= stream->size)
+      return 0;
+   avail = stream->size - (uint64_t)offset;
+   if (bytes > avail)
+      bytes = avail;
+   memcpy(data, stream->buf + offset, (size_t)bytes);
+   return (int64_t)bytes;
 }
 
 uint64_t memstream_write(memstream_t *stream,
@@ -155,7 +159,6 @@ void memstream_rewind(memstream_t *stream)
 
 uint64_t memstream_pos(memstream_t *stream) { return stream->ptr; }
 char *memstream_gets(memstream_t *stream, char *s, size_t len) { return NULL; }
-uint64_t memstream_get_last_size(void) { return last_file_size; }
 
 int memstream_getc(memstream_t *stream)
 {

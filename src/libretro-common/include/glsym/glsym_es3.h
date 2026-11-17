@@ -1,5 +1,8 @@
 #ifndef RGLGEN_DECL_H__
 #define RGLGEN_DECL_H__
+#ifdef __MACH__
+#include <TargetConditionals.h>
+#endif
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -22,7 +25,7 @@ typedef void *GLeglImageOES;
 #if !defined(GL_OES_fixed_point) && !defined(HAVE_OPENGLES2)
 typedef GLint GLfixed;
 #endif
-#if defined(OSX) && !defined(MAC_OS_X_VERSION_10_7)
+#if TARGET_OS_OSX && !defined(MAC_OS_X_VERSION_10_7)
 typedef long long int GLint64;
 typedef unsigned long long int GLuint64;
 typedef unsigned long long int GLuint64EXT;
@@ -644,6 +647,10 @@ extern RGLSYMGLTEXTURESTORAGE3DEXTPROC __rglgen_glTextureStorage3DEXT;
 extern RGLSYMGLTEXTUREVIEWEXTPROC __rglgen_glTextureViewEXT;
 extern RGLSYMGLFRAMEBUFFERTEXTUREMULTIVIEWOVRPROC __rglgen_glFramebufferTextureMultiviewOVR;
 extern RGLSYMGLFRAMEBUFFERTEXTUREMULTISAMPLEMULTIVIEWOVRPROC __rglgen_glFramebufferTextureMultisampleMultiviewOVR;
+
+typedef void (GL_APIENTRYP RGLSYMGLGETTEXLEVELPARAMETERIVPROC) (GLenum target, GLint level, GLenum pname, GLint *params);
+#define glGetTexLevelParameteriv __rglgen_glGetTexLevelParameteriv
+extern RGLSYMGLGETTEXLEVELPARAMETERIVPROC __rglgen_glGetTexLevelParameteriv;
 
 struct rglgen_sym_map { const char *sym; void *ptr; };
 extern const struct rglgen_sym_map rglgen_symbol_map[];

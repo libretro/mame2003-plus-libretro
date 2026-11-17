@@ -13,7 +13,7 @@
 #include "driver.h"
 #include "state.h"
 #include "machine/smc91c9x.h"
-#include <compat/zlib.h>
+#include <zlib.h>
 
 
 /* registers: bank * 8 + register */

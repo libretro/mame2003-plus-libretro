@@ -37,7 +37,10 @@ enum intfstream_type
    INTFSTREAM_FILE = 0,
    INTFSTREAM_MEMORY,
    INTFSTREAM_CHD,
-   INTFSTREAM_RZIP
+   INTFSTREAM_RZIP,
+   /* Read-only file access through a sliding buffer - see
+    * intfstream_open_buffered(). */
+   INTFSTREAM_BUFFERED
 };
 
 typedef struct intfstream_internal intfstream_internal_t, intfstream_t;
@@ -72,6 +75,20 @@ bool intfstream_open(intfstream_internal_t *intf,
 int64_t intfstream_read(intfstream_internal_t *intf,
       void *s, uint64_t len);
 
+/**
+ * intfstream_read_at:
+ *
+ * Up to @len bytes from @offset, the stream's position left where it
+ * was. Returns the bytes read (0 at the end), or -1 on failure or for
+ * an rzip stream, which cannot seek. Files (where filestream_read_at
+ * reads at offsets) and memory streams are read without touching the
+ * stream at all, and so from several threads at once; a CHD track, or
+ * a file without positional reads, is sought, read and sought back, so
+ * only by the thread that owns the stream.
+ */
+int64_t intfstream_read_at(intfstream_internal_t *intf,
+      void *s, uint64_t len, int64_t offset);
+
 int64_t intfstream_write(intfstream_internal_t *intf,
       const void *s, uint64_t len);
 
@@ -95,6 +112,20 @@ void intfstream_rewind(intfstream_internal_t *intf);
 
 int64_t intfstream_tell(intfstream_internal_t *intf);
 
+/**
+ * intfstream_view:
+ *
+ * intfstream_read() without the copy: points @ptr at up to @len
+ * octets at the stream position, where the stream holds them, and
+ * moves past them as a read of that many would.
+ *
+ * Returns: the octets lent, 0 at the end, or -1 when the stream holds
+ * nothing there it can lend; the caller then reads. Lent octets stay
+ * valid until the next call on @intf and must not be written.
+ */
+int64_t intfstream_view(intfstream_internal_t *intf, uint64_t len,
+      const uint8_t **ptr);
+
 int intfstream_eof(intfstream_internal_t *intf);
 
 void intfstream_putc(intfstream_internal_t *intf, int c);
@@ -113,14 +144,50 @@ uint32_t intfstream_get_first_sector(intfstream_internal_t* intf);
 
 bool intfstream_is_compressed(intfstream_internal_t *intf);
 
+/**
+ * intfstream_crc_step:
+ *
+ * Hash at most @max_bytes more of @intf into @accumulator, resuming
+ * from where the previous call stopped.  Returns bytes hashed, 0 at
+ * end of stream, -1 on error.
+ *
+ * For callers inside a task handler that must bound how long one tick
+ * spends hashing; intfstream_get_crc() consumes the whole stream in
+ * one call, making the tick cost a function of file size.  Timing
+ * policy stays with the caller, which owns the deadline and the
+ * quantum.  Position the stream and zero @accumulator before the
+ * first step.
+ **/
+int64_t intfstream_crc_step(intfstream_internal_t *intf,
+      uint32_t *accumulator, size_t max_bytes);
+
 bool intfstream_get_crc(intfstream_internal_t *intf, uint32_t *crc);
 
 intfstream_t *intfstream_open_file(const char *path,
       unsigned mode, unsigned hints);
 
+/* Open @path read-only behind a sliding window of @window bytes.
+ *
+ * Reads that fall inside the window are a memcpy; the window is
+ * refilled by seek+read when one does not.  For a consumer issuing
+ * very many small reads - a MsgPack walk over an .rdb spends its time
+ * there - this removes the per-read trip through
+ * filestream/VFS/fread while keeping the resident cost fixed at
+ * @window rather than the size of the file.
+ *
+ * A backwards seek inside the window is free; one outside it costs a
+ * refill, so @window should comfortably exceed the caller's largest
+ * backwards jump.
+ *
+ * Returns NULL if the file cannot be opened or the window cannot be
+ * allocated; callers should fall back to intfstream_open_file(). */
+intfstream_t *intfstream_open_buffered(const char *path, uint64_t window);
+
 intfstream_t *intfstream_open_memory(void *data,
       unsigned mode, unsigned hints, uint64_t size);
 
+/* Deprecated.  Has the same effect as `intfstream_open_memory` with
+   a mode including `RETRO_VFS_FILE_ACCESS_WRITE`. */
 intfstream_t *intfstream_open_writable_memory(void *data,
       unsigned mode, unsigned hints, uint64_t size);
 
