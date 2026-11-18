@@ -226,6 +226,8 @@ void retro_set_environment(retro_environment_t cb)
   vfs_iface_info.iface                      = NULL;
   if (environ_cb(RETRO_ENVIRONMENT_GET_VFS_INTERFACE, &vfs_iface_info))
     filestream_vfs_init(&vfs_iface_info);
+
+  init_core_options(false);
 }
 
 
@@ -320,7 +322,7 @@ bool retro_load_game(const struct retro_game_info *game)
   log_cb(RETRO_LOG_INFO, LOGPRE "   save path: %s\n", options.libretro_save_path);
 
 
-  init_core_options();
+  init_core_options(true);
   update_variables(true);
 
   configure_cyclone_mode(driverIndex);
