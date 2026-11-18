@@ -47,6 +47,8 @@ int m107_spritesystem;
 static int pf1_vram_ptr,pf2_vram_ptr,pf3_vram_ptr,pf4_vram_ptr;
 static int pf1_enable,pf2_enable,pf3_enable,pf4_enable;
 static int pf1_rowscroll,pf2_rowscroll,pf3_rowscroll,pf4_rowscroll;
+static int pf1_rowselect,pf2_rowselect,pf3_rowselect,pf4_rowselect;
+static int m107_sprite_display;
 
 /*****************************************************************************/
 
@@ -161,7 +163,8 @@ WRITE_HANDLER( m107_control_w )
 		case 0x10: /* Playfield 1 (top layer) */
 		case 0x11:
 			if ((m107_control[0x10]&0x80)==0x80) pf1_enable=0; else pf1_enable=1;
-			if ((m107_control[0x10]&0x02)==0x02) pf1_rowscroll=1; else pf1_rowscroll=0;
+			pf1_rowscroll=m107_control[0x10]&0x01;
+			pf1_rowselect=(m107_control[0x10]&0x02)>>1;
 			tilemap_set_enable(pf1_layer,pf1_enable);
 			pf1_vram_ptr=(m107_control[0x11]&0xf)*0x1000;
 			/* Have to dirty tilemaps if vram pointer has changed */
@@ -173,7 +176,8 @@ WRITE_HANDLER( m107_control_w )
 		case 0x12: /* Playfield 2 */
 		case 0x13:
 			if ((m107_control[0x12]&0x80)==0x80) pf2_enable=0; else pf2_enable=1;
-			if ((m107_control[0x12]&0x02)==0x02) pf2_rowscroll=1; else pf2_rowscroll=0;
+			pf2_rowscroll=m107_control[0x12]&0x01;
+			pf2_rowselect=(m107_control[0x12]&0x02)>>1;
 			tilemap_set_enable(pf2_layer,pf2_enable);
 			pf2_vram_ptr=(m107_control[0x13]&0xf)*0x1000;
 			/* Have to dirty tilemaps if vram pointer has changed */
@@ -185,7 +189,8 @@ WRITE_HANDLER( m107_control_w )
 		case 0x14: /* Playfield 3 */
 		case 0x15:
 			if ((m107_control[0x14]&0x80)==0x80) pf3_enable=0; else pf3_enable=1;
-			if ((m107_control[0x14]&0x02)==0x02) pf3_rowscroll=1; else pf3_rowscroll=0;
+			pf3_rowscroll=m107_control[0x14]&0x01;
+			pf3_rowselect=(m107_control[0x14]&0x02)>>1;
 			tilemap_set_enable(pf3_layer,pf3_enable);
 			pf3_vram_ptr=(m107_control[0x15]&0xf)*0x1000;
 			/* Have to dirty tilemaps if vram pointer has changed */
@@ -197,7 +202,8 @@ WRITE_HANDLER( m107_control_w )
 		case 0x16: /* Playfield 4 */
 		case 0x17:
 			if ((m107_control[0x16]&0x80)==0x80) pf4_enable=0; else pf4_enable=1;
-			if ((m107_control[0x16]&0x02)==0x02) pf4_rowscroll=1; else pf4_rowscroll=0;
+			pf4_rowscroll=m107_control[0x16]&0x01;
+			pf4_rowselect=(m107_control[0x16]&0x02)>>1;
 			tilemap_set_enable(pf4_layer,pf4_enable);
 			pf4_vram_ptr=(m107_control[0x17]&0xf)*0x1000;
 			/* Have to dirty tilemaps if vram pointer has changed */
@@ -207,7 +213,8 @@ WRITE_HANDLER( m107_control_w )
 			break;
 
 		case 0x1e:
-			m107_raster_irq_position=(m107_control[0x1e])-128; /*gamezfan */
+		case 0x1f:
+			m107_raster_irq_position=(m107_control[0x1e])-128;
 			break;
 	}
 }
@@ -254,10 +261,10 @@ VIDEO_START( m107 )
 	pf1_vram_ptr=pf2_vram_ptr=pf3_vram_ptr=pf4_vram_ptr=0;
 	pf1_enable=pf2_enable=pf3_enable=pf4_enable=0;
 	pf1_rowscroll=pf2_rowscroll=pf3_rowscroll=pf4_rowscroll=0;
+	pf1_rowselect=pf2_rowselect=pf3_rowselect=pf4_rowselect=0;
+	m107_sprite_display=0;
 
 	m107_spriteram = auto_malloc(0x1000);
-	if (!m107_spriteram)
-		return 1;
 	memset(m107_spriteram,0,0x1000);
 
 	m107_sprite_list=0;
@@ -287,7 +294,7 @@ static void m107_drawsprites(struct mame_bitmap *bitmap, const struct rectangle 
 	    sprite=(m107_spriteram[offs+2] | (m107_spriteram[offs+3]<<8))&0x7fff;
 
 		x = x - 16;
-		y = 512 - 16 - y;
+		y = 384 - 16 - y; /* 128 lines are added when drawing */
 
 		colour=m107_spriteram[offs+4]&0x7f;
 		fx=m107_spriteram[offs+5]&1;
@@ -307,7 +314,14 @@ static void m107_drawsprites(struct mame_bitmap *bitmap, const struct rectangle 
 						sprite + s_ptr,
 						colour,
 						fx,fy,
-						x,y-i*16,
+						x,y-i*16+128,
+						cliprect,TRANSPARENCY_PEN,0);
+				/* wrap-around y */
+				drawgfx(bitmap,Machine->gfx[1],
+						sprite + s_ptr,
+						colour,
+						fx,fy,
+						x,y-i*16+128-0x200,
 						cliprect,TRANSPARENCY_PEN,0);
 				if (fy) s_ptr++; else s_ptr--;
 			}
@@ -327,7 +341,7 @@ static void m107_drawsprites(struct mame_bitmap *bitmap, const struct rectangle 
 					int ffy=fy^(rom[rom_offs+1]&2);
 					sprite=rom[rom_offs+4]+256*rom[rom_offs+5];
 					y_multi=1<<((rom[rom_offs+3]>>1)&0x3);
-					if (fx) xdisp = -xdisp;
+					if (fx) xdisp = -xdisp - 16;
 					if (fy) ydisp = -ydisp - (16*y_multi-1);
 					if (!ffy) sprite+=y_multi-1;
 					for (i=0; i<y_multi; i++)
@@ -336,7 +350,14 @@ static void m107_drawsprites(struct mame_bitmap *bitmap, const struct rectangle 
 								sprite+(ffy?i:-i),
 								colour,
 								ffx,ffy,
-								(x+xdisp)&0x1ff,(y-ydisp-16*i)&0x1ff,
+								(x+xdisp)&0x1ff,((y-ydisp-16*i)&0x1ff)+128,
+								cliprect,TRANSPARENCY_PEN,0);
+						/* wrap-around y */
+						drawgfx(bitmap,Machine->gfx[1],
+								sprite+(ffy?i:-i),
+								colour,
+								ffx,ffy,
+								(x+xdisp)&0x1ff,((y-ydisp-16*i)&0x1ff)+128-0x200,
 								cliprect,TRANSPARENCY_PEN,0);
 					}
 
@@ -351,65 +372,63 @@ static void m107_drawsprites(struct mame_bitmap *bitmap, const struct rectangle 
 
 /*****************************************************************************/
 
-VIDEO_UPDATE( m107 )
-{
-	/* Nothing - screen refresh is handled by raster interrupt routine */
-}
-
-/*****************************************************************************/
-
 static void m107_update_scroll_positions(void)
 {
-	int i;
+	struct tilemap *layer[4];
+	int rs[4],i,l;
 
-	/*	Playfield 4 rowscroll data is 0xde800 - 0xdebff???
-		Playfield 3 rowscroll data is 0xdf800 - 0xdfbff
-		Playfield 2 rowscroll data is 0xdf400 - 0xdf7ff
-		Playfield 1 rowscroll data is 0xde800 - 0xdebff		??
-	*/
+	layer[0]=pf1_layer; layer[1]=pf2_layer; layer[2]=pf3_layer; layer[3]=pf4_layer;
+	rs[0]=pf1_rowscroll; rs[1]=pf2_rowscroll; rs[2]=pf3_rowscroll; rs[3]=pf4_rowscroll;
 
-	if (pf1_rowscroll) {
-		tilemap_set_scroll_rows(pf1_layer,1024);
-		for (i=0; i<1024; i+=2)
-			tilemap_set_scrollx( pf1_layer,i/2, (m107_vram_data[0xe800+i]+(m107_vram_data[0xe801+i]<<8)));
-	} else {
-		tilemap_set_scroll_rows(pf1_layer,1);
-		tilemap_set_scrollx( pf1_layer,0, (m107_control[3]<<8)+m107_control[2]+3 );
-	}
-	if (pf2_rowscroll) {
-		tilemap_set_scroll_rows(pf2_layer,512);
-		for (i=0; i<1024; i+=2)
-			tilemap_set_scrollx( pf2_layer,i/2, (m107_vram_data[0xf400+i]+(m107_vram_data[0xf401+i]<<8)));
-	} else {
-		tilemap_set_scroll_rows(pf2_layer,1);
-		tilemap_set_scrollx( pf2_layer,0, (m107_control[7]<<8)+m107_control[6]+1 );
-	}
-	if (pf3_rowscroll) {
-		tilemap_set_scroll_rows(pf3_layer,512);
-		for (i=0; i<1024; i+=2)
-			tilemap_set_scrollx( pf3_layer,i/2, (m107_vram_data[0xf800+i]+(m107_vram_data[0xf801+i]<<8)));
-	} else {
-		tilemap_set_scroll_rows(pf3_layer,1);
-		tilemap_set_scrollx( pf3_layer,0, (m107_control[11]<<8)+m107_control[10]-1 );
-	}
-	if (pf4_rowscroll) {
-		tilemap_set_scroll_rows(pf4_layer,512);
-		for (i=0; i<1024; i+=2)
-			tilemap_set_scrollx( pf4_layer,i/2, (m107_vram_data[0xfc00+i]+(m107_vram_data[0xfc01+i]<<8)));
-	} else {
-		tilemap_set_scroll_rows(pf4_layer,1);
-		tilemap_set_scrollx( pf4_layer,0, (m107_control[15]<<8)+m107_control[14]-3 );
-	}
+	/* Every layer has a dedicated 0x200 bytes area in VRAM for rowscroll
+       (0xe000-0xe7ff) and one for rowselect (0xe800-0xefff) */
+	for (l=0;l<4;l++) {
+		int scrolly = (m107_control[1+4*l]<<8)+m107_control[4*l];
+		int scrollx = (m107_control[3+4*l]<<8)+m107_control[2+4*l] + 3 - 2*l;
 
-	tilemap_set_scrolly( pf1_layer,0, (m107_control[1]<<8)+m107_control[0] );
-	tilemap_set_scrolly( pf2_layer,0, (m107_control[5]<<8)+m107_control[4] );
-	tilemap_set_scrolly( pf3_layer,0, (m107_control[9]<<8)+m107_control[8] );
-	tilemap_set_scrolly( pf4_layer,0, (m107_control[13]<<8)+m107_control[12] );
+		if (rs[l]) {
+			unsigned char *data = m107_vram_data + 0xe000 + 0x200*l;
 
-/*	pf4_layer->scrolled=1;*/
-/*	pf3_layer->scrolled=1;*/
-/*	pf2_layer->scrolled=1;*/
-/*	pf1_layer->scrolled=1;*/
+			tilemap_set_scroll_rows(layer[l],512);
+			for (i=0; i<512; i++) {
+				int line = (i + 0xff80 - scrolly) & 0x1ff;
+				tilemap_set_scrollx(layer[l],i, data[2*line]+(data[2*line+1]<<8) + scrollx);
+			}
+		} else {
+			tilemap_set_scroll_rows(layer[l],1);
+			tilemap_set_scrollx(layer[l],0, scrollx);
+		}
+
+		tilemap_set_scrolly(layer[l],0, scrolly);
+	}
+}
+
+/* Draw a playfield, applying the per line Y scroll if rowselect is enabled */
+static void m107_draw_layer(struct mame_bitmap *bitmap,const struct rectangle *cliprect,int l,int category,int flags)
+{
+	struct tilemap *layer[4];
+	int rowselect[4];
+
+	layer[0]=pf1_layer; layer[1]=pf2_layer; layer[2]=pf3_layer; layer[3]=pf4_layer;
+	rowselect[0]=pf1_rowselect; rowselect[1]=pf2_rowselect; rowselect[2]=pf3_rowselect; rowselect[3]=pf4_rowselect;
+
+	if (rowselect[l]) {
+		unsigned char *data = m107_vram_data + 0xe800 + 0x200*l;
+		int scrolly = (m107_control[1+4*l]<<8)+m107_control[4*l];
+		struct rectangle clip = *cliprect;
+		int line;
+
+		for (line=cliprect->min_y; line<=cliprect->max_y; line++) {
+			/* the VRAM table is indexed by the line in the visible area */
+			int offs = (line - 128) * 2;
+
+			clip.min_y = clip.max_y = line;
+			tilemap_set_scrolly(layer[l],0, scrolly + data[offs]+(data[offs+1]<<8));
+			tilemap_draw(bitmap,&clip,layer[l],category|flags,0);
+		}
+		tilemap_set_scrolly(layer[l],0, scrolly);
+	} else
+		tilemap_draw(bitmap,cliprect,layer[l],category|flags,0);
 }
 
 /*****************************************************************************/
@@ -417,42 +436,25 @@ static void m107_update_scroll_positions(void)
 void m107_screenrefresh(struct mame_bitmap *bitmap,const struct rectangle *cliprect)
 {
 	if (pf4_enable)
-		tilemap_draw(bitmap,cliprect,pf4_layer,0,0);
+		m107_draw_layer(bitmap,cliprect,3,0,0);
 	else
 		fillbitmap(bitmap,Machine->pens[0],cliprect);
 
-	tilemap_draw(bitmap,cliprect,pf3_layer,0,0);
-	tilemap_draw(bitmap,cliprect,pf2_layer,0,0);
-	tilemap_draw(bitmap,cliprect,pf1_layer,0,0);
+	/* the layer 3 is opaque if the layer 4 is disabled, noticeable in World PK Soccer */
+	m107_draw_layer(bitmap,cliprect,2,0,pf4_enable ? 0 : TILEMAP_IGNORE_TRANSPARENCY);
+	m107_draw_layer(bitmap,cliprect,1,0,0);
+	m107_draw_layer(bitmap,cliprect,0,0,0);
 
-	m107_drawsprites(bitmap,cliprect,0);
-	tilemap_draw(bitmap,cliprect,pf2_layer,1,0);
-	tilemap_draw(bitmap,cliprect,pf1_layer,1,0);
+	if (m107_sprite_display)
+		m107_drawsprites(bitmap,cliprect,0);
+	m107_draw_layer(bitmap,cliprect,1,1,0);
+	m107_draw_layer(bitmap,cliprect,0,1,0);
 
-	m107_drawsprites(bitmap,cliprect,1);
+	if (m107_sprite_display)
+		m107_drawsprites(bitmap,cliprect,1);
 
 	/* This hardware probably has more priority values - but I haven't found
-		any used yet */
-}
-
-void m107_vh_raster_partial_refresh(struct mame_bitmap *bitmap,int start_line,int end_line)
-{
-	struct rectangle clip;
-
-	clip.min_x = Machine->visible_area.min_x;
-	clip.max_x = Machine->visible_area.max_x;
-	clip.min_y = start_line+128;
-	clip.max_y = end_line+128;
-	if (clip.min_y < Machine->visible_area.min_y)
-		clip.min_y = Machine->visible_area.min_y;
-	if (clip.max_y > Machine->visible_area.max_y)
-		clip.max_y = Machine->visible_area.max_y;
-
-	if (clip.max_y > clip.min_y)
-	{
-		m107_update_scroll_positions();
-		m107_screenrefresh(bitmap,&clip);
-	}
+        any used yet */
 }
 
 /*****************************************************************************/
@@ -460,7 +462,17 @@ void m107_vh_raster_partial_refresh(struct mame_bitmap *bitmap,int start_line,in
 WRITE_HANDLER( m107_spritebuffer_w )
 {
 	if (offset==0) {
-/*		log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: buffered spriteram\n",activecpu_get_pc());*/
+//      logerror("%04x: buffered spriteram\n",activecpu_get_pc());
 		memcpy(m107_spriteram,spriteram,0x1000);
-	}
+	} else
+		m107_sprite_display = !(data & 0x10);
 }
+
+/*****************************************************************************/
+
+VIDEO_UPDATE( m107 )
+{
+	m107_update_scroll_positions();
+	m107_screenrefresh(bitmap,cliprect);
+}
+
