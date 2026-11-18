@@ -1233,113 +1233,26 @@ static void render_scene_band(int bandnum, int nbands)
 	draw, a pixel is written by one thread only and in the same order: the
 	picture is the same as with one thread.
 */
-#ifdef HAVE_THREADS
-#include <rthreads/rthreads.h>
-#define S22_MAX_THREADS	4
+#include "band_pool.h"
 
-static struct
+#ifdef BAND_POOL_THREADS
+static band_pool_t s22_pool;
+static void (*s22_job)(int band, int nbands);
+
+static void s22_band(void *user, int band, int nbands)
 {
-	sthread_t *thread[S22_MAX_THREADS];
-	int index[S22_MAX_THREADS];
-	slock_t *lock;
-	scond_t *start, *done;
-	int workers;
-	int gen;
-	int bands;
-	int pending;
-	int quit;
-	void (*job)(int band, int nbands);
-} s22_mt;
-
-static void s22_band_worker(void *arg)
-{
-	const int i = *(const int *)arg;
-	int seen = 0;
-
-	slock_lock(s22_mt.lock);
-	for (;;)
-	{
-		while (s22_mt.gen == seen && !s22_mt.quit)
-			scond_wait(s22_mt.start, s22_mt.lock);
-		if (s22_mt.quit)
-			break;
-		seen = s22_mt.gen;
-		if (i < s22_mt.bands)
-		{
-			int bands = s22_mt.bands;
-			void (*job)(int, int) = s22_mt.job;
-			slock_unlock(s22_mt.lock);
-			job(i, bands);
-			slock_lock(s22_mt.lock);
-			if (--s22_mt.pending == 0)
-				scond_signal(s22_mt.done);
-		}
-	}
-	slock_unlock(s22_mt.lock);
-}
-
-static void s22_threads_stop(void)
-{
-	int i;
-	if (!s22_mt.lock)
-		return;
-	slock_lock(s22_mt.lock);
-	s22_mt.quit = 1;
-	scond_broadcast(s22_mt.start);
-	slock_unlock(s22_mt.lock);
-	for (i = 1; i < s22_mt.workers + 1; i++)
-		sthread_join(s22_mt.thread[i]);
-	scond_free(s22_mt.start);
-	scond_free(s22_mt.done);
-	slock_free(s22_mt.lock);
-	memset(&s22_mt, 0, sizeof(s22_mt));
+	(void)user;
+	s22_job(band, nbands);
 }
 
 /* the frame in bands; 0 if there are no threads (the caller draws it alone) */
 static int render_frame_threaded(void (*job)(int band, int nbands))
 {
-	int bands = options.stv_video_threads, i;
-
-	if (bands > S22_MAX_THREADS)
-		bands = S22_MAX_THREADS;
-	if (bands < 2)
+	int bands = band_pool_prepare(&s22_pool, options.stv_video_threads);
+	if (!bands)
 		return 0;
-	if (!s22_mt.lock)
-	{
-		s22_mt.lock = slock_new();
-		s22_mt.start = scond_new();
-		s22_mt.done = scond_new();
-		if (!s22_mt.lock || !s22_mt.start || !s22_mt.done)
-			return 0;
-	}
-	while (s22_mt.workers < bands - 1)
-	{
-		i = s22_mt.workers + 1;
-		s22_mt.index[i] = i;
-		s22_mt.thread[i] = sthread_create(s22_band_worker, &s22_mt.index[i]);
-		if (!s22_mt.thread[i])
-			break;
-		s22_mt.workers++;
-	}
-	if (bands > s22_mt.workers + 1)
-		bands = s22_mt.workers + 1;
-	if (bands < 2)
-		return 0;
-
-	slock_lock(s22_mt.lock);
-	s22_mt.job = job;
-	s22_mt.bands = bands;
-	s22_mt.pending = bands - 1;
-	s22_mt.gen++;
-	scond_broadcast(s22_mt.start);
-	slock_unlock(s22_mt.lock);
-
-	job(0, bands);
-
-	slock_lock(s22_mt.lock);
-	while (s22_mt.pending)
-		scond_wait(s22_mt.done, s22_mt.lock);
-	slock_unlock(s22_mt.lock);
+	s22_job = job;
+	band_pool_run(&s22_pool, bands, s22_band, NULL);
 	return 1;
 }
 #endif
@@ -1347,7 +1260,7 @@ static int render_frame_threaded(void (*job)(int band, int nbands))
 static void render_frame(void (*job)(int band, int nbands))
 {
 	int i;
-#ifdef HAVE_THREADS
+#ifdef BAND_POOL_THREADS
 	if (!render_frame_threaded(job))
 #endif
 		job(0, 1);
@@ -1360,7 +1273,7 @@ static void render_frame(void (*job)(int band, int nbands))
 /* for the core options: is the "Threaded Video" option of any use here */
 int namcos22_video_threads_available(void)
 {
-#ifdef HAVE_THREADS
+#ifdef BAND_POOL_THREADS
 	return 1;
 #else
 	return 0;
@@ -2966,8 +2879,8 @@ VIDEO_UPDATE( namcos22 )
 
 VIDEO_STOP( namcos22 )
 {
-#ifdef HAVE_THREADS
-	s22_threads_stop();
+#ifdef BAND_POOL_THREADS
+	band_pool_stop(&s22_pool);
 #endif
 	{
 		int i;

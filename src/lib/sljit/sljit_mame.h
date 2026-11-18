@@ -58,6 +58,8 @@
 #define SLJIT_DEBUG				0
 #endif
 #define SLJIT_VERBOSE			0
+/* code is generated and freed on the emulation thread only: no allocator locks */
+#define SLJIT_SINGLE_THREADED	1
 #include "sljitLir.h"
 #endif
 

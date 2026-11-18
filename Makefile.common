@@ -2863,9 +2863,11 @@ SOURCES_C += \
 # sljit: run-time code generator of the MIPS recompilers (empty where they are not supported)
 SOURCES_C += $(CORE_DIR)/lib/sljit/sljit_mame.c
 
-# threads (libretro-common rthreads, set by the platform: see Makefile): the ST-V threaded video option
+# threads (libretro-common rthreads, set by the platform: see Makefile): the
+# band workers of the threaded video options
 ifeq ($(HAVE_THREADS),1)
 COREDEFINES += -DHAVE_THREADS
+SOURCES_C += $(CORE_DIR)/band_pool.c
 SOURCES_C += $(LIBRETRO_COMM_DIR)/rthreads/rthreads.c
 SOURCES_C += $(LIBRETRO_COMM_DIR)/rthreads/retro_eventcount.c
 endif
