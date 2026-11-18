@@ -416,7 +416,7 @@ else ifeq ($(platform), libnx)
 	EXT=a
 	TARGET := $(TARGET_NAME)_libretro_$(platform).$(EXT)
 	DEFINES := -DSWITCH=1 -U__linux__ -U__linux -DRARCH_INTERNAL -DHAVE_LIBNX
-	CFLAGS := $(DEFINES) -g -O3 -ffast-math -fPIE -I$(LIBNX)/include/ -ffunction-sections -fdata-sections -fcommon -ftls-model=local-exec -Wl,--allow-multiple-definition -specs=$(LIBNX)/switch.specs
+	CFLAGS := $(DEFINES) -g -O3 -ffast-math -fPIE -isystem $(LIBNX)/include/ -ffunction-sections -fdata-sections -fcommon -ftls-model=local-exec -Wl,--allow-multiple-definition -specs=$(LIBNX)/switch.specs
 	CXXFLAGS := $(CFLAGS) -fno-rtti -fno-exceptions -std=gnu++11
 	CFLAGS += -std=gnu11
 	PLATCFLAGS += -D__SWITCH__ -march=armv8-a -mtune=cortex-a57 -mtp=soft -fPIE
@@ -797,6 +797,17 @@ endif
 # All MSVC platforms
 ifeq (,$(findstring msvc,$(platform)))
 	CFLAGS += -D_XOPEN_SOURCE=500 -fomit-frame-pointer -fstrict-aliasing
+endif
+
+# Darwin hides its own extensions (u_int, QoS classes, RTLD_DEFAULT,
+# pthread_main_np) once _XOPEN_SOURCE is set, unless _DARWIN_C_SOURCE is
+ifneq (,$(filter osx tvos-arm64,$(platform))$(findstring ios,$(platform)))
+	CFLAGS += -D_DARWIN_C_SOURCE
+endif
+
+# uClibc declares O_CLOEXEC only under _GNU_SOURCE
+ifeq ($(platform), gcw0)
+	CFLAGS += -D_GNU_SOURCE
 endif
 
 # All MSVC platforms except the SNC PS3
