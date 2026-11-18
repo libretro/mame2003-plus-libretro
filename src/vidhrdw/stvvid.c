@@ -240,10 +240,10 @@ static void gfx_mark_dirty_addr(UINT32 addr)
 	}
 }
 
-static void gfx_decode_element(struct stv_gfx *g, int code)
+static void gfx_decode_into(const struct stv_gfx *g, int code, UINT8 *out, UINT16 *rows_any, UINT16 *rows_full)
 {
 	const UINT8 *src = vdp2_gfx_source + code * g->inc;
-	UINT8 *dst = g->cache + code * g->width * g->height;
+	UINT8 *dst = out;
 	UINT32 any = 0, full = 0;
 	int x, y;
 
@@ -271,7 +271,7 @@ static void gfx_decode_element(struct stv_gfx *g, int code)
 		}
 
 	/* which rows have something to draw, and which are drawn whole */
-	dst = g->cache + code * g->width * g->height;
+	dst = out;
 	for (y = 0; y < g->height; y++, dst += g->width)
 	{
 		int n0 = 0;
@@ -282,43 +282,95 @@ static void gfx_decode_element(struct stv_gfx *g, int code)
 		if (n0 == 0)
 			full |= 1 << y;
 	}
-	g->rows_any[code] = (UINT16)any;
-	g->rows_full[code] = (UINT16)full;
+	*rows_any = (UINT16)any;
+	*rows_full = (UINT16)full;
+}
+
+static void gfx_decode_element(struct stv_gfx *g, int code)
+{
+	gfx_decode_into(g, code, g->cache + code * g->width * g->height,
+			&g->rows_any[code], &g->rows_full[code]);
 }
 
 #ifdef STV_VIDEO_THREADS
 /*
-	While the strips are drawn, a thread that finds an element stale
-	decodes it itself and leaves it marked stale: another thread that
-	reads it decodes it too, writing the same bytes, so no thread reads
-	an element another one is writing. The elements decoded are noted
-	per thread and marked clean once all the strips are drawn.
+	While the strips are drawn, the first band to find an element stale
+	claims it for the frame with a compare-and-swap, decodes it into the
+	cache and publishes it with a release store; the bands that find it
+	published read the cache. A band that finds it claimed but not yet
+	published decodes a copy of its own instead of waiting. The cache is
+	written by one thread and read only once published. The elements
+	decoded are noted per band and marked clean once all the strips are
+	drawn.
 */
 #define VDP2_DECODED_MAX	16384
 static VDP2_TLS int vdp2_band_index = -1;
 static UINT32 *vdp2_band_decoded[BAND_POOL_MAX];
 static int vdp2_band_decoded_count[BAND_POOL_MAX];
+static retro_atomic_int_t *vdp2_claim[4];	/* per element: 2 * stamp claimed, 2 * stamp + 1 published */
+static int vdp2_claim_stamp;			/* the frame's stamp */
+static UINT8 vdp2_band_scratch[BAND_POOL_MAX][16 * 16];
+
+static const UINT8 *gfx_get_data_band(struct stv_gfx *g, int code, UINT32 *rows_any, UINT32 *rows_full)
+{
+	retro_atomic_int_t *claim = &vdp2_claim[g - stv_gfx][code];
+	const int busy = vdp2_claim_stamp * 2, published = busy + 1;
+	int c = retro_atomic_load_acquire_int(claim);
+
+	if (c != published)
+	{
+		if (c != busy && retro_atomic_cas_int(claim, c, busy))
+		{
+			const int b = vdp2_band_index;
+			gfx_decode_element(g, code);
+			retro_atomic_store_release_int(claim, published);
+			if (vdp2_band_decoded_count[b] < VDP2_DECODED_MAX)
+				vdp2_band_decoded[b][vdp2_band_decoded_count[b]++] = ((UINT32)(g - stv_gfx) << 24) | (UINT32)code;
+		}
+		else if (retro_atomic_load_acquire_int(claim) != published)
+		{
+			UINT8 *copy = vdp2_band_scratch[vdp2_band_index];
+			UINT16 any, full;
+			gfx_decode_into(g, code, copy, &any, &full);
+			if (rows_any)
+			{
+				*rows_any = any;
+				*rows_full = full;
+			}
+			return copy;
+		}
+	}
+	if (rows_any)
+	{
+		*rows_any = g->rows_any[code];
+		*rows_full = g->rows_full[code];
+	}
+	return g->cache + code * g->width * g->height;
+}
 #endif
 
-static INLINE const UINT8 *gfx_get_data(struct stv_gfx *g, int code)
+/* an element's pixels, and if asked its row masks */
+static INLINE const UINT8 *gfx_get_data_rows(struct stv_gfx *g, int code, UINT32 *rows_any, UINT32 *rows_full)
 {
 	code %= g->elements;
 	if (g->dirty[code])
 	{
-		gfx_decode_element(g, code);
 #ifdef STV_VIDEO_THREADS
 		if (vdp2_band_index >= 0)
-		{
-			int b = vdp2_band_index;
-			if (vdp2_band_decoded[b] && vdp2_band_decoded_count[b] < VDP2_DECODED_MAX)
-				vdp2_band_decoded[b][vdp2_band_decoded_count[b]++] = ((UINT32)(g - stv_gfx) << 24) | (UINT32)code;
-		}
-		else
+			return gfx_get_data_band(g, code, rows_any, rows_full);
 #endif
-			g->dirty[code] = 0;
+		gfx_decode_element(g, code);
+		g->dirty[code] = 0;
+	}
+	if (rows_any)
+	{
+		*rows_any = g->rows_any[code];
+		*rows_full = g->rows_full[code];
 	}
 	return g->cache + code * g->width * g->height;
 }
+
+#define gfx_get_data(g, code) gfx_get_data_rows((g), (code), NULL, NULL)
 
 #define gfx_element struct stv_gfx
 
@@ -6127,9 +6179,8 @@ static void vdp2_drawgfx_transpen(struct mame_bitmap *dest_bmp,const struct rect
 	int y;
 	int x;
 	const pen_t *pal = &PEN(0 + gfx->granularity * (color % gfx->colors));
-	const UINT8 *source_base = gfx_get_data(gfx, code % gfx->elements);
-	const UINT32 rows_any = gfx->rows_any[code % gfx->elements];
-	const UINT32 rows_full = gfx->rows_full[code % gfx->elements];
+	UINT32 rows_any, rows_full;
+	const UINT8 *source_base = gfx_get_data_rows(gfx, code % gfx->elements, &rows_any, &rows_full);
 	int x_index_base, y_index, sx, sy, ex, ey;
 	int xinc, yinc;
 
@@ -10333,6 +10384,12 @@ static void vdp2_threads_stop(void)
 		vdp2_band_decoded[i] = NULL;
 		vdp2_band_decoded_count[i] = 0;
 	}
+	for (i = 0; i < 4; i++)
+	{
+		free(vdp2_claim[i]);
+		vdp2_claim[i] = NULL;
+	}
+	vdp2_claim_stamp = 0;
 }
 
 /* the screen in bands, 0 if the threads are not there (then the caller draws it alone) */
@@ -10348,6 +10405,19 @@ static int vdp2_render_threaded(struct mame_bitmap *bitmap, const struct rectang
 			vdp2_band_decoded[i] = malloc(VDP2_DECODED_MAX * sizeof(UINT32));
 			if (!vdp2_band_decoded[i])
 				return 0;
+		}
+	/* a stamp names the frame's claims: when it wraps the old ones go */
+	vdp2_claim_stamp = (vdp2_claim_stamp % 0x3fffffff) + 1;
+	for (i = 0; i < 4; i++)
+		if (!vdp2_claim[i] || vdp2_claim_stamp == 1)
+		{
+			int e;
+			if (!vdp2_claim[i])
+				vdp2_claim[i] = malloc(stv_gfx[i].elements * sizeof(retro_atomic_int_t));
+			if (!vdp2_claim[i])
+				return 0;
+			for (e = 0; e < stv_gfx[i].elements; e++)
+				retro_atomic_int_init(&vdp2_claim[i][e], 0);
 		}
 
 	/* the rotation plane caches first, alone */
