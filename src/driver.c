@@ -2643,6 +2643,7 @@ V-V                           TP-027
 	DRIVER( sfz3a )      /* Capcom, Street Fighter Zero 3 (Asia 980904) */
 	DRIVER( sfz3ar1 )    /* Capcom, Street Fighter Zero 3 (Asia 980701) */
 	DRIVER( sfz3mix )    /* hack, Street Fighter Zero 3 Mix v0.32 (CPS2Turbo, Zero800) */
+	DRIVER( vsav2e )     /* bootleg, Darkstalkers 3 (Vampire Savior 2 full roster English bootleg) */
 	DRIVER( jyangoku )   /* Capcom, Jyangokushi: Haoh no Saihai (Japan 990527) */
 	DRIVER( hsf2 )       /* Capcom, Hyper Street Fighter II: The Anniversary Edition (USA 040202) */
 	DRIVER( hsf2a )      /* Capcom, Hyper Street Fighter II: The Anniversary Edition (Asia 040202) */
