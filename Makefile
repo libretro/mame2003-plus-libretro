@@ -805,9 +805,11 @@ ifneq (,$(filter osx tvos-arm64,$(platform))$(findstring ios,$(platform)))
 	CFLAGS += -D_DARWIN_C_SOURCE
 endif
 
-# uClibc declares O_CLOEXEC only under _GNU_SOURCE
+# uClibc declares O_CLOEXEC only under _GNU_SOURCE and keeps
+# clock_nanosleep in librt
 ifeq ($(platform), gcw0)
 	CFLAGS += -D_GNU_SOURCE
+	LIBS += -lrt
 endif
 
 # All MSVC platforms except the SNC PS3
