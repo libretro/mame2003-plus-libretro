@@ -696,6 +696,22 @@ static int cps2_objram_bank;
 static int cps2_last_sprite_offset;     /* Offset of the last sprite */
 static int cps2_turbo;					/* CPS2Turbo hack hardware (sfz3mix) */
 
+/* vsav2e: bits 0-2 make scroll 1-3 take their tiles from the scroll bank, the
+   16MB of graphics after the 64MB of sprites (its endings) */
+static int vsav2e_scroll_bank;
+#define VSAV2E_SCROLL_BANK_START 0x4000000
+
+WRITE16_HANDLER( vsav2e_scroll_bank_w )
+{
+	int layer;
+	if (!ACCESSING_LSB)
+		return;
+	for (layer = 0; layer < 3; layer++)
+		if ((data ^ vsav2e_scroll_bank) & (1 << layer))
+			tilemap_mark_all_tiles_dirty(tilemap[layer]);
+	vsav2e_scroll_bank = data & 7;
+}
+
 #define CPS2_OBJ_BASE	0x00	/* Unknown (not base address of objects). Could be bass address of bank used when object swap bit set? */
 #define CPS2_OBJ_UK1	0x02	/* Unknown (nearly always 0x807d, or 0x808e when screen flipped) */
 #define CPS2_OBJ_PRI	0x04	/* Layers priorities */
@@ -1054,6 +1070,8 @@ static void get_tile0_info(int tile_index)
 	int code = cps1_scroll1[2*tile_index];
 	int attr = cps1_scroll1[2*tile_index+1];
 
+	if (vsav2e_scroll_bank & 1) base = VSAV2E_SCROLL_BANK_START / 64;
+
 
 	/* knights & msword */
 	if (cps1_game_config->kludge == 3)
@@ -1083,6 +1101,8 @@ static void get_tile1_info(int tile_index)
 	int code = cps1_scroll2[2*tile_index];
 	int attr = cps1_scroll2[2*tile_index+1];
 
+	if (vsav2e_scroll_bank & 2) base = VSAV2E_SCROLL_BANK_START / 128;
+
 	SET_TILE_INFO(
 			1,
 			code + base,
@@ -1108,6 +1128,8 @@ static void get_tile2_info(int tile_index)
 	const int endcode   = cps1_game_config->end_scroll3;
 	int code = cps1_scroll3[2*tile_index];
 	int attr = cps1_scroll3[2*tile_index+1];
+
+	if (vsav2e_scroll_bank & 4) base = VSAV2E_SCROLL_BANK_START / 512;
 
 	if (cps1_game_config->kludge == 2 && code < 0x0e00)
 	{
@@ -1278,6 +1300,8 @@ VIDEO_START( cps2turbo )
 {
     cps_version = 2;
     cps2_turbo = 1;
+    vsav2e_scroll_bank = 0;
+    state_save_register_int("vsav2e", 0, "scroll bank", &vsav2e_scroll_bank);
     return video_start_cps();
 }
 
