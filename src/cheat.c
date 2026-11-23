@@ -8269,13 +8269,11 @@ static void LoadCheatDatabase()
 		out_file = intfstream_open_rzip_file(cheat_path, RETRO_VFS_FILE_ACCESS_WRITE);
 
 		if(!out_file)
-		{
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Failed to create cheat.rzip\n");
-			goto end;
-		}
+			/* cannot write it: read cheat.dat as it is */
+			log_cb(RETRO_LOG_ERROR, LOGPRE "Failed to create cheat.rzip, reading cheat.dat\n");
 
 		/* Compression loop */
-		for(;;)
+		while(out_file)
 		{
 			int64_t data_read  = intfstream_read(in_file, buf, sizeof(buf));
 			int64_t data_write = 0;

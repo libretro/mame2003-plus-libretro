@@ -851,8 +851,9 @@ ifeq (,$(findstring msvc,$(platform)))
 	CFLAGS += -ffp-contract=off
 endif
 
-# Required for RZIP support in cheat.c
-CFLAGS += -DHAVE_ZLIB
+# Required for RZIP support in cheat.c: libretro-common's interface_stream.c only
+# opens rzip streams with HAVE_COMPRESSION
+CFLAGS += -DHAVE_ZLIB -DHAVE_COMPRESSION
 
 # In theory, the RETRO_PROFILE could be set to different values for different
 # architectures or for special builds to hint to the host system how many
