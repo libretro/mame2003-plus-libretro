@@ -732,5 +732,5 @@ ROM_START( wyvernf0a )
 	ROM_LOAD( "sch_1.ic74",  0x6000, 0x2000, CRC(1cc389de) SHA1(4213484d3a82688f312811e7a5c4d128e40584c3) )
 ROM_END
 
-//GAMEX( 1985, wyvernf0,  0,        wyvernf0, wyvernf0, 0, ROT270, "Taito Corporation", "Wyvern F-0 (Rev 1)", GAME_IMPERFECT_COLORS | GAME_IMPERFECT_SOUND )
-//GAMEX( 1985, wyvernf0a, wyvernf0, wyvernf0, wyvernf0, 0, ROT270, "Taito Corporation", "Wyvern F-0", GAME_IMPERFECT_COLORS | GAME_IMPERFECT_SOUND )
+GAMEX( 1985, wyvernf0,  0,        wyvernf0, wyvernf0, 0, ROT270, "Taito Corporation", "Wyvern F-0 (Rev 1)", GAME_IMPERFECT_COLORS | GAME_IMPERFECT_SOUND )
+GAMEX( 1985, wyvernf0a, wyvernf0, wyvernf0, wyvernf0, 0, ROT270, "Taito Corporation", "Wyvern F-0", GAME_IMPERFECT_COLORS | GAME_IMPERFECT_SOUND )
