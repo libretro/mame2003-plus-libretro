@@ -284,7 +284,7 @@ MACHINE_DRIVER_END
 
 
 ROM_START( metlfrzr )
-	ROM_REGION( 2*0x20000, REGION_CPU1, 0 )
+	ROM_REGION( 0x20000 * 2, REGION_CPU1, 0 )
 	ROM_LOAD( "1.15j", 0x00000, 0x08000, CRC(f59b5fa2) SHA1(6033967dad5e64f45afbcb1b45c8eb79e0787afb) )
 	ROM_LOAD( "2.14j", 0x10000, 0x10000, CRC(21ecc248) SHA1(2fccf7db73890faf7c489bfc43c88ded54d5052d) )
 
@@ -325,11 +325,14 @@ static DRIVER_INIT( metlfrzr )
 
 	memory_set_opcode_base(0,rom+diff);
 	cpu_setbank(1, rom + 0x10000);
+
+  /* the banked ROM is not encrypted: same bytes for opcodes and data */
+	memcpy(rom + diff + 0x8000, rom + 0x8000, diff - 0x8000);
 	
 	for (A = 0x0000; A < 0x8000; A++)
 	{
 		/* decode the opcodes */
-        rom[A+diff] = rom[A];
+      rom[A+diff] = rom[A];
 
 		if (BIT(A,5) && !BIT(A,3))
 			rom[A+diff] ^= 0x40;
