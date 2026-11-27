@@ -749,7 +749,6 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( cybsled )	/* (c) 1993 */
 
 	/* Namco System 22 games */
-	DRIVER( namcoc74 )	/* C74 BIOS */
 	DRIVER( ridgerac )	/* (c) 1993 */
 	DRIVER( ridgeraca )	/* (c) 1993 */
 	DRIVER( ridgeracb )	/* (c) 1993 */

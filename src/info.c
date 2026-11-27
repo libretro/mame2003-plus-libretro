@@ -268,14 +268,102 @@ static void print_game_bios(FILE* out, const struct GameDriver* game)
 	}
 }
 
+/* Which DAT is being written: the full one, ROMs (the sets with ROMs */
+/* of their own; their disks stay listed, so a ROM manager knows the */
+/* set folder holding the CHD belongs to the set) or CHDs (the sets */
+/* with disks, just their disks) */
+enum
+{
+	XML_DAT_FULL = 0,
+	XML_DAT_ROMS,
+	XML_DAT_CHDS
+};
+
+static int xml_dat_mode = XML_DAT_FULL;
+
+static int game_has_disk(const struct GameDriver* game)
+{
+	const struct RomModule *region;
+
+	if (!game || !game->rom)
+		return 0;
+
+	for (region = rom_first_region(game); region; region = rom_next_region(region))
+		if (ROMREGION_ISDISKDATA(region) && rom_first_file(region))
+			return 1;
+	return 0;
+}
+
+static const struct GameDriver *xml_dat_parent(const struct GameDriver* game);
+
+/* a ROM the set needs in its own zip: dumped and not merged from the */
+/* parent it has in the DAT being written */
+static int game_has_own_roms(const struct GameDriver* game)
+{
+	const struct RomModule *region, *rom, *pregion, *prom;
+	const struct GameDriver *parent;
+
+	if (!game->rom)
+		return 0;
+
+	parent = xml_dat_parent(game);
+
+	for (region = rom_first_region(game); region; region = rom_next_region(region))
+	{
+		if (ROMREGION_ISDISKDATA(region))
+			continue;
+		for (rom = rom_first_file(region); rom; rom = rom_next_file(rom))
+		{
+			int in_parent = 0;
+
+			if (ROM_NOGOODDUMP(rom))
+				continue;
+			if (parent)
+				for (pregion = rom_first_region(parent); pregion && !in_parent; pregion = rom_next_region(pregion))
+					for (prom = rom_first_file(pregion); prom && !in_parent; prom = rom_next_file(prom))
+						if (hash_data_is_equal(ROM_GETHASHDATA(rom), ROM_GETHASHDATA(prom), 0))
+							in_parent = 1;
+			if (!in_parent)
+				return 1;
+		}
+	}
+	return 0;
+}
+
+/* whether a set goes in the DAT being written */
+static int game_in_xml_dat(const struct GameDriver* game)
+{
+	switch (xml_dat_mode)
+	{
+		case XML_DAT_ROMS:	return !game_has_disk(game) || game_has_own_roms(game);
+		case XML_DAT_CHDS:	return game_has_disk(game);
+	}
+	return 1;
+}
+
+/* the parent (or BIOS) a set refers to in the DAT being written: when */
+/* its parent isn't in it, the nearest ancestor that is */
+static const struct GameDriver *xml_dat_parent(const struct GameDriver* game)
+{
+	const struct GameDriver *parent;
+
+	for (parent = game->clone_of; parent; parent = parent->clone_of)
+		if (game_in_xml_dat(parent))
+			return parent;
+	return NULL;
+}
+
 static void print_game_rom(FILE* out, const struct GameDriver* game)
 {
 	const struct RomModule *region, *rom, *chunk;
 	const struct RomModule *pregion, *prom, *fprom=NULL;
+	const struct GameDriver *parent;
 /*	extern struct GameDriver driver_0;*/
 
 	if (!game->rom)
 		return;
+
+	parent = xml_dat_parent(game);
 
 	for (region = rom_first_region(game); region; region = rom_next_region(region))
 		for (rom = rom_first_file(region); rom; rom = rom_next_file(rom))
@@ -288,16 +376,29 @@ static void print_game_rom(FILE* out, const struct GameDriver* game)
 			is_disk = ROMREGION_ISDISKDATA(region);
 			is_bios = ROM_GETBIOSFLAGS(rom);
 
+			if (xml_dat_mode == XML_DAT_CHDS && !is_disk)
+				continue;
+
+			/* a disk is <name>.chd for ROM managers; the core opens it as */
+			/* its name up to the last '.' plus ".chd" (common.c), so */
+			/* "carnevil.chd" in a driver must be listed as "carnevil" */
+			if (is_disk)
+			{
+				char *ext = strrchr(name, '.');
+				if (ext)
+					*ext = 0;
+			}
+
 			in_parent = 0;
 			length = 0;
 			for (chunk = rom_first_chunk(rom); chunk; chunk = rom_next_chunk(chunk))
 				length += ROM_GETLENGTH(chunk);
 
 
-			if (!ROM_NOGOODDUMP(rom) && game->clone_of)
+			if (!ROM_NOGOODDUMP(rom) && parent)
 			{
 				fprom=NULL;
-				for (pregion = rom_first_region(game->clone_of); pregion; pregion = rom_next_region(pregion))
+				for (pregion = rom_first_region(parent); pregion; pregion = rom_next_region(pregion))
 					for (prom = rom_first_file(pregion); prom; prom = rom_next_file(prom))
 						if (hash_data_is_equal(ROM_GETHASHDATA(rom), ROM_GETHASHDATA(prom), 0))
 						{
@@ -697,6 +798,12 @@ static void print_game_info(FILE* out, const struct GameDriver* game)
 {
 	extern struct GameDriver driver_0;
 	const char *start;
+	const struct GameDriver *parent;
+
+	if (!game_in_xml_dat(game))
+		return;
+
+	parent = xml_dat_parent(game);
 
 	fprintf(out, "\t<" XML_TOP);
 
@@ -710,13 +817,14 @@ static void print_game_info(FILE* out, const struct GameDriver* game)
 	fprintf(out, " sourcefile=\"%s\"", start + 1);
 
 
-	if (game->clone_of && !(game->clone_of->flags & NOT_A_DRIVER))
-		fprintf(out, " cloneof=\"%s\"", game->clone_of->name);
+	if (parent && !(parent->flags & NOT_A_DRIVER))
+		fprintf(out, " cloneof=\"%s\"", parent->name);
 
-	if (game->clone_of && game->clone_of != &driver_0)
-		fprintf(out, " romof=\"%s\"", game->clone_of->name);
+	if (parent && parent != &driver_0)
+		fprintf(out, " romof=\"%s\"", parent->name);
 
-	print_game_sampleof(out, game);
+	if (xml_dat_mode != XML_DAT_CHDS)
+		print_game_sampleof(out, game);
 
 	fprintf(out, "%s", ">\n");
 
@@ -736,9 +844,11 @@ static void print_game_info(FILE* out, const struct GameDriver* game)
 	}
 
 /*	print_game_history(out, game); */
-	print_game_bios(out, game);
+	if (xml_dat_mode != XML_DAT_CHDS)
+		print_game_bios(out, game);
 	print_game_rom(out, game);
-	print_game_sample(out, game);
+	if (xml_dat_mode != XML_DAT_CHDS)
+		print_game_sample(out, game);
 	print_game_micro(out, game);
 	print_game_video(out, game);
 	print_game_sound(out, game);
@@ -783,23 +893,26 @@ static void print_resource_info(FILE* out, const struct GameDriver* game)
 #define PRINT_RESOURCE(s) \
 	{ \
 		extern struct GameDriver driver_##s; \
-		print_resource_info(xml_dat, &driver_##s); \
+		if (game_in_xml_dat(&driver_##s)) \
+			print_resource_info(xml_dat, &driver_##s); \
 	}
 
 
-/* Print the MAME database in XML format */
-void print_mame_xml()
+/* Print the MAME database in XML format, as the DAT 'mode' */
+static void print_xml_dat(const char *filename, int mode)
 {
     int driver_index = 0;
-    FILE *xml_dat = osd_fopen(FILETYPE_XML_DAT, 1, APPNAME".xml", "w+b");
+    FILE *xml_dat = osd_fopen(FILETYPE_XML_DAT, 1, filename, "w+b");
 
     if (xml_dat != NULL)
     {
-	    log_cb(RETRO_LOG_INFO, LOGPRE "Generating mame2003-plus.xml\n");
+	    log_cb(RETRO_LOG_INFO, LOGPRE "Generating %s\n", filename);
     } else {
-      log_cb(RETRO_LOG_WARN, LOGPRE "Unable to open mame2003-plus.xml for writing.\n");
+      log_cb(RETRO_LOG_WARN, LOGPRE "Unable to open %s for writing.\n", filename);
       return;
     }
+
+	xml_dat_mode = mode;
 
   fprintf(xml_dat,
 		"<?xml version=\"1.0\"?>\n"
@@ -907,7 +1020,19 @@ void print_mame_xml()
 	PRINT_RESOURCE(coh1002e);
 	PRINT_RESOURCE(coh1002v);
 	PRINT_RESOURCE(namcoc76);
+	PRINT_RESOURCE(namcoc74);
+	PRINT_RESOURCE(model1io);
+	PRINT_RESOURCE(model1io2);
 #endif
 	fprintf(xml_dat, "</" XML_ROOT ">\n");
     fclose(xml_dat);
+	xml_dat_mode = XML_DAT_FULL;
+}
+
+/* Split chds no need for full*/
+void print_mame_xml()
+{
+//	print_xml_dat(APPNAME-full".xml", XML_DAT_FULL);
+	print_xml_dat(APPNAME"-roms.xml", XML_DAT_ROMS);
+	print_xml_dat(APPNAME"-chds.xml", XML_DAT_CHDS);
 }
