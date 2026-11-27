@@ -377,6 +377,7 @@ is selected
 #include "machine/eeprom.h"
 #include <ctype.h>
 #include <streams/interface_stream.h>
+#include <file/file_path.h>
 
 
 #define CHEAT_DATABASE_RZIP_FILENAME  "cheat.rzip"
@@ -8240,6 +8241,9 @@ static void LoadCheatDatabase()
 	intfstream_t	* out_file = NULL;
 	char 		cheat_directory[PATH_MAX_LENGTH];
 	char 		cheat_path[PATH_MAX_LENGTH];
+	char 		dat_path[PATH_MAX_LENGTH];
+	int64_t		dat_mtime  = 0;
+	int64_t		rzip_mtime = 0;
 	char		formatString[256];
 	char		oldFormatString[256];
 	char		buf[2048];
@@ -8248,17 +8252,22 @@ static void LoadCheatDatabase()
 	cheat_directory[0] = '\0';
 	cheat_path[0]      = '\0';
 
-	/* Open existing cheat.rzip */
 	osd_get_path(FILETYPE_CHEAT, cheat_directory);
 	snprintf(cheat_path, PATH_MAX_LENGTH, "%s%c%s", cheat_directory, PATH_DEFAULT_SLASH_C(), CHEAT_DATABASE_RZIP_FILENAME);
-	in_file = intfstream_open_rzip_file(cheat_path, RETRO_VFS_FILE_ACCESS_READ);
+	snprintf(dat_path, PATH_MAX_LENGTH, "%s%c%s", cheat_directory, PATH_DEFAULT_SLASH_C(), CHEAT_DATABASE_FILENAME);
+
+	/* when cheat.dat has been edited or replaced since, rebuild */
+	/* the copy, or the changes would never be seen */
+	if(path_get_mtime(dat_path, &dat_mtime) && path_get_mtime(cheat_path, &rzip_mtime) && dat_mtime > rzip_mtime)
+		log_cb(RETRO_LOG_INFO, LOGPRE "cheat.dat is newer than cheat.rzip, rebuilding cheat.rzip\n");
+	else
+		/* Open existing cheat.rzip */
+		in_file = intfstream_open_rzip_file(cheat_path, RETRO_VFS_FILE_ACCESS_READ);
 
 	if(!in_file)
 	{
 		/* Try to open cheat.dat */
-		cheat_path[0] = '\0';
-		snprintf(cheat_path, PATH_MAX_LENGTH, "%s%c%s", cheat_directory, PATH_DEFAULT_SLASH_C(), CHEAT_DATABASE_FILENAME);
-		in_file = intfstream_open_file(cheat_path, RETRO_VFS_FILE_ACCESS_READ, RETRO_VFS_FILE_ACCESS_HINT_NONE);
+		in_file = intfstream_open_file(dat_path, RETRO_VFS_FILE_ACCESS_READ, RETRO_VFS_FILE_ACCESS_HINT_NONE);
 
 		if(!in_file)
 			goto end;

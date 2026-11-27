@@ -117310,7 +117310,7 @@ sonic:0:204FDE:18:000:Infinite Energy PL1
 sonic:0:204F3E:18:000:Infinite Energy PL2
 sonic:0:204E9E:18:000:Infinite Energy PL3
 sonic:0:20E658:13:000:Infinite Infinite Time (Final Stage)
-sonic:0:20F061:08:021:Show Stage Select
+sonic:0:20F061:08:001:Show Stage Select:Set during gameplay
 
 ; [ Segasonic the Hedgehog (Japan prototype) ]
 sonicp:0:204FDE:18:000:Infinite Energy PL1
