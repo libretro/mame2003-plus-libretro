@@ -33,6 +33,26 @@ static WRITE_HANDLER( output_w )
 	rowscroll_enable = (data >> 1) & 1;
 }
 
+
+static OPBASE_HANDLER( metlfrzr_opbase )
+{
+	UINT8 *rom = memory_region(REGION_CPU1);
+
+	if (address < 0x8000)
+	{
+		OP_RAM = rom;						/* operands: the decrypted data */
+		OP_ROM = rom + DECRYPTED_OFFSET;	/* opcodes */
+		OP_MEM_MIN = 0x0000;
+		OP_MEM_MAX = 0x7fff;
+		opcode_entry = STATIC_RAM;			/* the ROM's entry: no new lookup until the PC leaves it */
+		return ~0;
+	}
+
+	/* not encrypted: the same base for opcodes and operands, set up as usual */
+	OP_ROM = OP_RAM;
+	return address;
+}
+
 static MEMORY_READ_START( main_readmem )
   { 0x0000, 0x7fff, MRA_ROM },
 	{ 0x8000, 0xbfff, MRA_BANK1 },
@@ -48,7 +68,7 @@ static MEMORY_READ_START( main_readmem )
   { 0xd711, 0xd711, t5182_sharedram_semaphore_snd_r },
 	{ 0xd800, 0xdfff, MRA_RAM },
 	{ 0xe000, 0xefff, MRA_RAM },
-	{ 0xf000, 0xffff, MRA_RAM },
+	{ 0xf000, 0xffff, MRA_BANK2 },	/* work RAM, runs code: see metlfrzr_opbase */
 MEMORY_END
 
 static MEMORY_WRITE_START( main_writemem )
@@ -64,7 +84,7 @@ static MEMORY_WRITE_START( main_writemem )
 	{ 0xd713, 0xd713, t5182_sharedram_semaphore_main_acquire_w },
 	{ 0xd800, 0xdfff, MWA_RAM },
 	{ 0xe000, 0xefff, MWA_RAM },
-	{ 0xf000, 0xffff, MWA_RAM, &workram },
+	{ 0xf000, 0xffff, MWA_BANK2, &workram },
 MEMORY_END
 
 
@@ -154,7 +174,21 @@ INPUT_PORTS_START( metlfrzr )
 	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+	PORT_START	/* coins, wired to the T5182 (its port 0x30), as in MAME */
+	PORT_BIT_IMPULSE( 0x01, IP_ACTIVE_HIGH, IPT_COIN1, 2 )
+	PORT_BIT_IMPULSE( 0x02, IP_ACTIVE_HIGH, IPT_COIN2, 2 )
+	PORT_BIT( 0xfc, IP_ACTIVE_HIGH, IPT_UNUSED )
 INPUT_PORTS_END
+
+
+/* the T5182 port map, with the coins: the T5182 counts them and tells */
+/* the main CPU through the shared RAM (A1xx: coin inserted in slot xx) */
+static PORT_READ_START( metlfrzr_t5182_readport )
+	{ 0x01, 0x01, YM2151_status_port_0_r },
+	{ 0x20, 0x20, t5182_sharedram_semaphore_main_r },
+	{ 0x30, 0x30, input_port_5_r },
+PORT_END
 
 
 static struct GfxLayout tile_layout =
@@ -252,6 +286,11 @@ static VIDEO_UPDATE( metlfrzr )
 	}
 }
 
+static MACHINE_INIT( metlfrzr )
+{
+	cpu_setbank(1, memory_region(REGION_CPU1) + 0x10000);
+}
+
 static INTERRUPT_GEN( metlfrzr_interrupt )
 {
 	if (cpu_getiloops())
@@ -268,6 +307,8 @@ static MACHINE_DRIVER_START( metlfrzr )
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
 
+	MDRV_MACHINE_INIT(metlfrzr)
+
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
 	MDRV_SCREEN_SIZE(256, 256)
@@ -280,6 +321,8 @@ static MACHINE_DRIVER_START( metlfrzr )
 
 	/* sound hardware */
 	MDRV_IMPORT_FROM(t5182_audio)
+	MDRV_CPU_MODIFY(CPUTAG_T5182)
+	MDRV_CPU_PORTS(metlfrzr_t5182_readport, t5182_writeport)
 MACHINE_DRIVER_END
 
 
@@ -323,12 +366,10 @@ static DRIVER_INIT( metlfrzr )
 	unsigned char *rom = memory_region(REGION_CPU1);
 	int diff = memory_region_length(REGION_CPU1) / 2;
 
-	memory_set_opcode_base(0,rom+diff);
 	cpu_setbank(1, rom + 0x10000);
+	cpu_setbank(2, workram);
+	memory_set_opbase_handler(0, metlfrzr_opbase);
 
-  /* the banked ROM is not encrypted: same bytes for opcodes and data */
-	memcpy(rom + diff + 0x8000, rom + 0x8000, diff - 0x8000);
-	
 	for (A = 0x0000; A < 0x8000; A++)
 	{
 		/* decode the opcodes */
