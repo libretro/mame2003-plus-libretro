@@ -268,8 +268,10 @@ static void print_game_bios(FILE* out, const struct GameDriver* game)
 	}
 }
 
-/* Which DAT is being written: the full one, ROMs only (no disks, no */
-/* CHD-only sets) or CHDs only (the sets with disks, just their disks) */
+/* Which DAT is being written: the full one, ROMs (the sets with ROMs */
+/* of their own; their disks stay listed, so a ROM manager knows the */
+/* set folder holding the CHD belongs to the set) or CHDs (the sets */
+/* with disks, just their disks) */
 enum
 {
 	XML_DAT_FULL = 0,
@@ -374,7 +376,7 @@ static void print_game_rom(FILE* out, const struct GameDriver* game)
 			is_disk = ROMREGION_ISDISKDATA(region);
 			is_bios = ROM_GETBIOSFLAGS(rom);
 
-			if ((xml_dat_mode == XML_DAT_ROMS && is_disk) || (xml_dat_mode == XML_DAT_CHDS && !is_disk))
+			if (xml_dat_mode == XML_DAT_CHDS && !is_disk)
 				continue;
 
 			/* a disk is <name>.chd for ROM managers; the core opens it as */
