@@ -235,7 +235,7 @@ static WRITE_HANDLER(t5182_sharedram_semaphore_snd_release_w)
 	semaphore_snd = 0;
 }
 
-static READ_HANDLER(t5182_sharedram_semaphore_main_r)
+READ_HANDLER(t5182_sharedram_semaphore_main_r)
 {
 	return semaphore_main | (irqstate & 2);
 }
@@ -291,7 +291,8 @@ MEMORY_END
 	/* 12  W clear IRQ from YM2151*/
 	/* 13  W clear IRQ from main CPU*/
 	/* 20 R  flags bit 0 = main CPU is accessing shared RAM????  bit 1 = main CPU generated IRQ*/
-	/* 30 R  coin inputs (bits 0 and 1, active high)*/
+	/* 30 R  coin inputs (bits 0 and 1, active high): not mapped here; a driver */
+	/*       with coins wired to the T5182 maps it in its own port map */
 	/* 40  W external ROM banking? (the only 0 bit enables a ROM)*/
 	/* 50  W test mode status flags (bit 0 = ROM test fail, bit 1 = RAM test fail, bit 2 = YM2151 IRQ not received)*/
 PORT_READ_START( t5182_readport )
