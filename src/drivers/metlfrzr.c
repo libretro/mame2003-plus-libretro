@@ -29,29 +29,10 @@ static WRITE_HANDLER( output_w )
 	coin_lockout_w(1, (data >> 6) & 1);
 	coin_lockout_w(0, (data >> 5) & 1);
 	fg_tilebank = (data & 0x10) >> 4;
-	cpu_setbank(1, memory_region(REGION_CPU1) + 0x10000 + ((data & 0xc) >> 2) * 0x4000);
+	memory_set_bank(1, (data & 0xc) >> 2);
 	rowscroll_enable = (data >> 1) & 1;
 }
 
-
-static OPBASE_HANDLER( metlfrzr_opbase )
-{
-	UINT8 *rom = memory_region(REGION_CPU1);
-
-	if (address < 0x8000)
-	{
-		OP_RAM = rom;						/* operands: the decrypted data */
-		OP_ROM = rom + DECRYPTED_OFFSET;	/* opcodes */
-		OP_MEM_MIN = 0x0000;
-		OP_MEM_MAX = 0x7fff;
-		opcode_entry = STATIC_RAM;			/* the ROM's entry: no new lookup until the PC leaves it */
-		return ~0;
-	}
-
-	/* not encrypted: the same base for opcodes and operands, set up as usual */
-	OP_ROM = OP_RAM;
-	return address;
-}
 
 static MEMORY_READ_START( main_readmem )
   { 0x0000, 0x7fff, MRA_ROM },
@@ -68,7 +49,7 @@ static MEMORY_READ_START( main_readmem )
   { 0xd711, 0xd711, t5182_sharedram_semaphore_snd_r },
 	{ 0xd800, 0xdfff, MRA_RAM },
 	{ 0xe000, 0xefff, MRA_RAM },
-	{ 0xf000, 0xffff, MRA_BANK2 },	/* work RAM, runs code: see metlfrzr_opbase */
+	{ 0xf000, 0xffff, MRA_BANK2 },	/* work RAM: runs code, see the driver init */
 MEMORY_END
 
 static MEMORY_WRITE_START( main_writemem )
@@ -288,7 +269,7 @@ static VIDEO_UPDATE( metlfrzr )
 
 static MACHINE_INIT( metlfrzr )
 {
-	cpu_setbank(1, memory_region(REGION_CPU1) + 0x10000);
+	memory_set_bank(1, 0);
 }
 
 static INTERRUPT_GEN( metlfrzr_interrupt )
@@ -366,9 +347,10 @@ static DRIVER_INIT( metlfrzr )
 	unsigned char *rom = memory_region(REGION_CPU1);
 	int diff = memory_region_length(REGION_CPU1) / 2;
 
-	cpu_setbank(1, rom + 0x10000);
-	cpu_setbank(2, workram);
-	memory_set_opbase_handler(0, metlfrzr_opbase);
+		memory_set_decrypted_region(0, 0x0000, 0x7fff, rom + diff);
+	memory_configure_bank(1, 0, 4, rom + 0x10000, 0x4000);
+	memory_set_bank(1, 0);
+	memory_set_bankptr(2, workram);
 
 	for (A = 0x0000; A < 0x8000; A++)
 	{
