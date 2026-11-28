@@ -821,6 +821,14 @@ opbase_handler memory_set_opbase_handler(int cpunum, opbase_handler function);
 /* ----- separate opcode/data encryption helpers ---- */
 void		memory_set_opcode_base(int cpunum, void *base);
 void		memory_set_encrypted_opcode_range(int cpunum, offs_t min_address,offs_t max_address);
+void		memory_set_decrypted_region(int cpunum, offs_t start, offs_t end, void *base);
+
+/* ----- banks with numbered entries, as MAME 0.106 ----- */
+void		memory_configure_bank(int banknum, int startentry, int numentries, void *base, offs_t stride);
+void		memory_configure_bank_decrypted(int banknum, int startentry, int numentries, void *base, offs_t stride);
+void		memory_set_bank(int banknum, int entrynum);
+int			memory_get_bank(int banknum);
+void		memory_set_bankptr(int banknum, void *base);
 extern offs_t encrypted_opcode_start[],encrypted_opcode_end[];
 
 /* ----- return a base pointer to memory ---- */

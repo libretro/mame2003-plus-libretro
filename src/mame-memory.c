@@ -186,6 +186,20 @@ static struct bank_data 	bankdata[MAX_BANKS];			/* data gathered for each bank *
 
 offs_t encrypted_opcode_start[MAX_CPU],encrypted_opcode_end[MAX_CPU];
 
+/* banks with numbered entries (memory_configure_bank / memory_set_bank, as MAME 0.106) */
+#define MAX_BANK_ENTRIES		256
+static UINT8 *				bank_entry[STATIC_BANKMAX + 1][MAX_BANK_ENTRIES];	/* data of each entry */
+static UINT8 *				bank_entryd[STATIC_BANKMAX + 1][MAX_BANK_ENTRIES];	/* decrypted opcodes, NULL: as the data */
+static int					bank_curentry[STATIC_BANKMAX + 1];					/* current entry, MAX_BANK_ENTRIES: none */
+static UINT8 *				cpu_bankbased[STATIC_BANKMAX + 1];					/* decrypted opcodes of the bank, NULL: as the data */
+
+/* decrypted opcodes for one address range per CPU (memory_set_decrypted_region) */
+static struct
+{
+	offs_t		start, end;			/* the range */
+	UINT8 *		base;				/* its decrypted opcodes, NULL for none */
+} decrypted_region[MAX_CPU];
+
 
 /*-------------------------------------------------
 	PROTOTYPES
@@ -234,6 +248,16 @@ int memory_init(void)
 	/* no current context to start */
 	cur_context = -1;
 	unmap_value = 0;
+
+	/* no bank entries configured yet */
+	memset(bank_entry, 0, sizeof(bank_entry));
+	memset(bank_entryd, 0, sizeof(bank_entryd));
+	memset(cpu_bankbased, 0, sizeof(cpu_bankbased));
+	{
+		int bank;
+		for (bank = 0; bank <= STATIC_BANKMAX; bank++)
+			bank_curentry[bank] = MAX_BANK_ENTRIES;
+	}
 
 	/* init the static handlers */
 	if (!init_static())
@@ -333,6 +357,141 @@ void memory_set_encrypted_opcode_range(int cpunum,offs_t min_address,offs_t max_
 {
 	encrypted_opcode_start[cpunum] = min_address;
 	encrypted_opcode_end[cpunum] = max_address;
+}
+
+
+/*-------------------------------------------------
+	memory_set_decrypted_region - the opcodes of
+	start-end (address space of the CPU) are
+	fetched from base (the opcode for start at
+	base[0]); everything else, data and operands
+	included, is read as usual. Code outside the range
+	must be in its own memory entry (a bank) for
+	the core to notice when the PC goes there.
+-------------------------------------------------*/
+
+void memory_set_decrypted_region(int cpunum, offs_t start, offs_t end, void *base)
+{
+	decrypted_region[cpunum].start = start;
+	decrypted_region[cpunum].end = end;
+	decrypted_region[cpunum].base = (UINT8 *)base;
+
+	/* force a new opcode base on the next change of PC */
+	if (cpunum == cur_context)
+		opcode_entry = 0xff;
+	else
+		cpudata[cpunum].opcode_entry = 0xff;
+}
+
+
+/*-------------------------------------------------
+	Banks with numbered entries, as MAME 0.106:
+	memory_configure_bank() gives a bank its
+	entries (base + n * stride), memory_set_bank()
+	selects one, memory_configure_bank_decrypted()
+	gives the entries their decrypted opcodes.
+	memory_set_bankptr() is cpu_setbank().
+-------------------------------------------------*/
+
+static void bank_changed(int banknum)
+{
+	/* if we're executing out of this bank, adjust the opcode base */
+	if (opcode_entry == banknum && cpu_getactivecpu() >= 0)
+	{
+		opcode_entry = 0xff;
+		activecpu_set_op_base(activecpu_get_pc_byte());
+	}
+}
+
+void memory_configure_bank(int banknum, int startentry, int numentries, void *base, offs_t stride)
+{
+	int entrynum;
+
+	if (banknum < STATIC_BANK1 || banknum > STATIC_BANKMAX || startentry < 0 || startentry + numentries > MAX_BANK_ENTRIES)
+	{
+		log_cb(RETRO_LOG_ERROR, LOGPRE "memory_configure_bank: bank %d entries %d-%d out of range\n", banknum, startentry, startentry + numentries - 1);
+		return;
+	}
+	for (entrynum = startentry; entrynum < startentry + numentries; entrynum++)
+		bank_entry[banknum][entrynum] = (UINT8 *)base + (entrynum - startentry) * stride;
+}
+
+void memory_configure_bank_decrypted(int banknum, int startentry, int numentries, void *base, offs_t stride)
+{
+	int entrynum;
+
+	if (banknum < STATIC_BANK1 || banknum > STATIC_BANKMAX || startentry < 0 || startentry + numentries > MAX_BANK_ENTRIES)
+	{
+		log_cb(RETRO_LOG_ERROR, LOGPRE "memory_configure_bank_decrypted: bank %d entries %d-%d out of range\n", banknum, startentry, startentry + numentries - 1);
+		return;
+	}
+	for (entrynum = startentry; entrynum < startentry + numentries; entrynum++)
+		bank_entryd[banknum][entrynum] = (UINT8 *)base + (entrynum - startentry) * stride;
+
+	/* the current entry may have just got its decrypted opcodes */
+	if (bank_curentry[banknum] >= startentry && bank_curentry[banknum] < startentry + numentries)
+	{
+		cpu_bankbased[banknum] = bank_entryd[banknum][bank_curentry[banknum]];
+		bank_changed(banknum);
+	}
+}
+
+void memory_set_bank(int banknum, int entrynum)
+{
+	if (banknum < STATIC_BANK1 || banknum > STATIC_BANKMAX || entrynum < 0 || entrynum >= MAX_BANK_ENTRIES || !bank_entry[banknum][entrynum])
+	{
+		log_cb(RETRO_LOG_ERROR, LOGPRE "memory_set_bank: bank %d entry %d not configured\n", banknum, entrynum);
+		return;
+	}
+	bank_curentry[banknum] = entrynum;
+	cpu_bankbase[banknum] = bank_entry[banknum][entrynum];
+	cpu_bankbased[banknum] = bank_entryd[banknum][entrynum];
+	bank_changed(banknum);
+}
+
+int memory_get_bank(int banknum)
+{
+	if (banknum < STATIC_BANK1 || banknum > STATIC_BANKMAX)
+		return 0;
+	return bank_curentry[banknum];
+}
+
+void memory_set_bankptr(int banknum, void *base)
+{
+	if (banknum < STATIC_BANK1 || banknum > STATIC_BANKMAX)
+		return;
+	bank_curentry[banknum] = MAX_BANK_ENTRIES;
+	cpu_bankbase[banknum] = (UINT8 *)base;
+	cpu_bankbased[banknum] = NULL;
+	bank_changed(banknum);
+}
+
+/* save states: the selected entry of each bank, restored after a load */
+static void bank_entries_postload(void)
+{
+	int bank;
+
+	for (bank = STATIC_BANK1; bank <= STATIC_BANKMAX; bank++)
+		if (bank_curentry[bank] < MAX_BANK_ENTRIES && bank_entry[bank][bank_curentry[bank]])
+		{
+			cpu_bankbase[bank] = bank_entry[bank][bank_curentry[bank]];
+			cpu_bankbased[bank] = bank_entryd[bank][bank_curentry[bank]];
+			bank_changed(bank);
+		}
+}
+
+static void register_bank_entries(void)
+{
+	int bank, any = 0;
+
+	for (bank = STATIC_BANK1; bank <= STATIC_BANKMAX; bank++)
+		if (bank_entry[bank][0] || bank_curentry[bank] < MAX_BANK_ENTRIES)
+		{
+			state_save_register_int("bank", bank, "entry", &bank_curentry[bank]);
+			any = 1;
+		}
+	if (any)
+		state_save_register_func_postload(bank_entries_postload);
 }
 
 
@@ -1133,6 +1292,7 @@ static int init_cpudata(void)
 		cpudata[cpunum].opbase = NULL;
 		encrypted_opcode_start[cpunum] = 0;
 		encrypted_opcode_end[cpunum] = 0;
+		decrypted_region[cpunum].base = NULL;
 
 		/* initialize the readmem and writemem tables */
 		if (!init_memport(cpunum, &cpudata[cpunum].mem, mem_address_bits_of_cpu(cputype), cpunum_databus_width(cpunum), 1))
@@ -2392,9 +2552,27 @@ void name(offs_t pc)																	\
 		return;																			\
 	}																					\
 																						\
+	/* a decrypted region: decrypted opcodes, operands read as usual; outside */		\
+	/* it the opcodes are not encrypted */												\
+	if (decrypted_region[cpu_getactivecpu()].base)										\
+	{																					\
+		int cpu = cpu_getactivecpu();													\
+		OP_RAM = base - table[entry].offset;											\
+		if (pc >= decrypted_region[cpu].start && pc <= decrypted_region[cpu].end)		\
+		{																				\
+			OP_ROM = decrypted_region[cpu].base - decrypted_region[cpu].start;			\
+			OP_MEM_MIN = decrypted_region[cpu].start;									\
+			OP_MEM_MAX = decrypted_region[cpu].end;										\
+			return;																		\
+		}																				\
+		OP_ROM = OP_RAM;																\
+	}																					\
+																						\
 	/* compute the adjusted base */														\
 	OP_ROM = base - table[entry].offset + (OP_ROM - OP_RAM);							\
 	OP_RAM = base - table[entry].offset;												\
+	if (entry >= STATIC_BANK1 && entry <= STATIC_BANKMAX && cpu_bankbased[entry])		\
+		OP_ROM = cpu_bankbased[entry] - table[entry].offset;							\
 	OP_MEM_MIN = table[entry].offset;													\
 	OP_MEM_MAX = (entry >= STATIC_RAM && entry <= STATIC_RAMROM)						\
 		? cpudata[cpu_getactivecpu()].ramlength - 1										\
@@ -3144,4 +3322,5 @@ static void verify_masks(void)
 void memory_register_banks(void)
 {
 	register_banks();
+	register_bank_entries();
 }
